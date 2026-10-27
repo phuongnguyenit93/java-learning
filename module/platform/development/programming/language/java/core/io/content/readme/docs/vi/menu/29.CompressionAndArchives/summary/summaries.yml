@@ -1,0 +1,361 @@
+summaries:
+- id: compression-and-archives-001
+  title: Phân biệt nén GZIP với archive ZIP
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt nén GZIP với archive ZIP**
+
+    GZIP nén một luồng byte, còn ZIP là container có nhiều entry, tên và metadata. Bài học giúp chọn định dạng theo nhu cầu nén một payload hay đóng gói nhiều tệp, đồng thời phân biệt khả năng đọc/ghi và giới hạn an toàn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định dạng và dữ liệu
+
+    1. Vì sao GZIP và ZIP đều có thể sử dụng DEFLATE nhưng không thể đọc thay thế cho nhau?
+    2. Một tệp `.tar.gz` chứa nhiều file là nhờ lớp định dạng nào và GZIP đóng vai trò gì?
+
+    ### Lựa chọn API và an toàn
+
+    1. Khi cần nén một luồng HTTP so với đóng gói nhiều thư mục, bạn chọn GZIP hay ZIP và lớp Java tương ứng nào?
+    2. Vì sao ZIP cần kiểm tra tên entry và byte đã giải nén ngay cả khi archive có CRC32?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt định dạng | So sánh wrapper GZIP với cấu trúc ZIP có entry và central directory bằng một sơ đồ hoặc bảng. |
+    | Chọn API theo tình huống | Chọn đúng `GZIPInputStream`/`GZIPOutputStream` hoặc nhóm `Zip*` cho hai yêu cầu nén khác nhau. |
+    | Nhận diện giới hạn | Phân tích ví dụ zip-slip, decompression bomb và lý do checksum không xác thực nguồn. |
+- id: compression-and-archives-002
+  title: GZIPInputStream và GZIPOutputStream
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **GZIPInputStream và GZIPOutputStream**
+
+    `GZIPOutputStream` tạo header, dữ liệu nén và trailer; `GZIPInputStream` đọc/giải nén theo luồng byte. Bài học nhấn mạnh chu kỳ `finish`/`close`, checksum/EOF, charset của payload và quota byte thực tế khi đầu vào không tin cậy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Luồng và vòng đời
+
+    1. GZIP header/payload/trailer gắn với `GZIPOutputStream` và `GZIPInputStream` ra sao?
+    2. `finish()`, `flush()` và `close()` có tác dụng khác nhau như thế nào với stream nén và underlying stream?
+
+    ### Xử lý dữ liệu
+
+    1. Để nén một file lớn mà không nạp cả file vào RAM, cần dùng vòng lặp `read`/`write` thế nào?
+    2. Vì sao cần giới hạn byte sau giải nén ngay khi đọc thay vì chỉ dựa vào kích thước file `.gz` hay CRC32?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nén/giải nén streaming | Viết pipeline `Files.newInputStream` → `GZIPOutputStream` và ngược lại với buffer cố định. |
+    | Hoàn tất gzip đúng cách | Kiểm chứng trailer được ghi sau `finish()`/`close()` và phân biệt flush với format completion. |
+    | Giải nén có quota | Đếm byte giải nén trong vòng đọc, từ chối vượt ngưỡng và xử lý tệp hỏng. |
+- id: compression-and-archives-003
+  title: ZipInputStream, ZipOutputStream và ZipEntry
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ZipInputStream, ZipOutputStream và ZipEntry**
+
+    ZIP chứa nhiều entry; `ZipOutputStream` ghi các entry tuần tự, `ZipInputStream` đọc từng entry, còn `ZipEntry` lưu tên và thông tin cần thiết. Bài học giúp hiểu ranh giới entry, chế độ `DEFLATED`/`STORED`, charset và nguy cơ giải nén.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ba lớp và entry
+
+    1. Một archive ZIP, một `ZipEntry` và `ZipInputStream`/`ZipOutputStream` khác nhau thế nào về vai trò?
+    2. Trong lúc đọc, `read() == -1` biểu thị hết entry hay hết toàn archive, và `getNextEntry()` làm gì?
+
+    ### Metadata và xử lý an toàn
+
+    1. Vì sao entry `STORED` cần size và CRC đúng trước khi ghi, khác với `DEFLATED`?
+    2. Khi đọc ZIP nhận từ người khác, vì sao không tin `ZipEntry.getName()` hoặc `getSize()` để ghi file thẳng ra đĩa?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đóng gói nhiều entry | Viết trình tự `putNextEntry`/`write`/`closeEntry` để tạo archive có thư mục, văn bản và file nhị phân. |
+    | Đọc entry tuần tự | Dùng `getNextEntry` kết hợp vòng lặp đọc đến EOF của từng entry và tiếp tục sang entry kế tiếp. |
+    | Phân tích metadata | Giải thích mức độ tin cậy của tên, size, CRC, charset và khác biệt STORED/DEFLATED. |
+- id: compression-and-archives-004
+  title: putNextEntry, closeEntry và hoàn tất archive
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **putNextEntry, closeEntry và hoàn tất archive**
+
+    `putNextEntry` bắt đầu một entry ZIP, `write` thêm nội dung vào entry đang mở, `closeEntry` đóng entry còn `finish` hoàn tất cấu trúc archive. Bài học tập trung vào thứ tự thao tác, central directory, xử lý `STORED` và ownership của output stream.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Trạng thái archive
+
+    1. Điều gì xảy ra nếu ghi byte khi chưa có entry đang mở, và `putNextEntry` thay đổi trạng thái nào?
+    2. Vì sao gọi `closeEntry()` cho tất cả entry vẫn chưa đảm bảo ZIP có central directory hợp lệ?
+
+    ### Tài nguyên và trường hợp biên
+
+    1. Khi nào chọn `finish()` thay vì đóng `ZipOutputStream` nếu destination do caller sở hữu?
+    2. Muốn tạo entry `STORED`, phải biết trước những thuộc tính nào và xử lý thế nào nếu dữ liệu không đúng dự kiến?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Điều khiển state machine ZIP | Tạo ZIP hai entry với chuỗi gọi entry/open/write/close/finish và tự kiểm tra bằng `ZipFile`. |
+    | Quản lý underlying stream | Chứng minh `finish()` giữ sink mở nhưng `close()` đóng chuỗi stream theo hợp đồng. |
+    | Ghi STORED chính xác | Tính trước byte length và CRC32, khai báo chúng trên ZipEntry và kiểm chứng đọc lại. |
+- id: compression-and-archives-005
+  title: finish khác flush và close
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **finish khác flush và close**
+
+    `flush` đẩy buffer tùy implementation, `finish` ghi phần cuối của compressed format và `close` kết thúc vòng đời tài nguyên. Bài học so sánh ZIP/GZIP, ownership của sink, khả năng phát sinh lỗi ở bước hoàn tất và khác biệt với durability.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ba thao tác khác nhau
+
+    1. Vì sao `flush()` một `ZipOutputStream` không đảm bảo đã có central directory, và một `GZIPOutputStream` chưa chắc có trailer?
+    2. Khác biệt giữa `finish()` và `close()` trong việc ghi byte cuối và tác động đến underlying stream là gì?
+
+    ### Thiết kế pipeline
+
+    1. Nếu destination thuộc caller và cần tiếp tục sử dụng, bạn tổ chức hoàn tất luồng nén ra sao?
+    2. Vì sao kết quả `write()` thành công hoặc `flush()` xong chưa đảm bảo archive hoàn chỉnh hay dữ liệu bền vững sau crash?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt completion và flush | Vẽ pipeline có buffer, compressor, sink; chỉ ra byte nào còn thiếu trước khi `finish`. |
+    | Quản lý ownership | Chọn vị trí try-with-resources hoặc `finish` theo hợp đồng bên sở hữu sink. |
+    | Xử lý lỗi hoàn tất | Nhận biết failure tại `finish`/`close`, từ chối công bố output chưa hoàn chỉnh. |
+- id: compression-and-archives-006
+  title: ZipFile truy cập từng entry và quản lý vòng đời
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ZipFile truy cập từng entry và quản lý vòng đời**
+
+    `ZipFile` mở archive trên đĩa để tra cứu entry theo tên hoặc duyệt các entry có sẵn, khác mô hình đọc tuần tự `ZipInputStream`. Bài học nhấn mạnh thời gian sống của archive, stream của entry, metadata và đọc dữ liệu lớn theo từng khối.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Truy cập và lifetime
+
+    1. Khi nào `ZipFile.getEntry(name)` hiệu quả hơn duyệt `ZipInputStream` tới entry cần đọc?
+    2. Vì sao cần giữ `ZipFile` mở khi đang sử dụng `InputStream` được cấp bởi `getInputStream(entry)`?
+
+    ### Duyệt và kiểm chứng
+
+    1. Bạn duyệt toàn bộ entry bằng `Enumeration` hoặc Stream như thế nào và có được giả định thứ tự bất biến không?
+    2. Khi trích một entry lớn ra file, tại sao phải đọc theo buffer và vẫn phải kiểm tra path/quota?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tra cứu entry trực tiếp | Mở `ZipFile`, tìm tên entry, kiểm tra `null` và đọc stream của entry trong phạm vi archive còn mở. |
+    | Quản lý đóng tài nguyên | Viết hai lớp try-with-resources cho ZipFile và InputStream của entry, dự đoán lỗi khi archive đóng sớm. |
+    | So sánh chiến lược truy cập | Chọn ZipFile hay ZipInputStream dựa trên nguồn file/stream và nhu cầu truy cập ngẫu nhiên. |
+- id: compression-and-archives-007
+  title: Charset tên entry và metadata của archive
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Charset tên entry và metadata của archive**
+
+    Tên, comment và metadata của ZIP được mã hóa/lưu trữ riêng với byte của payload. Bài học phân biệt UTF-8 flag, archive legacy, timestamp/extra fields, chênh lệch metadata giữa các API và nguy cơ tên entry không tin cậy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tên entry và encoding
+
+    1. Charset dùng để đọc tên entry khác charset dùng để giải mã nội dung file bên trong ZIP ra sao?
+    2. UTF-8 flag trong ZIP tác động gì đến việc chọn charset và khi nào cần biết charset legacy thật?
+
+    ### Metadata và tương thích
+
+    1. Vì sao `ZipInputStream` có thể chưa thấy đầy đủ size/CRC trước khi đọc hết entry trong khi `ZipFile` có central directory?
+    2. Các trường timestamp, comment, extra field và tên entry phải được đánh giá thế nào khi sao chép archive đa nền tảng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt charset hai tầng | Tạo ZIP có tên entry Unicode và payload văn bản, giải thích hai điểm encode/decode độc lập. |
+    | Diễn giải metadata ZIP | So sánh thông tin ZipEntry đọc tuần tự và từ ZipFile, kiểm tra giới hạn của size/timestamp/CRC. |
+    | Thiết kế tương thích | Đề xuất quy ước UTF-8, dấu phân cách `/`, chính sách tên và kiểm tra khi nhận legacy archive. |
+- id: compression-and-archives-008
+  title: JarFile, JarInputStream và manifest ở mức I/O
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **JarFile, JarInputStream và manifest ở mức I/O**
+
+    JAR dựa trên ZIP nhưng có manifest và quy ước metadata riêng. Bài học so sánh truy cập ngẫu nhiên bằng `JarFile` với `JarInputStream` tuần tự, cách lấy Manifest, thời điểm manifest xuất hiện và lưu ý về chữ ký cũng như multi-release JAR.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### JAR và manifest
+
+    1. JAR khác một ZIP tùy ý ở quy ước manifest và đường dẫn `META-INF/MANIFEST.MF` như thế nào?
+    2. Tại sao `JarInputStream.getManifest()` phụ thuộc vị trí manifest gần đầu archive và có thể trả `null`?
+
+    ### API và tính đúng đắn
+
+    1. Với JAR trên đĩa và JAR nhận từ HTTP stream, bạn chọn `JarFile` hay `JarInputStream` và truy cập entry thế nào?
+    2. Vì sao đọc `Manifest` hoặc bật chế độ xác minh không đồng nghĩa archive đã đáng tin cậy để thực thi hay giải nén?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc manifest | Mở JAR, trích main attributes và thuộc tính từng entry khi có, xử lý trường hợp `null`. |
+    | Lựa chọn cơ chế duyệt | Sử dụng `JarFile.getJarEntry` để tra cứu và `JarInputStream.getNextJarEntry` để duyệt tuần tự. |
+    | Giải thích giới hạn metadata | Nêu ảnh hưởng của vị trí manifest, chữ ký và multi-release JAR tới việc diễn giải archive. |
+- id: compression-and-archives-009
+  title: Deflater, Inflater và phạm vi điều khiển mức nén
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Deflater, Inflater và phạm vi điều khiển mức nén**
+
+    `Deflater`/`Inflater` xử lý DEFLATE ở mức thấp với trạng thái, wrapper zlib/raw, dictionary và flush mode. Bài học giải thích mức nén tác động CPU/đầu ra nhưng không cam kết tỷ lệ, rồi thiết kế vòng lặp nén/giải nén và đóng đối tượng native đúng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thuật toán và trạng thái
+
+    1. DEFLATE khác lớp wrapper zlib, GZIP và ZIP ở đâu, và `Inflater` có cần biết mức nén mà `Deflater` đã dùng không?
+    2. Chu trình `setInput`, `deflate`, `finish`, `finished`, `end` và các trạng thái `needsInput`/`needsDictionary` dùng để tránh vòng lặp vô hạn ra sao?
+
+    ### Cấu hình và đánh đổi
+
+    1. `BEST_SPEED`, `BEST_COMPRESSION`, strategy và flush mode ảnh hưởng gì, và vì sao level 9 không luôn tạo file nhỏ nhất?
+    2. Với một payload có khả năng mở rộng rất lớn, bạn giới hạn output của `Inflater` và kiểm chứng round-trip thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Điều khiển stateful codec | Viết vòng lặp Deflater/Inflater theo trạng thái, gọi `end` và phát hiện dữ liệu bị cắt/dictionary thiếu. |
+    | So sánh mức nén | Thực nghiệm level khác nhau trên cùng dữ liệu và đo CPU/kích thước thay vì đưa cam kết tuyệt đối. |
+    | Chọn wrapper phù hợp | Giải thích khi cần nowrap/zlib wrapper so với GZIP và ZIP, đồng thời áp quota cho output. |
+- id: compression-and-archives-010
+  title: CRC32, Adler32 và giới hạn của checksum
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CRC32, Adler32 và giới hạn của checksum**
+
+    `CRC32` và `Adler32` là hai checksum 32 bit giúp phát hiện nhiều lỗi byte không chủ ý, hỗ trợ cập nhật từng khối và xuất hiện trong các wrapper ZIP/GZIP/zlib. Bài học nhấn mạnh collision, phạm vi byte và khác biệt với xác thực mật mã.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế checksum
+
+    1. CRC32 và Adler32 khác nhau về cách tính và vì sao cùng chỉ cho kết quả 32 bit?
+    2. Khi dùng `Checksum.update`, vì sao phải truyền chính xác số byte vừa đọc, và khi nào phải gọi `reset()`?
+
+    ### Ý nghĩa và bảo mật
+
+    1. CRC-32 được dùng ở đâu trong ZIP/GZIP, Adler-32 được dùng ở đâu trong zlib, và chúng kiểm tra dãy byte nào?
+    2. Vì sao checksum giống nhau không chứng minh hai file bằng nhau hoặc dữ liệu được nguồn đáng tin cậy ký xác nhận?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính theo chunk | Tính CRC32/Adler32 cho chuỗi kiểm thử và file stream; đối chiếu một lần với nhiều chunk. |
+    | Kiểm tra giới hạn kết quả | Chỉ ra collision có thể có và giải thích khi nào cần HMAC/chữ ký số. |
+    | Gắn checksum với format | Mô tả byte chưa nén cần kiểm tra ở entry ZIP hoặc trailer GZIP theo đúng hợp đồng định dạng. |
+- id: compression-and-archives-011
+  title: Giới hạn dung lượng, số entry và tỷ lệ giải nén
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn dung lượng, số entry và tỷ lệ giải nén**
+
+    Giải nén từ nguồn không tin cậy có thể gây ZIP bomb bằng output lớn, quá nhiều entry hoặc tỷ lệ mở rộng bất thường. Bài học xây quota đồng thời cho đầu vào, từng entry, tổng output và concurrency; kiểm tra byte thực tế khi đọc, staging và xử lý lỗi giữa chừng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngân sách giải nén
+
+    1. Vì sao giới hạn kích thước archive đầu vào không thay được hạn mức byte sau giải nén cho từng entry và toàn bộ archive?
+    2. Bạn định nghĩa giới hạn số entry và tỷ lệ uncompressed/compressed thế nào khi metadata có thể chưa có hoặc sai?
+
+    ### Áp dụng và xử lý lỗi
+
+    1. Vì sao phải kiểm tra quota trước mỗi lần ghi buffer thay vì kiểm tra kết quả sau khi copy toàn bộ?
+    2. Nếu entry thứ ba vượt quota, làm cách nào tránh công bố hai entry đã giải nén trong staging như một kết quả hoàn chỉnh?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế quota kết hợp | Viết chính sách MAX_ENTRY, MAX_TOTAL, MAX_COUNT, MAX_RATIO và giới hạn file đầu vào. |
+    | Đếm output thực tế | Đọc từng entry theo chunk, phát hiện overflow và dừng trước khi ghi vượt ngưỡng. |
+    | Xử lý archive thất bại | Mô tả cleanup staging, trạng thái lỗi và kiểm thử archive có entry lớn hoặc quá nhiều entry. |
+- id: compression-and-archives-012
+  title: Giải nén đúng thư mục đích và xử lý đường dẫn entry
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giải nén đúng thư mục đích và xử lý đường dẫn entry**
+
+    Tên `ZipEntry` là dữ liệu không tin cậy; ánh xạ sai sang Path có thể dẫn đến Zip Slip hoặc ghi đè ngoài root. Bài học kết hợp đường dẫn tương đối, normalize/startsWith, quy tắc symlink và TOCTOU, CREATE_NEW, staging và quota để giới hạn hiệu ứng trên filesystem.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Path và Zip Slip
+
+    1. Vì sao so chuỗi `target.toString().startsWith(root.toString())` không đủ, và nên dùng `Path.normalize()`/`Path.startsWith()` ra sao?
+    2. Bạn xử lý tên entry chứa `..`, đường dẫn tuyệt đối, Windows drive prefix, ký tự `\` và tên trùng thế nào?
+
+    ### Symlink và công bố output
+
+    1. Vì sao kiểm tra normalize/startsWith vẫn chưa ngăn symlink trong thư mục đích hoặc race giữa kiểm tra và ghi?
+    2. Một extractor từ nguồn không tin cậy nên tổ chức thư mục mới, `CREATE_NEW`, quota, staging và publish ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ngăn path traversal | Chuyển tên entry thành Path tương đối, từ chối absolute/traversal và chứng minh kết quả resolve luôn nằm trong output root. |
+    | Chặn ghi đè và symlink | Sử dụng root mới đáng tin, chính sách no-follow/CREATE_NEW và giải thích giới hạn race trên filesystem hiện có. |
+    | Kiểm thử extractor | Tạo archive chứa entry hợp lệ và `../escape.txt`, xác minh bài thử độc hại bị từ chối trước khi ghi file. |

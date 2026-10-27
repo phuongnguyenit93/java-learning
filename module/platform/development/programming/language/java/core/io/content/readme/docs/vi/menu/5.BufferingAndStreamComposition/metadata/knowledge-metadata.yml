@@ -1,0 +1,31 @@
+sections:
+  buffering-and-stream-composition-001:
+    difficulty: BASIC
+    isImportant: true
+  buffering-and-stream-composition-002:
+    difficulty: BASIC
+    isImportant: true
+  buffering-and-stream-composition-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  buffering-and-stream-composition-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  buffering-and-stream-composition-005:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  buffering-and-stream-composition-006:
+    difficulty: ADVANCED
+    isImportant: true
+  buffering-and-stream-composition-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  buffering-and-stream-composition-008:
+    difficulty: ADVANCED
+    isImportant: true
+  buffering-and-stream-composition-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  buffering-and-stream-composition-010:
+    difficulty: ADVANCED
+    isImportant: true

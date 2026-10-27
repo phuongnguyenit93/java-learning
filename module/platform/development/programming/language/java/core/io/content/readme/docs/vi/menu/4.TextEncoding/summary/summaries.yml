@@ -1,0 +1,361 @@
+summaries:
+- id: text-encoding-001
+  title: Quan hệ giữa byte, char UTF-16, code point và ký tự hiển thị
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Quan hệ giữa byte, char UTF-16, code point và ký tự hiển thị**
+
+    Phân biệt chính xác byte, đơn vị mã UTF-16 của Java `char`, Unicode code point và grapheme cluster để tránh đếm hoặc cắt văn bản theo sai đơn vị. Bài học còn làm rõ normalization, surrogate pair và giới hạn hiển thị của font.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các đơn vị văn bản
+
+    1. Vì sao một emoji có thể dài hai `char` nhưng chỉ gồm một code point?
+    2. Byte UTF-8, code point và grapheme cluster khác nhau thế nào với chữ có dấu tổ hợp?
+
+    ### Đếm và cắt chuỗi
+
+    1. Vì sao `substring(1, 2)` có thể tạo surrogate lẻ trong `A🙂B`?
+    2. Cần đo số byte, code point hay grapheme trong từng loại giới hạn nhập liệu nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện đơn vị | Tính riêng byte UTF-8, UTF-16 unit, code point và grapheme cho một chuỗi có emoji và dấu tổ hợp. |
+    | Cắt chuỗi an toàn | Sử dụng `offsetByCodePoints` hoặc regex `\X` để chọn đúng ranh giới cắt. |
+    | So sánh Unicode | Giải thích kết quả `equals` trước và sau NFC khi hai chuỗi trông giống nhau. |
+- id: text-encoding-002
+  title: Unicode, UTF-8, UTF-16 và các charset thường gặp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Unicode, UTF-8, UTF-16 và các charset thường gặp**
+
+    Nắm quan hệ giữa Unicode và UTF-8, UTF-16, UTF-32 cùng các charset legacy. Từ bảng byte và ví dụ Java, người học xác định đúng encoding, BOM, normalization và giới hạn biểu diễn của mỗi charset.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy tắc Unicode và UTF
+
+    1. Unicode code point khác code unit của UTF-8 và UTF-16 ở điểm nào?
+    2. Vì sao UTF-8 cần từ một đến bốn byte nhưng UTF-16 có surrogate pair?
+
+    ### Lựa chọn và kiểm chứng
+
+    1. Nhìn hai byte `C3 A9`, vì sao UTF-8 cho `é` còn Latin-1 cho `Ã©`?
+    2. BOM, byte order và Unicode normalization ảnh hưởng đến quá trình đọc dữ liệu ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích encoding | Tính byte UTF-8 và UTF-16BE/LE cho một chuỗi chứa ký tự ngoài BMP. |
+    | So sánh charset | Chọn bộ mã đúng cho dữ liệu ASCII, đa ngôn ngữ và file legacy theo hợp đồng nguồn. |
+    | Chẩn đoán dữ liệu | Phân biệt byte sai, charset sai và chuỗi Unicode khác normalization khi kết quả bất thường. |
+- id: text-encoding-003
+  title: Charset, StandardCharsets và tên charset
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Charset, StandardCharsets và tên charset**
+
+    Sử dụng `Charset` và `StandardCharsets` như API chọn bộ mã trong Java thay vì nhầm lẫn tên hằng, alias và tên chuẩn. Bài hướng dẫn tra cứu charset động, nhận diện ngoại lệ và encode/decode có kiểm soát.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### API và tên charset
+
+    1. `Charset.name()`, `aliases()` và `forName()` khác nhau về mục đích thế nào?
+    2. Sáu hằng `StandardCharsets` nào luôn được Java SE hỗ trợ và vì sao nên ưu tiên chúng?
+
+    ### Bộ mã không hợp lệ
+
+    1. Một tên charset sai cú pháp khác tên hợp lệ nhưng chưa được hỗ trợ ra sao?
+    2. Khi byte malformed hoặc ký tự không thể encode, tại sao API tiện lợi và coder nghiêm ngặt có thể khác kết quả?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tra cứu charset | Viết ví dụ dùng `Charset.forName`, `isSupported` và `name` có xử lý ngoại lệ. |
+    | Encode/decode | So sánh kết quả giải mã một mảng byte bằng UTF-8 và Latin-1. |
+    | Kiểm soát lỗi | Dùng encoder/decoder ở chế độ REPORT để phát hiện dữ liệu không biểu diễn được. |
+- id: text-encoding-004
+  title: Chọn charset tường minh khi đọc và ghi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn charset tường minh khi đọc và ghi**
+
+    Thực hành đọc và ghi văn bản bằng charset được chỉ rõ tại đúng ranh giới byte và ký tự. Bài nối `Files.readString/writeString` với `Reader`/`Writer`, phân biệt I/O text với dữ liệu nhị phân và quản lý vòng đời stream.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới I/O
+
+    1. Khi nào `Files.readString` phù hợp hơn `InputStreamReader` hoặc `BufferedReader`?
+    2. Tại sao phải xác định charset của file từ hợp đồng nguồn trước khi giải mã?
+
+    ### Triển khai và kiểm chứng
+
+    1. Làm sao kiểm chứng vòng encode → lưu file → decode giữ nguyên văn bản tiếng Việt?
+    2. Vì sao không dùng `Reader` để sao chép ZIP/ảnh và không đóng nhầm stream do caller sở hữu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc ghi tệp | Tạo chương trình `Files.writeString` và `Files.readString` với UTF-8 và kiểm tra round-trip. |
+    | Làm việc với stream | Cấu hình reader/writer có charset và đóng đúng tài nguyên được sở hữu. |
+    | Sửa lỗi văn bản | Dùng byte gốc để xác định và sửa lỗi decode sai charset theo nguồn dữ liệu. |
+- id: text-encoding-005
+  title: Charset mặc định, thay đổi UTF-8 từ JDK 18 và ngoại lệ theo API
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Charset mặc định, thay đổi UTF-8 từ JDK 18 và ngoại lệ theo API**
+
+    Hiểu JEP 400 và sự thay đổi charset mặc định từ JDK 18 trong ngữ cảnh nâng cấp Java 17. Bài tách các API dùng default charset khỏi `Files` cố định UTF-8, `Properties.load(InputStream)` và I/O console có quy tắc riêng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phiên bản và default charset
+
+    1. Điều gì thay đổi với default charset ở JDK 18 so với JDK 17?
+    2. Tại sao không thể suy ra mọi API không truyền charset đều dùng cùng default charset?
+
+    ### Kiểm thử nâng cấp
+
+    1. `Files.readString`, `Properties.load(InputStream)` và console dùng quy tắc encoding khác nhau ra sao?
+    2. Cần thiết kế phép kiểm thử nào để phát hiện thay đổi byte khi chuyển JDK 17 sang JDK mới?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích API | Lập bảng phân loại API dùng default charset và API có encoding được xác định sẵn. |
+    | Kiểm tra runtime | Quan sát `Charset.defaultCharset()` và xác định tính phụ thuộc phiên bản/cấu hình. |
+    | Kiểm thử migration | Đề xuất fixture có byte ngoài ASCII và đối chiếu kết quả trước/sau nâng JDK. |
+- id: text-encoding-006
+  title: BOM và khác biệt UTF-16, UTF-16BE, UTF-16LE
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **BOM và khác biệt UTF-16, UTF-16BE, UTF-16LE**
+
+    Đọc đúng BOM và thứ tự byte của UTF-16, UTF-16BE, UTF-16LE. Bài cho phép quan sát byte mã hóa thực, tránh đọc sai endian, BOM bị nhân đôi hoặc xử lý tùy tiện ký tự U+FEFF.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### BOM và byte order
+
+    1. `UTF_16`, `UTF_16BE`, `UTF_16LE` khác nhau thế nào khi có và không có BOM?
+    2. Vì sao cùng chữ `A` cho hai chuỗi byte khác nhau ở BE và LE?
+
+    ### Đọc ghi đúng chuẩn
+
+    1. Nếu file UTF-16LE yêu cầu BOM, cần xây byte đầu và chọn encoder thế nào?
+    2. Những lỗi nào xảy ra khi thêm BOM thủ công rồi lại dùng encoder `UTF_16`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc byte BOM | Dự đoán hex BOM và byte ký tự khi ghi UTF-16BE/LE. |
+    | Chọn decoder | Giải thích kết quả giải mã có hoặc không có BOM với ba charset Java. |
+    | Thiết kế I/O | Chọn cách ghi UTF-16LE có BOM mà không tạo BOM hai lần. |
+- id: text-encoding-007
+  title: Lỗi mojibake khi encode và decode không cùng charset
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lỗi mojibake khi encode và decode không cùng charset**
+
+    Chẩn đoán hiện tượng mojibake khi byte được giải mã bằng sai charset và xác định khi nào có thể phục hồi. Bài phân tích lỗi một tầng, double encoding, ký tự thay thế và chiến lược giữ byte gốc trước khi sửa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguyên nhân lỗi chữ
+
+    1. Vì sao byte UTF-8 của `é` có thể biến thành `Ã©` khi đọc sai charset?
+    2. Mojibake khác dữ liệu malformed và lỗi font ở điểm nào?
+
+    ### Phục hồi có kiểm soát
+
+    1. Khi nào có thể đảo ngược một lần decode sai để khôi phục byte?
+    2. Vì sao dữ liệu chứa ký tự thay thế đã lưu có thể không còn đủ thông tin để phục hồi?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tái hiện mojibake | Dùng Java encode và decode trái charset để tạo lỗi có thể kiểm chứng. |
+    | Điều tra pipeline | Vẽ được từng bước byte → String → byte gây double encoding. |
+    | Phục hồi an toàn | Lập quy trình giữ bản gốc, kiểm tra charset và chỉ chuyển lại khi đủ căn cứ. |
+- id: text-encoding-008
+  title: Malformed input, unmappable character và chính sách xử lý
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Malformed input, unmappable character và chính sách xử lý**
+
+    Phân biệt malformed input với unmappable character và lựa chọn REPORT, REPLACE hoặc IGNORE cho từng yêu cầu toàn vẹn dữ liệu. Bài kiểm chứng ngoại lệ, dữ liệu bị mất và khác biệt mặc định giữa các API Java.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai nhóm lỗi
+
+    1. Malformed input khác unmappable character về tính hợp lệ của đầu vào như thế nào?
+    2. Vì sao một surrogate đơn lẻ có thể gây lỗi malformed khi encode?
+
+    ### Hành động với lỗi
+
+    1. REPORT, REPLACE và IGNORE tạo kết quả hoặc ngoại lệ gì với UTF-8 sai?
+    2. Khi nào lựa chọn REPLACE làm mất khả năng phục hồi dữ liệu và cần từ chối đầu vào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại lỗi | Nhận diện `MalformedInputException` và `UnmappableCharacterException` theo tình huống. |
+    | So sánh chính sách | Dự đoán đầu ra ba chính sách cho cùng byte malformed hoặc ký tự ASCII không biểu diễn được. |
+    | Thiết kế an toàn | Lựa chọn REPORT cho dữ liệu cần tính toàn vẹn và giải thích lý do. |
+- id: text-encoding-009
+  title: CharsetEncoder, CharsetDecoder và CodingErrorAction
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CharsetEncoder, CharsetDecoder và CodingErrorAction**
+
+    Đi sâu vào `CharsetEncoder`, `CharsetDecoder` và `CodingErrorAction`, gồm cách cấu hình replacement, nhận `CoderResult`, tổ chức vòng đời buffer và xử lý nhiều lần gọi decode. Bài giúp phân biệt coder trực tiếp với API tiện ích.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu hình và coder
+
+    1. Khi nào phải tự tạo `newEncoder`/`newDecoder` thay vì dùng constructor String?
+    2. `CodingErrorAction` và replacement của coder ảnh hưởng đến dữ liệu ra sao?
+
+    ### CoderResult và buffer
+
+    1. Trong giải mã tăng dần, `UNDERFLOW`, `OVERFLOW` và lỗi có ý nghĩa gì?
+    2. Tại sao phải xử lý `flip`, `compact`, `endOfInput` và `flush` đúng thứ tự?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình coder | Viết decoder/encoder với chính sách lỗi minh bạch và kiểm tra kết quả. |
+    | Phân tích trạng thái | Mô phỏng một vòng `decode` và giải thích CoderResult quyết định bước tiếp theo. |
+    | Thực thi streaming | Điều chỉnh ByteBuffer/CharBuffer để dữ liệu chia chunk vẫn được khôi phục đầy đủ. |
+- id: text-encoding-010
+  title: Giải mã nhiều khối khi ký tự bị chia giữa hai lần đọc
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giải mã nhiều khối khi ký tự bị chia giữa hai lần đọc**
+
+    Xử lý UTF-8 bị cắt giữa hai lần đọc mà không tạo U+FFFD giả. Bài tập trung vào trạng thái `CharsetDecoder`, quản lý `ByteBuffer`/`CharBuffer`, dấu kết thúc input và khác biệt giữa một chunk I/O với một message.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới chunk
+
+    1. Vì sao `new String(chunk, UTF_8)` riêng cho từng lần đọc có thể làm hỏng emoji?
+    2. Khi decoder trả UNDERFLOW với byte đang dở, buffer cần được giữ lại như thế nào?
+
+    ### Thiết kế vòng giải mã
+
+    1. Cần phối hợp `flip`, `compact`, `endOfInput` và `flush` ra sao khi tới EOF?
+    2. Vì sao một lần `InputStream.read` hoặc socket read không bảo đảm một ký tự hay một message hoàn chỉnh?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tái hiện lỗi chunk | Chia byte UTF-8 ở giữa sequence bốn byte và giải thích đầu ra sai. |
+    | Giải mã tăng dần | Phác thảo vòng decoder xử lý underflow/overflow đến khi EOF và flush. |
+    | Kiểm thử chia khối | Xác nhận cùng dữ liệu nhận kết quả như nhau dưới nhiều kích thước chunk. |
+- id: text-encoding-011
+  title: Không cắt chuỗi byte hoặc char tùy ý giữa một ký tự
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không cắt chuỗi byte hoặc char tùy ý giữa một ký tự**
+
+    Tránh cắt dữ liệu ở ranh giới byte UTF-8, nửa surrogate UTF-16 hoặc giữa grapheme cluster. Bài hướng dẫn cắt `String` theo code point, kiểm soát byte budget và xử lý stream mà không phá ký tự.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới hợp lệ
+
+    1. Vì sao offset byte bất kỳ có thể rơi vào giữa UTF-8 sequence?
+    2. `substring` theo chỉ số char gây nguy cơ tạo surrogate lẻ như thế nào?
+
+    ### Giới hạn và giải pháp
+
+    1. Cắt theo code point có luôn giữ nguyên một grapheme hiển thị không?
+    2. Làm sao giữ giới hạn N byte UTF-8 mà vẫn không cắt dở code point?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện điểm cắt sai | Đưa ra ví dụ byte UTF-8, surrogate và combining mark bị chia không đúng. |
+    | Cắt theo code point | Dùng `offsetByCodePoints` để tính vị trí UTF-16 an toàn. |
+    | Tôn trọng byte budget | Xây dựng chiến lược giới hạn byte UTF-8 theo ranh giới code point và kiểm thử. |
+- id: text-encoding-012
+  title: Phân biệt charset với Base64 và nén dữ liệu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt charset với Base64 và nén dữ liệu**
+
+    Phân biệt chức năng của charset, Base64 và nén dữ liệu, rồi ghép đúng thứ tự các bước trong một pipeline lưu trữ hoặc trao đổi. Bài làm rõ vì sao Base64 không mã hóa ý nghĩa văn bản và nén không phải bảo mật.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ba phép biến đổi
+
+    1. Charset chuyển đổi gì mà Base64 không thay thế được?
+    2. Nén bằng GZIP thay đổi gì và vì sao không tương đương mã hóa bảo mật?
+
+    ### Thiết kế pipeline
+
+    1. Khi gửi văn bản đã gzip dưới dạng Base64, các bước encode/decode phải theo thứ tự nào?
+    2. Làm sao kiểm tra round-trip để phát hiện lỗi chọn charset hoặc giải Base64 sai?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh công cụ | Lập bảng đầu vào/đầu ra của charset encoding, Base64 và compression. |
+    | Lắp pipeline | Chọn thứ tự String → UTF-8 bytes → nén → Base64 và thực hiện chiều ngược. |
+    | Kiểm tra hợp đồng | Giải thích dữ liệu nào vẫn là byte và bước nào cần charset. |

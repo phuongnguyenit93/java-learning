@@ -1,0 +1,351 @@
+summaries:
+- id: memory-mapping-001
+  title: Memory-mapped file và MappedByteBuffer
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Memory-mapped file và MappedByteBuffer**
+
+    Ánh xạ bộ nhớ giúp truy cập một vùng file qua MappedByteBuffer và các thao tác ByteBuffer.get/put. Bài học mở đầu giải thích vai trò hệ điều hành, không gian địa chỉ ảo và sự khác biệt với FileChannel.read/write thông thường.
+
+    Từ ví dụ ánh xạ một vùng ASCII, người học nhận diện offset tương đối, ba chế độ map, các giới hạn về trang nhớ, force và vòng đời buffer để tránh kỳ vọng sai về việc nạp file hoặc giải phóng tài nguyên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất memory mapping
+
+    1. FileChannel.map liên kết vùng file và địa chỉ ảo như thế nào, khác gì với đọc toàn bộ file vào heap?
+    2. Vì sao lời gọi map chưa có nghĩa mọi trang của file đã nằm sẵn trong RAM?
+    3. MappedByteBuffer.get(0) tham chiếu vị trí nào khi map bắt đầu ở offset khác 0?
+
+    ### Hợp đồng API và giới hạn
+
+    1. Ba MapMode phân biệt quyền ghi và việc phản ánh thay đổi lên file ra sao?
+    2. Tại sao đóng FileChannel không đồng nghĩa giải phóng mapping lập tức?
+    3. Vì sao file lớn hơn 2 GiB vẫn xử lý được dù một MappedByteBuffer bị giới hạn capacity kiểu int?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích mô hình mmap | Vẽ luồng dữ liệu giữa file, OS page cache, vùng địa chỉ ảo và MappedByteBuffer; chỉ ra nơi có thể phát sinh page fault. |
+    | Map một vùng file | Chọn mode, offset, length và dự đoán byte nhận từ các vị trí get tuyệt đối. |
+    | Phân biệt các trạng thái | Giải thích khác nhau giữa position, limit, capacity của buffer và position của channel. |
+    | Nhận diện giới hạn | Phân tích nhu cầu force, quản lý lifetime và tình huống nên chọn I/O thông thường. |
+- id: memory-mapping-002
+  title: MapMode READ_ONLY, READ_WRITE và PRIVATE
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **MapMode READ_ONLY, READ_WRITE và PRIVATE**
+
+    Ba chế độ FileChannel.MapMode quyết định chương trình có thể thay đổi dữ liệu qua buffer hay không và thay đổi đó có được phản ánh về file. Việc chọn sai mode hoặc quyền mở channel làm chương trình lỗi ngay khi map hoặc put.
+
+    Bài học kiểm chứng READ_ONLY, READ_WRITE và PRIVATE qua tệp tạm, đặc biệt làm rõ copy-on-write không phải transaction, force không commit PRIVATE và read-only không phải snapshot bất biến.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quyền truy cập và kết quả ghi
+
+    1. READ_ONLY, READ_WRITE và PRIVATE khác nhau ở quyền put và đích lưu thay đổi thế nào?
+    2. Vì sao muốn map PRIVATE vẫn cần mở FileChannel với quyền đọc và ghi theo hợp đồng Java?
+
+    ### Ngữ nghĩa và rủi ro
+
+    1. Tại sao gọi force trên PRIVATE không đưa thay đổi riêng vào file gốc?
+    2. READ_ONLY có bảo đảm không bao giờ quan sát thay đổi do tiến trình khác ghi file không?
+    3. Ở tình huống tra cứu, cập nhật và biến đổi tạm thời, cần chọn MapMode nào và vì sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn MapMode | Phân loại ít nhất ba yêu cầu nghiệp vụ và chọn READ_ONLY, READ_WRITE hoặc PRIVATE với giải thích. |
+    | Thiết lập quyền channel | Viết lệnh FileChannel.open với quyền thích hợp, dự đoán NonReadableChannelException hoặc NonWritableChannelException. |
+    | Kiểm thử semantics | Thực hiện put thử trên ba mode và kiểm tra giá trị riêng so với byte thật trong file. |
+    | Đánh giá giả định sai | Chỉ ra vì sao PRIVATE không thay thế giao dịch, snapshot hoặc commit. |
+- id: memory-mapping-003
+  title: Ánh xạ từng vùng và giới hạn kích thước buffer
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ánh xạ từng vùng và giới hạn kích thước buffer**
+
+    FileChannel.map nhận vị trí file kiểu long nhưng MappedByteBuffer trả về có capacity và chỉ số kiểu int. Nếu map nguyên một file lớn hơn Integer.MAX_VALUE byte hoặc tính sai cửa sổ cuối, ứng dụng có thể thất bại dù file hoàn toàn hợp lệ.
+
+    Bài học phát triển thuật toán windowed mapping, tính offset toàn file và index cục bộ, xử lý record/UTF-8 băng qua ranh giới cùng ảnh hưởng của kích thước window đến số mapping và tài nguyên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giới hạn và thuật toán cửa sổ
+
+    1. Vì sao long fileOffset không loại bỏ giới hạn Integer.MAX_VALUE của một MappedByteBuffer?
+    2. Làm thế nào tính chính xác length cho cửa sổ cuối khi file có 10 byte và windowSize là 4?
+    3. Đổi absoluteOffset thành windowStart và indexInWindow như thế nào mà không tràn int?
+
+    ### Xử lý dữ liệu qua biên
+
+    1. Một record 6 byte vắt qua hai cửa sổ 4 byte thì parser phải ghép dữ liệu ra sao?
+    2. Vì sao giải mã từng cửa sổ UTF-8 độc lập có thể làm hỏng ký tự nhiều byte?
+    3. Những yếu tố nào quyết định kích thước window và vòng đời mapping hợp lý?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế windowed map | Viết vòng duyệt FileChannel bằng long offset và length = min(windowSize, fileSize - offset). |
+    | Xác định offset | Tính index tương đối cho một file offset và kiểm tra phạm vi trước khi truy cập. |
+    | Ghép dữ liệu qua cửa sổ | Trình bày cách xử lý record và UTF-8 split qua hai mapping mà không mất byte. |
+    | Chọn ngân sách window | Phân tích tác động của windowSize lên số mapping, địa chỉ ảo, cache và giới hạn tài nguyên. |
+- id: memory-mapping-004
+  title: Đọc ghi dữ liệu qua vùng nhớ đã ánh xạ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đọc ghi dữ liệu qua vùng nhớ đã ánh xạ**
+
+    MappedByteBuffer kế thừa quy tắc của ByteBuffer nên cách thay đổi position, limit, slice, get và put quyết định byte thực sự đọc hoặc sửa. Bài học tập trung vào thao tác dữ liệu chứ không chỉ tạo mapping.
+
+    Qua ví dụ ánh xạ tệp ASCII, số little-endian và bản ghi cố định, người học kiểm tra sự khác nhau giữa index của buffer và offset file, kết hợp mode, charset và force khi đọc ghi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thao tác dữ liệu trên buffer
+
+    1. get() và get(index) khác nhau thế nào về vị trí đọc và thay đổi position?
+    2. Lệnh clear() có xóa nội dung file đang được map hay chỉ thay đổi trạng thái ByteBuffer?
+    3. Một slice tạo từ mapping ảnh hưởng đến byte của base buffer thế nào?
+
+    ### Định dạng byte và tính đúng
+
+    1. Vì sao putInt/getInt cần thỏa thuận ByteOrder khi xử lý record nhị phân?
+    2. Khi đọc file UTF-8 qua mapping, vì sao không nên ép từng byte thành char?
+    3. Sau put lên READ_WRITE, force có mục tiêu gì và điều gì vẫn chưa được bảo đảm về giao dịch?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc ghi theo index | Dự đoán byte, position, limit sau các lệnh get/put tuyệt đối và tương đối. |
+    | Dùng view buffer | Tạo slice tại một vùng xác định và giải thích dữ liệu chung với mapping gốc. |
+    | Xử lý primitive và văn bản | Đọc putInt/getInt với ByteOrder phù hợp và giải mã byte UTF-8 bằng charset. |
+    | Đối chiếu file | Ghi sửa file tạm bằng READ_WRITE, force và đọc lại để so sánh byte mong đợi. |
+- id: memory-mapping-005
+  title: load, isLoaded và tác động của page fault
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **load, isLoaded và tác động của page fault**
+
+    Mapping cung cấp địa chỉ ảo chứ không bảo đảm các trang dữ liệu đã ở RAM; thao tác get có thể chịu độ trễ page fault. load và isLoaded chỉ cung cấp nỗ lực preload và hint, không bảo đảm mọi lượt đọc sau đều tránh I/O.
+
+    Bài học giúp phân biệt minor với major fault, cân nhắc chi phí warm-up, độ trễ tail và tác động của cache pressure khi preload dữ liệu không thực sự cần.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Trang nhớ và page fault
+
+    1. Vì sao một mapped buffer đã tạo thành công vẫn có thể gây page fault ở lần get đầu tiên?
+    2. Minor fault và major fault khác nhau về nhu cầu truy cập storage như thế nào?
+
+    ### Hợp đồng load/isLoaded và hiệu năng
+
+    1. load() hứa hẹn gì và vì sao không thể coi nó là pin toàn bộ mapping vào RAM?
+    2. Nếu isLoaded trả false sau load, có chứng minh load đã lỗi hoặc dữ liệu chưa có trong bộ nhớ không?
+    3. Khi dữ liệu rất lớn nhưng chỉ tra cứu ít trang, preload toàn bộ có thể làm hiệu năng xấu đi thế nào?
+    4. Muốn đánh giá lợi ích load, phải đo những yếu tố nào trong môi trường cold/warm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô tả demand paging | Vẽ luồng map, get, page fault và trạng thái trang cached hoặc cần I/O. |
+    | Dùng API đúng ngữ nghĩa | Giải thích ý nghĩa phản hồi của load và isLoaded trong các kết quả khác nhau. |
+    | So sánh chiến lược preload | Phân tích workload quét toàn vùng và truy vấn thưa để quyết định thử load hay demand paging. |
+    | Thiết kế benchmark | Nêu cách đo latency, page faults, page cache và warm-up trước khi kết luận hiệu quả. |
+- id: memory-mapping-006
+  title: force cho thay đổi trên vùng ánh xạ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **force cho thay đổi trên vùng ánh xạ**
+
+    Thay đổi READ_WRITE mapping có thể nằm trong bộ nhớ hoặc cache trước khi được ghi bền vững. Bài học làm rõ MappedByteBuffer.force cho toàn bộ mapping hay vùng con, phạm vi tính theo buffer và sự khác biệt với FileChannel.force(boolean).
+
+    Người học phân biệt đồng bộ dữ liệu với tính nguyên tử của bản ghi, hiểu điều kiện bảo đảm cho thiết bị local, ngoại lệ I/O và chiến lược force theo từng bản ghi hay theo batch.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phạm vi và lời gọi force
+
+    1. force() và force(index,length) yêu cầu đồng bộ những vùng byte nào khi mapping bắt đầu ở offset 4096?
+    2. Thay đổi position hoặc limit có thu hẹp phạm vi của force() không?
+    3. force(index,length) vượt capacity phải được xử lý thế nào?
+
+    ### Độ bền và tính nhất quán
+
+    1. MappedByteBuffer.force và FileChannel.force(boolean) khác nhau ở loại thay đổi nào được bảo đảm?
+    2. Vì sao force không biến hai lần putInt liên tiếp thành một transaction nguyên tử?
+    3. Thiết bị local và remote filesystem khác nhau thế nào theo hợp đồng force của Java?
+    4. Khi force phát sinh lỗi I/O, ứng dụng cần báo trạng thái lưu dữ liệu thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chỉ định vùng cần flush | Tính đúng index/length và file offset tương ứng của lời gọi force vùng con. |
+    | So sánh các phương thức đồng bộ | Giải thích vai trò mapped.force, channel.force và load bằng một ví dụ có thay đổi. |
+    | Đánh giá độ bền | Phân biệt việc đọc lại byte thấy đúng với cam kết lưu dữ liệu sau mất điện. |
+    | Thiết kế chính sách ghi | Đề xuất flush từng record hay theo batch và chỉ ra rủi ro crash giữa các trường. |
+- id: memory-mapping-007
+  title: Đóng channel không tự kết thúc vòng đời vùng ánh xạ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đóng channel không tự kết thúc vòng đời vùng ánh xạ**
+
+    Try-with-resources đóng FileChannel nhưng MappedByteBuffer đã tạo có thể còn truy cập được. Hiểu nhầm close là unmap có thể dẫn đến giữ tài nguyên native, khó xóa hoặc đổi tên file và cách xử lý sai khi kết thúc tác vụ.
+
+    Bài học giúp quản lý việc chia sẻ buffer, phạm vi sử dụng mapping, cách thay thế bằng FileChannel.read/write khi cần vòng đời tài nguyên dự đoán được và tránh phụ thuộc System.gc hay mẹo unmap.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới vòng đời tài nguyên
+
+    1. Vì sao mapped.get vẫn có thể thành công sau khi FileChannel dùng để tạo mapping đã đóng?
+    2. Đóng channel, force thay đổi và unmap mapping là ba hành vi khác nhau thế nào?
+
+    ### Hệ quả vận hành
+
+    1. Tại sao giữ MappedByteBuffer trong cache có thể kéo dài thời gian file bị map?
+    2. Vì sao việc xóa hay đổi tên file đang map có thể khác nhau giữa Windows và các hệ điều hành khác?
+    3. Trong ứng dụng cần thay thế file thường xuyên, khi nào nên chọn FileChannel.read/write thay cho mmap?
+    4. Tại sao System.gc không thể đóng mapping một cách quyết định?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm chứng lifetime | Chạy ví dụ ánh xạ file rồi đóng channel và giải thích vì sao buffer vẫn được phép truy cập. |
+    | Nhận diện tài nguyên giữ lại | Phân tích references và phạm vi xử lý làm kéo dài vòng đời mapping. |
+    | Thiết kế cleanup hợp lý | Đề xuất cách tránh giữ mapping thừa và kiểm tra khả năng file được quản lý bởi hệ điều hành. |
+    | Chọn I/O thay thế | Giải thích khi nào mô hình đọc theo buffer giúp yêu cầu đóng/xóa file dự đoán được hơn. |
+- id: memory-mapping-008
+  title: Giới hạn giải phóng mapping theo phiên bản API và JVM
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn giải phóng mapping theo phiên bản API và JVM**
+
+    Khả năng giải phóng mapping phụ thuộc mô hình API và phiên bản Java. Với MappedByteBuffer truyền thống của Java 17/21, không có public close/unmap mang nghĩa giải phóng đồng bộ; từ Java 22 có overload FileChannel.map dùng MemorySegment và Arena với vòng đời có thể đóng.
+
+    Bài học so sánh hai mô hình và ranh giới về portability, shared/confined arena, quyền truy cập sau khi đóng và việc giải phóng vùng nhớ khác với bảo đảm ghi bền.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giới hạn của MappedByteBuffer
+
+    1. Vì sao FileChannel.close và System.gc không thể được xem là thao tác unmap đồng bộ trong Java 17?
+    2. Những tài nguyên nào có thể tiếp tục bị giữ khi một mapped buffer còn được tham chiếu?
+
+    ### API Java 22 và lựa chọn triển khai
+
+    1. FileChannel.map với MemorySegment và Arena bổ sung điều khiển vòng đời nào so với overload truyền thống?
+    2. Arena.ofConfined đóng sẽ ảnh hưởng quyền truy cập segment và các thread khác ra sao?
+    3. Vì sao đóng Arena không thay thế force để yêu cầu dữ liệu READ_WRITE được lưu bền?
+    4. Ứng dụng chạy trên Java 17 cần lựa chọn nào nếu bắt buộc điều khiển chính xác thời điểm giải phóng mapping?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đối chiếu API theo phiên bản | Lập bảng Java 17/21 MappedByteBuffer và Java 22+ MemorySegment/Arena về lifecycle và compatibility. |
+    | Áp dụng Arena an toàn | Viết pseudocode phạm vi try-with-resources với Arena và xác định lúc segment mất hiệu lực. |
+    | Phân tích ownership | Giải thích vì sao segment đã đóng không còn dùng được và điều kiện thread confinement. |
+    | Lựa chọn triển khai | Đánh giá có nâng JDK, thay I/O hay đổi kiến trúc dữ liệu khi yêu cầu unmap quyết định. |
+- id: memory-mapping-009
+  title: Rủi ro khi tệp bị thay đổi kích thước trong lúc đang ánh xạ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Rủi ro khi tệp bị thay đổi kích thước trong lúc đang ánh xạ**
+
+    MappedByteBuffer giữ capacity và phạm vi cố định tại lúc map, nhưng tệp nền có thể bị tiến trình khác truncate, append hoặc ghi đè. Khi phần mapped mất khả năng truy cập, hành vi phụ thuộc hệ điều hành và Java không chỉ định một ngoại lệ ổn định.
+
+    Bài học phân tích race giữa kiểm tra kích thước và truy cập, chiến lược sở hữu độc quyền, file phiên bản hóa, snapshot ổn định và mapping theo cửa sổ để giảm rủi ro khi thay đổi dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thay đổi file và buffer
+
+    1. Nếu tệp đang map 4096 byte bị truncate còn 1024 byte, capacity() thay đổi hay không và vì sao vẫn nguy hiểm?
+    2. Khi tệp được append thêm byte, vì sao mapping cũ không tự mở rộng để thấy phần mới?
+    3. PRIVATE hoặc READ_ONLY có thể ngăn mọi thay đổi kích thước từ bên ngoài không?
+
+    ### Bảo đảm tính nhất quán
+
+    1. Vì sao kiểm tra FileChannel.size ngay trước mapped.get vẫn có race TOCTOU?
+    2. Làm thế nào sử dụng file bất biến theo version hoặc bản sao riêng để reader không bị writer truncate dưới chân?
+    3. File lock và ReadWriteLock bảo vệ trong những phạm vi nào và hạn chế gì khi có tiến trình không hợp tác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích truncate và append | Dự đoán kích thước mapping cũ và rủi ro truy cập sau khi backing file thay đổi. |
+    | Chỉ ra TOCTOU | Mô tả timeline giữa kiểm tra size và truncate gây lỗi dù có điều kiện bảo vệ bề mặt. |
+    | Thiết kế dữ liệu ổn định | Đề xuất file version/snapshot và quy tắc reader-writer ownership giữ vùng mapped bất biến. |
+    | Xây dựng kiểm thử an toàn | Kiểm tra giải pháp trên file snapshot riêng mà không cố gây lỗi OS bằng cách truy cập vùng đã truncate. |
+- id: memory-mapping-010
+  title: Khi nào memory mapping có ích và khi nào gây bất lợi
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khi nào memory mapping có ích và khi nào gây bất lợi**
+
+    Memory mapping không phải tối ưu mặc định: có lợi thế ở truy cập ngẫu nhiên lặp trên dữ liệu nhị phân ổn định, nhưng page faults, nhiều mappings, thiếu locality hoặc resize thường xuyên có thể khiến nó tệ hơn I/O thông thường.
+
+    Bài học kết nối các giới hạn kỹ thuật với tiêu chí chọn kiến trúc và benchmark: throughput, P95/P99 latency, cache, memory, file lifecycle và chi phí triển khai so với FileChannel.read/write hoặc Files.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khi mapping có lợi
+
+    1. Vì sao tệp chỉ mục nhị phân ổn định được truy cập ngẫu nhiên nhiều lần là ứng viên cho mmap?
+    2. Khả năng chia sẻ page cache giữa các tiến trình đóng vai trò gì trong workload chỉ đọc?
+
+    ### Khi mapping gây bất lợi và cách đo
+
+    1. Tại sao đọc một lần file nhỏ hoặc tập dữ liệu lớn vượt RAM có locality kém thường không thích hợp?
+    2. Page faults, tail latency và giới hạn address space có thể đảo chiều lợi ích hiệu năng thế nào?
+    3. Nếu file thường xuyên bị xóa, rename hoặc truncate, cần cân nhắc lựa chọn I/O nào?
+    4. Nên thiết kế benchmark so sánh mmap và positional FileChannel.read theo các chỉ số nào trước quyết định?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại workload | Chọn mmap hoặc I/O thông thường cho ba tình huống file nhỏ, index ổn định và file thay đổi thường xuyên, kèm lý do. |
+    | Thiết kế benchmark có baseline | Xác định phép đo throughput, P95/P99 latency, page faults, CPU và bộ nhớ dưới cold/warm cache. |
+    | Đánh giá chi phí vận hành | Liệt kê ảnh hưởng của GC/lifetime, mapping count, truncation và tính portable đối với vận hành. |
+    | Đề xuất kiến trúc | Bảo vệ lựa chọn bằng workload và số liệu thay vì gắn nhãn zero-copy mặc định nhanh. |

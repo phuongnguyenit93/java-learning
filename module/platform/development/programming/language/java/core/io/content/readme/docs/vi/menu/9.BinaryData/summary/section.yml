@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "DỮ LIỆU NHỊ PHÂN — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: binary-data-001
+    order: 1
+    title: "DataInput, DataOutput và định dạng dữ liệu nguyên thủy"
+    description: "Nắm hợp đồng DataInput/DataOutput: kích thước primitive, big-endian, signedness và sự khác biệt giữa giá trị Java với chuỗi byte."
+    transition:
+      to: binary-data-002
+      description: "Sau khi hiểu hợp đồng của từng kiểu, thực hành ghép các stream cụ thể để ghi và đọc."
+  - id: binary-data-002
+    order: 2
+    title: "DataInputStream và DataOutputStream"
+    description: "Thực hành ghép DataInputStream/DataOutputStream với byte stream, buffering và try-with-resources để đọc ghi bản ghi có kiểu."
+    transition:
+      to: binary-data-003
+      description: "Khi đã biết thao tác stream, cần bảo đảm hai phía đọc các trường theo đúng chuỗi thao tác ghi."
+  - id: binary-data-003
+    order: 3
+    title: "Thứ tự ghi phải tương ứng với thứ tự đọc"
+    description: "Giải thích vì sao thứ tự, kiểu và chiều rộng trường là một phần của schema; kiểm thử lỗi lệch trường bằng round-trip và golden bytes."
+    transition:
+      to: binary-data-004
+      description: "Khi thứ tự trường đã đúng, còn phải diễn giải các bit theo đúng endian và signedness."
+  - id: binary-data-004
+    order: 4
+    title: "Big-endian, signed byte và các thao tác đọc unsigned"
+    description: "Diễn giải byte có dấu/không dấu và số nhiều byte theo đúng endianness; dùng mask, shift và ByteBuffer an toàn."
+    transition:
+      to: binary-data-005
+      description: "Giải mã đúng bit chỉ có ý nghĩa khi parser đã nhận đủ tất cả byte của trường."
+  - id: binary-data-005
+    order: 5
+    title: "readFully khác read và cách xử lý EOFException"
+    description: "Phân biệt short read với EOF, dùng readFully để đọc chính xác và xử lý EOFException theo ranh giới record."
+    transition:
+      to: binary-data-006
+      description: "Sau khi kiểm soát lượng byte, cần hiểu một trường String được đóng khung và mã hóa đặc biệt ra sao."
+  - id: binary-data-006
+    order: 6
+    title: "readUTF, writeUTF và modified UTF-8"
+    description: "Phân tích định dạng hai byte length và modified UTF-8 của writeUTF/readUTF, bao gồm NUL, surrogate và lỗi giải mã."
+    transition:
+      to: binary-data-007
+      description: "Nắm wire format rồi phải kiểm tra giới hạn 65.535 byte tính trên payload modified UTF-8."
+  - id: binary-data-007
+    order: 7
+    title: "Giới hạn độ dài của writeUTF"
+    description: "Kiểm tra ngưỡng 65.535 byte modified UTF-8 của writeUTF, các trường hợp ranh giới và phương án cho chuỗi dài."
+    transition:
+      to: binary-data-008
+      description: "Sau các trường primitive và String, mở rộng thành bản ghi hoàn chỉnh có nhận diện, phiên bản và độ dài."
+  - id: binary-data-008
+    order: 8
+    title: "Thiết kế bản ghi có magic number, version và length"
+    description: "Thiết kế bản ghi JREC có magic, version và length, parse nhiều frame và xây dựng quy tắc phiên bản, lỗi và tương thích."
+    transition:
+      to: binary-data-009
+      description: "Một header rõ ràng vẫn có thể chứa độ dài giả hoặc quá lớn, nên parser cần hạn mức và kiểm tra số học."
+  - id: binary-data-009
+    order: 9
+    title: "Kiểm tra độ dài trước khi cấp phát hoặc đọc dữ liệu"
+    description: "Bảo vệ parser trước length không tin cậy, cấp phát quá mức, overflow, decompression bomb và luồng streaming không giới hạn."
+    transition:
+      to: binary-data-010
+      description: "Khi đã hiểu cách giữ an toàn cho parser, so sánh quyền sở hữu schema thủ công với Java Object Serialization."
+  - id: binary-data-010
+    order: 10
+    title: "Phân biệt định dạng nhị phân tự thiết kế với Java serialization"
+    description: "So sánh schema nhị phân tự thiết kế với Java Serialization, khả năng tương thích object graph, serialVersionUID và rủi ro deserialization."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | DataInput, DataOutput và định dạng dữ liệu nguyên thủy | DataInputStream và DataOutputStream | Thứ tự ghi phải tương ứng với thứ tự đọc | Big-endian, signed byte và các thao tác đọc unsigned | readFully khác read và cách xử lý EOFException | readUTF, writeUTF và modified UTF-8 | Giới hạn độ dài của writeUTF | Thiết kế bản ghi có magic number, version và length | Kiểm tra độ dài trước khi cấp phát hoặc đọc dữ liệu | Phân biệt định dạng nhị phân tự thiết kế với Java serialization |
+  | Vấn đề cần hiểu | Giá trị Java được ghi thành những byte nào và điều gì phải được thống nhất trước khi giải mã? | Làm thế nào thực hiện hợp đồng nhị phân bằng các stream Java và quản lý tài nguyên đúng? | Vì sao reader có thể nhận dữ liệu sai dù API ghi đọc đều chạy thành công? | Cùng một mẫu bit vì sao có thể thành số âm hoặc thành số khác khi đổi endian? | Làm sao bảo đảm đã nhận đủ N byte và phân biệt kết thúc sạch với dữ liệu bị cắt? | Modified UTF-8 khác UTF-8 chuẩn ở byte nào và vì sao không thể hoán đổi decoder? | Giới hạn writeUTF được đo theo byte nào và xử lý chuỗi vượt giới hạn ra sao? | Làm thế nào nhận diện loại bản ghi, version và ranh giới payload trong một luồng byte? | Kiểm tra độ dài và ngân sách nào cần thực hiện trước và trong khi đọc dữ liệu ngoài? | Nên chọn byte format tự thiết kế hay Java Serialization trong từng ngữ cảnh và dựa trên tiêu chí nào? |
+  | Giá trị đối với OOP/module | Nền tảng đặc tả byte cho dữ liệu kiểu nguyên thủy | Kỹ năng xây dựng đường ống ghi đọc nhị phân | Giữ tương thích và đúng vị trí trường của định dạng | Tránh lỗi giải mã bit và tương tác với wire format | Bảo đảm tính toàn vẹn chiều dài khi đọc payload | Tương thích chính xác định dạng chuỗi trong data streams | Chủ động kiểm soát biên dữ liệu String trong định dạng | Có schema nhị phân rõ ràng và khả năng phát triển phiên bản | An toàn bộ nhớ và tài nguyên I/O khi giải mã | Quyết định kiến trúc lưu trữ và an toàn deserialization |
+  | Tư duy hình thành | Từ giá trị có kiểu đến byte layout xác định | Từ hợp đồng API sang chương trình round-trip kiểm chứng được | Đọc byte theo schema thay vì suy đoán kiểu | Diễn giải bit dựa vào signedness và byte order được quy định | Xác minh lượng dữ liệu thực nhận trước khi parse | Đọc byte theo encoding và framing thực tế | Đo kích thước encoded thực trước khi chọn giao thức | Từ từng trường sang khung giao thức có điều kiện hợp lệ | Coi length là đầu vào chưa tin cậy và kiểm soát quota | Lựa chọn hợp đồng dữ liệu theo vòng đời, khả năng liên thông và rủi ro |

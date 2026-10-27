@@ -1,0 +1,298 @@
+summaries:
+- id: file-systems-001
+  title: FileSystem, FileSystems và FileSystemProvider
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **FileSystem, FileSystems và FileSystemProvider**
+
+    Bài học xây dựng mô hình ba tầng của Java NIO.2: `FileSystems` là điểm vào để lấy hoặc mở filesystem, `FileSystem` quản lý một không gian đường dẫn, còn `FileSystemProvider` thực thi các thao tác theo scheme. Nhờ phân biệt chúng, người học chọn đúng API khi làm việc với tệp thường và ZIP/JAR.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiến trúc NIO.2
+
+    1. Vì sao FileSystems, FileSystem và FileSystemProvider là ba vai trò khác nhau dù cùng tham gia một lời gọi Files.readString?
+    2. Một provider có thể quản lý nhiều FileSystem, và một FileSystem có thể sinh nhiều Path theo quan hệ nào?
+    3. Vì sao Path được tạo bởi zipFs.getPath không trỏ vào hệ thống tệp mặc định?
+
+    ### Mở và sử dụng filesystem
+
+    1. Khi nào chọn getDefault, getFileSystem hoặc newFileSystem theo URI, và chúng có điều kiện tiên quyết gì?
+    2. Trong ví dụ mở ZIP hai lần, vì sao cần đóng filesystem trước khi mở lại và đọc dữ liệu vừa ghi?
+    3. Nếu runtime thiếu jdk.zipfs hoặc provider không hỗ trợ một thuộc tính, cách kiểm chứng và xử lý đúng là gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập sơ đồ API | Vẽ được quan hệ FileSystems → FileSystem → Path và nhánh FileSystemProvider xử lý một thao tác Files. |
+    | Chọn cách tạo filesystem | Giải thích bằng tình huống sự khác biệt getDefault, getFileSystem và newFileSystem cùng điều kiện thành công. |
+    | Sử dụng ZipFS | Phân tích chương trình tạo, đóng và mở lại ZIP để chỉ rõ Path archive và Path entry. |
+    | Chẩn đoán giới hạn | Phân biệt lỗi thiếu provider với lỗi lookup instance hoặc file system đã đóng. |
+- id: file-systems-002
+  title: Default file system và các provider được cài đặt
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Default file system và các provider được cài đặt**
+
+    Bài tập đặt nền tảng cho việc nhận diện default file system và danh sách provider thực sự được cài trên runtime. Người học phân biệt scheme, provider type và instance đã mở, tránh suy từ bản JDK phát triển rằng mọi runtime đều có cùng ZipFS/JRT.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Default filesystem và provider
+
+    1. Path.of(String) sử dụng filesystem nào và vì sao gọi nó không đồng nghĩa tạo tệp thật?
+    2. installedProviders trả danh sách loại provider hay danh sách mọi ổ đĩa/ZIP đã mở?
+    3. Vì sao default provider đứng đầu danh sách mà số lượng provider vẫn thay đổi theo JDK, module và classpath?
+
+    ### Nhận diện runtime và mount ZIP
+
+    1. Khi jar xuất hiện trong installedProviders, có thể lập tức dùng getFileSystem cho ZIP chưa mở không?
+    2. Trong chương trình khám phá provider, nên phân biệt URI scheme với FileSystem instance bằng những phép kiểm tra nào?
+    3. Runtime jlink thiếu ZIP provider sẽ biểu hiện như thế nào và đâu là cách xử lý có chứng cứ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thăm dò môi trường | Chạy InstalledProvidersDemo và lý giải scheme của default provider và các provider được liệt kê. |
+    | Phân biệt trạng thái | Trình bày vì sao provider đã cài không đồng nghĩa filesystem tương ứng đã mount. |
+    | Dùng Path đúng nguồn | Tạo Path bằng defaultFs.getPath và zipFs.getPath rồi so sánh FileSystem sở hữu. |
+    | Đánh giá tính khả chuyển | Nêu được nguyên nhân khác biệt các scheme khi chuyển từ JDK đầy đủ sang runtime tối giản. |
+- id: file-systems-003
+  title: Quan hệ giữa Path với FileSystem tạo ra nó
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Quan hệ giữa Path với FileSystem tạo ra nó**
+
+    Một Path luôn thuộc FileSystem tạo ra nó, nên cùng chuỗi đường dẫn vẫn có thể trỏ đến hai không gian tên khác nhau. Bài học giúp giữ nguyên ngữ nghĩa provider khi resolve/normalize, phân biệt so sánh tên với cùng tệp thật và chuyển dữ liệu giữa filesystem bằng thao tác phù hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Danh tính Path
+
+    1. Tại sao hai Path đều in ra /docs/readme.md vẫn có thể thuộc hai tệp khác nhau?
+    2. Phép so sánh getFileSystem, provider identity, Path.equals và Files.isSameFile trả lời những câu hỏi khác nhau nào?
+    3. Vì sao resolve(String) và normalize không chuyển Path từ ZIP sang default provider?
+
+    ### Tương tác giữa các filesystem
+
+    1. Vì sao resolve(Path) hoặc relativize(Path) trên hai provider khác nhau có thể ném ProviderMismatchException?
+    2. Nếu phải sao chép entry từ ZIP ra OS, tại sao Files.copy khác với phép resolve?
+    3. Điều gì xảy ra khi giữ Path trong ZIP sau khi FileSystem của nó đã close?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy nguồn Path | Phân loại Path do Path.of, fs.getPath và URI tạo ra bằng getFileSystem/provider. |
+    | Bảo toàn không gian tên | Viết phép nối tên con qua base.resolve(String) mà không làm mất provider gốc. |
+    | Chọn thao tác liên provider | Phân biệt phép xử lý path với Files.copy và nêu giới hạn atomicity của thao tác. |
+    | Kiểm tra vòng đời | Dự đoán kết quả đọc ZipFS khi còn mở và sau khi đã đóng. |
+- id: file-systems-004
+  title: newFileSystem, getFileSystem và quyền đóng tài nguyên
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **newFileSystem, getFileSystem và quyền đóng tài nguyên**
+
+    newFileSystem tạo một tài nguyên mà nơi gọi thường sở hữu, trong khi getFileSystem chỉ mượn một instance đang được quản lý. Bài học rèn quản lý vòng đời ZIP filesystem, tránh đóng instance chia sẻ hoặc trả Path sống lâu hơn tài nguyên nền.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tạo, mượn và đóng
+
+    1. Quyền đóng khác nhau ra sao giữa getDefault, newFileSystem và getFileSystem?
+    2. Vì sao borrowed == owner có thể đúng nhưng người mượn lại không được đóng ZIP FS?
+    3. Điều gì xảy ra nếu một method trả Path trong ZIP sau khi khối try-with-resources đã đóng fs?
+
+    ### Lỗi và đồng thời
+
+    1. Phân biệt tình huống FileSystemNotFoundException với FileSystemAlreadyExistsException như thế nào?
+    2. Vì sao mô hình nếu getFileSystem thất bại thì newFileSystem ngay ở mọi thread có rủi ro race?
+    3. Khi nhiều service cùng dùng ZipFS, nên xác định chủ sở hữu và điểm đóng bằng hợp đồng nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế ownership | Viết quy ước ai mở, ai mượn, ai đóng một FileSystem cho chức năng đọc archive. |
+    | Phân tích chương trình | Giải thích output của FileSystemLifecycleDemo qua các pha mở, mượn, đóng và mở lại. |
+    | Sửa lỗi vòng đời | Nhận diện ví dụ try(sharedFs) sai ownership và đổi cách trả dữ liệu/phạm vi xử lý. |
+    | Xử lý cạnh tranh | Đề xuất cách quản lý shared ZipFS để tránh mở trùng URI và đóng trước khi hoàn tất I/O. |
+- id: file-systems-005
+  title: 'ZIP file system: thao tác archive bằng Path và Files'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ZIP file system: thao tác archive bằng Path và Files**
+
+    ZipFS cho phép coi một archive là hệ thống tệp với các entry được xử lý bằng Path và Files. Người học thực hành tạo, duyệt, sao chép, đổi tên và xóa entry, đồng thời kiểm soát lifecycle, ghi dở, ZIP Slip và giới hạn dữ liệu không tin cậy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thao tác archive
+
+    1. Archive Path trên OS khác với Path entry từ zipFs.getPath ở điểm nào?
+    2. Trong ZipFsDemo, các thao tác createDirectories, copy, writeString, walk, move và delete tác động vào đâu?
+    3. Vì sao cần đóng Files.walk stream trước khi đóng ZipFS và phải mở lại archive nếu muốn xác nhận nội dung lưu?
+
+    ### Thiết kế an toàn
+
+    1. Khi nào nên dùng ZipFS thay cho ZipFile, ZipInputStream hoặc ZipOutputStream?
+    2. Vì sao giải nén entry ra OS phải kiểm tra traversal/symlink, số lượng entry và kích thước sau giải nén?
+    3. Vì sao cập nhật ZIP nhiều lần không nên mặc định có atomicity hoặc chi phí giống thư mục OS?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chạy thao tác ZIP | Phân tích đầu ra và trạng thái entry của ZipFsDemo qua hai lần mở archive. |
+    | Quản lý tài nguyên | Sử dụng try-with-resources cho FileSystem và Stream<Path> lấy từ Files.walk. |
+    | Lựa chọn công cụ | So sánh ZipFS với các API java.util.zip cho nhu cầu đọc tuần tự hoặc sửa nhiều entry. |
+    | Thẩm định ZIP đầu vào | Đề xuất giới hạn giải nén và kiểm soát đường dẫn để giảm ZIP Slip và ZIP bomb. |
+- id: file-systems-006
+  title: Root directories, FileStore và các đặc điểm provider
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Root directories, FileStore và các đặc điểm provider**
+
+    Root directory là gốc của namespace, FileStore là nguồn metadata về nơi lưu dữ liệu, còn provider quyết định các khả năng I/O. Bài học giúp khảo sát root, dung lượng, quyền và attribute view mà không giả định mô hình ổ đĩa Windows/Unix giống nhau.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Root và FileStore
+
+    1. Vì sao root / trên Linux không đồng nghĩa chỉ có một volume hay một FileStore?
+    2. getRootDirectories, Files.getFileStore(path) và FileSystem.getFileStores trả dữ liệu khác nhau ở đâu?
+    3. UsableSpace khác UnallocatedSpace như thế nào và vì sao không bảo đảm lệnh ghi sau đó thành công?
+
+    ### Metadata và tính khả chuyển
+
+    1. Khi cần dự tính dung lượng ghi vào thư mục con có mount riêng, phải lấy FileStore của đường dẫn nào?
+    2. Tại sao supportedFileAttributeViews hoặc supportsFileAttributeView chưa đồng nghĩa có quyền sửa mọi metadata?
+    3. Nếu store tạm mất kết nối hoặc không hỗ trợ POSIX view, cần xử lý kết quả và lỗi theo cách nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quan sát storage | Giải thích output StorageOverview gồm root, separator, FileStore và các đại lượng byte theo môi trường. |
+    | Chọn FileStore phù hợp | Xác định store bằng Files.getFileStore trên thư mục đích đang tồn tại thay vì đoán từ root. |
+    | Đánh giá khả năng | Kiểm tra view ở mức FileSystem và FileStore, sau đó xử lý lỗi thao tác thực tế. |
+    | Đọc dung lượng có điều kiện | Diễn giải usable/unallocated như thông tin tức thời và nêu ví dụ quota hoặc mount ảnh hưởng. |
+- id: file-systems-007
+  title: ProviderMismatchException, FileSystemNotFoundException và ClosedFileSystemException
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ProviderMismatchException, FileSystemNotFoundException và ClosedFileSystemException**
+
+    Ba unchecked exceptions là ba nhóm lỗi khác nhau: trộn provider, tìm filesystem chưa được mount và dùng filesystem đã đóng. Bài học hướng dẫn xác định điểm phát sinh, phân biệt với NoSuchFileException và sửa đúng nơi tạo Path hoặc quản lý vòng đời.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân loại nguyên nhân
+
+    1. Khi resolve một Path ZIP với Path OS, vì sao lỗi có thể là ProviderMismatchException thay vì NoSuchFileException?
+    2. FileSystemNotFoundException ở getFileSystem khác với ProviderNotFoundException do thiếu scheme/provider ở chỗ nào?
+    3. Vì sao một Path còn nằm trong bộ nhớ vẫn có thể ném ClosedFileSystemException khi gọi Files.readString?
+
+    ### Khắc phục bằng đúng API
+
+    1. Nếu ZIP tồn tại nhưng chưa mount, nên chọn bước mở filesystem nào trước khi đọc entry?
+    2. Vì sao retry readString trên cùng Path đã đóng không giải quyết được lỗi lifecycle?
+    3. Làm sao thiết kế một dịch vụ dùng nhiều filesystem để tránh trả Path quá hạn sống hoặc đóng instance mượn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chẩn đoán exception | Lập bảng phân biệt mismatch/not found/closed với nguyên nhân, thao tác và cách sửa. |
+    | Dự đoán runtime | Giải thích thứ tự output ba lỗi trong FileSystemExceptionsDemo. |
+    | Sửa sai nguồn Path | Viết lại phép resolve không tương thích bằng Path lấy từ cùng provider. |
+    | Thiết kế vòng đời | Đề xuất chỗ mở/đóng ZIP FS để Path chỉ được dùng khi còn hợp lệ. |
+- id: file-systems-008
+  title: Giới hạn chuyển sang File và giả định về đường dẫn vật lý
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn chuyển sang File và giả định về đường dẫn vật lý**
+
+    `java.io.File` chỉ biểu diễn tên đường dẫn theo mô hình filesystem mặc định, còn Path có thể thuộc provider khác như ZIP/JAR. Bài học chỉ ra giới hạn toFile, toRealPath và toUri, rồi hướng dẫn thích nghi với thư viện legacy mà không đánh mất dữ liệu hay ngữ nghĩa đường dẫn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giới hạn chuyển đổi
+
+    1. Vì sao Path.toFile chỉ hỗ trợ default provider nhưng không cần tệp vật lý tồn tại?
+    2. Vì sao zipEntry.toFile và new File(zipEntry.toString()) có hậu quả khác nhau?
+    3. toAbsolutePath, normalize, toRealPath và toUri giữ lại những gì, không thể chứng minh điều gì về vị trí vật lý?
+
+    ### Tích hợp thư viện cũ
+
+    1. Nếu API legacy chỉ nhận File mà dữ liệu nằm trong ZIP, các lựa chọn dùng Path, InputStream hoặc staging copy khác nhau thế nào?
+    2. Vì sao staging file không mang cùng danh tính, metadata và quyền sửa ngược dữ liệu gốc?
+    3. Khi truyền một Path đa provider giữa các lớp, cách tạo path con nào tránh vô tình ép về hệ thống tệp mặc định?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm chứng toFile | Dự đoán kết quả của regularFile.toFile so với zipEntry.toFile trong PathToFileLimitDemo. |
+    | Giữ ngữ nghĩa provider | Sửa childBad dùng Path.of(base.toString(),...) thành base.resolve(...). |
+    | Thiết kế adapter legacy | Mô tả vòng đời staging copy, quyền truy cập, dọn dữ liệu và giới hạn đồng bộ ngược. |
+    | Giải thích path vật lý | Phân biệt thành công chuyển File với kết luận tệp nằm trên ổ đĩa cục bộ. |
+- id: file-systems-009
+  title: Khả năng mở rộng provider và ranh giới của Java API
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khả năng mở rộng provider và ranh giới của Java API**
+
+    FileSystemProvider là SPI giúp Java NIO.2 mở rộng ra nhiều backend, nhưng API chung không cam kết hỗ trợ mọi thao tác hay tính nguyên tử. Người học khảo sát provider discovery, cấu hình service/module, điều kiện hỗ trợ và phạm vi triển khai provider tự viết.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khả năng mở rộng SPI
+
+    1. Một custom FileSystemProvider phải cung cấp thêm những loại FileSystem/Path và thao tác nào ngoài getScheme?
+    2. ServiceLoader, META-INF/services và module provides tham gia việc khám phá provider ra sao?
+    3. Vì sao thêm service descriptor chưa đủ để code ứng dụng thao tác được với backend mới?
+
+    ### Ranh giới hợp đồng API
+
+    1. Vì sao Files.copy giữa hai provider không tự mang nghĩa copy đệ quy hoặc thao tác nguyên tử?
+    2. Tại sao POSIX metadata, WatchService, locks và ATOMIC_MOVE có thể khác nhau giữa các provider?
+    3. Thiết kế một API đa provider cần chọn Path, capability, exception và lifecycle theo những nguyên tắc nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ kiến trúc SPI | Thể hiện được đường đi Files → FileSystemProvider → backend và vai trò của Path/FileStore. |
+    | Phân tích discovery | Nêu được yêu cầu package, descriptor hoặc module provides để runtime phát hiện custom provider. |
+    | Thẩm định portable API | Đánh giá rủi ro khi dùng ATOMIC_MOVE, attribute view, watch và copy trên backend không hỗ trợ. |
+    | Xác định phạm vi triển khai | Liệt kê trách nhiệm tối thiểu của provider và các giới hạn consistency/concurrency cần tài liệu hóa. |

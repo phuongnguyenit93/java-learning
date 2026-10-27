@@ -1,0 +1,31 @@
+sections:
+  resources-and-errors-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  resources-and-errors-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  resources-and-errors-003:
+    difficulty: BASIC
+    isImportant: true
+  resources-and-errors-004:
+    difficulty: ADVANCED
+    isImportant: true
+  resources-and-errors-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  resources-and-errors-006:
+    difficulty: ADVANCED
+    isImportant: true
+  resources-and-errors-007:
+    difficulty: ADVANCED
+    isImportant: true
+  resources-and-errors-008:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  resources-and-errors-009:
+    difficulty: ADVANCED
+    isImportant: true
+  resources-and-errors-010:
+    difficulty: ADVANCED
+    isImportant: true

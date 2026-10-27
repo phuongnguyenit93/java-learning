@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "I/O BẤT ĐỒNG BỘ — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: asynchronous-io-001
+    order: 1
+    title: "Phân biệt asynchronous I/O với non-blocking I/O"
+    description: "Thiết lập khái niệm readiness và completion, phân biệt non-blocking Selector với API asynchronous file/socket."
+    transition: 
+      to: asynchronous-io-002
+      description: "Từ phân biệt readiness/completion chuyển sang thao tác file bất đồng bộ với offset tường minh"
+  - id: asynchronous-io-002
+    order: 2
+    title: "AsynchronousFileChannel và vị trí thao tác tường minh"
+    description: "Đi sâu vào read/write tệp với vị trí tường minh, theo dõi partial result, lifecycle và tính độc lập giữa các vùng dữ liệu."
+    transition: 
+      to: asynchronous-io-003
+      description: "Từ API file sang hai cách tiếp nhận kết quả ở mức Future và CompletionHandler"
+  - id: asynchronous-io-003
+    order: 3
+    title: "Future và CompletionHandler"
+    description: "Đối chiếu Future và CompletionHandler từ kết quả, attachment, lỗi, partial I/O đến timeout và cancellation."
+    transition: 
+      to: asynchronous-io-004
+      description: "Từ công cụ nhận kết quả chuyển sang tổ chức kết nối TCP và state riêng của mỗi socket"
+  - id: asynchronous-io-004
+    order: 4
+    title: "AsynchronousSocketChannel và AsynchronousServerSocketChannel"
+    description: "Áp dụng async cho TCP server/client, quản lý accept liên tục, luồng byte, pending operation và connection state."
+    transition: 
+      to: asynchronous-io-005
+      description: "Từ sử dụng socket bất đồng bộ đến quản lý group và luồng thực thi completion"
+  - id: asynchronous-io-005
+    order: 5
+    title: "AsynchronousChannelGroup và nhóm luồng thực thi"
+    description: "Làm rõ ownership, thread pool và lifecycle của AsynchronousChannelGroup, đối chiếu executor dành cho async file channel."
+    transition: 
+      to: asynchronous-io-006
+      description: "Từ thread pool/callback sang invariant về vòng đời buffer được giao cho operation"
+  - id: asynchronous-io-006
+    order: 6
+    title: "Không sửa hoặc tái sử dụng buffer khi thao tác chưa hoàn tất"
+    description: "Bảo vệ dữ liệu và state của ByteBuffer trong suốt pending operation; tránh reuse sớm và alias storage."
+    transition: 
+      to: asynchronous-io-007
+      description: "Từ giữ đúng quyền sở hữu buffer đến thuật toán tiếp tục khi chỉ xử lý được một phần"
+  - id: asynchronous-io-007
+    order: 7
+    title: "Tiếp tục đọc ghi khi kết quả chỉ hoàn tất một phần"
+    description: "Dạy vòng lặp hoặc resubmit sau partial completion, phối hợp ByteBuffer, file offset, EOF và framing TCP."
+    transition: 
+      to: asynchronous-io-008
+      description: "Từ đường thành công partial I/O sang đường lỗi, timeout, cancellation và close"
+  - id: asynchronous-io-008
+    order: 8
+    title: "Xử lý lỗi, ngắt, timeout và đóng channel"
+    description: "Đào sâu failure path, interrupt, timeout semantics, cancellation và close khi operation còn pending."
+    transition: 
+      to: asynchronous-io-009
+      description: "Từ lifecycle từng operation sang giới hạn tổng số operation pending và backpressure"
+  - id: asynchronous-io-009
+    order: 9
+    title: "Giới hạn số thao tác đồng thời và áp lực lên tài nguyên"
+    description: "Thiết kế giới hạn pending I/O bằng Semaphore, tính tài nguyên và vận hành backpressure/callback dưới tải."
+    transition: 
+      to: asynchronous-io-010
+      description: "Từ các cơ chế và giới hạn đã học sang quyết định chọn mô hình I/O theo workload"
+  - id: asynchronous-io-010
+    order: 10
+    title: "Lựa chọn blocking, selector hoặc API bất đồng bộ theo bài toán"
+    description: "Tổng hợp blocking, selector và asynchronous API để đưa ra lựa chọn dựa trên workload, SLO, portability và chi phí quản lý state."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Phân biệt asynchronous I/O với non-blocking I/O | AsynchronousFileChannel và vị trí thao tác tường minh | Future và CompletionHandler | AsynchronousSocketChannel và AsynchronousServerSocketChannel | AsynchronousChannelGroup và nhóm luồng thực thi | Không sửa hoặc tái sử dụng buffer khi thao tác chưa hoàn tất | Tiếp tục đọc ghi khi kết quả chỉ hoàn tất một phần | Xử lý lỗi, ngắt, timeout và đóng channel | Giới hạn số thao tác đồng thời và áp lực lên tài nguyên | Lựa chọn blocking, selector hoặc API bất đồng bộ theo bài toán |
+  | Vấn đề cần hiểu | Một thao tác đã sẵn sàng khác gì với đã hoàn thành? | Làm thế nào đọc/ghi nhiều vùng file bất đồng bộ mà không lệch offset? | Nhận kết quả async bằng chờ Future hay callback phù hợp hơn? | Làm sao vận hành nhiều TCP connection bằng completion API? | Pool xử lý completion của nhiều socket được quản lý ra sao? | Khi nào buffer được phép thay đổi hoặc trả về pool? | Làm sao biết toàn bộ dữ liệu đã chuyển xong sau nhiều lượt I/O? | Làm sao kết thúc async operation an toàn khi lỗi hoặc quá hạn? | Vì sao càng nhiều operation async có thể làm nghẽn cả hệ thống? | Workload nào phù hợp blocking, readiness hay completion? |
+  | Giá trị đối với OOP/module | Tránh chọn sai mô hình concurrency | Thực hiện thao tác file độc lập và kiểm soát vị trí | Điều phối completion có kiểm soát | Xây luồng kết nối TCP bất đồng bộ | Điều chỉnh hiệu năng và shutdown sạch | Ngăn race và corrupt dữ liệu trong async I/O | Tránh mất hoặc nhân đôi bytes | Ngăn resource leak và state không xác định | Giữ mức tải và độ trễ kiểm soát được | Ra quyết định kiến trúc có lý do |
+  | Tư duy hình thành | Phân biệt trạng thái lời gọi và kết quả I/O | Giữ state theo từng operation, không dựa vào shared cursor | Mỗi operation cần tuyến success/failure riêng | Mỗi kết nối có state và lifecycle riêng | Tách tài nguyên thực thi khỏi logic request | Ownership kéo dài đến khi operation kết thúc | Phân biệt operation completion và message completion | Mỗi kiểu kết thúc có hậu quả khác nhau | Mỗi request pending vẫn giữ tài nguyên hữu hạn | Đo chi phí và mức độ phức tạp trước khi chọn |

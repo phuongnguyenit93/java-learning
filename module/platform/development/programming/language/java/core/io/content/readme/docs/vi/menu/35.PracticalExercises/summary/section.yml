@@ -1,0 +1,96 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "THỰC HÀNH JAVA I/O — TỪ XỬ LÝ FILE ĐẾN KIỂM THỬ AN TOÀN"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: practical-exercises-001
+    order: 1
+    title: "Sao chép tệp nhị phân với buffer giới hạn"
+    description: "Sao chép nhị phân bằng buffer cố định, xử lý đọc/ghi một phần và chứng minh byte đầu ra khớp byte đầu vào."
+    transition:
+      to: practical-exercises-002
+      description: "Từ bảo toàn byte nhị phân, chuyển sang giải mã và mã hóa văn bản bằng charset có kiểm soát."
+  - id: practical-exercises-002
+    order: 2
+    title: "Chuyển văn bản giữa hai charset có kiểm tra lỗi"
+    description: "Chuyển mã streaming từ charset nguồn sang đích bằng decoder/encoder strict, xử lý BOM, dữ liệu lỗi và staging."
+    transition:
+      to: practical-exercises-003
+      description: "Sau khi chọn charset đúng, áp dụng đọc văn bản theo dòng để tổng hợp file lớn."
+  - id: practical-exercises-003
+    order: 3
+    title: "Đọc file lớn theo dòng và thống kê dữ liệu"
+    description: "Thống kê file lớn theo dòng bằng streaming và accumulator, quản lý charset, dữ liệu không hợp lệ, overflow và memory."
+    transition:
+      to: practical-exercises-004
+      description: "Sau thống kê text, chuyển sang thiết kế khung byte có version và length để lưu/đọc binary."
+  - id: practical-exercises-004
+    order: 4
+    title: "Thiết kế định dạng nhị phân có version và length"
+    description: "Thiết kế frame nhị phân có magic, version, length, byte order, CRC và parser từ chối dữ liệu không đáng tin."
+    transition:
+      to: practical-exercises-005
+      description: "Khi biết cách diễn giải dữ liệu trong file, chuyển sang duyệt tập hợp file bằng NIO.2 và metadata."
+  - id: practical-exercises-005
+    order: 5
+    title: "Xây dựng công cụ duyệt cây và lọc tệp"
+    description: "Duyệt cây bằng walkFileTree và BasicFileAttributes, lọc theo tiêu chí, xử lý lỗi và symbolic links."
+    transition:
+      to: practical-exercises-006
+      description: "Công cụ xử lý file thường cần xuất kết quả; tiếp theo học ghi tạm và publish file thay thế."
+  - id: practical-exercises-006
+    order: 6
+    title: "Cập nhật tệp bằng ghi tạm và thay thế"
+    description: "Cập nhật tệp qua staging và atomic rename nơi được hỗ trợ; kiểm tra cleanup, metadata, crash durability và concurrency."
+    transition:
+      to: practical-exercises-007
+      description: "Khi đã hiểu update file, so sánh hai API cập nhật trực tiếp record tại offset cố định."
+  - id: practical-exercises-007
+    order: 7
+    title: "So sánh RandomAccessFile với FileChannel trên bản ghi cố định"
+    description: "So sánh RandomAccessFile và FileChannel trên record cố định, positional I/O, ByteBuffer, layout và partial read/write."
+    transition:
+      to: practical-exercises-008
+      description: "Từ truy cập file ngẫu nhiên, chuyển sang event loop điều phối I/O readiness của nhiều socket."
+  - id: practical-exercises-008
+    order: 8
+    title: "Xây dựng vòng selector cho giao tiếp TCP đơn giản"
+    description: "Xây TCP echo server dùng Selector, per-connection framing, interest ops, partial I/O và backpressure."
+    transition:
+      to: practical-exercises-009
+      description: "Từ sự kiện trên socket, thực hành cơ chế thông báo thay đổi filesystem và phục hồi mất sự kiện."
+  - id: practical-exercises-009
+    order: 9
+    title: "Theo dõi thư mục bằng WatchService có xử lý overflow"
+    description: "Sử dụng WatchService với reset/OVERFLOW, rescan snapshot và reconcile theo trạng thái thực tế."
+    transition:
+      to: practical-exercises-010
+      description: "Khi xử lý nhiều file, cần nén/giải nén archive và bảo vệ đường dẫn từ dữ liệu không tin cậy."
+  - id: practical-exercises-010
+    order: 10
+    title: "Nén, giải nén archive có giới hạn và kiểm tra đường dẫn"
+    description: "Nén/giải nén ZIP với quota thực đọc, kiểm tra entry path, symlink và phòng chống Zip Slip/zip bomb."
+    transition:
+      to: practical-exercises-011
+      description: "Từ archive là dữ liệu ngoài không tin cậy, chuyển sang kiểm soát đồ thị đối tượng khi deserialization."
+  - id: practical-exercises-011
+    order: 11
+    title: "Minh họa serialization và cấu hình ObjectInputFilter"
+    description: "Serialization Java với ObjectInputFilter, giới hạn class/depth/array/bytes và các ca từ chối dữ liệu."
+    transition:
+      to: practical-exercises-012
+      description: "Sau các bài lab chuyên biệt, tích hợp đọc/xử lý/ghi và kiểm thử đầy đủ các nhánh thất bại."
+  - id: practical-exercises-012
+    order: 12
+    title: "Hoàn thiện ví dụ tích hợp với kiểm thử các nhánh thất bại"
+    description: "Hoàn thiện pipeline I/O với strict decoding, validation, aggregation, temp replace và 11 negative/success tests."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Sao chép tệp nhị phân với buffer giới hạn | Chuyển văn bản giữa hai charset có kiểm tra lỗi | Đọc file lớn theo dòng và thống kê dữ liệu | Thiết kế định dạng nhị phân có version và length | Xây dựng công cụ duyệt cây và lọc tệp | Cập nhật tệp bằng ghi tạm và thay thế | So sánh RandomAccessFile với FileChannel trên bản ghi cố định | Xây dựng vòng selector cho giao tiếp TCP đơn giản | Theo dõi thư mục bằng WatchService có xử lý overflow | Nén, giải nén archive có giới hạn và kiểm tra đường dẫn | Minh họa serialization và cấu hình ObjectInputFilter | Hoàn thiện ví dụ tích hợp với kiểm thử các nhánh thất bại |
+  | Vấn đề cần hiểu | Giữ bộ nhớ có giới hạn và bảo toàn từng byte khi sao chép thế nào? | Làm thế nào chuyển charset mà không mất ký tự âm thầm? | Làm sao thống kê file nhiều GB trong một lượt mà không gom mọi dòng? | Làm thế nào đọc nhiều phiên bản frame mà không cấp phát hoặc parse sai? | Làm sao duyệt đúng cây tệp và lọc mà vẫn tôn trọng ranh giới root? | Làm thế nào bảo vệ bản file hợp lệ khi việc tạo bản mới thất bại? | Khi hai API xử lý cùng fixed record, các lỗi offset và state khác nhau ra sao? | Làm sao một selector xử lý nhiều socket mà không mất dữ liệu giữa các lượt readiness? | Khi watch events bị mất, làm sao khôi phục trạng thái thư mục có thể tin cậy? | Kiểm soát archive không đáng tin để không ghi ra ngoài root hay vượt quota thế nào? | Làm sao kiểm soát kiểu và quy mô object graph khi deserialization? | Làm sao chứng minh pipeline I/O vẫn bảo toàn đầu ra cũ khi một pha thất bại? |
+  | Giá trị đối với OOP/module | Chép file lớn với kết quả đối chiếu được | Bảo toàn nội dung khi di chuyển giữa hệ thống mã hóa | Xử lý được dữ liệu lớn và xác minh số liệu chính xác | Tạo giao thức lưu trữ nhị phân kiểm tra được | Tạo tiện ích quét filesystem có hành vi dự đoán được | Giảm nguy cơ publish file dở dang hoặc làm mất cấu hình cũ | Chọn cách cập nhật record chính xác và có kiểm chứng | Vận hành event loop non-blocking có giới hạn tài nguyên | Giảm mất cập nhật khi theo dõi filesystem | Bảo vệ filesystem khi nhập archive | Giảm rủi ro và phạm vi dữ liệu Java object không đáng tin | Tổng hợp kiến thức I/O thành chương trình kiểm chứng được |
+  | Tư duy hình thành | Duy trì bất biến trên từng chunk, không giả định I/O đầy đủ | Xác định hợp đồng mã hóa và chính sách xử lý dữ liệu sai | Tính toán gia tăng với trạng thái vừa đủ | Đặc tả định dạng và giới hạn trước khi giải mã | Tách chính sách duyệt, tiêu chí lọc và xử lý lỗi | Tách giai đoạn chuẩn bị dữ liệu khỏi điểm công bố | Đánh giá API trên cùng format, invariant và workload | Tách readiness, dữ liệu đã nhận và trạng thái từng kết nối | Dùng event làm hint, xác nhận bằng snapshot | Xác thực mọi đường dẫn và ngân sách trước khi tạo file | Ràng buộc deserialization bằng chính sách loại và ngân sách tài nguyên | Kiểm thử cả kết quả đúng và trạng thái sau lỗi |

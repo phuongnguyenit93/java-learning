@@ -1,0 +1,288 @@
+summaries:
+- id: character-streams-001
+  title: Reader và Writer xử lý đơn vị char
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Reader và Writer xử lý đơn vị char**
+
+    Bài đặt nền tảng về `Reader` và `Writer`: thao tác trên UTF-16 code unit, khác byte, Unicode code point và ký tự hiển thị. Người học cần hiểu các lớp đại diện, charset khi kết nối với file/byte stream và trách nhiệm đóng tài nguyên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng và đơn vị dữ liệu
+
+    1. Vì sao `Reader.read()` trả về `int` thay vì `char`, và `-1` khác giá trị `0xFFFF` ra sao?
+    2. Một emoji ngoài BMP cần bao nhiêu `char` và điều đó ảnh hưởng gì đến `Writer.write(int)`?
+
+    ### Lựa chọn và vòng đời
+
+    1. Khi nào dùng `StringReader`, `BufferedReader` và `InputStreamReader` cho các nguồn khác nhau?
+    2. `flush()` và `close()` khác nhau ở điểm nào; đóng wrapper ảnh hưởng nguồn bên dưới ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đơn vị ký tự | Đếm code unit và code point trong chuỗi có emoji, đối chiếu với byte UTF-8. |
+    | Luồng ký tự cơ bản | Giải thích vòng lặp `read()` đến EOF và ghi lại chính xác từng code unit. |
+    | Chọn loại stream | Chỉ ra reader/writer tương ứng cho bộ nhớ, file UTF-8 và nguồn byte. |
+    | Quản lý tài nguyên | Đặt wrapper trong `try-with-resources` và giải thích quyền sở hữu. |
+- id: character-streams-002
+  title: Đọc và ghi char[], String và từng phần dữ liệu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đọc và ghi char[], String và từng phần dữ liệu**
+
+    Bài làm rõ `char[]`, `String`, `StringBuilder` và hợp đồng `off`/`len` để đọc/ghi từng phần khi văn bản có thể lớn. Trọng tâm là tôn trọng số ký tự thực đọc, tránh phần cũ trong buffer và giữ toàn vẹn Unicode hoặc newline khi xử lý.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vùng dữ liệu hợp lệ
+
+    1. Vì sao `writer.write(buffer)` có thể chèn ký tự thừa sau lượt đọc ngắn?
+    2. `write(String, off, len)` khác `append(CharSequence, start, end)` ra sao?
+
+    ### Xử lý từng phần
+
+    1. Khi nào dùng `StringBuilder` thay vì ghi trực tiếp từ buffer ra Writer?
+    2. Vì sao một lần `read(char[])` không tương ứng một dòng hay một thông điệp?
+    3. Làm thế nào sao chép giữ nguyên dấu xuống dòng và surrogate pair qua ranh giới buffer?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm soát offset và length | Dự đoán đoạn ký tự chính xác được đọc/ghi với các giá trị off/len. |
+    | Sao chép theo khối | Viết vòng lặp `read(buffer)` và `write(buffer,0,count)` đúng với lần cuối ngắn. |
+    | Phân biệt cấu trúc dữ liệu | Giải thích chi phí tích lũy nhiều đoạn trong `StringBuilder` so với streaming. |
+    | Bảo toàn văn bản | Kiểm chứng bản sao chứa emoji, CRLF và LF không bị đổi nội dung ký tự. |
+- id: character-streams-003
+  title: EOF của Reader và số ký tự thực tế đã đọc
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **EOF của Reader và số ký tự thực tế đã đọc**
+
+    Bài tập trung vào EOF, short read và số ký tự thực nhận từ `Reader`. Người học phân biệt `-1`, `0` của yêu cầu rỗng, `null` từ `readLine()` và viết logic đọc đủ N ký tự có phát hiện EOF sớm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận biết kết thúc
+
+    1. Vì sao ép kết quả `Reader.read()` sang `char` trước khi so với `-1` là sai?
+    2. Vì sao `readLine()` trả `""` khác `null`, và `ready()` không dùng để xác nhận EOF?
+
+    ### Đọc đủ số lượng
+
+    1. Một lượt đọc ít hơn kích thước buffer có chứng minh đã hết luồng không?
+    2. Nếu phải đọc đủ N ký tự, xử lý EOF khi mới nhận một phần như thế nào?
+    3. Vì sao `read(dst,0,0)` có thể trả 0 ngay cả khi đã hết dữ liệu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện EOF | Giải thích chuỗi kết quả `65`, `65535`, `-1` của Reader. |
+    | Đếm ký tự thực đọc | Cộng đúng số lượng n qua nhiều lượt short read. |
+    | Đọc theo hợp đồng độ dài | Thiết kế hàm đọc N đơn vị hoặc ném `EOFException` khi thiếu. |
+    | Xử lý dòng trống | Phân biệt `""` và `null` khi đọc với `BufferedReader`. |
+- id: character-streams-004
+  title: InputStreamReader nối luồng byte với ký tự
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **InputStreamReader nối luồng byte với ký tự**
+
+    Bài giải thích `InputStreamReader` như cầu nối byte → ký tự có decoder giữ trạng thái. Người học chọn charset, xử lý byte UTF-8 bị chia giữa các lượt đọc và quyết định báo lỗi hay thay thế khi byte đầu vào không hợp lệ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quá trình giải mã
+
+    1. Vì sao ép mỗi byte UTF-8 thành `char` không tái tạo được từ `Café`?
+    2. Tại sao decoder cần giữ trạng thái nếu các byte tạo nên một ký tự đến ở các lượt khác nhau?
+
+    ### Chính sách dữ liệu và ownership
+
+    1. Khi nào dùng `InputStreamReader` thay vì `Files.newBufferedReader`?
+    2. Cấu hình `CharsetDecoder` với `REPORT` thay đổi phản ứng trước UTF-8 hỏng thế nào?
+    3. Vì sao không được tùy tiện đọc trực tiếp stream dưới khi Reader đã đọc trước?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lắp ghép decoder | Tạo pipeline InputStream → InputStreamReader → BufferedReader có UTF-8 tường minh. |
+    | Chứng minh giải mã theo trạng thái | Giải thích đúng kết quả khi nguồn chỉ trả một byte mỗi lần. |
+    | Kiểm tra byte lỗi | So sánh dữ liệu malformed dưới chế độ thay thế và `REPORT`. |
+    | Quản lý vòng đời | Giải thích việc đóng Reader đóng cả InputStream được bọc. |
+- id: character-streams-005
+  title: OutputStreamWriter nối ký tự với luồng byte
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **OutputStreamWriter nối ký tự với luồng byte**
+
+    Bài giải thích `OutputStreamWriter` chuyển ký tự thành byte theo charset và cách phối hợp với `BufferedWriter`. Người học kiểm tra byte UTF-8, thời điểm flush/close và xử lý ký tự không biểu diễn được.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quá trình mã hóa
+
+    1. Vì sao `String.length()` không cho số byte UTF-8 sẽ ghi ra file?
+    2. Tại sao `write(int)` không phải cách ghi trực tiếp Unicode code point ngoài BMP?
+
+    ### Buffer và lỗi mã hóa
+
+    1. Nên đặt `BufferedWriter` ở tầng nào và flush writer nào để đẩy dữ liệu xuống dưới?
+    2. `flush` khác `close`, độ bền ổ đĩa và ACK mạng như thế nào?
+    3. Khi nào cần `CharsetEncoder` với `CodingErrorAction.REPORT`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ghép lớp mã hóa | Sơ đồ hóa pipeline Writer → OutputStreamWriter → OutputStream. |
+    | Kiểm tra byte UTF-8 | Dự đoán số byte và dãy hex từ text có chữ có dấu, emoji. |
+    | Quản lý đệm | Phân tích sự khác biệt giữa write, flush và close. |
+    | Phát hiện ký tự không thể mã hóa | Cấu hình US-ASCII encoder REPORT và nêu kết quả khi ghi `é`. |
+- id: character-streams-006
+  title: FileReader, FileWriter và lựa chọn charset
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **FileReader, FileWriter và lựa chọn charset**
+
+    Bài ứng dụng `FileReader` và `FileWriter` với charset chỉ định trên Java 17+, phân biệt mặc định của các API Files. Trọng tâm gồm ghi đè/append, mojibake, BOM và chuyển mã file legacy khi biết đúng charset nguồn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### File và charset
+
+    1. FileReader không chỉ định charset trên Java 17 khác gì `Files.newBufferedReader(path)`?
+    2. Vì sao giải mã UTF-8 bằng Latin-1 tạo `CafÃ©` dù dãy byte gốc không đổi?
+
+    ### Thao tác ghi và chuyển mã
+
+    1. `new FileWriter(path, UTF_8, true)` khác phiên bản không append thế nào?
+    2. Vì sao chuyển mã legacy phải phân biệt charset nguồn/đích và tránh ghi lên chính file nguồn?
+    3. BOM và `newLine()` có thể làm thay đổi biểu diễn byte ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc/ghi đúng charset | Tạo file UTF-8 bằng FileWriter và đọc lại bằng FileReader explicit charset. |
+    | Kiểm soát hành vi file | Giải thích và kiểm chứng overwrite, append và separator dòng. |
+    | Chẩn đoán dữ liệu lỗi dấu | Phân tích cùng dãy `C3 A9` dưới UTF-8 và Latin-1. |
+    | Thiết kế chuyển mã | Mô tả pipeline đọc Latin-1, ghi UTF-8 vào đích khác với nguồn. |
+- id: character-streams-007
+  title: Reader.transferTo và giới hạn xử lý dữ liệu lớn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Reader.transferTo và giới hạn xử lý dữ liệu lớn**
+
+    Bài phân tích `Reader.transferTo(Writer)` khi nguồn lớn hoặc không tin cậy: copy đến EOF, không có quota/timeout/rollback và không tự flush/close. Người học thiết kế bản sao có giới hạn, phân biệt quota UTF-16 với byte và bảo vệ đích khỏi dữ liệu dở.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng transferTo
+
+    1. Giá trị Reader.transferTo trả về là số code unit hay byte?
+    2. Vì sao transferTo không tự đóng, flush hoặc rollback đích?
+
+    ### Tài nguyên và thất bại
+
+    1. Nếu nguồn không bao giờ báo EOF, timeout/cancellation được thiết kế ở đâu?
+    2. Làm thế nào kiểm tra nguồn vượt N code unit bằng một lượt đọc thử?
+    3. Vì sao đích StringWriter có thể hết heap và lỗi quota vẫn có thể để lại dữ liệu dở?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc hợp đồng API | Giải thích `A😀B\n` được truyền 5 UTF-16 units nhưng mã hóa thành 7 byte UTF-8. |
+    | Giới hạn dữ liệu | Triển khai vòng copy giới hạn N code unit, phát hiện nguồn còn dữ liệu. |
+    | Phân tích tài nguyên | Đánh giá nguy cơ source vô hạn, RAM của StringWriter và disk exhaustion. |
+    | Xử lý ghi dở | Thiết kế ghi file tạm và chỉ công bố bản đích sau khi xác minh đầy đủ. |
+- id: character-streams-008
+  title: Readable, Appendable và khả năng ghép API
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Readable, Appendable và khả năng ghép API**
+
+    Bài giới thiệu cách ghép API ký tự theo hợp đồng tối thiểu `Readable` và `Appendable` cùng `CharBuffer`. Người học vận hành position/limit đúng qua `read → flip → append → clear`, xử lý trường hợp không tiến triển và phân biệt trách nhiệm sở hữu của interface với Reader/Writer.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế giao diện
+
+    1. Khi nào tham số `Appendable` phù hợp hơn `Writer`?
+    2. `Readable` có bắt buộc hỗ trợ `close()` và đọc mảng char không?
+
+    ### Buffer và thành phần ghép
+
+    1. Vì sao cần `flip()` trước `append(buffer)`; `clear()` có xóa nội dung vật lý không?
+    2. Cách nào tránh vòng lặp CPU vô hạn khi `Readable` trả 0?
+    3. `Scanner` và `Formatter` dùng hai interface này để ghép API ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế API đa hình | Viết helper chấp nhận Readable và Appendable cho nguồn/đích khác nhau. |
+    | Vận hành CharBuffer | Mô phỏng vị trí, giới hạn và dữ liệu hợp lệ trong vòng read–flip–append–clear. |
+    | Xử lý thiếu tiến độ | Chọn hành vi hợp lý với read trả 0 mà không nhầm là EOF. |
+    | Phân biệt ownership | Chỉ ra khả năng close/flush của Reader/Writer và giới hạn của hai interface. |
+- id: character-streams-009
+  title: Vì sao không dùng luồng ký tự để sao chép dữ liệu nhị phân
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vì sao không dùng luồng ký tự để sao chép dữ liệu nhị phân**
+
+    Bài kết thúc chương bằng ranh giới bắt buộc giữa xử lý văn bản và sao chép binary. Người học thấy byte `FF` có thể biến thành `EF BF BD` khi giải mã rồi mã hóa UTF-8, hiểu vì sao xử lý dòng đổi CRLF và chọn Files.copy hoặc byte stream để kiểm tra nguyên vẹn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tính toàn vẹn byte
+
+    1. Vì sao cùng charset UTF-8 ở reader và writer vẫn không bảo đảm file ZIP sao chép y nguyên?
+    2. Byte FF đổi thành EF BF BD qua quá trình giải mã/mã hóa như thế nào?
+
+    ### Chọn API và xác minh
+
+    1. `readLine()` và `newLine()` có thể thay đổi CRLF/LF trong file ra sao?
+    2. Chọn Files.copy, InputStream.transferTo hay vòng byte buffer trong trường hợp nào?
+    3. Files.mismatch khác việc chỉ so kích thước file như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lựa chọn cách sao chép | Phân loại tình huống cần giải mã text và tình huống cần giữ nguyên byte. |
+    | Chẩn đoán byte bị biến đổi | Giải thích dãy hex trước/sau khi byte FF đi qua Reader/Writer. |
+    | Sao chép nhị phân chính xác | Triển khai Files.copy hoặc byte-stream copy có vòng read/write đúng count. |
+    | Xác minh kết quả | Sử dụng Files.mismatch và giải thích vì sao cùng size chưa đủ chứng minh giống nhau. |

@@ -1,0 +1,301 @@
+summaries:
+- id: console-and-formatting-001
+  title: System.in, System.out và System.err
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **System.in, System.out và System.err**
+
+    Xác định đúng ba kênh chuẩn của tiến trình Java giúp đọc dữ liệu, xuất kết quả và báo lỗi mà không làm hỏng pipeline. Bài dạy kiểu InputStream/PrintStream, byte và charset, EOF, flush, mã thoát, cùng cách chọn API cho một CLI đơn giản.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất ba kênh
+
+    1. Vì sao System.in đọc byte còn System.out và System.err hỗ trợ in văn bản, và điều đó ảnh hưởng thế nào khi nhập tiếng Việt?
+    2. Vì sao hai dòng in ra stdout và stderr trên cùng terminal không có nghĩa chúng thuộc một kênh hoặc có thứ tự quan sát cố định?
+
+    ### Thiết kế chương trình dòng lệnh
+
+    1. Nếu stdout phải chứa dữ liệu máy có thể parse, bạn phân chia kết quả, cảnh báo và exit code ra sao?
+    2. Khi một CLI in prompt không xuống dòng rồi chờ stdin, vì sao có thể cần flush và điều gì xảy ra khi stdin đã EOF?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện kênh chuẩn | Phân loại System.in/out/err theo kiểu Java, chiều byte và vai trò trong một ví dụ CLI. |
+    | Dự đoán dữ liệu quan sát | Giải thích kết quả của print so với write, đọc -1 ở EOF và sự khác nhau giữa stdout/stderr. |
+    | Thiết kế CLI nhỏ | Viết chương trình đọc một dòng theo charset và xuất kết quả/lỗi riêng mà không đóng các stream chuẩn. |
+- id: console-and-formatting-002
+  title: Chuyển hướng đầu vào, đầu ra và lỗi ở mức tiến trình
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chuyển hướng đầu vào, đầu ra và lỗi ở mức tiến trình**
+
+    Chuyển hướng gắn các kênh tiến trình với file, pipe hoặc terminal, ảnh hưởng trực tiếp đến việc chạy và tích hợp CLI. Bài đi sâu vào shell redirection, thứ tự 2>&1, ProcessBuilder, exit code, PIPE, việc drain output và nguy cơ deadlock.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chuyển hướng bằng shell
+
+    1. Hai lệnh >both.txt 2>&1 và 2>&1 >both.txt khác nhau ở bước gắn stderr nào?
+    2. Khi dùng pipe nối hai chương trình, vì sao nội dung stderr không mặc nhiên xuất hiện ở stdin của chương trình sau?
+
+    ### Quản lý tiến trình con
+
+    1. Vì sao Process.getOutputStream() ghi vào stdin của child, trong khi getInputStream() nhận stdout của child?
+    2. Trong ProcessBuilder, tình huống nào khiến waitFor() treo vì PIPE, và cần thu stdout/stderr hoặc redirect theo cách nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập sơ đồ I/O tiến trình | Dự đoán file/pipe nhận từng kênh dưới lệnh redirect cho trước và phân biệt exit code. |
+    | Điều khiển child process | Cấu hình ProcessBuilder redirectInput/Output/Error hoặc redirectErrorStream theo yêu cầu, nêu tác dụng từng mode. |
+    | Ngăn treo tiến trình | Phân tích deadlock do PIPE đầy và chọn giải pháp drain song song, gộp hoặc redirect ra file. |
+- id: console-and-formatting-003
+  title: System.console và trường hợp không có console
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **System.console và trường hợp không có console**
+
+    Không phải môi trường nào cũng gắn console tương tác cho JVM. Bài làm rõ System.console() có thể null trong IDE, CI, container hoặc redirection; chỉ ra fallback qua stdin cho dữ liệu thường và giữ bảo vệ riêng cho mật khẩu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện console tương tác
+
+    1. Vì sao chương trình vẫn đọc System.in hoặc in System.out được khi System.console() trả null?
+    2. Những điều gì có thể và không thể suy ra về người dùng, TTY hoặc môi trường từ một giá trị console null?
+
+    ### Nhập liệu và bảo mật
+
+    1. Làm thế nào xử lý tên khi không có Console mà vẫn phân biệt EOF với dòng rỗng?
+    2. Vì sao không nên tự động dùng Scanner(System.in) để nhập mật khẩu khi không có readPassword() và cần làm sạch char[] ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn chế độ chạy | Thiết kế nhánh console/fallback stdin cho dữ liệu thường và xử lý null, EOF, charset. |
+    | Bảo vệ input nhạy cảm | Giải thích cơ chế không echo của readPassword và xây dựng đường lỗi an toàn nếu console không có. |
+    | Kiểm thử độc lập môi trường | Tách validation khỏi Console và kiểm chứng trường hợp dòng thường, trắng và EOF bằng Reader trong bộ nhớ. |
+- id: console-and-formatting-004
+  title: Console.reader, writer, readLine và readPassword
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Console.reader, writer, readLine và readPassword**
+
+    Sau khi biết khi nào có Console, bài này tập trung hợp đồng chi tiết của reader(), writer(), readLine() và readPassword(). Người học cần chọn đúng API ký tự hay dòng, hiểu buffer, định dạng prompt, EOF, mật khẩu char[] và vòng đời đối tượng Console.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chọn API Console
+
+    1. Trong trường hợp nào reader() hữu ích hơn readLine(), và việc đọc theo ký tự thay đổi cách xử lý line ending thế nào?
+    2. writer() trả về kiểu gì, và cần flush ở điểm nào trước khi chờ input từ người dùng?
+
+    ### Dòng, mật khẩu và wrapper
+
+    1. readLine() và readPassword() khác nhau về echo, kiểu kết quả và nghĩa của giá trị null hay rỗng như thế nào?
+    2. Vì sao việc trộn Scanner trên console.reader() với console.readLine() có thể làm sai thứ tự nhận dữ liệu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thao tác Console | Viết CLI dùng readLine, readPassword, writer và xử lý tình huống Console null trước mọi lời gọi. |
+    | Quản lý bí mật | Giữ password dạng char[], kiểm tra EOF và xóa mảng trong finally sau khi xử lý. |
+    | Phân tích buffering | Chọn một cơ chế đọc ổn định, giải thích rủi ro của nhiều reader/scanner trên cùng nguồn. |
+- id: console-and-formatting-005
+  title: PrintStream khác PrintWriter
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **PrintStream khác PrintWriter**
+
+    Hai lớp có cùng họ phương thức print/println/printf nhưng sở hữu mô hình đích byte so với ký tự khác nhau. So sánh charset, quy tắc auto-flush và checkError giúp lựa chọn đầu ra phù hợp và kiểm chứng lỗi thay vì chỉ nhìn cú pháp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểu đích và charset
+
+    1. Vì sao PrintStream thích hợp với OutputStream còn PrintWriter thích hợp với Writer, và trường hợp nào phải chỉ rõ UTF-8?
+    2. Tại sao PrintStream.write(0xE9) không tương đương PrintStream.print("é") với charset UTF-8?
+
+    ### Flush và lỗi ghi
+
+    1. Khi autoFlush=true, PrintStream và PrintWriter khác nhau thế nào đối với print("\n"), println và printf?
+    2. Vì sao println không ném IOException vẫn chưa đủ chứng minh ghi thành công, và checkError được dùng lúc nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lựa chọn lớp in | So sánh sơ đồ byte/ký tự và chọn PrintStream hoặc PrintWriter cho hai đầu ra cụ thể. |
+    | Dự đoán auto-flush | Lập bảng các lệnh kích hoạt flush ở hai lớp và minh họa bằng đích đếm flush. |
+    | Kiểm soát lỗi ghi | Mô phỏng đích lỗi, kiểm tra checkError và giải thích giới hạn của trạng thái lỗi. |
+- id: console-and-formatting-006
+  title: print, println, printf và Formatter
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **print, println, printf và Formatter**
+
+    Bài đưa người học từ phép in chuỗi đơn giản tới định dạng có thể kiểm soát: newline, format specifier, flags, width, precision, chỉ số đối số và Formatter. Nhờ đó kết quả console, bảng số hay chuỗi tạo bởi String.format nhất quán với yêu cầu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế in và format
+
+    1. print, println và printf khác nhau thế nào về newline và chuỗi định dạng?
+    2. Các thành phần argument index, flags, width, precision và conversion trong format specifier ảnh hưởng kết quả như thế nào?
+
+    ### Định dạng đúng và phát hiện lỗi
+
+    1. Với chuỗi %.3s, %06d và %,.2f, bạn dự đoán kết quả và điều kiện kiểu đối số ra sao?
+    2. Khi nào chọn Formatter/String.format thay cho System.out.printf, và làm thế nào phân biệt IllegalFormatException với lỗi I/O?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo output xác định | Viết ví dụ print/println/printf với Locale rõ ràng và dự đoán stdout theo từng dòng. |
+    | Phân tích format specifier | Giải thích width, precision, flags, tái sử dụng đối số và sửa một mẫu gây IllegalFormatException. |
+    | Lựa chọn nơi tạo văn bản | Tạo chuỗi bằng String.format hoặc ghi qua Formatter vào Appendable phù hợp với hợp đồng caller. |
+- id: console-and-formatting-007
+  title: Locale, mẫu định dạng và dấu phân cách số
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Locale, mẫu định dạng và dấu phân cách số**
+
+    Bài phân biệt giá trị số với cách trình bày theo vùng và ngữ pháp nhập liệu. Locale, NumberFormat, DecimalFormat, DecimalFormatSymbols, Scanner.useLocale và BigDecimal giúp tránh sai dấu thập phân, grouping, currency và độ chính xác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biểu diễn số theo vùng
+
+    1. Cùng giá trị 1234567.5, vì sao Locale.US và Locale.GERMANY cho dấu phân cách khác nhau?
+    2. DecimalFormatSymbols, pattern #,##0.00 và NumberFormat currency/percent đóng vai trò gì khác nhau?
+
+    ### Parse, làm tròn và an toàn dữ liệu
+
+    1. Scanner.useLocale ảnh hưởng nextBigDecimal ra sao khi người dùng nhập số có dấu nhóm?
+    2. Vì sao BigDecimal(String) không phải parser locale và cần kiểm tra parse hết input, rounding mode, thread-safety như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh định dạng vùng | Format một giá trị bằng Locale.US và Locale.GERMANY rồi phân tích decimal/grouping separator. |
+    | Xây dựng định dạng số | Chọn NumberFormat hoặc DecimalFormat với pattern, symbols, rounding mode phù hợp tình huống. |
+    | Kiểm chứng parsing | Nhận chuỗi số theo locale, kiểm tra dữ liệu thừa và giữ BigDecimal không bị sai bởi chuyển đổi double. |
+- id: console-and-formatting-008
+  title: Auto-flush và các thao tác thực sự kích hoạt flush
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Auto-flush và các thao tác thực sự kích hoạt flush**
+
+    Flush ảnh hưởng độ trễ và tính đầy đủ của output nhưng khác close và độ bền trên đĩa. Bài chứng minh bằng bộ đếm flush các trigger của PrintWriter, PrintStream, BufferedWriter và khi nào CLI phải flush prompt.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Flush và buffering
+
+    1. write, flush và close thay đổi trạng thái dữ liệu và vòng đời tài nguyên theo các cách nào?
+    2. Với PrintWriter autoFlush=true, vì sao print("\n") không bắt buộc flush trong khi println, printf và format thì có?
+
+    ### Ứng dụng và giới hạn
+
+    1. PrintStream autoFlush=true có các trigger gì khác PrintWriter và làm sao đo thay vì đoán trên terminal?
+    2. Vì sao flush không chứng minh dữ liệu đã lưu bền vững hay tới tay người nhận, và vì sao flush quá thường xuyên có thể hại hiệu năng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán hành vi flush | Lập bảng thao tác có/không trigger auto-flush cho PrintWriter và PrintStream. |
+    | Thực nghiệm với test double | Tạo Writer/OutputStream đếm flush và đối chiếu kết quả các lệnh print, println, printf. |
+    | Thiết kế vòng đời output | Đặt flush ở ranh giới prompt/streaming, vẫn giữ tài nguyên mượn mở để caller sử dụng. |
+- id: console-and-formatting-009
+  title: checkError và các lỗi I/O không được ném trực tiếp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **checkError và các lỗi I/O không được ném trực tiếp**
+
+    Bài phân tích cơ chế báo lỗi đặc biệt của PrintStream, PrintWriter và Formatter, trạng thái lỗi có thể được ghi lại thay vì ném IOException. Ví dụ output hỏng, flush/close, lỗi format và thiết kế biên tác vụ giúp phát hiện thất bại ghi dữ liệu đúng lúc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế báo lỗi
+
+    1. Tại sao PrintStream.println hay PrintWriter.println không nhất thiết ném IOException khi đích lỗi?
+    2. checkError() kiểm tra trạng thái thế nào, tại sao có thể flush khi gọi và có hạn chế gì sau close?
+
+    ### Lựa chọn xử lý khi output quan trọng
+
+    1. Khi nào dùng Writer/OutputStream ném IOException thay vì PrintWriter, và Formatter.ioException() khác checkError ra sao?
+    2. Một tác vụ xuất file cần phát hiện lỗi ghi muộn lúc flush/close như thế nào, và vì sao checkError=false vẫn chưa bảo đảm dữ liệu durable?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tái hiện lỗi bị ghi nhớ | Tạo đầu ra hỏng, quan sát print trả về và kiểm tra checkError ở mốc phù hợp. |
+    | Phân biệt lỗi | So sánh IOException ở Writer với cờ PrintStream/PrintWriter, IllegalFormatException và Formatter.ioException. |
+    | Thiết kế chính sách ghi | Xác định cách báo lỗi khi xuất dữ liệu quan trọng, bao gồm flush/close và xử lý dữ liệu đã ghi một phần. |
+- id: console-and-formatting-010
+  title: Không vô tình đóng các stream chuẩn dùng chung
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không vô tình đóng các stream chuẩn dùng chung**
+
+    Đây là bài về ownership của System.in/out/err: đóng Scanner, BufferedReader hoặc PrintWriter thường đóng cả nguồn nền. Người học phân biệt tài nguyên tự mở với tài nguyên được mượn, thiết kế helper không đóng global streams và kiểm chứng bằng test stream có cờ close.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quyền sở hữu tài nguyên
+
+    1. Hàm tự mở FileInputStream khác helper nhận System.in hoặc PrintStream từ caller thế nào về trách nhiệm close?
+    2. Wrapper như Scanner, BufferedReader và PrintWriter có thể khiến nguồn gốc System.in/out bị đóng ra sao?
+
+    ### Thiết kế helper an toàn
+
+    1. Vì sao dùng try-with-resources quanh Scanner(System.in) trong helper đọc một câu hỏi lại có thể làm hỏng bước nhập tiếp theo?
+    2. Cách truyền Reader/Writer hoặc Scanner từ caller, flush đầu ra và khôi phục System.setOut trong test nên được tổ chức ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích quyền đóng | Đánh dấu owner/callee/caller trên sơ đồ wrapper và dự đoán hậu quả close tầng ngoài. |
+    | Thiết kế API mượn stream | Viết helper chỉ đọc/ghi/flush theo hợp đồng nhưng không đóng input/output của caller. |
+    | Kiểm tra không đóng nhầm | Dùng stream thử nghiệm có đếm close và xác minh helper không đóng trong khi owner có thể đóng sau. |

@@ -1,0 +1,265 @@
+summaries:
+- id: io-overview-001
+  title: I/O là gì và vai trò của nguồn, đích và dữ liệu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **I/O là gì và vai trò của nguồn, đích và dữ liệu**
+
+    Định vị đúng chiều dữ liệu trong một tác vụ I/O giúp người học chọn điểm đọc, điểm ghi và phân biệt xử lý trong bộ nhớ với giao tiếp bên ngoài. Bài tập sao chép tệp và ví dụ standard input/output cho thấy nguồn và đích là vai trò của từng thao tác, không phải nhãn cố định của đối tượng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khái niệm và chiều dữ liệu
+
+    1. Vì sao I/O được xác định theo ranh giới của chương trình, và khi nào một phép tính thuần trong bộ nhớ không phải I/O?
+    2. Cùng một tệp có thể vừa là nguồn vừa là đích trong những thời điểm nào?
+    3. Trong sơ đồ đọc tệp rồi ghi kết quả, xác định nguồn, dữ liệu và đích của từng bước ra sao?
+
+    ### Thực hành và tính đúng đắn
+
+    1. Vì sao vòng lặp sao chép cần dùng đúng số byte do read trả về thay vì toàn bộ kích thước buffer?
+    2. Khi chuyển hướng System.out sang tệp, chiều output của ứng dụng có thay đổi không, và vì sao?
+    3. Tại sao ghi byte thành công chưa bảo đảm bên nhận đã xử lý hoặc lưu bền vững dữ liệu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích chiều I/O | Vẽ đường đi nguồn → xử lý → đích cho một chương trình nhận dữ liệu rồi tạo tệp mới, ghi rõ vai trò theo từng thao tác. |
+    | Lựa chọn loại luồng | Chọn byte stream cho sao chép tệp nguyên vẹn và reader/writer có charset cho nội dung ký tự, giải thích lựa chọn. |
+    | Sao chép dữ liệu đúng | Viết vòng lặp read(buffer) và write(buffer,0,count), dự đoán hậu quả khi ghi thừa byte. |
+    | Đối chiếu kết quả | Chạy ví dụ tệp tạm, đọc lại đích và giải thích vì sao so sánh byte xác nhận dữ liệu đã sao chép. |
+- id: io-overview-002
+  title: Phân biệt dữ liệu nhị phân với văn bản
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt dữ liệu nhị phân với văn bản**
+
+    Dữ liệu text và binary đều tồn tại dưới dạng byte nhưng cần hợp đồng diễn giải khác nhau. Bài học rèn cách chọn byte/character API, tính chính xác độ dài UTF-8 và phát hiện encoding lỗi trước khi làm hỏng ảnh, ZIP hoặc văn bản.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biểu diễn và mã hóa
+
+    1. Vì sao một tệp UTF-8 cũng là dữ liệu byte, nhưng không thể đọc mọi dãy byte như văn bản?
+    2. Vì sao chuỗi Aé có hai code point mà ba byte UTF-8, và khác với String.length ở trường hợp nào?
+    3. Charset, BOM, line ending và định dạng file ảnh hưởng thế nào đến khả năng phục hồi nội dung gốc?
+
+    ### Chọn API và kiểm chứng
+
+    1. Khi sao chép ảnh PNG hoặc ZIP, vì sao InputStream/OutputStream phù hợp hơn Reader/Writer?
+    2. Vì sao giải mã UTF-8 thành công không đủ để kết luận dữ liệu là văn bản?
+    3. Khi một dãy byte UTF-8 sai cấu trúc, có thể dùng CharsetDecoder với CodingErrorAction.REPORT để phát hiện thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt hợp đồng dữ liệu | Giải thích điểm khác giữa charset của text và schema byte của một file nhị phân bằng ví dụ thực tế. |
+    | Kiểm tra độ dài | Tính được số code point, UTF-16 code units và byte UTF-8 cho chuỗi thử rồi đối chiếu với output HexFormat. |
+    | Bảo toàn byte nhị phân | Chọn và giải thích cách sao chép PNG/ZIP bằng byte stream mà không qua String. |
+    | Phát hiện charset lỗi | Dự đoán kết quả giải mã dãy byte C3 28 bằng decoder REPORT và chỉ ra lý do lỗi. |
+- id: io-overview-003
+  title: Luồng dữ liệu, tài nguyên hệ điều hành và vòng đời sử dụng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Luồng dữ liệu, tài nguyên hệ điều hành và vòng đời sử dụng**
+
+    Đọc/ghi I/O gắn với vòng đời của đối tượng Java và đôi khi với file descriptor, handle hoặc socket của hệ điều hành. Bài học đi sâu vào quyền sở hữu tài nguyên, try-with-resources, lỗi dọn dẹp và khác biệt giữa write, flush, close với bảo đảm lưu bền vững.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tài nguyên và sở hữu
+
+    1. Vì sao không thể dựa vào garbage collector để đóng file descriptor đúng thời điểm?
+    2. Khi BufferedInputStream bọc FileInputStream, có nhất thiết tồn tại hai handle hệ điều hành không?
+    3. Ai cần đóng một InputStream được truyền vào phương thức khác, và khi nào việc đóng wrapper làm đóng luôn stream nền?
+
+    ### Lỗi và độ bền
+
+    1. Khi thân try và close đều ném lỗi, suppressed exception được giữ lại như thế nào?
+    2. Vì sao đọc tới EOF không có nghĩa luồng đã đóng, và vì sao flush không tương đương fsync?
+    3. Nếu việc ghi tệp đích thất bại giữa chừng, nên kiểm chứng trạng thái đích và thiết kế cleanup như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quản lý tài nguyên | Giải thích thứ tự đóng ngược trong try-with-resources và quan sát stdout từ ví dụ CloseOrderDemo. |
+    | Xử lý I/O từng phần | Triển khai hoặc phân tích vòng lặp copy với count, giải thích khi nào file đích có thể còn dở dang. |
+    | Phân biệt mức hoàn tất | Lập bảng ý nghĩa write/flush/close/FileChannel.force và chỉ ra giới hạn bảo đảm của mỗi thao tác. |
+    | Chẩn đoán resource leak | Đề xuất cách kiểm tra nhánh thiếu close và số handle/descriptor tăng khi tải lặp lại. |
+- id: io-overview-004
+  title: Phân biệt stream I/O với java.util.stream.Stream
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt stream I/O với java.util.stream.Stream**
+
+    Hai API cùng tên stream giải quyết hai vấn đề khác nhau: I/O stream truyền byte/ký tự, còn Stream API biến đổi và tổng hợp phần tử theo pipeline lazy. Bài học giúp tránh gọi nhầm API, dùng terminal operation đúng và đóng luồng dựa trên file qua Files.lines hoặc BufferedReader.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới hai API
+
+    1. InputStream khác với java.util.stream.Stream ở kiểu dữ liệu, phép toán và trách nhiệm tài nguyên thế nào?
+    2. Tại sao map/filter chưa thực thi trước terminal operation trong ví dụ LazyPipelineDemo?
+    3. Vì sao một Stream từ List thường không cần đóng nhưng Stream từ Files.lines phải được đóng?
+
+    ### Kết hợp và lỗi thường gặp
+
+    1. Làm sao dùng Files.lines để đọc file và đồng thời lọc các dòng dài mà vẫn đóng đúng resource?
+    2. Sau khi gọi count, vì sao không được gọi toList tiếp trên cùng pipeline?
+    3. Khi đọc file qua stream, lỗi I/O ở lúc duyệt có thể xuất hiện dưới dạng UncheckedIOException như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện API | Phân loại những lời gọi read/write và map/filter/count vào đúng họ I/O hoặc Stream API. |
+    | Dự đoán tính lazy | Dự đoán thứ tự stdout của LazyPipelineDemo trước và sau terminal operation. |
+    | Quản lý nguồn file | Viết try-with-resources cho Files.lines và giải thích khác biệt với việc đóng BufferedReader tạo ra reader.lines. |
+    | Tránh tái sử dụng stream | Sửa một đoạn code dùng lại Stream đã có terminal operation bằng cách tạo pipeline mới. |
+- id: io-overview-005
+  title: Bản đồ java.io, java.nio và NIO.2
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bản đồ java.io, java.nio và NIO.2**
+
+    Java I/O gồm các nhóm API bổ trợ nhau: java.io cung cấp stream/reader, java.nio cung cấp buffer/channel/selector/charset, NIO.2 cung cấp Path/Files và dịch vụ filesystem. Bài học xây bản đồ chọn API theo dữ liệu, kiểu truy cập, quy mô và mô hình thực thi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc thư viện
+
+    1. Java.io, java.nio và NIO.2 phân chia trách nhiệm thế nào, và vì sao không tồn tại package chuẩn java.nio2?
+    2. Vì sao Files.newInputStream thuộc NIO.2 mà lại trả về InputStream của java.io?
+    3. Path khác Files ở vai trò nào, và normalize có bảo đảm path thực tồn tại hoặc an toàn không?
+
+    ### Buffer, channel và filesystem
+
+    1. position/limit/capacity của ByteBuffer thay đổi ra sao qua put, flip, get và compact?
+    2. Vì sao FileChannel không thể đăng ký Selector trong khi SocketChannel có thể?
+    3. Khi dùng Files.list, Files.walk hoặc WatchService, cần quản lý những giới hạn tài nguyên/sự kiện nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập bản đồ API | Chọn và giải thích Path/Files, Reader/Writer, FileChannel/ByteBuffer hoặc SocketChannel/Selector cho bốn tác vụ cụ thể. |
+    | Theo dõi ByteBuffer | Tính được position, limit và các byte còn lại sau flip và compact trong ví dụ ByteBufferStateDemo. |
+    | Liên kết nhiều API | Phân tích ví dụ đọc text qua BufferedReader và đọc byte qua FileChannel trên cùng tệp. |
+    | Đánh giá NIO.2 | Mô tả một phương án duyệt tệp và xử lý overflow của WatchService mà không xem sự kiện là lịch sử đầy đủ. |
+- id: io-overview-006
+  title: Tuần tự, truy cập ngẫu nhiên, blocking và non-blocking
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tuần tự, truy cập ngẫu nhiên, blocking và non-blocking**
+
+    Sequential/random access mô tả vị trí đọc/ghi, còn blocking/non-blocking mô tả hành vi chờ của lời gọi. Bài học sử dụng RandomAccessFile và SocketChannel/Selector để thấy hai trục độc lập, các kết quả read 0/-1 và giới hạn của NIO.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai trục lựa chọn
+
+    1. Vì sao FileChannel đọc tại offset vẫn có thể blocking dù hỗ trợ random access?
+    2. Làm thế nào phân biệt truy cập tuần tự và truy cập ngẫu nhiên dựa trên việc seek tới offset byte?
+    3. Trong SocketChannel non-blocking, n=0 khác n=-1 như thế nào?
+
+    ### Thiết kế theo sự kiện
+
+    1. Vì sao Selector.select có thể chờ dù các SocketChannel là non-blocking?
+    2. Khi channel.write chỉ gửi một phần buffer, ứng dụng phải lưu trạng thái nào để tránh mất dữ liệu?
+    3. Vì sao đăng ký OP_WRITE vô điều kiện dễ gây busy loop, và TCP cần framing ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại mô hình | Đặt ví dụ BufferedReader, RandomAccessFile, SocketChannel non-blocking và AsynchronousFileChannel lên hai trục phân loại, chỉ ra ngoại lệ. |
+    | Đọc theo offset | Giải thích tác dụng seek(4) và seek(8) với ba int ghi theo định dạng nhị phân trong RandomAccessDemo. |
+    | Xử lý partial I/O | Diễn giải chính xác n>0, n=0, n=-1 của SocketChannel.read và hành động tương ứng. |
+    | Phân tích event loop | Mô tả luồng OP_ACCEPT/OP_READ và cách quản lý buffer, selected key, timeout, EOF trong NonBlockingDemo. |
+- id: io-overview-007
+  title: Kiến thức tiên quyết và trình tự học đề xuất
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiến thức tiên quyết và trình tự học đề xuất**
+
+    Bài học định hướng đầu vào và lộ trình tự học từ Java cơ bản tới file, stream, quản lý lỗi, file tree, channel rồi networking/serialization khi có nhu cầu. Người học dùng những tiêu chí thực hành để quyết định lúc nào đã đủ nền tảng trước khi tiến sang API phức tạp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Điều kiện bắt đầu
+
+    1. Để chạy bài I/O đầu tiên trên JDK 17+, cần những kiến thức Java, ngoại lệ, String/byte[] và công cụ nào?
+    2. Vì sao nên nắm EOF, while và try-with-resources trước khi học Selector?
+    3. Những chủ đề như multi-threading hay serialization có bắt buộc trước khi học Files.readString không?
+
+    ### Lộ trình và đánh giá tiến bộ
+
+    1. Theo lộ trình bài học, tại sao Path/Files và stream byte/ký tự xuất hiện trước FileChannel hoặc bất đồng bộ?
+    2. Một bài tập nào chứng minh người học sao chép được file binary không đổi byte và đọc UTF-8 không lỗi?
+    3. Nếu chưa thể giải thích sự khác nhau giữa flush và close, nên quay lại chặng học nào và kiểm tra điều gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đánh giá prerequisite | Lập checklist kiến thức Java, vòng lặp, exception, encoding và JDK cần có trước khi học I/O. |
+    | Lập kế hoạch học | Sắp xếp các chặng Files → stream → quản lý tài nguyên → file tree → channel → API nâng cao theo yêu cầu thực tế. |
+    | Tự kiểm chứng | Thiết kế hai bài tập đọc/ghi UTF-8 và sao chép file binary với tiêu chí đầu ra, lỗi và cleanup. |
+    | Xác định độ sẵn sàng | Chỉ ra các lỗ hổng từ việc xử lý EOF, charset hoặc close và chọn chặng củng cố thích hợp. |
+- id: io-overview-008
+  title: Phạm vi Java Core và khác biệt theo phiên bản JDK
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phạm vi Java Core và khác biệt theo phiên bản JDK**
+
+    API I/O Java SE có mốc xuất hiện khác nhau theo JDK; đồng thời việc nâng runtime có thể làm thay đổi hành vi charset mặc định. Bài học xây năng lực phân biệt version API, target biên dịch và môi trường triển khai, đặc biệt với JDK 8/11/17/18/21.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phạm vi và mốc API
+
+    1. Những gói java.io, java.nio.file, java.nio.channels, java.nio.charset và java.util.zip khác thư viện framework ở đâu?
+    2. Vì sao dự án target Java 8 không thể dùng Files.readString dù máy build chạy JDK 21?
+    3. Những API nổi bật xuất hiện ở JDK 7, 9, 11, 12 và virtual threads ở JDK 21 phục vụ mục đích nào?
+
+    ### Tương thích và môi trường chạy
+
+    1. Từ JDK 18, JEP 400 tác động tới những lời gọi dùng charset mặc định thế nào?
+    2. Vì sao nâng runtime sang JDK mới không tự sửa được tệp đã lưu bằng charset cũ?
+    3. Lệnh javac --release kiểm soát điều gì, và vì sao còn cần thử trên runtime thực tế?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra phiên bản API | Đối chiếu Files.readString, InputStream.transferTo và Path/Files với JDK tối thiểu của từng API. |
+    | Xác định nguồn khác biệt | Phân tích nguyên nhân text tiếng Việt thay đổi khi chương trình phụ thuộc default charset qua hai runtime. |
+    | Thiết lập biên dịch | Chọn javac --release 8 cho mã Java 8 và giải thích kết quả lỗi khi source dùng Files.readString. |
+    | Đánh giá nâng cấp JDK | Liệt kê các phép thử path, charset, file lớn, permission và resource lifecycle khi chuyển runtime lên JDK 21. |

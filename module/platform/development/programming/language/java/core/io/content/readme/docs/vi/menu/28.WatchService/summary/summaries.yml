@@ -1,0 +1,321 @@
+summaries:
+- id: watch-service-001
+  title: WatchService, Watchable và đăng ký thư mục
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **WatchService, Watchable và đăng ký thư mục**
+
+    Bài giải thích quan hệ giữa `WatchService`, `Watchable` và `WatchKey`, sau đó áp dụng để đăng ký một thư mục đang tồn tại. Người học cần biết event chỉ là thông báo thay đổi của entry trực tiếp và cách đọc, reset, đóng watcher đúng vòng đời.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khái niệm và đăng ký
+
+    1. `WatchService`, `Watchable` và `WatchKey` giữ ba vai trò khác nhau như thế nào?
+    2. Vì sao `Path.register(...)` phải nhắm tới thư mục có thực thay vì một tệp hoặc thư mục chưa được tạo?
+    3. Đăng ký thư mục cha có tự theo dõi mọi thư mục cháu không, và vì sao?
+
+    ### Vòng đời và giới hạn
+
+    1. Sau `take()`, chương trình phải xử lý `pollEvents()` và `reset()` theo thứ tự nào?
+    2. Tại sao event từ WatchService không phải một bản ghi giao dịch chắc chắn đầy đủ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết lập watcher | Tạo WatchService từ đúng FileSystem và đăng ký thư mục với các event kinds chuẩn. |
+    | Phân biệt API | Chỉ ra vai trò và kiểu trả về chính của `Watchable.register`, `WatchService.take` và `WatchKey.pollEvents`. |
+    | Quản lý key | Mô phỏng chu trình READY → SIGNALLED → reset hoặc invalid, nêu hậu quả khi bỏ reset. |
+    | Phân tích phạm vi | Dự đoán event nào có thể quan sát khi chỉ đăng ký thư mục cha. |
+- id: watch-service-002
+  title: ENTRY_CREATE, ENTRY_DELETE và ENTRY_MODIFY
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ENTRY_CREATE, ENTRY_DELETE và ENTRY_MODIFY**
+
+    Bài phân tích `ENTRY_CREATE`, `ENTRY_DELETE`, `ENTRY_MODIFY` và ý nghĩa thực tế của từng kind. Người học cần phân biệt thay đổi entry với nội dung file đã sẵn sàng, hiểu rename/move không có một kind riêng, và xử lý thông báo theo trạng thái thực tế.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa event
+
+    1. `ENTRY_CREATE`, `ENTRY_DELETE` và `ENTRY_MODIFY` mô tả những thay đổi nào đối với entry trực tiếp?
+    2. Khi một tệp được rename hoặc move vào/ra thư mục, vì sao không thể suy ra một sự kiện rename nguyên tử từ WatchService?
+
+    ### Ứng dụng và độ tin cậy
+
+    1. Tại sao `ENTRY_MODIFY` không chứng minh producer đã ghi xong nội dung tệp?
+    2. Vì sao có thể thấy nhiều modify hoặc thiếu event khi có thay đổi dồn dập?
+    3. Khi có `OVERFLOW`, cache file nên phục hồi trạng thái thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích loại event | Phân loại kịch bản tạo, sửa, xóa, move file vào các event có thể phát hiện. |
+    | Lắp ghép vòng xử lý | Đăng ký ba kinds và xử lý sự kiện trên WatchKey theo loại với kiểm tra context. |
+    | Đánh giá độ sẵn sàng | Phân tích vì sao create/modify chưa đủ để parse ngay một file đang ghi. |
+    | Chọn chính sách đồng bộ | Đề xuất quét đối chiếu sau overflow và ghi nhận event lặp theo nghiệp vụ. |
+- id: watch-service-003
+  title: WatchKey, pollEvents và đường dẫn tương đối của sự kiện
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **WatchKey, pollEvents và đường dẫn tương đối của sự kiện**
+
+    Bài tập trung vào `WatchKey.pollEvents()`, `WatchEvent.context()` và đường dẫn tương đối so với thư mục đã đăng ký. Người học phân biệt `WatchService.poll()` với `WatchKey.pollEvents()`, ghép key-root/context đúng khi có nhiều thư mục và kiểm tra `OVERFLOW` trước khi ép `Path`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Key, queue và context
+
+    1. `WatchService.poll()` khác `WatchKey.pollEvents()` ở đối tượng, dữ liệu trả về và thời điểm dùng ra sao?
+    2. Vì sao `event.context()` của entry kind phải resolve với thư mục của key thay vì thư mục làm việc hiện tại?
+
+    ### Nhiều đăng ký và race
+
+    1. Khi một service theo dõi hai thư mục chứa cùng `report.csv`, làm sao xác định file nào thay đổi?
+    2. Vì sao phải tách `OVERFLOW` trước khi ép `event.context()` sang `Path`?
+    3. Sau khi resolve đường dẫn sự kiện, có thể bảo đảm file vẫn còn tồn tại tại thời điểm đọc không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc event đúng tầng | Trình bày chuỗi `take/poll → pollEvents → reset` và phân biệt hai dạng poll. |
+    | Ghép đường dẫn | Xác định đường dẫn đầy đủ bằng `root.resolve((Path) event.context())`. |
+    | Quản lý nhiều thư mục | Thiết lập map `WatchKey → Path` và truy xuất đúng thư mục khi một service có nhiều registration. |
+    | Xử lý event đặc biệt | Chỉ ra trường hợp overflow, context null và race khi file bị xóa/thay thế. |
+- id: watch-service-004
+  title: take, poll và vòng xử lý sự kiện
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **take, poll và vòng xử lý sự kiện**
+
+    Bài so sánh `take()`, `poll()` và `poll(timeout, unit)` trong vòng xử lý sự kiện dài hạn. Người học chọn chiến lược chờ theo yêu cầu latency và shutdown, tránh busy polling, luôn reset key, xử lý null của timed poll cùng exception khi service đóng hoặc thread bị interrupt.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chiến lược chờ
+
+    1. `take()`, `poll()` và `poll(timeout, unit)` khác nhau về blocking, timeout và kết quả khi chưa có key ra sao?
+    2. Vì sao vòng gọi `poll()` liên tục mà không chờ có thể gây lãng phí CPU?
+
+    ### Event loop và shutdown
+
+    1. Khi nhận WatchKey, vì sao phải dùng `pollEvents()` rồi `reset()` mới tiếp tục giám sát?
+    2. Khi timed poll trả null, vì sao điều đó không chứng minh không có file nào tồn tại hay từng thay đổi?
+    3. Có những cách nào để dừng `take()` đang blocking một cách có chủ đích?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn phương thức chờ | Lựa chọn take hoặc timed poll cho watcher chuyên dụng hay ứng dụng có chu kỳ riêng. |
+    | Triển khai vòng lặp | Viết event loop xử lý key, overflow và reset với timeout rõ ràng. |
+    | Tránh busy polling | Phân tích chi phí CPU của poll không chờ so với take/poll timeout. |
+    | Thiết kế dừng an toàn | Giải thích phản ứng trước interrupt và `ClosedWatchServiceException`. |
+- id: watch-service-005
+  title: reset key và trạng thái đăng ký không còn hợp lệ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **reset key và trạng thái đăng ký không còn hợp lệ**
+
+    Bài đào sâu trạng thái READY/SIGNALLED và ý nghĩa `WatchKey.reset()`, `isValid()` và `cancel()`. Người học cần phát hiện key không còn hợp lệ sau xóa thư mục, cancel hoặc close, duy trì registry và thiết kế đăng ký lại có điều kiện.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Trạng thái và reset
+
+    1. Một WatchKey từ READY chuyển sang SIGNALLED rồi được re-arm như thế nào?
+    2. `reset() == false` cho biết gì và vì sao không tương đương 'không có event mới'?
+
+    ### Khôi phục đăng ký
+
+    1. Những tình huống nào làm một key invalid và vì sao reset liên tục không giúp nó sống lại?
+    2. Vì sao `cancel()` khác `close()` của toàn bộ WatchService?
+    3. Khi một watcher giám sát nhiều directory, cần xử lý một key invalid ra sao để không dừng nhầm toàn hệ thống?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích vòng đời | Vẽ và giải thích trạng thái READY, SIGNALLED, reset và invalid. |
+    | Xử lý kết quả reset | Nhánh hợp lý khi reset trả true hoặc false, cập nhật registry tương ứng. |
+    | Quản trị tài nguyên | Phân biệt cancel một registration với close toàn service. |
+    | Thiết kế phục hồi | Nêu điều kiện kiểm tra thư mục và đăng ký key mới sau mất registration. |
+- id: watch-service-006
+  title: OVERFLOW và nhu cầu quét lại trạng thái
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **OVERFLOW và nhu cầu quét lại trạng thái**
+
+    Bài chuyên sâu về `OVERFLOW`: watcher có thể mất event khi queue quá tải và không thể tái tạo sự kiện bị mất bằng cách poll thêm. Người học xây snapshot hệ thống tệp, so sánh trạng thái cũ/mới và phối hợp quét với event mới để tránh làm cache lệch trạng thái.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa overflow
+
+    1. Vì sao `OVERFLOW` báo khả năng mất sự kiện nhưng không chỉ ra đường dẫn file cụ thể?
+    2. Tại sao tăng tốc polling hoặc đọc lại WatchKey không phục hồi được event đã rơi?
+
+    ### Reconciliation
+
+    1. Snapshot cần ghi những trường thông tin nào để đối chiếu file được thêm, bớt hoặc thay đổi?
+    2. Nếu file tiếp tục thay đổi trong lúc quét, vì sao phải phối hợp rescan với hàng đợi event mới?
+    3. Đối chiếu `size`/`mtime` có thể thiếu trường hợp nào so với checksum hoặc version?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc tín hiệu mất event | Nhận diện OVERFLOW trước khi dùng context và đánh dấu cache cần đối soát. |
+    | Thiết kế snapshot | Chọn thông tin metadata cần giữ cho mục tiêu phát hiện thay đổi. |
+    | Triển khai rescan | Mô tả thuật toán quét, so sánh và cập nhật cache sau OVERFLOW. |
+    | Xử lý race đồng bộ | Giải thích nguy cơ file biến mất/chỉnh sửa khi rescan và cách kiểm tra lại. |
+- id: watch-service-007
+  title: Đăng ký đệ quy và thư mục được tạo mới
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đăng ký đệ quy và thư mục được tạo mới**
+
+    Bài giải thích WatchService không theo dõi đệ quy mặc định và cách đăng ký từng thư mục bằng `Files.walkFileTree`. Người học duy trì map WatchKey/root, phát hiện thư mục mới, đăng ký bổ sung, đối soát để bù khoảng trống đăng ký và kiểm soát symlink/race.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mở rộng vùng quan sát
+
+    1. Vì sao đăng ký `root` không tự nhận sự kiện sâu trong `root/a/b`?
+    2. `Files.walkFileTree` đóng vai trò gì trong pha đăng ký các thư mục đã có?
+
+    ### Thư mục mới và race
+
+    1. Khi thấy `ENTRY_CREATE` cho một thư mục mới, cần đăng ký và quét bổ sung thế nào?
+    2. Nếu thư mục vừa tạo bị xóa trước lúc register, handler nên phản ứng ra sao?
+    3. Vì sao theo symlink không kiểm soát và đăng ký số lượng lớn thư mục có thể gây vấn đề?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đăng ký cây thư mục | Thiết kế duyệt `Files.walkFileTree` và đăng ký từng thư mục trong tree. |
+    | Cập nhật registration | Thêm watch cho thư mục mới được tạo và cập nhật map key/root. |
+    | Phát hiện khoảng trống | Giải thích race giữa lúc tạo thư mục mới và lúc register; bổ sung rescan. |
+    | Kiểm soát độ an toàn | Mô tả quy tắc symlink và giới hạn tài nguyên native khi có nhiều thư mục. |
+- id: watch-service-008
+  title: Sự kiện lặp, gộp và thời điểm nội dung tệp chưa hoàn tất
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Sự kiện lặp, gộp và thời điểm nội dung tệp chưa hoàn tất**
+
+    Bài giải thích duplicate/coalesced events, `WatchEvent.count()` và nguyên tắc `ENTRY_MODIFY` không phải tín hiệu ghi xong. Người học thiết kế cách công bố file qua temp+rename/marker, xử lý debounce và idempotency, và dùng reconciliation khi event không đầy đủ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lặp/gộp và hoàn tất ghi
+
+    1. `WatchEvent.count()` phản ánh điều gì khi provider gộp nhiều event cùng kind?
+    2. Vì sao không được coi một `ENTRY_MODIFY` là dấu hiệu file đã đóng và hoàn tất?
+
+    ### Thiết kế consumer đáng tin
+
+    1. Khi điều khiển producer, vì sao ghi file tạm rồi rename có thể tốt hơn debounce theo thời gian?
+    2. Trong trường hợp không điều khiển producer, vì sao quan sát size/mtime ổn định chỉ là heuristic?
+    3. Làm thế nào để worker xử lý idempotent nhưng không bỏ mất phiên bản file mới đến trong lúc làm việc?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích coalescing | Phân biệt count gộp event, nhiều modify và overflow mất event. |
+    | Thiết kế protocol file hoàn tất | Đề xuất temp+rename hoặc marker/manifest với điều kiện filesystem phù hợp. |
+    | Chống xử lý trùng | Thiết kế per-path generation, debounce và xử lý idempotent. |
+    | Phục hồi dữ liệu | Kết hợp event với rescan và kiểm chứng file tại thời điểm xử lý. |
+- id: watch-service-009
+  title: Giới hạn phụ thuộc nền tảng và network file system
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn phụ thuộc nền tảng và network file system**
+
+    Bài phân tích WatchService khác nhau giữa hệ điều hành, filesystem provider và network share NFS/SMB. Người học không dựa vào một event như cam kết phát hiện remote change, lập ma trận kiểm thử, kết hợp polling/reconciliation và xác định nguồn sự thật theo mức độ tin cậy của nghiệp vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nền tảng và network filesystem
+
+    1. Vì sao hai máy chạy cùng mã WatchService có thể quan sát số lượng hoặc thời điểm event khác nhau?
+    2. Khi máy B cập nhật file trên SMB/NFS, vì sao watcher của máy A có thể không được thông báo?
+
+    ### Đảm bảo tính đúng
+
+    1. Vì sao không có `OVERFLOW` cũng chưa bảo đảm đã thấy mọi thay đổi quan trọng?
+    2. Thiết kế ma trận test nào để kiểm tra cả local write và remote write trên network share?
+    3. Khi nào cần kết hợp watcher với polling/reconciliation hoặc notification từ producer?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đánh giá giới hạn môi trường | Phân biệt hành vi native/polling, cache NFS/SMB và khả năng đăng ký không được hỗ trợ. |
+    | Thiết kế test thực tế | Xây kịch bản tạo/sửa/xóa file từ client local và remote với timeout và xác nhận state. |
+    | Đề xuất kiến trúc phục hồi | Lập quy trình snapshot/reconciliation định kỳ khi không thể tin event đầy đủ. |
+    | Chọn nguồn dữ liệu sự thật | Phân tích yêu cầu phản hồi nhanh so với yêu cầu không mất giao dịch thay đổi. |
+- id: watch-service-010
+  title: Đóng WatchService và dừng luồng chờ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đóng WatchService và dừng luồng chờ**
+
+    Bài đi sâu vào shutdown WatchService khi một thread đang blocking trong `take()`. Người học phân biệt `close`, `interrupt`, `cancel` và timed poll, hiểu `ClosedWatchServiceException` cùng `InterruptedException`, và thiết kế signal → close → join → cleanup để tránh thread tồn lưu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đánh thức thread đang chờ
+
+    1. Vì sao chỉ đặt `running=false` không bảo đảm dừng thread đang chặn ở `take()`?
+    2. `WatchService.close()` tác động thế nào đến thread chờ và khác gì `WatchKey.cancel()`?
+
+    ### Shutdown phối hợp
+
+    1. Dùng `Thread.interrupt()` khác `close()` ở trạng thái của service và cờ interrupt ra sao?
+    2. Khi controller gọi close đồng thời với interrupt, vì sao thứ tự exception không nên là giả định của logic?
+    3. Làm sao dùng join và cleanup để kiểm chứng thread thực sự dừng, kể cả có handler dài hạn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế wake | Mô phỏng `take()` blocking và phản ứng trước close/interrupt. |
+    | Phân biệt hành vi lifecycle | So sánh close service, cancel registration và timed polling. |
+    | Thiết kế shutdown | Xây quy trình signal, close, join, giải phóng tài nguyên và xử lý exception chủ động. |
+    | Đánh giá race | Nêu các tình huống handler còn chạy, closed service và interrupt cùng xuất hiện. |

@@ -1,0 +1,96 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'MÃ HÓA VĂN BẢN — MẠCH HỌC VÀ ĐỐI CHIẾU'
+roadmapHeading: 'Mạch liên kết bài học'
+roadmap:
+  - id: text-encoding-001
+    order: 1
+    title: 'Quan hệ giữa byte, char UTF-16, code point và ký tự hiển thị'
+    description: 'Xây nền tảng về bốn đơn vị đo văn bản và cách Java đánh chỉ số UTF-16, bao gồm surrogate pair và grapheme.'
+    transition:
+      to: text-encoding-002
+      description: 'Từ hiểu đơn vị văn bản, chuyển sang các biểu diễn UTF và charset phổ biến.'
+  - id: text-encoding-002
+    order: 2
+    title: 'Unicode, UTF-8, UTF-16 và các charset thường gặp'
+    description: 'So sánh các UTF và charset thông dụng theo cấu trúc byte, phạm vi ký tự và lựa chọn trong Java.'
+    transition:
+      to: text-encoding-003
+      description: 'Từ kiến thức về encoding, học cách biểu diễn và tra cứu charset bằng API Java.'
+  - id: text-encoding-003
+    order: 3
+    title: 'Charset, StandardCharsets và tên charset'
+    description: 'Giới thiệu `Charset`, `StandardCharsets`, canonical names, aliases và cách lựa chọn charset an toàn trong API Java.'
+    transition:
+      to: text-encoding-004
+      description: 'Từ đối tượng Charset, áp dụng trực tiếp vào file và luồng I/O.'
+  - id: text-encoding-004
+    order: 4
+    title: 'Chọn charset tường minh khi đọc và ghi'
+    description: 'Vận dụng charset tường minh trong Files, Reader và Writer, bảo toàn dữ liệu khi chuyển qua ranh giới I/O.'
+    transition:
+      to: text-encoding-005
+      description: 'Từ việc chọn tường minh, kiểm tra nơi API cũ còn chịu ảnh hưởng của charset mặc định.'
+  - id: text-encoding-005
+    order: 5
+    title: 'Charset mặc định, thay đổi UTF-8 từ JDK 18 và ngoại lệ theo API'
+    description: 'Phân biệt charset mặc định trước và sau JEP 400 với các ngoại lệ theo hợp đồng API.'
+    transition:
+      to: text-encoding-006
+      description: 'Từ quy tắc default charset, đi vào sự khác biệt byte order và BOM của UTF-16.'
+  - id: text-encoding-006
+    order: 6
+    title: 'BOM và khác biệt UTF-16, UTF-16BE, UTF-16LE'
+    description: 'Làm rõ BOM, byte order và cách mã UTF-16 trong Java xử lý các dấu hiệu đầu tệp.'
+    transition:
+      to: text-encoding-007
+      description: 'Từ BOM và byte order, chuyển sang lỗi chữ sai khi hai phía bất đồng charset.'
+  - id: text-encoding-007
+    order: 7
+    title: 'Lỗi mojibake khi encode và decode không cùng charset'
+    description: 'Phân tích mojibake và double encoding, cách truy nguyên byte nguồn và giới hạn phục hồi thông tin đã mất.'
+    transition:
+      to: text-encoding-008
+      description: 'Từ phát hiện mojibake, tách biệt lỗi byte malformed và ký tự không biểu diễn được.'
+  - id: text-encoding-008
+    order: 8
+    title: 'Malformed input, unmappable character và chính sách xử lý'
+    description: 'Giải thích hai loại lỗi charset và hệ quả dữ liệu khi chọn REPORT, REPLACE hoặc IGNORE.'
+    transition:
+      to: text-encoding-009
+      description: 'Từ chính sách xử lý lỗi, học điều khiển encoder/decoder trực tiếp.'
+  - id: text-encoding-009
+    order: 9
+    title: 'CharsetEncoder, CharsetDecoder và CodingErrorAction'
+    description: 'Khai thác encoder/decoder trực tiếp, policy lỗi, CoderResult và quản lý bộ đệm khi chuyển mã.'
+    transition:
+      to: text-encoding-010
+      description: 'Từ coder và CoderResult, giải quyết byte UTF-8 bị chia qua nhiều lần đọc.'
+  - id: text-encoding-010
+    order: 10
+    title: 'Giải mã nhiều khối khi ký tự bị chia giữa hai lần đọc'
+    description: 'Thực hiện giải mã gia tăng khi sequence UTF-8 nằm qua ranh giới hai buffer hoặc lần đọc.'
+    transition:
+      to: text-encoding-011
+      description: 'Từ streaming decoder, mở rộng nguyên tắc giữ ranh giới ký tự sang thao tác cắt dữ liệu.'
+  - id: text-encoding-011
+    order: 11
+    title: 'Không cắt chuỗi byte hoặc char tùy ý giữa một ký tự'
+    description: 'Thực hành cắt văn bản an toàn theo UTF-8, surrogate pair và grapheme trong nhiều kiểu giới hạn.'
+    transition:
+      to: text-encoding-012
+      description: 'Từ cắt text an toàn, phân biệt chuyển mã văn bản với Base64 và nén byte.'
+  - id: text-encoding-012
+    order: 12
+    title: 'Phân biệt charset với Base64 và nén dữ liệu'
+    description: 'Phân biệt byte encoding, Base64 và compression; lắp pipeline chuyển đổi và đảo ngược đúng thứ tự.'
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+    | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 |
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+    | Tên | Quan hệ giữa byte, char UTF-16, code point và ký tự hiển thị | Unicode, UTF-8, UTF-16 và các charset thường gặp | Charset, StandardCharsets và tên charset | Chọn charset tường minh khi đọc và ghi | Charset mặc định, thay đổi UTF-8 từ JDK 18 và ngoại lệ theo API | BOM và khác biệt UTF-16, UTF-16BE, UTF-16LE | Lỗi mojibake khi encode và decode không cùng charset | Malformed input, unmappable character và chính sách xử lý | CharsetEncoder, CharsetDecoder và CodingErrorAction | Giải mã nhiều khối khi ký tự bị chia giữa hai lần đọc | Không cắt chuỗi byte hoặc char tùy ý giữa một ký tự | Phân biệt charset với Base64 và nén dữ liệu |
+    | Vấn đề cần hiểu | Độ dài và ranh giới của một ký tự thật sự là gì? | Cùng văn bản được biến thành byte ra sao giữa các encoding? | Chọn và tra cứu charset trong Java đúng cách thế nào? | Làm sao để chương trình đọc và ghi text nhất quán? | Nâng JDK thay đổi ngầm định encoding ở những API nào? | Thứ tự byte và BOM quyết định UTF-16 được đọc thế nào? | Vì sao dữ liệu hợp lệ vẫn xuất hiện ký tự sai? | Khi encoder/decoder gặp dữ liệu không hợp lệ, chuyện gì xảy ra? | Điều khiển chi tiết quá trình chuyển mã như thế nào? | Làm sao giữ nguyên ký tự khi byte đến từng khối? | Cắt byte hoặc char ở đâu để không phá vỡ ký tự? | Charset, Base64 và nén khác nhau về mục tiêu và kiểu dữ liệu nào? |
+    | Giá trị đối với OOP/module | Tránh đếm và cắt nhầm khi đọc/ghi text | Chọn encoding theo chuẩn dữ liệu và phát hiện sai lệch | Sử dụng API charset rõ ràng, tránh tên không hỗ trợ | Tạo đường đi I/O dự đoán được trên nhiều máy | Ngăn lỗi migration do phụ thuộc default charset | Tránh lệch byte order và BOM nhân đôi | Điều tra lỗi hiển thị mà không phá dữ liệu nguồn | Kiểm soát mất mát dữ liệu và ngoại lệ chuyển mã | Xây dựng bộ chuyển mã có trạng thái và báo lỗi rõ | Giải mã streaming bền vững trên file và network | Giữ tính toàn vẹn text trong chunking và truncation | Tránh lẫn biến đổi text/byte và khôi phục sai chuỗi |
+    | Tư duy hình thành | Chọn đúng đơn vị dữ liệu trước khi thao tác | Tách hệ thống code point khỏi quy tắc lưu byte | Dựa vào kiểu `Charset` và contract thay vì tên tùy ý | Đặt charset tại đúng ranh giới byte và ký tự | Đọc contract từng API thay vì suy luận từ JVM | Kiểm chứng byte thực tế thay vì suy đoán endian | Truy ngược từng phép encode/decode trước khi sửa | Chọn chính sách lỗi theo yêu cầu toàn vẹn | Giải mã là một quá trình trạng thái với buffer và lifecycle | Ranh giới đọc dữ liệu không phải ranh giới ký tự | Xác định ranh giới logic trước khi cắt | Mỗi lớp chuyển đổi có vai trò và phép đảo riêng |

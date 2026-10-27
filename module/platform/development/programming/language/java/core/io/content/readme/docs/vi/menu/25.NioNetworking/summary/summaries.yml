@@ -1,0 +1,298 @@
+summaries:
+- id: nio-networking-001
+  title: SocketChannel, ServerSocketChannel và DatagramChannel
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **SocketChannel, ServerSocketChannel và DatagramChannel**
+
+    Bài học giúp phân biệt ba channel mạng trong Java NIO theo vai trò: `ServerSocketChannel` nhận kết nối, `SocketChannel` trao đổi byte trên TCP, còn `DatagramChannel` gửi/nhận datagram UDP. Hiểu đúng mối quan hệ channel, `ByteBuffer` và provider mạng là tiền đề để lựa chọn API và tránh nhầm TCP với UDP.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vai trò và mô hình kết nối
+
+    1. `SocketChannel`, `ServerSocketChannel` và `DatagramChannel` khác nhau về đối tượng dữ liệu và vai trò nào?
+    2. Vì sao `accept()` trả về một `SocketChannel` riêng trong khi listener vẫn tiếp tục lắng nghe?
+    3. UDP `send/receive` khác vòng đời `connect/accept` của TCP như thế nào?
+
+    ### Dữ liệu và vòng đời
+
+    1. Vì sao các lần `SocketChannel.write()` không định nghĩa message boundary cho các lần `read()`?
+    2. `DatagramChannel.connect(peer)` có tạo phiên TCP hay bảo đảm delivery không?
+    3. Khi sử dụng channel qua loopback, cần kiểm tra và đóng các tài nguyên nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn channel theo giao thức | Giải thích đúng khi nào dùng listener TCP, peer TCP hoặc UDP datagram channel. |
+    | Thiết lập TCP đơn giản | Mô tả chuỗi mở, bind, accept, connect và I/O trên accepted channel. |
+    | Phân biệt giá trị trả về | Giải thích `null`, `0`, `-1` theo phương thức và blocking mode. |
+    | Nhận diện giới hạn truyền dữ liệu | Chỉ rõ khác biệt TCP stream/UDP datagram và yêu cầu framing riêng của TCP. |
+- id: nio-networking-002
+  title: Chế độ blocking và non-blocking
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chế độ blocking và non-blocking**
+
+    Bài học đặt hành vi blocking và non-blocking cạnh nhau để lựa chọn mô hình đọc, ghi và chấp nhận kết nối phù hợp. Qua `configureBlocking(false)`, `Selector` và ví dụ loopback, người học biết cách xử lý readiness, tránh busy-spin, giới hạn hàng đợi ghi và không nhầm non-blocking với asynchronous I/O.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Blocking mode và trạng thái thao tác
+
+    1. `accept()`, `connect()`, `read()` và `write()` trả về gì khi đang blocking so với non-blocking?
+    2. Vì sao non-blocking `read() == 0` không phải EOF và `accept() == null` không có nghĩa listener hỏng?
+    3. Tại sao channel phải non-blocking trước khi `register(selector, ...)`?
+
+    ### Thiết kế event loop
+
+    1. `OP_ACCEPT`, `OP_CONNECT`, `OP_READ`, `OP_WRITE` báo readiness nào, và vì sao readiness không bảo đảm message đã hoàn chỉnh?
+    2. Tại sao nên xóa `OP_WRITE` khi không còn outbound bytes và giữ buffer khi ghi dở?
+    3. Blocking, non-blocking và asynchronous completion khác nhau về luồng điều khiển ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chuyển blocking mode | Đặt mode cho channel và chỉ ra trường hợp `IllegalBlockingModeException`. |
+    | Xử lý readiness | Mô tả event loop có selected keys và chỉ thử I/O khi phù hợp. |
+    | Tránh vòng lặp bận | Thay polling không điều kiện bằng chờ selector và cập nhật interestOps. |
+    | Đánh giá đánh đổi | Chọn blocking hoặc non-blocking dựa trên số kết nối, state và chi phí tài nguyên. |
+- id: nio-networking-003
+  title: Connect, finishConnect, accept, read và write
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Connect, finishConnect, accept, read và write**
+
+    Bài học diễn giải vòng đời TCP trong Java NIO qua `connect`, `finishConnect`, `accept`, `read`, `write`. Người học theo dõi được kết nối pending, phản ứng với `OP_CONNECT`/`OP_ACCEPT`, xử lý `0`/`-1`, buffer còn byte và không xem một lời gọi I/O là cả thông điệp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết lập kết nối
+
+    1. `connect(remote)` trả `false` trong non-blocking thì khi nào và tại sao phải gọi `finishConnect()`?
+    2. `OP_CONNECT` khác `OP_ACCEPT` ở channel nhận sự kiện và thao tác tiếp theo thế nào?
+    3. Vì sao accepted SocketChannel cần được chuyển sang non-blocking trước khi đăng ký selector?
+
+    ### Đọc ghi và trạng thái lỗi
+
+    1. `read()` trả `0` hoặc `-1` thể hiện hai điều gì khác nhau?
+    2. Sau khi `write(src)` trả số byte nhỏ hơn `src.remaining()` ban đầu, cần giữ thông tin gì?
+    3. Khi nào phải bật/tắt `OP_WRITE`, và vì sao ghi xong chưa có nghĩa peer đã xử lý?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ vòng đời TCP | Sắp xếp đúng bind/accept phía server và connect/finishConnect phía client. |
+    | Xử lý pending connect | Thiết kế nhánh connectable với finishConnect và interestOps tiếp theo. |
+    | Đọc/ghi ByteBuffer | Kiểm tra số byte trả về, `flip`/`compact` và dữ liệu còn trong buffer. |
+    | Giải thích lỗi trạng thái | Phân biệt null/0/-1, exception, EOF và timeout cho từng thao tác. |
+- id: nio-networking-004
+  title: TCP là luồng byte, không bảo toàn ranh giới bản tin
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **TCP là luồng byte, không bảo toàn ranh giới bản tin**
+
+    Bài học xây dựng trực giác nền tảng rằng TCP chỉ truyền một chuỗi byte có thứ tự: một lần `write` có thể bị chia thành nhiều lần `read`, và nhiều lần ghi có thể dồn vào một lần đọc. Người học nhờ đó không đọc dở JSON hay giải mã UTF-8 từ chunk chưa trọn, đồng thời biết lý do phải định nghĩa framing.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất TCP stream
+
+    1. Vì sao số lần `SocketChannel.read()` không ánh xạ một-một với số lần `write()`?
+    2. TCP segment, ByteBuffer chunk và frame ứng dụng khác nhau ở tầng nào?
+    3. Một lần `read()` có thể chứa phần cuối frame trước và phần đầu frame sau ra sao?
+
+    ### Ứng dụng với thông điệp
+
+    1. Length-prefix, delimiter và fixed-size xác định ranh giới message bằng quy tắc nào?
+    2. Vì sao không được suy hết message từ việc socket tạm im lặng, buffer đã đầy hoặc một lần read trả 0?
+    3. UTF-8 nhiều byte và EOF giữa frame đặt ra những yêu cầu gì cho parser?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng chia/gộp byte | Tạo ví dụ hai lần write được đọc thành nhiều chunk mà nội dung giữ nguyên thứ tự. |
+    | Chọn framing sơ bộ | So sánh length-prefix, delimiter và fixed-size cho payload cụ thể. |
+    | Giữ byte chưa trọn | Giải thích vai trò flip/compact và parser khi header/body chưa đủ. |
+    | Nhận diện ranh giới tầng ứng dụng | Phân biệt TCP transport với acknowledgement hoặc message boundary ở protocol. |
+- id: nio-networking-005
+  title: Thiết kế framing bằng độ dài hoặc dấu phân cách
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thiết kế framing bằng độ dài hoặc dấu phân cách**
+
+    Bài học chuyển từ nhận biết nhu cầu framing sang triển khai protocol có định dạng rõ ràng. Người học thiết kế header độ dài hoặc delimiter, xây decoder giữ trạng thái qua nhiều chunk, xử lý nhiều frame liên tiếp, giới hạn kích thước trước cấp phát và kiểm thử các điểm cắt byte.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định dạng frame
+
+    1. Trong length-prefix framing, header 4 byte big-endian xác định độ dài payload theo quy ước nào?
+    2. Vì sao chiều dài phải được xác thực trước khi cấp phát mảng/buffer và xử lý `length=0` riêng?
+    3. Delimiter-based framing phải giải quyết escaping, CRLF qua hai chunk và giới hạn độ dài dòng ra sao?
+
+    ### Decoder và kiểm thử
+
+    1. Vì sao decoder cần `WAIT_HEADER` và `WAIT_BODY` giữa nhiều lượt đọc?
+    2. Nếu một chunk chứa hai frame hoàn chỉnh và hai byte header frame kế, parser phải lưu lại gì?
+    3. Làm thế nào kiểm thử parser với nhiều cách chia chunk và EOF giữa frame?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đặc tả wire format | Định nghĩa header, endian, charset, max payload và chính sách dữ liệu lỗi. |
+    | Mô phỏng streaming decoder | Theo dõi state header/body hoặc delimiter trên nhiều chunk và emit đủ frame. |
+    | Kiểm thử phân đoạn bất kỳ | Thiết kế các trường hợp chia một frame ở mọi vị trí và nhiều frame cùng chunk. |
+    | Giới hạn tài nguyên | Từ chối độ dài âm/quá lớn hoặc dòng thiếu delimiter trước khi cấp phát vô hạn. |
+- id: nio-networking-006
+  title: Partial read, partial write và lưu trạng thái giữa các lần sẵn sàng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Partial read, partial write và lưu trạng thái giữa các lần sẵn sàng**
+
+    Bài học đưa framing vào event loop thực tế, nơi `read` và `write` có thể chỉ tiến triển một phần. Trọng tâm là duy trì `ByteBuffer`, parser state và outbound queue trên từng kết nối, dùng `flip`/`compact`, đăng ký `OP_WRITE` đúng lúc và áp dụng backpressure khi peer chậm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Trạng thái khi I/O chưa hoàn tất
+
+    1. Vì sao phải giữ `ConnectionState` gắn với `SelectionKey` qua các lần `select()`?
+    2. `flip()`, `compact()` và `clear()` tác động ra sao đến byte đã nhận nhưng chưa parse hết?
+    3. Nếu `SocketChannel.write()` chỉ gửi một phần buffer, vì sao không được rewind trước lượt ghi sau?
+
+    ### Selector, hiệu năng và lỗi
+
+    1. Tại sao `OP_WRITE` đăng ký thường trực có thể khiến event loop thức liên tục?
+    2. Cần xử lý inbound buffer đầy nhưng chưa có frame bằng chiến lược giới hạn/mở rộng nào?
+    3. Làm thế nào xử lý EOF giữa frame và giới hạn tổng outbound queue theo từng connection?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Bảo toàn per-connection state | Thiết kế ConnectionState chứa input buffer, parser state, outbound buffers và EOF flag. |
+    | Điều khiển partial read | Mô phỏng nhiều lần đọc hai byte, sau đó flip/parse/compact mà không làm mất byte. |
+    | Điều khiển partial write | Giữ position của buffer ghi dở, bật/tắt OP_WRITE dựa trên hasRemaining. |
+    | Áp dụng backpressure | Đưa ra giới hạn hàng đợi và cách ngừng/từ chối input khi peer tiêu thụ chậm. |
+- id: nio-networking-007
+  title: EOF, đóng kết nối và đóng một chiều
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **EOF, đóng kết nối và đóng một chiều**
+
+    Bài học phân biệt `read() == 0` với EOF `-1`, đồng thời giải thích `shutdownOutput`, `shutdownInput` và `close` theo từng hướng của kết nối TCP. Nhờ đó người học thiết kế request/response dùng half-close đúng lúc, nhận diện frame dở ở EOF và tránh treo vô thời hạn khi cả hai bên chờ nhau kết thúc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### EOF và đóng một chiều
+
+    1. Vì sao `read() == -1` là EOF của hướng nhận còn `0` chỉ là chưa có byte trong lần đọc?
+    2. `shutdownOutput()` khác `shutdownInput()` và `close()` về chiều dữ liệu còn sử dụng được như thế nào?
+    3. Sau khi client shutdownOutput, vì sao nó vẫn có thể nhận response từ server?
+
+    ### Vòng đời giao thức và sự cố
+
+    1. Vì sao protocol đợi EOF có thể treo nếu hai đầu vẫn giữ hướng gửi mở?
+    2. Khi gặp EOF giữa length-prefix frame chưa đủ byte, parser nên xử lý như thế nào?
+    3. TLS hoặc giao thức HTTP persistent khiến việc dùng TCP EOF làm ranh giới message có giới hạn gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích TCP half-close | Diễn giải request, FIN, response và EOF theo hai hướng kết nối. |
+    | Phân loại kết quả read | Phân biệt giá trị dương/0/-1 với IOException hoặc reset. |
+    | Thiết kế kết thúc đúng | Xây chu trình shutdownOutput rồi tiếp tục đọc response theo protocol. |
+    | Kiểm tra EOF và timeout | Phát hiện frame chưa trọn, vòng chờ EOF và quy trình hủy/đóng tài nguyên. |
+- id: nio-networking-008
+  title: Datagram và khác biệt với luồng TCP
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Datagram và khác biệt với luồng TCP**
+
+    Bài học đối chiếu UDP datagram với TCP stream bằng `DatagramChannel`, chú trọng mỗi lần `send/receive` xử lý một gói, sender address, việc cắt gói khi receive buffer nhỏ và những giới hạn tin cậy/thứ tự của UDP. Người học lựa chọn transport dựa trên yêu cầu nghiệp vụ, không dựa vào quan niệm UDP luôn nhanh hơn TCP.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình datagram
+
+    1. `DatagramChannel.send`, `receive`, `bind`, `connect` khác thao tác trên SocketChannel ở điểm nào?
+    2. Khi receive buffer nhỏ hơn datagram, vì sao phần bị cắt không thể nhận tiếp trong lượt sau?
+    3. Vì sao `DatagramChannel.connect` không thiết lập TCP handshake hoặc bảo đảm peer đã nhận gói?
+
+    ### Đánh đổi transport
+
+    1. UDP có thể mất, trùng hoặc đảo thứ tự gói thế nào, và ứng dụng phải tự bổ sung điều gì nếu cần reliability?
+    2. Tại sao selector readiness không chứng minh một datagram đã được gửi thành công tới peer?
+    3. Các tiêu chí MTU, latency, kiểm soát tắc nghẽn, authentication và tính đúng nghiệp vụ ảnh hưởng lựa chọn UDP/TCP ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Gửi/nhận datagram | Xây luồng bind UDP loopback, send/receive và đọc địa chỉ sender. |
+    | Xử lý truncation | Giải thích hậu quả khi nhận gói lớn vào ByteBuffer quá nhỏ. |
+    | Phân biệt connected UDP | Nêu rõ connected DatagramChannel chỉ ràng buộc peer, không tạo stream. |
+    | Chọn transport hợp lý | So sánh telemetry/game state với tác vụ cần thứ tự và bảo đảm dữ liệu. |
+- id: nio-networking-009
+  title: Phạm vi I/O mạng và các kiến thức giao thức cần học riêng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phạm vi I/O mạng và các kiến thức giao thức cần học riêng**
+
+    Bài kết nối kiến thức Java NIO với kiến trúc dịch vụ mạng: channel và selector chỉ vận chuyển byte/datagram, còn protocol ứng dụng chịu trách nhiệm framing, xác thực, retry, lỗi nghiệp vụ và TLS. Người học xác định được khi nào nên học sâu TCP/IP, HTTP, mTLS, timeout hoặc dùng framework chuẩn thay vì tự triển khai protocol production.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới API và giao thức
+
+    1. `SocketChannel`, `Selector` và `ByteBuffer` cung cấp những phần nào mà HTTP/WebSocket/TLS vẫn phải bổ sung?
+    2. Vì sao `write()` thành công không phải xác nhận giao dịch đã commit hoặc request được xử lý?
+    3. TCP và UDP ảnh hưởng yêu cầu framing, reliability và message validation ra sao?
+
+    ### Thiết kế hệ thống thật
+
+    1. Phân biệt transport error, protocol error và business error bằng ví dụ mạng nào?
+    2. Vì sao tự retry request không idempotent sau timeout có nguy cơ thực hiện nghiệp vụ hai lần?
+    3. Khi nào cần nghiên cứu DNS, NAT, congestion, TLS/mTLS, timeout và application protocol riêng, thay vì coi NIO là đầy đủ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ ranh giới kiến trúc | Phân lớp Java NIO API, transport, framing, security, protocol và nghiệp vụ. |
+    | Phân loại lỗi | Nêu cách ứng dụng xử lý khác nhau đối với socket reset, malformed frame và lỗi nghiệp vụ. |
+    | Đánh giá retry an toàn | Nhận diện tình huống timeout sau commit cần idempotency key hoặc quy tắc nghiệp vụ. |
+    | Chọn công cụ thích hợp | Lập danh sách yêu cầu HTTP/TLS/protocol và giải thích khi nên dùng thư viện chuẩn. |

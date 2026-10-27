@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "DÒNG VÀ TOKEN — MẠCH TỪ DÒNG VĂN BẢN ĐẾN PHÂN TÍCH DỮ LIỆU"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: lines-and-tokens-001
+    order: 1
+    title: "BufferedReader.readLine và dấu kết thúc dòng bị loại bỏ"
+    description: "Đọc dòng bằng `readLine()` và nhận biết mất terminator, dòng rỗng, EOF và charset."
+    transition:
+      to: lines-and-tokens-002
+      description: "Từ nội dung dòng sang cách biểu diễn LF, CRLF, CR."
+  - id: lines-and-tokens-002
+    order: 2
+    title: "LF, CRLF, CR và quy ước xuống dòng"
+    description: "So sánh LF, CRLF, CR và tác động của chuẩn hóa, tách dòng hay ghi lại file."
+    transition:
+      to: lines-and-tokens-003
+      description: "Từ quy ước xuống dòng sang ghi separator có chủ đích."
+  - id: lines-and-tokens-003
+    order: 3
+    title: "BufferedWriter.newLine và System.lineSeparator"
+    description: "Phân biệt API ghi newline theo nền tảng với separator cố định và vòng đời Writer."
+    transition:
+      to: lines-and-tokens-004
+      description: "Từ ghi/đọc từng dòng sang dòng dạng Stream và quyền sở hữu nguồn."
+  - id: lines-and-tokens-004
+    order: 4
+    title: "BufferedReader.lines và quyền đóng Reader"
+    description: "Quản lý stream lazy, Reader ownership, `Files.lines` và lỗi đọc trong terminal operation."
+    transition:
+      to: lines-and-tokens-005
+      description: "Từ đọc dòng sang phân tích token từ nguồn văn bản."
+  - id: lines-and-tokens-005
+    order: 5
+    title: "Scanner: nguồn dữ liệu, delimiter và token"
+    description: "Giới thiệu các nguồn Scanner, delimiter regex và token, cùng giới hạn của tách trường đơn giản."
+    transition:
+      to: lines-and-tokens-006
+      description: "Từ Scanner căn bản sang phân biệt đọc token và đọc dòng."
+  - id: lines-and-tokens-006
+    order: 6
+    title: "next, nextLine và phần xuống dòng còn lại"
+    description: "Giải thích phần dư dòng sau thao tác Scanner theo token và cách đọc nhập liệu nhất quán."
+    transition:
+      to: lines-and-tokens-007
+      description: "Từ vị trí quét sang quy tắc phân tích token số."
+  - id: lines-and-tokens-007
+    order: 7
+    title: "Đọc số với Scanner theo locale và radix"
+    description: "Phân tích số theo locale và radix, kiểm tra token và chọn BigDecimal khi cần chính xác."
+    transition:
+      to: lines-and-tokens-008
+      description: "Từ đọc số hợp lệ sang xử lý token sai và giá trị vượt miền."
+  - id: lines-and-tokens-008
+    order: 8
+    title: "hasNext, InputMismatchException và token không hợp lệ"
+    description: "Phân biệt lỗi kiểu dữ liệu, EOF và cơ chế phục hồi token sai không làm vòng lặp đứng yên."
+    transition:
+      to: lines-and-tokens-009
+      description: "Từ lỗi token sang lỗi nguồn I/O và đóng tài nguyên."
+  - id: lines-and-tokens-009
+    order: 9
+    title: "Scanner.ioException và đóng nguồn dữ liệu"
+    description: "Tìm `IOException` được Scanner ghi nhận và kiểm soát đóng nguồn đúng quyền sở hữu."
+    transition:
+      to: lines-and-tokens-010
+      description: "Từ Scanner sang công cụ lexical có cấu hình cú pháp khác."
+  - id: lines-and-tokens-010
+    order: 10
+    title: "StreamTokenizer và lựa chọn công cụ phân tích phù hợp"
+    description: "Khảo sát StreamTokenizer và cấu hình token, nhận diện giới hạn so với parser có ngữ pháp."
+    transition:
+      to: lines-and-tokens-011
+      description: "Từ lexer/token đơn giản sang parser xử lý escape và quote."
+  - id: lines-and-tokens-011
+    order: 11
+    title: "Giới hạn dùng tách dòng hoặc split để đọc định dạng có escape phức tạp"
+    description: "Phân tích giới hạn split/readLine trước escaped delimiter, CSV quoted multiline và JSON lồng nhau."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | BufferedReader.readLine và dấu kết thúc dòng bị loại bỏ | LF, CRLF, CR và quy ước xuống dòng | BufferedWriter.newLine và System.lineSeparator | BufferedReader.lines và quyền đóng Reader | Scanner: nguồn dữ liệu, delimiter và token | next, nextLine và phần xuống dòng còn lại | Đọc số với Scanner theo locale và radix | hasNext, InputMismatchException và token không hợp lệ | Scanner.ioException và đóng nguồn dữ liệu | StreamTokenizer và lựa chọn công cụ phân tích phù hợp | Giới hạn dùng tách dòng hoặc split để đọc định dạng có escape phức tạp |
+  | Vấn đề cần hiểu | Khi nào một dòng rỗng khác EOF? | Vì sao một nội dung nhìn giống nhau lại có byte khác? | Khi nào dùng newLine, khi nào dùng literal newline? | Ai có nghĩa vụ đóng Reader khi xử lý dòng qua stream? | Từ nguồn văn bản đến token diễn ra như thế nào? | Vì sao nextLine dường như bỏ qua dòng ngay sau nextInt? | Token số phụ thuộc delimiter, locale và cơ số ra sao? | Token sai kiểu khác EOF và được xử lý thế nào? | Lỗi nguồn có thể bị hiểu nhầm thành EOF như thế nào? | Tokenization khác parsing và validation ra sao? | Vì sao delimiter và newline không luôn đánh dấu field/record? |
+  | Giá trị đối với OOP/module | Đọc dòng đúng mà không nhầm terminator với nội dung. | Xử lý xuống dòng nhất quán giữa nền tảng. | Xuất dữ liệu phù hợp file và giao thức. | Tránh Reader bị đóng sớm hoặc không đóng. | Đọc và tách token đúng charset, delimiter. | Không bỏ sót chuỗi tên hoặc phần dư dòng. | Parse số tái lập và hạn chế sai lệch thập phân. | Xác thực dữ liệu và duy trì tiến triển của parser. | Báo lỗi đọc/đóng nguồn thay vì chấp nhận dữ liệu thiếu. | Lựa chọn công cụ lexical/parser đúng phạm vi. | Tránh đọc sai dữ liệu nhiều dòng, quote và escape. |
+  | Tư duy hình thành | Phân biệt dữ liệu dòng và điểm kết thúc dòng. | Phân biệt biểu diễn lưu trữ và quy ước hiển thị. | Xem separator là một phần của hợp đồng đầu ra. | Tách vòng đời tài nguyên khỏi stream pipeline. | Tách nguồn, quy tắc chia và giá trị token. | Theo dõi vị trí đọc logic trước khi chọn API. | Xác định định dạng số trước khi chuyển kiểu. | Mỗi lỗi phải dẫn đến quyết định dữ liệu rõ ràng. | Tách I/O failure, token failure và kết thúc hợp lệ. | Phân tách phân loại token khỏi kiểm tra cấu trúc. | Ưu tiên grammar và trạng thái thay cho split tùy tiện. |

@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "ĐỌC GHI TỆP BẰNG FILES — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: files-read-write-001
+    order: 1
+    title: "readAllBytes và giới hạn bộ nhớ"
+    description: "Hiểu `readAllBytes` trả một mảng byte đầy đủ, rủi ro cấp phát trên heap và cách thay bằng đọc theo khối hoặc đọc có hạn mức khi đầu vào lớn."
+    transition: 
+      to: files-read-write-002
+      description: "Sau khi nhận diện byte và giới hạn bộ nhớ, chuyển sang đọc/ghi văn bản với charset được chỉ định rõ."
+  - id: files-read-write-002
+    order: 2
+    title: "readString, writeString và charset UTF-8 mặc định của API"
+    description: "Phân biệt byte và String, UTF-8 mặc định do `readString`/`writeString` quy định, cách chọn charset và các tác động ghi đè/append."
+    transition: 
+      to: files-read-write-003
+      description: "Từ một String chứa toàn bộ tệp, xét trường hợp ứng dụng cần truy cập từng dòng và phải tính tới chi phí lưu danh sách."
+  - id: files-read-write-003
+    order: 3
+    title: "readAllLines và dữ liệu được đưa toàn bộ vào bộ nhớ"
+    description: "Hiểu `readAllLines` đọc hết file thành `List<String>`, tác động tới heap và lựa chọn thay thế khi chỉ cần lọc/đếm tuần tự."
+    transition: 
+      to: files-read-write-004
+      description: "Khi không cần lưu danh sách, sử dụng `Files.lines` để tiêu thụ dòng theo nhu cầu và quản lý tài nguyên đúng."
+  - id: files-read-write-004
+    order: 4
+    title: "Files.lines đọc lười và bắt buộc quản lý vòng đời Stream"
+    description: "Nắm `Files.lines` đọc dòng lazy nhưng giữ tài nguyên file đang mở, cách đóng Stream, xử lý short-circuit và lỗi khi tiêu thụ."
+    transition: 
+      to: files-read-write-005
+      description: "Từ pipeline dựa trên Stream, chuyển sang `BufferedReader`/`BufferedWriter` khi cần đọc/ghi văn bản tuần tự và kiểm soát chi tiết hơn."
+  - id: files-read-write-005
+    order: 5
+    title: "newBufferedReader và newBufferedWriter"
+    description: "Dùng `BufferedReader`/`BufferedWriter` cho I/O văn bản tuần tự, phân biệt dòng rỗng/EOF, charset, newline và vòng đời buffer."
+    transition: 
+      to: files-read-write-006
+      description: "Sau xử lý văn bản theo ký tự, quay về `InputStream`/`OutputStream` để thao tác chính xác trên byte thô."
+  - id: files-read-write-006
+    order: 6
+    title: "newInputStream, newOutputStream và các lựa chọn mở tệp"
+    description: "Phân biệt input/output stream cho byte, mặc định READ với input và CREATE/TRUNCATE với output, kết hợp xử lý buffer, lỗi và close."
+    transition: 
+      to: files-read-write-007
+      description: "Sau khi biết cách mở luồng, nghiên cứu riêng chính sách READ/WRITE/CREATE để phòng mất dữ liệu trong từng tình huống."
+  - id: files-read-write-007
+    order: 7
+    title: "READ, WRITE, CREATE, CREATE_NEW và TRUNCATE_EXISTING"
+    description: "Hiểu rành mạch READ/WRITE/CREATE/CREATE_NEW/TRUNCATE_EXISTING, các mặc định khác nhau theo API và lựa chọn chống ghi đè/race."
+    transition: 
+      to: files-read-write-008
+      description: "Sau các chính sách tạo và thay thế, mở rộng sang trường hợp ghi nối thêm và những tổ hợp option bị cấm."
+  - id: files-read-write-008
+    order: 8
+    title: "APPEND và giới hạn kết hợp OpenOption"
+    description: "Giải thích `APPEND` nối dữ liệu ở cuối file, giới hạn kết hợp option, hành vi provider và rủi ro nhiều writer cùng ghi."
+    transition: 
+      to: files-read-write-009
+      description: "Sau vị trí ghi và concurrency, chuyển sang yêu cầu đồng bộ dữ liệu xuống thiết bị và vòng đời tệp tạm."
+  - id: files-read-write-009
+    order: 9
+    title: "SYNC, DSYNC, DELETE_ON_CLOSE và tính hỗ trợ của provider"
+    description: "Phân biệt SYNC/DSYNC/force, DELETE_ON_CLOSE best effort, tác động của provider, chi phí đồng bộ và giới hạn crash durability."
+    transition: 
+      to: files-read-write-010
+      description: "Từ cơ chế duy trì file, chuyển sang sao chép dữ liệu giữa nguồn stream và đường dẫn tệp, nơi ownership rất quan trọng."
+  - id: files-read-write-010
+    order: 10
+    title: "Files.copy kết hợp InputStream hoặc OutputStream"
+    description: "Nắm hướng của các overload `Files.copy`, kết quả theo byte, quyền sở hữu stream và giới hạn khi copy chưa hoàn tất."
+    transition: 
+      to: files-read-write-011
+      description: "Khi đã sao chép xong, học cách đối chiếu chính xác nội dung byte của hai file bằng `Files.mismatch`."
+  - id: files-read-write-011
+    order: 11
+    title: "Files.mismatch và so sánh nội dung hai tệp"
+    description: "Sử dụng `Files.mismatch` để tìm byte đầu tiên khác nhau hoặc xác nhận hai file giống byte, kể cả khác do mã hóa và khi nguồn không ổn định."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | readAllBytes và giới hạn bộ nhớ | readString, writeString và charset UTF-8 mặc định của API | readAllLines và dữ liệu được đưa toàn bộ vào bộ nhớ | Files.lines đọc lười và bắt buộc quản lý vòng đời Stream | newBufferedReader và newBufferedWriter | newInputStream, newOutputStream và các lựa chọn mở tệp | READ, WRITE, CREATE, CREATE_NEW và TRUNCATE_EXISTING | APPEND và giới hạn kết hợp OpenOption | SYNC, DSYNC, DELETE_ON_CLOSE và tính hỗ trợ của provider | Files.copy kết hợp InputStream hoặc OutputStream | Files.mismatch và so sánh nội dung hai tệp |
+  | Vấn đề cần hiểu | Lúc nào đọc hết byte gây tốn heap hoặc vượt giới hạn mảng? | UTF-8 mặc định của API khác charset JVM và cách ghi mặc định ra sao? | Khi nào `List<String>` khiến dung lượng bộ nhớ tăng mạnh? | Stream lười đọc khác với vòng đời tài nguyên file như thế nào? | Khi nào dùng reader/writer có đệm và phải cẩn thận với newline? | Mặc định mở input/output tác động dữ liệu file ra sao? | Tạo file, ghi file có sẵn và truncate khác nhau ở đâu? | APPEND có giới hạn tổ hợp và atomicity nào? | Durability, xóa khi đóng và provider thực sự cam kết điều gì? | Hướng copy và trách nhiệm đóng stream thuộc về ai? | So sánh byte khác so tên, metadata và văn bản thế nào? |
+  | Giá trị đối với OOP/module | Chọn API byte có hạn mức để bảo vệ module trước input lớn. | Đọc/ghi cấu hình văn bản đúng charset, tránh hỏng dữ liệu. | Tránh giữ toàn bộ log/CSV lớn trong heap module. | Tránh rò rỉ file handle ở service xử lý nhiều request. | Tạo luồng xử lý text có tài nguyên và mã hóa rõ ràng. | Đọc/ghi byte an toàn cho tệp nhị phân và payload. | Thiết kế ghi file tránh phá dữ liệu đang tồn tại. | Ghi log nối thêm có chủ đích, biết xử lý concurrent writers. | Chọn chính sách độ bền và cleanup phù hợp dữ liệu module. | Chuyển byte qua file/stream mà vẫn kiểm soát tài nguyên. | Xác minh file sao chép đúng nội dung byte. |
+  | Tư duy hình thành | Ước lượng bộ nhớ trước khi chọn kỹ thuật đọc. | Xác định encoding và chính sách ghi trước khi thao tác. | Chỉ tích lũy dữ liệu khi nghiệp vụ thật sự cần. | Gắn trách nhiệm close vào quyền sở hữu nguồn dữ liệu. | Phân biệt ranh giới ký tự, dòng, buffer và tệp. | Chọn chế độ mở trước khi cấp handle. | Biến chính sách mở file thành một quyết định nghiệp vụ rõ. | Tách ghi cuối file khỏi bảo đảm thứ tự và durability. | Kiểm tra giới hạn cam kết của filesystem và thiết bị. | Theo dõi nguồn, đích và quyền sở hữu từng stream. | Định nghĩa tiêu chí bằng nhau trước khi kiểm chứng. |

@@ -1,0 +1,68 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "TRA CỨU JAVA I/O — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: reference-tables-001
+    order: 1
+    title: "Bảng chọn InputStream, Reader, Files hoặc Channel"
+    description: "Lập bảng quyết định giữa byte stream, character reader, tiện ích Files và channel theo nhu cầu, dung lượng và nguồn dữ liệu."
+    transition: 
+      to: reference-tables-002
+      description: "Từ xác định API theo dữ liệu sang quy tắc biến đổi byte và ký tự trong I/O văn bản"
+  - id: reference-tables-002
+    order: 2
+    title: "Bảng charset và quy tắc chuyển byte sang ký tự"
+    description: "Tra cứu UTF-8, UTF-16, BOM, luồng chuyển byte sang ký tự và cách phát hiện/sửa lỗi mã hóa văn bản."
+    transition: 
+      to: reference-tables-003
+      description: "Từ mã hóa văn bản sang điều khiển trạng thái buffer khi đọc/ghi dữ liệu"
+  - id: reference-tables-003
+    order: 3
+    title: "Bảng biến đổi trạng thái Buffer"
+    description: "Tổng hợp quy tắc position, limit, mark, flip/clear/rewind/compact để dự đoán chính xác trạng thái buffer."
+    transition: 
+      to: reference-tables-004
+      description: "Từ trạng thái buffer sang chọn đúng nhóm option cho từng thao tác Path/Files"
+  - id: reference-tables-004
+    order: 4
+    title: "Bảng OpenOption, CopyOption, LinkOption và FileVisitOption"
+    description: "Tra cứu OpenOption, CopyOption, LinkOption và FileVisitOption đúng thao tác, mặc định và rủi ro khi gặp symlink."
+    transition: 
+      to: reference-tables-005
+      description: "Từ chọn option thực hiện thao tác sang quản lý người chịu trách nhiệm đóng tài nguyên"
+  - id: reference-tables-005
+    order: 5
+    title: "Bảng trách nhiệm đóng tài nguyên theo từng API"
+    description: "Tổ chức ownership và close cho các API I/O, đặc biệt stream trả về, wrapper, tài nguyên mượn và try-with-resources."
+    transition: 
+      to: reference-tables-006
+      description: "Từ vòng đời tài nguyên sang nhận diện nguyên nhân lỗi và ghi thông tin chẩn đoán"
+  - id: reference-tables-006
+    order: 6
+    title: "Bảng lỗi I/O thường gặp và thông tin cần kiểm tra"
+    description: "Liên kết exception I/O với nguồn lỗi, dữ liệu chẩn đoán và quyết định retry/khắc phục có điều kiện."
+    transition: 
+      to: reference-tables-007
+      description: "Từ tra cứu lỗi theo API sang đối chiếu lịch sử phát hành và tương thích JDK"
+  - id: reference-tables-007
+    order: 7
+    title: "Bảng API truyền thống, NIO, NIO.2 và các mốc phiên bản"
+    description: "Sơ đồ thế hệ java.io, NIO và NIO.2 cùng các mốc phát hành, tránh suy đoán hỗ trợ từ tên lớp."
+    transition: 
+      to: reference-tables-008
+      description: "Từ bảng mốc API sang phương pháp đọc Javadoc, đặc tả serialization và hỗ trợ provider"
+  - id: reference-tables-008
+    order: 8
+    title: "Tra cứu Javadoc, Serialization Specification và khả năng của provider"
+    description: "Dạy quy trình tra Javadoc và Serialization Specification, kiểm chứng metadata features của filesystem/provider."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Bảng chọn InputStream, Reader, Files hoặc Channel | Bảng charset và quy tắc chuyển byte sang ký tự | Bảng biến đổi trạng thái Buffer | Bảng OpenOption, CopyOption, LinkOption và FileVisitOption | Bảng trách nhiệm đóng tài nguyên theo từng API | Bảng lỗi I/O thường gặp và thông tin cần kiểm tra | Bảng API truyền thống, NIO, NIO.2 và các mốc phiên bản | Tra cứu Javadoc, Serialization Specification và khả năng của provider |
+  | Vấn đề cần hiểu | Dữ liệu và thao tác nào cần InputStream, Reader, Files hay Channel? | Chuỗi byte biến thành ký tự theo quy tắc charset nào? | Sau mỗi phép biến đổi, vùng nào của buffer còn đọc hoặc ghi được? | Option nào hợp lệ cho mở, copy, move hoặc duyệt cây? | Tài nguyên nào do caller hay callee chịu trách nhiệm đóng? | Gặp lỗi I/O phải kiểm tra dữ kiện nào trước và xử lý ra sao? | Lớp hoặc phương thức I/O này được hỗ trợ từ bản Java nào? | Đâu là điều Java bảo đảm và đâu là khả năng riêng của provider? |
+  | Giá trị đối với OOP/module | Giảm chọn sai API và rủi ro bộ nhớ | Giữ dữ liệu văn bản chính xác | Xử lý partial I/O không làm mất dữ liệu | Chọn cấu hình file đúng ý định | Tránh rò rỉ và đóng nhầm tài nguyên | Rút ngắn điều tra, giảm retry sai | Tránh lỗi tương thích khi build | Ra quyết định dựa trên tài liệu và thử nghiệm |
+  | Tư duy hình thành | Bắt đầu từ hình dạng dữ liệu | Xác minh encoding ở cả hai đầu | Theo dõi trạng thái bằng bất biến | Tôn trọng hợp đồng của từng overload | Ownership quan trọng hơn có AutoCloseable | Đi từ ngữ cảnh sự cố tới nguyên nhân khả dĩ | Kiểm tra phiên bản tới cấp phương thức | Phân biệt hợp đồng chuẩn với triển khai cụ thể |

@@ -1,0 +1,343 @@
+summaries:
+- id: lines-and-tokens-001
+  title: BufferedReader.readLine và dấu kết thúc dòng bị loại bỏ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **BufferedReader.readLine và dấu kết thúc dòng bị loại bỏ**
+
+    `BufferedReader.readLine()` loại dấu kết thúc dòng và trả `null` khi EOF. Cần hiểu việc loại LF/CRLF/CR, dòng rỗng, newline cuối, charset và vòng đời Reader để không làm hỏng bản sao văn bản.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giá trị dòng và EOF
+
+    1. `readLine()` nhận những dấu kết thúc nào và trả dữ liệu gì?
+    2. `""` khác `null` thế nào khi gặp dòng trống và cuối file?
+    3. Vì sao `"A"` và `"A\n"` cho các lần gọi `readLine()` giống nhau?
+
+    ### Bảo toàn dữ liệu
+
+    1. Tại sao không thể suy ra separator gốc từ chuỗi dòng?
+    2. Khi nào dùng `Files.newBufferedReader` thay vì đọc byte hay `Files.readString`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán dòng | Liệt kê đúng kết quả và EOF của đầu vào có LF, CRLF, CR và dòng trống. |
+    | Viết vòng đọc | Lặp tới `null`, giữ dòng rỗng và đóng Reader bằng try-with-resources. |
+    | Đánh giá mất thông tin | Giải thích vì sao đọc rồi ghi bằng `newLine()` không bảo toàn byte. |
+- id: lines-and-tokens-002
+  title: LF, CRLF, CR và quy ước xuống dòng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **LF, CRLF, CR và quy ước xuống dòng**
+
+    LF, CRLF và CR biểu diễn ranh giới dòng bằng các byte/ký tự khác nhau, dù hiển thị có thể như nhau. Bài giải thích việc chuẩn hóa có chủ đích và cách giữ chính xác định dạng khi chuyển file giữa nhiều hệ điều hành.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biểu diễn dòng
+
+    1. LF, CR và CRLF khác nhau về `char` và byte UTF-8 ra sao?
+    2. Vì sao không thể đoán dấu xuống dòng của file từ hệ điều hành đang chạy?
+
+    ### Chọn cách đọc và chuẩn hóa
+
+    1. Vì sao phải thay CRLF trước CR khi chuyển sang LF?
+    2. `String.lines()` khác `String.split("\n")` ra sao với CRLF và trailing newline?
+    3. Làm gì khi phải bảo toàn mỗi separator hoặc byte gốc?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích byte | Giải thích 0A, 0D và 0D 0A trên file UTF-8. |
+    | Chuẩn hóa chuỗi | Dùng thay CRLF rồi CR đơn mà không thêm dòng rỗng giả. |
+    | Chọn API | Lựa chọn giữa lines, readAllLines và readString theo yêu cầu bảo toàn. |
+- id: lines-and-tokens-003
+  title: BufferedWriter.newLine và System.lineSeparator
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **BufferedWriter.newLine và System.lineSeparator**
+
+    `BufferedWriter.newLine()` thực hiện ghi separator, còn `System.lineSeparator()` chỉ trả chuỗi theo nền tảng. Bài giúp xác định quy ước ghi file, thời điểm flush/close và lựa chọn literal LF/CRLF khi tiêu chuẩn đầu ra yêu cầu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### API xuống dòng
+
+    1. `newLine()` khác `System.lineSeparator()` về hành vi ghi và giá trị trả về như thế nào?
+    2. Kết quả ghi ba dòng thay đổi thế nào giữa nền tảng LF và CRLF?
+
+    ### Chọn hợp đồng đầu ra
+
+    1. Khi định dạng buộc dùng CRLF, vì sao không dùng `newLine()`?
+    2. `newLine()` có flush dữ liệu ngay hay không?
+    3. Làm sao kiểm soát có newline sau dòng cuối?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Soạn file text | Ghi ba dòng bằng BufferedWriter và đóng đúng nguồn. |
+    | Giữ chuẩn giao thức | Ghi literal LF hoặc CRLF khi quy định độc lập OS. |
+    | Kiểm soát bộ đệm | Phân biệt tác dụng của write, newLine, flush và close. |
+- id: lines-and-tokens-004
+  title: BufferedReader.lines và quyền đóng Reader
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **BufferedReader.lines và quyền đóng Reader**
+
+    `BufferedReader.lines()` xử lý dòng lazily bằng Stream API nhưng không bàn giao quyền đóng Reader. Bài này giúp tránh stream gắn với Reader đã đóng, rò rỉ nguồn và lỗi `UncheckedIOException` khi tiêu thụ pipeline.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dòng dữ liệu lazy
+
+    1. Khi nào `lines()` bắt đầu đọc thật từ Reader?
+    2. Vì sao `limit()` và `findFirst()` không tự đóng tài nguyên?
+
+    ### Quyền đóng và ngoại lệ
+
+    1. Vì sao `stream.close()` của `BufferedReader.lines()` không đóng Reader như `Files.lines()`?
+    2. Lỗi gì xảy ra khi trả stream lazy từ trong try-with-resources đã đóng Reader?
+    3. `IOException` lúc chạy `count()` được thể hiện thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quản lý nguồn | Chọn chính xác đối tượng cần đóng khi dùng BufferedReader.lines và Files.lines. |
+    | Sửa lifetime bug | Viết API trả kết quả trong scope Reader hoặc chuyển stream có owner rõ. |
+    | Chẩn đoán lazy I/O | Giải thích UncheckedIOException và hậu quả tiêu thụ sớm/dừng sớm. |
+- id: lines-and-tokens-005
+  title: 'Scanner: nguồn dữ liệu, delimiter và token'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Scanner: nguồn dữ liệu, delimiter và token**
+
+    Scanner biến đầu vào từ String, Reader, InputStream hoặc Path thành token bằng delimiter regex rồi diễn giải giá trị. Nắm được sự khác nhau giữa nguồn, charset, delimiter và quyền đóng giúp dùng Scanner đúng phạm vi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn và delimiter
+
+    1. Scanner nhận những nguồn nào, charset được áp dụng ở tầng nào?
+    2. Tại sao đổi delimiter không làm đổi charset hay locale?
+    3. Khi regex delimiter chứa `.` hoặc `|`, cần escape thế nào?
+
+    ### Token và giới hạn
+
+    1. `hasNext()` khác `next()` ở việc tiêu thụ dữ liệu ra sao?
+    2. Vì sao dấu phẩy trong quoted CSV không thể được xử lý đủ bằng `useDelimiter(",")`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình delimiter | Tách các trường có khoảng trắng bằng regex delimiter đúng. |
+    | Kiểm soát source | Tạo Scanner với UTF-8 và giải thích việc close có thể đóng nguồn bọc. |
+    | Phân loại phạm vi | Chọn Scanner cho dữ liệu token đơn giản và parser khác cho quote/escape. |
+- id: lines-and-tokens-006
+  title: next, nextLine và phần xuống dòng còn lại
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **next, nextLine và phần xuống dòng còn lại**
+
+    `next()`/`nextInt()` đọc token còn `nextLine()` đọc phần còn lại của dòng. Bài phân tích vị trí quét và các cách xử lý để không tưởng nhầm tên bị bỏ qua hoặc đánh mất nội dung cùng dòng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vị trí sau đọc token
+
+    1. Sau `next()` trên `"Java Core\n"`, `nextLine()` trả chuỗi nào?
+    2. `nextLine()` sau `nextInt()` khi nào rỗng, khi nào có khoảng trắng hay văn bản?
+
+    ### Chiến lược nhập
+
+    1. Vì sao một lệnh `nextLine()` bổ sung có thể bỏ dữ liệu hợp lệ?
+    2. Nên đọc tuổi và họ tên nhiều từ bằng phương thức nhất quán nào?
+    3. `hasNextLine()` khác `hasNext()` với các dòng rỗng như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng cursor | Dự đoán chuỗi `next`, `nextInt`, `nextLine` khi dòng có phần dư khác nhau. |
+    | Sửa lỗi console | Đọc cả dòng và parse số với xử lý NumberFormatException. |
+    | Bảo vệ nội dung | Chỉ bỏ phần dư dòng khi hợp đồng input cho phép. |
+- id: lines-and-tokens-007
+  title: Đọc số với Scanner theo locale và radix
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đọc số với Scanner theo locale và radix**
+
+    Đọc số bằng Scanner cần cả locale cho dấu thập phân/nhóm và radix cho số nguyên. Bài làm rõ sự độc lập của delimiter, charset, locale và radix cũng như khi cần BigDecimal để giữ độ chính xác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ pháp số
+
+    1. Vì sao `1,234.50` và `1.234,50` cần locale phù hợp?
+    2. `nextInt(16)` và `useRadix(16)` khác nhau thế nào?
+
+    ### Đọc số an toàn
+
+    1. Làm sao đọc `"1,5;2,75"` với delimiter `;` và Locale.GERMANY?
+    2. Vì sao `nextBigDecimal()` phù hợp với số tiền hơn `nextDouble()`?
+    3. Cần xử lý ra sao khi `hasNextInt(radix)` báo false hoặc giá trị vượt miền int?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc số đa locale | Parse số theo US/GERMANY và in đầu ra bằng locale cố định. |
+    | Đọc radix | Chuyển FF, 1011, 17 sang thập phân bằng cơ số tương ứng. |
+    | Phân biệt cấu hình | Giải thích riêng charset, delimiter, locale, radix cho một bản ghi. |
+- id: lines-and-tokens-008
+  title: hasNext, InputMismatchException và token không hợp lệ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **hasNext, InputMismatchException và token không hợp lệ**
+
+    Scanner cần phân biệt token không phù hợp kiểu với EOF. `InputMismatchException` giữ lại token gây lỗi, vì vậy code phải có chính sách tiêu thụ, từ chối hoặc sửa input để tránh lặp vô hạn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểm tra trước khi đọc
+
+    1. `hasNext()` và `hasNextInt()` cho kết quả khác nhau ra sao với `abc` hay số vượt int?
+    2. Tại sao `InputMismatchException` và `NoSuchElementException` cần xử lý riêng?
+
+    ### Phục hồi có tiến triển
+
+    1. Vì sao catch mismatch rồi gọi lại `nextInt()` có thể lặp lỗi vô hạn?
+    2. Khi nào bỏ đúng một token bằng `next()`, khi nào bỏ cả dòng bằng `nextLine()`?
+    3. Một bản ghi bắt buộc đúng hai trường số cần được xác thực thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xử lý token lỗi | Dùng while(hasNext) với nhánh hasNextInt/nextInt hoặc next để có tiến triển. |
+    | Phân loại lỗi | Dự đoán mismatch, thiếu token và trạng thái scanner đã đóng. |
+    | Đảm bảo toàn vẹn | Từ chối record sai cấu trúc thay vì im lặng lọc token hợp lệ. |
+- id: lines-and-tokens-009
+  title: Scanner.ioException và đóng nguồn dữ liệu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Scanner.ioException và đóng nguồn dữ liệu**
+
+    Scanner có thể giữ `IOException` của nguồn ở `ioException()` thay vì ném tại lần quét. Bài dạy phân biệt EOF với I/O failure, kiểm tra sau close và quản lý nguồn được sở hữu hoặc dùng chung như System.in.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lỗi nguồn ẩn
+
+    1. Vì sao `hasNext() == false` chưa đủ kết luận đã đọc thành công?
+    2. `ioException()` trả gì sau lỗi đọc và sau lỗi `close()`?
+
+    ### Quyền đóng
+
+    1. `Scanner.close()` đóng nguồn nào và vì sao helper không nên đóng System.in tùy tiện?
+    2. Tại sao cần giữ tham chiếu Scanner nếu muốn kiểm tra lỗi close sau try-with-resources?
+    3. Khi nào dùng `BufferedReader.readLine()` để nhận trực tiếp IOException?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện lỗi I/O | Mô phỏng Readable ném IOException và đọc lại lỗi bằng ioException. |
+    | Quản lý vòng đời | Thiết kế close đúng owner cho Path/Reader/System.in và phân biệt lỗi close. |
+    | Phân tích exception | Tách lỗi mở nguồn, token mismatch, EOF và lỗi read/close. |
+- id: lines-and-tokens-010
+  title: StreamTokenizer và lựa chọn công cụ phân tích phù hợp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **StreamTokenizer và lựa chọn công cụ phân tích phù hợp**
+
+    StreamTokenizer là lexer kiểu cũ có thể đọc word, number, dấu câu, quote và EOL theo cấu hình. Bài giúp hiểu trạng thái token, giới hạn của giá trị double và cách chọn giữa Scanner, StreamTokenizer, parser chuẩn hoặc lexer chuyên dụng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế lexical
+
+    1. `TT_WORD`, `TT_NUMBER`, `TT_EOL`, `TT_EOF` và `sval`/`nval` có ý nghĩa gì?
+    2. `wordChars`, `commentChar`, `quoteChar` và `eolIsSignificant` thay đổi token thế nào?
+    3. Vì sao không dùng `nval` để giữ nguyên số nguyên rất lớn?
+
+    ### Ranh giới với parser
+
+    1. Vì sao các token `x`, `=`, `4` chưa chứng minh một biểu thức hợp lệ?
+    2. Khi nào dùng StreamTokenizer và khi nào chọn Scanner, parser CSV/JSON hoặc lexer riêng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Duyệt token | Sử dụng nextToken đến TT_EOF và giải thích đúng sval/nval. |
+    | Định nghĩa cú pháp | Cấu hình `_` là word char và `#` là comment; kiểm chứng EOL. |
+    | Chọn công cụ | So sánh lexer/tokenizer với parser có grammar và validation. |
+- id: lines-and-tokens-011
+  title: Giới hạn dùng tách dòng hoặc split để đọc định dạng có escape phức tạp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn dùng tách dòng hoặc split để đọc định dạng có escape phức tạp**
+
+    Dữ liệu có escape, quote hoặc cấu trúc lồng nhau không còn tuân quy tắc một dòng là một record hay một delimiter là một field. Bài tổng hợp chỉ rõ giới hạn readLine/split và cách thiết kế parser theo trạng thái cho CSV, backslash escape và JSON.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới dữ liệu
+
+    1. Vì sao CSV quoted có thể chứa dấu phẩy và newline mà vẫn là một field?
+    2. `split(regex, -1)` khác `split(regex)` ra sao với trường rỗng cuối?
+    3. Vì sao `Pattern.quote` không giải mã escaping của dữ liệu?
+
+    ### Parser trạng thái
+
+    1. Khi nào dấu gạch đứng sau backslash là delimiter thật trong grammar minh họa?
+    2. Các trạng thái START, PLAIN, QUOTED, AFTER_QUOTE xác định record và lỗi quote thế nào?
+    3. Tại sao JSON lồng nhau cần JSON parser thay vì split theo dấu phẩy hoặc colon?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chỉ ra lỗi naive parser | So sánh số dòng vật lý với bản ghi logic và số trường CSV. |
+    | Thiết kế state machine | Theo dõi quote, escape, CRLF và phát hiện quote chưa đóng. |
+    | Xác định parser contract | Nêu charset, boundary, empty fields, quota, lỗi cú pháp và ownership. |

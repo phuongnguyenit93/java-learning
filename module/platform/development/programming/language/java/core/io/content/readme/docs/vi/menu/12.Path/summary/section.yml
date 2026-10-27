@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: PATH — MẠCH LIÊN KẾT BÀI HỌC
+roadmapHeading: Mạch liên kết bài học
+roadmap:
+  - id: path-001
+    order: 1
+    title: "Tạo Path bằng Path.of, Paths.get và FileSystem"
+    description: "Đặt nền tảng về Path factory, lựa chọn API theo JDK và cách FileSystem/provider quyết định ý nghĩa đường dẫn."
+    transition:
+      to: path-002
+      description: "Sau khi tạo Path, cần đọc cấu trúc root, parent và name element của chính đối tượng đó."
+  - id: path-002
+    order: 2
+    title: "Root, parent, file name và các thành phần đường dẫn"
+    description: "Giải thích cấu trúc của Path qua root, parent, fileName, name count và các trường hợp biên."
+    transition:
+      to: path-003
+      description: "Khi nắm được thành phần đường dẫn, bước tiếp theo là ghép tên con hoặc thay tên ngang cấp."
+  - id: path-003
+    order: 3
+    title: "resolve, resolveSibling và ghép đường dẫn"
+    description: "Dạy cách ghép Path con và ngang cấp, xử lý đường dẫn tuyệt đối và giới hạn khi đầu vào không đáng tin."
+    transition:
+      to: path-004
+      description: "Khi ghép được hai vị trí, có thể tính tuyến đường tương đối từ vị trí này đến vị trí kia."
+  - id: path-004
+    order: 4
+    title: "relativize và điều kiện tương thích"
+    description: "Làm rõ chiều tính của relativize và điều kiện về kiểu Path, root và FileSystem."
+    transition:
+      to: path-005
+      description: "Đường đi có thể chứa `.` và `..`; cần hiểu normalize rút gọn chúng ra sao và giới hạn phép rút gọn."
+  - id: path-005
+    order: 5
+    title: "normalize chỉ xử lý cú pháp đường dẫn"
+    description: "Giải thích phép normalize, các trường hợp `.`/`..`, symlink và giới hạn bảo mật của chuẩn hóa cú pháp."
+    transition:
+      to: path-006
+      description: "Từ đường dẫn lexical, tiếp tục phân biệt biểu diễn absolute với real path có truy vấn filesystem."
+  - id: path-006
+    order: 6
+    title: "toAbsolutePath khác toRealPath"
+    description: "Đối chiếu toAbsolutePath với toRealPath qua tồn tại của file, symbolic link và lỗi I/O."
+    transition:
+      to: path-007
+      description: "Sau khi phân biệt biểu diễn và thực thể, cần chọn đúng phép so sánh Path theo các thành phần."
+  - id: path-007
+    order: 7
+    title: "startsWith, endsWith, equals và so sánh theo thành phần"
+    description: "Dạy so sánh prefix/suffix/equality theo name elements, root, provider và phân biệt identity file."
+    transition:
+      to: path-008
+      description: "Khi cần trao đổi vị trí file dưới dạng URI, phải chuyển từ cấu trúc Path sang ngữ nghĩa scheme/provider."
+  - id: path-008
+    order: 8
+    title: "URI, toUri và giới hạn chuyển đổi giữa các provider"
+    description: "Phân tích URI conversion, file scheme, provider lookup, ZIP entries và lỗi khi URI không phù hợp."
+    transition:
+      to: path-009
+      description: "Provider quyết định cách diễn giải đường dẫn; tiếp theo xét sự khác biệt cụ thể Windows và Unix."
+  - id: path-009
+    order: 9
+    title: "Đường dẫn Windows, Unix, dấu phân cách và tính phân biệt hoa thường"
+    description: "Giải thích cú pháp Windows/Unix, separator trong Java string và khác biệt case sensitivity theo filesystem."
+    transition:
+      to: path-010
+      description: "Ngoài cú pháp platform, cần nhớ Path vẫn chỉ là biểu diễn và không xác nhận đích tồn tại."
+  - id: path-010
+    order: 10
+    title: "Path không bảo đảm đích đang tồn tại"
+    description: "Giải thích Path không bảo đảm tồn tại, trạng thái exists/notExists, lỗi I/O và TOCTOU."
+    transition:
+      to: path-011
+      description: "Khi đã phân biệt Path với filesystem, dùng PathMatcher để lọc tên hoặc cây file theo pattern."
+  - id: path-011
+    order: 11
+    title: "PathMatcher với glob và regex"
+    description: "Dạy glob/regex PathMatcher, phạm vi match, kết hợp list/walk và giới hạn portable."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Tạo Path bằng Path.of, Paths.get và FileSystem | Root, parent, file name và các thành phần đường dẫn | resolve, resolveSibling và ghép đường dẫn | relativize và điều kiện tương thích | normalize chỉ xử lý cú pháp đường dẫn | toAbsolutePath khác toRealPath | startsWith, endsWith, equals và so sánh theo thành phần | URI, toUri và giới hạn chuyển đổi giữa các provider | Đường dẫn Windows, Unix, dấu phân cách và tính phân biệt hoa thường | Path không bảo đảm đích đang tồn tại | PathMatcher với glob và regex |
+  | Vấn đề cần hiểu | Tạo Path đúng môi trường và phân biệt đối tượng đường dẫn với file vật lý. | Trích xuất thành phần đường dẫn đúng thay vì tách chuỗi theo separator. | Phân biệt nối đường dẫn con với thay tên cùng cấp và kiểm tra input. | Tính tuyến đường tương đối đúng khi hai Path phải tương thích. | Làm gọn đường dẫn mà không đồng nhất kết quả với file thực hoặc bảo mật. | Chọn absolute lexical path hay đường dẫn thực có tồn tại. | Không dùng String prefix hay Path.equals sai mục tiêu. | Chuyển URI sang Path theo đúng scheme và vòng đời FileSystem. | Tránh mã đường dẫn phụ thuộc Windows/Unix và chính sách tên file giả định. | Phân biệt tên đường dẫn với file thực và trạng thái thay đổi theo thời gian. | Lọc file/path theo pattern với đúng phạm vi so khớp. |
+  | Giá trị đối với OOP/module | Nền tảng thiết kế API nhận Path, tránh trộn default FileSystem với ZipFS. | Tạo breadcrumb, xác định tên/cha và tránh NullPointerException với path đặc biệt. | Lập đường dẫn đầu ra, bản sao, báo cáo mà không nối chuỗi sai. | Sinh liên kết, đường dẫn cấu hình và tham chiếu giữa các thư mục dự án. | Hạn chế lỗi ghép path và đánh giá đúng các bước kiểm tra containment. | Định vị file cấu hình, xác minh đích và xử lý file mới hay symlink đúng cách. | Kiểm tra cấu trúc đường dẫn, lọc tên và tránh lỗi xác thực thư mục con. | Tích hợp địa chỉ tài nguyên file/ZIP mà không làm mất ngữ nghĩa provider. | Giảm lỗi chạy khác nhau giữa máy cá nhân, CI và môi trường triển khai. | Thiết kế đọc/ghi/tạo file an toàn, xử lý thiếu file, quyền và race. | Xây bộ lọc tên file và duyệt thư mục có kiểm soát. |
+  | Tư duy hình thành | Chọn factory theo JDK, URI và FileSystem; tách cú pháp khỏi I/O. | Xem Path như dãy phần tên có root riêng và các phép truy vấn có thể trả null. | Chọn phép ghép theo quan hệ giữa các vị trí và kiểm tra root, parent trước I/O. | Xác định from/to, hệ quy chiếu và giả định tái dựng trước khi tính. | Tách phép biến đổi lexical khỏi truy vấn filesystem và threat model. | Hỏi có cần trạng thái thực không, rồi lựa chọn API và xử lý race. | Chọn phép so sánh theo câu hỏi: tên, Path value hay file identity. | Phân biệt định danh URI, Path thuộc FileSystem và trạng thái mở provider. | Phân biệt cú pháp platform, biểu diễn Java và hành vi filesystem thực. | Quan sát trạng thái tại thời điểm I/O, không coi Path hoặc exists là bảo đảm lâu dài. | Chọn pattern theo yêu cầu và xác định chính xác Path đưa vào matches. |

@@ -1,0 +1,75 @@
+version: 1
+type: LEARNING_ROADMAP
+title: NIO MẠNG — MẠCH LIÊN KẾT BÀI HỌC
+roadmapHeading: Mạch liên kết bài học
+roadmap:
+  - id: nio-networking-001
+    order: 1
+    title: "SocketChannel, ServerSocketChannel và DatagramChannel"
+    description: "Giới thiệu trách nhiệm của SocketChannel, ServerSocketChannel, DatagramChannel và khác biệt căn bản giữa TCP stream và UDP datagram."
+    transition:
+      to: nio-networking-002
+      description: "Sau khi phân biệt channel, cần hiểu mỗi thao tác của chúng có chờ I/O hay trả về ngay."
+  - id: nio-networking-002
+    order: 2
+    title: "Chế độ blocking và non-blocking"
+    description: "Giải thích configureBlocking, các giá trị trả về khi chưa sẵn sàng, Selector và lựa chọn mô hình I/O."
+    transition:
+      to: nio-networking-003
+      description: "Với mode đã xác định, tiếp tục lần lượt thực hiện connect, finishConnect, accept, read và write."
+  - id: nio-networking-003
+    order: 3
+    title: "Connect, finishConnect, accept, read và write"
+    description: "Phân tích chu kỳ bind/accept/connect/finishConnect/read/write cùng trạng thái buffer, readiness và ngoại lệ."
+    transition:
+      to: nio-networking-004
+      description: "Ngay cả khi đọc ghi đúng API, TCP không bảo đảm ranh giới của message ứng dụng."
+  - id: nio-networking-004
+    order: 4
+    title: "TCP là luồng byte, không bảo toàn ranh giới bản tin"
+    description: "Chứng minh TCP cung cấp byte stream có thứ tự chứ không giữ ranh giới write/read và giới thiệu framing."
+    transition:
+      to: nio-networking-005
+      description: "Khi thấy TCP thiếu ranh giới, bước tiếp theo là thiết kế wire format và decoder cụ thể."
+  - id: nio-networking-005
+    order: 5
+    title: "Thiết kế framing bằng độ dài hoặc dấu phân cách"
+    description: "Thiết kế length-prefix/delimiter framing, triển khai decoder trạng thái và kiểm thử chia/gộp chunk."
+    transition:
+      to: nio-networking-006
+      description: "Decoder tốt còn phải sống qua nhiều lượt readiness và phối hợp với partial read/write."
+  - id: nio-networking-006
+    order: 6
+    title: "Partial read, partial write và lưu trạng thái giữa các lần sẵn sàng"
+    description: "Phân tích partial I/O và duy trì buffer, parser, outbound queue, interestOps giữa nhiều lần select."
+    transition:
+      to: nio-networking-007
+      description: "Khi trạng thái có thể tiến triển qua nhiều lượt, cần xác định chính xác cách kết thúc từng hướng TCP."
+  - id: nio-networking-007
+    order: 7
+    title: "EOF, đóng kết nối và đóng một chiều"
+    description: "Giải thích EOF, shutdownOutput/shutdownInput, full-close và các trạng thái kết thúc TCP."
+    transition:
+      to: nio-networking-008
+      description: "Từ vòng đời TCP, chuyển sang mô hình gói UDP có ranh giới datagram riêng."
+  - id: nio-networking-008
+    order: 8
+    title: "Datagram và khác biệt với luồng TCP"
+    description: "Làm rõ UDP datagram qua DatagramChannel, truncation, connected UDP và đánh đổi transport so với TCP."
+    transition:
+      to: nio-networking-009
+      description: "Sau khi hiểu API của hai transport, phân biệt phần trách nhiệm NIO với các protocol cần học riêng."
+  - id: nio-networking-009
+    order: 9
+    title: "Phạm vi I/O mạng và các kiến thức giao thức cần học riêng"
+    description: "Hệ thống hóa phạm vi Java NIO networking so với TCP/IP, TLS, protocol framing và logic nghiệp vụ."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | SocketChannel, ServerSocketChannel và DatagramChannel | Chế độ blocking và non-blocking | Connect, finishConnect, accept, read và write | TCP là luồng byte, không bảo toàn ranh giới bản tin | Thiết kế framing bằng độ dài hoặc dấu phân cách | Partial read, partial write và lưu trạng thái giữa các lần sẵn sàng | EOF, đóng kết nối và đóng một chiều | Datagram và khác biệt với luồng TCP | Phạm vi I/O mạng và các kiến thức giao thức cần học riêng |
+  | Vấn đề cần hiểu | Chọn đúng NIO network channel và phân biệt listener, peer, datagram. | Quyết định chờ I/O hay điều phối readiness và tránh busy-spin. | Thực hiện đúng từng lời gọi TCP trong cả blocking và non-blocking. | Tại sao nhận byte không đồng nghĩa nhận được một message nguyên vẹn? | Làm thế nào xác định message boundary an toàn khi byte đến không đúng từng frame? | Duy trì tiến độ từng kết nối và tránh mất byte hoặc CPU spin. | Phân biệt hết byte hiện tại, FIN một chiều và đóng kết nối hoàn toàn. | Khi nào gửi datagram độc lập thay cho luồng TCP và phải tự bù bảo đảm nào? | Điều gì NIO cung cấp, điều gì phải định nghĩa ở protocol hoặc tầng nghiệp vụ? |
+  | Giá trị đối với OOP/module | Nền tảng cấu trúc client/server TCP và UDP qua ByteBuffer. | Xây socket server phù hợp tải, không chặn event loop hoặc mất trạng thái buffer. | Đảm bảo kết nối được hoàn tất trước I/O và không làm mất dữ liệu khi thao tác mới tiến triển một phần. | Ngăn lỗi cắt/trộn JSON, lệnh, frame hoặc ký tự UTF-8 khi đọc TCP. | Xây protocol parser có kiểm tra kích thước, endian và tình huống EOF giữa frame. | Thiết kế selector server có stateful parser, backpressure và write queue ổn định. | Giữ đúng luồng request/response và xử lý EOF/timeout mà không mất dữ liệu. | Lựa chọn truyền dữ liệu cho telemetry, discovery, game, hoặc tác vụ cần reliability. | Tránh đưa demo socket vào production khi thiếu TLS, timeout, idempotency hoặc bảo vệ tài nguyên. |
+  | Tư duy hình thành | Đặt câu hỏi ai lắng nghe, ai truyền byte và đơn vị dữ liệu là stream hay datagram. | Phân biệt tiến độ thực tế với tín hiệu sẵn sàng và thiết kế vòng điều phối. | Chuyển trạng thái rõ ràng qua pending, connected, readable, writable và closed. | Nhìn mỗi read như một chunk tùy ý và yêu cầu parser tái tạo thông điệp. | Định nghĩa wire format trước rồi xây máy trạng thái tích lũy byte và giới hạn tài nguyên. | Xem readiness là cơ hội tiến triển từng bước, giữ lại mọi phần chưa hoàn tất. | Theo dõi trạng thái hai hướng TCP độc lập và phân biệt kết thúc stream với kết thúc message. | Đánh giá ranh giới gói, delivery/order, MTU và giao thức tầng trên. | Phân tách trách nhiệm transport/protocol/security/business và chọn thư viện chuẩn theo mục tiêu. |

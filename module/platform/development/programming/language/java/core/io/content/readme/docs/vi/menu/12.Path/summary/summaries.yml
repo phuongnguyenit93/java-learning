@@ -1,0 +1,363 @@
+summaries:
+- id: path-001
+  title: Tạo Path bằng Path.of, Paths.get và FileSystem
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tạo Path bằng Path.of, Paths.get và FileSystem**
+
+    Bài học giúp lựa chọn đúng cách khởi tạo `Path` theo JDK và hệ thống tệp: `Path.of`, `Paths.get`, `FileSystem.getPath` hoặc factory nhận URI. Nắm điều này giúp thao tác đúng với đường dẫn mặc định lẫn thành viên trong ZIP và tránh nhầm tạo `Path` với tạo file.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lựa chọn factory và provider
+
+    1. `Path.of(String...)`, `Paths.get(String...)` và `FileSystem.getPath(...)` giống và khác nhau ở điểm nào?
+    2. Vì sao mã cần tương thích Java 8 thường chọn `Paths.get` thay cho `Path.of`?
+    3. Trong trường hợp nào `root.resolve(...)` bảo toàn FileSystem của caller tốt hơn `Path.of(...)`?
+
+    ### URI và thao tác thực tế
+
+    1. Khi nào cần dùng `Path.of(URI)` và điều kiện provider tương ứng là gì?
+    2. Một `Path` bên trong ZIP khác gì đường dẫn file ZIP ngoài đĩa?
+    3. Tại sao tạo `Path` thành công chưa chứng minh file tồn tại hoặc input an toàn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn API theo phiên bản | Chọn factory phù hợp cho Java 8 và Java 17, giải thích vì sao. |
+    | Giữ đúng filesystem | Tạo đường dẫn con từ một `Path` thuộc ZipFS mà không nhầm với default provider. |
+    | Đối chiếu factory | Chạy ví dụ và xác nhận ba factory trên default FileSystem tạo Path bằng nhau. |
+    | Phân biệt Path và I/O | Chỉ ra chính xác lời gọi nào tạo Path và lời gọi `Files` nào mới truy cập đĩa. |
+- id: path-002
+  title: Root, parent, file name và các thành phần đường dẫn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Root, parent, file name và các thành phần đường dẫn**
+
+    Bài học rèn cách phân tích một `Path` bằng root, parent, file name và name element thay cho cắt chuỗi. Người học sẽ xử lý được root-only, empty path, đường dẫn một tên, chỉ số và trường hợp trả `null` mà không phụ thuộc dấu phân cách nền tảng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc và các trường hợp biên
+
+    1. `getRoot()`, `getParent()` và `getFileName()` khác nhau về cấu trúc và các trường hợp trả `null` ra sao?
+    2. Vì sao root không thuộc `getNameCount()` và `Path.of("")` khác Path chỉ gồm root?
+    3. `getName(index)`, `subpath(begin,end)` và iterator duyệt các thành phần theo quy tắc nào?
+
+    ### Áp dụng phân tích Path
+
+    1. Vì sao `getParent()` của đường dẫn tương đối một tên trả `null` dù tiến trình có working directory?
+    2. Khi nào nên dùng `getFileName()` hay `resolveSibling()` để làm breadcrumb và đặt tên cùng cấp?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Trích xuất thành phần | Dự đoán root, parent, fileName và số name element cho một Path cho trước. |
+    | Xử lý edge case | Viết hàm đọc parent/fileName có xử lý `null` cho root hoặc path một tên. |
+    | Duyệt cấu trúc | Dùng iterator và subpath tạo breadcrumb mà không tách chuỗi theo `/`. |
+    | Phân biệt tên và thực thể | Giải thích tại sao `getFileName()` không kiểm chứng mục là regular file. |
+- id: path-003
+  title: resolve, resolveSibling và ghép đường dẫn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **resolve, resolveSibling và ghép đường dẫn**
+
+    Bài học phân biệt tạo Path từ các phần tên, ghép path con bằng `resolve` và tạo đường dẫn ngang cấp bằng `resolveSibling`. Những lựa chọn này giúp tránh đặt file mới bên dưới một tên file cũ, hiểu hành vi với parent `null`, input tuyệt đối và nhận diện giới hạn của kiểm tra path traversal ở tầng cú pháp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ghép con và ngang cấp
+
+    1. `Path.of(...)`, `base.resolve(other)` và `path.resolveSibling(other)` giải quyết những bài toán khác nhau thế nào?
+    2. Điều gì xảy ra khi gọi `file.resolve("new.txt")` thay cho `file.resolveSibling("new.txt")`?
+    3. `resolveSibling` hoạt động ra sao nếu `getParent()` là `null`?
+
+    ### Đường dẫn đầu vào và I/O
+
+    1. Đối số `other` tuyệt đối có thể làm thay đổi kết quả `resolve` thế nào?
+    2. Vì sao `resolve(...).normalize().startsWith(base)` mới là kiểm tra lexical và chưa chống hoàn toàn symlink hay TOCTOU?
+    3. Muốn ghi file hoặc đổi tên file thật sau khi ghép Path cần API nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ghép path đúng | Dựng đường dẫn file con và sibling rồi so sánh các thành phần kết quả. |
+    | Tránh nhầm file với thư mục | Sửa ví dụ ghép path vô tình tạo cấu trúc `old.csv/new.csv`. |
+    | Xử lý đường dẫn không parent | Dự đoán kết quả `resolveSibling` của path một thành phần. |
+    | Định ranh giới kiểm tra | Giải thích giới hạn của lexical containment trước thao tác `Files`. |
+- id: path-004
+  title: relativize và điều kiện tương thích
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **relativize và điều kiện tương thích**
+
+    Bài học chỉ rõ `base.relativize(target)` tính đường đi từ base đến target theo các thành phần của Path. Việc thống nhất absolute/relative, root và provider giúp tạo link, cấu hình tương đối đúng, xử lý ngoại lệ khi hai đường dẫn không cùng hệ quy chiếu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và chiều tính toán
+
+    1. `base.relativize(target)` hình thành các đoạn `..` và phần tên còn lại như thế nào?
+    2. Vì sao đổi chỗ `base` và `target` có thể tạo kết quả khác, nhất là khi base là path đến file?
+    3. Khi `base.equals(target)` thì kết quả có dạng nào?
+
+    ### Điều kiện tương thích
+
+    1. Vì sao một absolute path và một relative path không thể relativize trực tiếp?
+    2. Root ổ `C:` và `D:` trên Windows hoặc Path từ default FS và ZipFS gây vấn đề gì?
+    3. Cách đối chiếu `base.resolve(base.relativize(target)).normalize()` cần những giả định nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính đường đi tương đối | Tính và kiểm tra relative Path giữa hai nhánh `src` và `assets`. |
+    | Phát hiện đầu vào không tương thích | Viết kiểm tra/catch cho cặp absolute–relative, root hoặc provider không phù hợp. |
+    | Đặt hệ quy chiếu | Chuyển hai path về cùng anchor khi nghiệp vụ cho phép rồi mới relativize. |
+    | Kiểm chứng lexical round-trip | Dùng resolve/normalize kiểm thử kết quả mà không suy ra file tồn tại. |
+- id: path-005
+  title: normalize chỉ xử lý cú pháp đường dẫn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **normalize chỉ xử lý cú pháp đường dẫn**
+
+    Bài học tập trung vào `Path.normalize()` như phép rút gọn lexical: loại `.` và những cặp `name/..` có thể triệt tiêu. Việc phân biệt cú pháp với symbolic link, Unicode normalization và kiểm tra an toàn giúp tránh đổi ý nghĩa file vật lý hoặc dùng normalize sai mục đích.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy tắc biến đổi cú pháp
+
+    1. `normalize()` xử lý dấu `.` và cặp `name/..` theo thứ tự thế nào?
+    2. Tại sao `..` ở đầu path tương đối có thể còn lại sau normalize?
+    3. Phép normalize khác chuẩn hóa Unicode NFC/NFD ở điểm nào?
+
+    ### Giới hạn với filesystem
+
+    1. Vì sao `link/../file` sau normalize có thể trỏ đến file vật lý khác trước?
+    2. `normalize`, `toAbsolutePath`, `toRealPath` và `Files.isSameFile` trả lời các câu hỏi nào?
+    3. Vì sao kiểm tra `normalize().startsWith(root)` không đủ làm cơ chế chống path traversal có đối thủ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán chuẩn hóa | Tính các name element sau normalize và kiểm tra tính idempotent. |
+    | Phân biệt lexical và real | Giải thích một ví dụ symbolic link làm hai đường dẫn khác về thực thể. |
+    | Tránh lỗi tiền tố chuỗi | Thử trường hợp `public` và `public-backup` bằng String và Path startsWith. |
+    | Đánh giá kiểm tra truy cập | Nêu các giới hạn của kiểm tra root khi target chưa tồn tại hoặc filesystem thay đổi. |
+- id: path-006
+  title: toAbsolutePath khác toRealPath
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **toAbsolutePath khác toRealPath**
+
+    Bài học phân biệt `toAbsolutePath()` tạo biểu diễn tuyệt đối với `toRealPath()` truy vấn hệ thống tệp và có thể giải quyết symbolic link. Việc chọn API theo file đã tồn tại, file sẽ tạo, xử lý `IOException` và TOCTOU giúp tránh những quyết định sai khi xác minh đích.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Absolute và real path
+
+    1. Vì sao một Path tuyệt đối vẫn có thể chứa `..`, không tồn tại hoặc không truy cập được?
+    2. `toRealPath()` khác `toAbsolutePath().normalize()` ở việc truy vấn filesystem và giải quyết symlink thế nào?
+    3. `LinkOption.NOFOLLOW_LINKS` thay đổi chính sách lấy real path ra sao?
+
+    ### Trường hợp sử dụng và lỗi
+
+    1. Với file đầu ra chưa tạo, vì sao dùng `toRealPath()` sớm thường thất bại?
+    2. Khi tra cứu thành công bằng `toRealPath()` rồi mở file, nguy cơ TOCTOU còn tồn tại thế nào?
+    3. Trong ví dụ thư mục tạm chứa `nested/../info.txt`, các đường dẫn absolute, normalized và real khác nhau ở đâu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn API theo trạng thái | Chọn toAbsolutePath cho đích tương lai hoặc toRealPath cho đối tượng đã tồn tại. |
+    | Phân tích symlink | Dự đoán chênh lệch giữa absolute path và real path qua symbolic link. |
+    | Xử lý lỗi I/O | Viết luồng toRealPath có xử lý `IOException` khi file bị thiếu/không truy cập được. |
+    | Kiểm tra giả định bảo mật | Chỉ ra rủi ro kiểm tra trước rồi dùng sau dù đã lấy real path. |
+- id: path-007
+  title: startsWith, endsWith, equals và so sánh theo thành phần
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **startsWith, endsWith, equals và so sánh theo thành phần**
+
+    Bài học cho thấy `startsWith`, `endsWith` và `equals` so sánh cấu trúc `Path` theo provider, khác thao tác tiền tố/hậu tố chuỗi và khác danh tính file vật lý. Nhờ đó có thể kiểm tra quan hệ tên, root và hậu tố mà tránh nhầm `.txt` là một name element hay `equals` là `Files.isSameFile`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### So sánh các thành phần
+
+    1. `Path.startsWith`/`endsWith` đòi các name element khớp ra sao, khác với String như thế nào?
+    2. Vì sao `Path.of("notes.txt").endsWith(".txt")` không dùng để kiểm tra extension?
+    3. `startsWith(String)` khác gì `path.toString().startsWith(...)`?
+
+    ### Bằng nhau và định danh
+
+    1. `Path.equals` khác với `Files.isSameFile` và `toRealPath` ra sao?
+    2. Root, absolute/relative, phân biệt hoa–thường và FileSystem provider ảnh hưởng kết quả như thế nào?
+    3. Vì sao `candidate.startsWith(base)` vẫn chưa đủ làm kiểm soát truy cập vật lý?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh tiền tố cấu trúc | Dự đoán startsWith giữa `data`, `database` và đường dẫn con. |
+    | Kiểm tra hậu tố đúng cấp | Tách yêu cầu so khớp name element khỏi yêu cầu kiểm tra đuôi tên file. |
+    | Phân biệt equality/identity | Đưa ví dụ hai Path khác nhau lexical nhưng `Files.isSameFile` có thể true. |
+    | Thiết kế containment | Mô tả phần Path comparison hỗ trợ và phần an toàn symlink/race còn thiếu. |
+- id: path-008
+  title: URI, toUri và giới hạn chuyển đổi giữa các provider
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **URI, toUri và giới hạn chuyển đổi giữa các provider**
+
+    Bài học làm rõ sự khác nhau giữa `Path` và URI, cách `toUri()`, `Path.of(URI)` và `Paths.get(URI)` tìm provider theo scheme. Ví dụ file URI, ký tự escape và ZipFS giúp xử lý round-trip, filesystem chưa mở và ngoại lệ mà không giả định mọi URL/URI là đường dẫn file.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### URI và quy tắc round-trip
+
+    1. Vì sao `Path.toUri()` khác `Path.toString()` hoặc tự ghép `file://`?
+    2. Đảm bảo round-trip của default `file:` provider có những điều kiện nào?
+    3. Vì sao URI có scheme `https:` không thể mặc nhiên dùng `Path.of(URI)` như một file?
+
+    ### Provider và ZIP filesystem
+
+    1. Khi nào `Path.of(URI)` có thể gặp `FileSystemNotFoundException`, `ProviderNotFoundException` hoặc lỗi scheme?
+    2. Một URI `jar:` có liên hệ gì với lifecycle của ZipFS và đường dẫn entry bên trong archive?
+    3. Tại sao phải phân biệt `URI.getPath()` với `getRawPath()` khi đường dẫn có ký tự cần percent-encoding?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chuyển URI đúng | Tạo file URI bằng Path.toUri và giải thích vấn đề escape ký tự. |
+    | Đánh giá round-trip | Kiểm tra một Path từ default provider có thể dựng lại qua URI trong cùng JVM. |
+    | Làm việc với ZipFS | Giải thích việc mở FileSystem của ZIP và lấy entry Path có cùng provider. |
+    | Xử lý provider errors | Phân loại lỗi scheme không được hỗ trợ, provider không có hoặc filesystem chưa mở. |
+- id: path-009
+  title: Đường dẫn Windows, Unix, dấu phân cách và tính phân biệt hoa thường
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đường dẫn Windows, Unix, dấu phân cách và tính phân biệt hoa thường**
+
+    Bài học lý giải vì sao cú pháp Windows, Unix, separator và case sensitivity ảnh hưởng cách Java phân tích `Path`. Những ví dụ về drive-relative `C:foo`, root của UNC, `File.separator`/`pathSeparator`, escape Java và đặc điểm filesystem giúp viết mã portable và test ít phụ thuộc máy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cú pháp theo nền tảng
+
+    1. `C:notes.txt` trên Windows khác `C:\\notes.txt` thế nào, và chuỗi kiểu Windows được hiểu ra sao trên Unix?
+    2. `File.separator` khác `File.pathSeparator` trong mục đích và ký tự đại diện như thế nào?
+    3. Vì sao tách chuỗi bằng `String.split(File.separator)` có thể gây lỗi regex trên Windows?
+
+    ### Portability và file identity
+
+    1. Vì sao không nên suy case sensitivity chỉ từ `os.name` hoặc dùng `equalsIgnoreCase` để suy hai file là một?
+    2. Các phương thức `Path.of`, `resolve`, `getFileName` giúp giảm hard-code separator ra sao?
+    3. Khi kiểm tra file identity và xử lý symlink, giới hạn của chuẩn hóa chuỗi là gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt separator | Giải thích chức năng path-list separator khác directory separator bằng ví dụ PATH/classpath. |
+    | Xử lý Windows path | Phân biệt drive-relative, drive-rooted và đường dẫn UNC trong tình huống cụ thể. |
+    | Viết Java portable | Thay phép nối chuỗi separator bằng Path factory/resolve và test các name element. |
+    | Đánh giá case sensitivity | Thiết kế kiểm tra dựa trên Files/Path khi cần identity, không suy từ hệ điều hành. |
+- id: path-010
+  title: Path không bảo đảm đích đang tồn tại
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Path không bảo đảm đích đang tồn tại**
+
+    Bài học dùng tình huống file chưa được tạo để phân biệt đối tượng `Path` với entry tồn tại trên filesystem. Trọng tâm là trạng thái ba khả năng của `Files.exists`/`notExists`, `IOException` khi đọc/ghi, thao tác `CREATE_NEW` và rủi ro TOCTOU; đây là nền tảng để viết logic file an toàn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biểu diễn và trạng thái tồn tại
+
+    1. Vì sao có thể gọi `resolve`, `getParent`, `normalize` trên một Path trỏ tới file chưa tồn tại?
+    2. Vì sao `!Files.exists(path)` không đồng nghĩa `Files.notExists(path)`?
+    3. `Files.isRegularFile(path) == false` có khẳng định đó là directory hoặc file không tồn tại không?
+
+    ### Thao tác I/O và race
+
+    1. Vì sao nên xử lý exception ở `Files.readString`/`writeString` thay vì tin phép kiểm tra `exists` trước đó?
+    2. `StandardOpenOption.CREATE_NEW` giúp tránh loại lỗi ghi đè nào?
+    3. Symbolic link và quyền truy cập làm ranh giới giữa tên Path và đối tượng thật phức tạp ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt Path và entry | Giải thích các bước tạo Path, đọc lỗi, tạo file và đọc thành công trong demo thư mục tạm. |
+    | Hiểu trạng thái kiểm tra | Phân tích ba kết hợp có ý nghĩa của exists/notExists khi trạng thái ổn định. |
+    | Xử lý lỗi trực tiếp | Viết ví dụ tạo/đọc file bằng Files và bắt IOException phù hợp. |
+    | Chống giả định TOCTOU | Chỉ ra race khi kiểm tra trước mở và chọn tùy chọn thao tác tại điểm I/O. |
+- id: path-011
+  title: PathMatcher với glob và regex
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **PathMatcher với glob và regex**
+
+    Bài học giới thiệu `PathMatcher` do FileSystem tạo ra, so sánh `glob:` và `regex:` cùng phạm vi match toàn bộ `Path`, `getFileName()` hoặc relative path. Người học có thể chọn wildcard phù hợp, ghép matcher với `Files.list`/`Files.walk` và đóng stream đúng cách, đồng thời hiểu matcher không tự duyệt hay xác minh file.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cú pháp mẫu và phạm vi match
+
+    1. `glob:*`, `glob:**`, `glob:?`, `glob:{java,kt}` khác regex ở những điểm nào?
+    2. Vì sao `glob:*.java` có thể khớp `App.java` nhưng không khớp `src/App.java` nếu truyền toàn Path?
+    3. `PathMatcher.matches` khác `Pattern.matcher(...).find()` như thế nào?
+
+    ### Ứng dụng và giới hạn
+
+    1. Cần truyền `getFileName()`, toàn Path hay `root.relativize(path)` khi nào?
+    2. `Files.list` khác `Files.walk` về phạm vi duyệt và cách đóng stream như thế nào?
+    3. Vì sao matcher không đủ để xác minh file tồn tại, chính sách truy cập hay kết quả giống nhau trên mọi provider?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn cú pháp matcher | Tạo glob lọc đuôi và regex kiểm tra tên report bốn chữ số. |
+    | Điều khiển phạm vi match | Dự đoán matches cho full path và chỉ fileName trong cùng ví dụ. |
+    | Kết hợp duyệt file | Dùng Files.list/walk và PathMatcher trong try-with-resources, sắp xếp kết quả. |
+    | Kiểm tra tính portable | Phân tích tác động separator, case-sensitivity, provider và regex escaping. |

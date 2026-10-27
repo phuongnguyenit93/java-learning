@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "LUỒNG BYTE — HỢP ĐỒNG ĐỌC GHI VÀ QUẢN LÝ TÀI NGUYÊN"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: byte-streams-001
+    order: 1
+    title: "InputStream và OutputStream"
+    description: "Xác lập hợp đồng của InputStream và OutputStream, vòng lặp sao chép byte, nguồn/đích và trách nhiệm đóng tài nguyên."
+    transition:
+      to: byte-streams-002
+      description: "Sau mô hình tổng thể, làm rõ sentinel EOF và miền giá trị của một lần đọc byte."
+  - id: byte-streams-002
+    order: 2
+    title: "read trả về int từ 0 đến 255 và dấu hiệu EOF -1"
+    description: "Phân biệt miền byte 0–255 và giá trị EOF -1 của InputStream.read(), tránh lỗi khi ép kiểu."
+    transition:
+      to: byte-streams-003
+      description: "Từ một byte đơn lẻ, chuyển sang đọc theo khối có offset và length."
+  - id: byte-streams-003
+    order: 3
+    title: "Đọc theo byte[], offset và length"
+    description: "Sử dụng read(byte[], offset, length) đúng biên mảng và đúng số byte nhận được."
+    transition:
+      to: byte-streams-004
+      description: "Một vùng mảng hợp lệ chưa bảo đảm lần đọc sẽ điền đầy toàn bộ vùng đó."
+  - id: byte-streams-004
+    order: 4
+    title: "Một lần read không bảo đảm lấp đầy buffer"
+    description: "Giải thích và mô phỏng short read; thiết kế vòng lặp đọc đến EOF hoặc lấy chính xác N byte."
+    transition:
+      to: byte-streams-005
+      description: "Khi đã hiểu short read, áp dụng đúng số byte vừa nhận vào thao tác ghi."
+  - id: byte-streams-005
+    order: 5
+    title: "Ghi đúng số byte thực tế đã đọc"
+    description: "Bảo toàn dữ liệu khi sao chép bằng write(buffer,0,count), đặc biệt lượt đọc ngắn cuối cùng."
+    transition:
+      to: byte-streams-006
+      description: "Tiếp theo chọn API có sẵn để đọc theo N byte hoặc đọc tới EOF."
+  - id: byte-streams-006
+    order: 6
+    title: "readNBytes và khác biệt với readAllBytes"
+    description: "Phân biệt readNBytes và readAllBytes về ranh giới đọc, EOF, vị trí luồng và RAM."
+    transition:
+      to: byte-streams-007
+      description: "Sau khi biết cách đọc giới hạn, so sánh thao tác bỏ qua byte với yêu cầu bỏ qua đủ."
+  - id: byte-streams-007
+    order: 7
+    title: "skip, skipNBytes và giới hạn khi bỏ qua dữ liệu"
+    description: "Phân biệt skip và skipNBytes, số byte đã bỏ qua, EOF và không có rollback/seek mặc định."
+    transition:
+      to: byte-streams-008
+      description: "Để phát hiện EOF chính xác, cần loại bỏ suy luận sai từ available()."
+  - id: byte-streams-008
+    order: 8
+    title: "available không phải kích thước toàn bộ dữ liệu"
+    description: "Bác bỏ cách dùng available() để đo kích thước/EOF và xây dựng lặp đọc đúng."
+    transition:
+      to: byte-streams-009
+      description: "Khi đã đọc đến EOF đúng cách, học cách chuyển trực tiếp sang output và quản lý ownership."
+  - id: byte-streams-009
+    order: 9
+    title: "transferTo và quyền sở hữu hai stream"
+    description: "Hiểu transferTo và ownership/close/flush của hai stream, trạng thái chuyển một phần khi thất bại."
+    transition:
+      to: byte-streams-010
+      description: "Áp dụng trách nhiệm stream vào tệp và quyết định chế độ ghi mới, overwrite hoặc append."
+  - id: byte-streams-010
+    order: 10
+    title: "FileInputStream, FileOutputStream và chế độ append"
+    description: "So sánh FileInputStream, FileOutputStream, truncate, append và tác dụng phụ trên tệp."
+    transition:
+      to: byte-streams-011
+      description: "Khép lại bằng các stream rỗng và stream bỏ qua đầu ra phục vụ nhánh tùy chọn và kiểm thử."
+  - id: byte-streams-011
+    order: 11
+    title: "nullInputStream, nullOutputStream và tình huống sử dụng"
+    description: "Dùng nullInputStream/nullOutputStream cho nguồn rỗng/sink bỏ qua, phân biệt với null và hành vi sau close."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | InputStream và OutputStream | read trả về int từ 0 đến 255 và dấu hiệu EOF -1 | Đọc theo byte[], offset và length | Một lần read không bảo đảm lấp đầy buffer | Ghi đúng số byte thực tế đã đọc | readNBytes và khác biệt với readAllBytes | skip, skipNBytes và giới hạn khi bỏ qua dữ liệu | available không phải kích thước toàn bộ dữ liệu | transferTo và quyền sở hữu hai stream | FileInputStream, FileOutputStream và chế độ append | nullInputStream, nullOutputStream và tình huống sử dụng |
+  | Vấn đề cần hiểu | Luồng byte hoạt động và được đóng như thế nào? | Tại sao read() trả int và kết thúc bằng -1? | offset, length và số byte thực đọc khác nhau ở điểm nào? | Vì sao một lần read có thể trả ít hơn số byte yêu cầu? | Phải ghi bao nhiêu byte sau từng lần read? | Khi nào nên đọc N byte, khi nào đọc hết stream? | Làm thế nào bỏ qua đúng số byte và phát hiện EOF sớm? | Vì sao available() không cho biết còn bao nhiêu byte? | Ai chịu trách nhiệm đóng hai stream sau transferTo? | Mở FileOutputStream thay thế hay nối dữ liệu hiện có? | Khi nào stream rỗng hoặc stream bỏ qua dữ liệu là lựa chọn có chủ đích? |
+  | Giá trị đối với OOP/module | Nền tảng cho các thao tác đọc ghi an toàn | Tránh mất dữ liệu byte 0xFF và vòng lặp sai | Bảo vệ vùng mảng và dữ liệu nhị phân | Ngăn mất khung dữ liệu và đọc non hợp đồng | Tránh byte thừa và mất tính toàn vẹn đầu ra | Chọn đúng ranh giới đọc và kiểm soát bộ nhớ | Giữ đúng vị trí đọc payload của luồng | Tránh đọc hụt, cấp phát sai và polling sai | Tránh leak hoặc đóng nhầm stream do caller sở hữu | Tránh xóa nhầm hoặc nối dữ liệu sai cấu trúc | Tạo fallback và test không phụ thuộc I/O thực |
+  | Tư duy hình thành | Tách nguồn, thao tác byte và vòng đời tài nguyên | Tách giá trị dữ liệu khỏi tín hiệu điều khiển | Phân biệt kích thước yêu cầu và kết quả thực tế | Lập vòng lặp dựa vào tiến độ thực nhận | Chỉ xử lý vùng byte thực sự mới đọc | Đặt giới hạn dữ liệu trước khi chọn API | Kiểm tra tiến độ và giới hạn của thao tác dịch vị trí | Phân biệt khả năng đọc tức thời và kết thúc nguồn | Thiết kế lifecycle theo hợp đồng sở hữu | Nhìn thấy tác dụng phụ khi mở nguồn/đích file | Biểu diễn ý định rỗng/bỏ qua bằng đối tượng hợp lệ |

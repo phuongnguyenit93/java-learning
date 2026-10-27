@@ -1,0 +1,339 @@
+summaries:
+- id: file-channel-001
+  title: Mở FileChannel bằng Path và OpenOption
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Mở FileChannel bằng Path và OpenOption**
+
+    Bài mở đầu cách tạo FileChannel qua Path và những tổ hợp OpenOption có ý nghĩa. Người học phải phân biệt READ, WRITE, CREATE, CREATE_NEW, TRUNCATE_EXISTING và APPEND để không vô tình phá dữ liệu, đồng thời quản lý quyền và vòng đời channel.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chế độ mở và hợp đồng API
+
+    1. Hai overload FileChannel.open khác nhau ở cách truyền option và FileAttribute như thế nào?
+    2. Vì sao CREATE hoặc TRUNCATE_EXISTING không tự biến một channel chỉ READ thành channel ghi?
+    3. Khi nào nên chọn CREATE_NEW thay cho CREATE và lỗi nào cần xử lý?
+
+    ### Bảo vệ dữ liệu và tài nguyên
+
+    1. Điều gì xảy ra với tệp cũ nếu dùng WRITE kết hợp TRUNCATE_EXISTING, và vì sao mở trực tiếp tệp đích có rủi ro?
+    2. Vì sao APPEND không nên ghép tùy tiện với READ hoặc TRUNCATE_EXISTING, và quyền đóng thuộc về ai?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn OpenOption | Lập bộ option cho đọc, cập nhật tại chỗ, tạo mới không ghi đè và append, giải thích kết quả. |
+    | Kiểm soát dữ liệu | Phân tích nguy cơ truncate và thiết kế xử lý FileAlreadyExistsException. |
+    | Quản lý lifecycle | Mở và đóng FileChannel bằng try-with-resources, phân biệt các lỗi mở tệp. |
+- id: file-channel-002
+  title: Đọc ghi theo vị trí hiện tại
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đọc ghi theo vị trí hiện tại**
+
+    Bài dạy FileChannel.read/write theo vị trí hiện tại và mối quan hệ với position/limit của ByteBuffer. Người học theo dõi số byte thực đọc/ghi, xử lý EOF, short I/O và thứ tự flip/clear để tránh mất hoặc lặp dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai hệ tọa độ
+
+    1. Vì sao channel.position() và buffer.position() là hai giá trị khác nhau?
+    2. Nếu relative read đọc thành công n byte, file position và buffer position tiến như thế nào?
+
+    ### Đọc ghi tin cậy
+
+    1. Vì sao read(buffer) có thể trả ít byte hơn remaining hoặc trả -1 tại EOF?
+    2. Lúc nào phải flip, clear hoặc compact ByteBuffer khi chuyển giữa đọc và ghi?
+    3. Tại sao gọi position(offset) rồi read() thành hai lệnh không an toàn khi nhiều thread cùng dùng channel?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng vị trí | Tính con trỏ channel/buffer sau các bước đọc và ghi tương đối. |
+    | Xử lý short I/O | Viết vòng lặp read/write kiểm tra giá trị trả về và phân biệt EOF với không tiến triển. |
+    | Kiểm soát buffer | Đặt limit và flip/clear đúng khi sửa một đoạn của tệp. |
+- id: file-channel-003
+  title: Đọc ghi tại vị trí tuyệt đối mà không đổi position
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đọc ghi tại vị trí tuyệt đối mà không đổi position**
+
+    Bài tập trung vào read/write có tham số offset, giữ nguyên FileChannel.position() nhưng vẫn tiêu thụ ByteBuffer. Người học biết tính offset cộng dồn sau mỗi partial I/O và lựa chọn positional access cho header, record cố định hoặc nhiều tác vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế positional I/O
+
+    1. read(dst, absoluteOffset) khác read(dst) ở tác động lên file position như thế nào?
+    2. Vì sao ByteBuffer.position() vẫn tăng ngay cả khi file position không đổi?
+    3. Với record độ dài cố định, phải tính offset bằng công thức nào từ index của record?
+
+    ### Tính đúng của vòng lặp
+
+    1. Khi read(dst, offset) chỉ nhận n byte, vì sao lượt kế phải dùng offset + n?
+    2. Positional I/O giúp tránh race nào từ cặp position()/read(), và vì sao nó chưa bảo đảm atomic cho hai writer cùng vùng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc/ghi theo offset | Viết phương thức đọc đủ record tại offset với kiểm tra EOF và tiến độ. |
+    | Phân biệt trạng thái | Chứng minh channel position giữ nguyên trong khi buffer position thay đổi. |
+    | Chọn concurrency pattern | Đề xuất vùng offset không chồng lấn và buffer riêng cho từng tác vụ. |
+- id: file-channel-004
+  title: size, truncate và giới hạn thay đổi độ dài
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **size, truncate và giới hạn thay đổi độ dài**
+
+    Bài làm rõ size(), position() và truncate(long) như ba thao tác khác nhau. Người học phân tích cắt ngắn file, vị trí vượt EOF, thay đổi độ dài khi ghi và các giới hạn của filesystem, quota và quyền ghi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Size, position và truncate
+
+    1. Vì sao position(100) trên file 10 byte không tự làm size() thành 100?
+    2. truncate(newSize) xử lý ra sao khi newSize nhỏ hơn size hiện tại, lớn hơn size hiện tại hoặc position đang vượt newSize?
+
+    ### Mở rộng và rủi ro
+
+    1. Muốn kéo dài file thì phải thực hiện thao tác ghi nào, và vùng gap có thể có ý nghĩa gì?
+    2. Vì sao không nên mặc định mọi filesystem hỗ trợ file kích thước long tùy ý?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng độ dài | Tính size và position sau chuỗi truncate, seek và ghi sau EOF. |
+    | Chọn thao tác thay đổi độ dài | Phân biệt cắt ngắn với mở rộng nhờ ghi dữ liệu. |
+    | Xử lý giới hạn | Liệt kê quyền, quota và ngoại lệ cần xét trước khi đổi size. |
+- id: file-channel-005
+  title: transferTo, transferFrom và xử lý số byte chuyển thực tế
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **transferTo, transferFrom và xử lý số byte chuyển thực tế**
+
+    Bài giải thích chiều dữ liệu của FileChannel.transferTo và transferFrom, vị trí được truyền vào và giá trị byte thực tế. Người học lặp dựa trên số byte trả về, xử lý trường hợp không tiến triển và xác minh kết quả copy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai chiều transfer
+
+    1. transferTo và transferFrom khác nhau ở FileChannel nguồn hay đích, và offset chỉ vùng nào?
+    2. FileChannel thực hiện lời gọi có bị thay đổi current position không, và channel đối tác có thể đổi những gì?
+
+    ### Short transfer
+
+    1. Vì sao một lần transfer với count=1000 có thể trả về 600 mà chưa phải lỗi?
+    2. Nếu transfer trả về 0 khi vẫn còn byte dự kiến, vì sao không nên lặp vô hạn hoặc suy ngay EOF?
+    3. Vì sao source.size() trước khi sao chép chưa chứng minh nguồn không đổi giữa các lượt?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn hướng chuyển | Vẽ hướng nguồn/đích, xác định offset và count cho cả hai phương thức. |
+    | Lặp truyền đủ byte | Viết thuật toán cộng số byte thực và xử lý trường hợp trả về 0. |
+    | Xác minh bản sao | Kiểm tra độ dài, nội dung và trường hợp file đích còn đuôi cũ. |
+- id: file-channel-006
+  title: Zero-copy là khả năng tối ưu, không phải bảo đảm cho mọi tình huống
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Zero-copy là khả năng tối ưu, không phải bảo đảm cho mọi tình huống**
+
+    Bài phân biệt hợp đồng chuyển dữ liệu với tối ưu zero-copy của hệ điều hành/JVM. Người học biết khi nào transferTo có thể giảm bản sao trung gian, vì sao còn phụ thuộc loại channel và provider, và cách đo thực tế mà không đánh đổi tính đúng của bản sao.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đường truyền dữ liệu
+
+    1. Zero-copy giảm những bước chuyển dữ liệu nào, và vì sao tên gọi không nhất thiết có nghĩa không còn bất kỳ copy nào?
+    2. Tại sao FileChannel.transferTo không cam kết runtime luôn dùng đường zero-copy?
+
+    ### Tối ưu có kiểm chứng
+
+    1. Khi một lời gọi transfer không tiến triển, fallback bằng ByteBuffer cần kiểm tra offset và dữ liệu như thế nào?
+    2. Bạn đo throughput, CPU và chi phí cấp phát thế nào để đánh giá tối ưu trên file-to-file khác file-to-socket?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích đường dữ liệu | So sánh transferTo với vòng lặp ByteBuffer về hợp đồng và khả năng giảm copy. |
+    | Thiết kế fallback | Đề xuất lộ trình fallback có kiểm soát khi transfer không hoàn tất. |
+    | Đánh giá hiệu năng | Lập phép đo theo tổ hợp source/target và giải thích giới hạn môi trường. |
+- id: file-channel-007
+  title: force và phạm vi bảo đảm với thiết bị lưu trữ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **force và phạm vi bảo đảm với thiết bị lưu trữ**
+
+    Bài phân biệt thao tác write thành công với dữ liệu đã được đồng bộ xuống thiết bị. Người học chọn force(true/false), SYNC/DSYNC, hiểu giới hạn với mapped buffer, filesystem không cục bộ và cập nhật nhiều file, từ đó thiết kế điểm cam kết dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng force
+
+    1. Vì sao write thành công hoặc đọc lại byte mới chưa chứng minh dữ liệu chống mất điện?
+    2. force(false) và force(true) khác nhau về metadata thế nào, và vì sao bảo đảm với thiết bị không cục bộ yếu hơn?
+
+    ### Thiết kế bền vững
+
+    1. Khi thay đổi mapped byte buffer, vì sao cần tra MappedByteBuffer.force thay vì suy FileChannel.force đã bao phủ mọi thay đổi?
+    2. Vì sao force một file không tạo transaction cho nhiều file hoặc bảo đảm tên file sau rename?
+    3. Khi nào chọn SYNC/DSYNC so với gọi force tại điểm commit?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại độ bền | Giải thích khác nhau giữa write, cache, force và durable commit. |
+    | Chọn cơ chế đồng bộ | Chọn force/SYNC/DSYNC theo yêu cầu metadata, chi phí và nguồn ghi. |
+    | Thiết kế phục hồi | Xác định điểm commit, dữ liệu cần kiểm chứng và hạn chế với rename/multi-file. |
+- id: file-channel-008
+  title: Quan hệ với FileInputStream, FileOutputStream và RandomAccessFile
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Quan hệ với FileInputStream, FileOutputStream và RandomAccessFile**
+
+    Bài cho thấy getChannel() kết nối các lớp java.io truyền thống với FileChannel và làm rõ quyền truy cập, vị trí tệp cùng vòng đời dùng chung. Người học tránh vô tình coi stream và channel gắn với nó là hai file handle độc lập.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cầu nối I/O
+
+    1. FileInputStream, FileOutputStream và RandomAccessFile cấp FileChannel với quyền đọc/ghi tương ứng thế nào?
+    2. Khi RandomAccessFile.seek() và getChannel().position() tác động cùng tệp, vì sao con trỏ quan sát được từ hai API là chung?
+
+    ### Vòng đời và lỗi
+
+    1. Đóng stream hoặc channel gắn với nhau ảnh hưởng đối tượng còn lại ra sao?
+    2. Vì sao mở trực tiếp FileChannel.open(Path, options) là một tình huống ownership khác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn adapter phù hợp | So sánh quyền và cách lấy channel từ ba API legacy. |
+    | Theo dõi file pointer | Dự đoán vị trí sau thao tác xen kẽ stream/RAF và FileChannel. |
+    | Kiểm soát lifecycle | Thiết kế code đóng tài nguyên tránh dùng lại stream đã đóng. |
+- id: file-channel-009
+  title: 'Dùng đồng thời: vị trí chia sẻ và thao tác có vị trí tường minh'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dùng đồng thời: vị trí chia sẻ và thao tác có vị trí tường minh**
+
+    Bài đi sâu hợp đồng thread-safety của FileChannel, phân biệt từng thao tác được phối hợp với chuỗi nhiều thao tác không nguyên tử. Người học tổ chức offset rõ ràng, buffer riêng, khóa khi cần và tránh các writer xung đột trên cùng vùng file.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng đồng thời
+
+    1. FileChannel cho phép các thao tác nào chạy ở nhiều thread, và nhóm thao tác nào bị tuần tự hóa vì tác động position hoặc file size?
+    2. Vì sao position(offset) rồi read(buffer) trên cùng channel có thể đọc sai vùng khi thread khác xen vào?
+
+    ### Thiết kế chia vùng
+
+    1. Positional I/O giúp tránh tranh chấp con trỏ thế nào nhưng vẫn không tự bảo vệ ByteBuffer dùng chung?
+    2. Nếu hai writer dùng cùng offset hoặc một thread truncate, cần chọn chiến lược phối hợp gì?
+    3. Vì sao FileLock có giới hạn theo OS và không nên coi như transaction ứng dụng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng interleaving | Chỉ ra lịch thread khiến relative I/O đọc sai offset. |
+    | Thiết kế file access | Phân vùng offset, dùng buffer riêng và kiểm soát ghi chồng lấn. |
+    | Phân biệt bảo đảm | Giải thích thread-safe, atomic record và file lock là các mức khác nhau. |
+- id: file-channel-010
+  title: Append và các hành vi phụ thuộc hệ điều hành
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Append và các hành vi phụ thuộc hệ điều hành**
+
+    Bài phân biệt APPEND với tự seek tới size cuối file trong bối cảnh nhiều writer. Người học hiểu vì sao append một lần không biến chuỗi nhiều write thành transaction và cách áp dụng single writer, file locking, framing, force khi cần.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa append
+
+    1. APPEND khác position(size()) rồi write như thế nào dưới cạnh tranh đa tiến trình?
+    2. Vì sao Java không bảo đảm việc nhảy đến EOF và write nguyên tử trên mọi filesystem/provider?
+
+    ### Bảo đảm cho log
+
+    1. Một record gồm header và payload ghi bằng hai write có thể bị interleave như thế nào?
+    2. Bạn sẽ tổ chức một writer queue hoặc protocol ghi record ra sao để giảm race, và khi nào FileLock có ích?
+    3. force và APPEND có giải quyết cùng một vấn đề không, và vì sao NFS/SMB có thể khác local filesystem?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn option append | Thiết lập APPEND/WRITE/CREATE hợp lệ và phân biệt overwrite. |
+    | Phân tích race | Dựng interleaving minh họa lỗi position(size()) và record nhiều write. |
+    | Thiết kế ghi log | Đề xuất single writer/lock, framing, flush hoặc force tùy yêu cầu. |
+- id: file-channel-011
+  title: FileChannel không phải selectable channel
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **FileChannel không phải selectable channel**
+
+    Bài phân biệt FileChannel với SelectableChannel và SelectionKey, nêu vì sao channel file không thể register hoặc configureBlocking(false). Người học chọn SocketChannel, Pipe.SourceChannel hoặc AsynchronousFileChannel theo loại I/O và mô hình concurrency phù hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân cấp channel
+
+    1. Vì sao cùng hỗ trợ read(ByteBuffer) nhưng FileChannel không triển khai SelectableChannel?
+    2. Selector readiness khác thời gian chặn của một lệnh FileChannel.read như thế nào?
+    3. Các OP_READ/OP_WRITE của SelectionKey áp dụng cho nhóm channel nào?
+
+    ### Thay thế phù hợp
+
+    1. Khi muốn xử lý file mà không chặn luồng chính, vì sao AsynchronousFileChannel hoặc worker thread có thể phù hợp hơn Selector?
+    2. So sánh một tình huống đọc file, một socket và một Pipe.SourceChannel để chọn cơ chế xử lý nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện kiểu channel | Đối chiếu FileChannel, SocketChannel, Pipe.SourceChannel và khả năng đăng ký Selector. |
+    | Chọn mô hình bất đồng bộ | Chọn FileChannel trên worker hoặc AsynchronousFileChannel cho file theo offset. |
+    | Phân tích lỗi API | Giải thích vì sao cast sang SelectableChannel hoặc gọi register trên FileChannel không hợp lệ. |

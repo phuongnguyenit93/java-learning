@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "ÁNH XẠ BỘ NHỚ — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: memory-mapping-001
+    order: 1
+    title: "Memory-mapped file và MappedByteBuffer"
+    description: "Giới thiệu FileChannel.map và MappedByteBuffer: cơ chế ánh xạ file, offset tương đối, ba chế độ, page cache và giới hạn vòng đời."
+    transition:
+      to: memory-mapping-002
+      description: "Sau mô hình nền, cần xác định chính xác quyền đọc ghi của từng MapMode."
+  - id: memory-mapping-002
+    order: 2
+    title: "MapMode READ_ONLY, READ_WRITE và PRIVATE"
+    description: "So sánh READ_ONLY, READ_WRITE và PRIVATE về quyền truy cập, copy-on-write, điều kiện mở channel và khả năng cập nhật file."
+    transition:
+      to: memory-mapping-003
+      description: "Sau khi chọn mode, cần chia file lớn thành các vùng có độ dài phù hợp giới hạn ByteBuffer."
+  - id: memory-mapping-003
+    order: 3
+    title: "Ánh xạ từng vùng và giới hạn kích thước buffer"
+    description: "Thiết kế mapping theo cửa sổ cho file lớn hơn 2 GiB, tính offset chính xác và xử lý record hay UTF-8 vắt qua ranh giới."
+    transition:
+      to: memory-mapping-004
+      description: "Sau khi chọn đúng vùng ánh xạ, thực hành các thao tác get/put, byte order và view."
+  - id: memory-mapping-004
+    order: 4
+    title: "Đọc ghi dữ liệu qua vùng nhớ đã ánh xạ"
+    description: "Thực hành get/put, vị trí buffer, slice, ByteOrder và charset trên vùng file đã ánh xạ; kiểm chứng thay đổi byte bằng file tạm."
+    transition:
+      to: memory-mapping-005
+      description: "Thao tác get/put trên các trang ánh xạ có thể gây page fault, cần hiểu preload và residency."
+  - id: memory-mapping-005
+    order: 5
+    title: "load, isLoaded và tác động của page fault"
+    description: "Giải thích page faults, load() best-effort, isLoaded() như hint và tác động của preload lên độ trễ và page cache."
+    transition:
+      to: memory-mapping-006
+      description: "Khi sửa byte trong mapping, câu hỏi kế tiếp là bảo đảm thay đổi được đẩy xuống storage thế nào."
+  - id: memory-mapping-006
+    order: 6
+    title: "force cho thay đổi trên vùng ánh xạ"
+    description: "Phân tích MappedByteBuffer.force toàn vùng và vùng con, khác biệt với FileChannel.force, giới hạn durability và lỗi flush."
+    transition:
+      to: memory-mapping-007
+      description: "Ghi dữ liệu xong vẫn phải quản lý vòng đời mapping vốn độc lập với channel."
+  - id: memory-mapping-007
+    order: 7
+    title: "Đóng channel không tự kết thúc vòng đời vùng ánh xạ"
+    description: "Tách vòng đời FileChannel với vùng mapped memory; phân tích tác động đến xóa/đổi tên file, GC và quản lý native resource."
+    transition:
+      to: memory-mapping-008
+      description: "Sau khi hiểu lifetime, đối chiếu API quản lý unmap giữa JDK truyền thống và mô hình Arena mới."
+  - id: memory-mapping-008
+    order: 8
+    title: "Giới hạn giải phóng mapping theo phiên bản API và JVM"
+    description: "So sánh giới hạn unmap của MappedByteBuffer Java 17/21 với FileChannel.map trả MemorySegment gắn Arena từ Java 22."
+    transition:
+      to: memory-mapping-009
+      description: "Bất kể cơ chế unmap nào, resize/truncate file đang map vẫn cần kiểm soát nhất quán."
+  - id: memory-mapping-009
+    order: 9
+    title: "Rủi ro khi tệp bị thay đổi kích thước trong lúc đang ánh xạ"
+    description: "Phân tích truncate, append và thay đổi đồng thời của backing file; dùng ownership, snapshot/version và phối hợp writer-reader để tránh vùng mapped hỏng."
+    transition:
+      to: memory-mapping-010
+      description: "Từ các rủi ro và lợi ích đã học, đánh giá khi nào memory mapping đáng dùng trên workload thật."
+  - id: memory-mapping-010
+    order: 10
+    title: "Khi nào memory mapping có ích và khi nào gây bất lợi"
+    description: "Đánh giá lợi ích mmap với random access lặp, bất lợi từ page faults và vòng đời file, rồi lựa chọn dựa trên benchmark thực tế."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Memory-mapped file và MappedByteBuffer | MapMode READ_ONLY, READ_WRITE và PRIVATE | Ánh xạ từng vùng và giới hạn kích thước buffer | Đọc ghi dữ liệu qua vùng nhớ đã ánh xạ | load, isLoaded và tác động của page fault | force cho thay đổi trên vùng ánh xạ | Đóng channel không tự kết thúc vòng đời vùng ánh xạ | Giới hạn giải phóng mapping theo phiên bản API và JVM | Rủi ro khi tệp bị thay đổi kích thước trong lúc đang ánh xạ | Khi nào memory mapping có ích và khi nào gây bất lợi |
+  | Vấn đề cần hiểu | Một vùng file trở thành buffer như thế nào và cơ chế đó khác I/O đọc/ghi thông thường ở đâu? | Chọn mode nào để đọc, sửa thật hoặc chỉnh một view riêng mà không ghi về file? | Xử lý file lớn hơn khả năng chứa của một ByteBuffer mà không làm sai offset hoặc record ra sao? | Đọc hoặc sửa đúng byte trong mapping và giải mã primitive/UTF-8 thế nào? | Vì sao mapping vẫn gây I/O khi truy cập và khi nào load thật sự giúp giảm độ trễ? | Sau khi put vào mapping, làm gì để yêu cầu lưu bền dữ liệu và những bảo đảm nào vẫn chưa có? | Vì sao đóng channel rồi vùng ánh xạ vẫn sống và quản lý tài nguyên đó thế nào? | Có thể chủ động giải phóng mapping bằng API công khai nào và giới hạn phụ thuộc phiên bản JDK ra sao? | Khi file đang được ánh xạ bị resize, điều gì khiến truy cập không còn an toàn và tránh race thế nào? | Trong workload nào memory mapping tốt hơn FileChannel.read/write, và chứng minh lựa chọn bằng phép đo nào? |
+  | Giá trị đối với OOP/module | Nền tảng hiểu kiến trúc NIO memory mapping | Tránh vi phạm quyền truy cập và sai ngữ nghĩa ghi | Đọc dữ liệu lớn theo vùng mà không vượt giới hạn API | Thao tác chính xác trên ByteBuffer có backing file | Hiểu nguyên nhân biến động latency của mmap | Đặt checkpoint lưu dữ liệu đúng hợp đồng Java | Tránh leak vòng đời mapping và lỗi vận hành file | Chọn mô hình native memory lifecycle theo nền tảng | Bảo vệ correctness của reader khi file thay đổi | Ra quyết định I/O dựa trên pattern truy cập và số liệu |
+  | Tư duy hình thành | Phân biệt virtual memory, page residency và ByteBuffer | Quyền sửa buffer khác quyền thay đổi nội dung file | Quản lý offset long và cửa sổ int có chủ đích | Tách trạng thái buffer, byte layout và semantics file | Đo residency và page faults, không suy đoán từ tên API | Phân biệt visibility, durability và atomicity | Quản lý ownership của channel và mapped buffer riêng biệt | Gắn tính quyết định của cleanup với hợp đồng API thực tế | Thiết kế consistency dựa trên lifecycle và version file | So sánh lợi ích kỹ thuật với chi phí hiệu năng và vận hành |

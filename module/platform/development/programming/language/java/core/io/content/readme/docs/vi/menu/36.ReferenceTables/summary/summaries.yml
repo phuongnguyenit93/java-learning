@@ -1,0 +1,257 @@
+summaries:
+- id: reference-tables-001
+  title: Bảng chọn InputStream, Reader, Files hoặc Channel
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bảng chọn InputStream, Reader, Files hoặc Channel**
+
+    Bài học đưa ra bảng chọn API I/O theo tính chất dữ liệu và thao tác: byte, ký tự, file trên hệ thống tệp, hay đọc/ghi qua buffer và vị trí. Người học dùng mục đích, kích thước dữ liệu, yêu cầu truy cập ngẫu nhiên và ownership tài nguyên để quyết định giải pháp, thay vì phỏng đoán API nào luôn nhanh hơn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhu cầu dữ liệu và API
+
+    1. Khi yêu cầu xử lý byte thô, vì sao `InputStream` thường phù hợp hơn `Reader`?
+    2. `Files` với `Path` giúp đơn giản hóa thao tác file cụ thể nào so với tự viết vòng lặp stream?
+    3. `Channel` và `ByteBuffer` có lợi thế gì khi cần vị trí truy cập hoặc giao thức dữ liệu?
+
+    ### Đánh đổi khi áp dụng
+
+    1. Khi nào đọc toàn bộ file vào bộ nhớ trở nên không phù hợp và có thể chuyển sang streaming theo dòng?
+    2. Một yêu cầu sao chép file từ nguồn bất kỳ khác gì sao chép hai `Path` mà chọn API phù hợp?
+    3. Các yếu tố charset, đóng tài nguyên và kiểm tra lỗi ảnh hưởng thế nào đến lựa chọn ban đầu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn công cụ theo yêu cầu | Lập quyết định API cho dữ liệu byte, văn bản, file path và truy cập offset với lý do cụ thể |
+    | Thiết kế xử lý file lớn | Phân biệt trường hợp nên dùng stream theo khối, theo dòng hoặc `Files.copy` |
+    | Phòng tránh chọn nhầm | Nhận diện lỗi đọc byte như ký tự, giữ toàn bộ dữ liệu quá lớn trong RAM và bỏ quên close |
+- id: reference-tables-002
+  title: Bảng charset và quy tắc chuyển byte sang ký tự
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bảng charset và quy tắc chuyển byte sang ký tự**
+
+    Bài học là tài liệu tra cứu cách mã hóa và giải mã văn bản khi chuyển giữa byte và ký tự. Người học phân biệt charset, ký tự Unicode, UTF-8/UTF-16, BOM, giới hạn của charset, đồng thời biết cách kiểm tra và xử lý malformed input hoặc mojibake bằng chính sách REPORT/REPLACE/IGNORE.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giải mã và định dạng
+
+    1. Tại sao cùng dãy byte có thể sinh các ký tự khác nhau khi đổi charset?
+    2. UTF-8 dùng bao nhiêu byte cho từng nhóm mã Unicode và vì sao phải kiểm tra continuation bytes?
+    3. UTF-16LE/UTF-16BE và BOM liên quan thế nào đến thứ tự byte và nhận biết văn bản?
+
+    ### Sửa lỗi và ghi/đọc thực tế
+
+    1. `CodingErrorAction.REPORT`, `REPLACE`, `IGNORE` tác động ra sao khi gặp byte không hợp lệ?
+    2. Vì sao `StandardCharsets.UTF_8` nên được truyền tường minh khi dữ liệu có hợp đồng mã hóa?
+    3. Khi chuỗi xuất hiện `Ã©` hoặc `â‚¬`, người học lần ngược khâu encode/decode để xác định sai charset thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đối chiếu byte với ký tự | Giải thích kết quả encode/decode ký tự mẫu theo UTF-8/UTF-16 và BOM |
+    | Kiểm soát lỗi decode | Cấu hình decoder với REPORT hoặc REPLACE và diễn giải kết quả khác nhau |
+    | Chẩn đoán mojibake | Kiểm tra bytes gốc, charset ghi/đọc và sửa khâu giải mã không nhất quán |
+- id: reference-tables-003
+  title: Bảng biến đổi trạng thái Buffer
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bảng biến đổi trạng thái Buffer**
+
+    Bài học cung cấp bảng biến đổi chính xác các trạng thái của `Buffer`: capacity, limit, position và mark. Người học theo dõi chu trình ghi vào buffer, flip để đọc, compact để giữ phần chưa xử lý, cũng như phân biệt clear, rewind và các view chia sẻ vùng nhớ, qua đó tránh mất dữ liệu khi đọc ghi từng phần.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Trạng thái trước và sau thao tác
+
+    1. Bộ bốn `capacity`, `limit`, `position`, `mark` tuân theo các bất biến nào?
+    2. `flip()`, `clear()`, `rewind()` và `compact()` thay đổi position/limit khác nhau ra sao?
+    3. Một buffer có các byte chưa tiêu thụ phải dùng `compact()` thay vì `clear()` trong tình huống nào?
+
+    ### Truy cập và alias
+
+    1. Vì sao việc giảm position hoặc limit có thể hủy mark?
+    2. Absolute get/put có làm thay đổi position giống relative get/put hay không?
+    3. `slice()` và `duplicate()` tạo trạng thái riêng nhưng dùng chung vùng dữ liệu như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính state buffer | Lập bảng position, limit, capacity sau chuỗi put/flip/get/compact và xác minh bằng code |
+    | Xử lý dữ liệu còn dư | Chọn compact/clear theo số phần tử đã xử lý để tránh mất phần còn lại |
+    | Phân tích view và mark | Dự đoán ảnh hưởng của truy cập absolute, duplicate/slice và giảm limit |
+- id: reference-tables-004
+  title: Bảng OpenOption, CopyOption, LinkOption và FileVisitOption
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bảng OpenOption, CopyOption, LinkOption và FileVisitOption**
+
+    Bài học đối chiếu bốn họ option của NIO.2 theo ngữ cảnh sử dụng: mở file, copy/move, xử lý symbolic link và duyệt cây. Người học lựa chọn chính xác enum cho từng overload `Files` và hiểu các mặc định, giới hạn provider, điều kiện thay thế file, theo dõi symlink cũng như các rủi ro của thao tác có tác dụng phụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân biệt các họ option
+
+    1. `StandardOpenOption` có các lựa chọn READ, WRITE, APPEND, CREATE, CREATE_NEW và TRUNCATE_EXISTING khác nhau thế nào?
+    2. `StandardCopyOption.REPLACE_EXISTING` và `ATOMIC_MOVE` thuộc trường hợp copy/move nào và không bảo đảm điều gì?
+    3. `LinkOption.NOFOLLOW_LINKS` và `FileVisitOption.FOLLOW_LINKS` được dùng ở API nào?
+
+    ### Kết hợp, mặc định và giới hạn
+
+    1. Khi không truyền options cho từng phương thức `Files`, vì sao không được suy ra cùng một mặc định?
+    2. Việc duyệt cây với FOLLOW_LINKS có thể gặp chu trình symlink hoặc lỗi gì?
+    3. Khi move hoặc copy qua filesystem khác, đặc tính atomicity và metadata có thể thay đổi thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn option theo API | Phân loại option đúng chữ ký read/write/copy/move/walkFileTree và giải thích mặc định |
+    | Phòng ngừa ghi đè | Đối chiếu CREATE với CREATE_NEW, TRUNCATE_EXISTING và REPLACE_EXISTING theo kịch bản file đã tồn tại |
+    | Đánh giá symlink và provider | Thiết kế xử lý follow/nofollow và dự đoán lỗi khi không hỗ trợ atomic move |
+- id: reference-tables-005
+  title: Bảng trách nhiệm đóng tài nguyên theo từng API
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bảng trách nhiệm đóng tài nguyên theo từng API**
+
+    Bài học tập trung vào ownership vòng đời tài nguyên: thành phần tạo/mở chịu trách nhiệm đóng, tài nguyên được mượn không thể tự ý đóng, và API trả stream hoặc channel có hợp đồng riêng. Người học dùng bảng cho `java.io`, `Files`, channels và tài nguyên dùng chung để áp dụng try-with-resources đúng chỗ, xử lý close exception và tránh đóng System streams ngoài ý muốn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn tạo và quyền đóng
+
+    1. Đối tượng có `close()` có đồng nghĩa mọi caller đang dùng nó đều được quyền đóng không?
+    2. Ai đóng stream do `Files.lines` tạo và khác gì với `Files.readAllLines` trả collection?
+    3. Khi một wrapper đóng cả underlying stream, phải xác định ownership qua hợp đồng nào?
+
+    ### Thực hành lifecycle
+
+    1. Vì sao try-with-resources nên bao quanh tài nguyên được tạo/mở trong cùng phạm vi?
+    2. Nếu phương thức nhận `OutputStream` được mượn từ caller, việc đóng nó ngay có thể gây hậu quả gì?
+    3. Trong trường hợp thao tác và close đều ném exception, suppressed exceptions giúp chẩn đoán ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định owner | Lập bảng ai mở, ai đóng cho stream, reader, Files streams, channel và nguồn dùng chung |
+    | Áp dụng try-with-resources | Viết lại ví dụ để đóng tài nguyên sở hữu và giữ tài nguyên mượn sống đúng hợp đồng |
+    | Chẩn đoán cleanup | Đọc exception và suppressed exceptions khi close xảy ra đồng thời với lỗi xử lý |
+- id: reference-tables-006
+  title: Bảng lỗi I/O thường gặp và thông tin cần kiểm tra
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bảng lỗi I/O thường gặp và thông tin cần kiểm tra**
+
+    Bài học xây quy trình triage sự cố I/O từ exception và ngữ cảnh thao tác, bao gồm lỗi file system, stream/buffer/channel, charset, socket/TLS, ZIP và serialization. Người học thu thập path, options, charset, stack trace, cause và điều kiện retry, phân biệt lỗi có thể phục hồi với lỗi dữ liệu hoặc quyền hạn cần xử lý riêng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện lỗi và ngữ cảnh
+
+    1. `NoSuchFileException`, `FileAlreadyExistsException`, `AccessDeniedException` và `NotDirectoryException` gợi ý điều tra điều kiện nào?
+    2. Khi gặp `MalformedInputException`, EOF bất ngờ hay `BufferUnderflowException`, vì sao nên kiểm tra format và buffer state?
+    3. Một socket timeout hoặc TLS handshake failure phải được đặt trong ngữ cảnh network, protocol và cấu hình nào?
+
+    ### Quy trình chẩn đoán và phục hồi
+
+    1. Log một sự cố I/O hữu ích cần lưu thao tác, path, exception chain và trạng thái nào mà không rò dữ liệu nhạy cảm?
+    2. Vì sao retry mọi `IOException` có thể che lỗi quyền, tồn tại file hoặc làm lặp thao tác không idempotent?
+    3. Khi lỗi serialization hay ZIP xuất hiện, cần kiểm tra dữ liệu nguồn, compatibility và chính sách deserialization ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại sự cố | Ánh xạ exception thường gặp tới nguyên nhân có thể và bước xác minh ít rủi ro |
+    | Viết log có ngữ cảnh | Tạo mẫu thông tin chẩn đoán gồm operation, path an toàn, cause và điều kiện runtime |
+    | Chọn biện pháp xử lý | Phân biệt sửa input/config/permission với retry có giới hạn hoặc dừng thao tác |
+- id: reference-tables-007
+  title: Bảng API truyền thống, NIO, NIO.2 và các mốc phiên bản
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bảng API truyền thống, NIO, NIO.2 và các mốc phiên bản**
+
+    Bài học đặt các nhóm Java I/O lên dòng thời gian: `java.io` truyền thống, NIO từ Java 1.4 và NIO.2 từ Java 7, kèm khác biệt cấp lớp và phương thức giữa các bản JDK. Người học tra đúng mốc hỗ trợ khi biên dịch, hiểu các API cùng tồn tại, và đánh giá đường di chuyển từ File sang Path hay từ stream sang channel.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lịch sử và phạm vi API
+
+    1. `java.io`, NIO và NIO.2 giải quyết các nhu cầu gì và có thay thế hoàn toàn cho nhau không?
+    2. Những API nền tảng xuất hiện ở Java 1.4 và Java 7 liên quan Channel, Buffer, Path và Files ra sao?
+    3. Vì sao `File` và `Path` thường có thể cùng dùng qua conversion nhưng vẫn khác mô hình provider?
+
+    ### Tương thích phiên bản
+
+    1. Vì sao một lớp tồn tại từ Java 7 không có nghĩa mọi phương thức mới của lớp cũng có từ Java 7?
+    2. Khi build với `--release` thấp hơn JDK đang dùng, phải kiểm tra mốc của overload như thế nào?
+    3. Dựa vào yêu cầu truy cập ngẫu nhiên, streaming, cây thư mục và async I/O, làm sao chọn API thích hợp?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tra cứu mốc phát hành | Xếp các API chính theo java.io/NIO/NIO.2 và xác nhận since-version bằng Javadoc |
+    | Giải thích tương thích | Nhận biết sự khác nhau giữa phiên bản xuất hiện của class và overload/method |
+    | Chọn đường nâng cấp | Đề xuất API theo nhu cầu và phiên bản Java thực tế của module |
+- id: reference-tables-008
+  title: Tra cứu Javadoc, Serialization Specification và khả năng của provider
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tra cứu Javadoc, Serialization Specification và khả năng của provider**
+
+    Bài học hướng dẫn phương pháp xác minh hợp đồng Java I/O từ Javadoc và Java Object Serialization Specification, rồi đối chiếu khả năng thực tế của `FileSystemProvider`/`FileStore` với môi trường chạy. Người học phân biệt điều được Java đảm bảo với hành vi tùy provider, đọc phiên bản tài liệu đúng JDK và xử lý an toàn các giới hạn về serialization/deserialization.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn chuẩn và hợp đồng API
+
+    1. Với một API I/O, cần kiểm tra chữ ký overload, các exceptions và mô tả provider-specific ở mục nào của Javadoc?
+    2. Serialization Specification bổ sung những quy tắc serial form và phiên bản mà Javadoc của từng class không đủ giải thích ra sao?
+    3. Khi học deserialization, vì sao cần tra thêm security guidance và `ObjectInputFilter`?
+
+    ### Khả năng provider và thực nghiệm
+
+    1. `FileSystem.supportedFileAttributeViews`, `FileStore.supportsFileAttributeView` và thao tác thực tế xác minh hỗ trợ ở cấp nào?
+    2. Vì sao API tồn tại trong Java không có nghĩa mọi filesystem hỗ trợ `posix`, `dos` hay attribute cụ thể?
+    3. Nếu ví dụ chạy trên một provider nhưng thất bại ở provider khác, quy trình xác nhận capability/fallback nên tiến hành thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tra cứu hợp đồng chuẩn | Xác định đúng Java version, class, overload, exceptions và điều kiện do provider quyết định |
+    | Giải thích đặc tả serialization | Phân biệt serial form, `transient` và rủi ro lọc dữ liệu không tin cậy |
+    | Xác minh khả năng provider | Viết bước kiểm tra supported views và xử lý fallback hoặc lỗi khi hệ thống không hỗ trợ |

@@ -1,0 +1,301 @@
+summaries:
+- id: file-operations-001
+  title: createFile, createDirectory và createDirectories
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **createFile, createDirectory và createDirectories**
+
+    Chọn sai API tạo file hoặc thư mục có thể gây lỗi thiếu thư mục cha, trùng tên hay để lại cây thư mục dở dang. Bài học giúp chọn `createFile`, `createDirectory`, `createDirectories` và nhận biết giới hạn tính nguyên tử của mỗi thao tác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tạo đúng loại tài nguyên
+
+    1. `Path.of(...)` và `Files.createFile(...)` khác nhau thế nào về tác động thực lên hệ thống tệp?
+    2. Khi cha chưa tồn tại, vì sao `createDirectory` thất bại còn `createDirectories` có thể thành công?
+
+    ### Xung đột tên và dữ liệu ban đầu
+
+    1. Gọi lặp `createDirectories` trên thư mục hợp lệ khác gọi lặp `createFile` trên file đã có ra sao?
+    2. Khi cần tạo mới và ghi mà không ghi đè, vì sao `CREATE_NEW` tốt hơn kiểm tra trước rồi `writeString`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn API tạo | Áp dụng đúng ba phương thức cho file rỗng, thư mục một cấp và cây nhiều cấp. |
+    | Đánh giá lỗi | Dự đoán `FileAlreadyExistsException`, thiếu cha và kết quả tạo một phần. |
+    | Tạo rồi ghi không ghi đè | Viết thao tác với `StandardOpenOption.CREATE_NEW` và giải thích giới hạn của nó. |
+- id: file-operations-002
+  title: createTempFile, createTempDirectory và phạm vi dọn dẹp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **createTempFile, createTempDirectory và phạm vi dọn dẹp**
+
+    File trung gian có thể làm đầy ổ đĩa hoặc bị xóa nhầm nếu job không xác định ranh giới sở hữu. Bài học giúp tạo workspace tạm bằng NIO.2, đóng stream và dọn đúng cây do job tạo, đồng thời hiểu giới hạn `finally` và `deleteOnExit`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tên tạm và ownership
+
+    1. Overload `createTempFile` có và không có `Path dir` khác nhau ở nơi tạo/provider thế nào?
+    2. Vì sao tên temp mới tạo không thay cho quyền truy cập và không nên chứa dữ liệu bí mật?
+
+    ### Đóng tài nguyên và dọn thư mục
+
+    1. Tại sao `try-with-resources` đóng stream nhưng không tự xóa file temp?
+    2. Vì sao `walkFileTree` cần xóa con trước cha và không tự đi theo symlink khi dọn cây owned root?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấp workspace | Dùng `createTempDirectory` và tạo file tạm bên trong thư mục job riêng. |
+    | Dọn đúng scope | Thiết kế `walkFileTree` chỉ xóa các entry thuộc quyền sở hữu của job. |
+    | Giữ lỗi gốc | Mô tả suppressed exception khi xử lý và cleanup cùng thất bại. |
+- id: file-operations-003
+  title: copy tệp với REPLACE_EXISTING và COPY_ATTRIBUTES
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **copy tệp với REPLACE_EXISTING và COPY_ATTRIBUTES**
+
+    Copy dữ liệu vào một tên đã tồn tại có thể làm mất file cũ; sao chép metadata cũng phụ thuộc file store. Bài này dạy chính sách copy an toàn, phân biệt byte với attributes và hiểu giới hạn symlink, directory, atomicity.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tùy chọn copy
+
+    1. `Files.copy(source,target)` xử lý đích có sẵn khác khi thêm `REPLACE_EXISTING` thế nào?
+    2. `COPY_ATTRIBUTES` có bảo đảm giữ toàn bộ owner, ACL và timestamp chính xác không?
+
+    ### Kiểm chứng và tình huống đặc biệt
+
+    1. Khi nguồn là symlink, `NOFOLLOW_LINKS` khiến API copy đối tượng nào?
+    2. Vì sao copy thư mục không copy toàn bộ cây, và `Files.mismatch` chứng minh điều gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn CopyOption | Xây lời gọi copy theo chính sách không ghi đè, thay thế hoặc giữ metadata. |
+    | Xác minh kết quả | Dùng `Files.mismatch` để so nội dung và xác minh metadata riêng. |
+    | Giải thích giới hạn | Phân tích symlink, copy directory nông và file đích có thể dở dang sau lỗi. |
+- id: file-operations-004
+  title: move, đổi tên và lựa chọn ATOMIC_MOVE
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **move, đổi tên và lựa chọn ATOMIC_MOVE**
+
+    Đổi tên file và công bố một phiên bản mới đòi hỏi hiểu hậu điều kiện của `Files.move`. Bài học phân biệt replace với atomic move, điều kiện provider hỗ trợ và tính nguyên tử namespace với độ bền dữ liệu sau crash.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đổi tên và tùy chọn move
+
+    1. `resolveSibling` cùng `Files.move` thực hiện đổi tên tại cùng thư mục ra sao?
+    2. `REPLACE_EXISTING` khác `ATOMIC_MOVE` về mục tiêu và mức bảo đảm thế nào?
+
+    ### Atomic publish và ngoại lệ
+
+    1. Vì sao truyền cả `ATOMIC_MOVE` lẫn `REPLACE_EXISTING` không bảo đảm luôn thay đích nguyên tử?
+    2. Nếu nhận `AtomicMoveNotSupportedException`, khi nào được fallback và khi nào cần dừng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Áp dụng Files.move | Đổi tên, move sang thư mục khác và xử lý tình huống đích đã tồn tại. |
+    | Thiết kế publish | Yêu cầu `ATOMIC_MOVE` sau khi ghi/đóng staging file và xử lý unsupported. |
+    | Phân tích bảo đảm | Phân biệt atomic namespace, durability và batch nhiều lần move. |
+- id: file-operations-005
+  title: delete khác deleteIfExists
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **delete khác deleteIfExists**
+
+    Xóa file bắt buộc phải tồn tại khác với dọn một file temp có thể đã mất. Bài học giúp đọc đúng `void`, `boolean`, ngoại lệ và tránh nhầm `deleteIfExists` thành thao tác bỏ mọi lỗi hoặc xóa đệ quy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kết quả trả về và lỗi
+
+    1. `Files.delete` và `Files.deleteIfExists` khác nhau khi mục tiêu không tồn tại như thế nào?
+    2. Khi `deleteIfExists` trả `false`, điều đó khác lỗi quyền và thư mục không rỗng ra sao?
+
+    ### Directory, link và race
+
+    1. Xóa một symbolic link có xóa cả target mà nó trỏ đến không?
+    2. Vì sao gọi `exists` rồi `delete` vẫn có thể gặp `NoSuchFileException`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn nghĩa xóa | Dùng `delete` khi vắng mặt phải báo lỗi và `deleteIfExists` khi vắng mặt được chấp nhận. |
+    | Phân loại ngoại lệ | Tách `NoSuchFileException`, `DirectoryNotEmptyException` và IOException khác. |
+    | Giữ scope | Giải thích xóa entry link, thư mục rỗng và dọn tạm đúng ownership. |
+- id: file-operations-006
+  title: Xử lý tệp đích đã tồn tại và thư mục không rỗng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Xử lý tệp đích đã tồn tại và thư mục không rỗng**
+
+    Đích đã có dữ liệu đòi hỏi chính sách rõ ràng trước khi copy, move hoặc ghi. Bài này đối chiếu từ chối, thay thế, append, `CREATE_NEW` và xóa cây có kiểm soát để tránh overwrite ngoài ý muốn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chính sách đối với target
+
+    1. Khi target tồn tại, vì sao `Files.copy` thường từ chối còn `Files.writeString` mặc định có thể truncate?
+    2. Lựa chọn nào phù hợp giữa `CREATE_NEW`, `REPLACE_EXISTING`, append và tên mới cho các yêu cầu khác nhau?
+
+    ### Directory không rỗng
+
+    1. `DirectoryNotEmptyException` xuất hiện khi nào, và vì sao `deleteIfExists` không giải quyết nó?
+    2. Trước khi dùng `walkFileTree` để xóa cây, cần xác định những giới hạn về ownership và symlink nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập chính sách xung đột | Quyết định refuse, replace, append hay version khi đích có sẵn. |
+    | So sánh API | Dự đoán tác động của copy/move/write/create và ngoại lệ khi đích tồn tại. |
+    | Dọn cây có kiểm soát | Thiết kế chiến lược xóa con trước cha cho thư mục do tác vụ sở hữu. |
+- id: file-operations-007
+  title: Thao tác xuyên file system và giới hạn provider
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thao tác xuyên file system và giới hạn provider**
+
+    Java NIO.2 cho phép Path thuộc filesystem mặc định, ZIP hoặc provider tùy biến; những Path đó không cùng namespace. Bài học giúp phân biệt provider/FileStore, copy xuyên provider, xử lý giới hạn `ATOMIC_MOVE`, attributes, `resolve`, `toFile` và vòng đời ZipFS.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình filesystem
+
+    1. `Path`, `FileSystem`, `FileSystemProvider` và `FileStore` biểu thị bốn vai trò khác nhau thế nào?
+    2. Vì sao hai volume có thể cùng provider mà không hỗ trợ atomic move giữa chúng?
+
+    ### Tương tác qua provider
+
+    1. Vì sao `Files.copy(nativePath,zipPath)` có thể chạy trong khi `nativePath.resolve(zipPath)` gây `ProviderMismatchException`?
+    2. Khi nào `zipPath.toFile()` thất bại và vì sao phải đóng ZipFS trước khi dọn ZIP archive?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt provider | Lấy provider scheme từ Path và nhận diện FileStore khác với FileSystem. |
+    | Thực hiện copy xuyên provider | Tạo ZipFS, copy từ native Path vào entry ZIP và đóng filesystem đúng lúc. |
+    | Đánh giá capability | Phân tích atomic move, timestamp, quyền và những thuộc tính provider không hỗ trợ. |
+- id: file-operations-008
+  title: exists, notExists và trường hợp không xác định được trạng thái
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **exists, notExists và trường hợp không xác định được trạng thái**
+
+    `exists=false` chưa đủ kết luận file không có vì provider có thể không xác minh được metadata. Bài này giúp biểu diễn PRESENT/ABSENT/UNKNOWN, phân biệt symlink với target và dùng `readAttributes` khi cần chẩn đoán nguyên nhân.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ba trạng thái tồn tại
+
+    1. Vì sao `Files.notExists(p)` không luôn tương đương `!Files.exists(p)`?
+    2. Cả hai phép kiểm tra cùng `false` phải được biểu diễn thành trạng thái nào?
+
+    ### Link policy và chẩn đoán
+
+    1. Khi target của symbolic link đã mất, `NOFOLLOW_LINKS` thay đổi phép hỏi về đối tượng nào?
+    2. Vì sao `exists=true` vẫn chưa bảo đảm file có thể đọc hoặc cho biết lỗi quyền?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại tồn tại | Lập ba trường hợp PRESENT, ABSENT và UNKNOWN từ exists/notExists. |
+    | Làm việc với symlink | Dự đoán kết quả follow và NOFOLLOW_LINKS trên broken link. |
+    | Chẩn đoán metadata | Dùng readAttributes và bắt IOException để tách missing khỏi access denied. |
+- id: file-operations-009
+  title: Không kiểm tra trước rồi mặc định thao tác sau sẽ thành công
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không kiểm tra trước rồi mặc định thao tác sau sẽ thành công**
+
+    File, quyền và symlink có thể thay đổi giữa lúc kiểm tra và hành động. Bài này giúp nhận diện TOCTOU, chọn điều kiện ngay trong `CREATE_NEW` hay phép copy/delete thật và xử lý IOException phát sinh ở từng bước.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### TOCTOU trong ứng dụng
+
+    1. Vì sao `if (Files.exists(p)) Files.readString(p)` vẫn có thể ném IOException?
+    2. Cách check `notExists` rồi `writeString` mặc định có thể ghi đè file do tiến trình khác tạo như thế nào?
+
+    ### Thiết kế thao tác và xử lý lỗi
+
+    1. Khi chỉ được tạo mới, `CREATE_NEW` bảo đảm điều gì và chưa bảo đảm gì cho toàn bộ nội dung ghi?
+    2. Vì sao kiểm tra lexical path hoặc `toRealPath` trước không tự ngăn symlink race tại thời điểm mở file?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tái hiện TOCTOU | Mô phỏng file bị xóa giữa check và read rồi xử lý lỗi tại thao tác đọc. |
+    | Áp đúng operation | Thay check-then-act bằng `CREATE_NEW`, `deleteIfExists` hoặc `createDirectories` khi phù hợp. |
+    | Phân tích race | Giải thích giới hạn của kiểm tra quyền, path và stream mở trong môi trường đồng thời. |
+- id: file-operations-010
+  title: Xử lý lỗi từng bước trong các thao tác nhiều tệp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Xử lý lỗi từng bước trong các thao tác nhiều tệp**
+
+    Copy hoặc move 50 file không biến thành một transaction chỉ vì được đặt trong một vòng lặp. Bài này hướng dẫn fail-fast, best-effort, staging/verify/publish, trạng thái từng file, rollback bù trừ và manifest để phục hồi khi crash.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chiến lược batch
+
+    1. Nếu file thứ ba lỗi sau hai file thành công, fail-fast và best-effort trả kết quả khác nhau ra sao?
+    2. Vì sao nhiều lần `ATOMIC_MOVE` riêng biệt không làm cả batch nguyên tử?
+
+    ### Cleanup và phục hồi
+
+    1. Nếu move không nguyên tử thất bại giữa chừng, vì sao danh sách bước return thành công có thể chưa phản ánh hết trạng thái đích?
+    2. `addSuppressed`, manifest và idempotency hỗ trợ giữ lỗi gốc và recovery sau crash như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập workflow | Thiết kế PLAN, STAGE, VERIFY, PUBLISH, CLEANUP cho một batch với trạng thái từng file. |
+    | Phân loại lỗi | Tổng hợp thành công/thất bại và giữ IOException chính kèm lỗi cleanup bị suppress. |
+    | Thiết kế recovery | Dùng ownership, manifest, checksum và retry có giới hạn để không xóa hoặc ghi đè dữ liệu cũ. |

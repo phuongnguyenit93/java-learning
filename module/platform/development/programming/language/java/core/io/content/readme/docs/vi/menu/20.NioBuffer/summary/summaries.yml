@@ -1,0 +1,361 @@
+summaries:
+- id: nio-buffer-001
+  title: Buffer, ByteBuffer, CharBuffer và các kiểu buffer khác
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Buffer, ByteBuffer, CharBuffer và các kiểu buffer khác**
+
+    Giải thích vai trò của `Buffer` trong Java NIO, phân biệt `ByteBuffer`, `CharBuffer`, các typed buffer và liên hệ với Channel. Từ đó xác định trạng thái vị trí, kiểu dữ liệu, vùng nhớ và hướng chuyển đổi giữa byte với văn bản.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình buffer
+
+    1. Buffer lưu dữ liệu và duy trì trạng thái gì khác với một mảng thông thường?
+    2. Vì sao `ByteBuffer` không tự giải mã UTF-8 thành `CharBuffer`?
+
+    ### Lựa chọn API
+
+    1. Khi nào cần ByteBuffer, CharBuffer hay view buffer cho primitive?
+    2. Quy trình `put → flip → get → compact` có ý nghĩa gì khi đọc dữ liệu từ channel?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại buffer | So sánh ByteBuffer, CharBuffer, typed buffer theo đơn vị phần tử và tình huống áp dụng. |
+    | Theo dõi trạng thái | Dự đoán position/limit trong ví dụ viết rồi đọc buffer. |
+    | Chọn đường chuyển đổi | Chỉ ra thời điểm dùng CharsetDecoder thay vì ép byte trực tiếp sang char. |
+- id: nio-buffer-002
+  title: Capacity, position, limit và mark
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Capacity, position, limit và mark**
+
+    Làm chủ bất biến `0 ≤ position ≤ limit ≤ capacity` và ý nghĩa của mark trong NIO Buffer. Người học có thể dự đoán chính xác điểm đọc/ghi tiếp theo cùng thay đổi trạng thái sau `flip`, `clear`, `rewind` hoặc `compact`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bốn trường trạng thái
+
+    1. `capacity`, `position`, `limit` và `mark` xác định quyền đọc/ghi phần tử như thế nào?
+    2. Tại sao `position` không thể vượt `limit` nhưng `limit` không nhất thiết bằng `capacity`?
+
+    ### Chuyển đổi và dấu mốc
+
+    1. Những thao tác nào làm mark mất hiệu lực khiến `reset()` ném `InvalidMarkException`?
+    2. Với một dãy `put/get/flip/compact`, bạn suy ra position và limit cuối cùng ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra bất biến | Tính trạng thái hợp lệ sau một chuỗi thao tác trên buffer có capacity cố định. |
+    | Đọc trace | Giải thích từng lần position thay đổi và mark còn hay mất. |
+    | Sửa thao tác sai | Xác định lỗi đặt limit/position và điều chỉnh để không phát sinh underflow/overflow. |
+- id: nio-buffer-003
+  title: Chu trình ghi vào buffer, flip và đọc khỏi buffer
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chu trình ghi vào buffer, flip và đọc khỏi buffer**
+
+    Thực hành chuyển buffer từ pha ghi sang pha đọc bằng `flip()` và quyết định khi nào dùng `clear()` hoặc `compact()` cho lượt tiếp theo. Bài học còn giải thích cách Channel đọc/ghi từng phần và ý nghĩa `remaining()` tại mỗi pha.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chu kỳ ghi/đọc
+
+    1. Sau khi `put` n byte, `flip` thay đổi position và limit chính xác ra sao?
+    2. Vì sao thiếu `flip()` thường khiến phần dữ liệu vừa ghi không được đọc như mong muốn?
+
+    ### Tích hợp channel
+
+    1. Khi nào dùng `clear()` và khi nào dùng `compact()` để không làm mất dữ liệu chưa tiêu thụ?
+    2. Tại sao một lần ghi `WritableByteChannel` chưa chắc gửi hết các byte còn lại?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng pha | Theo dõi các giá trị position/limit khi put, flip và get từng byte. |
+    | Thiết kế vòng I/O | Xây dựng vòng đọc và chuyển tiếp qua Channel với kiểm tra lượng dữ liệu còn lại. |
+    | Phân biệt bước chuẩn bị | Giải thích hậu quả dùng `flip`/`clear` sai vị trí trong quy trình. |
+- id: nio-buffer-004
+  title: clear không xóa dữ liệu trong vùng nhớ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **clear không xóa dữ liệu trong vùng nhớ**
+
+    Nhận biết `clear()` chỉ đặt lại các con trỏ quản lý, không ghi số không vào bộ nhớ và không giải phóng vùng lưu trữ. Bài minh họa stale data, khác biệt giữa byte còn nằm trong backing storage với byte hợp lệ theo limit, và cách tránh lộ dữ liệu ngoài dự kiến.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa clear
+
+    1. `clear()` đặt lại những giá trị trạng thái nào và vì sao byte cũ vẫn còn?
+    2. Tại sao đọc `capacity` byte sau lượt `read()` ngắn có thể làm lộ stale data?
+
+    ### An toàn dữ liệu
+
+    1. Điều gì khác giữa `clear`, thao tác ghi zero và giải phóng tài nguyên?
+    2. Nếu slice/duplicate cùng dùng vùng nhớ, việc clear một view ảnh hưởng byte bên dưới ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tái hiện stale byte | Viết ví dụ ghi dữ liệu, gọi clear rồi kiểm tra byte cũ bằng absolute get. |
+    | Phân tích giới hạn hợp lệ | Dùng limit/remaining để chỉ gửi dữ liệu thực tế đã đọc được. |
+    | Thiết kế xử lý nhạy cảm | Giải thích vì sao clear không đủ để xóa nội dung cần bảo mật. |
+- id: nio-buffer-005
+  title: rewind, compact và reset
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **rewind, compact và reset**
+
+    Phân biệt ba thao tác `rewind()`, `compact()` và `reset()` dựa trên việc đọc lại, giữ phần chưa đọc hay quay về mark. Người học theo dõi được dữ liệu bị dịch chuyển khi compact và điều kiện InvalidMarkException khi reset.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các thao tác điều khiển
+
+    1. `rewind`, `reset` và `compact` ảnh hưởng position/limit và mark khác nhau thế nào?
+    2. Vì sao `rewind()` không thể thay `compact()` khi dữ liệu chưa được xử lý hết?
+
+    ### Tình huống thực tế
+
+    1. Khi một bản ghi chỉ mới tới nửa chừng, làm sao compact giữ byte chưa đọc?
+    2. Làm sao đặt mark và xử lý khi `reset()` không còn mark hợp lệ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính trạng thái | Lập bảng trước/sau rewind, compact, reset cho một ByteBuffer. |
+    | Xử lý bản ghi dở | Mô phỏng compact để đẩy byte chưa đọc về đầu rồi tiếp tục nhận byte. |
+    | Kiểm thử mark | Dự đoán khi reset hợp lệ hoặc phát sinh InvalidMarkException. |
+- id: nio-buffer-006
+  title: get, put tương đối và tuyệt đối
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **get, put tương đối và tuyệt đối**
+
+    Lựa chọn `get`/`put` tương đối và tuyệt đối khi cần đọc tuần tự hay truy cập offset cố định. Bài học kết hợp limit, kiểu truy cập và tác dụng phụ lên position để tránh ghi đè hoặc đọc vượt vùng đang được phép dùng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai chế độ truy cập
+
+    1. `get()` khác `get(index)` như thế nào đối với position?
+    2. `put(value)` và `put(index, value)` khác nhau ra sao khi sửa header tại một offset?
+
+    ### Giới hạn và thiết kế
+
+    1. Vì sao absolute get vẫn phải tuân theo limit?
+    2. Khi cần peek dữ liệu mà không đổi cursor caller, dùng indexed get, duplicate hoặc slice trong trường hợp nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán cursor | Tính position sau chuỗi relative và absolute get/put. |
+    | Sửa byte theo offset | Chỉnh trường header ở vị trí cố định mà không làm thay đổi position. |
+    | Bắt lỗi truy cập | Phân biệt index ngoài limit với underflow/overflow từ thao tác tương đối. |
+- id: nio-buffer-007
+  title: remaining, hasRemaining và lỗi tràn hoặc thiếu buffer
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **remaining, hasRemaining và lỗi tràn hoặc thiếu buffer**
+
+    Sử dụng `remaining()` và `hasRemaining()` để kiểm soát khoảng hợp lệ giữa position và limit. Bài giải thích `BufferUnderflowException`, `BufferOverflowException`, `IndexOutOfBoundsException` và partial write khi tích hợp Channel.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đếm phần tử hợp lệ
+
+    1. `remaining()` được tính thế nào từ position và limit?
+    2. Tại sao `hasRemaining()` không tự chứng minh đủ byte cho cả một record nhiều trường?
+
+    ### Ngoại lệ và channel
+
+    1. Khi nào get ném BufferUnderflowException và put ném BufferOverflowException?
+    2. Vì sao vòng gửi channel phải xử lý partial write và trạng thái nonblocking riêng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra dung lượng | Dùng remaining để xác thực đủ chỗ/đủ dữ liệu trước thao tác bulk. |
+    | Phân loại lỗi | Tái hiện và phân biệt underflow, overflow, index và read-only. |
+    | Thiết kế vòng gửi | Giải thích điều kiện lặp đến khi byte còn lại đã được channel tiêu thụ. |
+- id: nio-buffer-008
+  title: allocate, wrap và vùng dữ liệu được chia sẻ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **allocate, wrap và vùng dữ liệu được chia sẻ**
+
+    Phân biệt `allocate` tạo backing storage mới với `wrap` dùng chung mảng đầu vào, đặc biệt bẫy `wrap(array, offset, length)` giữ capacity của toàn mảng. Bài mở rộng sang slice, duplicate, read-only view và hệ quả aliasing khi dữ liệu thay đổi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tạo buffer
+
+    1. `ByteBuffer.allocate(capacity)` khác `ByteBuffer.wrap(array)` ở quan hệ sở hữu vùng nhớ nào?
+    2. Tại sao `wrap(array, offset, length)` không làm capacity bằng length?
+
+    ### Chia sẻ bộ nhớ
+
+    1. Vì sao sửa mảng gốc có thể thay nội dung đọc từ buffer wrap?
+    2. Lúc nào nên dùng `slice` để có hệ index 0 cho một đoạn, và khi nào cần copy độc lập?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn khởi tạo | Quyết định allocate, wrap hoặc slice theo yêu cầu cấp phát và shared storage. |
+    | Theo dõi alias | Dự đoán nội dung buffer sau khi thay một byte của backing array. |
+    | Thiết kế bảo vệ dữ liệu | Chỉ ra rủi ro khi truyền một view read-only của dữ liệu vẫn bị nơi khác sửa. |
+- id: nio-buffer-009
+  title: Heap buffer, direct buffer và chi phí cấp phát
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Heap buffer, direct buffer và chi phí cấp phát**
+
+    Phân tích khác biệt heap và direct ByteBuffer trong chi phí cấp phát, GC, truy cập và I/O. Bài hướng dẫn lựa chọn theo kích thước, vòng đời và đường dữ liệu thay vì coi direct buffer luôn nhanh hơn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bộ nhớ và chi phí
+
+    1. Heap buffer khác direct buffer ở backing array, bộ nhớ và khả năng truy cập như thế nào?
+    2. Vì sao allocateDirect thường đáng cân nhắc cho I/O lớn/tái sử dụng nhưng không mặc nhiên nhanh hơn?
+
+    ### Đo lường và vòng đời
+
+    1. Nếu cấp phát direct buffer liên tục trong vòng lặp nhỏ, chi phí nào có thể tăng?
+    2. Làm sao đo công bằng allocation, truy cập byte và throughput I/O trước khi chọn buffer?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh chiến lược | Giải thích trade-off heap/direct và tình huống phù hợp cho mỗi kiểu. |
+    | Kiểm thử hiệu năng | Đề xuất benchmark kiểm soát warm-up, kích thước buffer, tái sử dụng và I/O path. |
+    | Quản lý vòng đời | Mô tả cách hạn chế cấp phát direct lặp lại và phân biệt thu hồi heap/off-heap. |
+- id: nio-buffer-010
+  title: ByteOrder và các view buffer cho kiểu nguyên thủy
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ByteOrder và các view buffer cho kiểu nguyên thủy**
+
+    Đọc ghi primitive nhiều byte bằng `ByteOrder.BIG_ENDIAN/LITTLE_ENDIAN` và các view buffer như `asIntBuffer`, `asCharBuffer`. Bài nhấn mạnh view có đơn vị index riêng, chia sẻ byte nền và không thay thế CharsetDecoder khi đọc text.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Endianness và primitives
+
+    1. Cùng số nguyên 32 bit được lưu khác nhau thế nào theo big-endian và little-endian?
+    2. Vì sao ByteOrder.nativeOrder() không được dùng thay byte order quy định bởi giao thức?
+
+    ### Typed view
+
+    1. `asIntBuffer()` ánh xạ vị trí, dung lượng và dữ liệu chung với ByteBuffer ra sao?
+    2. Tại sao `asCharBuffer()` không phải cách giải mã UTF-8?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích binary format | Dự đoán hex getInt/putInt dưới hai ByteOrder. |
+    | Sử dụng view | Tạo typed view và giải thích index theo số phần tử cùng shared backing bytes. |
+    | Chọn đúng decoder | Phân biệt primitive reinterpretation với charset decoding để đọc văn bản. |
+- id: nio-buffer-011
+  title: slice, duplicate, read-only buffer và trạng thái vị trí riêng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **slice, duplicate, read-only buffer và trạng thái vị trí riêng**
+
+    Sử dụng `slice`, `duplicate`, `asReadOnlyBuffer` để tạo view có position/limit riêng nhưng cùng dữ liệu nền. Bài kiểm tra tính read-only, thay đổi byte order khi tạo view và chọn copy khi cần snapshot thực sự độc lập.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các loại view
+
+    1. `slice()` khác `duplicate()` về vùng nhìn thấy và chỉ số bắt đầu như thế nào?
+    2. `asReadOnlyBuffer()` có thật sự bảo đảm nội dung bất biến khi buffer gốc vẫn có thể ghi không?
+
+    ### Đóng gói và alias
+
+    1. Vì sao position của duplicate đổi mà position của buffer gốc không đổi?
+    2. Khi cung cấp API chỉ đọc, cần dùng duplicate, read-only view hay sao chép dữ liệu để bảo đảm tính ổn định?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập bản đồ view | Tính offset, capacity, limit và position của slice/duplicate từ buffer nguồn. |
+    | Kiểm thử alias | Chứng minh thay byte ở một view xuất hiện ở view khác dù con trỏ độc lập. |
+    | Thiết kế API | Chọn read-only view hoặc copy theo hợp đồng không ghi hay không đổi dữ liệu. |
+- id: nio-buffer-012
+  title: Buffer không mặc nhiên an toàn cho nhiều luồng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Buffer không mặc nhiên an toàn cho nhiều luồng**
+
+    Đánh giá an toàn đa luồng của Buffer khi state position/limit/mark và backing storage đều có thể thay đổi. Bài phân biệt cursor riêng với dữ liệu chung, áp dụng thread confinement, chuyển ownership, đồng bộ và happens-before đúng Java Memory Model.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn data race
+
+    1. Vì sao hai luồng cùng gọi relative get trên một Buffer có thể làm sai vị trí?
+    2. Vì sao duplicate có cursor riêng vẫn không ngăn race trên shared byte storage?
+
+    ### Phương án an toàn
+
+    1. Khi nào dùng thread confinement, copy, phân vùng disjoint hoặc cơ chế đồng bộ?
+    2. Cần quan hệ happens-before nào khi chuyển quyền sở hữu buffer từ thread ghi sang thread đọc?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích race | Chỉ ra state race và data race trong ví dụ hai thread truy cập shared buffer. |
+    | Thiết kế chuyển giao | Phác thảo ownership handoff có đồng bộ và visibility bảo đảm. |
+    | Chọn ranh giới chia sẻ | Giải thích tại sao absolute get, slice hay read-only view không tự mang lại thread safety. |

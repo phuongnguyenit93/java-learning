@@ -1,0 +1,31 @@
+sections:
+  watch-service-001:
+    difficulty: BASIC
+    isImportant: true
+  watch-service-002:
+    difficulty: BASIC
+    isImportant: true
+  watch-service-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  watch-service-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  watch-service-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  watch-service-006:
+    difficulty: ADVANCED
+    isImportant: true
+  watch-service-007:
+    difficulty: ADVANCED
+    isImportant: true
+  watch-service-008:
+    difficulty: ADVANCED
+    isImportant: true
+  watch-service-009:
+    difficulty: ADVANCED
+    isImportant: true
+  watch-service-010:
+    difficulty: ADVANCED
+    isImportant: true

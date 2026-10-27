@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'DUYỆT CÂY THƯ MỤC — MẠCH HỌC JAVA NIO.2'
+roadmapHeading: 'Mạch liên kết bài học'
+roadmap:
+  - id: directory-tree-traversal-001
+    order: 1
+    title: 'DirectoryStream và đóng handle thư mục'
+    description: 'Nắm cách liệt kê entry trực tiếp với DirectoryStream, lọc theo glob/Filter và đóng tài nguyên đúng vòng đời.'
+    transition: 
+      to: directory-tree-traversal-002
+      description: 'Từ Iterable quản lý handle sang Stream API để liệt kê một cấp bằng thao tác pipeline.'
+  - id: directory-tree-traversal-002
+    order: 2
+    title: 'Files.list chỉ liệt kê con trực tiếp'
+    description: 'Sử dụng Files.list để xử lý các phần tử trực tiếp bằng Stream API, hiểu phạm vi một cấp và nghĩa vụ đóng stream.'
+    transition: 
+      to: directory-tree-traversal-003
+      description: 'Khi nhu cầu vượt một cấp, chuyển sang Files.walk và giới hạn độ sâu ngay tại nguồn.'
+  - id: directory-tree-traversal-003
+    order: 3
+    title: 'Files.walk và độ sâu tối đa'
+    description: 'Hiểu duyệt cây theo chiều sâu, root là cấp 0, maxDepth giới hạn traversal thực tế và các rủi ro tài nguyên.'
+    transition: 
+      to: directory-tree-traversal-004
+      description: 'Từ duyệt và lọc Path sang tìm theo cả đường dẫn lẫn thuộc tính file đã đọc.'
+  - id: directory-tree-traversal-004
+    order: 4
+    title: 'Files.find kết hợp Path với BasicFileAttributes'
+    description: 'Dùng Files.find và BasicFileAttributes để áp điều kiện trên tên, loại, kích thước, thời gian của mục trong cây.'
+    transition: 
+      to: directory-tree-traversal-005
+      description: 'Khi cần kiểm soát nhánh hoặc lỗi theo từng mục, chuyển sang cơ chế FileVisitor.'
+  - id: directory-tree-traversal-005
+    order: 5
+    title: 'walkFileTree, FileVisitor và SimpleFileVisitor'
+    description: 'Hiểu mô hình duyệt cây theo callback, FileVisitor/SimpleFileVisitor và điều khiển từng nhánh khi đi qua filesystem.'
+    transition: 
+      to: directory-tree-traversal-006
+      description: 'Sau khung visitor, đi sâu vào ý nghĩa và thứ tự của từng callback.'
+  - id: directory-tree-traversal-006
+    order: 6
+    title: 'preVisitDirectory, visitFile, visitFileFailed và postVisitDirectory'
+    description: 'Phân biệt bốn callback của FileVisitor và thứ tự trước/sau thư mục, kể cả đường đi qua lỗi.'
+    transition: 
+      to: directory-tree-traversal-007
+      description: 'Khi hiểu lúc callback chạy, bước tiếp theo là chọn giá trị trả về để quyết định hướng duyệt.'
+  - id: directory-tree-traversal-007
+    order: 7
+    title: 'FileVisitResult: tiếp tục, bỏ nhánh hoặc kết thúc'
+    description: 'Phân tích bốn giá trị FileVisitResult và tác động của chúng ở từng callback để cắt nhánh, bỏ sibling hoặc dừng cây.'
+    transition: 
+      to: directory-tree-traversal-008
+      description: 'Điều khiển duyệt cần kết hợp chính sách symbolic link để tránh vòng và đi ra ngoài phạm vi mong muốn.'
+  - id: directory-tree-traversal-008
+    order: 8
+    title: 'FOLLOW_LINKS, vòng liên kết và FileSystemLoopException'
+    description: 'Nhận diện symlink, vòng liên kết, FOLLOW_LINKS và cách xử lý FileSystemLoopException trong duyệt cây.'
+    transition: 
+      to: directory-tree-traversal-009
+      description: 'Ngay cả khi chính sách link đúng, thứ tự node được trả về vẫn cần được lựa chọn rõ.'
+  - id: directory-tree-traversal-009
+    order: 9
+    title: 'Thứ tự duyệt không mặc nhiên là thứ tự mong muốn'
+    description: 'Phân biệt thứ tự filesystem, thứ tự traversal và thứ tự nghiệp vụ; chủ động sắp xếp khi cần kết quả tất định.'
+    transition: 
+      to: directory-tree-traversal-010
+      description: 'Từ nhận diện ràng buộc cha-con sang áp dụng cụ thể khi sao chép hoặc xóa cả cây.'
+  - id: directory-tree-traversal-010
+    order: 10
+    title: 'Sao chép hoặc xóa cây theo đúng thứ tự xử lý'
+    description: 'Áp dụng thứ tự cha trước con khi copy và con trước cha khi delete, kèm xử lý lỗi và chính sách an toàn.'
+    transition: 
+      to: directory-tree-traversal-011
+      description: 'Khép lại chương bằng trách nhiệm đóng tài nguyên trong các Stream duyệt cây dùng ở các bước trước.'
+  - id: directory-tree-traversal-011
+    order: 11
+    title: 'Đóng Stream trả về từ list, walk và find'
+    description: 'Tổng hợp trách nhiệm đóng Stream<Path> từ Files.list/walk/find, kể cả short-circuit và lỗi khi traversal lazy.'
+    transition:  null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | DirectoryStream và đóng handle thư mục | Files.list chỉ liệt kê con trực tiếp | Files.walk và độ sâu tối đa | Files.find kết hợp Path với BasicFileAttributes | walkFileTree, FileVisitor và SimpleFileVisitor | preVisitDirectory, visitFile, visitFileFailed và postVisitDirectory | FileVisitResult: tiếp tục, bỏ nhánh hoặc kết thúc | FOLLOW_LINKS, vòng liên kết và FileSystemLoopException | Thứ tự duyệt không mặc nhiên là thứ tự mong muốn | Sao chép hoặc xóa cây theo đúng thứ tự xử lý | Đóng Stream trả về từ list, walk và find |
+  | Vấn đề cần hiểu | Handle thư mục tồn tại khi nào, và duyệt trực tiếp an toàn ra sao? | Làm sao dùng pipeline cho một thư mục mà không duyệt vào cây con? | Duyệt sâu đến đâu và tránh đọc nhánh không cần thiết bằng cách nào? | Lọc theo metadata hiệu quả mà không đọc lại thuộc tính ra sao? | Cần API nào để điều khiển từng bước của việc thăm cây? | Mỗi thời điểm thăm node cho phép xử lý thao tác gì? | Điều khiển phạm vi traversal chính xác mà không dừng nhầm nhánh thế nào? | Theo symbolic link có thể làm traversal lặp vòng hoặc vượt phạm vi ra sao? | Vì sao duyệt đúng các node vẫn có thể cho kết quả sai thứ tự? | Sao chép, xóa cây nhiều cấp mà không sai phụ thuộc hoặc phá dữ liệu thế nào? | Ai phải đóng stream và vì sao terminal operation không giải phóng handle? |
+  | Giá trị đối với OOP/module | Làm chủ Iterable có tài nguyên; phòng rò rỉ handle. | Chọn API liệt kê một cấp, xử lý tập entry theo mục tiêu. | Kiểm soát phạm vi duyệt nhiều cấp có cân nhắc chi phí. | Xây bộ tìm file theo điều kiện nghiệp vụ rõ ràng. | Xây traversal nhiều cấp có callback và chính sách lỗi tường minh. | Đặt logic vào callback đúng thời điểm và giữ thông tin lỗi. | Quyết định hướng duyệt và chính sách lỗi trên từng node. | Giữ việc duyệt cây an toàn với filesystem không tin cậy. | Xây báo cáo và thuật toán duyệt có quy tắc thứ tự rõ ràng. | Chuyển traversal thành thao tác filesystem có kiểm soát. | Ngăn rò rỉ tài nguyên ở mọi truy vấn cây thư mục. |
+  | Tư duy hình thành | Sở hữu và đóng tài nguyên rõ ràng. | Xác định phạm vi duyệt trước khi lọc. | Giới hạn công việc tại nguồn thay vì lọc hậu kỳ. | Tận dụng metadata có sẵn trong callback tìm kiếm. | Mô hình hóa traversal thành các sự kiện thăm node. | Suy luận theo vòng đời trước-trong-sau của thư mục. | Đọc luồng điều khiển theo ngữ cảnh callback. | Xem link và độ sâu là chính sách vận hành tường minh. | Xác định thứ tự dựa trên mục tiêu, chi phí và phụ thuộc. | Giải quyết phụ thuộc và rủi ro trước khi thực thi. | Thiết kế ownership và xử lý lỗi cho API trả tài nguyên. |

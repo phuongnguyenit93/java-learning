@@ -1,0 +1,34 @@
+sections:
+  files-read-write-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  files-read-write-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  files-read-write-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  files-read-write-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  files-read-write-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  files-read-write-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  files-read-write-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  files-read-write-008:
+    difficulty: ADVANCED
+    isImportant: true
+  files-read-write-009:
+    difficulty: ADVANCED
+    isImportant: true
+  files-read-write-010:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  files-read-write-011:
+    difficulty: INTERMEDIATE
+    isImportant: false

@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "I/O trong bộ nhớ — liên kết luồng, biến đổi và an toàn dữ liệu"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: in-memory-io-001
+    order: 1
+    title: "ByteArrayInputStream và ByteArrayOutputStream"
+    description: "Đặt nền móng cho hai hướng I/O byte trong RAM, từ read/EOF, mark/reset đến ghi tích lũy và sao chép byte."
+    transition:
+      to: in-memory-io-002
+      description: "Từ nhận diện luồng byte đến chọn hai cách xuất nội dung từ ByteArrayOutputStream."
+  - id: in-memory-io-002
+    order: 2
+    title: "toByteArray tạo bản sao và writeTo chuyển dữ liệu"
+    description: "Phân biệt bản sao độc lập toByteArray() với writeTo() truyền byte sang một đích có vòng đời riêng, kể cả khi lỗi xảy ra."
+    transition:
+      to: in-memory-io-003
+      description: "Chuyển từ byte stream sang luồng char khi dữ liệu đầu vào/đầu ra đã ở dạng văn bản."
+  - id: in-memory-io-003
+    order: 3
+    title: "StringReader, StringWriter và các luồng mảng char"
+    description: "Xây dựng nền tảng stream ký tự trong bộ nhớ và phân biệt String/char[] cùng đơn vị UTF-16, snapshot và vòng đời."
+    transition:
+      to: in-memory-io-004
+      description: "Từ dữ liệu char trong RAM sang lúc phải giải mã byte thành String với charset xác định."
+  - id: in-memory-io-004
+    order: 4
+    title: "Chuyển byte[] sang String bằng charset xác định"
+    description: "Giải mã byte[] bằng charset đã xác định, phân tích mojibake và chính sách thay thế hoặc báo lỗi với UTF-8 không hợp lệ."
+    transition:
+      to: in-memory-io-005
+      description: "Sau khi hiểu byte và charset, nối nhiều nguồn byte mà giữ đúng thứ tự và không chia hỏng ký tự."
+  - id: in-memory-io-005
+    order: 5
+    title: "SequenceInputStream nối nhiều nguồn byte"
+    description: "Kết nối các nguồn InputStream theo thứ tự, tôn trọng EOF và ownership, bảo toàn byte trước khi giải mã Unicode."
+    transition:
+      to: in-memory-io-006
+      description: "Từ đọc các nguồn theo thứ tự sang kỹ thuật nhìn trước rồi trả lại byte/char khi parser cần."
+  - id: in-memory-io-006
+    order: 6
+    title: "PushbackInputStream và PushbackReader"
+    description: "Sử dụng pushback hữu hạn cho lookahead byte/char, phân biệt với mark/reset và tránh xử lý sai BOM hay EOF."
+    transition:
+      to: in-memory-io-007
+      description: "Từ luồng đọc tuần tự một chiều sang truyền byte trực tiếp giữa producer và consumer có blocking."
+  - id: in-memory-io-007
+    order: 7
+    title: "PipedInputStream, PipedOutputStream và giao tiếp giữa luồng"
+    description: "Thiết kế byte pipe giữa thread với buffer hữu hạn, backpressure, EOF, framing và xử lý lỗi producer–consumer."
+    transition:
+      to: in-memory-io-008
+      description: "Áp dụng tư duy đồng thời đó vào PipedReader/PipedWriter, nơi dữ liệu là đơn vị char và bẫy deadlock cần phân tích sâu hơn."
+  - id: in-memory-io-008
+    order: 8
+    title: "PipedReader, PipedWriter và nguy cơ bế tắc khi dùng không đúng"
+    description: "Đi sâu vào byte-vs-char pipe, deadlock khi vận hành sai, tín hiệu EOF và xử lý broken pipe/thông báo lỗi."
+    transition:
+      to: in-memory-io-009
+      description: "Từ các stream bộ nhớ và pipe sang sử dụng dependency injection bằng stream để kiểm thử biến đổi dữ liệu."
+  - id: in-memory-io-009
+    order: 9
+    title: "Dùng stream bộ nhớ trong kiểm thử và các phép biến đổi"
+    description: "Ứng dụng stream RAM làm fixture cho unit test và pipeline biến đổi byte/char, bao gồm nén, record nhị phân, charset."
+    transition:
+      to: in-memory-io-010
+      description: "Sau khi đã gom dữ liệu trong RAM để test/biến đổi, cần đặt trần dung lượng và chuyển sang streaming khi payload lớn."
+  - id: in-memory-io-010
+    order: 10
+    title: "Giới hạn dung lượng khi tích lũy toàn bộ nội dung"
+    description: "Chốt giới hạn heap của bộ đệm, kiểm soát kích thước trong lúc đọc và chọn streaming thay vì gom mọi nội dung."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | ByteArrayInputStream và ByteArrayOutputStream | toByteArray tạo bản sao và writeTo chuyển dữ liệu | StringReader, StringWriter và các luồng mảng char | Chuyển byte[] sang String bằng charset xác định | SequenceInputStream nối nhiều nguồn byte | PushbackInputStream và PushbackReader | PipedInputStream, PipedOutputStream và giao tiếp giữa luồng | PipedReader, PipedWriter và nguy cơ bế tắc khi dùng không đúng | Dùng stream bộ nhớ trong kiểm thử và các phép biến đổi | Giới hạn dung lượng khi tích lũy toàn bộ nội dung |
+  | Vấn đề cần hiểu | Một byte[] trở thành nguồn/đích InputStream và OutputStream thế nào? | Cần lấy byte[] độc lập hay chuyển dữ liệu đang có tới một OutputStream? | Khi đầu vào là String hoặc char[], chọn luồng ký tự nào và đọc được đơn vị gì? | Làm sao chuyển byte[] thành String đúng và phát hiện dữ liệu/charset sai? | Làm thế nào ghép nhiều nguồn byte thành một InputStream mà không tự thêm nội dung? | Parser đọc thử rồi trả lại byte/char thế nào mà không mất dữ liệu? | Làm sao truyền byte giữa hai thread trong JVM mà không tự khóa tiến trình? | Điều gì khiến PipedReader/PipedWriter có thể treo hoặc báo broken pipe? | Làm sao kiểm chứng logic I/O nhanh và xác định mà chưa cần file/socket? | Làm sao giới hạn dữ liệu thu vào RAM trước khi gây quá tải heap? |
+  | Giá trị đối với OOP/module | Sử dụng đúng hợp đồng byte-stream nền tảng, tránh hỏng dữ liệu. | Giảm sao chép và quản lý ownership/flush/close chính xác. | Phù hợp API Reader/Writer và tránh nhầm ký tự với byte. | Bảo toàn văn bản Unicode và phân biệt byte nhị phân với text. | Ghép dữ liệu tuần tự đúng thứ tự và hạn chế giữ toàn bộ RAM. | Xử lý lookahead đúng hợp đồng và tránh tràn bộ đệm unread. | Tránh deadlock, hiểu backpressure và quản lý kết thúc luồng. | Tổ chức hai thread an toàn và giải thích sự cố theo trạng thái buffer. | Thiết kế mã dễ test và đối chiếu round-trip dữ liệu. | Phòng OOME và bảo vệ ngân sách bộ nhớ với nguồn lớn/không tin cậy. |
+  | Tư duy hình thành | Quan sát vị trí đọc, byte hợp lệ, quyền sở hữu mảng. | Chọn API dựa trên contract và chi phí thay vì tên gọi gần nhau. | Tách xử lý ký tự UTF-16 khỏi encoding/decoding. | Dựa vào hợp đồng encoding và chứng cứ hex, không đoán charset. | Xem EOF từng nguồn như bước chuyển, phân biệt nối với parallelism. | Kiểm soát thứ tự dữ liệu và số phần tử đọc trước. | Tư duy hai actor, lifecycle và định dạng message trên byte stream. | Phân tích thứ tự sự kiện, quyền đóng và tín hiệu kết thúc. | Tách thuật toán khỏi nguồn đích thật và phân biệt unit/integration test. | Tính byte thực, bản sao và điều kiện từ chối trước khi cấp phát. |

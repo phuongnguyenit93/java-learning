@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'SELECTOR — MẠCH HỌC NON-BLOCKING I/O TRONG JAVA'
+roadmapHeading: 'Mạch liên kết bài học'
+roadmap:
+  - id: selector-001
+    order: 1
+    title: 'Selector và mô hình nhiều channel trên một luồng'
+    description: 'Nhìn tổng thể Selector multiplex readiness nhiều channel trên một thread, còn I/O và state thuộc ứng dụng.'
+    transition:
+      to: selector-002
+      description: 'Từ sơ đồ tổng thể tới các điều kiện đăng ký channel hợp lệ.'
+  - id: selector-002
+    order: 2
+    title: 'Đăng ký channel ở chế độ non-blocking'
+    description: 'Nắm contract register, bitmask hợp lệ và cơ chế attachment ở channel non-blocking.'
+    transition:
+      to: selector-003
+      description: 'Sau khi register, cần hiểu chính xác interest set và ready set.'
+  - id: selector-003
+    order: 3
+    title: 'SelectionKey, interest set và ready set'
+    description: 'Phân biệt registration, interest bits, ready bits và các tập key của Selector.'
+    transition:
+      to: selector-004
+      description: 'Bốn operation cụ thể làm rõ mỗi bit phải được xử lý thế nào.'
+  - id: selector-004
+    order: 4
+    title: 'OP_ACCEPT, OP_CONNECT, OP_READ và OP_WRITE'
+    description: 'Hiểu bốn operation và tiến trình accept/connect/read/write của socket non-blocking.'
+    transition:
+      to: selector-005
+      description: 'Sau khi hiểu ready ops, cần biết chọn phương thức select phù hợp.'
+  - id: selector-005
+    order: 5
+    title: 'select, selectNow và select có timeout'
+    description: 'So sánh ba overload selection, timeout, wakeup và tính chất return 0.'
+    transition:
+      to: selector-006
+      description: 'Sau select cần tiêu thụ selectedKeys đúng cách.'
+  - id: selector-006
+    order: 6
+    title: 'Lặp selectedKeys và loại bỏ key đã xử lý'
+    description: 'Sử dụng iterator.remove đúng trong vòng selectedKeys, tách tiêu thụ event khỏi hủy registration.'
+    transition:
+      to: selector-007
+      description: 'Sau dispatch, học cách đánh thức, hủy và đóng selector đúng vòng đời.'
+  - id: selector-007
+    order: 7
+    title: 'Wakeup, hủy key và đóng selector'
+    description: 'Quản lý wakeup, cancel và close khi phối hợp thread và shutdown event loop.'
+    transition:
+      to: selector-008
+      description: 'Một selected event không bảo đảm các thao tác I/O đã hoàn tất.'
+  - id: selector-008
+    order: 8
+    title: 'Sẵn sàng I/O không bảo đảm hoàn tất toàn bộ thao tác'
+    description: 'Giải thích ready khác complete và xử lý buffer, partial read/write và EOF qua nhiều vòng.'
+    transition:
+      to: selector-009
+      description: 'Từ partial write, thiết kế OP_WRITE có điều kiện.'
+  - id: selector-009
+    order: 9
+    title: 'Chỉ đăng ký OP_WRITE khi còn dữ liệu cần gửi'
+    description: 'Duy trì OP_WRITE chỉ khi outbound queue có byte; xử lý partial write và backpressure.'
+    transition:
+      to: selector-010
+      description: 'Cuối chương kết hợp OP_WRITE với fairness, worker và buffer ownership.'
+  - id: selector-010
+    order: 10
+    title: 'Tránh busy loop, nghẽn xử lý và dùng chung buffer sai cách'
+    description: 'Phối hợp fairness, thread offload, buffer ownership, backpressure và vòng đời connection.'
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Selector và mô hình nhiều channel trên một luồng | Đăng ký channel ở chế độ non-blocking | SelectionKey, interest set và ready set | OP_ACCEPT, OP_CONNECT, OP_READ và OP_WRITE | select, selectNow và select có timeout | Lặp selectedKeys và loại bỏ key đã xử lý | Wakeup, hủy key và đóng selector | Sẵn sàng I/O không bảo đảm hoàn tất toàn bộ thao tác | Chỉ đăng ký OP_WRITE khi còn dữ liệu cần gửi | Tránh busy loop, nghẽn xử lý và dùng chung buffer sai cách |
+  | Vấn đề cần hiểu | Một luồng theo dõi nhiều channel ra sao? | Điều kiện nào giúp registration hợp lệ? | Bit muốn theo dõi khác bit vừa ready ra sao? | Bit ready yêu cầu thao tác nào tiếp theo? | Chờ readiness trong bao lâu để vẫn thực hiện task đúng hạn? | Cách loại selected key đã xử lý mà vẫn giữ registration? | Đánh thức và hủy đăng ký khác đóng tài nguyên ra sao? | Khi nào request I/O thực sự hoàn thành? | Làm sao tránh CPU spin nhưng không bỏ quên dữ liệu chưa gửi? | Làm sao event loop đúng mà vẫn không nghẽn hoặc lẫn dữ liệu? |
+  | Giá trị đối với OOP/module | Nền tảng kiến trúc event loop Java NIO. | Tránh lỗi cấu hình khi khởi tạo event loop. | Quản lý trạng thái event loop chính xác. | Dispatch đúng từng trạng thái kết nối. | Điều phối I/O và tác vụ định kỳ hiệu quả. | Ngăn sự kiện cũ bị dispatch lặp. | Shutdown và chuyển trạng thái an toàn. | Không làm mất byte và không kết luận sớm. | Gửi dữ liệu tin cậy và giữ tải bounded. | Vận hành selector với CPU và memory có giới hạn. |
+  | Tư duy hình thành | Tách phát hiện sự kiện khỏi xử lý và lưu state. | Kiểm tra hợp đồng API trước khi nhận readiness. | Nhận biết ý định, tín hiệu và completion là ba lớp khác nhau. | Sự kiện chỉ là tín hiệu; phải kiểm tra kết quả API. | Không nhầm timeout selector với deadline nghiệp vụ. | Tách vòng đời selected event khỏi channel/key. | Định nghĩa chủ sở hữu cho từng tài nguyên và tín hiệu điều phối. | Completion được xác nhận bằng byte và trạng thái protocol. | Interest write phản ánh nhu cầu nghiệp vụ. | Đánh giá throughput cùng tính nhất quán và fairness. |

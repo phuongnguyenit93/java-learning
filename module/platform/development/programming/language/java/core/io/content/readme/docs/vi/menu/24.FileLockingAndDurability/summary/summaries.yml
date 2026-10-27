@@ -1,0 +1,301 @@
+summaries:
+- id: file-locking-and-durability-001
+  title: FileLock, lock và tryLock
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **FileLock, lock và tryLock**
+
+    Làm chủ cách xin `FileLock` từ `FileChannel` để phối hợp truy cập tệp giữa các tiến trình. Phân biệt `lock()` có thể chờ với `tryLock()` thử ngay, xác định phạm vi byte, kết quả `null`, lỗi chồng lấn trong JVM và trách nhiệm giải phóng khóa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và cách nhận khóa
+
+    1. `FileChannel.lock()` và `tryLock()` khác nhau thế nào khi tiến trình khác đang giữ vùng khóa xung đột?
+    2. Vì sao `tryLock()` có thể trả `null` hoặc ném `OverlappingFileLockException`, và cần xử lý hai tình huống ra sao?
+
+    ### Giới hạn giao thức
+
+    1. Một FileLock đã nhận có tự bảo đảm tính nguyên tử và độ bền của dữ liệu không?
+    2. Trong môi trường khóa advisory, các tiến trình cần phối hợp theo quy ước nào để tránh ghi đè dữ liệu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xin khóa theo nhu cầu | Lựa chọn lock hoặc tryLock, kiểm tra null và đặt phạm vi công việc trong try-with-resources. |
+    | Phân tích xung đột | Giải thích đúng xung đột giữa hai JVM so với hai channel trong cùng JVM. |
+    | Phân định bảo đảm | Nêu giới hạn FileLock về đồng bộ thread, atomicity và durability. |
+- id: file-locking-and-durability-002
+  title: Khóa độc quyền, khóa chia sẻ và vùng byte
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khóa độc quyền, khóa chia sẻ và vùng byte**
+
+    Chọn khóa độc quyền hoặc chia sẻ theo luồng đọc/ghi và khoanh đúng vùng byte của bản ghi. Biết shared lock có thể bị nâng cấp theo nền tảng, các vùng nửa mở không chồng lấn thế nào và vì sao thao tác read-modify-write phải được bao bọc toàn bộ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Loại khóa và vùng khóa
+
+    1. Shared lock và exclusive lock tương tác ra sao giữa các tiến trình cùng tuân thủ giao thức?
+    2. Với `lock(100, 50, false)` và `lock(150, 50, false)`, hai vùng byte có chồng lấn hay không?
+
+    ### Thiết kế cập nhật record
+
+    1. Vì sao khóa chỉ quanh lệnh write chưa đủ bảo vệ thao tác đọc–tính toán–ghi của bộ đếm?
+    2. Với record kích thước cố định, làm thế nào tính đúng offset và ngăn lỗi tràn số?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính vùng khóa | Xác định byte offset và khoảng nửa mở của từng record để phân tích vùng chồng lấn. |
+    | Thiết kế khóa theo vai trò | Chọn shared hoặc exclusive lock và kiểm tra `isShared()` khi cần. |
+    | Ngăn lost update | Đặt toàn bộ thao tác đọc–sửa–ghi bên trong khoảng giữ khóa. |
+- id: file-locking-and-durability-003
+  title: File lock thuộc phạm vi JVM, không thay thế khóa giữa các luồng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **File lock thuộc phạm vi JVM, không thay thế khóa giữa các luồng**
+
+    Hiểu file lock được JVM quản lý theo phạm vi chồng lấn và không cung cấp thứ tự chờ hay happens-before cho các thread Java. Phối hợp đúng bằng mutex nội bộ trước khi dùng FileLock cho các tiến trình khác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai cấp đồng bộ
+
+    1. Vì sao hai thread trong cùng JVM xin vùng khóa chồng lấn có thể nhận ngoại lệ thay vì chờ như `ReentrantLock`?
+    2. FileLock có tạo memory visibility cho `HashMap` và các biến chia sẻ giữa các thread không?
+
+    ### Thiết kế kết hợp
+
+    1. Khi nhiều thread và nhiều JVM cùng ghi file, nên giữ mutex Java và FileLock theo thứ tự nào?
+    2. Vì sao đóng một channel khác cùng file có thể làm mất khóa còn đang giữ trên một số OS?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt phạm vi điều phối | Xác định lỗi do thread contention và lỗi do process contention để chọn primitive phù hợp. |
+    | Áp dụng đồng bộ hai tầng | Đề xuất critical section có mutex trong JVM và FileLock liên tiến trình. |
+    | Quản lý channel | Nhận diện mã đóng channel phụ có nguy cơ làm mất lock đang dùng. |
+- id: file-locking-and-durability-004
+  title: OverlappingFileLockException và giới hạn hỗ trợ của hệ điều hành
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **OverlappingFileLockException và giới hạn hỗ trợ của hệ điều hành**
+
+    Chẩn đoán `OverlappingFileLockException` khi JVM đã giữ hoặc đang chờ vùng chồng lấn, phân biệt với `tryLock()==null` từ tiến trình khác. Đánh giá sự phụ thuộc hệ điều hành/filesystem của shared lock, byte-range lock, advisory/mandatory và memory mapping.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngoại lệ và tình trạng khóa
+
+    1. Khi nào JVM ném `OverlappingFileLockException` kể cả với hai channel khác nhau?
+    2. `null` từ tryLock khác `IOException` và `OverlappingFileLockException` như thế nào?
+
+    ### Tính di động và giới hạn
+
+    1. Vì sao không thể suy ra mọi shared lock hoặc khóa vùng byte được triển khai giống nhau trên mọi OS?
+    2. Tại sao cần kiểm thử tương tác giữa file mapping, close channel và file lock trên filesystem đích?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại lỗi lock | Giải thích đúng điều kiện xung đột trong JVM so với tiến trình ngoài và lỗi I/O. |
+    | Kiểm thử giới hạn hệ thống | Xây tình huống thử shared/exclusive, vùng không chồng lấn và ảnh hưởng đóng channel. |
+    | Đề xuất phản ứng lỗi | Tránh retry mù quáng khi ngoại lệ cho thấy quản lý khóa sai trong JVM. |
+- id: file-locking-and-durability-005
+  title: Giải phóng lock khi đóng tài nguyên
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giải phóng lock khi đóng tài nguyên**
+
+    Quản lý chính xác vòng đời `FileLock` và `FileChannel`, bảo đảm khóa được thả khi hoàn thành, xảy ra exception hoặc đóng channel. Nắm thứ tự `try-with-resources`, `release()` trong `finally`, trạng thái `isValid()` và phạm vi critical section.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng đời tài nguyên
+
+    1. Những sự kiện nào làm `FileLock` mất hiệu lực và `isValid()` thay đổi?
+    2. Vì sao nên khai báo channel trước lock trong try-with-resources để tài nguyên đóng theo thứ tự phù hợp?
+
+    ### Thời điểm nhả khóa
+
+    1. Vì sao thả lock sau bước đọc nhưng trước bước ghi vẫn có thể gây lost update?
+    2. Khi xảy ra lỗi xử lý và lỗi đóng tài nguyên, try-with-resources biểu diễn suppressed exception như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quản lý khóa bằng tài nguyên | Viết khối try-with-resources hoặc finally giải phóng lock trước khi đóng channel. |
+    | Bảo vệ trọn thao tác | Đặt đọc, tính toán, ghi và force cần thiết trong đúng khoảng giữ khóa. |
+    | Chẩn đoán vòng đời | Giải thích vì sao channel khác đóng sớm có thể làm mất hiệu lực lock trên một số OS. |
+- id: file-locking-and-durability-006
+  title: Phân biệt flush, FileDescriptor.sync và FileChannel.force
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt flush, FileDescriptor.sync và FileChannel.force**
+
+    Phân biệt dữ liệu rời bộ đệm ứng dụng, yêu cầu đồng bộ descriptor và đồng bộ nội dung/metadata của FileChannel. Biết thứ tự `flush` trước `sync`, khác biệt `force(false/true)`, `MappedByteBuffer.force` và giới hạn durability theo thiết bị.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các tầng đệm và đồng bộ
+
+    1. Tại sao `BufferedOutputStream.flush()` chưa bảo đảm dữ liệu sống sót sau mất điện?
+    2. Vì sao gọi `FileDescriptor.sync()` trước khi flush writer có thể bỏ sót dữ liệu còn trong JVM?
+
+    ### FileChannel và giới hạn độ bền
+
+    1. `force(false)`, `force(true)`, `SYNC` và `DSYNC` khác nhau về phạm vi nào?
+    2. Khi sửa file qua MappedByteBuffer, vì sao cần xem xét `MappedByteBuffer.force()` thay vì chỉ gọi channel.force?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt mức cam kết | Chỉ ra dữ liệu đang ở buffer ứng dụng, ở tầng OS và mức đồng bộ thiết bị tương ứng. |
+    | Viết thứ tự đồng bộ | Áp dụng flush–descriptor sync hoặc write–FileChannel.force đúng pipeline. |
+    | Thiết kế checkpoint | Đề xuất group commit, cờ force và cách xử lý giới hạn provider/storage. |
+- id: file-locking-and-durability-007
+  title: Ghi ra tệp tạm rồi thay thế đích
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ghi ra tệp tạm rồi thay thế đích**
+
+    Thiết kế quy trình thay thế tệp quan trọng bằng staging: tạo temp cùng thư mục, ghi đủ byte, validate, force khi cần, đóng handle và move để publish. Phân tích trạng thái trước/sau crash, metadata của tệp mới và lost update giữa nhiều writer.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giao thức staging và publish
+
+    1. Vì sao ghi trực tiếp vào target với TRUNCATE_EXISTING có thể khiến reader gặp dữ liệu dở?
+    2. Vì sao staging nên được tạo cùng thư mục với target và được kiểm tra trước khi move?
+
+    ### Tính nhất quán và lỗi
+
+    1. Atomic replace có tự tránh lost update giữa hai writer cùng xuất bản phiên bản mới không?
+    2. Sau lỗi giữa các giai đoạn ghi staging, validate, force, move, cần dọn temp và bảo vệ target cũ thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây quy trình xuất bản | Mô tả chính xác thứ tự tạo staging, writeFully, validate, force, close và move. |
+    | Phân tích failure mode | Dự đoán trạng thái đích/temp sau khi lỗi xảy ra ở từng giai đoạn. |
+    | Bảo vệ bản cập nhật | Nêu biện pháp tránh hai writer đè nhau và chính sách metadata/cleanup. |
+- id: file-locking-and-durability-008
+  title: ATOMIC_MOVE và khả năng không được hỗ trợ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ATOMIC_MOVE và khả năng không được hỗ trợ**
+
+    Hiểu chính xác hợp đồng `Files.move(..., ATOMIC_MOVE)`, trường hợp không hỗ trợ, khi đích đã tồn tại và việc các move options khác bị bỏ qua. Thiết kế chính sách strict hoặc fallback có ghi nhận giảm bảo đảm thay vì ngầm coi mọi rename là nguyên tử.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API
+
+    1. Khi có ATOMIC_MOVE, `REPLACE_EXISTING` còn bảo đảm overwrite target hiện hữu trên mọi provider không?
+    2. `AtomicMoveNotSupportedException` khác những lỗi IOException khác khi move thế nào?
+
+    ### Thiết kế fallback và kiểm thử
+
+    1. Vì sao move giữa hai file store thường không thể nguyên tử và tạo staging tại đích giúp gì?
+    2. Trường hợp nào phải từ chối fallback để không làm suy giảm yêu cầu tính nguyên tử?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc đúng hợp đồng ATOMIC_MOVE | Giải thích tình huống target tồn tại và các option bị bỏ qua theo API. |
+    | Xử lý thiếu hỗ trợ | Viết nhánh strict fail hoặc fallback có chủ đích, truyền đạt độ bảo đảm giảm. |
+    | Thiết kế kiểm thử portability | Đề xuất thử move trên đúng file store/provider và điều kiện target hiện hữu. |
+- id: file-locking-and-durability-009
+  title: Tính nguyên tử của đổi tên khác độ bền sau sự cố nguồn điện
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tính nguyên tử của đổi tên khác độ bền sau sự cố nguồn điện**
+
+    Phân biệt atomic visibility của rename với crash durability của byte dữ liệu và directory entry. Mô hình hóa các giai đoạn trước/sau force file, atomic rename và đồng bộ parent directory, xét giới hạn Java portable và hạ tầng lưu trữ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tính nguyên tử và độ bền
+
+    1. Vì sao `Files.move(..., ATOMIC_MOVE)` thành công không chứng minh tệp còn nguyên sau power loss?
+    2. Nếu đã `force(true)` trên staging trước rename, phần metadata nào vẫn chưa được đồng bộ tại thời điểm rename xảy ra?
+
+    ### Thiết kế recovery
+
+    1. Vì sao Java FileChannel.force không cung cấp lời hứa portable để fsync thư mục trên mọi OS?
+    2. Khi mô phỏng process crash thay vì mất điện, kết luận nào về storage durability không được phép rút ra?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích thời điểm sự cố | Xây bảng T0–T5 tách ghi, force, rename, directory sync và phục hồi. |
+    | Đánh giá cam kết độ bền | Chỉ ra bảo đảm thuộc file data so với namespace/directory metadata. |
+    | Thiết kế kiểm chứng | Đề xuất recovery/checksum và thử nghiệm trên đúng OS, filesystem, storage stack. |
+- id: file-locking-and-durability-010
+  title: Giới hạn nhất quán trên network file system
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn nhất quán trên network file system**
+
+    Đánh giá visibility, durability và coordination khi nhiều client dùng NFS/SMB. Hiểu close-to-open và cache metadata, giới hạn `FileChannel.force` trên remote storage, file lock/lease mất hiệu lực khi partition và vai trò của version, checksum, manifest hoặc giao thức giao dịch phù hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quan sát dữ liệu từ nhiều client
+
+    1. Vì sao reader ở client B có thể vẫn thấy dữ liệu cũ dù writer ở client A đã ghi và đóng file?
+    2. Theo đặc tả FileChannel.force, vì sao không suy được cùng một bảo đảm durability cho file nằm trên thiết bị từ xa?
+
+    ### Phân tán và khôi phục
+
+    1. Network partition hoặc failover có thể làm sai những giả định nào về file lock và trạng thái đã commit?
+    2. Vì sao retry sau timeout cần version hoặc transaction ID, chứ FileChannel không cung cấp exactly-once?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích cache coherence | Mô tả tình huống close-to-open và metadata cache khiến client khác đọc dữ liệu cũ. |
+    | Đánh giá ràng buộc hệ thống | Tách trách nhiệm OS/FS/provider/server về lock, force và atomicity. |
+    | Thiết kế kiểm chứng thực tế | Lập kịch bản test hai client, version/checksum/manifest, network partition và failover. |

@@ -1,0 +1,331 @@
+summaries:
+- id: testing-and-diagnostics-001
+  title: Kiểm thử bằng stream bộ nhớ trước khi phụ thuộc tệp thật
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm thử bằng stream bộ nhớ trước khi phụ thuộc tệp thật**
+
+    Tách logic sao chép và biến đổi I/O khỏi việc mở tệp để kiểm chứng thuật toán bằng `ByteArrayInputStream`, `ByteArrayOutputStream`, `StringReader` và `StringWriter`. Bài còn đặt ranh giới cho test trong RAM: cần integration test riêng để kiểm tra hành vi filesystem thực.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiến trúc kiểm thử bằng bộ nhớ
+
+    1. Vì sao nên nhận `InputStream` và `OutputStream` làm tham số thay vì mở `Path` ngay trong thuật toán?
+    2. `ByteArrayInputStream` và `ByteArrayOutputStream` cho phép xác nhận những thuộc tính byte nào?
+
+    ### Đường lỗi và giới hạn
+
+    1. Làm sao tự dựng một stream đọc ngắn hoặc ném `IOException` để kiểm thử nhánh thất bại?
+    2. Vì sao một bài test dùng stream bộ nhớ không chứng minh mọi hành vi tệp thật đều đúng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tách logic khỏi adapter | Thiết kế hàm copy nhận hai stream và kiểm tra bằng mảng byte trong RAM. |
+    | Kiểm tra kết quả | Assert chính xác số byte, nội dung UTF-8 và hợp đồng ownership. |
+    | Tiêm lỗi | Tạo fake stream giới hạn read hoặc ném IOException rồi kiểm tra nhánh lỗi. |
+- id: testing-and-diagnostics-002
+  title: Tạo thư mục tạm riêng cho từng kịch bản
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tạo thư mục tạm riêng cho từng kịch bản**
+
+    Dùng `Files.createTempDirectory` hoặc JUnit `@TempDir` để cô lập dữ liệu kiểm thử theo từng scenario, tránh xung đột CI và chạy song song. Bài làm rõ ownership của thư mục tạm, thao tác cleanup trong `finally` và các tình huống khi handle/symlink gây cản trở.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cô lập và sở hữu tài nguyên
+
+    1. Vì sao hai test dùng chung `./test-data/output.txt` có thể tạo kết quả thất thường?
+    2. Ai chịu trách nhiệm xóa một temp root và khi nào helper không được xóa root do caller quản lý?
+
+    ### Tạo và dọn kịch bản
+
+    1. Làm sao dùng `Files.createTempDirectory` để hai test có cùng tên file con nhưng không xung đột?
+    2. Vì sao cần xử lý file đang mở, symlink và lỗi cleanup trước khi kết luận test không để lại dữ liệu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo fixture an toàn | Khởi tạo root tạm riêng rồi ghi/đọc các file fixture dưới root đó. |
+    | Dọn dữ liệu đúng phạm vi | Xây dựng cleanup qua finally hoặc @TempDir và xử lý cây thư mục có con. |
+    | Chạy test độc lập | Giải thích vì sao fixture chạy song song không chia sẻ path dễ gây race. |
+- id: testing-and-diagnostics-003
+  title: Kiểm tra nội dung byte chính xác và round-trip văn bản
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra nội dung byte chính xác và round-trip văn bản**
+
+    Đánh giá đúng ba mức xác nhận: byte-for-byte, text round-trip và tương đương logic. Bài dùng `Arrays.equals`, `Arrays.mismatch`, `Files.mismatch`, hex offset cùng strict charset để kiểm chứng nội dung và tìm byte đầu tiên khác nhau.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định nghĩa đúng tính toàn vẹn
+
+    1. Byte equality, text round-trip và logical equivalence khác nhau trong trường hợp nào?
+    2. Vì sao hai văn bản trông giống nhau chưa chắc có byte UTF-8 giống nhau?
+
+    ### Assertions và diagnostics
+
+    1. Làm sao dùng `Files.mismatch` để tìm offset đầu tiên không khớp mà không nạp file lớn lên RAM?
+    2. BOM, newline, normalization và decoder REPORT ảnh hưởng thế nào đến phép kiểm thử round-trip?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh byte | Viết assertion so sánh hai byte array hoặc file và chỉ ra offset khác đầu tiên. |
+    | Kiểm tra text | Thiết kế cả String→byte→String và byte→String→byte round-trip theo charset cụ thể. |
+    | Chẩn đoán sai khác | Đưa ra báo cáo length, offset và vùng hex an toàn khi fixture không khớp. |
+- id: testing-and-diagnostics-004
+  title: Dữ liệu Unicode, BOM và ký tự bị chia giữa các khối
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dữ liệu Unicode, BOM và ký tự bị chia giữa các khối**
+
+    Kiểm thử UTF-8/UTF-16 có Unicode ngoài ASCII, BOM và chuỗi byte bị cắt giữa hai lần đọc. Bài yêu cầu phân biệt byte, code point và UTF-16 code unit, giữ trạng thái `CharsetDecoder` đúng qua các chunk và lựa chọn REPORT khi dữ liệu lỗi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Unicode và BOM
+
+    1. Vì sao số byte UTF-8 có thể khác `String.length()` khi chuỗi chứa tiếng Việt và emoji?
+    2. BOM của UTF-8/UTF-16 và byte order phải được xử lý theo hợp đồng đầu vào ra sao?
+
+    ### Ranh giới buffer
+
+    1. Tại sao giải mã từng byte chunk bằng `new String(chunk, UTF_8)` độc lập có thể sinh U+FFFD?
+    2. Cần phối hợp `flip`, `compact`, UNDERFLOW và `endOfInput` thế nào khi UTF-8 code point bị chia đôi?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán encoding | Tính byte UTF-8 và UTF-16 của chuỗi mẫu có emoji, dấu tổ hợp. |
+    | Tạo edge fixture | Thiết kế fixture có BOM, byte malformed và code point trải qua hai lượt read. |
+    | Giải mã streaming | Chọn InputStreamReader hoặc decoder trạng thái và chứng minh kết quả không phụ thuộc kích thước chunk. |
+- id: testing-and-diagnostics-005
+  title: Tệp rỗng, tệp lớn, EOF sớm và bản ghi không hoàn chỉnh
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tệp rỗng, tệp lớn, EOF sớm và bản ghi không hoàn chỉnh**
+
+    Kiểm tra các tình huống tệp trống, header/payload thiếu, EOF sớm, short read và dữ liệu lớn trước khi phát sinh lỗi tài nguyên. Bài làm rõ read-exactly cần một vòng lặp, phân biệt EOF/0/partial và kiểm tra length prefix trước khi allocate.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### EOF và framing
+
+    1. Vì sao tệp 0 byte khác một record có payload length bằng 0?
+    2. `readNBytes` có thể trả ít byte hơn yêu cầu thế nào và khi nào `readFully` ném EOFException?
+
+    ### Biên về dung lượng
+
+    1. Vì sao phải kiểm tra length prefix trước khi cấp phát byte array hay ByteBuffer?
+    2. Làm sao thiết kế fixture file lớn, header ngắn và payload thiếu mà không làm test tốn RAM vô hạn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xử lý EOF | Phân biệt EOF bình thường với record bị cắt và trả lỗi chính xác. |
+    | Chặn cấp phát sai | Validate độ dài âm, vượt giới hạn hoặc tràn int trước khi allocate. |
+    | Thiết kế edge tests | Lập ma trận rỗng, ngắn, file lớn, thiếu header/payload và partial read. |
+- id: testing-and-diagnostics-006
+  title: Mô phỏng partial read, partial write và lỗi giữa chừng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Mô phỏng partial read, partial write và lỗi giữa chừng**
+
+    Tiêm short read, partial write, read trả 0, EOF và `IOException` giữa chừng để xác minh vòng xử lý dữ liệu và chiến lược retry. Bài nhấn mạnh một lệnh read/write không bảo đảm hoàn thành message, và ghi được một phần chưa tạo thành transaction nguyên tử.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### I/O từng phần
+
+    1. Vì sao API read/write được phép trả số phần tử nhỏ hơn yêu cầu?
+    2. Làm sao lập test double ép mỗi lượt chỉ đọc hoặc ghi tối đa vài byte?
+
+    ### Lỗi giữa chừng và retry
+
+    1. Khi stream ném IOException sau khi đã truyền một phần, chương trình phải báo cáo trạng thái nào?
+    2. Tại sao retry toàn bộ có thể lặp dữ liệu và cần hợp đồng idempotency hoặc atomic replace?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng partial I/O | Cài fake source/sink giới hạn byte mỗi lần và xác minh dữ liệu được truyền hết. |
+    | Tiêm lỗi giữa chừng | Assert số byte đã đi qua trước IOException và hậu quả trên sink. |
+    | Thiết kế recovery | Giải thích khi nào có thể retry an toàn và khi nào phải rollback hoặc ghi file tạm. |
+- id: testing-and-diagnostics-007
+  title: Kiểm tra tài nguyên được đóng khi có lỗi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra tài nguyên được đóng khi có lỗi**
+
+    Chứng minh tài nguyên vẫn được đóng khi khởi tạo, xử lý hoặc `close()` phát sinh lỗi. Bài áp dụng `try-with-resources`, thứ tự đóng ngược, suppressed exceptions và spy/fault injection; đồng thời phân biệt close, flush và ownership của wrapper.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tự động đóng tài nguyên
+
+    1. Try-with-resources đóng resource theo thứ tự nào nếu có nhiều resource?
+    2. Vì sao exception trong body còn exception do close xuất hiện qua `getSuppressed()`?
+
+    ### Kiểm thử đường lỗi
+
+    1. Làm sao thiết kế spy để assert số lần close và thứ tự đóng khi một thao tác ném IOException?
+    2. Nếu caller sở hữu stream gốc, wrapper đóng stream như thế nào và cần quy định ownership gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm chứng lifecycle | Viết test với fake Closeable xác nhận close trên cả success và failure path. |
+    | Phân tích exception | Chỉ ra primary exception và suppressed exception trong kịch bản body và close đều lỗi. |
+    | Thiết kế ownership | Quy định ai mở/đóng stream và xác minh không leak file handle sau khi exception. |
+- id: testing-and-diagnostics-008
+  title: Kiểm tra symbolic link, quyền và hành vi theo nền tảng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra symbolic link, quyền và hành vi theo nền tảng**
+
+    Kiểm chứng hành vi symbolic link, `NOFOLLOW_LINKS`, quyền POSIX/DOS/ACL và sai khác file provider khi chuyển nền tảng. Bài phân biệt phép kiểm tra metadata với thao tác mở thật, giải thích TOCTOU và thiết kế bài test portable có điều kiện skip hợp lý.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Link và thuộc tính
+
+    1. `Files.exists(path)` và `Files.exists(path, NOFOLLOW_LINKS)` khác ra sao với broken symlink?
+    2. Vì sao `Files.isReadable` không bảo đảm lần mở thật tiếp theo sẽ thành công?
+
+    ### Khác biệt nền tảng
+
+    1. Khi hệ thống không cho tạo symlink hoặc không hỗ trợ POSIX attribute view, bài test nên xử lý thế nào?
+    2. Vì sao `normalize`, `toRealPath` và kiểm tra quyền không loại bỏ toàn bộ nguy cơ TOCTOU?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quan sát symlink | Phân biệt symlink đang hoạt động, broken symlink và target bằng NOFOLLOW_LINKS. |
+    | Thiết kế test portable | Thử capability của provider trước khi assert và phân biệt skip với fail. |
+    | Phân tích race | Giải thích nguy cơ thay đường dẫn giữa check và use và thiết kế thao tác chịu IOException. |
+- id: testing-and-diagnostics-009
+  title: Chẩn đoán sai working directory, charset và đường dẫn resource
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chẩn đoán sai working directory, charset và đường dẫn resource**
+
+    Phân loại lỗi do working directory, charset và classpath resource bằng cách tách định vị file, giải mã byte và resource lookup. Bài phân biệt đường dẫn tương đối ở runtime với source/JAR, quy tắc slash của `getResourceAsStream` và khác biệt resource nằm trong JAR.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đường dẫn và classpath
+
+    1. Vì sao relative Path được giải quyết theo working directory, không theo thư mục source hay JAR?
+    2. `Class.getResourceAsStream` và `ClassLoader.getResourceAsStream` khác nhau ở dấu slash và package nào?
+
+    ### Chẩn đoán lỗi môi trường
+
+    1. Làm sao phân biệt không tìm thấy resource với đọc đúng file nhưng sai charset?
+    2. Khi IDE chạy được mà JAR không chạy được, bạn kiểm tra base path, build resources và classpath ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Khoanh vùng lỗi path | In/thử CWD và chuyển sang base directory rõ ràng để tái hiện khác biệt. |
+    | Đọc classpath resource | Truy cập resource đóng gói qua stream và kiểm tra null đúng cách. |
+    | Kiểm tra charset | So sánh byte đầu vào và text sau decode với charset được đặc tả. |
+- id: testing-and-diagnostics-010
+  title: Chẩn đoán dữ liệu chưa flush, file handle còn mở và buffer sai trạng thái
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chẩn đoán dữ liệu chưa flush, file handle còn mở và buffer sai trạng thái**
+
+    Lần theo chuỗi write → flush → close → force/durability và trạng thái `ByteBuffer` để tìm nguyên nhân file rỗng, thiếu byte hoặc file handle còn mở. Bài nhấn mạnh flush không bảo đảm fsync, `flip` trước ghi channel và trách nhiệm đóng stream đã mở.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Flush và handle
+
+    1. Write, flush, close và FileChannel.force khác nhau thế nào về dữ liệu quan sát được và độ bền?
+    2. Vì sao file handle bị leak có thể khiến rename/delete lỗi hoặc tích lũy `Too many open files`?
+
+    ### Trạng thái NIO
+
+    1. Sau khi `put` vào ByteBuffer, nếu quên flip trước FileChannel.write có thể ghi vùng byte nào?
+    2. Làm sao xác định lỗi dữ liệu chưa flush, buffer còn sai limit, hay stream chưa đóng qua diagnostics riêng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chẩn đoán flush | Xây kiểm thử so sánh output trước và sau flush trong phạm vi BufferedWriter. |
+    | Theo dõi handle | Giải thích leak dựa trên vòng đời AutoCloseable và thử đóng đúng thứ tự. |
+    | Kiểm tra ByteBuffer | Phát hiện position/limit sai và sửa vòng ghi channel với hasRemaining. |
+- id: testing-and-diagnostics-011
+  title: Kiểm tra event, callback và thao tác đồng thời theo cách xác định
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra event, callback và thao tác đồng thời theo cách xác định**
+
+    Thiết kế bài test event, callback và concurrency có điểm đồng bộ rõ, timeout giới hạn và assertion trên trạng thái thực sự. Bài áp dụng CountDownLatch, Future/CompletableFuture, CompletionHandler và WatchService; tránh dùng sleep hay giả định thứ tự scheduler để chứng minh kết quả.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểm thử theo sự kiện
+
+    1. Vì sao `Thread.sleep` không chứng minh I/O bất đồng bộ đã hoàn tất?
+    2. CompletionHandler có thể trả partial result thế nào và test cần kiểm tra số byte gì?
+
+    ### Đồng bộ và nhất quán
+
+    1. Khi nào dùng CountDownLatch, Future và timeout để quan sát sự kiện đã xảy ra?
+    2. Vì sao WatchService event cần reconcile với trạng thái tệp thay vì suy ra một event tương ứng một thay đổi?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đồng bộ deterministically | Dùng latch/future với timeout để kiểm tra result và lỗi mà không dựa vào sleep. |
+    | Kiểm thử callback | Tạo fake callback hoặc handler theo thứ tự điều khiển được và assert chính xác outcome. |
+    | Kiểm thử event/concurrency | Đặt invariant, thực hiện cleanup thread pool và đối chiếu trạng thái thay vì thứ tự sự kiện. |

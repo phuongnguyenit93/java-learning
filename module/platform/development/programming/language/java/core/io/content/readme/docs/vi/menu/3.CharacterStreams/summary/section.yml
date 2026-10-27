@@ -1,0 +1,75 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "LUỒNG KÝ TỰ — LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: character-streams-001
+    order: 1
+    title: "Reader và Writer xử lý đơn vị char"
+    description: "Thiết lập khái niệm Reader, Writer và đơn vị `char` UTF-16 để chọn đúng luồng ký tự."
+    transition:
+      to: character-streams-002
+      description: "Từ hợp đồng `char` sang đọc/ghi từng đoạn dữ liệu bằng buffer."
+  - id: character-streams-002
+    order: 2
+    title: "Đọc và ghi char[], String và từng phần dữ liệu"
+    description: "Thực hành thao tác `char[]`, String và các vùng `off/len` để xử lý văn bản theo khối."
+    transition:
+      to: character-streams-003
+      description: "Khi đã xử lý khối, cần phân biệt chính xác EOF và short read."
+  - id: character-streams-003
+    order: 3
+    title: "EOF của Reader và số ký tự thực tế đã đọc"
+    description: "Hiểu tín hiệu EOF và số lượng ký tự thực đọc để xử lý short read, đọc dòng và đọc đủ N ký tự."
+    transition:
+      to: character-streams-004
+      description: "Từ kết quả Reader chuyển sang cách giải mã byte nguồn thành ký tự."
+  - id: character-streams-004
+    order: 4
+    title: "InputStreamReader nối luồng byte với ký tự"
+    description: "Giải mã liên tục byte thành ký tự bằng InputStreamReader với charset và chính sách lỗi rõ ràng."
+    transition:
+      to: character-streams-005
+      description: "Sau chiều byte → ký tự, xét chiều mã hóa ngược lại."
+  - id: character-streams-005
+    order: 5
+    title: "OutputStreamWriter nối ký tự với luồng byte"
+    description: "Mã hóa ký tự thành byte bằng OutputStreamWriter, kiểm soát charset, bộ đệm và flush/close."
+    transition:
+      to: character-streams-006
+      description: "Áp dụng bộ mã hóa vào FileReader/FileWriter và quy tắc file thực."
+  - id: character-streams-006
+    order: 6
+    title: "FileReader, FileWriter và lựa chọn charset"
+    description: "Áp dụng character stream cho file văn bản, tránh charset sai, mất dữ liệu do overwrite và chuyển mã thiếu kiểm soát."
+    transition:
+      to: character-streams-007
+      description: "Khi thao tác file text đã rõ, xét chuyển văn bản lớn và quota."
+  - id: character-streams-007
+    order: 7
+    title: "Reader.transferTo và giới hạn xử lý dữ liệu lớn"
+    description: "Đánh giá Reader.transferTo, dữ liệu lớn, quota, timeout và các hậu quả khi ghi dở."
+    transition:
+      to: character-streams-008
+      description: "Từ việc chuyển nguồn/đích cụ thể, mở rộng khả năng ghép API qua interface."
+  - id: character-streams-008
+    order: 8
+    title: "Readable, Appendable và khả năng ghép API"
+    description: "Ghép nhiều nguồn và đích văn bản bằng Readable, Appendable và CharBuffer theo hợp đồng tối thiểu."
+    transition:
+      to: character-streams-009
+      description: "Chốt ranh giới API bằng bài kiểm chứng an toàn với dữ liệu nhị phân."
+  - id: character-streams-009
+    order: 9
+    title: "Vì sao không dùng luồng ký tự để sao chép dữ liệu nhị phân"
+    description: "Phân biệt xử lý text với sao chép binary để bảo toàn byte, tránh biến đổi do charset và newline."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Reader và Writer xử lý đơn vị char | Đọc và ghi char[], String và từng phần dữ liệu | EOF của Reader và số ký tự thực tế đã đọc | InputStreamReader nối luồng byte với ký tự | OutputStreamWriter nối ký tự với luồng byte | FileReader, FileWriter và lựa chọn charset | Reader.transferTo và giới hạn xử lý dữ liệu lớn | Readable, Appendable và khả năng ghép API | Vì sao không dùng luồng ký tự để sao chép dữ liệu nhị phân |
+  | Vấn đề cần hiểu | Reader và Writer trao đổi đơn vị dữ liệu gì? | Đọc/ghi theo đoạn mà không làm rơi hoặc dư dữ liệu thế nào? | Khi nào luồng thật sự EOF, và số ký tự đọc được là bao nhiêu? | Đọc byte UTF-8 thành ký tự đúng qua ranh giới các lần đọc ra sao? | Ghi Unicode thành byte đúng và hoàn tất luồng ra sao? | Đọc/ghi file text có charset và chế độ ghi đúng như thế nào? | Sao chép luồng text lớn an toàn trước quota và lỗi ra sao? | Thiết kế thuật toán ký tự tái sử dụng trên nhiều loại API ra sao? | Vì sao luồng ký tự không bảo đảm sao chép nguyên vẹn byte nhị phân? |
+  | Giá trị đối với OOP/module | Hiểu bản chất ký tự và vòng đời luồng | Tránh lỗi buffer và giảm nhu cầu giữ cả file trong RAM | Tránh mất dữ liệu hoặc đếm sai khi đọc | Đọc đúng text, phát hiện đầu vào bị lỗi | Ghi đúng byte và tránh mất dữ liệu đệm | Tránh mojibake, ghi đè và sai xuống dòng | Bảo vệ RAM, ổ đĩa và tính hoàn chỉnh của đích | Tách thuật toán khỏi lớp nguồn/đích cụ thể | Giữ tính toàn vẹn binary và checksum |
+  | Tư duy hình thành | Chọn kiểu dữ liệu trước API | Tin số thực đọc, không tin kích thước buffer | Dùng sentinel đúng hợp đồng | Giải mã theo trạng thái và có chính sách lỗi | Mã hóa có trạng thái và rõ quyền sở hữu | Charset và ghi đè là quyết định nghiệp vụ | Thiết kế quota và xử lý thất bại | Lập trình theo hợp đồng tối thiểu | Bảo toàn byte khi dữ liệu không phải text |

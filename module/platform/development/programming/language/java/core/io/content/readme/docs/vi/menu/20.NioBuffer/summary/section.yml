@@ -1,0 +1,96 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'JAVA NIO BUFFER — MẠCH HỌC VÀ ĐỐI CHIẾU'
+roadmapHeading: 'Mạch liên kết bài học'
+roadmap:
+  - id: nio-buffer-001
+    order: 1
+    title: 'Buffer, ByteBuffer, CharBuffer và các kiểu buffer khác'
+    description: 'Nhận diện các loại NIO Buffer và mô hình bộ đệm khi truyền dữ liệu giữa Java và Channel.'
+    transition:
+      to: nio-buffer-002
+      description: 'Từ các loại Buffer, tìm hiểu bốn thông số xác định phạm vi truy cập.'
+  - id: nio-buffer-002
+    order: 2
+    title: 'Capacity, position, limit và mark'
+    description: 'Làm rõ capacity, position, limit, mark và các bất biến điều khiển mọi truy cập buffer.'
+    transition:
+      to: nio-buffer-003
+      description: 'Từ trạng thái position/limit, áp dụng chu kỳ ghi và chuyển sang đọc.'
+  - id: nio-buffer-003
+    order: 3
+    title: 'Chu trình ghi vào buffer, flip và đọc khỏi buffer'
+    description: 'Vận dụng put, flip, get và lựa chọn chuẩn bị vòng mới khi dùng Buffer với Channel.'
+    transition:
+      to: nio-buffer-004
+      description: 'Từ việc kết thúc một chu kỳ, xem chính xác clear tác động thế nào đến dữ liệu cũ.'
+  - id: nio-buffer-004
+    order: 4
+    title: 'clear không xóa dữ liệu trong vùng nhớ'
+    description: 'Phân biệt reset trạng thái buffer với xóa byte thật, minh họa stale data và rủi ro an toàn.'
+    transition:
+      to: nio-buffer-005
+      description: 'Từ giới hạn của clear, chọn rewind, compact hoặc reset theo nhu cầu.'
+  - id: nio-buffer-005
+    order: 5
+    title: 'rewind, compact và reset'
+    description: 'Phân biệt rewind, compact, reset trong việc đọc lại và giữ phần dữ liệu chưa xử lý.'
+    transition:
+      to: nio-buffer-006
+      description: 'Từ thao tác trạng thái, phân biệt truy cập con trỏ tương đối và index tuyệt đối.'
+  - id: nio-buffer-006
+    order: 6
+    title: 'get, put tương đối và tuyệt đối'
+    description: 'Làm chủ get/put tương đối và tuyệt đối, hiệu ứng lên position và giới hạn truy cập.'
+    transition:
+      to: nio-buffer-007
+      description: 'Từ cách dùng get/put, kiểm tra remaining và các ngoại lệ tràn/thiếu.'
+  - id: nio-buffer-007
+    order: 7
+    title: 'remaining, hasRemaining và lỗi tràn hoặc thiếu buffer'
+    description: 'Liên kết remaining, hasRemaining với ngoại lệ tràn/thiếu và vòng truyền dữ liệu từng phần.'
+    transition:
+      to: nio-buffer-008
+      description: 'Từ giới hạn buffer, xem cách tạo storage và chia sẻ mảng dữ liệu.'
+  - id: nio-buffer-008
+    order: 8
+    title: 'allocate, wrap và vùng dữ liệu được chia sẻ'
+    description: 'So sánh allocate, wrap và shared storage, làm rõ offset, capacity cùng các bẫy alias.'
+    transition:
+      to: nio-buffer-009
+      description: 'Từ cấp phát/wrap, cân nhắc heap và direct theo chi phí sử dụng thực.'
+  - id: nio-buffer-009
+    order: 9
+    title: 'Heap buffer, direct buffer và chi phí cấp phát'
+    description: 'So sánh heap/direct Buffer, allocation và I/O overhead cùng cách đo lựa chọn phù hợp.'
+    transition:
+      to: nio-buffer-010
+      description: 'Từ chiến lược vùng nhớ, học ByteOrder và view buffer cho dữ liệu nhị phân nhiều byte.'
+  - id: nio-buffer-010
+    order: 10
+    title: 'ByteOrder và các view buffer cho kiểu nguyên thủy'
+    description: 'Hướng dẫn ByteOrder và typed view buffers, chia sẻ bytes và giới hạn của asCharBuffer.'
+    transition:
+      to: nio-buffer-011
+      description: 'Từ typed views, phân tích đầy đủ slice, duplicate và read-only alias.'
+  - id: nio-buffer-011
+    order: 11
+    title: 'slice, duplicate, read-only buffer và trạng thái vị trí riêng'
+    description: 'Phân biệt slice, duplicate và read-only view theo cursor, index và shared backing storage.'
+    transition:
+      to: nio-buffer-012
+      description: 'Từ các view chia sẻ dữ liệu, xác định điều kiện đồng bộ và ownership giữa thread.'
+  - id: nio-buffer-012
+    order: 12
+    title: 'Buffer không mặc nhiên an toàn cho nhiều luồng'
+    description: 'Giải thích an toàn Buffer đa luồng, các race trên cursor/backing storage và mẫu chuyển quyền sở hữu.'
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Buffer, ByteBuffer, CharBuffer và các kiểu buffer khác | Capacity, position, limit và mark | Chu trình ghi vào buffer, flip và đọc khỏi buffer | clear không xóa dữ liệu trong vùng nhớ | rewind, compact và reset | get, put tương đối và tuyệt đối | remaining, hasRemaining và lỗi tràn hoặc thiếu buffer | allocate, wrap và vùng dữ liệu được chia sẻ | Heap buffer, direct buffer và chi phí cấp phát | ByteOrder và các view buffer cho kiểu nguyên thủy | slice, duplicate, read-only buffer và trạng thái vị trí riêng | Buffer không mặc nhiên an toàn cho nhiều luồng |
+  | Vấn đề cần hiểu | Buffer và các biến thể khác nhau vì sao? | Bốn thuộc tính trạng thái ràng buộc nhau thế nào? | Làm sao chuyển pha ghi sang pha đọc đúng? | Vì sao clear không thực sự xóa dữ liệu? | Đọc lại, lưu phần dư và khôi phục dấu mốc khác nhau thế nào? | Truy cập tuần tự và theo index khác nhau ra sao? | Biết còn bao nhiêu phần tử và tránh lỗi thế nào? | Buffer cấp phát mới hay chia sẻ backing array? | Chọn heap hay direct theo chi phí thực nào? | ByteOrder và typed views định nghĩa cách đọc binary thế nào? | Các view chia sẻ dữ liệu nhưng có state riêng ra sao? | Buffer chia sẻ đa luồng có những race nào? |
+  | Giá trị đối với OOP/module | Chọn đúng bộ đệm cho đường dữ liệu NIO | Dự đoán vùng hợp lệ trước khi thao tác | Tổ chức vòng xử lý Channel không bỏ sót byte | Ngăn truyền stale byte và hiểu giới hạn xóa nhớ | Giữ byte dang dở và quay về vị trí chính xác | Điều khiển cursor chính xác trong parse binary | Kiểm soát giới hạn buffer và partial write | Quản lý alias và ownership tránh sửa dữ liệu ngoài ý muốn | Tránh tối ưu cảm tính và cấp phát đắt đỏ | Parse dữ liệu đa byte đúng layout và endian | Thiết kế API buffer tránh alias và sửa ngoài ý muốn | Bảo toàn cursor, dữ liệu và visibility giữa luồng |
+  | Tư duy hình thành | Tách kiểu phần tử, trạng thái và vùng nhớ | Dùng trạng thái làm căn cứ, không đoán dữ liệu | Chuyển trạng thái có chủ đích sau mỗi pha | Trạng thái truy cập khác nội dung backing storage | Chọn phép dịch trạng thái theo mục đích xử lý | Phân biệt thao tác gây side effect lên position | Kiểm tra remaining trước yêu cầu nhiều byte | Tách view/cursor khỏi quyền sở hữu dữ liệu | Đánh giá hiệu năng theo workload và lifecycle | Ánh xạ byte theo layout, không nhầm thành text | Read-only view không phải immutable snapshot | Phân biệt độc lập trạng thái với đồng bộ bộ nhớ |

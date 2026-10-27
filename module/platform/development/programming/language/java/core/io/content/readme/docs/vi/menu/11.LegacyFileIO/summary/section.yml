@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "FILE TRUYỀN THỐNG — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: legacy-file-io-001
+    order: 1
+    title: "File là biểu diễn đường dẫn, không phải nội dung tệp"
+    description: "Nắm bản chất `File` là abstract pathname, phân biệt mô tả vị trí với kiểm tra trạng thái và mở dữ liệu."
+    transition:
+      to: legacy-file-io-002
+      description: "Từ việc nhận diện đối tượng pathname sang việc xác định chính xác thao tác nào tạo tệp vật lý."
+  - id: legacy-file-io-002
+    order: 2
+    title: "Tạo File không đồng nghĩa tạo tệp vật lý"
+    description: "Phân biệt dựng `File` với tạo tài nguyên thật, so sánh các cách tạo file, thư mục và kiểm soát ghi đè."
+    transition:
+      to: legacy-file-io-003
+      description: "Khi đã biết thao tác tạo thực tế, cần hiểu vị trí mà đường dẫn tương đối trỏ tới."
+  - id: legacy-file-io-003
+    order: 3
+    title: "Đường dẫn tuyệt đối, tương đối và thư mục làm việc"
+    description: "Giải thích absolute/relative path, tác động của working directory và cách `Path` xử lý đường dẫn, resource và traversal."
+    transition:
+      to: legacy-file-io-004
+      description: "Sau khi biết path tương đối được giải ra sao, cần phân biệt ba cách lấy pathname của `File`."
+  - id: legacy-file-io-004
+    order: 4
+    title: "getPath, getAbsolutePath và getCanonicalPath"
+    description: "So sánh tên đường dẫn gốc, tuyệt đối và chuẩn tắc; phân tích symlink, ngoại lệ và giới hạn của canonical hóa."
+    transition:
+      to: legacy-file-io-005
+      description: "Từ cách biểu diễn đường dẫn chuyển sang cách thăm dò loại tài nguyên và metadata tại vị trí đó."
+  - id: legacy-file-io-005
+    order: 5
+    title: "Kiểm tra tồn tại, loại tệp, kích thước và quyền truy cập"
+    description: "Đánh giá metadata và quyền trên `File`, giải thích byte length, symbolic link và tính nhất thời của phép thăm dò."
+    transition:
+      to: legacy-file-io-006
+      description: "Từ truy vấn một đường dẫn tới liệt kê và lọc nhiều mục con của thư mục."
+  - id: legacy-file-io-006
+    order: 6
+    title: "list, listFiles, FileFilter và FilenameFilter"
+    description: "Liệt kê một cấp bằng `list`/`listFiles`, lọc với hai interface, xử lý `null`, thứ tự và chuyển sang NIO khi phù hợp."
+    transition:
+      to: legacy-file-io-007
+      description: "Sau khi tìm được mục cần xử lý, khảo sát các phương thức tạo, đổi tên và xóa của File."
+  - id: legacy-file-io-007
+    order: 7
+    title: "mkdir, mkdirs, createNewFile, renameTo và delete"
+    description: "Nắm năm thao tác tạo/sửa/xóa của `File` với hậu điều kiện, hành vi boolean, tính nguyên tử và hạn chế nền tảng."
+    transition:
+      to: legacy-file-io-008
+      description: "Các thao tác vừa học thường chỉ trả true/false; bài kế phân tích cụ thể giá trị chẩn đoán của chúng."
+  - id: legacy-file-io-008
+    order: 8
+    title: "Giới hạn thông tin lỗi của API trả về boolean"
+    description: "Phân tích vì sao false khó chẩn đoán, ngoại lệ `createNewFile`, khả năng quan sát lỗi qua `Files` và TOCTOU."
+    transition:
+      to: legacy-file-io-009
+      description: "Từ hạn chế của API cũ sang cách chuyển pathname để sử dụng phương thức NIO giàu thông tin."
+  - id: legacy-file-io-009
+    order: 9
+    title: "Chuyển đổi File.toPath và Path.toFile"
+    description: "Sử dụng cầu nối `File.toPath`/`Path.toFile`, giữ pathname, hiểu default filesystem và giới hạn ZIP provider."
+    transition:
+      to: legacy-file-io-010
+      description: "Từ kỹ thuật chuyển đổi cụ thể đến tiêu chí quyết định khi nào nên dùng Path và Files."
+  - id: legacy-file-io-010
+    order: 10
+    title: "Khi nào nên ưu tiên Path và Files"
+    description: "Tổng hợp tiêu chí chọn `Path`/`Files` trong code mới, khả năng kiểm soát lỗi/options/provider và ngoại lệ khi giữ `File`."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | File là biểu diễn đường dẫn, không phải nội dung tệp | Tạo File không đồng nghĩa tạo tệp vật lý | Đường dẫn tuyệt đối, tương đối và thư mục làm việc | getPath, getAbsolutePath và getCanonicalPath | Kiểm tra tồn tại, loại tệp, kích thước và quyền truy cập | list, listFiles, FileFilter và FilenameFilter | mkdir, mkdirs, createNewFile, renameTo và delete | Giới hạn thông tin lỗi của API trả về boolean | Chuyển đổi File.toPath và Path.toFile | Khi nào nên ưu tiên Path và Files |
+  | Vấn đề cần hiểu | `File` đại diện cái gì và thao tác nào thật sự đọc/ghi dữ liệu? | Khi nào tên đường dẫn trở thành tệp thật, và tạo mới an toàn ra sao? | Vì sao cùng đường dẫn lại trỏ khác nơi giữa IDE, terminal và container? | Ba phương thức pathname khác nhau thế nào và canonical path tin cậy đến đâu? | Các giá trị boolean và độ dài file nói được gì, bỏ sót thông tin gì? | Lấy tên hay pathname và lọc các phần tử thư mục bằng cách nào? | Tạo, đổi tên, xóa ra sao và kết quả boolean cần hiểu thế nào? | Cách xác định nguyên nhân thất bại khi API truyền thống chỉ báo false? | Kết nối API I/O cũ và NIO như thế nào mà không làm sai ngữ nghĩa path? | API nào phù hợp với chức năng mới, legacy, symlink và dữ liệu quan trọng? |
+  | Giá trị đối với OOP/module | Đặt nền tảng khái niệm cho toàn bộ `java.io.File`. | Tránh tạo nhầm, ghi đè và lỗi thiếu thư mục cha. | Giảm lỗi không tìm thấy tệp và truy cập sai root. | Chẩn đoán vị trí tệp chính xác hơn trong code legacy. | Tránh suy luận sai về loại tệp, kích thước và quyền. | Xây chức năng khám phá thư mục có kết quả rõ ràng. | Giảm rủi ro xóa nhầm và thao tác không đạt hậu điều kiện. | Cải thiện thông báo lỗi, kiểm thử và độ an toàn thao tác. | Giữ tương thích với thư viện legacy khi triển khai NIO. | Hình thành quyết định thiết kế I/O và migration dựa trên semantics. |
+  | Tư duy hình thành | Tách biểu diễn đường dẫn khỏi tác dụng phụ lên hệ thống tệp. | Xác định tác dụng phụ và hợp đồng atomic create của từng lời gọi. | Luôn xác định base directory cùng ranh giới tin cậy. | Phân biệt biến đổi cú pháp, truy vấn filesystem và identity. | Coi metadata là ảnh chụp có giới hạn, kiểm chứng bằng thao tác thật. | Chọn kiểu trả về, kiểu callback và chính sách lỗi trước khi duyệt. | Kiểm tra contract của từng thao tác, không suy đoán từ true/false. | Phân biệt tín hiệu quan sát được với nguyên nhân suy đoán. | Kiểm tra filesystem provider ở biên chuyển kiểu. | Ưu tiên hợp đồng thao tác và xử lý lỗi theo yêu cầu thực tế. |

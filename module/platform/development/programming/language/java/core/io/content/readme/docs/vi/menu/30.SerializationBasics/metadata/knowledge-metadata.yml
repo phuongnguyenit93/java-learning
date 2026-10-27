@@ -1,0 +1,34 @@
+sections:
+  serialization-basics-001:
+    difficulty: BASIC
+    isImportant: true
+  serialization-basics-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  serialization-basics-003:
+    difficulty: ADVANCED
+    isImportant: true
+  serialization-basics-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  serialization-basics-005:
+    difficulty: BASIC
+    isImportant: true
+  serialization-basics-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  serialization-basics-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  serialization-basics-008:
+    difficulty: ADVANCED
+    isImportant: true
+  serialization-basics-009:
+    difficulty: ADVANCED
+    isImportant: true
+  serialization-basics-010:
+    difficulty: ADVANCED
+    isImportant: true
+  serialization-basics-011:
+    difficulty: ADVANCED
+    isImportant: true

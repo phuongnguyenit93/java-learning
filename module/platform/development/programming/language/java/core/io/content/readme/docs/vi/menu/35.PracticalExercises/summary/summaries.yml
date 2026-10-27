@@ -1,0 +1,361 @@
+summaries:
+- id: practical-exercises-001
+  title: Sao chép tệp nhị phân với buffer giới hạn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Sao chép tệp nhị phân với buffer giới hạn**
+
+    Bài này thực hành sao chép tệp nhị phân bằng **bộ đệm hữu hạn** để giữ mức sử dụng bộ nhớ ổn định khi tệp lớn. Bạn cần tự kiểm chứng vòng đời `ByteBuffer` (`clear` → `read` → `flip` → `write`), xử lý short read/short write, bảo toàn byte và chính sách xử lý tệp đích khi thất bại.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Luồng dữ liệu và buffer
+
+    1. Tại sao gọi `Files.readAllBytes()` không phù hợp với một file nhị phân nhiều GB, dù việc sao chép vẫn đơn giản về ý tưởng?
+    2. `ByteBuffer.flip()` và vòng lặp `hasRemaining()` liên hệ với nhau thế nào để không mất byte khi `FileChannel.write()` ghi ngắn?
+
+    ### Kiểm chứng và lỗi
+
+    1. Nếu `read()` trả 0 trên channel, vì sao chưa thể kết luận EOF và nên tránh vòng quay bận thế nào?
+    2. Bạn chọn `CREATE_NEW`, ghi tạm hay thay thế đích theo tiêu chí an toàn nào, và `Files.mismatch()` chứng minh điều gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cài đặt copy loop | Viết vòng đọc–flip–ghi hết–clear dùng buffer cố định, xử lý `-1` và short I/O. |
+    | Kiểm tra tính toàn vẹn | So sánh chiều dài và nội dung trước/sau bằng `Files.mismatch`, kiểm tra cả tệp rỗng và tệp lớn. |
+    | Thiết kế chính sách lỗi | Nêu trạng thái đích khi copy dở dang và cách bảo vệ dữ liệu sẵn có. |
+- id: practical-exercises-002
+  title: Chuyển văn bản giữa hai charset có kiểm tra lỗi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chuyển văn bản giữa hai charset có kiểm tra lỗi**
+
+    Bài thực hành triển khai **chuyển đổi charset có kiểm tra lỗi**, kết hợp `CharsetDecoder`, `CharsetEncoder` và cấu hình `CodingErrorAction.REPORT` để phát hiện byte không hợp lệ hoặc ký tự không mã hóa được. Học cách chuyển mã streaming, cân nhắc BOM/line ending và chỉ publish đầu ra khi toàn bộ quá trình hợp lệ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giải mã và mã hóa
+
+    1. Vì sao phải xác định charset nguồn, charset đích độc lập và không thể tự đoán chính xác encoding từ mọi byte input?
+    2. `MalformedInputException` khác `UnmappableCharacterException` thế nào trong hai hướng decode và encode?
+
+    ### Luồng và bảo toàn nội dung
+
+    1. Chia chunk giữa một surrogate pair hoặc một chuỗi byte nhiều phần ảnh hưởng gì đến trạng thái decoder/encoder?
+    2. Vì sao chính sách `REPORT` và ghi tạm hữu ích khi cần không tạo file kết quả bị thay ký tự âm thầm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chạy chuyển mã strict | Tạo input chứa ký tự ngoài repertoire đích, kiểm tra quá trình thất bại và đích cũ không bị thay. |
+    | Phân tích ranh giới encoding | Giải thích BOM, UTF-16 byte order, surrogate pair và lỗi phát hiện ở cuối stream. |
+    | Chọn chính sách dữ liệu | So sánh `REPORT`, `REPLACE` và `IGNORE` theo mục tiêu bảo toàn văn bản. |
+- id: practical-exercises-003
+  title: Đọc file lớn theo dòng và thống kê dữ liệu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đọc file lớn theo dòng và thống kê dữ liệu**
+
+    Bài này xây dựng bộ **thống kê file lớn theo từng dòng**, dùng `BufferedReader` hoặc `Files.lines` để xử lý một lượt thay vì gom toàn bộ file vào heap. Người học cần xác thực từng bản ghi, bảo vệ số học khỏi overflow và phân biệt bộ nhớ tuyến tính theo dòng dài/nhóm dữ liệu với bộ nhớ theo kích thước file.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đọc một lượt và bộ nhớ
+
+    1. Tại sao `Files.readAllLines` có nguy cơ giữ toàn bộ file trong RAM còn `BufferedReader.readLine` phù hợp streaming?
+    2. Điều gì có thể làm bộ nhớ tăng dù dùng streaming, chẳng hạn dòng quá dài hoặc số nhóm thống kê quá lớn?
+
+    ### Tính đúng số liệu
+
+    1. Thiết kế accumulator count/sum/min/max như thế nào để giữ được kết quả chính xác và xử lý trường hợp file rỗng?
+    2. Vì sao cần kiểm tra schema, charset và tràn số thay vì bỏ qua bản ghi lỗi khi tổng hợp?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế one-pass aggregation | Viết vòng lặp đọc từng dòng và cập nhật count/sum/min/max bằng trạng thái giới hạn. |
+    | Kiểm tra dữ liệu đầu vào | Tạo ca file rỗng, dòng hỏng, số vượt phạm vi và dự đoán thông báo lỗi. |
+    | Phân tích giới hạn | Chỉ ra khi nào `Files.lines`/`BufferedReader` vẫn có thể làm tăng RAM và đề xuất ràng buộc hợp lý. |
+- id: practical-exercises-004
+  title: Thiết kế định dạng nhị phân có version và length
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thiết kế định dạng nhị phân có version và length**
+
+    Bài thực hành thiết kế **định dạng nhị phân có version và length** để parser tìm đúng ranh giới mỗi frame và phát hiện dữ liệu không phù hợp. Bài yêu cầu định nghĩa magic, byte order, giới hạn payload, tương thích version và checksum; đặc biệt kiểm tra chiều dài trước khi cấp phát và phân biệt EOF bình thường với frame cắt cụt.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bố cục frame
+
+    1. Header cần chứa những trường nào để nhận dạng format, version, chiều dài và điểm kết thúc payload một cách xác định?
+    2. Vì sao độ dài chuỗi UTF-8 phải tính theo byte đã mã hóa, còn `String.length()` không phản ánh chính xác payload length?
+
+    ### Tương thích và phòng vệ
+
+    1. Khi parser gặp version mới hoặc length vượt quota, nó phải quyết định từ chối hay skip theo điều kiện nào?
+    2. CRC32 giúp phát hiện loại lỗi nào và tại sao không thể dùng như cơ chế xác thực chống sửa dữ liệu có chủ ý?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đặc tả binary frame | Phác thảo header, payload và checksum với kích thước byte và thứ tự endian rõ ràng. |
+    | Thực hiện round-trip | Ghi/đọc nhiều frame version khác nhau và đối chiếu dữ liệu đã giải mã. |
+    | Kiểm thử parser phòng vệ | Tạo ca magic sai, version không hỗ trợ, length âm/quá lớn và EOF giữa frame. |
+- id: practical-exercises-005
+  title: Xây dựng công cụ duyệt cây và lọc tệp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Xây dựng công cụ duyệt cây và lọc tệp**
+
+    Bài này xây dựng công cụ dòng lệnh **duyệt cây thư mục và lọc tệp** với `Files.walkFileTree`, `FileVisitor` và `BasicFileAttributes`. Cần tách điều kiện lọc với chính sách duyệt, xử lý lỗi truy cập, symbolic link và biến động filesystem để kết quả có nghĩa và không đi ngoài root ngoài ý muốn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Duyệt cây và lọc
+
+    1. Vì sao `walkFileTree` thích hợp hơn việc tự đệ quy thủ công khi cần quản lý lỗi và quyền truy cập thư mục?
+    2. Những bộ lọc theo tên, kích thước, loại tệp hoặc thời gian tác động ở pha duyệt hay pha chấp nhận kết quả?
+
+    ### Ranh giới và an toàn
+
+    1. Điều gì xảy ra với symbolic link khi không bật `FOLLOW_LINKS` và vì sao vẫn phải cân nhắc thay đổi cây trong lúc quét?
+    2. Bạn quyết định tiếp tục hay dừng tại `visitFileFailed` dựa trên loại lỗi và yêu cầu kiểm toán nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cài đặt CLI | Viết `FileVisitor` lọc tệp theo extension và metadata, in kết quả theo yêu cầu. |
+    | Xây fixture | Tạo cây file/thư mục nhỏ và dự đoán tập kết quả cho từng bộ lọc. |
+    | Đánh giá lỗi/symlink | Thiết kế ca truy cập thất bại, symbolic link và thư mục thay đổi khi duyệt. |
+- id: practical-exercises-006
+  title: Cập nhật tệp bằng ghi tạm và thay thế
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Cập nhật tệp bằng ghi tạm và thay thế**
+
+    Bài này xây dựng quy trình **ghi tạm cùng thư mục rồi thay thế đích** để hạn chế lộ dữ liệu chưa ghi xong. Bạn phải phân biệt atomic visibility, khả năng giữ dữ liệu bền vững sau sự cố, quyền sở hữu/permissions và tranh chấp giữa nhiều writer, đồng thời xử lý `AtomicMoveNotSupportedException` theo chính sách đã chọn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ghi tạm và publish
+
+    1. Vì sao ghi trực tiếp với `TRUNCATE_EXISTING` có thể làm mất bản hợp lệ cũ khi chương trình lỗi giữa chừng?
+    2. Vai trò của việc tạo temp cùng thư mục, đóng writer và `Files.move(... ATOMIC_MOVE ...)` trong đường cập nhật là gì?
+
+    ### Giới hạn bảo đảm
+
+    1. Vì sao `ATOMIC_MOVE` không mặc nhiên đồng nghĩa thay thế đích đã tồn tại theo mọi provider và không phải một giao dịch nhiều file?
+    2. Vì sao `force` và atomic rename khác nhau về crash durability, còn hai writer vẫn cần cơ chế phối hợp riêng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Triển khai update workflow | Thiết kế trình tự ghi, verify, đóng, move và cleanup, giải thích các điểm thất bại. |
+    | Thử lỗi trước publish | Cố tình ném `IOException` trước move và xác minh tệp cũ còn nguyên, tệp tạm được dọn. |
+    | Chọn bảo đảm | Đánh giá khác biệt giữa atomic visibility, durability và đồng bộ multi-writer. |
+- id: practical-exercises-007
+  title: So sánh RandomAccessFile với FileChannel trên bản ghi cố định
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **So sánh RandomAccessFile với FileChannel trên bản ghi cố định**
+
+    Bài thực hành đặt **RandomAccessFile và FileChannel** trên cùng layout record cố định để so sánh cách tính offset, quản lý con trỏ, kiểu nguyên thủy và `ByteBuffer`. Người học phải bảo vệ ranh giới record, xử lý partial I/O và đánh giá các bảo đảm về đồng thời/độ bền mà không mặc định một API luôn nhanh hơn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Layout và vị trí đọc/ghi
+
+    1. Với header và record size cố định, tính offset byte của record thứ i sao cho tránh tràn số như thế nào?
+    2. Điều gì khác nhau giữa `RandomAccessFile.seek()` và `FileChannel.read/write(buffer, position)` về state được thay đổi?
+
+    ### So sánh kết quả và rủi ro
+
+    1. Tại sao phải lặp khi channel đọc/ghi từng phần và giữ đúng `ByteBuffer.position()`/`limit()`?
+    2. Bạn kiểm chứng hai API ghi cùng byte layout thế nào và vì sao concurrency/durability phải được giải quyết ngoài API lựa chọn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh hai implementation | Đọc và cập nhật cùng một bản ghi bằng RAF và FileChannel rồi xác minh byte đầu ra giống nhau. |
+    | Kiểm tra file lỗi | Từ record length dự kiến, phát hiện file bị cắt hoặc còn byte dư không thuộc record đầy đủ. |
+    | Phân tích đánh đổi | Nêu tiêu chí chọn API theo positional I/O, primitive, buffer và pattern truy cập. |
+- id: practical-exercises-008
+  title: Xây dựng vòng selector cho giao tiếp TCP đơn giản
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Xây dựng vòng selector cho giao tiếp TCP đơn giản**
+
+    Bài này dựng **TCP echo server dùng Selector** và `ServerSocketChannel`/`SocketChannel` non-blocking, thực hành `OP_ACCEPT`, `OP_READ`, `OP_WRITE`, per-connection state và xóa `selectedKeys` sau xử lý. Bạn cần hiểu readiness không đồng nghĩa request hoàn chỉnh, xử lý partial I/O, giới hạn buffer và backpressure.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Selector và readiness
+
+    1. Vì sao `Selector.select()` chỉ báo channel sẵn sàng chứ không đảm bảo đọc được toàn bộ một message?
+    2. Trong vòng lặp event, cần đăng ký/xóa selected keys và đổi interest ops thế nào để tránh xử lý trùng hoặc quay CPU liên tục?
+
+    ### TCP message và lifecycle
+
+    1. Khi client gửi chuỗi theo nhiều packet, ứng dụng gom frame và giới hạn độ dài dữ liệu theo connection ra sao?
+    2. Khi nào bật `OP_WRITE`, cần giữ bytes chưa gửi và đóng connection theo chính sách lỗi/EOF nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Triển khai server | Xây dựng một vòng selector với accept/read/write non-blocking và state riêng mỗi client. |
+    | Kiểm thử partial I/O | Gửi dữ liệu tách đoạn hoặc thiếu newline, dự đoán echo và thao tác chờ. |
+    | Đánh giá backpressure | Phân tích giới hạn queue/output buffer và lý do chỉ bật `OP_WRITE` khi còn pending bytes. |
+- id: practical-exercises-009
+  title: Theo dõi thư mục bằng WatchService có xử lý overflow
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Theo dõi thư mục bằng WatchService có xử lý overflow**
+
+    Bài này thiết kế **WatchService có phục hồi OVERFLOW**: coi event là tín hiệu có thể thất lạc và dùng snapshot/rescan để đối chiếu trạng thái thư mục. Tập trung vào `WatchKey.reset()`, invalid key, đồng nhất sự kiện lặp, giới hạn theo dõi cây và chiến lược phục hồi thay vì cho rằng mọi lần sửa file đều có event.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Event và mất tín hiệu
+
+    1. `StandardWatchEventKinds.OVERFLOW` nói lên điều gì và vì sao không thể phục dựng các sự kiện bị mất chỉ từ event queue?
+    2. Vì sao đăng ký watcher và chụp snapshot ban đầu phải có trình tự có chủ đích để tránh khoảng mù?
+
+    ### Reconcile và vòng đời
+
+    1. Khi `WatchKey.reset()` trả `false`, ứng dụng cần xem xét trạng thái registration ra sao?
+    2. Bạn thiết kế rescan/diff idempotent thế nào khi sự kiện trùng, thư mục biến mất hoặc filesystem thay đổi giữa lúc quét?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết vòng WatchService | Đăng ký đường dẫn, nhận key, xử lý event và reset đúng lifecycle. |
+    | Thử phục hồi lỗi | Mô phỏng mất event hoặc OVERFLOW ở tầng xử lý, chạy rescan và kiểm chứng snapshot sau cùng. |
+    | Lập chính sách consistency | Nêu giới hạn độ tin cậy event, TOCTOU và chính sách dừng/khôi phục watcher. |
+- id: practical-exercises-010
+  title: Nén, giải nén archive có giới hạn và kiểm tra đường dẫn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Nén, giải nén archive có giới hạn và kiểm tra đường dẫn**
+
+    Bài thực hành tạo **ZIP packer/extractor có giới hạn quota và kiểm tra entry path**, nhằm tránh Zip Slip, giải nén vượt dung lượng và đi ra ngoài thư mục đích. Cần kiểm tra tên entry theo từng thành phần, đường dẫn sau `normalize`, symbolic link, số lượng/byte giải nén thực tế và các ca thử xấu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới đường dẫn
+
+    1. Vì sao một entry như `../outside.txt` hoặc đường dẫn tuyệt đối phải được từ chối trước khi ghi ra filesystem?
+    2. `Path.normalize()` và kiểm tra parent/symlink giải quyết phần nào rủi ro, còn race TOCTOU nào vẫn tồn tại?
+
+    ### Giới hạn và kiểm thử archive
+
+    1. Vì sao `ZipEntry.getSize()` chưa đủ làm nguồn đáng tin để kiểm soát zip bomb?
+    2. Khi một entry vượt quota giữa lúc giải nén, chương trình phải xử lý file dở dang/đích như thế nào để không publish kết quả thiếu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thực hiện pack/unpack | Duyệt dữ liệu nguồn và tạo ZIP, sau đó giải nén hợp lệ sang đích mới theo giới hạn. |
+    | Kiểm tra chống Zip Slip | Tạo entry traversal, absolute path hoặc symlink scenario và chứng minh ghi bên ngoài root bị chặn. |
+    | Đo quota thực tế | Tính tổng byte đã giải nén và số entry để phát hiện vi phạm trong lúc streaming. |
+- id: practical-exercises-011
+  title: Minh họa serialization và cấu hình ObjectInputFilter
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Minh họa serialization và cấu hình ObjectInputFilter**
+
+    Bài minh họa **Java serialization/deserialization và ObjectInputFilter**, bao gồm `Serializable`, `serialVersionUID`, `transient` và cách giới hạn lớp, độ sâu, kích thước mảng/số byte trước khi đọc object graph. Trọng tâm là chính sách allowlist/denylist, trạng thái filter và nguy cơ giải mã dữ liệu Java object không tin cậy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Serialization và filter
+
+    1. `serialVersionUID` và `transient` tác động khác nhau thế nào đến việc khôi phục object?
+    2. ObjectInputFilter áp dụng các giới hạn class, depth, references, array length và bytes nhằm chặn rủi ro gì?
+
+    ### Kiểm chứng chính sách
+
+    1. Vì sao một filter chỉ trả `UNDECIDED` khác với chính sách từ chối mặc định, và nên xây allowlist kiểu nào?
+    2. Khi gặp class không được phép hay đồ thị quá sâu, chương trình cần kiểm tra exception và dữ liệu còn lại ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình filter | Cài đặt filter theo từng ObjectInputStream để giới hạn class và tài nguyên. |
+    | Kiểm thử loại trừ | Tạo object hợp lệ và object không được phép để quan sát kết quả allow/reject. |
+    | Đánh giá dữ liệu không tin cậy | Giải thích vì sao cần lựa chọn định dạng khác hoặc giới hạn nguồn, không dựa hoàn toàn vào filter. |
+- id: practical-exercises-012
+  title: Hoàn thiện ví dụ tích hợp với kiểm thử các nhánh thất bại
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Hoàn thiện ví dụ tích hợp với kiểm thử các nhánh thất bại**
+
+    Bài cuối tích hợp **đọc UTF-8 strict → xác thực CSV đơn giản → tổng hợp số lượng → ghi báo cáo qua tệp tạm → atomic move nếu được hỗ trợ**. Nội dung cần chứng minh nhánh thành công lẫn các nhánh thất bại bằng 11 bài test, đặc biệt không làm hỏng báo cáo cũ và không rò rỉ file tạm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Pipeline và bất biến dữ liệu
+
+    1. Vì sao phải parse/validate toàn bộ nguồn trước khi ghi kết quả mới, và chính sách fail fast tác động tới đầu ra thế nào?
+    2. Vì sao dùng `CharsetDecoder` chế độ `REPORT` và `Math.addExact` thay vì thay ký tự lỗi hoặc cho phép overflow?
+
+    ### Kiểm thử các đường lỗi
+
+    1. Khi chủ động ném IOException trước bước commit, cần kiểm tra những bất biến nào trên báo cáo cũ và temporary file?
+    2. Trong 11 ca test, làm sao phân biệt lỗi header/row/duplicate ID/malformed UTF-8/đích là thư mục với lỗi dùng cùng input-output?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chạy ví dụ tích hợp | Biên dịch `IntegratedIoDemo.java`, kiểm chứng 11 ca thành công, lỗi và stdout. |
+    | Phân tích ngoại lệ | Phân biệt DataFormatException, IOException và lỗi UTF-8; xác định pha đọc, validation, ghi, commit. |
+    | Kiểm tra side effect khi lỗi | Khẳng định báo cáo cũ còn nguyên và temp được dọn khi exception xảy ra trước commit. |

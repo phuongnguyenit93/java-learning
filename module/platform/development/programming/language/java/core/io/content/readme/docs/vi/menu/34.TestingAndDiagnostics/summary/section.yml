@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'KIỂM THỬ VÀ CHẨN ĐOÁN JAVA I/O — MẠCH HỌC'
+roadmapHeading: 'Mạch liên kết bài học'
+roadmap:
+  - id: testing-and-diagnostics-001
+    order: 1
+    title: 'Kiểm thử bằng stream bộ nhớ trước khi phụ thuộc tệp thật'
+    description: 'Dùng stream và reader/writer trong RAM để kiểm thử lõi I/O, biết giới hạn cần integration test.'
+    transition:
+      to: testing-and-diagnostics-002
+      description: 'Từ unit test trong RAM, chuyển sang cách tạo tệp tạm cô lập cho integration test.'
+  - id: testing-and-diagnostics-002
+    order: 2
+    title: 'Tạo thư mục tạm riêng cho từng kịch bản'
+    description: 'Tạo và dọn thư mục tạm cho từng scenario, phân biệt ownership với đường dẫn cố định.'
+    transition:
+      to: testing-and-diagnostics-003
+      description: 'Từ việc quản lý fixture tạm, xác định mức độ chính xác của byte và text cần assert.'
+  - id: testing-and-diagnostics-003
+    order: 3
+    title: 'Kiểm tra nội dung byte chính xác và round-trip văn bản'
+    description: 'Kiểm tra byte exactness, text round-trip và diagnostics theo offset bằng API Java.'
+    transition:
+      to: testing-and-diagnostics-004
+      description: 'Từ round-trip và byte-exactness, kiểm tra các lỗi Unicode, BOM và ranh giới chunk.'
+  - id: testing-and-diagnostics-004
+    order: 4
+    title: 'Dữ liệu Unicode, BOM và ký tự bị chia giữa các khối'
+    description: 'Kiểm thử Unicode, BOM, strict decoding và UTF-8 bị tách qua nhiều khối đọc.'
+    transition:
+      to: testing-and-diagnostics-005
+      description: 'Từ tính toàn vẹn của ký tự, tiếp tục kiểm thử EOF, file lớn và bản ghi chưa đủ.'
+  - id: testing-and-diagnostics-005
+    order: 5
+    title: 'Tệp rỗng, tệp lớn, EOF sớm và bản ghi không hoàn chỉnh'
+    description: 'Phân biệt empty file, truncated records, premature EOF và kiểm thử length lớn an toàn.'
+    transition:
+      to: testing-and-diagnostics-006
+      description: 'Từ file/record bị cắt, chủ động mô phỏng short read, short write và lỗi giữa chừng.'
+  - id: testing-and-diagnostics-006
+    order: 6
+    title: 'Mô phỏng partial read, partial write và lỗi giữa chừng'
+    description: 'Mô phỏng short read/write, IOException giữa chừng, retry và trạng thái dữ liệu ghi dở.'
+    transition:
+      to: testing-and-diagnostics-007
+      description: 'Từ lỗi trong quá trình I/O, xác minh tài nguyên có được đóng theo đúng ownership.'
+  - id: testing-and-diagnostics-007
+    order: 7
+    title: 'Kiểm tra tài nguyên được đóng khi có lỗi'
+    description: 'Kiểm thử try-with-resources, cleanup khi lỗi, suppressed exception và quyền đóng stream.'
+    transition:
+      to: testing-and-diagnostics-008
+      description: 'Từ cleanup khi lỗi, mở rộng test sang symlink, permissions và khác biệt provider.'
+  - id: testing-and-diagnostics-008
+    order: 8
+    title: 'Kiểm tra symbolic link, quyền và hành vi theo nền tảng'
+    description: 'Kiểm tra symbolic link, permissions, attribute views và tính portable của test Java NIO.2.'
+    transition:
+      to: testing-and-diagnostics-009
+      description: 'Từ sai khác filesystem, tập trung chẩn đoán working directory, resource và charset.'
+  - id: testing-and-diagnostics-009
+    order: 9
+    title: 'Chẩn đoán sai working directory, charset và đường dẫn resource'
+    description: 'Chẩn đoán working directory, classpath resource, JAR packaging và sai charset.'
+    transition:
+      to: testing-and-diagnostics-010
+      description: 'Từ tìm đúng tệp/byte, chẩn đoán trường hợp write chưa flush, handle mở và buffer sai.'
+  - id: testing-and-diagnostics-010
+    order: 10
+    title: 'Chẩn đoán dữ liệu chưa flush, file handle còn mở và buffer sai trạng thái'
+    description: 'Chẩn đoán data buffering, open handles và ByteBuffer sai trạng thái khi ghi file.'
+    transition:
+      to: testing-and-diagnostics-011
+      description: 'Từ lỗi tài nguyên và trạng thái, xây kiểm thử có đồng bộ cho event và I/O bất đồng bộ.'
+  - id: testing-and-diagnostics-011
+    order: 11
+    title: 'Kiểm tra event, callback và thao tác đồng thời theo cách xác định'
+    description: 'Kiểm thử event, callback và concurrency với latch/future, timeout và state reconciliation.'
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Kiểm thử bằng stream bộ nhớ trước khi phụ thuộc tệp thật | Tạo thư mục tạm riêng cho từng kịch bản | Kiểm tra nội dung byte chính xác và round-trip văn bản | Dữ liệu Unicode, BOM và ký tự bị chia giữa các khối | Tệp rỗng, tệp lớn, EOF sớm và bản ghi không hoàn chỉnh | Mô phỏng partial read, partial write và lỗi giữa chừng | Kiểm tra tài nguyên được đóng khi có lỗi | Kiểm tra symbolic link, quyền và hành vi theo nền tảng | Chẩn đoán sai working directory, charset và đường dẫn resource | Chẩn đoán dữ liệu chưa flush, file handle còn mở và buffer sai trạng thái | Kiểm tra event, callback và thao tác đồng thời theo cách xác định |
+  | Vấn đề cần hiểu | Làm sao kiểm thử xử lý I/O khi chưa cần tệp thật? | Làm thế nào cô lập filesystem fixture giữa nhiều bài test? | Cần chứng minh byte giống hệt hay chỉ text tương đương? | Làm sao chứng minh Unicode không hỏng khi I/O chia khối? | Parser làm gì khi file thiếu dữ liệu hoặc quá lớn? | Một lần I/O chỉ xử lý một phần thì kiểm thử ra sao? | Làm sao bảo đảm resource được đóng cả khi lỗi? | Vì sao cùng thao tác path có thể khác theo filesystem? | File không tìm thấy hay đã đọc bằng charset sai? | Vì sao file rỗng, thiếu byte hoặc bị giữ mở? | Làm sao kiểm thử I/O bất đồng bộ không flaky? |
+  | Giá trị đối với OOP/module | Tăng độ xác định của unit test và khoanh lỗi thuật toán | Ngăn test ảnh hưởng lẫn nhau và cleanup nhầm dữ liệu | Định nghĩa và kiểm tra đúng mức bảo toàn dữ liệu | Phát hiện lỗi BOM và decoding ở ranh giới chunk | Bảo vệ framing và tài nguyên trước dữ liệu biên | Ngăn mất, nhân đôi byte và giả định ghi nguyên tử | Ngăn rò handle và bảo toàn exception gốc | Tránh test phụ thuộc OS và kiểm tra quyền sai | Tách lỗi định vị dữ liệu khỏi lỗi diễn giải byte | Tách lỗi buffering, trạng thái và vòng đời handle | Bảo đảm assertion dựa trên tín hiệu hoàn tất và invariant |
+  | Tư duy hình thành | Tách xử lý dữ liệu khỏi adapter filesystem | Một kịch bản sở hữu một vùng tạm độc lập | Assertion phải khớp với hợp đồng dữ liệu | Ranh giới I/O không phải ranh giới ký tự | Đọc đủ có điều kiện và xác thực kích thước sớm | Theo dõi tiến độ I/O và hậu quả lỗi từng phần | Close là hợp đồng ownership và error path | Kiểm thử theo capability thay vì giả định nền tảng | Filesystem path, resource và charset là ba hợp đồng riêng | Truy vết từng tầng write, flush, close, buffer | Điều khiển điểm đồng bộ, không dự đoán scheduler |

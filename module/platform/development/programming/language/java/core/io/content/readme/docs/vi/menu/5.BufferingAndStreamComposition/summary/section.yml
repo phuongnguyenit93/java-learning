@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "BỘ ĐỆM VÀ GHÉP LUỒNG — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: buffering-and-stream-composition-001
+    order: 1
+    title: "Mục đích của BufferedInputStream và BufferedOutputStream"
+    description: "Giải thích cách bộ đệm byte làm giảm overhead ở luồng nguồn/đích, thực hành đọc ghi đúng số byte và phân biệt buffer với việc chuyển mã."
+    transition:
+      to: buffering-and-stream-composition-002
+      description: "Từ đệm byte, chuyển sang xử lý văn bản ở tầng ký tự và ranh giới dòng."
+  - id: buffering-and-stream-composition-002
+    order: 2
+    title: "BufferedReader và BufferedWriter"
+    description: "Làm chủ buffering ở tầng ký tự, đọc dòng và ghi xuống dòng, xử lý EOF, charset và khác biệt giữa nội dung dòng với dấu kết thúc dòng."
+    transition:
+      to: buffering-and-stream-composition-003
+      description: "Sau khi dùng các wrapper byte và ký tự, giải thích mẫu thiết kế cho phép ghép nhiều lớp bổ sung chức năng."
+  - id: buffering-and-stream-composition-003
+    order: 3
+    title: "Decorator: lớp bọc bổ sung hành vi cho stream"
+    description: "Giải thích Decorator pattern ở hệ thống stream, xác định tầng đóng góp chức năng và trách nhiệm ủy quyền cũng như sở hữu nguồn."
+    transition:
+      to: buffering-and-stream-composition-004
+      description: "Từ nguyên lý decorator, thiết kế pipeline hoàn chỉnh với buffer, bộ chuyển mã và định dạng dữ liệu."
+  - id: buffering-and-stream-composition-004
+    order: 4
+    title: "Thứ tự ghép stream, buffer, charset và định dạng"
+    description: "Thiết kế thứ tự ghép byte stream, buffering, charset bridge và định dạng; giải thích chiều đọc/ghi và vị trí chuyển đổi dữ liệu."
+    transition:
+      to: buffering-and-stream-composition-005
+      description: "Sau khi đặt đúng các tầng, đo số lần I/O và chọn kích thước buffer phù hợp."
+  - id: buffering-and-stream-composition-005
+    order: 5
+    title: "Kích thước bộ đệm và số lần gọi I/O"
+    description: "Phân tích định lượng buffer size và số lần trao đổi với tầng dưới, đo lợi ích giảm dần và chọn cấu hình dựa trên tải thực tế."
+    transition:
+      to: buffering-and-stream-composition-006
+      description: "Từ hiệu năng buffer, phân biệt flush giảm thời gian giữ dữ liệu trong Java với cam kết lưu trữ bền vững."
+  - id: buffering-and-stream-composition-006
+    order: 6
+    title: "flush đẩy bộ đệm phần mềm nhưng không đồng nghĩa dữ liệu bền vững"
+    description: "Phân biệt flush phần mềm với đồng bộ storage, ACK và atomicity; thiết kế chuỗi thao tác ghi với bảo đảm được nêu rõ."
+    transition:
+      to: buffering-and-stream-composition-007
+      description: "Sau thời điểm flush, đi sâu vào close và quyền sở hữu của lớp bọc khi hoàn tất luồng và giải phóng tài nguyên."
+  - id: buffering-and-stream-composition-007
+    order: 7
+    title: "close lớp ngoài cùng và việc đóng tài nguyên bên dưới"
+    description: "Kiểm soát close lan truyền, try-with-resources, thứ tự dọn tài nguyên và quyền sở hữu khi wrapper nhận nguồn từ caller."
+    transition:
+      to: buffering-and-stream-composition-008
+      description: "Sau quản lý vòng đời, xem cách tạm lưu vị trí đọc trên stream và rủi ro khi rewind không còn hợp lệ."
+  - id: buffering-and-stream-composition-008
+    order: 8
+    title: "Mark, reset, markSupported và readlimit"
+    description: "Phân tích mark/reset và readlimit của stream byte và reader ký tự, dùng lookahead đúng giới hạn và xử lý rewind lỗi."
+    transition:
+      to: buffering-and-stream-composition-009
+      description: "Từ việc dự đoán vị trí đọc, phân biệt khả năng đọc tức thời với điều kiện kết thúc luồng ở Reader."
+  - id: buffering-and-stream-composition-009
+    order: 9
+    title: "Reader.ready khác kiểm tra EOF như thế nào"
+    description: "Phân biệt Reader.ready với EOF, sửa vòng lặp đọc dòng/khối và xử lý trạng thái không sẵn sàng mà không suy luận sai."
+    transition:
+      to: buffering-and-stream-composition-010
+      description: "Khi vòng lặp đã đúng, tìm hiểu lỗi đọc trước khi nhiều buffered reader cùng tranh một nguồn."
+  - id: buffering-and-stream-composition-010
+    order: 10
+    title: "Tránh trộn nhiều lớp đọc có bộ đệm trên cùng một nguồn"
+    description: "Chứng minh read-ahead tạo lỗi khi nhiều đầu đọc có buffer cạnh tranh cùng nguồn, rồi thiết kế một điểm tiêu thụ và phân phối dữ liệu."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Mục đích của BufferedInputStream và BufferedOutputStream | BufferedReader và BufferedWriter | Decorator: lớp bọc bổ sung hành vi cho stream | Thứ tự ghép stream, buffer, charset và định dạng | Kích thước bộ đệm và số lần gọi I/O | flush đẩy bộ đệm phần mềm nhưng không đồng nghĩa dữ liệu bền vững | close lớp ngoài cùng và việc đóng tài nguyên bên dưới | Mark, reset, markSupported và readlimit | Reader.ready khác kiểm tra EOF như thế nào | Tránh trộn nhiều lớp đọc có bộ đệm trên cùng một nguồn |
+  | Vấn đề cần hiểu | Vì sao đọc/ghi từng byte có thể tốn nhiều lời gọi xuống nguồn, và buffer byte vận hành ra sao? | Làm thế nào đọc/ghi văn bản theo dòng mà vẫn xử lý đúng EOF, charset và dấu xuống dòng? | Làm cách nào thêm hành vi vào stream bằng wrapper mà không phá hợp đồng dữ liệu và đóng tài nguyên? | Sắp xếp stream, buffer, charset và parser/formatter thế nào để dữ liệu giữ đúng kiểu, nội dung và thứ tự xử lý? | Buffer size thay đổi tần suất đọc/ghi, latency và bộ nhớ thế nào; đo ra sao để tránh suy luận sai? | Flush đảm bảo tới đâu, khi nào cần force/sync và làm sao tách độ bền, tính nguyên tử, ACK? | Khi đóng wrapper bên ngoài, lớp nào đóng tầng dưới, ai sở hữu stream và lỗi đóng được báo thế nào? | Khi nào mark/reset hợp lệ, readlimit bảo đảm gì và parser nên xử lý rewind thất bại ra sao? | ready() và EOF trả lời hai câu hỏi nào khác nhau, và vòng lặp đọc phải dùng tín hiệu nào để dừng? | Vì sao nhiều buffer đọc trên cùng một nguồn làm lệch dữ liệu, và tổ chức một reader chung như thế nào? |
+  | Giá trị đối với OOP/module | Nền tảng lựa chọn luồng byte có đệm và copy dữ liệu nhị phân. | Dùng API ký tự có đệm đúng loại và đúng định dạng văn bản. | Có cơ sở thiết kế và kiểm tra các lớp bao trong module I/O. | Thiết kế pipeline I/O có thể kiểm chứng và tránh lỗi chuyển mã. | Tối ưu hợp lý luồng có đệm theo dữ liệu đo. | Tránh thiết kế dữ liệu tưởng đã bền vững hoặc được xác nhận sai. | Giữ hợp đồng tài nguyên đúng, tránh đóng nhầm hoặc rò rỉ. | Tránh sai vị trí dữ liệu khi đọc trước trên stream. | Tránh mất dữ liệu hoặc vòng lặp sai khi đọc đến EOF. | Ngăn lỗi âm thầm mất byte hoặc EOF sớm khi thiết kế parser. |
+  | Tư duy hình thành | Phân biệt lời gọi ứng dụng với thao tác của luồng nền. | Phân biệt byte, char, line terminator và EOF. | Xem I/O như chuỗi trách nhiệm giữa các decorator. | Đi từ loại dữ liệu và giao thức để chọn đúng thứ tự tầng. | Đo và nêu giả định trước khi khẳng định hiệu năng. | Phân biệt rõ mỗi tầng cam kết sau thao tác ghi. | Quyền sở hữu là một phần của thiết kế API, không chỉ của cú pháp close. | Đọc hợp đồng capability và giới hạn trước khi xây parser lookahead. | Quyết định theo kết quả read thực tế thay vì dự đoán trạng thái nguồn. | Mỗi nguồn tuần tự cần một chiến lược sở hữu và phân phối việc đọc rõ ràng. |

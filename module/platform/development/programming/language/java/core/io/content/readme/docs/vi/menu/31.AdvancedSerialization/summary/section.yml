@@ -1,0 +1,96 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "TUẦN TỰ HÓA NÂNG CAO — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: advanced-serialization-001
+    order: 1
+    title: "writeObject, readObject và defaultWriteObject, defaultReadObject"
+    description: "Đi sâu vào các callback serialization cho lớp Serializable, phần field data mặc định, optional data, phiên bản và kiểm thử round-trip."
+    transition:
+      to: advanced-serialization-002
+      description: "Sau các callback thông thường, xem hook ít gặp khi class hierarchy thay đổi giữa lúc ghi và đọc."
+  - id: advanced-serialization-002
+    order: 2
+    title: "readObjectNoData và thay đổi hệ phân cấp"
+    description: "Giải thích readObjectNoData khi hierarchy Serializable đổi, thử nghiệm schema evolution và bảo vệ trạng thái superclass mới."
+    transition:
+      to: advanced-serialization-003
+      description: "Từ tiến hóa hệ phân cấp, chuyển sang tự quy định các trường nằm trong serialized form khi tên field nội bộ thay đổi."
+  - id: advanced-serialization-003
+    order: 3
+    title: "serialPersistentFields và điều khiển dạng lưu trữ"
+    description: "Sử dụng serialPersistentFields và PutField/GetField để tách cấu trúc field trong bộ nhớ khỏi serialized form ổn định."
+    transition:
+      to: advanced-serialization-004
+      description: "Sau khi điều khiển các field lưu trữ, xem kỹ thuật thay cả đối tượng ở đầu vào/đầu ra bằng serialization proxy."
+  - id: advanced-serialization-004
+    order: 4
+    title: "writeReplace, readResolve và thay thế đối tượng"
+    description: "Khảo sát substitution hooks và serialization proxy để kiểm soát wire representation, canonicalization và invariants."
+    transition:
+      to: advanced-serialization-005
+      description: "Sau cách thay thế đối tượng trong Serializable, so sánh cơ chế hoàn toàn tự ghi/đọc field của Externalizable."
+  - id: advanced-serialization-005
+    order: 5
+    title: "Externalizable, writeExternal và readExternal"
+    description: "Mô tả Externalizable và custom wire format qua writeExternal/readExternal, version, constructor và trách nhiệm bảo toàn dữ liệu."
+    transition:
+      to: advanced-serialization-006
+      description: "Sau giao thức Externalizable, tập trung vào lý do runtime cần public no-arg constructor và trường hợp thiếu nó."
+  - id: advanced-serialization-006
+    order: 6
+    title: "Yêu cầu constructor public không tham số của Externalizable"
+    description: "Giải thích yêu cầu public no-arg constructor và thứ tự khởi tạo đối tượng Externalizable khi deserialize."
+    transition:
+      to: advanced-serialization-007
+      description: "Từ cơ chế dựng class thông thường, so sánh các quy tắc đặc biệt của enum và record."
+  - id: advanced-serialization-007
+    order: 7
+    title: "Serializable với enum và record"
+    description: "So sánh serialized form và cơ chế dựng lại enum/record, đặc biệt danh tính enum và canonical constructor của record."
+    transition:
+      to: advanced-serialization-008
+      description: "Sau các loại class đặc biệt, kiểm tra khai báo đúng các thành viên serialization bằng annotation @Serial."
+  - id: advanced-serialization-008
+    order: 8
+    title: "@Serial và kiểm tra khai báo thành viên đặc biệt"
+    description: "Dùng annotation @Serial để phát hiện thành viên serialization sai chữ ký/modifier và làm rõ giới hạn kiểm tra compile-time."
+    transition:
+      to: advanced-serialization-009
+      description: "Khai báo hook đúng mới là điều kiện cần; tiếp theo kiểm tra bất biến của object sau khi runtime khôi phục state."
+  - id: advanced-serialization-009
+    order: 9
+    title: "Kiểm tra bất biến sau khi khôi phục đối tượng"
+    description: "Bảo vệ invariants khi deserialize qua readObject, ObjectInputValidation, defensive copy và kiểm tra toàn graph."
+    transition:
+      to: advanced-serialization-010
+      description: "Validation của dữ liệu nghiệp vụ cần được kết hợp với lớp phòng vệ về loại class và giới hạn tài nguyên của ObjectInputFilter."
+  - id: advanced-serialization-010
+    order: 10
+    title: "ObjectInputFilter: giới hạn lớp, độ sâu, số tham chiếu và độ dài mảng"
+    description: "Sử dụng ObjectInputFilter để giới hạn class, graph depth, reference count, array length và stream bytes khi đọc object."
+    transition:
+      to: advanced-serialization-011
+      description: "Sau khi hiểu điều kiện lọc, xét chính sách ở cấp stream và toàn JVM cùng sự khác biệt giữa các phiên bản JDK."
+  - id: advanced-serialization-011
+    order: 11
+    title: "Filter theo stream, cấu hình JVM và phụ thuộc phiên bản JDK"
+    description: "So sánh filter per-stream, global JVM và context-specific factory, có xét JDK 9/JDK 17, selection và hiệu lực policy."
+    transition:
+      to: advanced-serialization-012
+      description: "Sau kỹ thuật lọc, kết luận bằng nguyên tắc thiết kế: tránh khôi phục object trực tiếp từ dữ liệu không tin cậy."
+  - id: advanced-serialization-012
+    order: 12
+    title: "Không khôi phục trực tiếp dữ liệu đối tượng không tin cậy"
+    description: "Tổng hợp rủi ro native deserialization với nguồn không tin cậy và đề xuất protocol có giới hạn, validation và lộ trình migrate."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | writeObject, readObject và defaultWriteObject, defaultReadObject | readObjectNoData và thay đổi hệ phân cấp | serialPersistentFields và điều khiển dạng lưu trữ | writeReplace, readResolve và thay thế đối tượng | Externalizable, writeExternal và readExternal | Yêu cầu constructor public không tham số của Externalizable | Serializable với enum và record | @Serial và kiểm tra khai báo thành viên đặc biệt | Kiểm tra bất biến sau khi khôi phục đối tượng | ObjectInputFilter: giới hạn lớp, độ sâu, số tham chiếu và độ dài mảng | Filter theo stream, cấu hình JVM và phụ thuộc phiên bản JDK | Không khôi phục trực tiếp dữ liệu đối tượng không tin cậy |
+  | Vấn đề cần hiểu | Callback writeObject/readObject khác lệnh stream cùng tên thế nào và default methods bảo toàn field data ra sao? | Stream cũ thiếu dữ liệu cho Serializable superclass mới thì object được khôi phục ra sao? | Làm sao thay tên field nội bộ nhưng vẫn giữ serialized form cũ qua nhiều phiên bản? | writeReplace/readResolve thay đối tượng ở thời điểm nào, và việc thay thế có ảnh hưởng identity ra sao? | Externalizable bắt người viết tự chịu trách nhiệm dữ liệu nào và các lệnh ghi/đọc phải tương thích ra sao? | Vì sao Externalizable không deserialize được khi thiếu constructor public không tham số? | Enum và record được serialize/deserialize khác class thông thường thế nào? | @Serial xác nhận những khai báo nào và vì sao hook sai chữ ký có thể bị lặng lẽ bỏ qua? | Làm sao đảm bảo object graph khôi phục vẫn hợp lệ dù constructor Serializable không chạy như bình thường? | ObjectInputFilter giới hạn điều gì và cách diễn giải ALLOWED/REJECTED/UNDECIDED ra sao? | Chính sách deserialization được gắn vào stream/JVM thế nào và thay đổi gì theo phiên bản JDK? | Vì sao không được readObject trực tiếp bytes không tin cậy và nên thay thế bằng giao thức nào? |
+  | Giá trị đối với OOP/module | Tùy biến wire format và kiểm thử round-trip có chủ đích. | Tránh làm sai state khi thay đổi cấu trúc kế thừa qua phiên bản. | Quản lý schema và compatibility cho dữ liệu serialized lâu dài. | Thiết kế representation an toàn hơn và bảo toàn canonical object khi cần. | Chủ động kiểm soát biểu diễn dữ liệu mà vẫn xử lý đúng object graph. | Phòng lỗi InvalidClassException và side effect khi tạo Externalizable instance. | Áp dụng serialization đúng cho các kiểu Java hiện đại. | Giảm sai sót khi bảo trì lớp Serializable và tooling CI. | Ngăn trạng thái không hợp lệ thoát khỏi deserialization. | Giảm rủi ro dùng tài nguyên quá mức và tải class không mong muốn. | Vận hành filter đúng context, tránh policy cấu hình mà không thực sự được áp dụng. | Ngăn rủi ro thực thi hành vi ngoài dự kiến, cạn tài nguyên và sai invariant trong ứng dụng. |
+  | Tư duy hình thành | Xem phần dữ liệu mặc định và dữ liệu bổ sung là một hợp đồng đọc–ghi đối xứng. | Kiểm thử tương thích trên hai classpath và theo class-data slot thật. | Xem field name/type trên stream là public data contract nội bộ có phiên bản. | Xem object graph, references và kiểu thay thế là ràng buộc của thiết kế. | Mọi byte và thứ tự đọc–ghi đều là hợp đồng do class định nghĩa. | Tách khởi tạo đối tượng tối thiểu khỏi nạp dữ liệu serialized. | Đọc hợp đồng riêng của từng kind of class thay vì suy rộng từ Serializable. | Sử dụng kiểm tra compile-time để bắt lỗi hợp đồng, rồi kiểm tra logic runtime riêng. | Phải validate hậu điều kiện trên toàn object graph, không chỉ đầu vào constructor. | Chọn allowlist và resource budget theo threat model cụ thể. | Kiểm tra chính sách runtime thực tế thay vì suy ra từ một biến cấu hình. | Thiết kế input theo schema và giới hạn xác minh được trước khi dựng đối tượng. |

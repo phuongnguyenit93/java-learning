@@ -1,0 +1,331 @@
+summaries:
+- id: files-read-write-001
+  title: readAllBytes và giới hạn bộ nhớ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **readAllBytes và giới hạn bộ nhớ**
+
+    `Files.readAllBytes(Path)` đưa toàn bộ byte của tệp vào một `byte[]`. Bài học giúp chọn giải pháp theo kích thước đầu vào và ngân sách heap, đồng thời biết giới hạn việc kiểm tra kích thước trước khi đọc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và bộ nhớ
+
+    1. Vì sao `readAllBytes` không phải cơ chế streaming, và byte thô khác văn bản đã giải mã như thế nào?
+    2. Vì sao một tệp nhỏ trên đĩa vẫn có thể gây áp lực heap hoặc `OutOfMemoryError` khi được giữ trong `byte[]`?
+
+    ### Lựa chọn và kiểm chứng
+
+    1. Khi chỉ cần tính checksum hay đếm byte, bạn xây dựng vòng lặp đọc theo khối với `newInputStream` ra sao?
+    2. Vì sao `Files.size(path)` chỉ là bước sàng lọc và không bảo đảm giới hạn trong lúc một tệp đang thay đổi?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đánh giá ngân sách bộ nhớ | Ước lượng rủi ro cấp phát từ kích thước file, giới hạn mảng và heap; giải thích lúc nào cần bỏ `readAllBytes`. |
+    | Đọc theo khối | Viết vòng lặp `InputStream.read` xử lý đúng số byte đã đọc, không tích lũy toàn bộ nội dung. |
+    | Áp giới hạn khi đọc | Thiết kế hàm đọc tối đa N byte, phát hiện vượt ngưỡng khi nguồn thay đổi và xử lý `IOException`. |
+- id: files-read-write-002
+  title: readString, writeString và charset UTF-8 mặc định của API
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **readString, writeString và charset UTF-8 mặc định của API**
+
+    `Files.readString` và `Files.writeString` thuận tiện khi đã xác định dữ liệu là văn bản đủ nhỏ. Bài học làm rõ UTF-8 mặc định của chính API, rủi ro giải mã sai và chính sách ghi đè hoặc nối thêm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mã hóa và văn bản
+
+    1. Vì sao `Files.readString(path)` dùng UTF-8 ngay cả khi `Charset.defaultCharset()` trên JVM khác UTF-8?
+    2. File byte không hợp lệ với UTF-8 ảnh hưởng đến `readString` thế nào, và khi nào phải chọn overload nhận `Charset`?
+
+    ### Ghi tệp và ngữ nghĩa
+
+    1. Không truyền `OpenOption`, `Files.writeString` xử lý tệp thiếu và tệp đã tồn tại ra sao?
+    2. Làm cách nào chứng minh rằng `readString`/`writeString` không tự chuẩn hóa CRLF/LF khi round-trip văn bản?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn charset | Giải thích ranh giới byte/String và chọn overload đọc/ghi đúng với encoding thực của file. |
+    | Kiểm thử round-trip Unicode | Tạo file UTF-8, ghi/đọc ký tự đa byte và đối chiếu nội dung cùng byte kết quả. |
+    | Tránh ghi đè ngoài ý muốn | Chọn `CREATE_NEW`, `APPEND` hoặc chính sách ghi rõ ràng và dự đoán ảnh hưởng lên tệp hiện có. |
+- id: files-read-write-003
+  title: readAllLines và dữ liệu được đưa toàn bộ vào bộ nhớ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **readAllLines và dữ liệu được đưa toàn bộ vào bộ nhớ**
+
+    `Files.readAllLines` trả `List<String>` sau khi đọc hết các dòng, thuận lợi cho truy cập theo chỉ số nhưng giữ toàn bộ kết quả trong heap. Bài học tập trung vào chi phí bộ nhớ, newline và cách chọn xử lý tuần tự.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kết quả và giới hạn
+
+    1. Tại sao `readAllLines` là eager, và bộ nhớ của `List<String>` có thể khác kích thước tệp gốc thế nào?
+    2. Khi tệp có dòng trống, CRLF hay newline cuối cùng, nội dung các phần tử của danh sách khác byte ban đầu ở điểm nào?
+
+    ### Chọn chiến lược đọc
+
+    1. Trường hợp nào cần truy cập dòng ngẫu nhiên để biện minh cho `readAllLines`, thay vì chỉ duyệt mỗi dòng một lần?
+    2. Làm thế nào chuyển tác vụ đếm dòng khớp điều kiện sang `Files.lines` hoặc `BufferedReader` mà không gom tất cả dòng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô tả chi phí eager | So sánh lượng bộ nhớ của `List<String>` với stream và giải thích vai trò object/collection overhead. |
+    | Xử lý dữ liệu dòng | Dự đoán danh sách trả về với dòng rỗng, CR, LF và CRLF khi đọc file UTF-8. |
+    | Chuyển sang xử lý tuần tự | Viết bộ đếm/lọc dòng không giữ toàn bộ file và kiểm tra bằng dữ liệu mẫu. |
+- id: files-read-write-004
+  title: Files.lines đọc lười và bắt buộc quản lý vòng đời Stream
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Files.lines đọc lười và bắt buộc quản lý vòng đời Stream**
+
+    `Files.lines` tạo `Stream<String>` có nguồn là tệp và xử lý dòng khi terminal operation tiêu thụ pipeline. Bài học phân biệt tính lazy của phần tử với việc nguồn đã được mở, đồng thời thiết lập quy tắc đóng stream trong mọi đường đi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Pipeline và vòng đời
+
+    1. Khi gọi `Files.lines` rồi `filter` nhưng chưa có terminal operation, phần nào đã xảy ra và phần nào chưa?
+    2. Vì sao `limit` hoặc `findFirst` không thay thế `close`, kể cả khi pipeline đã dừng sớm?
+
+    ### Lỗi và quyền sở hữu
+
+    1. Lỗi I/O lúc mở stream khác lỗi lúc duyệt thường được biểu diễn thế nào trong API này?
+    2. Nếu một phương thức trả `Stream<String>` cho caller, phải mô tả và kiểm chứng quyền sở hữu tài nguyên ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quản lý Stream có file | Viết pipeline `Files.lines` trong try-with-resources và chứng minh tài nguyên được đóng khi trả kết quả hay lỗi. |
+    | Giải thích lazy evaluation | Dự đoán thời điểm `filter`/`map` chạy và tác động của short-circuit operation. |
+    | Thiết kế hợp đồng API | Phân biệt `IOException` và `UncheckedIOException`, nêu rõ bên phải đóng stream nếu trả về cho caller. |
+- id: files-read-write-005
+  title: newBufferedReader và newBufferedWriter
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **newBufferedReader và newBufferedWriter**
+
+    Hai factory này tạo reader/writer văn bản có đệm để xử lý tuần tự theo dòng hoặc theo khối ký tự. Bài học yêu cầu quản lý charset, vòng đời resource, newline, flush và các lựa chọn ghi để tránh đổi nội dung hoặc mất dữ liệu ngoài ý muốn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đọc/ghi văn bản
+
+    1. `readLine()` phân biệt EOF với dòng trống ra sao, và vì sao không còn giữ nguyên dấu xuống dòng?
+    2. Khi cần sao chép nguyên các ký tự xuống dòng, vì sao đọc `char[]` thích hợp hơn kết hợp `readLine()` với `newLine()`?
+
+    ### Ghi và tài nguyên
+
+    1. `Files.newBufferedWriter(path, UTF_8)` xử lý tệp đã tồn tại thế nào nếu không truyền open option?
+    2. `newLine()`, `flush()` và `close()` khác nhau thế nào; bước nào không cam kết crash durability?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc đúng EOF | Viết vòng lặp `readLine() != null` giữ dòng rỗng và kiểm thử bằng file chứa LF/CRLF. |
+    | Chọn chiến lược ghi | Dùng writer với `APPEND` hoặc truncate có chủ đích, charset đúng và try-with-resources. |
+    | Bảo toàn nội dung ký tự | Sao chép qua `char[]` và chỉ rõ khi nào việc chuẩn hóa newline được chấp nhận. |
+- id: files-read-write-006
+  title: newInputStream, newOutputStream và các lựa chọn mở tệp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **newInputStream, newOutputStream và các lựa chọn mở tệp**
+
+    `Files.newInputStream` và `newOutputStream` mở luồng byte, cho phép chọn hành vi mở tệp thông qua `OpenOption`. Bài học chỉ ra mặc định mở output có thể truncate ngay khi mở, cách streaming an toàn, xử lý partial read và đóng tài nguyên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Luồng byte và mặc định
+
+    1. `newInputStream(path)` mặc định yêu cầu gì, và vì sao không tạo file khi nguồn thiếu?
+    2. Vì sao mở `newOutputStream(path)` mà chưa `write` cũng có thể đã xóa nội dung cũ?
+
+    ### Quy trình sao chép an toàn
+
+    1. Trong vòng lặp `read(buffer)`, vì sao chỉ dùng số byte trả về và dừng ở `-1`?
+    2. Cần xác định chính sách gì về file đích, thư mục cha và tiến trình ghi đồng thời trước khi stream byte ra tệp?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mở luồng đúng mục đích | Chọn input READ và output CREATE/CREATE_NEW/APPEND/truncate theo kịch bản, dự đoán kết quả khi file tồn tại. |
+    | Sao chép byte theo khối | Viết vòng lặp đọc/ghi sử dụng đúng độ dài `n` và try-with-resources. |
+    | Phân tích lỗi I/O | Giải thích tác động của thiếu file, quyền truy cập, parent directory và output bị ghi dở. |
+- id: files-read-write-007
+  title: READ, WRITE, CREATE, CREATE_NEW và TRUNCATE_EXISTING
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **READ, WRITE, CREATE, CREATE_NEW và TRUNCATE_EXISTING**
+
+    Nhóm `StandardOpenOption` này tách quyền đọc/ghi khỏi hành vi tạo mới và cắt ngắn. Bài học giúp xây ma trận theo ý định nghiệp vụ, dùng `CREATE_NEW` để ngăn ghi đè tên đã tồn tại và phân biệt tạo nguyên tử với thay nội dung nguyên tử.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng từng option
+
+    1. `WRITE` một mình khác gì với `WRITE + TRUNCATE_EXISTING` nếu file hiện có dài hơn nội dung vừa ghi?
+    2. `CREATE` và `CREATE_NEW` khác nhau thế nào ở bước kiểm tra tên đã tồn tại, và vì sao `CREATE_NEW` tránh race kiểu check-then-act?
+
+    ### Chọn tổ hợp an toàn
+
+    1. Với yêu cầu 'chỉ ghi vào file đã tồn tại', 'tạo nếu thiếu' và 'từ chối ghi đè', chọn tổ hợp nào cho từng trường hợp?
+    2. Vì sao tạo mới file đích thành công vẫn chưa có nghĩa là thay toàn bộ cấu hình theo giao dịch nguyên tử?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập bảng hành vi mở | Dự đoán đầu ra của `READ`, `WRITE`, `CREATE`, `CREATE_NEW` và `TRUNCATE_EXISTING` trên file thiếu/có sẵn. |
+    | Chặn ghi đè có race | Sử dụng `CREATE_NEW` trực tiếp và xử lý `FileAlreadyExistsException` thay cho `exists()` rồi mới ghi. |
+    | Thiết kế thay file | Phân biệt truncate trực tiếp với ghi file tạm rồi move khi cần giảm rủi ro bản ghi dở. |
+- id: files-read-write-008
+  title: APPEND và giới hạn kết hợp OpenOption
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **APPEND và giới hạn kết hợp OpenOption**
+
+    `APPEND` cho phép ghi tại cuối tệp nhưng có các giới hạn kết hợp với `READ`/`TRUNCATE_EXISTING` tùy API, và không bảo đảm mỗi bản ghi đồng thời là nguyên tử. Bài học củng cố lựa chọn open option, quản lý log và giới hạn từ filesystem provider.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### APPEND và tổ hợp
+
+    1. Vì sao `APPEND` không tương đương `WRITE`, không tự tạo file và không tự thêm newline?
+    2. `APPEND + TRUNCATE_EXISTING` và `APPEND + READ` bị ràng buộc thế nào với `newByteChannel`?
+
+    ### Nhiều writer và độ tin cậy
+
+    1. Vì sao một lần append có thể không đồng nghĩa bản ghi hoàn chỉnh xuất hiện nguyên tử trước writer khác?
+    2. Làm thế nào kiểm thử cả file thiếu, file có sẵn, `CREATE + APPEND` và tổ hợp options sai trên provider đang dùng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết log nối thêm | Cấu hình writer hoặc channel với `CREATE, APPEND`, xác nhận dữ liệu cũ còn nguyên sau nhiều lượt. |
+    | Bắt lỗi options | Chỉ ra và sửa tổ hợp `APPEND` sai hoặc không được API/provider hỗ trợ. |
+    | Phân tích cạnh tranh ghi | Giải thích giới hạn atomic append và đề xuất cơ chế tuần tự hóa writer khi cần bản ghi liền mạch. |
+- id: files-read-write-009
+  title: SYNC, DSYNC, DELETE_ON_CLOSE và tính hỗ trợ của provider
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **SYNC, DSYNC, DELETE_ON_CLOSE và tính hỗ trợ của provider**
+
+    `SYNC`, `DSYNC` và `DELETE_ON_CLOSE` tác động tới durability và vòng đời file nhưng phụ thuộc filesystem provider. Bài học phân biệt flush/force/durability, atomic move và yêu cầu xóa best effort, tránh diễn giải các option như giao dịch hoặc xóa dữ liệu bảo mật.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đồng bộ dữ liệu
+
+    1. `SYNC` yêu cầu gì hơn `DSYNC` về metadata, và khác `FileChannel.force(boolean)` ở thời điểm thực hiện thế nào?
+    2. Vì sao `BufferedWriter.flush()` hoặc đọc lại file thành công chưa đủ để khẳng định dữ liệu an toàn sau crash?
+
+    ### Provider và vòng đời
+
+    1. Tại sao `DELETE_ON_CLOSE` là best effort và không tương đương xóa vật lý an toàn?
+    2. Nếu provider không hỗ trợ `SYNC` hoặc `DELETE_ON_CLOSE`, ứng dụng cần quyết định fallback theo yêu cầu nghiệp vụ ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn chính sách durability | So sánh `SYNC`, `DSYNC` và `force(metaData)` theo yêu cầu metadata, hiệu năng và thời điểm flush. |
+    | Đóng file tạm | Dùng try-with-resources kết hợp `DELETE_ON_CLOSE` và nêu giới hạn dọn tệp. |
+    | Xử lý provider | Nhận diện lỗi unsupported option, giải thích lúc nào fail closed thay vì âm thầm hạ yêu cầu durability. |
+- id: files-read-write-010
+  title: Files.copy kết hợp InputStream hoặc OutputStream
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Files.copy kết hợp InputStream hoặc OutputStream**
+
+    Hai overload `Files.copy(InputStream, Path)` và `Files.copy(Path, OutputStream)` chuyển byte theo hai hướng khác nhau, cùng trả về số byte đã chuyển. Bài học giúp giữ đúng quyền sở hữu stream, xử lý đích đã tồn tại và kết quả sao chép dở khi lỗi I/O.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hướng dữ liệu và kiểu kết quả
+
+    1. Ba dạng `Files.copy` với `InputStream`, `OutputStream` và cặp `Path` khác nhau thế nào về hướng và giá trị trả về?
+    2. Khi copy từ stream vào Path đã tồn tại, option nào cho phép thay thế và điều đó có bảo đảm ghi nguyên tử hay không?
+
+    ### Quản lý stream và lỗi
+
+    1. Sau `Files.copy(input, target)` ai đóng input, và sau `Files.copy(source, output)` ai đóng output?
+    2. Vì sao thành công một phần có thể để lại file hoặc output dở khi nguồn/đích phát sinh `IOException`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn overload đúng | Vẽ luồng byte InputStream → Path và Path → OutputStream, giải thích kiểu `long` và overload Path → Path. |
+    | Quản lý quyền sở hữu | Bọc stream do caller tạo trong try-with-resources mà không giả định `Files.copy` tự đóng stream được truyền vào. |
+    | Kiểm tra sao chép | Đánh giá trạng thái file đích sau lỗi, lựa chọn cơ chế ghi tạm và quy trình xác minh số byte. |
+- id: files-read-write-011
+  title: Files.mismatch và so sánh nội dung hai tệp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Files.mismatch và so sánh nội dung hai tệp**
+
+    `Files.mismatch(Path, Path)` tìm offset byte đầu tiên khác nhau, trả `-1L` khi byte của hai tệp khớp. Bài học phân biệt so sánh byte với so sánh văn bản hay metadata, và biết giới hạn khi tệp thay đổi đồng thời.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kết quả và ngữ nghĩa
+
+    1. `mismatch` trả `-1L`, `0L` hoặc một offset dương khi nào, đặc biệt khi một file là tiền tố của file khác?
+    2. Vì sao hai văn bản hiển thị giống nhau vẫn có thể cho mismatch khác `-1L` do encoding hoặc chuẩn hóa Unicode?
+
+    ### Lựa chọn kiểm chứng
+
+    1. Trong bài toán kiểm tra bản sao, `Files.size`, timestamp và hash khác `Files.mismatch` thế nào về bằng chứng nội dung?
+    2. Nếu file bị sửa trong lúc so, kết quả `mismatch` và `IOException` cần được diễn giải thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích offset byte | Dự đoán kết quả so hai file giống hệt, khác ngay byte đầu và có quan hệ tiền tố. |
+    | Kiểm chứng bản sao | Dùng `Files.copy` rồi `Files.mismatch` để xác minh nội dung byte tại thời điểm nguồn ổn định. |
+    | Phân biệt tiêu chí bằng nhau | Chọn so sánh byte thay vì metadata/String khi cần bảo toàn tệp nhị phân; nêu giới hạn với concurrent writes. |

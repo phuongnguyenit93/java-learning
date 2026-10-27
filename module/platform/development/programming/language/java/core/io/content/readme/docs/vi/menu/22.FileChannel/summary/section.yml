@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "FILECHANNEL — LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: file-channel-001
+    order: 1
+    title: "Mở FileChannel bằng Path và OpenOption"
+    description: "Dạy cách mở FileChannel bằng Path, chọn OpenOption đúng quyền truy cập và tránh tạo, truncate hoặc ghi đè ngoài ý muốn."
+    transition:
+      to: file-channel-002
+      description: "Sau khi mở đúng quyền, quan sát cách read/write tương đối di chuyển vị trí hiện hành."
+  - id: file-channel-002
+    order: 2
+    title: "Đọc ghi theo vị trí hiện tại"
+    description: "Giải thích thao tác read/write tương đối, current file position, ByteBuffer position và xử lý EOF/partial I/O."
+    transition:
+      to: file-channel-003
+      description: "Từ con trỏ dùng chung chuyển sang offset tuyệt đối để đọc/ghi một vùng mà vẫn giữ file position."
+  - id: file-channel-003
+    order: 3
+    title: "Đọc ghi tại vị trí tuyệt đối mà không đổi position"
+    description: "Dạy read/write tại offset tuyệt đối mà không đổi file position, cách lặp khi partial I/O và lợi ích cho truy cập ngẫu nhiên."
+    transition:
+      to: file-channel-004
+      description: "Từ việc kiểm soát offset đến phân biệt file size, position và thao tác cắt ngắn."
+  - id: file-channel-004
+    order: 4
+    title: "size, truncate và giới hạn thay đổi độ dài"
+    description: "Phân biệt size, current position và truncate chỉ thu nhỏ, đồng thời giải thích cách ghi sau EOF và giới hạn filesystem."
+    transition:
+      to: file-channel-005
+      description: "Sau khi hiểu phạm vi byte trong tệp, chuyển sang API sao chép dữ liệu giữa các channel."
+  - id: file-channel-005
+    order: 5
+    title: "transferTo, transferFrom và xử lý số byte chuyển thực tế"
+    description: "Trình bày chiều và hợp đồng transferTo/transferFrom, đặc biệt cần lặp theo số byte thực chuyển thay vì tin count yêu cầu."
+    transition:
+      to: file-channel-006
+      description: "Sau hợp đồng transfer, xem khi nào runtime có cơ hội tối ưu đường truyền kiểu zero-copy."
+  - id: file-channel-006
+    order: 6
+    title: "Zero-copy là khả năng tối ưu, không phải bảo đảm cho mọi tình huống"
+    description: "Phân tích zero-copy như tối ưu phụ thuộc môi trường, so sánh transferTo với ByteBuffer và phương pháp đo thực nghiệm."
+    transition:
+      to: file-channel-007
+      description: "Từ tối ưu tốc độ chuyển byte sang bảo đảm bền vững của dữ liệu sau khi ghi."
+  - id: file-channel-007
+    order: 7
+    title: "force và phạm vi bảo đảm với thiết bị lưu trữ"
+    description: "Đào sâu FileChannel.force, quan hệ cache/thiết bị lưu trữ, mapped buffer, SYNC/DSYNC và giới hạn durability."
+    transition:
+      to: file-channel-008
+      description: "Từ FileChannel mở trực tiếp sang channel lấy từ các API stream và RandomAccessFile cũ."
+  - id: file-channel-008
+    order: 8
+    title: "Quan hệ với FileInputStream, FileOutputStream và RandomAccessFile"
+    description: "Nối Java I/O truyền thống với FileChannel qua getChannel, nhận diện chia sẻ position, quyền và close lifecycle."
+    transition:
+      to: file-channel-009
+      description: "Khi chia sẻ channel giữa nhiều thành phần, phân tích luật đồng thời và tránh tranh chấp vị trí."
+  - id: file-channel-009
+    order: 9
+    title: "Dùng đồng thời: vị trí chia sẻ và thao tác có vị trí tường minh"
+    description: "Phân tích FileChannel trong môi trường multi-thread, con trỏ chung, positional I/O, buffer riêng và giới hạn atomicity/lock."
+    transition:
+      to: file-channel-010
+      description: "Áp dụng hiểu biết race vào append và các giới hạn phụ thuộc hệ điều hành."
+  - id: file-channel-010
+    order: 10
+    title: "Append và các hành vi phụ thuộc hệ điều hành"
+    description: "Phân tích APPEND, giới hạn atomicity, log record gồm nhiều write và sự phụ thuộc OS/filesystem."
+    transition:
+      to: file-channel-011
+      description: "Kết thúc bằng ranh giới API: FileChannel cho file ngẫu nhiên không đăng ký trực tiếp với Selector."
+  - id: file-channel-011
+    order: 11
+    title: "FileChannel không phải selectable channel"
+    description: "Xác định ranh giới loại FileChannel so với SelectableChannel, Selector và những lựa chọn async cho I/O file."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Mở FileChannel bằng Path và OpenOption | Đọc ghi theo vị trí hiện tại | Đọc ghi tại vị trí tuyệt đối mà không đổi position | size, truncate và giới hạn thay đổi độ dài | transferTo, transferFrom và xử lý số byte chuyển thực tế | Zero-copy là khả năng tối ưu, không phải bảo đảm cho mọi tình huống | force và phạm vi bảo đảm với thiết bị lưu trữ | Quan hệ với FileInputStream, FileOutputStream và RandomAccessFile | Dùng đồng thời: vị trí chia sẻ và thao tác có vị trí tường minh | Append và các hành vi phụ thuộc hệ điều hành | FileChannel không phải selectable channel |
+  | Vấn đề cần hiểu | Cần mở channel với quyền nào và các option tác động thế nào đến dữ liệu? | Read/write tác động đến con trỏ của tệp và ByteBuffer ra sao? | Làm sao thao tác tại một offset mà không làm dịch chuyển con trỏ channel? | Kích thước file thay đổi khi nào và truncate có thể tăng kích thước không? | Làm sao sao chép đúng lượng byte khi transfer có thể chỉ làm một phần? | Khi nào transferTo có thể giảm copy và vì sao điều đó không được bảo đảm? | Ghi xong đã bền vững chưa và force thực sự bảo đảm điều gì? | Lấy channel từ Stream hoặc RandomAccessFile có chia sẻ trạng thái nào? | Vì sao FileChannel thread-safe vẫn có race khi phối hợp nhiều lời gọi? | Append và ghi record có nguyên tử trong nhiều writer hay không? | Vì sao FileChannel đọc được ByteBuffer nhưng không đăng ký được với Selector? |
+  | Giá trị đối với OOP/module | Mở file đúng chế độ và tránh mất dữ liệu khi tạo/ghi. | Đọc ghi tuần tự chính xác mà không nhầm EOF hay buffer state. | Đọc header/record cố định theo vị trí chính xác. | Quản lý thay đổi độ dài file mà không suy diễn sai. | Phòng mất dữ liệu khi transfer hoặc offset chưa hoàn tất. | Tối ưu I/O có chứng cứ mà vẫn giữ đúng dữ liệu. | Thiết kế điểm commit và phục hồi sau sự cố đúng phạm vi. | Kết hợp API cũ và NIO mà không rối con trỏ hoặc ownership. | Thiết kế truy cập song song không ghi đè hoặc đọc sai vùng. | Tránh ghi đè và xen kẽ record khi triển khai log đồng thời. | Chọn đúng API cho file, socket, pipe và asynchronous I/O. |
+  | Tư duy hình thành | Xác định hợp đồng truy cập trước khi gọi API. | Theo dõi riêng file position, buffer position và số byte thực. | Tách offset file tường minh khỏi vị trí ByteBuffer. | Tách metadata về chiều dài khỏi vị trí thao tác. | Dựa vào số byte trả về và xác minh hậu điều kiện. | Tách API contract khỏi implementation optimization. | Phân biệt hoàn thành I/O với độ bền dữ liệu trên storage. | Nhìn stream/channel gắn với nhau như một vòng đời liên kết. | Xem interleaving, offset và trạng thái buffer như tài nguyên chia sẻ. | Đánh giá mức atomicity của từng lời gọi và hệ thống đích. | Tách thao tác file khỏi sự kiện readiness của selectable channels. |

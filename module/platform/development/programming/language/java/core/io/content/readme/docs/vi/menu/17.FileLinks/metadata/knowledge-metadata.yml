@@ -1,0 +1,28 @@
+sections:
+  file-links-001:
+    difficulty: BASIC
+    isImportant: true
+  file-links-002:
+    difficulty: BASIC
+    isImportant: true
+  file-links-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  file-links-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  file-links-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  file-links-006:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  file-links-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  file-links-008:
+    difficulty: ADVANCED
+    isImportant: true
+  file-links-009:
+    difficulty: ADVANCED
+    isImportant: true

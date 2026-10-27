@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "TUẦN TỰ HÓA CƠ BẢN — TỪ ĐỒ THỊ ĐỐI TƯỢNG ĐẾN SCHEMA TRAO ĐỔI"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: serialization-basics-001
+    order: 1
+    title: "Tuần tự hóa (serialization), Serializable và việc lưu đồ thị đối tượng"
+    description: "Giới thiệu Serializable, đồ thị đối tượng, luồng ghi/đọc, trạng thái và giới hạn native Java serialization."
+    transition:
+      to: serialization-basics-002
+      description: "Từ khái niệm object graph đi vào cách thiết lập và phối hợp hai object streams."
+  - id: serialization-basics-002
+    order: 2
+    title: "ObjectOutputStream và ObjectInputStream"
+    description: "Thực hành tạo, đóng, flush ObjectOutputStream/ObjectInputStream và đồng bộ protocol giữa hai phía."
+    transition:
+      to: serialization-basics-003
+      description: "Sau khi dùng object streams, cần hiểu wire format của `writeObject` và `readObject`."
+  - id: serialization-basics-003
+    order: 3
+    title: "writeObject, readObject và định dạng stream"
+    description: "Giải thích Java Serialization Stream Protocol, headers, tokens, class descriptor, block data và handles."
+    transition:
+      to: serialization-basics-004
+      description: "Protocol dẫn tới nghiên cứu cách handles bảo toàn shared references và cycles."
+  - id: serialization-basics-004
+    order: 4
+    title: "Tham chiếu dùng chung, vòng tham chiếu và object handle"
+    description: "Giải thích shared references, cycles, object identity, handles và ranh giới unshared/reset."
+    transition:
+      to: serialization-basics-005
+      description: "Sau khi hiểu graph topology, chuyển sang những fields tạo nên trạng thái được lưu."
+  - id: serialization-basics-005
+    order: 5
+    title: "Trường transient, static và trạng thái mặc định được lưu"
+    description: "Phân biệt static, transient và nontransient instance fields cùng trạng thái sau deserialize."
+    transition:
+      to: serialization-basics-006
+      description: "Khi class thay đổi giữa lúc ghi và đọc, tập field được lưu liên quan trực tiếp đến compatibility."
+  - id: serialization-basics-006
+    order: 6
+    title: "serialVersionUID và tương thích lớp"
+    description: "Giải thích class compatibility, serialVersionUID và kiểm thử serial form giữa các bản build."
+    transition:
+      to: serialization-basics-007
+      description: "Từ versioning có thể phân biệt rõ lỗi không serializable, lỗi class và lỗi byte stream."
+  - id: serialization-basics-007
+    order: 7
+    title: "NotSerializableException, InvalidClassException và StreamCorruptedException"
+    description: "Phân loại NotSerializableException, InvalidClassException và StreamCorruptedException để chẩn đoán chính xác."
+    transition:
+      to: serialization-basics-008
+      description: "Lỗi class dẫn sang quy tắc constructor khi ObjectInputStream dựng một object."
+  - id: serialization-basics-008
+    order: 8
+    title: "Constructor của lớp Serializable và lớp cha không Serializable"
+    description: "Giải thích quy tắc constructor và state trong inheritance hierarchy của Serializable và Externalizable."
+    transition:
+      to: serialization-basics-009
+      description: "Từ object được khôi phục chuyển sang hiện tượng writer dùng handle cũ khi ghi lại object."
+  - id: serialization-basics-009
+    order: 9
+    title: "Ghi lại đối tượng đã thay đổi, reset và cache handle"
+    description: "Phân tích cache handle, writeObject lặp, reset epoch, writeUnshared và snapshot cũ."
+    transition:
+      to: serialization-basics-010
+      description: "Handle table là trạng thái stream; tạo writer mới để append có thể chèn header làm sai protocol."
+  - id: serialization-basics-010
+    order: 10
+    title: "Stream header và lỗi khi nối tùy tiện nhiều object stream"
+    description: "Giải thích stream header, lỗi append tùy tiện và giao thức framing cho các object streams độc lập."
+    transition:
+      to: serialization-basics-011
+      description: "Stream format gắn với class Java dẫn sang việc so sánh các giao thức có schema độc lập."
+  - id: serialization-basics-011
+    order: 11
+    title: "Khác biệt với định dạng trao đổi có schema độc lập Java"
+    description: "So sánh Java object serialization với schema formats độc lập Java và quy trình migration/versioning."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Tuần tự hóa (serialization), Serializable và việc lưu đồ thị đối tượng | ObjectOutputStream và ObjectInputStream | writeObject, readObject và định dạng stream | Tham chiếu dùng chung, vòng tham chiếu và object handle | Trường transient, static và trạng thái mặc định được lưu | serialVersionUID và tương thích lớp | NotSerializableException, InvalidClassException và StreamCorruptedException | Constructor của lớp Serializable và lớp cha không Serializable | Ghi lại đối tượng đã thay đổi, reset và cache handle | Stream header và lỗi khi nối tùy tiện nhiều object stream | Khác biệt với định dạng trao đổi có schema độc lập Java |
+  | Vấn đề cần hiểu | `Serializable` ghi một object hay cả graph? | Writer và reader phối hợp thế nào để đọc đúng? | Java object stream có cấu trúc byte nào? | Cơ chế nào giữ alias/cycle? | Field nào được lưu trong serialized state? | Class V2 có đọc được stream V1 không? | Lỗi xảy ra do graph, lớp hay bytes? | Constructor của lớp nào chạy lúc readObject? | Ghi lại object bị sửa như thế nào? | Vì sao nối writer mới có thể phá stream? | Khi nào cần schema tách khỏi Java class? |
+  | Giá trị đối với OOP/module | Nền tảng lưu/đọc object trong Java | Thiết lập I/O có thứ tự và vòng đời rõ | Chẩn đoán lỗi giao thức và identity | Giữ topology và identity của graph | Thiết kế state lưu chính xác | Chủ động versioning dữ liệu đã lưu | Sửa đúng nguyên nhân I/O | Bảo vệ invariant qua inheritance | Kiểm soát cache và state được xuất | Tránh stream corruption khi lưu nhiều object | Thiết kế giao thức dữ liệu portable |
+  | Tư duy hình thành | Tách graph, bytes và trạng thái runtime | Thao tác theo contract của cả hai đầu | Không xem stream là object dump thô | Phân biệt equality với identity | Phân tách instance và runtime state | UID không phải hợp đồng schema tuyệt đối | Chẩn đoán dựa trên bước thất bại | Tách cách `new` và cơ chế restore | Không coi handle là bản cập nhật tự động | Phân biệt stream state với record framing | Đặt schema làm hợp đồng dữ liệu |

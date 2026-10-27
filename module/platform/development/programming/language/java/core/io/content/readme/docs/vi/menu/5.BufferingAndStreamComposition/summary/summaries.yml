@@ -1,0 +1,311 @@
+summaries:
+- id: buffering-and-stream-composition-001
+  title: Mục đích của BufferedInputStream và BufferedOutputStream
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Mục đích của BufferedInputStream và BufferedOutputStream**
+
+    Bài học đặt nền tảng cho việc đọc và ghi byte hiệu quả: tại sao các thao tác một byte có thể tạo ra nhiều lời gọi xuống luồng bên dưới, cách BufferedInputStream đọc trước và BufferedOutputStream tích lũy dữ liệu, và khi nào cần chuyển dữ liệu còn đệm bằng flush hoặc close. Người học thực hành sao chép byte và xác định rõ buffer không thực hiện giải mã văn bản.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế bộ đệm byte
+
+    1. Vì sao bọc một FileInputStream bằng BufferedInputStream có thể giảm số lần đọc trực tiếp từ luồng nguồn khi ứng dụng gọi read() từng byte?
+    2. BufferedOutputStream giữ byte ở đâu trước khi gọi write xuống luồng đích, và điều kiện nào khiến nó đẩy dữ liệu ra?
+    3. Khi tự đọc và ghi từng khối byte[], bổ sung BufferedInputStream hoặc BufferedOutputStream mang lại lợi ích gì và có giới hạn nào?
+
+    ### Sử dụng và kiểm chứng
+
+    1. Trong ví dụ copy file, làm thế nào kiểm tra số byte hoặc nội dung đầu ra không bị thiếu so với file gốc?
+    2. Vì sao flush và close có vai trò khác nhau khi sử dụng BufferedOutputStream?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích buffer byte | Vẽ được chuỗi BufferedInputStream → nguồn và BufferedOutputStream → đích; chỉ rõ vùng đệm hoạt động ở chiều nào. |
+    | Thực hiện sao chép có đệm | Viết được vòng lặp read(byte[])/write(byte[],offset,length), xử lý EOF và số byte thực đọc. |
+    | Nhận diện giới hạn | Phân biệt giảm lời gọi tầng dưới với bảo đảm đồng bộ ra đĩa hoặc chuyển đổi charset. |
+- id: buffering-and-stream-composition-002
+  title: BufferedReader và BufferedWriter
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **BufferedReader và BufferedWriter**
+
+    Bài học triển khai buffering cho dữ liệu ký tự thay vì byte, làm rõ cách BufferedReader.readLine() nhận biết EOF và dòng trống, cách BufferedWriter.newLine() phụ thuộc nền tảng, và vai trò charset khi dựng Reader/Writer từ byte stream. Ví dụ đọc/ghi file UTF-8 giúp nhận ra trường hợp làm thay đổi ký tự xuống dòng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đọc và ghi theo ký tự
+
+    1. BufferedReader khác BufferedInputStream ở kiểu dữ liệu và những thao tác tiện ích nào?
+    2. readLine() trả null khi nào, và vì sao chuỗi rỗng không có nghĩa là EOF?
+    3. newLine() khác việc ghi ký tự '\n' về ý nghĩa và tính di động như thế nào?
+
+    ### Charset và dòng dữ liệu
+
+    1. Vì sao không thể truyền InputStream trực tiếp vào constructor BufferedReader, và cần lớp cầu nối nào?
+    2. Trong ví dụ sao chép văn bản, cách đọc bằng readLine() rồi ghi bằng newLine() thay đổi byte gốc trong trường hợp nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết lập pipeline ký tự | Viết chuỗi InputStreamReader/BufferedReader và OutputStreamWriter/BufferedWriter với UTF-8 rõ ràng. |
+    | Kiểm soát EOF và dòng trống | Triển khai vòng lặp readLine() đến null mà vẫn giữ các dòng có độ dài 0. |
+    | Giữ định dạng văn bản | Giải thích được vì sao muốn giữ nguyên CRLF/LF phải cân nhắc đọc theo khối ký tự hoặc sao chép byte. |
+- id: buffering-and-stream-composition-003
+  title: 'Decorator: lớp bọc bổ sung hành vi cho stream'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Decorator: lớp bọc bổ sung hành vi cho stream**
+
+    Bài học giải thích Decorator pattern trong Java I/O qua hành vi của lớp bao bổ sung buffering, đọc dữ liệu có kiểu và đếm byte. Trọng tâm là luồng điều khiển qua từng lớp, việc một decorator tự viết cần ủy quyền đúng các overload read, và ranh giới sở hữu tài nguyên khi close lan truyền.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất decorator và chuỗi ủy quyền
+
+    1. Decorator thêm hành vi gì mà vẫn giữ được giao diện InputStream hoặc OutputStream của tầng dưới?
+    2. Một lời gọi read(byte[],offset,length) đi qua các wrapper theo thứ tự nào, và vì sao wrapper tự viết phải bảo toàn cách ủy quyền?
+
+    ### Thiết kế và giới hạn
+
+    1. Vì sao DataInputStream có thể bọc BufferedInputStream nhưng BufferedReader không nhận trực tiếp InputStream?
+    2. Thứ tự đặt bộ đệm và luồng đọc dữ liệu có kiểu ảnh hưởng đến chức năng của pipeline ra sao?
+    3. Nếu stream gốc thuộc quyền quản lý của caller, cần mô tả contract close cho decorator tự viết như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích decorator | Lần theo một lời gọi từ lớp ngoài tới lớp trong và xác định chức năng từng tầng. |
+    | Thiết kế wrapper | Đánh giá code decorator có ủy quyền chính xác read()/read(byte[],offset,length)/close() hay không. |
+    | Ghép hợp lệ | Chọn cặp wrapper tương thích với byte hoặc char và giải thích thứ tự bọc. |
+- id: buffering-and-stream-composition-004
+  title: Thứ tự ghép stream, buffer, charset và định dạng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thứ tự ghép stream, buffer, charset và định dạng**
+
+    Bài học thiết kế một pipeline xử lý dữ liệu theo ranh giới kiểu: luồng byte, buffer, cầu nối charset và parser/formatter văn bản hoặc định dạng nhị phân. Người học phải lý giải vì sao đảo sai vị trí các tầng làm đổi ngữ nghĩa, và có thể ghép thêm nén khi thiết kế giao thức yêu cầu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các ranh giới dữ liệu
+
+    1. Sơ đồ đọc văn bản từ file qua InputStream, InputStreamReader, BufferedReader và parser cần sắp xếp theo thứ tự nào?
+    2. Vì sao BufferedReader không thay thế InputStreamReader và DataInputStream không giải mã dữ liệu thành dòng ký tự?
+    3. Đặt bộ đệm byte và bộ đệm ký tự ở hai tầng có luôn cần thiết không?
+
+    ### Định dạng và chiều ghi
+
+    1. Khi ghi văn bản qua BufferedWriter và OutputStreamWriter, dữ liệu đi qua mỗi lớp và trở thành byte ở đâu?
+    2. Nếu truyền dữ liệu gzip hoặc nhị phân có cấu trúc, thứ tự nén/giải nén và mã hóa ký tự cần dựa trên điều gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ pipeline | Từ yêu cầu đọc/ghi một tệp UTF-8, biểu diễn đúng thứ tự các lớp và chỉ rõ ranh giới byte → char. |
+    | Phân tích định dạng | Dự đoán hậu quả khi đổi thứ tự decorator, charset và lớp tạo bản ghi. |
+    | Kiểm tra thiết kế | Loại bỏ lớp đệm thừa hoặc lớp chuyển đổi sai kiểu, đồng thời giữ đúng hợp đồng dữ liệu. |
+- id: buffering-and-stream-composition-005
+  title: Kích thước bộ đệm và số lần gọi I/O
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kích thước bộ đệm và số lần gọi I/O**
+
+    Bài học định lượng sự đánh đổi của buffer size đối với số lời gọi xuống stream nền, overhead, thông lượng, độ trễ, bộ nhớ và lượng truy cập đồng thời. Qua ví dụ đếm lời gọi và quy trình đo, người học phân biệt số lần gọi phương thức Java với system call hoặc I/O vật lý, tránh kết luận cứ tăng buffer là nhanh hơn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình và phép đo
+
+    1. Khi ứng dụng thực hiện nhiều lần read() từng byte, kích thước buffer làm thay đổi tần suất gọi nguồn bên dưới theo mô hình đơn giản ra sao?
+    2. Vì sao số lần gọi read ở wrapper, số system call và số lần thiết bị đọc vật lý không đồng nhất?
+    3. Trong ví dụ đếm lời gọi tầng dưới, cần kiểm soát biến gì để so sánh hai kích thước buffer công bằng?
+
+    ### Đánh đổi hiệu năng
+
+    1. Trong điều kiện nào buffer lớn hơn làm tăng memory footprint nhưng không tăng throughput đáng kể?
+    2. Flush thường xuyên có thể ảnh hưởng đến batching, latency và khả năng quan sát dữ liệu như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ước lượng chi phí | Tính được số lần refill hoặc flush gần đúng từ dung lượng dữ liệu và kích thước buffer trong mô hình nêu rõ giả định. |
+    | Đọc kết quả đo | Phân biệt phép đếm tầng Java với syscall và tránh suy luận quá mức từ ví dụ. |
+    | Chọn cấu hình | Đề xuất kích thước thử nghiệm, kế hoạch benchmark và tiêu chí throughput/latency/memory. |
+- id: buffering-and-stream-composition-006
+  title: flush đẩy bộ đệm phần mềm nhưng không đồng nghĩa dữ liệu bền vững
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **flush đẩy bộ đệm phần mềm nhưng không đồng nghĩa dữ liệu bền vững**
+
+    Bài học tách bạch các tầng cam kết khi ghi: dữ liệu trong buffer Java, flush xuống stream bên dưới, dữ liệu hệ điều hành có thể đọc lại, yêu cầu force/sync với storage, tính nguyên tử khi thay thế file và ACK phía nhận qua mạng. Ví dụ flush wrapper trước khi force cho thấy đúng thứ tự các bước và giới hạn của từng cơ chế.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa flush và độ bền
+
+    1. Khi gọi BufferedOutputStream.flush(), dữ liệu được đảm bảo đi đến đâu và điều gì vẫn chưa được đảm bảo?
+    2. Khác biệt về trách nhiệm giữa flush(), FileChannel.force(boolean), FileDescriptor.sync() và close() là gì?
+    3. Vì sao một byte đã được đọc lại sau flush vẫn chưa chứng minh chịu được mất điện?
+
+    ### Thiết kế đường ghi an toàn
+
+    1. Nếu hệ thống yêu cầu ghi và đồng bộ tệp, thứ tự giữa flush của wrapper và force của channel cần giải thích thế nào?
+    2. Atomic move, ACK từ phía mạng và tính bền vững của dữ liệu giải quyết các vấn đề khác nhau ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân lớp trạng thái ghi | Phân biệt được Java buffer, kernel cache, thiết bị lưu trữ và xử lý phía nhận trong một trace ghi. |
+    | Đề xuất quy trình | Mô tả thứ tự flush/force/đổi tên khi bài toán có yêu cầu độ bền và tính nguyên tử, kèm giới hạn hỗ trợ. |
+    | Phát hiện bảo đảm sai | Bác bỏ phát biểu flush luôn đồng nghĩa fsync, ACK hoặc ghi nguyên tử và nêu chứng cứ API. |
+- id: buffering-and-stream-composition-007
+  title: close lớp ngoài cùng và việc đóng tài nguyên bên dưới
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **close lớp ngoài cùng và việc đóng tài nguyên bên dưới**
+
+    Bài học dạy vòng đời tài nguyên trong pipeline nhiều wrapper: close lớp ngoài cùng thuộc quyền sở hữu của ứng dụng, đóng lan truyền, flush khi đóng output wrapper và thứ tự của try-with-resources. Người học phân tích exception bị suppressed và trường hợp wrapper chỉ mượn nguồn nên không có quyền đóng stream bên dưới.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng đời wrapper
+
+    1. Khi gọi close() trên BufferedReader bọc InputStreamReader và FileInputStream, lời gọi được chuyển qua các tầng nào?
+    2. Vì sao cần phân biệt đóng lớp ngoài cùng trong chuỗi wrapper với đóng nhiều resource độc lập trong try-with-resources?
+    3. close() có thể làm gì với dữ liệu còn chờ trong output buffer?
+
+    ### Quyền sở hữu và lỗi
+
+    1. Nếu lớp xử lý chỉ mượn InputStream từ caller, close ở wrapper có thể vi phạm quyền sở hữu như thế nào?
+    2. Khi body và close đều ném lỗi trong try-with-resources, suppressed exception giúp kiểm tra trường hợp đó ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Theo dõi đóng tài nguyên | Lần theo chuỗi close qua các wrapper chuẩn và xác định đối tượng thực sự nắm giữ descriptor. |
+    | Thiết kế scope | Viết try-with-resources cho một pipeline có owner rõ ràng; chỉ ra resource độc lập nào phải được khai báo riêng. |
+    | Điều tra lỗi close | Tách primary exception và suppressed exceptions khi nhiều resource hoặc thao tác đóng lỗi. |
+- id: buffering-and-stream-composition-008
+  title: Mark, reset, markSupported và readlimit
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Mark, reset, markSupported và readlimit**
+
+    Bài học phân tích khả năng đọc trước rồi quay lại vị trí đã đánh dấu: markSupported không đồng nghĩa reset luôn thành công, readlimit có đơn vị và cam kết khác nhau giữa InputStream và BufferedReader, và một lần đọc vượt giới hạn có thể làm mark mất hiệu lực. Qua parser byte/char, người học xác định phương án dự phòng như PushbackInputStream hoặc seek khi mark/reset không phù hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng mark và reset
+
+    1. markSupported() xác nhận khả năng gì và vì sao vẫn phải xử lý IOException ở reset()?
+    2. readlimit trong InputStream tính theo byte còn readAheadLimit của BufferedReader tính theo đơn vị gì?
+    3. Vì sao không thể coi readlimit là bộ đếm buộc mọi implementation hủy mark ngay đúng số byte đã đọc?
+
+    ### Đọc trước an toàn
+
+    1. Khi parser cần nhìn trước header rồi trả vị trí về đầu, cần kiểm tra và đặt mark ở bước nào?
+    2. Nếu luồng gốc không hỗ trợ mark/reset hoặc phải seek nhiều lần, PushbackInputStream và file channel giải quyết nhu cầu nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng trạng thái | Dự đoán dữ liệu được đọc sau mark, read, reset đối với buffer có giới hạn. |
+    | Xử lý tình huống lỗi | Thiết kế kiểm tra capability và đường xử lý khi reset báo IOException. |
+    | Lựa chọn cơ chế | Chọn mark/reset, pushback hoặc random access theo độ dài lookahead và loại nguồn. |
+- id: buffering-and-stream-composition-009
+  title: Reader.ready khác kiểm tra EOF như thế nào
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Reader.ready khác kiểm tra EOF như thế nào**
+
+    Bài học sửa một nhầm lẫn gây lỗi vòng lặp: Reader.ready() nói về khả năng đọc ngay mà không chờ input, còn EOF được báo bằng kết quả read() == -1 hoặc readLine() == null. Ví dụ đọc ở EOF và nguồn chưa sẵn sàng giúp người học thiết kế vòng lặp đọc đúng, tránh ép -1 thành char hay dùng ready như polling/timeout.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Readiness và EOF
+
+    1. Reader.ready() trả true đảm bảo điều gì và vì sao điều đó không chứng minh còn ký tự chưa đọc?
+    2. Nếu ready() trả false, có thể kết luận đã EOF hay lần read() chắc chắn sẽ blocking không?
+    3. Các giá trị nào từ read() và BufferedReader.readLine() mới trực tiếp thể hiện EOF?
+
+    ### Vòng lặp và tình huống biên
+
+    1. Vì sao while(reader.ready()) có thể bỏ sót dữ liệu hoặc lặp sai khi reader đã ở cuối?
+    2. Viết điều kiện lặp thế nào để phân biệt dòng trống với EOF khi đọc dòng văn bản?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt hợp đồng API | Diễn giải đúng ready(), read() và readLine() cho cả trường hợp có dữ liệu, tạm thời không sẵn sàng và EOF. |
+    | Sửa điều kiện lặp | Thay việc dừng dựa trên ready() bằng điều kiện kiểm tra giá trị đọc thực tế. |
+    | Phân tích lỗi | Chứng minh bằng trace vì sao ép kết quả read()=-1 thành char hoặc dùng ready làm timeout là sai. |
+- id: buffering-and-stream-composition-010
+  title: Tránh trộn nhiều lớp đọc có bộ đệm trên cùng một nguồn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tránh trộn nhiều lớp đọc có bộ đệm trên cùng một nguồn**
+
+    Bài học chỉ rõ tác hại của hai đầu đọc độc lập cùng bọc một nguồn: một wrapper có thể read-ahead và giữ byte mà wrapper khác không thể thấy, dẫn đến thứ tự lệch hoặc EOF sớm. Bài học đối chiếu chain decorator một chiều hợp lệ với các reader cạnh tranh, trình bày cách dùng một điểm đọc, parser chung, hoặc phân phối dữ liệu có chủ đích.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Read-ahead và cạnh tranh nguồn
+
+    1. Vì sao hai BufferedInputStream độc lập trên cùng InputStream có thể đọc ra nội dung lệch thứ tự mong đợi?
+    2. Ghép BufferedReader → InputStreamReader → nguồn khác ở điểm nào với việc tạo hai BufferedReader độc lập trên cùng nguồn?
+    3. Khi đọc xen kẽ raw stream và BufferedInputStream, byte đã read-ahead đang nằm ở đâu?
+
+    ### Khắc phục theo cấu trúc pipeline
+
+    1. Nếu header và body phải được xử lý theo hai cách khác nhau, làm sao vẫn duy trì một điểm tiêu thụ dữ liệu nhất quán?
+    2. Khi có nhiều consumer, nên phân phối từ reader chung hoặc dùng nguồn độc lập trong tình huống nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích byte order | Mô phỏng buffer đọc trước và xác định byte bị giữ trong từng wrapper khi hai consumer xen kẽ. |
+    | Sửa pipeline | Thiết kế lại parser để chỉ có một đầu đọc, giảm nguy cơ EOF sớm và mất dữ liệu. |
+    | Đánh giá kiến trúc | Phân biệt nhiều tầng decorator hợp lệ với nhiều buffered reader tranh nguồn và nêu điều kiện cần để chia sẻ dữ liệu. |

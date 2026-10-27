@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "CONSOLE VÀ ĐỊNH DẠNG — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: console-and-formatting-001
+    order: 1
+    title: "System.in, System.out và System.err"
+    description: "Nhận diện System.in, System.out và System.err, xử lý byte/text, EOF, charset, stdout/stderr và exit code trong một CLI."
+    transition:
+      to: console-and-formatting-002
+      description: "Từ việc nhận diện ba kênh chuẩn sang cấu hình các kênh ở biên tiến trình và đọc kết quả thực tế."
+  - id: console-and-formatting-002
+    order: 2
+    title: "Chuyển hướng đầu vào, đầu ra và lỗi ở mức tiến trình"
+    description: "Áp dụng redirect của shell và ProcessBuilder để nối stdin/stdout/stderr đến file hoặc pipe, xử lý exit code và tránh deadlock."
+    transition:
+      to: console-and-formatting-003
+      description: "Khi đã biết redirect, cần quyết định liệu môi trường chạy có cho phép tương tác trực tiếp qua Console hay không."
+  - id: console-and-formatting-003
+    order: 3
+    title: "System.console và trường hợp không có console"
+    description: "Xác định khi nào JVM có Console; thiết kế fallback stdin cho dữ liệu thường và bảo vệ nhánh nhập mật khẩu."
+    transition:
+      to: console-and-formatting-004
+      description: "Sau khi xử lý khả năng Console vắng mặt, tìm hiểu chi tiết các thao tác ký tự, dòng và mật khẩu khi Console khả dụng."
+  - id: console-and-formatting-004
+    order: 4
+    title: "Console.reader, writer, readLine và readPassword"
+    description: "Sử dụng reader, writer, readLine và readPassword theo hợp đồng Console, bao gồm prompt, buffering, EOF và char[] bí mật."
+    transition:
+      to: console-and-formatting-005
+      description: "Từ cách Console in và đọc văn bản chuyển sang lựa chọn hai lớp in định dạng phổ biến trong Java."
+  - id: console-and-formatting-005
+    order: 5
+    title: "PrintStream khác PrintWriter"
+    description: "So sánh PrintStream với PrintWriter theo đích byte/ký tự, charset, auto-flush và cách quan sát lỗi đầu ra."
+    transition:
+      to: console-and-formatting-006
+      description: "Khi phân biệt PrintStream và PrintWriter, tiếp tục học cú pháp định dạng văn bản mà cả hai có thể cung cấp."
+  - id: console-and-formatting-006
+    order: 6
+    title: "print, println, printf và Formatter"
+    description: "Định dạng kết quả bằng print, println, printf và Formatter với format specifier, width, precision và lỗi định dạng."
+    transition:
+      to: console-and-formatting-007
+      description: "Từ format specifier tổng quát sang quy ước số, dấu phân cách và parsing phụ thuộc Locale."
+  - id: console-and-formatting-007
+    order: 7
+    title: "Locale, mẫu định dạng và dấu phân cách số"
+    description: "Dùng Locale, NumberFormat, DecimalFormat và Scanner để hiển thị và parse số đúng dấu phân cách, rounding và BigDecimal."
+    transition:
+      to: console-and-formatting-008
+      description: "Khi đã tạo đúng chuỗi định dạng, cần biết khi nào dữ liệu thực sự được flush tới tầng I/O kế tiếp."
+  - id: console-and-formatting-008
+    order: 8
+    title: "Auto-flush và các thao tác thực sự kích hoạt flush"
+    description: "Phân biệt write, flush, close; thực nghiệm trigger auto-flush của PrintStream, PrintWriter và các wrapper đệm."
+    transition:
+      to: console-and-formatting-009
+      description: "Từ hành vi flush chuyển sang cách phát hiện lỗi ghi đôi khi bị che giấu bởi các lớp print."
+  - id: console-and-formatting-009
+    order: 9
+    title: "checkError và các lỗi I/O không được ném trực tiếp"
+    description: "Phát hiện lỗi ghi bị PrintStream/PrintWriter ghi nhớ qua checkError và chọn API báo IOException phù hợp khi xuất dữ liệu quan trọng."
+    transition:
+      to: console-and-formatting-010
+      description: "Sau khi biết cách kiểm soát lỗi, hoàn thiện thiết kế vòng đời để một helper không vô tình đóng luồng chuẩn dùng chung."
+  - id: console-and-formatting-010
+    order: 10
+    title: "Không vô tình đóng các stream chuẩn dùng chung"
+    description: "Quản lý ownership khi bọc System.in/out/err, tránh đóng stream mượn và kiểm chứng hợp đồng bằng test độc lập."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | System.in, System.out và System.err | Chuyển hướng đầu vào, đầu ra và lỗi ở mức tiến trình | System.console và trường hợp không có console | Console.reader, writer, readLine và readPassword | PrintStream khác PrintWriter | print, println, printf và Formatter | Locale, mẫu định dạng và dấu phân cách số | Auto-flush và các thao tác thực sự kích hoạt flush | checkError và các lỗi I/O không được ném trực tiếp | Không vô tình đóng các stream chuẩn dùng chung |
+  | Vấn đề cần hiểu | Ba luồng chuẩn khác nhau về kiểu và trách nhiệm gì? | Shell và ProcessBuilder gắn stdin/stdout/stderr vào đâu? | Khi không có Console, chương trình nhập thế nào? | Các API reader/writer/readLine/readPassword xử lý ra sao? | PrintStream và PrintWriter khác nhau ở đâu? | Muốn in và định dạng văn bản chính xác dùng gì? | Biểu diễn và đọc số theo vùng thế nào? | Thao tác nào thật sự kích hoạt flush? | Làm sao phát hiện lỗi I/O ẩn sau lệnh print? | Ai có quyền đóng stream chuẩn và wrapper? |
+  | Giá trị đối với OOP/module | Đặt nền tảng giao tiếp byte/text và kênh dữ liệu của CLI | Xây dựng pipeline/child process đúng, tránh pipe deadlock | Thiết kế nhánh interactive và batch an toàn | Chọn chính xác API Console và bảo vệ dữ liệu nhập | Chọn abstraction output theo đích, encoding và lỗi | Tạo output console dễ đọc và đúng format specifier | Định dạng và parse số, tiền tệ không sai locale | Đảm bảo output xuất hiện đúng ranh giới khi cần | Đưa lỗi ghi vào quyết định thành công/thất bại | Bảo toàn vòng đời tài nguyên dùng chung qua nhiều helper |
+  | Tư duy hình thành | Phân tách nguồn, kết quả, lỗi và mã thoát | Nhìn pipeline như các kênh có ownership và backpressure | Không suy luận khả năng tương tác từ stdout | Tách giao diện đọc dòng, ký tự và secret | Đọc hợp đồng API thay vì đoán từ cú pháp print | Phân biệt giá trị và cách trình bày | Xem locale như một phần của hợp đồng dữ liệu | Đánh giá buffering và độ trễ bằng phép đo | Kiểm chứng lỗi đến tận lúc flush/close | Xác định chủ sở hữu trước khi gọi close |

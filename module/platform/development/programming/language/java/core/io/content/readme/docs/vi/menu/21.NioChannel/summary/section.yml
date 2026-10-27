@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "NIO CHANNEL — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: nio-channel-001
+    order: 1
+    title: "Channel khác InputStream và OutputStream"
+    description: "Phân biệt byte stream và channel, dùng ByteBuffer đúng cách, hiểu khả năng seek, blocking/non-blocking và ranh giới của adapter."
+    transition:
+      to: nio-channel-002
+      description: "Sau bức tranh chung về stream và channel, học hợp đồng ba interface byte channel làm nền cho các thao tác."
+  - id: nio-channel-002
+    order: 2
+    title: "ReadableByteChannel, WritableByteChannel và ByteChannel"
+    description: "Hiểu ba interface ReadableByteChannel, WritableByteChannel, ByteChannel và hợp đồng chuyển byte qua position/limit của ByteBuffer."
+    transition:
+      to: nio-channel-003
+      description: "Khi đã biết đọc/ghi byte qua buffer, mở rộng sang channel tệp có thể định vị và sửa nội dung."
+  - id: nio-channel-003
+    order: 3
+    title: "SeekableByteChannel và khả năng thay đổi vị trí"
+    description: "Thực hành vị trí ngẫu nhiên, ghi đè, EOF, kích thước và truncate với SeekableByteChannel, chú ý chế độ mở và đồng thời."
+    transition:
+      to: nio-channel-004
+      description: "Từ việc định vị byte chính xác sang xử lý khả năng read/write không truyền hết buffer trong một lần."
+  - id: nio-channel-004
+    order: 4
+    title: "Đọc hoặc ghi không đủ toàn bộ buffer"
+    description: "Xử lý partial read/write thay vì giả định một lời gọi truyền hết buffer, quản lý header/frame và non-blocking zero progress."
+    transition:
+      to: nio-channel-005
+      description: "Từ partial I/O cần phân biệt rõ zero-progress, EOF và lượng dữ liệu thực sự đọc được."
+  - id: nio-channel-005
+    order: 5
+    title: "Ý nghĩa của kết quả 0 và EOF -1"
+    description: "Diễn giải read trả số dương, 0 và -1 theo trạng thái buffer, file hoặc socket; tách dữ liệu, no-progress và EOF."
+    transition:
+      to: nio-channel-006
+      description: "Sau khi hiểu read trả 0 hay -1, áp dụng position/remaining để tổ chức vòng lặp đọc ghi không mất byte."
+  - id: nio-channel-006
+    order: 6
+    title: "Vòng lặp đọc ghi dựa trên position và remaining"
+    description: "Tổ chức vòng lặp read/flip/write/clear hay compact bằng position và remaining, sao chép file và giữ frame chưa đủ."
+    transition:
+      to: nio-channel-007
+      description: "Từ một buffer chuyển sang trường hợp thông điệp chia nhiều vùng header và payload."
+  - id: nio-channel-007
+    order: 7
+    title: "Scattering read và gathering write"
+    description: "Phân tán đọc và gom ghi trên nhiều ByteBuffer theo thứ tự, xử lý partial I/O và khung dữ liệu có độ dài động."
+    transition:
+      to: nio-channel-008
+      description: "Sau khi xử lý nhiều buffer, kết nối hệ sinh thái NIO với thư viện InputStream/OutputStream đã có."
+  - id: nio-channel-008
+    order: 8
+    title: "Channels.newChannel, newInputStream và newOutputStream"
+    description: "Chuyển stream thành channel và ngược lại bằng Channels adapter, giữ đúng hướng I/O, mode và quyền đóng tài nguyên."
+    transition:
+      to: nio-channel-009
+      description: "Từ adapter vận chuyển byte chuyển sang adapter văn bản cần charset và chính sách lỗi."
+  - id: nio-channel-009
+    order: 9
+    title: "Channels.newReader, newWriter và chuyển đổi charset"
+    description: "Chuyển byte channel thành Reader/Writer bằng charset và coder rõ ràng, xử lý lỗi mã hóa và transcoding."
+    transition:
+      to: nio-channel-010
+      description: "Khi đã có wrapper/decoder, kết thúc mạch học bằng vòng đời, interrupt và đóng nguồn chung."
+  - id: nio-channel-010
+    order: 10
+    title: "Đóng channel, khả năng ngắt và tài nguyên bên dưới"
+    description: "Đóng và ngắt channel an toàn, phân biệt loại lỗi đóng trong blocking I/O và tài nguyên chung/ngoài channel."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Channel khác InputStream và OutputStream | ReadableByteChannel, WritableByteChannel và ByteChannel | SeekableByteChannel và khả năng thay đổi vị trí | Đọc hoặc ghi không đủ toàn bộ buffer | Ý nghĩa của kết quả 0 và EOF -1 | Vòng lặp đọc ghi dựa trên position và remaining | Scattering read và gathering write | Channels.newChannel, newInputStream và newOutputStream | Channels.newReader, newWriter và chuyển đổi charset | Đóng channel, khả năng ngắt và tài nguyên bên dưới |
+  | Vấn đề cần hiểu | Stream và channel khác nhau về dữ liệu và khả năng nào? | Ba byte channel interface ràng buộc read/write ra sao? | Định vị và thay đổi kích thước file thế nào? | Vì sao một lần read/write chưa chắc hoàn tất buffer? | read 0 khác EOF -1 ở đâu? | position và remaining dẫn dắt loop I/O ra sao? | Làm sao đọc/ghi vào nhiều buffer theo thứ tự? | Chuyển stream/channel hai chiều bằng API nào? | Byte channel thành text phải decode/encode ra sao? | Đóng và interrupt channel gây hệ quả gì? |
+  | Giá trị đối với OOP/module | Chọn đúng lớp IO/NIO cho bài toán | Dùng hợp đồng read/write trên ByteBuffer | Thao tác truy cập ngẫu nhiên chính xác | Ngăn mất dữ liệu do partial I/O | Tránh suy diễn EOF và busy-spin | Giữ mọi byte trong vòng lặp/khung dữ liệu | Thiết kế protocol nhiều vùng header/payload | Tích hợp IO cũ và NIO an toàn | Giữ dữ liệu văn bản và charset chính xác | Chặn rò rỉ tài nguyên và lỗi shutdown |
+  | Tư duy hình thành | Đọc năng lực theo kiểu channel thực tế | Đo tiến độ qua giá trị trả về và buffer state | Phân biệt offset tệp với offset bộ đệm | Không đồng nhất một lời gọi với hoàn thành I/O | Phân biệt không có tiến triển với hết nguồn | Xem buffer state là hợp đồng | Tách frame logic khỏi số lần syscall | Đánh giá quyền sở hữu khi bọc adapter | Kiểm tra charset và coding error policy | Đặt ownership/cancellation trước close |

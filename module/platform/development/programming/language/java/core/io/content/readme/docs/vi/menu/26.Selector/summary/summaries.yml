@@ -1,0 +1,306 @@
+summaries:
+- id: selector-001
+  title: Selector và mô hình nhiều channel trên một luồng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Selector và mô hình nhiều channel trên một luồng**
+
+    Định hình mô hình multiplexing của `Selector`: một event-loop thread giám sát nhiều `SelectableChannel`, nhận biết readiness nhưng chính ứng dụng phải gọi I/O và giữ state mỗi kết nối.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình kiến trúc
+
+    1. Selector phối hợp với `SelectableChannel`, `SelectionKey` và `ByteBuffer` thế nào trong một event loop?
+    2. Vì sao một thread có thể theo dõi nhiều kết nối mà không block riêng trên từng socket?
+
+    ### Giới hạn readiness
+
+    1. Vì sao tín hiệu ready không có nghĩa đã nhận hoặc gửi đủ một message?
+    2. Điều gì xảy ra với fairness khi một handler blocking hoặc tất cả socket đều bật OP_WRITE?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô tả hệ thống | Vẽ luồng register → select → selectedKeys → I/O và state. |
+    | Diễn giải phạm vi | Phân biệt khả năng multiplex với công việc read/write thực tế. |
+    | Nhận diện rủi ro | Đề xuất state riêng cho mỗi connection và tránh blocking event loop. |
+- id: selector-002
+  title: Đăng ký channel ở chế độ non-blocking
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đăng ký channel ở chế độ non-blocking**
+
+    Thực hành chuỗi `configureBlocking(false)` → kiểm tra `validOps()` → `register(selector, ops, attachment)`; phân tích các lỗi `IllegalBlockingModeException`, `IllegalArgumentException` và vòng đời đăng ký.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Điều kiện register
+
+    1. Tại sao một channel phải được đặt non-blocking trước `register()`?
+    2. Bạn phát hiện tổ hợp interest ops không thuộc `channel.validOps()` như thế nào?
+
+    ### Registration và state
+
+    1. Register lại cùng channel trên cùng selector ảnh hưởng `SelectionKey` và attachment ra sao?
+    2. Khi `SocketChannel.connect()` chưa hoàn tất, cần đăng ký OP nào và chuyển sang OP_READ khi nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đăng ký đúng | Viết trình tự mở Pipe/SocketChannel, cấu hình non-blocking và register. |
+    | Chẩn đoán đăng ký | Giải thích nguyên nhân lỗi blocking mode, bitmask không hợp lệ và closed channel. |
+    | Gắn trạng thái | Sử dụng attachment để theo dõi connection mà không tạo key trùng. |
+- id: selector-003
+  title: SelectionKey, interest set và ready set
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **SelectionKey, interest set và ready set**
+
+    Phân biệt `SelectionKey` là registration, `interestOps()` mô tả ý định ứng dụng, còn `readyOps()` là các bit selector phát hiện; tìm hiểu registered/selected/cancelled key sets và state attachment.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý định và readiness
+
+    1. Interest set và ready set khác nhau về nguồn gốc và thời điểm cập nhật như thế nào?
+    2. Thay interestOps có lập tức viết đè readyOps của key đã chọn hay không, vì sao?
+
+    ### Key sets và attachment
+
+    1. `keys()`, `selectedKeys()` và cancelled-key set khác nhau ở vai trò nào?
+    2. Tại sao nên giữ inbound buffer và outbound queue ở attachment của từng connection?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích bitmask | Dự đoán sự thay đổi interest/ready ops qua hai lượt selection. |
+    | Phân biệt tập key | Giải thích remove selected key khác với cancel đăng ký. |
+    | Thiết kế state | Phác họa connection attachment lưu partial I/O và parser state. |
+- id: selector-004
+  title: OP_ACCEPT, OP_CONNECT, OP_READ và OP_WRITE
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **OP_ACCEPT, OP_CONNECT, OP_READ và OP_WRITE**
+
+    Liên hệ bốn bit thao tác với từng pha TCP: `accept()` client, `finishConnect()` kết nối pending, `read()` byte và `write()` payload, luôn kiểm tra kết quả API sau thông báo readiness.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các cờ theo vòng đời
+
+    1. OP_ACCEPT và OP_CONNECT áp dụng cho loại channel và trạng thái kết nối nào?
+    2. Tại sao OP_CONNECT chưa khẳng định TCP connection đã thành công?
+
+    ### I/O và chuyển trạng thái
+
+    1. Bạn xử lý `accept()` trả null, `read()` trả -1/0 và `write()` ghi dở như thế nào?
+    2. Vì sao OP_WRITE phải bật có điều kiện và việc thay interestOps cần giữ những bit khác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ánh xạ operation | Ghép OP_ACCEPT/CONNECT/READ/WRITE với channel và lệnh I/O. |
+    | Xử lý non-blocking connect | Phân tích nhánh kết nối hoàn tất ngay hoặc cần finishConnect. |
+    | Bảo toàn dữ liệu | Thiết kế xử lý read EOF, write từng phần và cập nhật interest. |
+- id: selector-005
+  title: select, selectNow và select có timeout
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **select, selectNow và select có timeout**
+
+    Phân biệt `select()` chờ, `selectNow()` không chờ và `select(timeout)` có giới hạn; đặc biệt `select(0)` lại chờ vô hạn và wakeup có thể khiến select sớm trở về.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chọn chế độ select
+
+    1. `select()`, `selectNow()` và `select(100)` khác nhau ra sao khi chưa có readiness?
+    2. Vì sao `select(0)` không tương đương `selectNow()` và kết quả return 0 biểu thị điều gì?
+
+    ### Lịch và wakeup
+
+    1. Làm sao tích hợp scheduled tasks vào vòng chờ có timeout mà không busy poll?
+    2. `wakeup()` và interrupt tác động thế nào đến thời điểm select trở về và công việc phải kiểm tra?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn timeout | Quyết định API select cho I/O thuần, polling kết hợp tác vụ và timer. |
+    | Phân tích trường hợp biên | Giải thích timeout=0, return=0 và wakeup pending. |
+    | Thiết kế vòng lặp | Viết vòng select có xử lý task queue và selected keys đúng. |
+- id: selector-006
+  title: Lặp selectedKeys và loại bỏ key đã xử lý
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lặp selectedKeys và loại bỏ key đã xử lý**
+
+    Thực hành lặp `selector.selectedKeys()` bằng iterator, gọi `iterator.remove()` và phân biệt tiêu thụ một readiness event với hủy key hoặc đóng channel.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng lặp selected set
+
+    1. Vì sao tập `selectedKeys()` không tự rỗng sau mỗi lần select?
+    2. `iterator.remove()` cần đặt ở đâu để tránh xử lý lặp khi handler thất bại?
+
+    ### Phân biệt lifecycle
+
+    1. `iterator.remove()`, `key.cancel()`, `channel.close()` và `interestOps(0)` khác nhau thế nào?
+    2. Nếu key invalid giữa hai nhánh dispatch, bạn kiểm tra và bỏ qua nhánh còn lại thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Duyệt chuẩn | Viết select → iterator.next → remove → isValid → dispatch. |
+    | Phân loại thao tác | Diễn giải tác dụng remove/cancel/close với selected set và đăng ký. |
+    | Chịu lỗi handler | Bố trí kiểm tra key hợp lệ để tránh lỗi và xử lý trùng. |
+- id: selector-007
+  title: Wakeup, hủy key và đóng selector
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Wakeup, hủy key và đóng selector**
+
+    Phân biệt `Selector.wakeup()`, `SelectionKey.cancel()` và `Selector.close()` theo đối tượng bị tác động, trường hợp đánh thức trước khi select, dọn đăng ký và nghĩa vụ tự đóng channel.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hiệu lực và trạng thái
+
+    1. Wakeup trước khi select khác wakeup lúc thread đang chờ như thế nào?
+    2. Sau `cancel()` hoặc `selector.close()` registration và channel còn sống ở trạng thái nào?
+
+    ### Phối hợp và shutdown
+
+    1. Vì sao thread khác nên thêm lệnh vào thread-safe queue rồi gọi `wakeup()`?
+    2. Bạn sắp xếp dừng event loop, đóng các socket và selector để không còn tài nguyên mở thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt vòng đời | Giải thích wakeup/cancel/close có ảnh hưởng riêng lên selection, key, channel. |
+    | Đồng bộ tác vụ | Thiết kế task queue và wakeup để thay interest trên event-loop thread. |
+    | Lập shutdown | Đưa ra thứ tự cancel, đóng channel và selector có xử lý lỗi. |
+- id: selector-008
+  title: Sẵn sàng I/O không bảo đảm hoàn tất toàn bộ thao tác
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Sẵn sàng I/O không bảo đảm hoàn tất toàn bộ thao tác**
+
+    Phân biệt readiness với completion và áp dụng `read()` >0/0/-1, partial `write()`, `ByteBuffer.flip/compact` cùng parser state qua nhiều lượt selection để không mất hay lặp byte.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ready và completion
+
+    1. Vì sao read-ready chưa đủ cả frame và write-ready không có nghĩa gửi hết payload?
+    2. OP_ACCEPT/OP_CONNECT cần kiểm tra `accept()`/`finishConnect()` thế nào trước khi coi thành công?
+
+    ### Bảo toàn trạng thái
+
+    1. Với frame chia làm ba chunk, bạn dùng `flip/compact` và giữ `position/limit` thế nào?
+    2. Xử lý `read()==0`, EOF và `write()==0` ra sao để không busy spin?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc kết quả API | Phân tích read >0/0/-1 và write một phần đúng nghĩa. |
+    | Mô phỏng ByteBuffer | Theo dõi position/limit của frame dở qua các lần select. |
+    | Xác nhận completion | Xác định điều kiện protocol frame hoàn chỉnh thay vì dựa vào readiness. |
+- id: selector-009
+  title: Chỉ đăng ký OP_WRITE khi còn dữ liệu cần gửi
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chỉ đăng ký OP_WRITE khi còn dữ liệu cần gửi**
+
+    Giải thích nguyên nhân OP_WRITE thường ready liên tục; thiết kế outbound queue theo connection, bật bit khi còn byte, tắt khi queue rỗng, giữ partial write và áp dụng backpressure.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bit OP_WRITE đúng thời điểm
+
+    1. Tại sao socket writable thường xuyên ngay cả khi không có payload?
+    2. Thêm và gỡ riêng OP_WRITE bằng phép bit nào để không bỏ mất OP_READ?
+
+    ### Queue và flow control
+
+    1. Nếu write chỉ gửi 70 trong 200 byte, ByteBuffer và interestOps cần giữ trạng thái nào?
+    2. High/low watermark cùng bounded queue và wakeup xử lý producer nhanh hơn network thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Điều khiển interest | Cập nhật interestOps theo trạng thái queue với bitmask OR/AND NOT. |
+    | Giữ pending output | Mô phỏng ghi từng phần qua nhiều ByteBuffer mà không mất dữ liệu. |
+    | Giới hạn bộ nhớ | Xây chính sách high/low watermarks cho outbound queue và producer. |
+- id: selector-010
+  title: Tránh busy loop, nghẽn xử lý và dùng chung buffer sai cách
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tránh busy loop, nghẽn xử lý và dùng chung buffer sai cách**
+
+    Tích hợp kinh nghiệm vận hành: tránh busy polling, zero-progress spin và blocking handler; giữ ByteBuffer state riêng theo connection, offload task qua queue bounded và áp dụng per-key budgets/backpressure.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chẩn đoán busy loop
+
+    1. Ba nguồn busy loop là `selectNow()` liên tục, zero-progress read/write và OP_WRITE bật rỗng khác nhau thế nào?
+    2. Vì sao một callback blocking hoặc CPU-heavy trì hoãn mọi connection trên cùng event loop?
+
+    ### Ownership và offload
+
+    1. Dùng chung `ByteBuffer` mutable, duplicate/slice và chuyển sang worker có thể làm sai dữ liệu ra sao?
+    2. Bạn tạo connection state, hàng đợi completion và `wakeup()` để giữ ownership thế nào?
+
+    ### Fairness và backlog
+
+    1. Per-key budget và high/low watermarks giúp tránh starvation và cạn RAM như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tìm nguyên nhân CPU cao | Phân tích busy spin theo selectNow, zero-progress I/O và OP_WRITE. |
+    | Bảo vệ buffer | Đề xuất inbound/outbound state theo connection cùng quy tắc chuyển ownership. |
+    | Thiết kế fairness | Kết hợp bounded queue, backpressure, budget và lịch xử lý frame chưa xong. |
+    | Chịu tải | Giải thích cách xử lý EOF, cancel và connection chậm an toàn. |

@@ -1,0 +1,68 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "TRUY CẬP NGẪU NHIÊN — VỊ TRÍ BYTE, BẢN GHI VÀ PHỐI HỢP I/O"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: random-access-001
+    order: 1
+    title: "RandomAccessFile và các chế độ r, rw, rws, rwd"
+    description: "Giới thiệu RandomAccessFile, các mode r/rw/rws/rwd, cập nhật tại vị trí và đánh đổi đồng bộ dữ liệu."
+    transition:
+      to: random-access-002
+      description: "Sau khi chọn mode, cần định vị chính xác byte đọc/ghi kế tiếp bằng con trỏ tệp."
+  - id: random-access-002
+    order: 2
+    title: "File pointer, seek và getFilePointer"
+    description: "Hiểu file pointer và hợp đồng seek/getFilePointer, trace vị trí sau I/O, tránh nhầm EOF với độ dài."
+    transition:
+      to: random-access-003
+      description: "Khi offset đã rõ, cần biết primitive được mã hóa thành bao nhiêu byte và theo thứ tự nào."
+  - id: random-access-003
+    order: 3
+    title: "Đọc ghi dữ liệu nguyên thủy qua DataInput và DataOutput"
+    description: "Dùng DataInput/DataOutput cho kiểu nguyên thủy, layout big-endian, readFully, EOF và modified UTF-8."
+    transition:
+      to: random-access-004
+      description: "Định dạng byte chỉ đáng tin khi biết chính xác kích thước logic và vùng nào đã có dữ liệu."
+  - id: random-access-004
+    order: 4
+    title: "length, setLength và vùng dữ liệu chưa được ghi"
+    description: "Phân biệt logical length, file pointer, setLength mở rộng/thu nhỏ và vùng dữ liệu chưa ghi."
+    transition:
+      to: random-access-005
+      description: "Từ kích thước tệp, thiết kế trực tiếp vị trí và kích thước cho từng slot dữ liệu."
+  - id: random-access-005
+    order: 5
+    title: "Thiết kế bản ghi có vị trí và kích thước xác định"
+    description: "Thiết kế header và slot cố định, kiểm tra offset overflow, encoding, tombstone và integrity."
+    transition:
+      to: random-access-006
+      description: "Sau khi layout đã ổn định, phân biệt con trỏ chia sẻ giữa RandomAccessFile và FileChannel."
+  - id: random-access-006
+    order: 6
+    title: "getChannel và trạng thái vị trí được chia sẻ"
+    description: "Phân biệt RAF pointer, FileChannel position, ByteBuffer position và hành vi dùng chung vị trí."
+    transition:
+      to: random-access-007
+      description: "Từ con trỏ chia sẻ trong một đối tượng, phân tích race khi nhiều thao tác cùng truy cập."
+  - id: random-access-007
+    order: 7
+    title: "Không chia sẻ file pointer giữa nhiều thao tác mà thiếu phối hợp"
+    description: "Nhận diện race do shared cursor; áp dụng positional I/O hoặc đồng bộ multi-step; phân biệt các kiểu lock."
+    transition:
+      to: random-access-008
+      description: "Tổng hợp các yêu cầu đã học để lựa chọn RAF hoặc FileChannel theo nhu cầu thực tế."
+  - id: random-access-008
+    order: 8
+    title: "Khi nào chọn RandomAccessFile thay FileChannel"
+    description: "Đưa ra tiêu chí lựa chọn RandomAccessFile và FileChannel dựa trên primitive, ByteBuffer, positional I/O, locking."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | RandomAccessFile và các chế độ r, rw, rws, rwd | File pointer, seek và getFilePointer | Đọc ghi dữ liệu nguyên thủy qua DataInput và DataOutput | length, setLength và vùng dữ liệu chưa được ghi | Thiết kế bản ghi có vị trí và kích thước xác định | getChannel và trạng thái vị trí được chia sẻ | Không chia sẻ file pointer giữa nhiều thao tác mà thiếu phối hợp | Khi nào chọn RandomAccessFile thay FileChannel |
+  | Vấn đề cần hiểu | Mode mở file và yêu cầu đồng bộ ghi khác nhau thế nào? | Seek tác động lên vị trí và độ dài tệp ra sao? | Vì sao cách đọc phải đối xứng với kiểu và thứ tự đã ghi? | Kéo dài tệp có đồng nghĩa tạo bản ghi hợp lệ không? | Một định dạng record cố định phải bảo vệ những bất biến nào? | Những lời gọi nào cập nhật shared file position, lời gọi nào giữ nguyên? | Vì sao seek và write đúng riêng lẻ vẫn có thể làm hỏng dữ liệu khi chạy đồng thời? | Theo yêu cầu truy cập cụ thể, vì sao chọn RAF hoặc FileChannel? |
+  | Giá trị đối với OOP/module | Chọn quyền ghi và độ bền phù hợp | Đọc ghi đúng byte mong muốn | Giữ tính đúng đắn và khả năng đọc lại dữ liệu nhị phân | Tránh diễn giải byte chưa khởi tạo là dữ liệu thật | Truy xuất, cập nhật và xác minh record đúng vị trí | Ngăn đọc sai byte khi kết hợp RAF với FileChannel | Bảo vệ offset và sự nhất quán khi có concurrency | Ra quyết định API theo cấu trúc dữ liệu và workload |
+  | Tư duy hình thành | Phân biệt quyền truy cập, durability và atomicity | Theo dõi con trỏ như trạng thái thay đổi qua mỗi lệnh | Xem binary file như một hợp đồng schema có phiên bản | Tách dung lượng logic, nội dung vật lý và tính hợp lệ | Thiết kế schema byte và invariant trước khi code | Nhận diện trạng thái nằm trong file, channel và buffer | Xem thao tác nhiều bước là đơn vị cần phối hợp | So sánh năng lực và đánh đổi thay vì giả định hiệu năng |

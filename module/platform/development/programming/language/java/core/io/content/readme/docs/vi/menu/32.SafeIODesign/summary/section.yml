@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "THIẾT KẾ AN TOÀN — LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: safe-io-design-001
+    order: 1
+    title: "Giới hạn kích thước đầu vào và lượng bộ nhớ sử dụng"
+    description: "Kiểm soát input theo byte đọc thực tế, decompressed size và peak memory, đồng thời hạn chế tài nguyên cho các request đồng thời."
+    transition:
+      to: safe-io-design-002
+      description: "Giới hạn kích thước bảo vệ tài nguyên; bước tiếp theo phải bảo đảm tên file từ input không vượt phạm vi truy cập được phép."
+  - id: safe-io-design-002
+    order: 2
+    title: "Path traversal và ranh giới thư mục được phép"
+    description: "Giới hạn thao tác file trong allowed root trước đường dẫn từ client, upload hoặc archive, xét cả path component và filesystem thực."
+    transition:
+      to: safe-io-design-003
+      description: "Dù đường dẫn đã normalize và nằm dưới root về mặt ký tự, symbolic link vẫn có thể dẫn tới một đích khác."
+  - id: safe-io-design-003
+    order: 3
+    title: "Normalize không thay thế việc xử lý symbolic link"
+    description: "Phân biệt chuẩn hóa cú pháp với giải quyết symbolic link và hạn chế của NOFOLLOW_LINKS khi bảo vệ đường dẫn."
+    transition:
+      to: safe-io-design-004
+      description: "Ngay cả khi real path vừa được kiểm tra, trạng thái filesystem vẫn có thể đổi trước thời điểm sử dụng."
+  - id: safe-io-design-004
+    order: 4
+    title: "TOCTOU: khoảng trống giữa kiểm tra và thao tác"
+    description: "Phát hiện khoảng trống giữa kiểm tra và sử dụng filesystem; giảm race bằng operation có điều kiện hoặc handle ổn định."
+    transition:
+      to: safe-io-design-005
+      description: "Đối với cây thư mục bị thay đổi đồng thời, SecureDirectoryStream cung cấp các thao tác tương đối với directory handle."
+  - id: safe-io-design-005
+    order: 5
+    title: "SecureDirectoryStream và khả năng hỗ trợ của provider"
+    description: "Khai thác thao tác dựa trên directory handle khi provider cung cấp SecureDirectoryStream, kiểm tra hỗ trợ và fail closed nếu cần."
+    transition:
+      to: safe-io-design-006
+      description: "Sau khi đã kiểm soát ranh giới directory, file tạm cần được tạo với quyền tối thiểu và giải phóng có trách nhiệm."
+  - id: safe-io-design-006
+    order: 6
+    title: "Tạo tệp tạm có quyền phù hợp và dọn dẹp có kiểm soát"
+    description: "Tạo file tạm với quyền phù hợp ngay lúc tạo, kiểm soát storage và cleanup kể cả khi exception hoặc crash xảy ra."
+    transition:
+      to: safe-io-design-007
+      description: "Một file tạm an toàn mới là bước chuẩn bị; thao tác mở, copy và publish vẫn có thể ghi đè file đã tồn tại."
+  - id: safe-io-design-007
+    order: 7
+    title: "Không ghi đè dữ liệu ngoài ý muốn khi mở hoặc copy"
+    description: "Chọn open/copy options để không vô tình truncate hoặc thay thế file, và thiết kế publish nội dung mới an toàn."
+    transition:
+      to: safe-io-design-008
+      description: "Sau khi tránh ghi đè ngoài ý muốn, một số workflow còn cần xác nhận byte nhận và lưu trữ không bị thay đổi."
+  - id: safe-io-design-008
+    order: 8
+    title: "Kiểm tra tính toàn vẹn bằng hash khi bài toán yêu cầu"
+    description: "Tính và kiểm tra digest khi yêu cầu byte integrity; xác định mức tin cậy của hash tham chiếu và giới hạn xác thực."
+    transition:
+      to: safe-io-design-009
+      description: "Dù thao tác đọc/ghi hay integrity thất bại, phản hồi công khai phải tránh tiết lộ đường dẫn hoặc dữ liệu nhạy cảm."
+  - id: safe-io-design-009
+    order: 9
+    title: "Tránh ghi dữ liệu nhạy cảm và đường dẫn nội bộ vào thông báo công khai"
+    description: "Tách public error DTO khỏi internal diagnostics bằng allowlist và requestId, phòng lộ path, exception và log injection."
+    transition:
+      to: safe-io-design-010
+      description: "Cuối cùng, phân biệt bảo vệ do hệ điều hành thực thi với cơ chế Java SecurityManager lịch sử để tránh hiểu sai ranh giới quyền."
+  - id: safe-io-design-010
+    order: 10
+    title: "Phân biệt quyền hệ điều hành với các cơ chế bảo mật Java lịch sử"
+    description: "Phân biệt quyền truy cập OS với SecurityManager Java lịch sử và authorization ứng dụng; áp dụng least privilege đúng tầng."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Giới hạn kích thước đầu vào và lượng bộ nhớ sử dụng | Path traversal và ranh giới thư mục được phép | Normalize không thay thế việc xử lý symbolic link | TOCTOU: khoảng trống giữa kiểm tra và thao tác | SecureDirectoryStream và khả năng hỗ trợ của provider | Tạo tệp tạm có quyền phù hợp và dọn dẹp có kiểm soát | Không ghi đè dữ liệu ngoài ý muốn khi mở hoặc copy | Kiểm tra tính toàn vẹn bằng hash khi bài toán yêu cầu | Tránh ghi dữ liệu nhạy cảm và đường dẫn nội bộ vào thông báo công khai | Phân biệt quyền hệ điều hành với các cơ chế bảo mật Java lịch sử |
+  | Vấn đề cần hiểu | Làm sao ngăn nguồn I/O làm cạn RAM, đĩa hoặc thời gian xử lý? | Làm sao không cho đường dẫn từ client thoát khỏi thư mục được cấp quyền? | Vì sao đường dẫn đã normalize vẫn có thể trỏ ra ngoài vùng an toàn? | Làm sao tránh thay đổi filesystem trong khoảng check và use? | Khi nào provider hỗ trợ thao tác directory có khả năng chống race? | Tạo và dọn file tạm thế nào để không lộ dữ liệu hay để lại rác? | Lệnh mở/copy nào tự ý truncate hoặc ghi đè và tránh bằng cách nào? | Khi nào cần hash, và hash đối chiếu với nguồn nào đáng tin? | Công khai lỗi I/O sao cho hữu ích mà không lộ hạ tầng? | Quyền OS, Java SecurityManager và application authorization khác nhau ở đâu? |
+  | Giá trị đối với OOP/module | Giảm nguy cơ DoS, zip bomb và dữ liệu đầu vào vô hạn | Ngăn traversal khi tải, đọc, lưu và giải nén file | Tránh tin nhầm vào canonicalization và kiểm tra link đơn lẻ | Giảm race ghi đè, đổi đích symlink và thao tác sai object | Hạn chế symlink race với API được hỗ trợ trên runtime cụ thể | Hạn chế lộ dữ liệu và lạm dụng ổ đĩa tạm | Tránh mất dữ liệu khi ghi tệp hoặc sao chép | Phát hiện khác biệt dữ liệu và tránh ngộ nhận hash là xác thực | Giảm rò rỉ thông tin nhạy cảm qua response hoặc log | Tránh đặt sai trust boundary và dựa vào sandbox Java đã vô hiệu |
+  | Tư duy hình thành | Đặt quota ở mọi điểm làm phình hoặc nhân bản dữ liệu | So sánh đường dẫn theo cấu trúc và trust boundary | Phân biệt tên đường dẫn với đối tượng thật và thời điểm quan sát | Chuyển điều kiện bảo vệ vào chính thao tác | Xác minh capability của provider và đặt chính sách unsupported | Quản lý vòng đời và quyền filesystem tại điểm tạo | Biến ý định thay thế thành open option/hợp đồng minh bạch | Gắn kiểm tra integrity với chuỗi tin cậy | Thiết kế thông tin đầu ra theo trust boundary | Tách cơ chế phân quyền theo từng tầng hệ thống |

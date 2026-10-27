@@ -1,0 +1,31 @@
+sections:
+  performance-and-large-files-001:
+    difficulty: BASIC
+    isImportant: true
+  performance-and-large-files-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  performance-and-large-files-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  performance-and-large-files-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  performance-and-large-files-005:
+    difficulty: ADVANCED
+    isImportant: true
+  performance-and-large-files-006:
+    difficulty: ADVANCED
+    isImportant: false
+  performance-and-large-files-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  performance-and-large-files-008:
+    difficulty: ADVANCED
+    isImportant: true
+  performance-and-large-files-009:
+    difficulty: ADVANCED
+    isImportant: true
+  performance-and-large-files-010:
+    difficulty: ADVANCED
+    isImportant: true

@@ -1,0 +1,75 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "LIÊN KẾT TỆP — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: file-links-001
+    order: 1
+    title: "Symbolic link và hard link"
+    description: "Thiết lập khái niệm hard link, symbolic link và danh tính tệp; phân tích hành vi khi thay đổi hoặc xóa các tên đường dẫn."
+    transition:
+      to: file-links-002
+      description: "Từ hai loại liên kết, tập trung vào bộ API tạo, đọc và nhận biết symbolic link trong chương trình Java."
+  - id: file-links-002
+    order: 2
+    title: "Tạo, đọc và nhận biết symbolic link"
+    description: "Thực hành tạo, đọc target đã lưu và nhận diện symbolic link bằng ba phương thức Files, kể cả khi đích bị mất."
+    transition:
+      to: file-links-003
+      description: "Từ việc đọc target lưu trữ, giải thích cách diễn giải target tương đối theo thư mục chứa liên kết."
+  - id: file-links-003
+    order: 3
+    title: "Đường dẫn đích tương đối của symbolic link"
+    description: "Giải symbolic target tương đối theo vị trí link, phân biệt đường dẫn lưu, đường dẫn chuẩn hóa và đường dẫn thực khi cấu trúc di chuyển."
+    transition:
+      to: file-links-004
+      description: "Khi đường dẫn đích không còn phân giải được, cần xét symlink bị đứt và ý nghĩa follow/no-follow."
+  - id: file-links-004
+    order: 4
+    title: "Liên kết hỏng và khác biệt khi theo hoặc không theo link"
+    description: "Phân tích dangling symlink và sự khác nhau giữa theo link với xét chính link; đọc đúng trạng thái tồn tại và tránh suy luận thiếu chắc chắn."
+    transition:
+      to: file-links-005
+      description: "Sau nhận diện hai đối tượng link và referent, đi sâu vào NOFOLLOW_LINKS khi đọc metadata và kiểm tra loại tệp."
+  - id: file-links-005
+    order: 5
+    title: "NOFOLLOW_LINKS trong đọc thuộc tính và kiểm tra tệp"
+    description: "Sử dụng NOFOLLOW_LINKS chính xác cho việc đọc metadata, kiểm tra sự tồn tại và loại entry, đồng thời nêu giới hạn của các phép kiểm tra."
+    transition:
+      to: file-links-006
+      description: "Từ metadata và loại đối tượng, so sánh danh tính tệp thật với việc hai đối tượng Path có biểu diễn giống nhau."
+  - id: file-links-006
+    order: 6
+    title: "Files.isSameFile khác Path.equals"
+    description: "Phân biệt so sánh biểu diễn đường dẫn với đồng nhất danh tính file, cả khi symlink, hard link và chuẩn hóa cú pháp tham gia."
+    transition:
+      to: file-links-007
+      description: "Sau khi biết đường dẫn nào cùng trỏ một tệp, xét tác động thật sự của copy, move và delete lên link hay đích."
+  - id: file-links-007
+    order: 7
+    title: "Thao tác copy, move, delete tác động vào link hay đích"
+    description: "Đối chiếu copy, move, delete với nguồn/destination là symlink, hard link; xác định chính xác entry hay referent bị thay đổi."
+    transition:
+      to: file-links-008
+      description: "Từ thao tác trên một link đơn, phân tích duyệt cây có FOLLOW_LINKS, vòng lặp và giới hạn độ sâu."
+  - id: file-links-008
+    order: 8
+    title: "Vòng liên kết và giới hạn khi duyệt cây"
+    description: "Giải thích vòng do FOLLOW_LINKS khi duyệt cây, giới hạn maxDepth, cách báo FileSystemLoopException và chính sách tránh vượt phạm vi."
+    transition:
+      to: file-links-009
+      description: "Sau quy tắc duyệt, tổng hợp giới hạn theo hệ điều hành, filesystem, quyền và bảo mật khi tạo hoặc truy cập liên kết."
+  - id: file-links-009
+    order: 9
+    title: "Quyền và tính hỗ trợ theo hệ điều hành"
+    description: "Đánh giá quyền và hỗ trợ file link theo OS, filesystem và provider; đọc attribute views, xử lý lỗi và bảo vệ đường dẫn không tin cậy."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Symbolic link và hard link | Tạo, đọc và nhận biết symbolic link | Đường dẫn đích tương đối của symbolic link | Liên kết hỏng và khác biệt khi theo hoặc không theo link | NOFOLLOW_LINKS trong đọc thuộc tính và kiểm tra tệp | Files.isSameFile khác Path.equals | Thao tác copy, move, delete tác động vào link hay đích | Vòng liên kết và giới hạn khi duyệt cây | Quyền và tính hỗ trợ theo hệ điều hành |
+  | Vấn đề cần hiểu | Hard link và symbolic link tham chiếu dữ liệu theo cách nào, và chuyện gì xảy ra khi tên gốc thay đổi? | Tạo, đọc và xác nhận một symbolic link bằng API nào, và làm sao biết chính link vẫn tồn tại? | Target tương đối được tính từ đâu, và cách di chuyển đường dẫn làm liên kết đúng hoặc sai ra sao? | Link vẫn tồn tại nhưng đích mất thì Files.exists, notExists và isSymbolicLink cho biết điều gì? | NOFOLLOW_LINKS thay đổi kết quả thuộc tính và loại tệp ra sao trên một symlink? | Hai Path bằng nhau có đồng nghĩa cùng file, và hai Path khác nhau có thể tham chiếu cùng file không? | Copy, move và delete tác động lên link hay file đích; tùy chọn NOFOLLOW_LINKS/REPLACE_EXISTING ảnh hưởng gì? | FOLLOW_LINKS có thể tạo vòng, duyệt trùng và vượt ra ngoài root; giới hạn và callback nào giúp kiểm soát? | Vì sao tạo hoặc kiểm tra link thất bại theo nền tảng, và làm sao chọn API quyền/attributes an toàn? |
+  | Giá trị đối với OOP/module | Có nền tảng chọn đúng loại file link và dự đoán vòng đời của dữ liệu. | Thực hành NIO.2 chính xác trên mục symlink và target của nó. | Giữ đúng tham chiếu trong cấu trúc thư mục di động. | Chẩn đoán tệp liên kết đúng và tránh thao tác lên sai đối tượng. | Giải thích metadata đúng đối tượng và nhận diện giới hạn của preflight. | Chọn đúng phép so sánh cho identity, lưu cache và kiểm tra tài nguyên. | Tránh sao chép, di chuyển hoặc xóa nhầm đối tượng dữ liệu. | Thiết kế duyệt cây tin cậy, có giới hạn và xử lý lỗi. | Xây dựng tính di động và xử lý lỗi đúng cho ứng dụng Java NIO.2. |
+  | Tư duy hình thành | Tách tên đường dẫn, mục liên kết và đối tượng tệp được tham chiếu. | Phân biệt chuỗi target được lưu với việc hệ thống tệp phân giải đích. | Luôn gắn target tương đối với vị trí của link, không gắn với working directory. | Không đồng nhất trạng thái một pathname với trạng thái referent phía sau symlink. | Kiểm tra chính entry khác với kiểm tra referent; không suy diễn tính an toàn toàn cục. | Tách biểu diễn Path khỏi danh tính đối tượng trong filesystem. | Đọc hợp đồng riêng từng thao tác thay vì khái quát mặc định follow cho mọi API. | Xem tree-walk như bài toán duyệt đồ thị có ràng buộc tài nguyên và phạm vi. | Xem quyền, provider và điều kiện thời điểm chạy là một phần của hợp đồng I/O. |

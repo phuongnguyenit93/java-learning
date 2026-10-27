@@ -1,0 +1,75 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "HỆ THỐNG TỆP JAVA NIO.2 — PROVIDER, PATH VÀ VÒNG ĐỜI"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: file-systems-001
+    order: 1
+    title: "FileSystem, FileSystems và FileSystemProvider"
+    description: "Giới thiệu kiến trúc NIO.2 gồm FileSystems, FileSystem và FileSystemProvider; sử dụng default FS và ZIP FS để thấy cách Path/Files gọi provider."
+    transition:
+      to: file-systems-002
+      description: "Từ vai trò các lớp nền, chuyển sang khám phá default provider và danh sách các provider thực sự được cài trong runtime."
+  - id: file-systems-002
+    order: 2
+    title: "Default file system và các provider được cài đặt"
+    description: "Nhận diện default file system, danh sách provider đã cài và URI scheme; phân biệt provider khả dụng với một filesystem instance đã mở."
+    transition:
+      to: file-systems-003
+      description: "Sau khi biết provider nào hiện diện, tiếp tục nhận biết FileSystem nào tạo ra mỗi Path và vì sao không thể trộn đường dẫn tùy ý."
+  - id: file-systems-003
+    order: 3
+    title: "Quan hệ giữa Path với FileSystem tạo ra nó"
+    description: "Làm rõ Path mang danh tính FileSystem sở hữu, cách tạo/ghép tên cùng provider và cách sao chép dữ liệu giữa hai filesystem."
+    transition:
+      to: file-systems-004
+      description: "Khi Path đã gắn với FileSystem cụ thể, cần quản lý đúng việc mở, mượn và đóng instance ấy."
+  - id: file-systems-004
+    order: 4
+    title: "newFileSystem, getFileSystem và quyền đóng tài nguyên"
+    description: "Quản lý vòng đời filesystem mở bằng newFileSystem và tham chiếu mượn từ getFileSystem; tránh đóng instance dùng chung hoặc sử dụng Path quá hạn."
+    transition:
+      to: file-systems-005
+      description: "Từ nguyên tắc quản lý vòng đời, áp dụng vào trường hợp thực hành ZipFS với nhiều thao tác trên entry."
+  - id: file-systems-005
+    order: 5
+    title: "ZIP file system: thao tác archive bằng Path và Files"
+    description: "Thực hành tạo, duyệt, sửa, đọc entry ZIP bằng ZipFS và Path/Files; xử lý giới hạn tài nguyên, tính nguyên tử và dữ liệu ZIP không tin cậy."
+    transition:
+      to: file-systems-006
+      description: "Sau khi thao tác trên ZIP và default filesystem, khảo sát thêm root, FileStore và metadata của từng provider."
+  - id: file-systems-006
+    order: 6
+    title: "Root directories, FileStore và các đặc điểm provider"
+    description: "Phân biệt root directory, FileStore và file-system provider; khảo sát dung lượng, khả năng read-only và attribute views theo backend."
+    transition:
+      to: file-systems-007
+      description: "Từ khả năng metadata khác biệt, chuyển sang chẩn đoán chính xác các ngoại lệ do provider, lookup và lifecycle."
+  - id: file-systems-007
+    order: 7
+    title: "ProviderMismatchException, FileSystemNotFoundException và ClosedFileSystemException"
+    description: "Chẩn đoán ba ngoại lệ ProviderMismatchException, FileSystemNotFoundException và ClosedFileSystemException từ nguyên nhân trộn Path, thiếu mount hoặc sai lifecycle."
+    transition:
+      to: file-systems-008
+      description: "Khi đã hiểu lỗi ranh giới filesystem, xem thêm giới hạn chuyển Path sang API java.io.File truyền thống."
+  - id: file-systems-008
+    order: 8
+    title: "Giới hạn chuyển sang File và giả định về đường dẫn vật lý"
+    description: "Phân biệt Path đa provider với java.io.File gắn với default filesystem; xử lý toFile không hỗ trợ và adapter cho API legacy bằng staging copy."
+    transition:
+      to: file-systems-009
+      description: "Sau khi đã hiểu hạn chế của bridge legacy, mở rộng tư duy sang SPI và tính năng đặc thù của mỗi backend."
+  - id: file-systems-009
+    order: 9
+    title: "Khả năng mở rộng provider và ranh giới của Java API"
+    description: "Tổng hợp mô hình mở rộng FileSystemProvider SPI, service discovery và ranh giới hỗ trợ/atomicity của API trên các backend khác nhau."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | FileSystem, FileSystems và FileSystemProvider | Default file system và các provider được cài đặt | Quan hệ giữa Path với FileSystem tạo ra nó | newFileSystem, getFileSystem và quyền đóng tài nguyên | ZIP file system: thao tác archive bằng Path và Files | Root directories, FileStore và các đặc điểm provider | ProviderMismatchException, FileSystemNotFoundException và ClosedFileSystemException | Giới hạn chuyển sang File và giả định về đường dẫn vật lý | Khả năng mở rộng provider và ranh giới của Java API |
+  | Vấn đề cần hiểu | FileSystems/FileSystem/provider chia vai trò ra sao? | Runtime có những provider nào và đã mount instance chưa? | Path thuộc FileSystem nào và phối hợp ra sao? | Ai tạo, ai mượn, ai được đóng filesystem? | Làm sao thao tác entry ZIP an toàn bằng Files? | Namespace root và storage metadata khác nhau thế nào? | Trộn provider, thiếu mount và đóng FS gây lỗi gì? | Khi nào Path chuyển được sang java.io.File? | API chung giới hạn ở đâu khi backend thay đổi? |
+  | Giá trị đối với OOP/module | Đặt đúng abstraction I/O trong module. | Nhận diện phụ thuộc runtime/provider. | Bảo toàn ngữ nghĩa Path xuyên lớp. | Tránh lifecycle bug ở dịch vụ dùng chung. | Thực hành xử lý archive và dữ liệu không tin cậy. | Khảo sát capability/dung lượng của đích ghi. | Chẩn đoán và sửa lỗi theo nguyên nhân. | Tích hợp thư viện cũ mà không mất nguồn dữ liệu. | Thiết kế API portable có điều kiện. |
+  | Tư duy hình thành | Tách facade, instance và SPI. | Phân biệt cài đặt với sử dụng instance. | Bám danh tính filesystem, không bám chuỗi tên. | Quản lý ownership và thời gian sống. | Lựa chọn tác vụ, giới hạn và xử lý ZIP. | Đo metadata theo path và provider thực. | Phân nhóm exception theo tầng trách nhiệm. | Giữ ranh giới giữa logical path và File. | Kiểm chứng hợp đồng và khả năng backend. |

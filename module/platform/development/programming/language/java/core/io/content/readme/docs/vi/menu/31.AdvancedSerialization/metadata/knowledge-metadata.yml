@@ -1,0 +1,37 @@
+sections:
+  advanced-serialization-001:
+    difficulty: ADVANCED
+    isImportant: true
+  advanced-serialization-002:
+    difficulty: ADVANCED
+    isImportant: false
+  advanced-serialization-003:
+    difficulty: ADVANCED
+    isImportant: false
+  advanced-serialization-004:
+    difficulty: ADVANCED
+    isImportant: true
+  advanced-serialization-005:
+    difficulty: ADVANCED
+    isImportant: true
+  advanced-serialization-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  advanced-serialization-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  advanced-serialization-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  advanced-serialization-009:
+    difficulty: ADVANCED
+    isImportant: true
+  advanced-serialization-010:
+    difficulty: ADVANCED
+    isImportant: true
+  advanced-serialization-011:
+    difficulty: ADVANCED
+    isImportant: true
+  advanced-serialization-012:
+    difficulty: ADVANCED
+    isImportant: true

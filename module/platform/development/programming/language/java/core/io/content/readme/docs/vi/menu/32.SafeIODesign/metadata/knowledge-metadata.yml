@@ -1,0 +1,31 @@
+sections:
+  safe-io-design-001:
+    difficulty: ADVANCED
+    isImportant: true
+  safe-io-design-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  safe-io-design-003:
+    difficulty: ADVANCED
+    isImportant: true
+  safe-io-design-004:
+    difficulty: ADVANCED
+    isImportant: true
+  safe-io-design-005:
+    difficulty: ADVANCED
+    isImportant: false
+  safe-io-design-006:
+    difficulty: ADVANCED
+    isImportant: true
+  safe-io-design-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  safe-io-design-008:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  safe-io-design-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  safe-io-design-010:
+    difficulty: ADVANCED
+    isImportant: true

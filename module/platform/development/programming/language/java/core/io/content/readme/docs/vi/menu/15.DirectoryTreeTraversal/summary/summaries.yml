@@ -1,0 +1,331 @@
+summaries:
+- id: directory-tree-traversal-001
+  title: DirectoryStream và đóng handle thư mục
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **DirectoryStream và đóng handle thư mục**
+
+    Bài học giúp duyệt các entry trực tiếp bằng `DirectoryStream<Path>` trong khi kiểm soát vòng đời handle hệ điều hành. Từ đó bạn biết chọn glob hoặc `DirectoryStream.Filter`, nhận diện lỗi mở/duyệt/đóng và tránh trả iterator phụ thuộc nguồn đã đóng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế DirectoryStream
+
+    1. Vì sao `DirectoryStream` vừa là `Iterable<Path>` vừa cần đóng, và nó khác `Stream<Path>` như thế nào?
+    2. Vì sao không thể giả định có thể gọi `iterator()` hai lần hoặc coi kết quả duyệt là snapshot ổn định?
+
+    ### Lọc và quản lý tài nguyên
+
+    1. Bạn sẽ dùng glob hay `DirectoryStream.Filter<Path>` khi phải lọc entry theo tên và metadata, và xử lý `IOException` của filter ra sao?
+    2. Khi lồng nhiều lần duyệt hoặc xảy ra `DirectoryIteratorException`, bạn bố trí `try-with-resources` thế nào để không rò rỉ handle?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quản lý vòng đời | Viết vòng `for-each` trong `try-with-resources`, giải thích chính xác thời điểm mở và đóng handle. |
+    | Lọc entry | Tạo ví dụ lọc bằng glob và `Filter<Path>`, nêu giới hạn lọc tên và loại tệp. |
+    | Xử lý lỗi duyệt | Phân biệt lỗi mở, lỗi khi lấy phần tử và lỗi đóng; bảo toàn nguyên nhân ngoại lệ. |
+- id: directory-tree-traversal-002
+  title: Files.list chỉ liệt kê con trực tiếp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Files.list chỉ liệt kê con trực tiếp**
+
+    Bài học xác định đúng phạm vi của `Files.list(Path)`: trả `Stream<Path>` chỉ gồm các entry trực tiếp, không bao gồm chính thư mục gốc và không tự đệ quy. Bạn dùng pipeline lọc, sắp xếp khi cần, đồng thời đóng stream và phân biệt lỗi tại bước mở với lỗi phát sinh lúc tiêu thụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phạm vi và pipeline
+
+    1. Với cây có nhiều tầng, `Files.list(root)` trả những đường dẫn nào và khác `Files.walk(root, 1)` ở điểm nào?
+    2. Khi lọc một entry theo phần mở rộng, vì sao cần phân biệt điều kiện tên với kiểm tra `Files.isRegularFile`?
+
+    ### Vòng đời và giới hạn
+
+    1. Vì sao `count()`, `toList()` hoặc `findFirst()` không thay cho `close()` của stream từ `Files.list`?
+    2. Bạn sẽ sắp xếp danh sách tên ra sao để kết quả ổn định mà vẫn cân nhắc bộ nhớ với thư mục rất lớn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định phạm vi | Dự đoán chính xác kết quả liệt kê cấp 1, phân biệt root và con trực tiếp. |
+    | Viết pipeline | Lọc file theo tên và loại, sắp xếp đầu ra ổn định khi nghiệp vụ yêu cầu. |
+    | Đóng stream | Dùng `try-with-resources` và chỉ ra trường hợp tiêu thụ có thể phát sinh `UncheckedIOException`. |
+- id: directory-tree-traversal-003
+  title: Files.walk và độ sâu tối đa
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Files.walk và độ sâu tối đa**
+
+    Bài học hướng dẫn duyệt cây với `Files.walk(start, maxDepth)`, hiểu root ở cấp 0 và sự khác nhau giữa giới hạn độ sâu với lọc kết quả sau khi đã đi sâu. Bạn sẽ phân tích độ rộng cây, tài nguyên stream, thứ tự, liên kết tượng trưng và ngoại lệ lazy traversal.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giới hạn cây
+
+    1. Với `root/a/b.txt`, giá trị `maxDepth` nào mới đưa `b.txt` vào stream và vì sao root được tính cấp 0?
+    2. Vì sao `Files.walk(root).filter(...)` theo độ sâu không tương đương `Files.walk(root, 2)` về lượng I/O và lỗi?
+
+    ### Rủi ro vận hành
+
+    1. Giới hạn độ sâu có chặn được một thư mục cấp 1 chứa hàng triệu file không, và cách xử lý bộ nhớ nên thay đổi thế nào?
+    2. Điều gì thay đổi khi bật `FOLLOW_LINKS`, và khi nào lỗi I/O xuất hiện dưới dạng `UncheckedIOException`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính độ sâu | Lập bảng các đường dẫn được thăm với `maxDepth` 0, 1, 2 trên một cây mẫu. |
+    | Thiết kế giới hạn | So sánh giới hạn tại API với lọc sau duyệt, giải thích tác động tới I/O. |
+    | Quản lý lỗi và tài nguyên | Viết traversal đóng stream, phân biệt lỗi mở và lỗi trong terminal operation. |
+- id: directory-tree-traversal-004
+  title: Files.find kết hợp Path với BasicFileAttributes
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Files.find kết hợp Path với BasicFileAttributes**
+
+    Bài học sử dụng `Files.find` với matcher nhận đồng thời `Path` và `BasicFileAttributes` để tìm file theo tên, kích thước, loại và thời gian sửa đổi. Từ ví dụ chạy được, bạn đánh giá chi phí truy vấn metadata, giới hạn độ sâu, xử lý lỗi lazy và chính sách symbolic link.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Matcher và metadata
+
+    1. Hai tham số của matcher `Files.find` cung cấp loại thông tin khác nhau thế nào và vì sao nên dùng `BasicFileAttributes` đã nhận?
+    2. Bạn kết hợp kiểm tra tên, kích thước, `isRegularFile()` và thời điểm sửa đổi trong một predicate như thế nào?
+
+    ### Thiết kế truy vấn
+
+    1. Khi nào chọn `Files.find` thay cho `Files.walk(...).filter(...)` hoặc một `FileVisitor` có điều khiển nhánh?
+    2. `maxDepth`, `FOLLOW_LINKS` và việc đóng `Stream<Path>` ảnh hưởng thế nào đến kết quả và độ tin cậy của tìm kiếm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo matcher | Viết `BiPredicate<Path, BasicFileAttributes>` kết hợp điều kiện tên và metadata. |
+    | Tránh truy vấn thừa | Giải thích khi nào sử dụng `attrs` giúp hạn chế đọc lại thuộc tính filesystem. |
+    | Kiểm chứng tìm kiếm | Thiết kế bộ cây mẫu, dự đoán kết quả theo maxDepth và link policy. |
+- id: directory-tree-traversal-005
+  title: walkFileTree, FileVisitor và SimpleFileVisitor
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **walkFileTree, FileVisitor và SimpleFileVisitor**
+
+    Bài học giới thiệu cấu trúc duyệt cây theo callback với `Files.walkFileTree`, bốn phương thức của `FileVisitor` và lớp `SimpleFileVisitor` giúp chỉ override thao tác cần thiết. Bạn phân biệt vòng đời callback, cơ chế dừng/bỏ nhánh và vai trò của visitor khi thao tác trên cây có lỗi hoặc giới hạn độ sâu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc visitor
+
+    1. `walkFileTree` gọi những callback nào khi thăm thư mục và file, và `SimpleFileVisitor` giảm phần mã lặp thế nào?
+    2. Vì sao một visitor có thể xử lý nhánh lỗi hoặc bỏ nhánh linh hoạt hơn pipeline của `Files.walk`?
+
+    ### Thiết kế traversal
+
+    1. Bạn thiết kế visitor ghi nhận thư mục và file như thế nào để không phụ thuộc thứ tự tên giữa các sibling?
+    2. `maxDepth`, `FOLLOW_LINKS` và ngoại lệ ném từ callback có thể thay đổi luồng duyệt ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Triển khai visitor | Viết lớp kế thừa `SimpleFileVisitor<Path>` và override callback phù hợp yêu cầu. |
+    | Mô phỏng luồng | Giải thích thứ tự callback khi vào thư mục, gặp file và rời thư mục. |
+    | Định hướng API | Chọn `walkFileTree` thay cho `walk` khi cần điều khiển nhánh hay xử lý lỗi theo node. |
+- id: directory-tree-traversal-006
+  title: preVisitDirectory, visitFile, visitFileFailed và postVisitDirectory
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **preVisitDirectory, visitFile, visitFileFailed và postVisitDirectory**
+
+    Bài học phân tích bốn callback theo thời điểm thăm cây: trước thư mục, tại file, lúc không thể thăm file và sau thư mục. Nhờ biết chính xác khi nào callback chạy, bạn thiết kế thao tác tạo cây, thống kê, dọn dẹp và xử lý lỗi mà không nhầm `visitFileFailed` với `postVisitDirectory`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thứ tự callback
+
+    1. Trên cây có hai nhánh, thứ tự `preVisitDirectory`, `visitFile` và `postVisitDirectory` được ràng buộc thế nào?
+    2. `visitFileFailed` được gọi trong trường hợp gì, và khác tham số `exc` của `postVisitDirectory` ở đâu?
+
+    ### Chọn callback
+
+    1. Vì sao tạo thư mục đích thường diễn ra trong `preVisitDirectory` còn xóa thư mục rỗng cần `postVisitDirectory`?
+    2. Bạn sẽ xử lý lỗi đọc node hoặc không thể liệt kê hết thư mục ra sao để không báo traversal thành công sai?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng callback | Liệt kê chuỗi sự kiện callback hợp lệ trên cây ví dụ, phân biệt trước và sau node. |
+    | Thiết kế xử lý lỗi | Chọn chỗ xử lý `IOException` khi thăm file và khi kết thúc thư mục. |
+    | Gắn callback với nghiệp vụ | Ánh xạ việc tạo thư mục, xử lý file và xóa thư mục vào callback thích hợp. |
+- id: directory-tree-traversal-007
+  title: 'FileVisitResult: tiếp tục, bỏ nhánh hoặc kết thúc'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **FileVisitResult: tiếp tục, bỏ nhánh hoặc kết thúc**
+
+    Bài học làm rõ ý nghĩa của `CONTINUE`, `SKIP_SUBTREE`, `SKIP_SIBLINGS` và `TERMINATE` theo từng callback trong `FileVisitor`. Bạn sẽ dự đoán phạm vi ảnh hưởng của mỗi lựa chọn, biết phân biệt việc bỏ một nhánh với kết thúc cả cây, đồng thời xử lý ngoại lệ riêng với tín hiệu điều khiển duyệt.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bốn quyết định điều khiển
+
+    1. `SKIP_SUBTREE` ở `preVisitDirectory` tác động thế nào đến node con, và khác `SKIP_SIBLINGS` ra sao?
+    2. Vì sao `TERMINATE` khác bỏ các sibling hiện tại, đặc biệt khi còn nhánh của cấp cha chưa thăm?
+
+    ### Vị trí callback và lỗi
+
+    1. Nếu trả `SKIP_SUBTREE` từ `visitFile`, hiệu quả thực tế khác gì so với khi trả ở `preVisitDirectory`?
+    2. Bạn chọn `CONTINUE`, `SKIP_SIBLINGS` hay ném `IOException` ở `visitFileFailed` dựa trên chính sách nghiệp vụ như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán đường đi | Vẽ luồng node còn được thăm sau từng `FileVisitResult` trên cây nhiều nhánh. |
+    | Chọn tín hiệu đúng | Viết visitor bỏ nhánh cụ thể, bỏ sibling hoặc dừng toàn bộ cây. |
+    | Tách lỗi với điều khiển | Phân biệt trả kết quả hợp lệ với ném ngoại lệ khi thao tác thất bại. |
+- id: directory-tree-traversal-008
+  title: FOLLOW_LINKS, vòng liên kết và FileSystemLoopException
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **FOLLOW_LINKS, vòng liên kết và FileSystemLoopException**
+
+    Bài học giải thích mặc định không theo symbolic link của các API duyệt cây, rủi ro khi dùng `FOLLOW_LINKS` và cách phát hiện vòng liên kết qua `FileSystemLoopException`. Bạn so sánh đường đi lỗi giữa `walkFileTree` và `Files.walk`/`Files.find`, từ đó đặt chính sách link, độ sâu và kiểm soát đường dẫn đầu vào phù hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chính sách liên kết
+
+    1. Mặc định không `FOLLOW_LINKS` thì traversal xử lý symlink tới thư mục ra sao, và thay đổi gì khi bật tùy chọn?
+    2. Vì sao một symlink có thể tạo vòng hoặc dẫn ra ngoài root logic dù bạn đã giới hạn độ sâu?
+
+    ### Chẩn đoán và phòng ngừa
+
+    1. `FileSystemLoopException` đến `visitFileFailed` hay `UncheckedIOException` trong những API duyệt khác nhau như thế nào?
+    2. Bạn thiết kế hành vi bỏ qua hoặc báo lỗi vòng link thế nào để không giấu mất nhánh đã thất bại?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích link policy | So sánh tuyến traversal có và không có `FOLLOW_LINKS` trên sơ đồ cây có symlink. |
+    | Xử lý vòng | Nhận diện `FileSystemLoopException` và giải thích cách các API chuyển lỗi lên caller. |
+    | Đánh giá an toàn | Đưa ra chính sách no-follow/depth/check path khi duyệt cây do người dùng chỉ định. |
+- id: directory-tree-traversal-009
+  title: Thứ tự duyệt không mặc nhiên là thứ tự mong muốn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thứ tự duyệt không mặc nhiên là thứ tự mong muốn**
+
+    Bài học phân biệt thứ tự hệ thống tệp trả entry, thứ tự duyệt trước/sau của thuật toán và thứ tự nghiệp vụ yêu cầu. Bạn so sánh `sorted()` toàn cục với sắp xếp từng nhóm sibling, thiết kế comparator ổn định và hiểu vì sao thao tác sao chép/xóa còn phụ thuộc quan hệ cha–con.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các loại thứ tự
+
+    1. Vì sao `Files.list` không bảo đảm alphabet, còn `Files.walk` duyệt theo chiều sâu vẫn không bảo đảm sibling được sắp theo tên?
+    2. `stream.sorted()` toàn cục khác thao tác sort sibling trước khi đệ quy như thế nào trên một cây nhiều cấp?
+
+    ### Kết quả và hiệu năng
+
+    1. Bạn chọn comparator theo tên, thời gian hay kích thước như thế nào để có quy tắc phụ khi giá trị bằng nhau?
+    2. Khi nào phải ưu tiên cha trước con hoặc con trước cha thay cho thứ tự alphabet, và sắp xếp gây chi phí bộ nhớ gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện thứ tự | Dự đoán khác nhau giữa pre-order, post-order và sort toàn cục. |
+    | Thiết kế comparator | Sắp xếp danh sách đường dẫn ổn định theo tiêu chí nghiệp vụ, có tie-breaker. |
+    | Ràng buộc thao tác | Giải thích vì sao copy cần tạo cha trước con còn delete cần dọn con trước cha. |
+- id: directory-tree-traversal-010
+  title: Sao chép hoặc xóa cây theo đúng thứ tự xử lý
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Sao chép hoặc xóa cây theo đúng thứ tự xử lý**
+
+    Bài học triển khai copy cây theo chiều cha trước con và delete theo chiều con trước cha với `Files.walkFileTree` cùng `FileVisitor`. Bạn phân tích xử lý lỗi, sao chép thuộc tính, vòng liên kết, thay đổi đồng thời và lý do phải kiểm tra đường dẫn đích trước khi thực hiện thao tác có thể phá dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thứ tự thao tác
+
+    1. Vì sao copy cần tạo thư mục đích ở `preVisitDirectory`, còn delete phải xóa thư mục ở `postVisitDirectory`?
+    2. Những lỗi nào xảy ra khi `Files.delete(root)` được gọi trước khi các entry con đã được xử lý?
+
+    ### An toàn và thất bại
+
+    1. Vì sao không nên đặt thư mục đích copy bên trong chính cây nguồn và phải có chính sách symbolic link?
+    2. Khi một tệp không thể đọc, `DirectoryNotEmptyException` xuất hiện hoặc cây bị thay đổi đồng thời, bạn báo cáo kết quả và thiết kế phục hồi như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế copy tree | Ánh xạ tạo thư mục và copy file vào callback đúng thứ tự. |
+    | Thiết kế delete tree | Viết visitor xóa file rồi thư mục, phân tích ảnh hưởng của post-order. |
+    | Kiểm soát rủi ro | Nêu điều kiện kiểm tra root/target, link policy và lỗi cần báo trước thao tác thật. |
+- id: directory-tree-traversal-011
+  title: Đóng Stream trả về từ list, walk và find
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đóng Stream trả về từ list, walk và find**
+
+    Bài học hệ thống hóa quy tắc tài nguyên chung cho `Files.list`, `Files.walk` và `Files.find`: tất cả trả `Stream<Path>` cần được đóng đúng lúc. Bạn phân biệt terminal operation với `close()`, quy định ai sở hữu stream khi trả từ phương thức và bảo toàn nguyên nhân lỗi I/O cả lúc mở lẫn khi tiêu thụ lazy stream.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng đời Stream<Path>
+
+    1. Vì sao stream từ `Files.list`, `Files.walk` và `Files.find` cần `try-with-resources`, dù pipeline đã chạy `count()` hoặc `findFirst()`?
+    2. Điều gì có thể xảy ra nếu một phương thức trả stream đã bị đóng hoặc trả stream sống mà không làm rõ ai chịu trách nhiệm `close()`?
+
+    ### Thất bại và cách dùng
+
+    1. Bạn phân biệt `IOException` khi tạo stream với `UncheckedIOException` trong lúc tiêu thụ lazy stream như thế nào?
+    2. Khi nào nên xử lý trong phương thức rồi trả kết quả hoàn chỉnh, và khi nào nên giao stream sống cho caller?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đóng tài nguyên | Viết `try-with-resources` cho từng API list/walk/find và chứng minh terminal operation không tự đóng. |
+    | Quy định ownership | Thiết kế chữ ký và hợp đồng trả stream hoặc trả kết quả đã tính. |
+    | Phân loại lỗi | Giải thích đường đi của checked và unchecked I/O exceptions, không che mất lỗi traversal. |

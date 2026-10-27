@@ -1,0 +1,321 @@
+summaries:
+- id: performance-and-large-files-001
+  title: Xử lý từng khối thay vì đưa toàn bộ tệp vào bộ nhớ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Xử lý từng khối thay vì đưa toàn bộ tệp vào bộ nhớ**
+
+    Khi tệp lớn hơn ngân sách heap, `Files.readAllBytes` và việc gom dữ liệu không giới hạn có thể làm chương trình hết bộ nhớ. Bài hướng dẫn streaming bằng buffer tái sử dụng, xử lý đúng EOF, khối cuối, partial write và giới hạn kích thước, đồng thời phân biệt byte chunk với ranh giới ký tự hoặc bản ghi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế đọc và ghi theo khối
+
+    1. Vì sao một buffer cố định cho phép sao chép tệp lớn mà không nạp toàn bộ tệp vào heap?
+    2. Vì sao phải ghi `out.write(buffer, 0, n)` thay vì luôn ghi toàn bộ buffer?
+    3. `InputStream.read()` báo EOF thế nào, tại sao `available()` không phải phép kiểm tra EOF?
+
+    ### Đúng đắn và ngân sách tài nguyên
+
+    1. Khi dùng `FileChannel` và `ByteBuffer`, vì sao cần `flip()`, `clear()` và xử lý partial write?
+    2. Tại sao không nên giải mã UTF-8 độc lập trên từng byte chunk?
+    3. Streaming cần phối hợp quota, backpressure và staging thế nào khi tệp lớn hoặc thay đổi đồng thời?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết copy theo khối | Viết vòng đọc có buffer tái sử dụng, ghi đúng số byte và so sánh đầu ra bằng `Files.mismatch`. |
+    | Giải thích chunk cuối và channel | Dự đoán tình huống chunk ngắn, partial write, EOF và lỗi thiếu tiến triển. |
+    | Giữ giới hạn bộ nhớ | Tính ngân sách buffer theo concurrency, đề xuất quota và tránh tích lũy chunk trong queue vô hạn. |
+- id: performance-and-large-files-002
+  title: Chọn kích thước buffer theo phép đo
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn kích thước buffer theo phép đo**
+
+    Buffer nhỏ có thể tăng lời gọi I/O, còn buffer rất lớn tiêu tốn RAM và chưa chắc tăng tốc. Bài hướng dẫn so sánh các cỡ buffer theo workload, nhận diện điểm bão hòa của throughput, đo latency và chi phí concurrency, không chọn theo cảm tính hoặc một lần chạy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lựa chọn buffer và cơ chế chi phí
+
+    1. Vì sao số lần `read()` trong Java không luôn bằng số syscall xuống hệ điều hành?
+    2. Điểm bão hòa khi tăng buffer từ 4 KiB đến 1 MiB có nghĩa gì?
+    3. Heap buffer, direct buffer và wrapper buffer khác nhau về chi phí nào?
+
+    ### Thiết kế phép thử
+
+    1. Phải giữ cố định những biến nào khi so sánh các buffer size?
+    2. Làm sao tính tổng RAM buffer với hàng trăm tác vụ song song?
+    3. Vì sao benchmark chỉ đọc file chưa chứng minh tốc độ sao chép hay parse CSV?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây ma trận đo | Chọn các cỡ buffer, warm-up, số lượt và thước đo throughput/latency/memory. |
+    | Phân tích trade-off | Từ bảng số đo nhận ra vùng lợi ích giảm dần thay vì mặc định cỡ lớn nhất. |
+    | Kiểm soát công bằng | Giải thích ảnh hưởng page cache, JIT, GC và mức đồng thời khi so sánh. |
+- id: performance-and-large-files-003
+  title: Chi phí syscall, chuyển đổi charset và số lớp bọc
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chi phí syscall, chuyển đổi charset và số lớp bọc**
+
+    Đường đi byte từ file đến nghiệp vụ có chi phí lời gọi Java, kernel I/O, page cache, buffering, giải mã charset và wrapper. Bài tách những loại chi phí này, chỉ ra khi nào lớp bọc có ích, khi nào chuyển mã lặp gây overhead và vì sao không đồng nhất mỗi `read()` với một syscall.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chi phí qua các tầng I/O
+
+    1. Một lời gọi Java `read()` có nhất thiết sinh một syscall hay một lần đọc đĩa vật lý không?
+    2. `BufferedInputStream` giảm underlying calls thế nào khi code đọc từng byte?
+    3. Vai trò của `InputStreamReader` và `BufferedReader` khác nhau như thế nào?
+
+    ### Charset và lựa chọn pipeline
+
+    1. Một ký tự UTF-8 chia giữa hai khối byte gây lỗi gì nếu giải mã từng chunk độc lập?
+    2. Khi nào cần giữ `CharsetDecoder` state và `CodingErrorAction.REPORT`?
+    3. Vì sao thêm wrapper hoặc decode/encode lặp có thể chậm nhưng không thể kết luận wrapper nào cũng thừa?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chẩn đoán đường đi | Vẽ đường byte→Reader→buffer→parser và chỉ rõ vị trí decode và syscall. |
+    | So sánh underlying calls | Giải thích một counting stream có/không có BufferedInputStream khác nhau ở cấp lời gọi nào. |
+    | Loại công việc thừa | Chọn byte-copy cho copy nguyên dạng và charset-aware Reader cho xử lý text. |
+- id: performance-and-large-files-004
+  title: So sánh stream có bộ đệm, Files.copy và FileChannel
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **So sánh stream có bộ đệm, Files.copy và FileChannel**
+
+    Ba hướng sao chép file có mức độ điều khiển, khả năng tối ưu và trách nhiệm xử lý lỗi khác nhau. Bài so sánh copy byte bằng buffered streams, `Files.copy` và `FileChannel`/`transferTo`, nhấn mạnh partial transfer, copy file lớn, metadata, snapshot, atomic publish và durability.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chọn API copy
+
+    1. Khi nào `Files.copy(Path, Path)` phù hợp hơn tự viết vòng lặp?
+    2. `BufferedInputStream` với bulk read có nhất thiết giúp thêm hiệu năng không?
+    3. `FileChannel.transferTo` có luôn zero-copy và chuyển đủ `count` byte không?
+
+    ### Correctness và vòng đời
+
+    1. Vì sao `FileChannel.write`/`transferTo` phải kiểm tra số byte thực tế và có vòng lặp?
+    2. `Files.mismatch` kiểm tra điều gì và khác kiểm tra kích thước tệp ra sao?
+    3. Vì sao copy thành công chưa đảm bảo snapshot nhất quán, publish nguyên tử hay dữ liệu bền qua mất điện?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Triển khai ba cách copy | Giải thích luồng dữ liệu và mã cho buffered stream, Files.copy, FileChannel. |
+    | Bảo vệ tính toàn vẹn | Phát hiện partial write/transfer, xử lý tệp trên 2 GiB bằng long và xác minh content. |
+    | Thiết kế workflow an toàn | Lựa chọn CREATE_NEW/REPLACE_EXISTING, staging, cleanup và kiểm tra filesystem constraints. |
+- id: performance-and-large-files-005
+  title: Heap buffer, direct memory và áp lực bộ nhớ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Heap buffer, direct memory và áp lực bộ nhớ**
+
+    Dữ liệu buffer có thể nằm trên heap hoặc vùng native/direct, trong khi mapping và OS page cache lại có vòng đời riêng. Bài giúp đọc đúng số liệu bộ nhớ, tránh OOME dù heap còn dư, tái sử dụng buffer an toàn và xác định khi nào direct memory có lợi hoặc tạo chi phí mới.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Heap, direct và mapping
+
+    1. `ByteBuffer.allocate` khác `allocateDirect` về backing storage, GC và chi phí allocation như thế nào?
+    2. Tại sao direct memory có thể hết trong khi Java heap còn trống?
+    3. MappedByteBuffer khác direct allocation về memory mapping và vòng đời tài nguyên thế nào?
+
+    ### Đo lường và ownership
+
+    1. `BufferPoolMXBean` và Native Memory Tracking quan sát những phạm vi bộ nhớ nào?
+    2. Làm sao tính memory footprint từ buffer size, số tầng buffer và số tác vụ đồng thời?
+    3. Vì sao không được trả lại buffer cho pool trước khi consumer ghi xong hoặc chia sẻ ByteBuffer mutable tùy tiện giữa các thread?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt không gian nhớ | Diễn giải heap/direct/mapped/native và các giới hạn đo lường tương ứng. |
+    | Thiết kế ngân sách memory | Ước tính số buffer đồng thời và nêu rủi ro OOME/GC/RSS. |
+    | Kiểm tra vòng đời ByteBuffer | Giải thích `position/limit/flip/clear`, pooling và ownership không gây race. |
+- id: performance-and-large-files-006
+  title: Giới hạn đọc song song và thứ tự ghép kết quả
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn đọc song song và thứ tự ghép kết quả**
+
+    Chia file thành nhiều khối song song có thể tăng throughput với một số workload nhưng làm xuất hiện tranh chấp tài nguyên và lỗi thứ tự. Bài phân biệt offset dữ liệu với completion order, đặt hạn mức tác vụ/buffer và ghép theo vị trí để không hỏng byte, UTF-8 hoặc record.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới và thứ tự
+
+    1. Thứ tự submit, hoàn tất và thứ tự byte kết quả khác nhau ra sao?
+    2. Khi đọc theo offset, tại sao cần xử lý số byte thực tế và không xem một chunk là một dòng văn bản?
+    3. Vì sao hai thread đọc cùng một FileChannel bằng positional API vẫn cần ownership của buffer riêng?
+
+    ### Concurrency và khôi phục lỗi
+
+    1. Vì sao submit toàn bộ hàng triệu khối vào ExecutorService gây áp lực RAM/queue?
+    2. Làm sao dùng bounded in-flight hoặc CompletionService với bộ đệm reorder?
+    3. Khi một worker lỗi, phải hủy, giải phóng buffer và tránh xuất bản file dở dang như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân vùng đọc | Đề xuất các vùng byte không chồng nhau và kiểm tra offset/length cuối file. |
+    | Giữ thứ tự kết quả | Dùng positional writes hoặc reorder theo chunk index, không ghi theo finish order. |
+    | Giới hạn concurrency | Thiết kế giới hạn task/FD/buffer và cleanup khi Future thất bại. |
+- id: performance-and-large-files-007
+  title: Đo throughput, latency và mức sử dụng bộ nhớ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đo throughput, latency và mức sử dụng bộ nhớ**
+
+    Tối ưu hiệu năng tệp lớn đòi hỏi ít nhất ba góc nhìn: lượng byte trên thời gian, phân phối độ trễ và memory footprint. Bài hướng dẫn đo `System.nanoTime`, percentile, heap/direct/native memory, warm-up và điều kiện cache để tránh benchmark thiếu công bằng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định nghĩa và phép đo
+
+    1. Throughput MiB/s khác latency của một job và p95/p99 của nhiều job như thế nào?
+    2. `System.nanoTime()` dùng để đo elapsed time ra sao và vì sao không dùng làm wall-clock timestamp?
+    3. Một heap snapshot có đủ chứng minh peak memory hoặc RSS toàn tiến trình không?
+
+    ### Tính tái lập
+
+    1. Làm sao giữ workload, byte count, warm-up và thứ tự benchmark công bằng?
+    2. `BufferPoolMXBean` bổ sung dữ liệu gì khi chương trình dùng direct/mapped buffers?
+    3. Vì sao tăng throughput nhưng p99 latency hoặc memory tăng mạnh chưa chắc là tối ưu tốt?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây phương pháp đo | Tính throughput/percentile/elapsed từ các mẫu và công bố ranh giới đo. |
+    | Quan sát memory | So sánh heap snapshot, heap peak, direct buffer pool, RSS và GC. |
+    | Đọc kết quả nhiều chiều | Đề xuất phương án tối ưu sau khi cân cả throughput, latency và memory. |
+- id: performance-and-large-files-008
+  title: Ảnh hưởng của cache hệ điều hành khi benchmark
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ảnh hưởng của cache hệ điều hành khi benchmark**
+
+    Hệ điều hành thường giữ trang file trong page cache, khiến các lần đọc file có cùng code nhưng khác tốc độ. Bài tách warm/cold cache khỏi buffer Java, read-ahead và write-back; giải thích vì sao lượt đầu không chắc cold và cách báo cáo số đo trung thực.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế page cache
+
+    1. Page cache nằm ở tầng nào và khác `BufferedInputStream` như thế nào?
+    2. Vì sao đọc tệp lần đầu trong chính chương trình vẫn có thể là warm cache?
+    3. `FileChannel.force` và direct ByteBuffer có xóa hoặc bypass page cache không?
+
+    ### Thiết kế benchmark
+
+    1. Sequential versus random access ảnh hưởng readahead và hit rate thế nào?
+    2. Muốn đo cold-ish và warm-cache công bằng, phải ghi nhận working set, thứ tự đo và thông số thiết bị nào?
+    3. Vì sao `write()` thành công hoặc `flush()` chưa chứng minh dữ liệu đã được fsync bền vững?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích số liệu chênh lệch | Phân tích nhiều lượt đọc chung tệp với cache hit/miss mà không khẳng định lượt đầu cold. |
+    | Thiết kế A/B hợp lệ | Luân phiên thứ tự, ghi rõ cache state, dataset và tổng byte xử lý. |
+    | Phân biệt cache/durability | Đặt page cache, Java buffer và write-back vào các tầng đúng. |
+- id: performance-and-large-files-009
+  title: Không mặc định NIO hoặc memory mapping luôn nhanh hơn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không mặc định NIO hoặc memory mapping luôn nhanh hơn**
+
+    NIO, channel transfer và mmap cho thêm lựa chọn truy cập dữ liệu nhưng có overhead mapping, page fault, native memory và vòng đời khác nhau. Bài yêu cầu thử baseline buffered stream và Files.copy, chọn workload tuần tự/ngẫu nhiên cụ thể, so sánh hiệu năng cùng correctness thay vì dựa vào tên API.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đặc tính API và cost model
+
+    1. Vì sao tên gọi NIO không tự bảo đảm nhanh hơn byte stream?
+    2. `transferTo` có thể dùng zero-copy khi nào, và vì sao API không bảo đảm điều đó?
+    3. Memory mapping khác đọc channel về page fault, setup và không gian địa chỉ ảo ra sao?
+
+    ### Ứng dụng và benchmark
+
+    1. Khi nào random access khiến mapping đáng thử hơn đọc tuần tự một lần?
+    2. Tại sao một `MappedByteBuffer` Java 17 không thể map tùy ý cả tệp lớn hơn giới hạn int?
+    3. Làm sao so sánh buffered stream, FileChannel, Files.copy và mmap mà không bỏ sót byte, bias cache hoặc nhầm write với durability?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lựa chọn theo workload | Đề xuất API cho sequential copy, random access và file cần xử lý nội dung. |
+    | Phân tích giới hạn mmap | Giải thích page fault, giới hạn mapping và cleanup/unmap không đồng bộ với close channel. |
+    | Thiết kế so sánh đúng | Cân cả correctness, memory, cache state và throughput/latency trước khi kết luận. |
+- id: performance-and-large-files-010
+  title: Giới hạn file descriptor và số tài nguyên đang mở
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn file descriptor và số tài nguyên đang mở**
+
+    Một chương trình có thể đủ heap và CPU nhưng không mở thêm được file/socket vì cạn descriptor hoặc handle. Bài giải thích limit OS, try-with-resources, stream duyệt thư mục, semaphore giới hạn channel, phép đo FD và cách ứng phó `Too many open files` mà không dựa vào GC.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### FD và ownership
+
+    1. File descriptor khác object `FileDescriptor` trong Java và giới hạn của tiến trình ra sao?
+    2. Vì sao GC không thay `close()` và `Files.list`/`Files.walk` cũng cần đóng stream?
+    3. Tại sao một NIO Selector phục vụ nhiều SocketChannel không có nghĩa chỉ dùng một FD?
+
+    ### Giới hạn và chẩn đoán
+
+    1. Làm sao dùng Semaphore để giới hạn số FileChannel cùng mở mà không rò permit khi lỗi?
+    2. Cần quan sát điều gì để phân biệt FD leak với số FD tăng hợp lệ theo tải?
+    3. Vì sao tăng `ulimit` không thay thế việc giới hạn concurrency và sửa resource leak?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế vòng đời I/O | Dùng try-with-resources, giữ stream nguồn mở đúng scope và xử lý suppressed close exception. |
+    | Cấp ngân sách FD | Tính giới hạn đồng thời; đặt semaphore quanh open/close và release an toàn. |
+    | Chẩn đoán lỗi tài nguyên | Đọc tín hiệu Too many open files và đề xuất phép đo FD theo OS. |

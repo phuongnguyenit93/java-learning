@@ -1,0 +1,28 @@
+sections:
+  file-systems-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  file-systems-002:
+    difficulty: BASIC
+    isImportant: true
+  file-systems-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  file-systems-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  file-systems-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  file-systems-006:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  file-systems-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  file-systems-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  file-systems-009:
+    difficulty: ADVANCED
+    isImportant: false

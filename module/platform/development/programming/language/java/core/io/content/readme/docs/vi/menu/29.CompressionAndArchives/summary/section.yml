@@ -1,0 +1,96 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "NÉN VÀ ĐÓNG GÓI — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: compression-and-archives-001
+    order: 1
+    title: "Phân biệt nén GZIP với archive ZIP"
+    description: "Phân biệt GZIP nén luồng với ZIP đóng gói nhiều entry; chọn API đúng và nhận diện rủi ro giải nén từ nguồn không tin cậy."
+    transition:
+      to: compression-and-archives-002
+      description: "Sau khi phân biệt hai định dạng, bắt đầu với luồng GZIP để quan sát chu trình nén/giải nén theo byte."
+  - id: compression-and-archives-002
+    order: 2
+    title: "GZIPInputStream và GZIPOutputStream"
+    description: "Dùng luồng GZIP để nén và giải nén byte theo buffer, hoàn tất header/trailer đúng vòng đời và giới hạn output từ đầu vào không tin cậy."
+    transition:
+      to: compression-and-archives-003
+      description: "Khi cần nhiều entry có tên và thư mục thay cho một luồng, chuyển sang bộ API `ZipInputStream`, `ZipOutputStream`, `ZipEntry`."
+  - id: compression-and-archives-003
+    order: 3
+    title: "ZipInputStream, ZipOutputStream và ZipEntry"
+    description: "Hiểu vai trò các Zip stream và ZipEntry, tạo/duyệt nhiều entry tuần tự, phân biệt nén STORED/DEFLATED và bảo vệ đầu ra."
+    transition:
+      to: compression-and-archives-004
+      description: "Sau khi thấy chu trình ZIP tổng quát, đi sâu vào thời điểm mở/đóng một entry và hoàn tất central directory."
+  - id: compression-and-archives-004
+    order: 4
+    title: "putNextEntry, closeEntry và hoàn tất archive"
+    description: "Điều khiển vòng đời mỗi entry với `putNextEntry`/`closeEntry`, kết thúc central directory và phân biệt finish với close của destination."
+    transition:
+      to: compression-and-archives-005
+      description: "Từ các thao tác kết thúc ZIP, tổng quát hóa khác biệt `flush`, `finish`, `close` trên nhiều luồng nén."
+  - id: compression-and-archives-005
+    order: 5
+    title: "finish khác flush và close"
+    description: "Làm rõ ranh giới `flush`/`finish`/`close` với ZIP, GZIP và bộ nén, vòng đời sink và thất bại khi xuất archive."
+    transition:
+      to: compression-and-archives-006
+      description: "Sau phần lifecycle, chuyển sang `ZipFile` cho nhu cầu tra cứu entry ngẫu nhiên trên archive hoàn chỉnh."
+  - id: compression-and-archives-006
+    order: 6
+    title: "ZipFile truy cập từng entry và quản lý vòng đời"
+    description: "Tra cứu và duyệt ZIP bằng ZipFile, quản lý vòng đời archive và InputStream entry, xử lý nội dung lớn theo buffer."
+    transition:
+      to: compression-and-archives-007
+      description: "Từ việc tra cứu entry và metadata, làm rõ charset tên entry, flags và sự khác biệt thông tin giữa local header và central directory."
+  - id: compression-and-archives-007
+    order: 7
+    title: "Charset tên entry và metadata của archive"
+    description: "Phân biệt charset tên/comment ZIP với charset payload, hiểu flag UTF-8, metadata/extra field và giới hạn tương thích archive."
+    transition:
+      to: compression-and-archives-008
+      description: "Sau metadata ZIP, xem JAR như một biến thể archive có manifest, entry và cơ chế truy cập riêng."
+  - id: compression-and-archives-008
+    order: 8
+    title: "JarFile, JarInputStream và manifest ở mức I/O"
+    description: "Dùng JarFile/JarInputStream để đọc entry và Manifest ở mức I/O, phân biệt tra cứu ngẫu nhiên với stream tuần tự và giới hạn xác minh JAR."
+    transition:
+      to: compression-and-archives-009
+      description: "Sau API container, chuyển sang cơ chế DEFLATE bên dưới và cấu hình mức nén bằng Deflater/Inflater."
+  - id: compression-and-archives-009
+    order: 9
+    title: "Deflater, Inflater và phạm vi điều khiển mức nén"
+    description: "Hiểu state machine Deflater/Inflater, ranh giới DEFLATE với wrapper, level/strategy/dictionary/flush và giới hạn hiệu năng."
+    transition:
+      to: compression-and-archives-010
+      description: "Sau thuật toán nén, xét checksum để kiểm tra dữ liệu không chủ ý bị hỏng trong các định dạng."
+  - id: compression-and-archives-010
+    order: 10
+    title: "CRC32, Adler32 và giới hạn của checksum"
+    description: "Tính CRC32/Adler32 incrementally, hiểu vai trò trong ZIP/GZIP/zlib và vì sao checksum không thay được cơ chế xác thực."
+    transition:
+      to: compression-and-archives-011
+      description: "Checksum chỉ kiểm tra hư hỏng; để bảo vệ tài nguyên khi giải nén còn phải có quota theo byte, số entry và tỷ lệ nén."
+  - id: compression-and-archives-011
+    order: 11
+    title: "Giới hạn dung lượng, số entry và tỷ lệ giải nén"
+    description: "Thiết kế và áp dụng quota ZIP bomb theo input size, mỗi entry, tổng output, số entry, tỷ lệ nén và tài nguyên khác."
+    transition:
+      to: compression-and-archives-012
+      description: "Sau khi kiểm soát dung lượng, hoàn thiện extractor bằng giới hạn đường dẫn entry và phòng Zip Slip/symlink."
+  - id: compression-and-archives-012
+    order: 12
+    title: "Giải nén đúng thư mục đích và xử lý đường dẫn entry"
+    description: "Ngăn Zip Slip khi ánh xạ entry name thành Path, giải thích giới hạn normalize/startsWith với symlink/TOCTOU và thiết kế staging an toàn."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Phân biệt nén GZIP với archive ZIP | GZIPInputStream và GZIPOutputStream | ZipInputStream, ZipOutputStream và ZipEntry | putNextEntry, closeEntry và hoàn tất archive | finish khác flush và close | ZipFile truy cập từng entry và quản lý vòng đời | Charset tên entry và metadata của archive | JarFile, JarInputStream và manifest ở mức I/O | Deflater, Inflater và phạm vi điều khiển mức nén | CRC32, Adler32 và giới hạn của checksum | Giới hạn dung lượng, số entry và tỷ lệ giải nén | Giải nén đúng thư mục đích và xử lý đường dẫn entry |
+  | Vấn đề cần hiểu | GZIP khác ZIP về đơn vị dữ liệu và khả năng chứa entry như thế nào? | GZIP xử lý header, trailer, EOF và vòng đời stream thế nào? | Các lớp Zip* và ranh giới entry phối hợp ra sao? | Kết thúc entry khác với hoàn tất cả ZIP archive ra sao? | Flush, finish, close khác nhau về tính đầy đủ và tài nguyên ra sao? | ZipFile xử lý random access và sở hữu stream của entry thế nào? | Charset của tên entry và metadata archive khác payload thế nào? | JAR và ZIP liên hệ thế nào, manifest được đọc ở đâu? | Level và trạng thái Deflater/Inflater kiểm soát điều gì? | Checksum phát hiện hư hỏng nhưng không bảo đảm xác thực thế nào? | ZIP bomb vượt quota theo những chiều nào và kiểm tra lúc nào? | Tên entry ZIP có thể thoát khỏi root qua traversal và symlink thế nào? |
+  | Giá trị đối với OOP/module | Chọn định dạng nén và archive phù hợp nhu cầu I/O. | Nén một luồng dữ liệu có kiểm soát tài nguyên và dung lượng. | Tạo và đọc ZIP nhiều nội dung một cách chính xác. | Tạo archive hợp lệ và xử lý đúng ownership tài nguyên. | Ngăn công bố stream nén chưa hoàn chỉnh. | Tra cứu file cụ thể trong archive lớn và đóng tài nguyên đúng. | Tránh tên ZIP bị lỗi mã hóa và metadata bị diễn giải sai. | Đọc cấu trúc và metadata JAR có kiểm soát. | Tối ưu codec có kiểm chứng trên workload thực. | Kiểm tra dữ liệu nén bị lỗi mà không nhầm với chữ ký. | Bảo vệ RAM, CPU, đĩa và tính toàn vẹn output khi giải nén. | Ngăn ghi đè hoặc giải nén file ra ngoài vùng cho phép. |
+  | Tư duy hình thành | Phân biệt định dạng container với thuật toán và luồng nén. | Đo output thực tế và hoàn tất stream trước khi sử dụng. | Đi theo vòng đời archive và từng entry riêng biệt. | Tách trạng thái entry, định dạng archive và stream đích. | Phân biệt đẩy buffer, hoàn tất định dạng và đóng resource. | Chọn API theo kiểu nguồn và nhu cầu truy cập. | Đọc đúng lớp metadata trước khi ánh xạ thành file thực. | Xem JAR là archive với quy ước bổ sung. | Đo trade-off thay vì xem compression level là bảo đảm. | Tách phát hiện lỗi tình cờ khỏi chống sửa đổi cố ý. | Thực thi ngân sách tài nguyên ngay trong vòng đọc/ghi. | Coi tên archive là input không tin cậy cho filesystem. |

@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "THEO DÕI THAY ĐỔI — MẠCH HỌC WATCHSERVICE"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: watch-service-001
+    order: 1
+    title: "WatchService, Watchable và đăng ký thư mục"
+    description: "Giới thiệu cơ chế theo dõi thay đổi của Java NIO.2, cách đăng ký thư mục và vòng đời WatchService/WatchKey."
+    transition:
+      to: watch-service-002
+      description: "Từ cách đăng ký chuyển sang ý nghĩa cụ thể của các loại event."
+  - id: watch-service-002
+    order: 2
+    title: "ENTRY_CREATE, ENTRY_DELETE và ENTRY_MODIFY"
+    description: "Phân biệt sự kiện tạo, xóa, sửa entry và các giới hạn khi suy luận từ thông báo filesystem."
+    transition:
+      to: watch-service-003
+      description: "Sau phân loại kinds, học cách đọc event và ghép context thành đường dẫn."
+  - id: watch-service-003
+    order: 3
+    title: "WatchKey, pollEvents và đường dẫn tương đối của sự kiện"
+    description: "Làm chủ WatchKey và event context tương đối, đặc biệt khi một WatchService giám sát nhiều thư mục."
+    transition:
+      to: watch-service-004
+      description: "Từ nội dung mỗi key chuyển sang lựa chọn take/poll cho vòng lặp."
+  - id: watch-service-004
+    order: 4
+    title: "take, poll và vòng xử lý sự kiện"
+    description: "So sánh ba phương thức lấy WatchKey và tổ chức vòng lặp chờ, xử lý, reset và shutdown."
+    transition:
+      to: watch-service-005
+      description: "Sau event loop cần hiểu vì sao một WatchKey có thể không còn valid."
+  - id: watch-service-005
+    order: 5
+    title: "reset key và trạng thái đăng ký không còn hợp lệ"
+    description: "Giải thích trạng thái WatchKey và phục hồi hoặc loại bỏ đăng ký khi reset không còn hợp lệ."
+    transition:
+      to: watch-service-006
+      description: "Key hợp lệ chưa bảo đảm không bỏ lỡ event; tiếp theo xét OVERFLOW."
+  - id: watch-service-006
+    order: 6
+    title: "OVERFLOW và nhu cầu quét lại trạng thái"
+    description: "Xử lý OVERFLOW bằng snapshot và reconciliation để phục hồi trạng thái khi watcher bỏ lỡ thông báo."
+    transition:
+      to: watch-service-007
+      description: "Sau đối soát một thư mục, mở rộng chiến lược tới cả cây thư mục."
+  - id: watch-service-007
+    order: 7
+    title: "Đăng ký đệ quy và thư mục được tạo mới"
+    description: "Xây watcher đệ quy bằng đăng ký từng thư mục và bổ sung đăng ký khi thư mục con xuất hiện."
+    transition:
+      to: watch-service-008
+      description: "Sau khi theo dõi sâu, cần xử lý nhiều event trên cùng file và độ sẵn sàng của nội dung."
+  - id: watch-service-008
+    order: 8
+    title: "Sự kiện lặp, gộp và thời điểm nội dung tệp chưa hoàn tất"
+    description: "Phân tích event lặp/gộp và thiết kế cách xử lý file chỉ khi nội dung đã đủ tin cậy."
+    transition:
+      to: watch-service-009
+      description: "Ngay cả thiết kế tốt cũng phụ thuộc provider và filesystem; tiếp theo xét NFS/SMB."
+  - id: watch-service-009
+    order: 9
+    title: "Giới hạn phụ thuộc nền tảng và network file system"
+    description: "Đánh giá tính portable của WatchService và chiến lược phát hiện thay đổi trên network filesystem."
+    transition:
+      to: watch-service-010
+      description: "Cuối cùng, khi kết thúc watcher cần đóng dịch vụ và giải phóng thread chờ đúng vòng đời."
+  - id: watch-service-010
+    order: 10
+    title: "Đóng WatchService và dừng luồng chờ"
+    description: "Hoàn thiện vòng đời WatchService bằng đóng service, xử lý thread đang chờ và shutdown có kiểm chứng."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | WatchService, Watchable và đăng ký thư mục | ENTRY_CREATE, ENTRY_DELETE và ENTRY_MODIFY | WatchKey, pollEvents và đường dẫn tương đối của sự kiện | take, poll và vòng xử lý sự kiện | reset key và trạng thái đăng ký không còn hợp lệ | OVERFLOW và nhu cầu quét lại trạng thái | Đăng ký đệ quy và thư mục được tạo mới | Sự kiện lặp, gộp và thời điểm nội dung tệp chưa hoàn tất | Giới hạn phụ thuộc nền tảng và network file system | Đóng WatchService và dừng luồng chờ |
+  | Vấn đề cần hiểu | Đăng ký theo dõi một thư mục và lấy key đúng cách thế nào? | CREATE, DELETE và MODIFY thực sự có ý nghĩa gì? | Lấy event và xác định đường dẫn của entry nào thay đổi? | Làm sao chờ sự kiện hiệu quả mà vẫn dừng watcher đúng lúc? | Khi nào cần reset key và xử lý key invalid thế nào? | Khi mất event, làm sao tái đồng bộ trạng thái thư mục? | Làm thế nào theo dõi cả cây thư mục động mà không bỏ sót dễ dàng? | Một file phát nhiều event; làm sao biết dữ liệu sẵn sàng và xử lý đúng lần? | WatchService đáng tin đến đâu trên OS, provider và network share khác nhau? | Dừng thread đang take() và giải phóng tài nguyên watcher ra sao? |
+  | Giá trị đối với OOP/module | Tạo nền tảng watcher và tránh hiểu sai phạm vi thư mục | Xử lý đúng loại thay đổi và tránh giả định ghi hoàn tất | Tránh xử lý nhầm file khi có nhiều directory registrations | Tránh busy loop và mất khả năng kết thúc thread | Giữ watcher hoạt động ổn định qua thay đổi thư mục | Duy trì tính đúng của chỉ mục/cache bất chấp event bị rơi | Mở rộng phạm vi giám sát và kiểm soát race đăng ký | Tránh đọc file dở và tránh xử lý lặp mất tính nhất quán | Tránh mất thay đổi từ client khác và rủi ro cache nhất quán | Tránh thread treo và rò tài nguyên khi ứng dụng tắt |
+  | Tư duy hình thành | Phân tách đăng ký, thông báo và xử lý | Diễn giải thông báo theo trạng thái file | Bảo toàn nguồn gốc của từng event | Chọn cơ chế chờ theo vòng đời ứng dụng | Quản lý đăng ký như một trạng thái có vòng đời | Xem snapshot là trạng thái thực, event là tín hiệu | Xây registry động và đối soát thường xuyên | Xây giao thức công bố dữ liệu thay vì đoán thời điểm | Kiểm thử theo môi trường, có phương án đối soát | Điều phối vòng đời với tín hiệu, đóng và đợi |

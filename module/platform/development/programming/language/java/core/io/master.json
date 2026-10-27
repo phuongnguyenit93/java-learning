@@ -2,12 +2,12 @@
     "CURRENT_STEP": {
         "DESCRIPTION": "Last successfully completed module generation step (0, numeric STEP, 12A, FINAL)",
         "TYPE": "string",
-        "VALUE": "3"
+        "VALUE": "5"
     },
     "MODULE_TYPE": {
         "DESCRIPTION": "Include 4 values. SERVLET for runnable Spring MVC/Servlet application, REACTIVE for runnable Spring WebFlux application, LIBRARY for Java module without Spring Boot main application, PLATFORM for configuration/dependency module without Java source",
         "TYPE": "string",
-        "VALUE": "LIBRARY",
+        "VALUE": "SERVLET",
         "EXAMPLE_VALUE": "SERVLET,REACTIVE,LIBRARY,PLATFORM"
     },
     "MODULE_LANGUAGE": {
@@ -59,7 +59,7 @@
     "BUILD_SWAGGER": {
         "DESCRIPTION": "Enable it to implement dependency and enable swagger it project (Still disable in product deploy)",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "SWAGGER"
     },
     "BUILD_DATABASE_MODULE": {
@@ -83,7 +83,7 @@
     "USE_TASK": {
         "DESCRIPTION": "Enable it to auto inject task list in file gradle/task/list/task-list.json",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "TASK"
     }
 }

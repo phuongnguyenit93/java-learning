@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "THAO TÁC TỆP — MẠCH TỪ TẠO TÀI NGUYÊN ĐẾN XỬ LÝ LỖI"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: file-operations-001
+    order: 1
+    title: "createFile, createDirectory và createDirectories"
+    description: "Phân biệt tạo một file, một thư mục và cả cây thư mục, cùng các điều kiện khi đích tồn tại, thiếu cha và cần ghi ngay."
+    transition:
+      to: file-operations-002
+      description: "Từ việc tạo tài nguyên mới chuyển sang quản lý file/thư mục tạm và phạm vi chịu trách nhiệm cleanup."
+  - id: file-operations-002
+    order: 2
+    title: "createTempFile, createTempDirectory và phạm vi dọn dẹp"
+    description: "Giải thích file temp, temp directory, vị trí/provider và vòng đời file từ tạo đến cleanup, kể cả lỗi hoặc crash."
+    transition:
+      to: file-operations-003
+      description: "Workspace tạm là vùng staging thích hợp trước khi sao chép dữ liệu đến tên đích."
+  - id: file-operations-003
+    order: 3
+    title: "copy tệp với REPLACE_EXISTING và COPY_ATTRIBUTES"
+    description: "Hiểu chính sách `REPLACE_EXISTING`, giới hạn `COPY_ATTRIBUTES`, sao chép symlink/thư mục và kiểm tra byte hậu copy."
+    transition:
+      to: file-operations-004
+      description: "Sau khi tạo bản sao hoặc staging, move giúp công bố dữ liệu dưới tên đích chính thức."
+  - id: file-operations-004
+    order: 4
+    title: "move, đổi tên và lựa chọn ATOMIC_MOVE"
+    description: "Trình bày rename/move, lựa chọn `REPLACE_EXISTING`, `ATOMIC_MOVE`, provider limitation và quy trình publish tệp."
+    transition:
+      to: file-operations-005
+      description: "Sau khi công bố hoặc di chuyển xong, cần chọn đúng phép xóa file dư và cách hiểu file vắng mặt."
+  - id: file-operations-005
+    order: 5
+    title: "delete khác deleteIfExists"
+    description: "Phân biệt `delete` và `deleteIfExists` theo ngữ nghĩa thiếu file, kết quả boolean, ngoại lệ và giới hạn xóa directory."
+    transition:
+      to: file-operations-006
+      description: "Từ xóa một entry riêng lẻ, chuyển sang các chính sách với đích có sẵn và thư mục chứa nhiều entry."
+  - id: file-operations-006
+    order: 6
+    title: "Xử lý tệp đích đã tồn tại và thư mục không rỗng"
+    description: "Tổng hợp xung đột target, overwrite/append/create-new và giới hạn của delete với thư mục không rỗng."
+    transition:
+      to: file-operations-007
+      description: "Chính sách nghiệp vụ đúng cần được đối chiếu khả năng thực tế của file system và provider."
+  - id: file-operations-007
+    order: 7
+    title: "Thao tác xuyên file system và giới hạn provider"
+    description: "Đối chiếu Path, FileSystem, provider, FileStore và copy/move xuyên provider với ZIP cùng giới hạn metadata/lifecycle."
+    transition:
+      to: file-operations-008
+      description: "Khi biết provider có khả năng khác nhau, cần hiểu vì sao việc xác minh file tồn tại cũng có thể trả kết quả không chắc chắn."
+  - id: file-operations-008
+    order: 8
+    title: "exists, notExists và trường hợp không xác định được trạng thái"
+    description: "Giải thích trạng thái tồn tại ba giá trị, khác biệt symlink theo `NOFOLLOW_LINKS` và API metadata trả ngoại lệ."
+    transition:
+      to: file-operations-009
+      description: "Vì các phép tồn tại chỉ là quan sát tạm thời, bước kế tiếp cần xử lý TOCTOU khi thao tác thật."
+  - id: file-operations-009
+    order: 9
+    title: "Không kiểm tra trước rồi mặc định thao tác sau sẽ thành công"
+    description: "Nhận diện TOCTOU và chọn các Files operations có điều kiện tại thời điểm thao tác với xử lý ngoại lệ đầy đủ."
+    transition:
+      to: file-operations-010
+      description: "Trong chuỗi nhiều file, việc lỗi tại mỗi bước cần được theo dõi bằng trạng thái batch và quy trình recovery."
+  - id: file-operations-010
+    order: 10
+    title: "Xử lý lỗi từng bước trong các thao tác nhiều tệp"
+    description: "Thiết kế batch file với fail-fast/best-effort, staging, xác minh, publish, cleanup, trạng thái sau lỗi và recovery."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | createFile, createDirectory và createDirectories | createTempFile, createTempDirectory và phạm vi dọn dẹp | copy tệp với REPLACE_EXISTING và COPY_ATTRIBUTES | move, đổi tên và lựa chọn ATOMIC_MOVE | delete khác deleteIfExists | Xử lý tệp đích đã tồn tại và thư mục không rỗng | Thao tác xuyên file system và giới hạn provider | exists, notExists và trường hợp không xác định được trạng thái | Không kiểm tra trước rồi mặc định thao tác sau sẽ thành công | Xử lý lỗi từng bước trong các thao tác nhiều tệp |
+  | Vấn đề cần hiểu | Tạo file, một thư mục hay cả cây cha theo điều kiện nào? | Tạo file tạm ở đâu, ai có quyền và trách nhiệm dọn? | Được thay đích không, metadata nào phải sao chép? | Move có thay đích và có atomic không? | Thiếu file là lỗi hay trạng thái cleanup bình thường? | Đích đã có hoặc directory có con thì xử lý ra sao? | Hệ thống tệp khác nhau chia sẻ thao tác và giới hạn nào? | Vì sao false chưa đủ xác nhận path vắng mặt? | Vì sao check thành công chưa bảo đảm action thành công? | Nếu bước N lỗi, làm sao biết và phục hồi các bước trước? |
+  | Giá trị đối với OOP/module | Nền tảng sử dụng Files/Path đúng hậu điều kiện | Kiểm soát vòng đời và rác trung gian | Copy có chính sách dữ liệu và metadata rõ | Công bố file theo đúng semantics provider | Xóa chính xác đối tượng và bảo toàn tín hiệu lỗi | Chính sách an toàn cho thao tác dễ mất dữ liệu | Ứng dụng file portable qua ZIP và các file store | Không biến UNKNOWN thành lỗi missing sai | Tránh race khi tạo, đọc, ghi và xóa | Quản lý batch file có kiểm chứng và khả năng recovery |
+  | Tư duy hình thành | Chọn API bằng loại đối tượng và mức nguyên tử | Dọn theo ownership, không theo prefix | Tách nội dung byte, entry đích và thuộc tính | Phân biệt atomicity, replace và durability | Định nghĩa hậu điều kiện xóa trước | Tách quyền overwrite khỏi khả năng API | Kiểm tra namespace và khả năng provider | Phân biệt quan sát và sự thật ổn định | Xử lý kết quả thao tác thật | Theo dõi trạng thái và idempotency |

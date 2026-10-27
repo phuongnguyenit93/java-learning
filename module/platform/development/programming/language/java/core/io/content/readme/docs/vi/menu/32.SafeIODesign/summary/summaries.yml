@@ -1,0 +1,312 @@
+summaries:
+- id: safe-io-design-001
+  title: Giới hạn kích thước đầu vào và lượng bộ nhớ sử dụng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn kích thước đầu vào và lượng bộ nhớ sử dụng**
+
+    Bài học giúp thiết kế giới hạn dữ liệu theo byte thực đọc, dung lượng sau giải nén và ngân sách bộ nhớ đỉnh, thay vì tin vào kích thước khai báo hoặc `available()`. Từ bộ đệm cố định và bounded streaming, người học phải kiểm soát cả concurrency, backpressure, timeout và khả năng rollback khi vượt quota.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giới hạn dữ liệu và bộ nhớ
+
+    1. Tại sao `InputStream.available()` và độ dài do client công bố không thể thay cho giới hạn byte thực đọc?
+    2. Khi input bằng đúng quota, cần làm gì để phát hiện byte dư mà vẫn giữ bộ nhớ hằng số?
+    3. Vì sao input chỉ 5 MiB có thể tiêu tốn nhiều hơn 5 MiB heap sau giải mã và parse?
+
+    ### Giải nén và tài nguyên đồng thời
+
+    1. Vì sao phải tính quota trên dữ liệu đã giải nén và tổng các entry ZIP?
+    2. Một hệ thống nhiều request phải chọn giới hạn mỗi tác vụ, concurrency và timeout như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc có giới hạn | Mô phỏng `boundedCopy` và chứng minh chặn byte thứ maxBytes + 1 mà không tạo mảng kích thước input. |
+    | Ngăn decompression bomb | Thiết lập số entry và ngân sách byte đã giải nén cho ZIP/GZIP, chỉ ra trạng thái từ chối. |
+    | Lập ngân sách bộ nhớ | Ước tính peak heap khi nhiều request cùng parse và đề xuất backpressure hợp lý. |
+- id: safe-io-design-002
+  title: Path traversal và ranh giới thư mục được phép
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Path traversal và ranh giới thư mục được phép**
+
+    Bài học xác định ranh giới thư mục tin cậy khi đường dẫn, tên upload hay ZIP entry đến từ nguồn bên ngoài. Người học cần phân biệt `resolve`, `normalize`, `startsWith` theo thành phần đường dẫn và kiểm tra real path, đồng thời nêu rõ giới hạn trước symbolic link/race.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đường dẫn không tin cậy
+
+    1. Vì sao ghép thẳng user path hoặc ZIP entry vào đường dẫn lưu trữ có thể truy cập ra ngoài allowed root?
+    2. Vì sao `Path.startsWith` an toàn hơn `String.startsWith` khi xác minh containment?
+    3. Cần xử lý absolute path, `..` và drive-relative path trên hệ điều hành mục tiêu ra sao?
+
+    ### Đọc hoặc tạo file dưới root
+
+    1. Tại sao kiểm tra `toRealPath()` phù hợp với file đã tồn tại nhưng không chạy trực tiếp trên file upload chưa có?
+    2. Khi nào kiểm tra lexical và real path vẫn còn rủi ro do symlink/TOCTOU?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định path traversal | Phân tích các chuỗi `../`, absolute path và ZIP entry để xác định vị trí thực ngoài root. |
+    | Kiểm soát containment | Thiết kế phép kiểm tra `Path` theo component và dùng real parent đối với đích mới. |
+    | Lập test traversal | Tạo các ca thử tên tuyệt đối, parent segment và ZIP Slip nhằm bảo vệ file đích. |
+- id: safe-io-design-003
+  title: Normalize không thay thế việc xử lý symbolic link
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Normalize không thay thế việc xử lý symbolic link**
+
+    Bài học giải thích tại sao chuẩn hóa tên đường dẫn không tương đương xác minh đối tượng filesystem mà tên đó trỏ tới. Người học cần đối chiếu `normalize()`, `toAbsolutePath()`, `toRealPath()` và `NOFOLLOW_LINKS`, nhận diện symlink ở entry cuối hoặc thư mục cha.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tên đường dẫn và đối tượng filesystem
+
+    1. `normalize()` thay đổi phần nào của `Path` và vì sao không tự phát hiện symbolic link?
+    2. Nếu `uploads/current` là symlink trỏ ra ngoài root, tại sao `candidate.startsWith(root)` vẫn có thể trả true?
+    3. Phân biệt `toRealPath()` và `toRealPath(NOFOLLOW_LINKS)` trong cách xét đường dẫn đã tồn tại?
+
+    ### Giới hạn NOFOLLOW_LINKS
+
+    1. `NOFOLLOW_LINKS` trên entry cuối có bảo đảm mọi ancestor không phải symlink không?
+    2. Khi symbolic link bị thay sau kiểm tra, tại sao `toRealPath()` vẫn chưa loại bỏ TOCTOU?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đối chiếu API Path | Giải thích bằng ví dụ thao tác lexical khác việc đọc metadata/resolve symlink. |
+    | Phân tích chuỗi symlink | Vẽ root, ancestor symlink và đích thực để nhận diện vi phạm containment. |
+    | Đánh giá rào cản | Nêu điều kiện `NOFOLLOW_LINKS` hữu ích và những lỗ hổng còn lại trước race. |
+- id: safe-io-design-004
+  title: 'TOCTOU: khoảng trống giữa kiểm tra và thao tác'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **TOCTOU: khoảng trống giữa kiểm tra và thao tác**
+
+    Bài học nhận diện race condition khi ứng dụng kiểm tra path hoặc thuộc tính ở T1 rồi ghi, đọc, xóa ở T2. Người học cần chọn một thao tác có tiền điều kiện nguyên tử như `CREATE_NEW`, chiến lược staging–publish hay neo thao tác vào directory handle theo threat model.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình TOCTOU
+
+    1. Nếu attacker thay entry giữa `Files.exists()` và `Files.newOutputStream()`, rủi ro nào xuất hiện?
+    2. Vì sao `synchronized`, check lại ngay trước open hoặc so `fileKey` sau đó không tự loại bỏ race?
+
+    ### Thao tác có điều kiện
+
+    1. `CREATE_NEW` bảo đảm điều gì về bước tạo file, và vì sao chưa bảo đảm nội dung đã ghi hoàn chỉnh?
+    2. Khi nào `ATOMIC_MOVE` có thể giúp publish một kết quả đã sẵn sàng và giới hạn nào còn tồn tại?
+    3. Vì sao chống symlink race có thể cần giữ directory handle hoặc cơ chế provider hỗ trợ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ lịch xen kẽ | Mô phỏng T1-check, attacker-swap, T2-use và nêu hậu quả. |
+    | Thay check-then-act | Đề xuất `CREATE_NEW` hoặc staging–publish cho tình huống ghi cụ thể. |
+    | Đánh giá bảo đảm | Giải thích phạm vi atomicity và những rủi ro vẫn cần phòng vệ qua quyền OS. |
+- id: safe-io-design-005
+  title: SecureDirectoryStream và khả năng hỗ trợ của provider
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **SecureDirectoryStream và khả năng hỗ trợ của provider**
+
+    Bài học giới thiệu `SecureDirectoryStream` như một khả năng tùy chọn của filesystem provider để đọc, xóa, di chuyển hoặc lấy metadata tương đối với một directory đã mở. Người học phải kiểm tra `instanceof` ở runtime, xét `NOFOLLOW_LINKS`, quyền và điều kiện fail closed khi chống race là yêu cầu bắt buộc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khả năng của provider
+
+    1. Vì sao `Files.newDirectoryStream()` có thể trả `DirectoryStream` thông thường thay vì `SecureDirectoryStream`?
+    2. Nếu provider không hỗ trợ `SecureDirectoryStream`, tại sao không được quảng cáo fallback check-then-use là an toàn tương đương?
+
+    ### Dùng directory handle
+
+    1. Làm thế nào relative path được neo vào thư mục đã mở và vì sao phải kiểm soát từng path component?
+    2. `newByteChannel`, `deleteFile` và `move` trên SecureDirectoryStream cải thiện loại race nào?
+    3. Những nguy cơ nào SecureDirectoryStream không tự giải quyết, chẳng hạn ghi đồng thời vào nội dung file?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra runtime capability | Viết nhánh `instanceof SecureDirectoryStream` có chính sách unsupported rõ ràng. |
+    | Thao tác tương đối | Giải thích cách sử dụng channel/relative path để tránh lookup dễ bị tráo tên. |
+    | Đánh giá security boundary | Liệt kê giới hạn provider, symlink, ownership và kiểm thử trên filesystem đích. |
+- id: safe-io-design-006
+  title: Tạo tệp tạm có quyền phù hợp và dọn dẹp có kiểm soát
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tạo tệp tạm có quyền phù hợp và dọn dẹp có kiểm soát**
+
+    Tệp tạm không mặc nhiên an toàn vì có thể chứa dữ liệu nhạy cảm, nằm trong thư mục rộng quyền hoặc tồn dư sau crash. Bài học hướng dẫn tạo file/temp directory với quyền ngay khi tạo, phân biệt POSIX và ACL, giới hạn dung lượng và dọn dẹp theo vòng đời.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tạo an toàn theo filesystem
+
+    1. Tại sao tên tệp tạm cố định hoặc tạo rồi mới chmod có thể mở cửa sổ race?
+    2. Đặt POSIX 0600/0700 ngay khi tạo bằng `FileAttribute` khác việc đặt quyền sau tạo như thế nào?
+    3. Tại sao không thể áp dụng máy móc PosixFilePermissions cho Windows ACL?
+
+    ### Cleanup và dữ liệu nhạy cảm
+
+    1. Vì sao `deleteOnExit()` và `DELETE_ON_CLOSE` không thay thế được chiến lược cleanup có kiểm soát?
+    2. Khi đóng file hoặc xoá temp thất bại, làm sao bảo toàn lỗi chính và xử lý orphan files sau crash?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn temp root | Đề xuất thư mục tạm do service kiểm soát cùng chính sách quyền phù hợp OS. |
+    | Tạo temp an toàn | Minh họa `Files.createTempFile` với thuộc tính POSIX tại thời điểm tạo. |
+    | Quản lý cleanup | Xây dựng luồng hoàn thành, hủy, crash và sweeper cho file tạm còn sót. |
+- id: safe-io-design-007
+  title: Không ghi đè dữ liệu ngoài ý muốn khi mở hoặc copy
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không ghi đè dữ liệu ngoài ý muốn khi mở hoặc copy**
+
+    Bài học phân biệt mặc định có thể truncate của `Files.writeString`, `newOutputStream`, `FileOutputStream` và cách `Files.copy` từ chối target đã tồn tại. Người học phải chọn `CREATE_NEW`, `APPEND`, `REPLACE_EXISTING` theo chủ đích và đánh giá staging–publish khi cập nhật dữ liệu cũ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Open options và copy
+
+    1. Những API Java I/O nào mặc định truncate nội dung khi file đích tồn tại?
+    2. `CREATE_NEW` khác `CREATE` ở điều kiện nguyên tử nào và khi nào nên dùng?
+    3. Vì sao `Files.copy` không có `REPLACE_EXISTING` thường an toàn hơn với file đích đã tồn tại?
+
+    ### Cập nhật nội dung có chủ đích
+
+    1. Khi cần cập nhật file cũ, vì sao ghi staging và publish tốt hơn truncate ngay ở đầu?
+    2. Vì sao `ATOMIC_MOVE` không đồng nghĩa bảo đảm độ bền đĩa hay luôn có semantics no-overwrite?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán open option | Lập bảng kết quả cho target tồn tại hoặc thiếu với CREATE, CREATE_NEW, APPEND. |
+    | Viết copy không overwrite | Sử dụng `Files.copy` hoặc `Files.newOutputStream(..., CREATE_NEW)` và xử lý FileAlreadyExistsException. |
+    | Thiết kế update an toàn | Mô tả tệp tạm, kiểm tra, close và move với điều kiện thay thế có chủ ý. |
+- id: safe-io-design-008
+  title: Kiểm tra tính toàn vẹn bằng hash khi bài toán yêu cầu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra tính toàn vẹn bằng hash khi bài toán yêu cầu**
+
+    Bài học chỉ ra khi nào bài toán cần xác minh byte-level integrity thay vì chỉ kiểm tra số byte hoặc CRC. Người học tính SHA-256 theo luồng, so với digest tham chiếu được xác thực, đồng thời phân biệt hash, HMAC, chữ ký số và giới hạn như replay hoặc thay đổi sau kiểm tra.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hash và tính toàn vẹn
+
+    1. Vì sao hai file cùng kích thước hoặc CRC phù hợp không đủ xác thực chống giả mạo?
+    2. Làm sao dùng `MessageDigest` hoặc `DigestInputStream` để hash file lớn mà không giữ toàn bộ trong RAM?
+    3. Khi so sánh SHA-256 hex cần kiểm tra độ dài và biểu diễn ra sao?
+
+    ### Nguồn tin cậy và giới hạn
+
+    1. Vì sao tải file cùng checksum từ một nguồn đều bị attacker kiểm soát không chứng minh tính xác thực?
+    2. Khi nào cần HMAC hoặc chữ ký số và vì sao hash không tự chống replay hoặc TOCTOU?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính digest theo luồng | Thiết kế vòng đọc buffer và tính SHA-256 cho chính byte được copy. |
+    | Xác minh expected digest | Phân tích nguồn cấp hash đáng tin và dùng `MessageDigest.isEqual` đúng ngữ cảnh. |
+    | Phân loại integrity mechanism | Chọn SHA-256, CRC, HMAC hoặc signature theo threat model có giải thích. |
+- id: safe-io-design-009
+  title: Tránh ghi dữ liệu nhạy cảm và đường dẫn nội bộ vào thông báo công khai
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tránh ghi dữ liệu nhạy cảm và đường dẫn nội bộ vào thông báo công khai**
+
+    Lỗi I/O có thể mang đường dẫn server, tên người dùng, khóa lưu trữ hoặc nội dung yêu cầu. Bài học xây dựng `PublicError` dựa trên allowlist, mã lỗi và request ID, trong khi log nội bộ được kiểm soát theo trường, quyền truy cập, retention và chống log injection.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới thông tin public
+
+    1. Vì sao không được đưa trực tiếp `exception.getMessage()`, full path hoặc stack trace vào HTTP response?
+    2. Một PublicError an toàn nên có những trường nào và vì sao không serialize Throwable?
+    3. Request ID hỗ trợ truy vết thế nào mà không cho phép truy cập log trái quyền?
+
+    ### Diagnostic và chống rò rỉ
+
+    1. Vì sao 'log nội bộ' vẫn có thể làm rò rỉ dữ liệu nếu sink hoặc dashboard truy cập rộng?
+    2. Tại sao tên file do client gửi có thể chèn dòng giả vào log, và giải pháp structured logging cần đáp ứng điều gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế response an toàn | Ánh xạ IOException vào code/message công khai không lộ path, cause hoặc payload. |
+    | Lập allowlist log | Xác định trường diagnostic được phép, requestId và thông tin cần redaction. |
+    | Kiểm thử rò rỉ | Tạo file/path mồi có marker nhạy cảm để assert response/log công khai không chứa marker. |
+- id: safe-io-design-010
+  title: Phân biệt quyền hệ điều hành với các cơ chế bảo mật Java lịch sử
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt quyền hệ điều hành với các cơ chế bảo mật Java lịch sử**
+
+    Quyền OS/POSIX/Windows ACL quyết định một tiến trình có thể truy cập tệp, còn `SecurityManager`, `FilePermission` và `AccessController` là các cơ chế Java lịch sử. Bài học phân tích JEP 411/486, kiểm tra provider attribute view, nguyên tắc least privilege và phân quyền người dùng ứng dụng, tránh nhầm quyền process với quyền caller.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới giữa Java và hệ điều hành
+
+    1. Quyền POSIX owner/group/others và Windows ACL khác `java.io.FilePermission` thế nào?
+    2. Vì sao `Files.isReadable()` không cấp quyền, và lỗi AccessDeniedException không đồng nghĩa bị SecurityManager từ chối?
+    3. JEP 411 trên JDK 17 và JEP 486 trên JDK 24 đã thay đổi khả năng dùng SecurityManager ra sao?
+
+    ### Thiết kế kiểm soát truy cập
+
+    1. Vì sao chạy Java process với quyền administrator để né AccessDeniedException tạo rủi ro mới?
+    2. Khi một service đọc được tất cả file trên đĩa, vì sao ứng dụng vẫn phải authorization cho từng user/tenant?
+    3. Vì sao ClassLoader và Java module không thay thế cô lập tiến trình khi chạy code không tin cậy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đối chiếu cơ chế quyền | Giải thích lỗi và quyền thuộc OS, Java legacy hay application authorization. |
+    | Chọn cơ chế kiểm tra quyền | Đánh giá POSIX/ACL view của filesystem và xác định các giả định platform. |
+    | Thiết kế least privilege | Đề xuất service account, phân quyền theo tenant và sandbox ở mức OS cho trường hợp phù hợp. |

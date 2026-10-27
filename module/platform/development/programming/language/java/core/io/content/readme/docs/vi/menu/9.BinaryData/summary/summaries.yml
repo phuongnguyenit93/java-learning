@@ -1,0 +1,344 @@
+summaries:
+- id: binary-data-001
+  title: DataInput, DataOutput và định dạng dữ liệu nguyên thủy
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **DataInput, DataOutput và định dạng dữ liệu nguyên thủy**
+
+    Dữ liệu truyền trên file hoặc socket chỉ là byte, vì vậy người đọc cần hiểu một giá trị Java được biểu diễn thành bao nhiêu byte và theo quy tắc nào. Bài học giúp đặt nền tảng cho việc đọc đúng primitive mà không nhầm với văn bản.
+
+    Từ các cặp phương thức trong DataInput và DataOutput, người học phân biệt hợp đồng từng kiểu với schema của cả bản ghi, nhận diện big-endian, signed/unsigned, EOF và giới hạn của writeUTF.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biểu diễn primitive thành byte
+
+    1. Vì sao chuỗi văn bản "300" và kết quả writeInt(300) có dãy byte và kích thước khác nhau?
+    2. Kích thước và byte order của int, long, boolean, char, double trong DataOutput được quy định như thế nào?
+
+    ### Hợp đồng đọc và thiết kế định dạng
+
+    1. Vì sao cùng dùng DataInput và DataOutput vẫn có thể đọc sai một file nếu hai phía không thống nhất schema?
+    2. readByte, readUnsignedByte và InputStream.read khác nhau thế nào khi gặp byte FF và EOF?
+    3. Vì sao readUTF không thể thay thế một decoder UTF-8 chuẩn thông thường?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mã hóa kiểu nguyên thủy | Viết và giải thích phép ghi/đọc int, boolean, double qua DataOutputStream và DataInputStream; đối chiếu hex của từng trường. |
+    | Phân biệt byte và văn bản | So sánh biểu diễn của cùng một số ở dạng text UTF-8 và dạng primitive nhị phân. |
+    | Phân tích schema tối thiểu | Xác định thứ tự, độ rộng, signedness và charset cần công bố trước khi chia sẻ một bản ghi. |
+    | Chẩn đoán đọc thiếu | Giải thích kết quả byte FF và phân biệt dấu EOF với EOFException ở trường cố định. |
+- id: binary-data-002
+  title: DataInputStream và DataOutputStream
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **DataInputStream và DataOutputStream**
+
+    DataInputStream và DataOutputStream biến hợp đồng nhị phân thành thao tác trên InputStream và OutputStream. Bài học tập trung vào việc ghép các wrapper, ghi đọc bản ghi có kiểu và quản lý vòng đời tài nguyên khi dùng file hoặc bộ nhớ.
+
+    Những ví dụ round-trip, buffering và xử lý IOException làm rõ vì sao cùng API nhưng khác thứ tự trường, độ dài hoặc quyền sở hữu stream vẫn dẫn tới lỗi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Sử dụng lớp và stream wrapper
+
+    1. DataInputStream và DataOutputStream cung cấp phương thức gì so với InputStream và OutputStream thuần?
+    2. Vì sao phải quyết định ai chịu trách nhiệm đóng stream khi lồng DataOutputStream với BufferedOutputStream?
+
+    ### Ghi đọc bản ghi thật
+
+    1. Làm thế nào để xây dựng một round-trip có kiểu và kiểm tra byte đã ghi?
+    2. Điều gì xảy ra nếu reader đọc nhầm kiểu hoặc dùng readUTF với payload UTF-8 chuẩn?
+    3. Vì sao available() không chứng minh còn đủ byte để đọc một trường?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây dựng wrapper I/O | Ghép các data stream với byte stream và buffered stream trong ví dụ try-with-resources phù hợp quyền sở hữu. |
+    | Thực hiện round-trip | Viết một bản ghi gồm primitive và String, đọc lại đúng schema và đối chiếu kết quả. |
+    | Kiểm tra byte thực | Dự đoán hex, số byte và ngoại lệ khi đổi kiểu đọc hoặc thiếu một trường. |
+    | Quản lý file | Giải thích lựa chọn tạo mới, ghi đè, flush và đóng wrapper theo tình huống lưu file. |
+- id: binary-data-003
+  title: Thứ tự ghi phải tương ứng với thứ tự đọc
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thứ tự ghi phải tương ứng với thứ tự đọc**
+
+    Luồng byte không chứa tên trường hoặc thông tin kiểu. Nếu bên ghi và bên đọc tiêu thụ các byte theo thứ tự khác nhau, chương trình có thể trả về giá trị sai ngay cả khi không báo lỗi.
+
+    Bài học giúp thiết kế schema theo thứ tự trường, kiểm tra round-trip bằng golden bytes và nhận diện ranh giới giữa các bản ghi biến độ dài.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thứ tự và kiểu trường
+
+    1. Vì sao writeInt rồi writeBoolean phải đi cùng readInt rồi readBoolean theo đúng thứ tự?
+    2. Trong tình huống nào việc đọc sai thứ tự tạo ra dữ liệu sai mà không ném exception?
+
+    ### Framing và kiểm thử
+
+    1. Làm cách nào biểu diễn thứ tự, byte width và độ dài payload trong một schema đủ rõ cho hai phía?
+    2. Round-trip và golden bytes phát hiện những loại sai lệch khác nhau như thế nào?
+    3. Vì sao thêm một trường version cần chiến lược tương thích cho các reader cũ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đặc tả trình tự ghi đọc | Viết bảng trường có thứ tự và API tương ứng cho một bản ghi nhiều kiểu. |
+    | Phân tích sai lệch | Tính vị trí byte bị lệch khi reader đọc short thay cho int hoặc đảo thứ tự. |
+    | Tạo kiểm thử giao thức | Thiết kế kiểm thử round-trip, golden bytes và dữ liệu cắt cụt cho cùng một schema. |
+    | Định nghĩa framing | Chọn quy ước length prefix cho payload biến độ dài và giải thích cách parser tìm bản ghi kế tiếp. |
+- id: binary-data-004
+  title: Big-endian, signed byte và các thao tác đọc unsigned
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Big-endian, signed byte và các thao tác đọc unsigned**
+
+    Khi đối chiếu tệp nhị phân với hex dump hoặc giao thức ngoài Java, cùng một mẫu bit có thể được hiểu khác nhau do endianness và signedness. Bài học giúp tránh lỗi dấu, sign extension và nhầm FF với EOF.
+
+    Người học thực hành readUnsignedByte, readUnsignedShort, ByteBuffer.order và phép mask trước khi shift để tái tạo đúng giá trị.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Endian và unsigned
+
+    1. Hai dãy byte 01 02 03 04 được ByteBuffer đọc thành những số khác nhau thế nào khi đổi byte order?
+    2. Vì sao DataInputStream đọc nhiều byte theo big-endian và khi nào cần ByteBuffer little-endian?
+
+    ### Bit và xử lý EOF
+
+    1. Tại sao byte FF biểu diễn -1 khi giữ trong byte nhưng 255 khi đọc unsigned?
+    2. Sai lầm nào xuất hiện khi shift một byte âm trước khi mask bằng 0xFF?
+    3. Làm sao đọc unsigned 32-bit vào long mà không mất miền giá trị?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải mã có dấu và không dấu | Tính kết quả readByte, readUnsignedByte và readUnsignedShort từ mẫu hex được cho. |
+    | Kiểm tra endian | Dùng ByteBuffer đọc cùng bốn byte theo hai byte order và giải thích chênh lệch. |
+    | Ghép byte an toàn | Viết biểu thức mask/shift tái tạo unsigned 16-bit và 32-bit mà không sai sign extension. |
+    | Xử lý EOF | Phân biệt InputStream.read() trả -1 với byte dữ liệu FF còn hợp lệ. |
+- id: binary-data-005
+  title: readFully khác read và cách xử lý EOFException
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **readFully khác read và cách xử lý EOFException**
+
+    Một lần read(byte[]) có thể trả ít dữ liệu hơn yêu cầu ngay cả khi luồng chưa hết. Với bản ghi nhị phân, việc dùng mảng đọc thiếu để giải mã dẫn đến giá trị không đáng tin.
+
+    Bài học làm rõ hợp đồng read, readFully, readNBytes và cách hiểu EOFException giữa header, payload và ranh giới record.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Short read và đọc đúng số lượng
+
+    1. Tại sao read(buffer) trả 2 không chứng minh nguồn đã hết khi buffer dài 5?
+    2. readFully(buffer, offset, length) xử lý short read và phần tử ngoài đoạn yêu cầu như thế nào?
+
+    ### EOF và lỗi bản ghi
+
+    1. Phân biệt EOF sạch ở ranh giới record với header bị cắt còn 1–3 byte bằng cách nào?
+    2. readNBytes và readAllBytes có những giới hạn nào nếu giao thức bắt buộc đúng N byte?
+    3. Vì sao cần validate length trước khi gọi readFully trên mảng đã cấp phát?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây dựng bộ đọc chính xác | Dùng DataInputStream.readFully để đọc đúng N byte và kiểm tra ngoại lệ khi nguồn bị cắt. |
+    | Mô phỏng short read | Giải thích vì sao nhiều lần đọc ngắn vẫn tạo thành một bản ghi hoàn chỉnh. |
+    | Xử lý lỗi EOF | Phân loại EOF sạch và dữ liệu bị cắt dựa vào vị trí parser, không bắt EOFException một cách mù quáng. |
+    | So sánh API | Chọn read, readNBytes hoặc readFully phù hợp với đọc theo khối hay khung cố định. |
+- id: binary-data-006
+  title: readUTF, writeUTF và modified UTF-8
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **readUTF, writeUTF và modified UTF-8**
+
+    writeUTF/readUTF dùng định dạng nhị phân riêng của DataInput/DataOutput, khác UTF-8 tiêu chuẩn. Không hiểu sự khác biệt này dễ gây lỗi khi truyền dữ liệu cho Python, Go hoặc parser văn bản thông thường.
+
+    Bài học giải thích tiền tố độ dài hai byte, cách mã hóa NUL và surrogate UTF-16, round-trip và cách xử lý UTFDataFormatException hoặc EOFException.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Wire format của String
+
+    1. Chuỗi Hi được writeUTF ghi thành những byte nào và hai byte đầu có ý nghĩa gì?
+    2. Vì sao NUL mã hóa thành C0 80 và ký tự ngoài BMP có thể chiếm sáu byte trong modified UTF-8?
+
+    ### Tính tương thích và lỗi
+
+    1. Vì sao getBytes(StandardCharsets.UTF_8) không thể đưa trực tiếp cho readUTF?
+    2. Khi nào readUTF phát sinh UTFDataFormatException và khi nào phát sinh EOFException?
+    3. Làm thế nào thiết kế length prefix + UTF-8 chuẩn nếu muốn trao đổi giữa nhiều ngôn ngữ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích modified UTF-8 | Phân tích byte prefix và payload của chuỗi chứa ASCII, NUL, dấu tiếng Việt và emoji. |
+    | Kiểm tra round-trip | Dùng writeUTF/readUTF ghi rồi khôi phục String và đối chiếu với UTF-8 chuẩn. |
+    | Chẩn đoán lỗi decoder | Phân biệt byte mã hóa hỏng với payload bị cắt và chọn cách phản hồi thích hợp. |
+    | Thiết kế phương án liên thông | Đặc tả chuỗi UTF-8 chuẩn có length prefix riêng với giới hạn đọc. |
+- id: binary-data-007
+  title: Giới hạn độ dài của writeUTF
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn độ dài của writeUTF**
+
+    Giới hạn writeUTF thường bị hiểu nhầm là 65.535 ký tự Java, trong khi định dạng chỉ chứa tối đa 65.535 byte modified UTF-8 của payload. Nhầm đơn vị có thể khiến chương trình thất bại khi chuỗi chứa NUL, tiếng Việt hoặc emoji.
+
+    Bài học cung cấp các mốc biên, cách tính dung lượng theo từng char, xử lý UTFDataFormatException và một phương án UTF-8 chuẩn với length prefix bốn byte.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tính giới hạn byte
+
+    1. Vì sao 65.535 byte không tương đương 65.535 ký tự hoặc String.length()?
+    2. Vì sao 32.768 NUL vượt giới hạn nhưng 65.535 chữ A vẫn ghi được?
+    3. Mỗi emoji ngoài BMP đóng góp bao nhiêu byte vào modified UTF-8 và tại sao?
+
+    ### Xử lý vượt ngưỡng
+
+    1. writeUTF phản ứng ra sao khi payload dài 65.536 byte, và vì sao không nên cắt chuỗi tùy ý?
+    2. Làm thế nào xây dựng định dạng UTF-8 chuẩn cho chuỗi dài hơn mà vẫn chống đọc quá kích thước?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính dung lượng | Viết hàm tính số byte modified UTF-8 từ String theo từng đơn vị UTF-16. |
+    | Kiểm thử ranh giới | Tạo trường hợp đúng 65.535 và vượt 65.535 byte, đối chiếu kết quả hoặc UTFDataFormatException. |
+    | Xử lý lỗi độ dài | Giải thích vì sao String.length và getBytes(UTF_8).length không đủ để dự báo giới hạn writeUTF. |
+    | Đề xuất framing thay thế | Thiết kế writer/reader int32 length + UTF-8 với giới hạn trước cấp phát. |
+- id: binary-data-008
+  title: Thiết kế bản ghi có magic number, version và length
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thiết kế bản ghi có magic number, version và length**
+
+    Để lưu hoặc truyền nhiều bản ghi liên tiếp, parser cần nhận biết loại định dạng, phiên bản và chính xác ranh giới payload. Magic number, version và length là các trường cơ bản giúp tránh đọc nhầm và hỗ trợ nâng cấp schema.
+
+    Thông qua giao thức mẫu JREC, bài học xây dựng layout byte rõ ràng, phân loại lỗi magic/version/length, xử lý EOF và hiểu ranh giới của checksum và xác thực.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đặc tả header
+
+    1. Magic number, version và length giải quyết các loại mơ hồ khác nhau thế nào?
+    2. Đặc tả JREC quy định offset, chiều rộng, endian và đơn vị của length ra sao?
+
+    ### Parser và tiến hóa định dạng
+
+    1. Reader nên xác thực các trường header theo thứ tự nào trước khi cấp phát payload?
+    2. Vì sao cần quy tắc đọc EOF khi nối nhiều record trên cùng stream?
+    3. Magic number và checksum cung cấp bảo đảm gì, và vì sao không thay thế xác thực nội dung?
+    4. Khi thay đổi version, parser nên xử lý phiên bản chưa hỗ trợ thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế byte layout | Viết bảng offset, width, magic, version, length và payload cho một định dạng mẫu. |
+    | Triển khai parser có điều kiện | Kiểm tra magic/version/length, đọc payload bằng readFully và phân loại bản ghi hỏng. |
+    | Quản lý nhiều record | Giải thích cách tách khung liên tiếp và sự khác nhau giữa EOF sạch với frame cắt cụt. |
+    | Lập chiến lược tương thích | Đề xuất cách xử lý version mới và giới hạn checksum/xác thực. |
+- id: binary-data-009
+  title: Kiểm tra độ dài trước khi cấp phát hoặc đọc dữ liệu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra độ dài trước khi cấp phát hoặc đọc dữ liệu**
+
+    Một trường length đọc từ file hoặc mạng là dữ liệu chưa được tin cậy. Dùng ngay giá trị đó để cấp phát hoặc đọc hết luồng có thể gây thiếu bộ nhớ, treo chương trình hay chấp nhận frame bị cắt.
+
+    Bài học rèn thiết kế parser có ngân sách tài nguyên: kiểm tra số âm, giới hạn max, overflow, số lượng bản ghi, kích thước giải nén và quota tích lũy trước khi xử lý.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Xác thực length và số học
+
+    1. Vì sao phải kiểm tra length âm, bằng không theo schema và vượt MAX trước new byte[length]?
+    2. Phép nhân số phần tử với kích thước mỗi phần tử có thể overflow như thế nào, và kiểm tra an toàn ra sao?
+    3. Khi length là unsigned 32-bit, tại sao không thể ép tùy ý về int?
+
+    ### Nguồn không tin cậy và streaming
+
+    1. Làm sao đọc luồng không biết trước độ dài mà vẫn khống chế tổng byte và bộ nhớ?
+    2. Vì sao Files.size và InputStream.available không thay cho hạn mức trong quá trình đọc?
+    3. Vì sao cần giới hạn byte sau giải nén, timeout và số lượng bản ghi dù length từng frame hợp lệ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Validate frame length | Viết điều kiện từ chối length âm hoặc vượt trần trước khi cấp phát và gọi readFully. |
+    | Chống overflow | Dùng long hoặc Math.multiplyExact để xác thực kích thước tổng của mảng/record. |
+    | Thiết kế quota streaming | Đặt buffer cố định và giới hạn byte tích lũy khi sao chép dữ liệu không có length tin cậy. |
+    | Phân tích tài nguyên | Liệt kê và kiểm thử các rủi ro từ nén, TOCTOU, timeout, dữ liệu bị cắt và partial output. |
+- id: binary-data-010
+  title: Phân biệt định dạng nhị phân tự thiết kế với Java serialization
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt định dạng nhị phân tự thiết kế với Java serialization**
+
+    Cả định dạng tự thiết kế và Java Object Serialization đều tạo byte nhưng mang những hợp đồng khác nhau. Bài học giúp chọn công cụ phù hợp với tuổi thọ dữ liệu, tương thích giữa ngôn ngữ và nhu cầu giữ tham chiếu của đồ thị đối tượng.
+
+    Nội dung đối chiếu DataInputStream/DataOutputStream với ObjectInputStream/ObjectOutputStream, vai trò của serialVersionUID và nguy cơ readObject trên dữ liệu không đáng tin.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chọn định dạng và schema
+
+    1. Định dạng nhị phân tự thiết kế khác Java Serialization như thế nào về byte layout, khả năng liên thông và object graph?
+    2. Khi lưu lâu dài hoặc trao đổi với Python/Go, vì sao cần schema độc lập Java và chiến lược version rõ?
+
+    ### Serialization và bảo mật
+
+    1. serialVersionUID giúp kiểm tra điều gì và không bảo đảm điều gì khi class thay đổi?
+    2. Java Serialization duy trì tham chiếu dùng chung trong object graph như thế nào?
+    3. Vì sao readObject có thể nguy hiểm với dữ liệu không tin cậy, và ObjectInputFilter đóng vai trò gì?
+    4. Parser nhị phân tự thiết kế cần những kiểm tra nào để không mặc nhiên trở thành an toàn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh hai cơ chế | Lập bảng trade-off byte layout, schema, tương thích, object graph và bảo trì dữ liệu. |
+    | Diễn giải Java Serialization | Giải thích vai trò Serializable, transient, serialVersionUID và reference identity qua round-trip. |
+    | Đánh giá dữ liệu không tin cậy | Chỉ ra rủi ro deserialization, giới hạn của filter và các kiểm tra bắt buộc cho parser tự viết. |
+    | Chọn giải pháp | Đề xuất format phù hợp cho file lâu dài, trao đổi liên ngôn ngữ hoặc object graph Java nội bộ và nêu lý do. |

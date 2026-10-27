@@ -1,0 +1,31 @@
+sections:
+  file-operations-001:
+    difficulty: BASIC
+    isImportant: true
+  file-operations-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  file-operations-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  file-operations-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  file-operations-005:
+    difficulty: BASIC
+    isImportant: true
+  file-operations-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  file-operations-007:
+    difficulty: ADVANCED
+    isImportant: true
+  file-operations-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  file-operations-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  file-operations-010:
+    difficulty: ADVANCED
+    isImportant: true

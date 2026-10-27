@@ -1,0 +1,301 @@
+summaries:
+- id: resources-and-errors-001
+  title: IOException và các lỗi thường gặp khi mở, đọc hoặc ghi
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **IOException và các lỗi thường gặp khi mở, đọc hoặc ghi**
+
+    Phân biệt lỗi khi mở, đọc, ghi và đóng I/O để xử lý đúng ngoại lệ, giữ ngữ cảnh và tránh retry thao tác có tác dụng phụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện IOException
+
+    1. Lỗi file không tồn tại, quyền truy cập và file đã tồn tại cần xử lý khác nhau thế nào?
+    2. EOF, EOFException và IOException giữa luồng báo những tình huống gì?
+
+    ### Chiến lược xử lý
+
+    1. Khi nào `flush()` hoặc `close()` có thể báo lỗi sau những lần `write()` thành công?
+    2. Khi nào nên bắt IOException cụ thể, ném tiếp, ghi ngữ cảnh hoặc retry?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại lỗi theo giai đoạn mở/đọc/ghi | Đối chiếu lỗi đường dẫn, quyền truy cập và trạng thái tệp với ngoại lệ/thông tin tương ứng. |
+    | Viết catch giữ cause và thông tin thao tác | Viết catch có thông điệp thao tác, không nuốt cause và chỉ retry khi điều kiện đã được xác định. |
+    | Đề xuất phép thử sao chép có kiểm tra và cleanup | Dựng thử nghiệm sao chép và so sánh số byte cùng nội dung trước/sau khi đóng. |
+- id: resources-and-errors-002
+  title: EOF bình thường khác dữ liệu bị cắt cụt
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **EOF bình thường khác dữ liệu bị cắt cụt**
+
+    EOF chỉ cho biết nguồn đã hết dữ liệu, còn sự hoàn chỉnh của bản ghi phụ thuộc framing, độ dài hoặc marker do định dạng yêu cầu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### EOF và hợp đồng định dạng
+
+    1. Vì sao `read()` trả `-1` chưa bảo đảm một frame đã hoàn tất?
+    2. `readFully()` báo gì nếu nguồn hết khi chưa đủ độ dài mong đợi?
+
+    ### Nhận diện truncation
+
+    1. Làm thế nào xác minh length-prefix header và payload đã đủ?
+    2. Vì sao một lần non-blocking read ngắn hoặc `available()` không chứng minh truncation?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích EOF hợp lệ hoặc bất thường | Giải thích vì sao EOF hợp lệ với đọc tự do nhưng sai khi còn thiếu payload theo framing. |
+    | Thiết kế kiểm tra đủ byte của frame | Viết vòng lặp xác nhận đủ byte header và payload hoặc báo truncation. |
+    | Kiểm thử thiếu header, payload hoặc UTF-8 code point | Tạo đầu vào thiếu header, thiếu payload và UTF-8 để dự đoán kết quả parser. |
+- id: resources-and-errors-003
+  title: Closeable, AutoCloseable và try-with-resources
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Closeable, AutoCloseable và try-with-resources**
+
+    Các tài nguyên I/O cần được đóng rõ ràng ngoài vòng đời GC; `AutoCloseable`, `Closeable` và try-with-resources cung cấp cơ chế giải phóng theo scope.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giao diện quản lý resource
+
+    1. `AutoCloseable` khác `Closeable` ở chữ ký `close()` như thế nào?
+    2. Try-with-resources đóng hai resource khai báo liên tiếp theo thứ tự nào?
+
+    ### Vòng đời và lỗi
+
+    1. Vì sao trả `InputStream` bên trong try-with-resources có thể khiến caller nhận stream đã đóng?
+    2. Thân try và `close()` cùng lỗi thì ngoại lệ được bảo toàn thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt hợp đồng AutoCloseable/Closeable | So sánh chữ ký close() và quy tắc exception của hai interface bằng ví dụ mã. |
+    | Viết try-with-resources đúng phạm vi | Thay finally đóng thủ công bằng try-with-resources để resource chỉ sống trong scope cần thiết. |
+    | Dự đoán vòng đời và lỗi đóng của nguồn I/O | Mô phỏng thứ tự close và phát hiện API trả về InputStream đã bị đóng. |
+- id: resources-and-errors-004
+  title: Thứ tự đóng tài nguyên và suppressed exception
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thứ tự đóng tài nguyên và suppressed exception**
+
+    Khi nhiều resource cùng có thể ném exception, cần dự đoán chính xác thứ tự đóng, primary exception và `getSuppressed()`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thứ tự xử lý
+
+    1. Nếu khai báo A trước B, thứ tự đóng resource là gì?
+    2. Khi tạo B thất bại, A được đóng ra sao?
+
+    ### Quan hệ ngoại lệ
+
+    1. Nếu body và cả hai close cùng thất bại, lỗi nào là primary và các lỗi nào suppressed?
+    2. Vì sao finally đóng thủ công có thể che nguyên nhân gốc?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập trace thứ tự mở và đóng | Lập timeline khởi tạo, body, close cho hai hoặc nhiều resource. |
+    | Xác định primary và suppressed theo tình huống | Xác định chính xác lỗi body/close nào là primary và danh sách suppressed. |
+    | Viết test quan sát sự kiện close và getSuppressed() | Viết AutoCloseable giả lập và assert thứ tự close cùng getSuppressed(). |
+- id: resources-and-errors-005
+  title: 'Ai mở, ai đóng: quy tắc sở hữu trong thiết kế API'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ai mở, ai đóng: quy tắc sở hữu trong thiết kế API**
+
+    Quy tắc sở hữu mượn, nhận và chuyển giao quyết định ai phải đóng stream khi API nhận hoặc trả tài nguyên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Borrowed, owned, transferred
+
+    1. Khi mượn một `OutputStream` từ caller, callee nên xử lý việc close thế nào?
+    2. Factory trả stream còn mở đồng nghĩa ai chịu trách nhiệm đóng?
+
+    ### Thiết kế API
+
+    1. Tại sao hợp đồng ownership phải được mô tả trong Javadoc hoặc kiểu trả về?
+    2. Callback và async task ảnh hưởng thế nào đến thời gian sống resource?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại hợp đồng sở hữu | Gán chính xác vai trò borrowed, owned, transferred cho từng lời gọi I/O. |
+    | Thiết kế API chuyển giao resource rõ ràng | Mô tả nghĩa vụ close trong chữ ký và Javadoc của factory/callback. |
+    | Kiểm thử tránh đóng tài nguyên mượn | Kiểm thử rằng phương thức mượn không đóng stream của caller khi thành công hay lỗi. |
+- id: resources-and-errors-006
+  title: Đóng stream bọc, tài nguyên chia sẻ và tài nguyên do bên gọi truyền vào
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đóng stream bọc, tài nguyên chia sẻ và tài nguyên do bên gọi truyền vào**
+
+    Wrapper thường đóng delegate, gây rủi ro khi bên dưới là stream mượn hoặc dùng chung; cần phân biệt flush, finish và close.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chuỗi wrapper
+
+    1. Đóng wrapper ngoài cùng ảnh hưởng delegate nào?
+    2. Tại sao đóng wrapper đặt trên stream mượn có thể làm caller lỗi?
+
+    ### Tài nguyên dùng chung
+
+    1. Điều gì xảy ra khi đóng Scanner bọc `System.in` hoặc resource có nhiều consumer?
+    2. `flush()`, `finish()` và `close()` không tương đương nhau ở điểm nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ luồng đóng từ wrapper đến delegate | Chỉ ra delegate bị đóng khi close wrapper ngoài trong từng sơ đồ I/O. |
+    | Sửa API bảo vệ stream mượn | Sửa phương thức dùng wrapper để không làm mất resource mà caller sở hữu. |
+    | Chọn chính sách đóng cho stream chia sẻ | Lựa chọn cách giải phóng System.in, Files.lines và stream có nhiều consumer, kèm lý do. |
+- id: resources-and-errors-007
+  title: Cleanup khi tạo hoặc ghép tài nguyên thất bại
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Cleanup khi tạo hoặc ghép tài nguyên thất bại**
+
+    Nếu factory hay constructor gặp lỗi sau khi đã mở một phần nguồn I/O, đường cleanup phải khôi phục trạng thái dù đối tượng cuối chưa được trả về.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khởi tạo dở dang
+
+    1. Nếu mở A thành công rồi mở B lỗi, A được dọn ra sao?
+    2. Tại sao try-with-resources chỉ quản lý wrapper kết quả có thể bỏ sót delegate khi constructor thất bại?
+
+    ### Rollback có trách nhiệm
+
+    1. Lúc nào factory chuyển quyền đóng cho đối tượng được trả về?
+    2. Nếu cleanup cũng lỗi, cách nào bảo toàn lỗi khởi tạo chính?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định resource đang sống ở mỗi failure path | Liệt kê chính xác resource đã mở ở điểm constructor hoặc factory xảy ra lỗi. |
+    | Thiết kế factory có rollback | Thiết kế factory rollback những resource chưa được chuyển quyền sở hữu. |
+    | Kiểm thử cả lỗi khởi tạo và lỗi close | Dự đoán primary và suppressed khi cả tạo wrapper lẫn cleanup gặp lỗi. |
+- id: resources-and-errors-008
+  title: UncheckedIOException khi kết hợp I/O với Stream API
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **UncheckedIOException khi kết hợp I/O với Stream API**
+
+    Checked IOException không thể ném trực tiếp từ những lambda Function/Consumer phổ biến; UncheckedIOException giữ cause khi I/O đi qua pipeline lazy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Checked exception và lambda
+
+    1. Tại sao Function lambda không thể trực tiếp khai báo `throws IOException`?
+    2. UncheckedIOException giữ quan hệ với IOException gốc như thế nào?
+
+    ### Pipeline lazy
+
+    1. Tại sao Files.lines có thể phát sinh lỗi trong terminal operation?
+    2. Cần quản lý vòng đời Files.lines/Files.walk và cân nhắc vòng for ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết adapter ném UncheckedIOException | Viết lambda adapter giữ nguyên IOException làm cause của UncheckedIOException. |
+    | Dự đoán thời điểm thực thi stream | Xác định lỗi đọc sẽ xuất hiện ở khởi tạo Files.lines hay terminal operation. |
+    | Đóng tài nguyên I/O trong try-with-resources | Đặt Files.lines/Files.walk trong try-with-resources bao trọn việc duyệt stream. |
+- id: resources-and-errors-009
+  title: Đọc hoặc ghi dở dang khi có ngoại lệ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đọc hoặc ghi dở dang khi có ngoại lệ**
+
+    Ngoại lệ I/O không tự hoàn tác byte đã đọc hoặc ghi, trong khi buffer có thể làm thời điểm báo lỗi muộn hơn thao tác ban đầu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Partial read/write
+
+    1. Một lần read nhận ít byte có mặc nhiên báo lỗi hoặc EOF không?
+    2. Write ném IOException có bảo đảm đích chưa thay đổi không?
+
+    ### Recovery và công bố
+
+    1. Buffered output làm thay đổi thời điểm quan sát lỗi thế nào?
+    2. Dùng tệp tạm, điểm công bố và retry có tính idempotent để giảm rủi ro ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng dữ liệu đã chuyển trước lỗi | Ghi nhận số byte có thể đã tiêu thụ/ghi trước khi IOException được ném. |
+    | Thiết kế ghi tệp tạm rồi công bố | Đề xuất đường tạo tệp tạm, kiểm tra nội dung rồi công bố kết quả. |
+    | Đánh giá chính sách retry và resume | Lý giải trường hợp retry sẽ nhân đôi dữ liệu và cách tránh bằng idempotency. |
+- id: resources-and-errors-010
+  title: Ngắt, đóng từ luồng khác và hành vi phụ thuộc loại I/O
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ngắt, đóng từ luồng khác và hành vi phụ thuộc loại I/O**
+
+    Interrupt, đóng channel từ thread khác, timeout và selector wakeup là các cơ chế khác nhau tùy loại I/O và hợp đồng API.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khác biệt primitive
+
+    1. Interrupt một InterruptibleChannel đang chặn có thể có kết quả gì?
+    2. Đóng channel từ luồng khác khác Socket read timeout thế nào?
+
+    ### Shutdown và kiểm chứng
+
+    1. Vì sao `Future.cancel(true)` không chắc chặn được mọi blocking I/O?
+    2. Khi nào dùng Selector.wakeup và thiết kế test tránh race như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh interrupt, close và timeout | Đối chiếu InterruptedIOException, ClosedByInterruptException và AsynchronousCloseException theo primitive. |
+    | Dự đoán race khi read và close đồng thời | Dự đoán kết quả từ read/close race khi channel hoặc socket bị đóng đồng thời. |
+    | Thiết kế kiểm thử shutdown có thời hạn | Mô tả phép test shutdown có đồng bộ, timeout và kiểm tra resource kết thúc. |

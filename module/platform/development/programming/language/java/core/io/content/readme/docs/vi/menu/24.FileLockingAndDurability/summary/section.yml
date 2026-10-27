@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "KHÓA VÀ DỮ LIỆU BỀN — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: file-locking-and-durability-001
+    order: 1
+    title: "FileLock, lock và tryLock"
+    description: "Giới thiệu đối tượng FileLock, hai cách xin khóa, vùng byte, vòng đời và các giới hạn của phối hợp giữa tiến trình."
+    transition:
+      to: file-locking-and-durability-002
+      description: "Sau khi biết cách xin khóa, cần xác định chính xác loại shared/exclusive và vùng byte được bảo vệ."
+  - id: file-locking-and-durability-002
+    order: 2
+    title: "Khóa độc quyền, khóa chia sẻ và vùng byte"
+    description: "Làm rõ shared/exclusive, khoảng byte, tương tác khóa giữa tiến trình và quy trình bảo vệ read-modify-write."
+    transition:
+      to: file-locking-and-durability-003
+      description: "Từ phạm vi vùng byte chuyển sang phân biệt khóa tệp ở mức JVM với mutex giữa các thread."
+  - id: file-locking-and-durability-003
+    order: 3
+    title: "File lock thuộc phạm vi JVM, không thay thế khóa giữa các luồng"
+    description: "Giải thích phạm vi JVM của FileLock, sự khác biệt với khóa luồng và mẫu phối hợp đồng bộ hai tầng."
+    transition:
+      to: file-locking-and-durability-004
+      description: "Khi đã tách thread và process, cần đọc đúng ngoại lệ xung đột cùng JVM và giới hạn OS."
+  - id: file-locking-and-durability-004
+    order: 4
+    title: "OverlappingFileLockException và giới hạn hỗ trợ của hệ điều hành"
+    description: "Đi sâu ngoại lệ chồng lấn, khác biệt giữa null và exception, cùng giới hạn khóa phụ thuộc OS/provider."
+    transition:
+      to: file-locking-and-durability-005
+      description: "Sau khi nhận diện được lỗi, cần sở hữu và giải phóng FileLock đúng thời điểm."
+  - id: file-locking-and-durability-005
+    order: 5
+    title: "Giải phóng lock khi đóng tài nguyên"
+    description: "Quản lý ownership, `release`, close, try-with-resources, lỗi khi đóng và khoảng thời gian giữ khóa."
+    transition:
+      to: file-locking-and-durability-006
+      description: "Khóa đã kiểm soát quyền truy cập; tiếp theo cần phân biệt dữ liệu trong bộ đệm với dữ liệu đã được đồng bộ xuống lưu trữ."
+  - id: file-locking-and-durability-006
+    order: 6
+    title: "Phân biệt flush, FileDescriptor.sync và FileChannel.force"
+    description: "So sánh flush với FileDescriptor.sync và FileChannel.force, buffer mapping, SYNC/DSYNC cùng ranh giới durability."
+    transition:
+      to: file-locking-and-durability-007
+      description: "Có cơ chế đồng bộ dữ liệu rồi, ta tổ chức ghi staging để tránh công bố bản cập nhật dở dang."
+  - id: file-locking-and-durability-007
+    order: 7
+    title: "Ghi ra tệp tạm rồi thay thế đích"
+    description: "Thiết kế temp-file publish bảo vệ bản cũ trong khi ghi, kiểm tra payload và xử lý atomic replacement, lỗi, writer tranh chấp."
+    transition:
+      to: file-locking-and-durability-008
+      description: "Sau khi có chiến lược staging, cần hiểu bảo đảm thật của tùy chọn ATOMIC_MOVE và chính sách fallback."
+  - id: file-locking-and-durability-008
+    order: 8
+    title: "ATOMIC_MOVE và khả năng không được hỗ trợ"
+    description: "Phân tích `ATOMIC_MOVE`, ngoại lệ thiếu hỗ trợ, target tồn tại, provider và fallback theo chính sách."
+    transition:
+      to: file-locking-and-durability-009
+      description: "Ngay cả atomic move thành công, vẫn phải phân tích khả năng phục hồi sau mất điện của nội dung và tên tệp."
+  - id: file-locking-and-durability-009
+    order: 9
+    title: "Tính nguyên tử của đổi tên khác độ bền sau sự cố nguồn điện"
+    description: "Tách atomic rename khỏi độ bền qua power loss, xem xét force file, directory entry và giới hạn của Java portable."
+    transition:
+      to: file-locking-and-durability-010
+      description: "Trên lưu trữ mạng, cache và giao thức client/server còn làm yếu thêm các giả định về visibility và durability."
+  - id: file-locking-and-durability-010
+    order: 10
+    title: "Giới hạn nhất quán trên network file system"
+    description: "Khảo sát giới hạn consistency trên NFS/SMB: cache, close-to-open, lock, remote durability, partition và giao thức versioning."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | FileLock, lock và tryLock | Khóa độc quyền, khóa chia sẻ và vùng byte | File lock thuộc phạm vi JVM, không thay thế khóa giữa các luồng | OverlappingFileLockException và giới hạn hỗ trợ của hệ điều hành | Giải phóng lock khi đóng tài nguyên | Phân biệt flush, FileDescriptor.sync và FileChannel.force | Ghi ra tệp tạm rồi thay thế đích | ATOMIC_MOVE và khả năng không được hỗ trợ | Tính nguyên tử của đổi tên khác độ bền sau sự cố nguồn điện | Giới hạn nhất quán trên network file system |
+  | Vấn đề cần hiểu | Làm sao xin khóa tệp và phân biệt chờ, bận, chồng lấn? | Khóa kiểu nào và vùng bao nhiêu byte mới đủ cho một lần cập nhật? | Vì sao FileLock không thay được synchronized hay ReentrantLock? | Những thất bại khi xin khóa cần hiểu và xử lý khác nhau ra sao? | FileLock mất hiệu lực khi nào và giải phóng thế nào khi có lỗi? | Khi nào write/flush/sync/force đủ để công bố dữ liệu đã bền? | Làm sao thay tệp đích mà reader không nhìn thấy bản ghi dở? | Khi nào atomic rename khả thi, và fallback làm mất bảo đảm gì? | Vì sao đổi tên nguyên tử vẫn có thể không bền sau crash/mất điện? | Vì sao shared file trên NFS/SMB không có cùng nghĩa nhất quán như file cục bộ? |
+  | Giá trị đối với OOP/module | Nắm API locking trước khi thiết kế cập nhật tệp chung. | Thiết kế ranh giới khóa cho bản ghi và reader/writer. | Ngăn race trong JVM và giảm lỗi chồng lấn vùng khóa. | Chẩn đoán lock contention chính xác, tránh giả định sai theo nền tảng. | Tránh giữ khóa quá lâu hoặc thả trước khi hoàn tất cập nhật. | Tránh xác nhận ghi bền trước khi đồng bộ đúng tầng. | Giảm hỏng dữ liệu khi ghi cấu hình và trạng thái quan trọng. | Ngăn ghi đè không chủ đích hoặc công bố file thiếu atomicity. | Tránh coi publish thành công là durable commit. | Đánh giá rủi ro cross-client và chọn giao thức dữ liệu đáng tin. |
+  | Tư duy hình thành | Xem khóa tệp là giao thức phối hợp có phạm vi và vòng đời. | Ánh xạ invariant nghiệp vụ vào phạm vi byte và loại khóa. | Tách memory concurrency khỏi file-system coordination. | Đọc contract và kiểm chứng môi trường thay vì suy từ kết quả một máy. | Gắn ownership và thời gian giữ khóa với critical section. | Mô hình hóa từng bộ đệm, hợp đồng sync và phạm vi bảo đảm. | Chuẩn bị và kiểm tra phiên bản mới trước lúc công bố. | Đặt atomicity thành precondition có thể kiểm tra và báo lỗi. | Phân tích từng lớp dữ liệu, tên tệp và mô hình sự cố. | Kiểm chứng hợp đồng của từng lớp mạng và thiết kế phục hồi theo phiên bản. |

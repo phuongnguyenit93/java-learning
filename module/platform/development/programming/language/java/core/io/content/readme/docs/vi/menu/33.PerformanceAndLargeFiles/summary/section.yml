@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "HIỆU NĂNG VÀ TỆP LỚN — TỪ STREAMING ĐÚNG ĐẾN TỐI ƯU CÓ ĐO LƯỜNG"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: performance-and-large-files-001
+    order: 1
+    title: "Xử lý từng khối thay vì đưa toàn bộ tệp vào bộ nhớ"
+    description: "Chuyển từ nạp toàn bộ file sang đọc/ghi chunk bằng stream và channel; bảo vệ byte count, UTF-8 và RAM."
+    transition:
+      to: performance-and-large-files-002
+      description: "Từ khả năng đọc theo khối chuyển sang chọn kích thước buffer bằng số đo thực tế."
+  - id: performance-and-large-files-002
+    order: 2
+    title: "Chọn kích thước buffer theo phép đo"
+    description: "Đo thay vì đoán kích thước buffer, so sánh hiệu năng và chi phí bộ nhớ trên workload cụ thể."
+    transition:
+      to: performance-and-large-files-003
+      description: "Từ phép đo buffer chuyển sang phân tích chi phí syscall, charset và các lớp bọc."
+  - id: performance-and-large-files-003
+    order: 3
+    title: "Chi phí syscall, chuyển đổi charset và số lớp bọc"
+    description: "Phân biệt lời gọi Java với syscall, chi phí wrapper và charset decoding/encoding trên pipeline dữ liệu lớn."
+    transition:
+      to: performance-and-large-files-004
+      description: "Từ nhận diện overhead chuyển sang lựa chọn API copy theo yêu cầu và contract."
+  - id: performance-and-large-files-004
+    order: 4
+    title: "So sánh stream có bộ đệm, Files.copy và FileChannel"
+    description: "So sánh các API copy theo độ đơn giản, chức năng, hiệu năng tiềm năng và yêu cầu correctness/durability."
+    transition:
+      to: performance-and-large-files-005
+      description: "Từ API copy chuyển sang cân đối vùng nhớ heap, direct và mapped."
+  - id: performance-and-large-files-005
+    order: 5
+    title: "Heap buffer, direct memory và áp lực bộ nhớ"
+    description: "Giải thích heap/direct/mapped buffer, áp lực native memory và quản lý vòng đời buffer khi file lớn."
+    transition:
+      to: performance-and-large-files-006
+      description: "Từ bộ nhớ từng tác vụ chuyển sang giới hạn task và thứ tự kết quả khi xử lý song song."
+  - id: performance-and-large-files-006
+    order: 6
+    title: "Giới hạn đọc song song và thứ tự ghép kết quả"
+    description: "Đọc theo offset song song có giới hạn và ghép theo thứ tự byte chính xác, xử lý lỗi/cancellation."
+    transition:
+      to: performance-and-large-files-007
+      description: "Từ song song có giới hạn chuyển sang đo throughput, latency và memory đồng thời."
+  - id: performance-and-large-files-007
+    order: 7
+    title: "Đo throughput, latency và mức sử dụng bộ nhớ"
+    description: "Định nghĩa và đo throughput/latency/memory cùng kiểm soát warm-up và biến nhiễu trong benchmark I/O."
+    transition:
+      to: performance-and-large-files-008
+      description: "Từ quy trình benchmark chuyển sang nhận diện tác động của page cache hệ điều hành."
+  - id: performance-and-large-files-008
+    order: 8
+    title: "Ảnh hưởng của cache hệ điều hành khi benchmark"
+    description: "Nhận biết page cache/readahead/write-back và kiểm soát cache state để benchmark file đáng tin."
+    transition:
+      to: performance-and-large-files-009
+      description: "Từ cache state chuyển sang đánh giá khách quan NIO/mapping theo workload."
+  - id: performance-and-large-files-009
+    order: 9
+    title: "Không mặc định NIO hoặc memory mapping luôn nhanh hơn"
+    description: "Phê phán quy tắc NIO/mmap luôn nhanh hơn; so sánh trade-off từ API và workload có kiểm chứng."
+    transition:
+      to: performance-and-large-files-010
+      description: "Từ lựa chọn API và mapping chuyển sang quản lý file descriptor, channel và nguồn đang mở."
+  - id: performance-and-large-files-010
+    order: 10
+    title: "Giới hạn file descriptor và số tài nguyên đang mở"
+    description: "Quản lý FD/handle và tài nguyên mở đồng thời, giới hạn bằng semaphore và phát hiện leak/OS limit."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Xử lý từng khối thay vì đưa toàn bộ tệp vào bộ nhớ | Chọn kích thước buffer theo phép đo | Chi phí syscall, chuyển đổi charset và số lớp bọc | So sánh stream có bộ đệm, Files.copy và FileChannel | Heap buffer, direct memory và áp lực bộ nhớ | Giới hạn đọc song song và thứ tự ghép kết quả | Đo throughput, latency và mức sử dụng bộ nhớ | Ảnh hưởng của cache hệ điều hành khi benchmark | Không mặc định NIO hoặc memory mapping luôn nhanh hơn | Giới hạn file descriptor và số tài nguyên đang mở |
+  | Vấn đề cần hiểu | Sao chép tệp vượt heap mà không bỏ byte và tăng RAM thế nào? | Cỡ buffer nào tối ưu cho workload và mức song song hiện tại? | Overhead nằm ở syscall, wrapper hay decode/encode? | Chọn API sao chép file lớn mà vẫn đúng dữ liệu và xử lý lỗi ra sao? | Vì sao heap còn dư mà direct allocation vẫn thất bại? | Làm sao tăng song song mà không đảo byte hoặc bùng nổ resource? | Tại sao chỉ báo cáo MiB/s là chưa đủ đánh giá hiệu năng? | Vì sao hai lượt chạy cùng code có tốc độ khác mạnh? | Khi nào mmap hoặc NIO thực sự đáng đổi lấy complexity? | Tại sao còn RAM mà không mở được file hoặc socket? |
+  | Giá trị đối với OOP/module | Streaming đúng và có quota, backpressure rõ. | Giảm overhead mà không đánh đổi quá nhiều RAM. | Xác định nút nghẽn đúng tầng và bảo toàn text. | Áp dụng API mức cao đúng nơi, channel đúng nhu cầu. | Giới hạn bộ nhớ thực và tái sử dụng buffer an toàn. | Giữ đúng kết quả và bounded concurrency. | Có số liệu công bằng để quyết định tối ưu hóa. | Tránh kết luận nhầm tốc độ API với cache OS. | Tối ưu dựa trên benchmark chứ không chạy theo API mới. | Phòng lỗi quá nhiều FD và close nguồn đúng owner. |
+  | Tư duy hình thành | Biến thao tác file lớn thành luồng khối có trạng thái và giới hạn. | Đưa quyết định tối ưu hóa về giả thuyết và số liệu. | Tách chi phí từng tầng thay vì đếm số object bọc. | Ưu tiên contract và tính đúng trước khi benchmark tốc độ. | Quan sát cả heap lẫn native thay vì chỉ nhìn Xmx. | Phân biệt thứ tự hoàn thành với thứ tự dữ liệu. | Kết luận trên nhiều chỉ số với workload có thể tái lập. | Tách tác động phần mềm Java khỏi bộ nhớ đệm kernel. | Phân biệt công cụ và bảo đảm hiệu năng. | Coi tài nguyên OS như một ngân sách độc lập heap. |

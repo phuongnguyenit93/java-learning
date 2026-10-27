@@ -1,0 +1,68 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "TỔNG QUAN JAVA I/O — LIÊN KẾT TỪ DỮ LIỆU ĐẾN API VÀ VÒNG ĐỜI"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: io-overview-001
+    order: 1
+    title: "I/O là gì và vai trò của nguồn, đích và dữ liệu"
+    description: "Xác định nguồn, dữ liệu, đích và chiều input/output theo từng thao tác trong chương trình. Thực hành sao chép byte và kiểm tra kết quả để hiểu data flow."
+    transition:
+      to: io-overview-002
+      description: "Từ việc xác định dữ liệu đang di chuyển ở đâu, cần biết byte được diễn giải thành văn bản hoặc binary như thế nào."
+  - id: io-overview-002
+    order: 2
+    title: "Phân biệt dữ liệu nhị phân với văn bản"
+    description: "Phân biệt text với binary ở hợp đồng diễn giải byte; nắm charset, UTF-8 và cách chọn stream đọc/ghi không làm hỏng dữ liệu."
+    transition:
+      to: io-overview-003
+      description: "Sau khi chọn biểu diễn dữ liệu phù hợp, tiếp tục quản lý luồng và tài nguyên cần đóng trong quá trình đọc/ghi."
+  - id: io-overview-003
+    order: 3
+    title: "Luồng dữ liệu, tài nguyên hệ điều hành và vòng đời sử dụng"
+    description: "Theo dõi vòng đời stream, wrapper và tài nguyên hệ điều hành; thực hành try-with-resources, xử lý partial I/O, lỗi đóng và phân biệt flush/close/durability."
+    transition:
+      to: io-overview-004
+      description: "Khi đã nắm stream I/O và ownership, làm rõ từ stream cũng chỉ một loại pipeline phần tử hoàn toàn khác trong Java."
+  - id: io-overview-004
+    order: 4
+    title: "Phân biệt stream I/O với java.util.stream.Stream"
+    description: "Phân biệt I/O stream với Stream API lazy trên phần tử, sử dụng terminal operation và đóng đúng nguồn file khi kết hợp Files.lines."
+    transition:
+      to: io-overview-005
+      description: "Phân biệt hai nghĩa stream tạo nền tảng để xem các API java.io, java.nio và NIO.2 phối hợp với nhau như thế nào."
+  - id: io-overview-005
+    order: 5
+    title: "Bản đồ java.io, java.nio và NIO.2"
+    description: "Nhận diện các nhóm java.io, java.nio và NIO.2; chọn Path/Files, channel, buffer, selector và filesystem API theo bài toán."
+    transition:
+      to: io-overview-006
+      description: "Có bản đồ API rồi, tiếp tục chọn theo kiểu truy cập và khả năng chờ của thao tác thay vì suy từ tên NIO."
+  - id: io-overview-006
+    order: 6
+    title: "Tuần tự, truy cập ngẫu nhiên, blocking và non-blocking"
+    description: "Phân biệt hai trục sequential/random access và blocking/non-blocking; phân tích seek, partial read/write, Selector và các giới hạn của asynchronous I/O."
+    transition:
+      to: io-overview-007
+      description: "Sau khi thấy các mức độ phức tạp của I/O, hệ thống hóa thứ tự học và kiến thức tiên quyết cần củng cố."
+  - id: io-overview-007
+    order: 7
+    title: "Kiến thức tiên quyết và trình tự học đề xuất"
+    description: "Lập checklist kỹ năng Java nền tảng và trình tự thực hành từ Files đến stream, resource handling, file tree, buffer/channel và API nâng cao."
+    transition:
+      to: io-overview-008
+      description: "Lộ trình cho biết nên học gì; phần cuối giúp chọn JDK và kiểm tra API tương thích với môi trường triển khai."
+  - id: io-overview-008
+    order: 8
+    title: "Phạm vi Java Core và khác biệt theo phiên bản JDK"
+    description: "Đối chiếu mốc Java SE API theo phiên bản JDK, sự đổi charset mặc định từ Java 18 và tương thích source/API/runtime qua --release."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | I/O là gì và vai trò của nguồn, đích và dữ liệu | Phân biệt dữ liệu nhị phân với văn bản | Luồng dữ liệu, tài nguyên hệ điều hành và vòng đời sử dụng | Phân biệt stream I/O với java.util.stream.Stream | Bản đồ java.io, java.nio và NIO.2 | Tuần tự, truy cập ngẫu nhiên, blocking và non-blocking | Kiến thức tiên quyết và trình tự học đề xuất | Phạm vi Java Core và khác biệt theo phiên bản JDK |
+  | Vấn đề cần hiểu | Nguồn, đích và chiều dữ liệu được xác định ra sao? | Một dãy byte cần được diễn giải là text hay binary? | Ai sở hữu và đóng tài nguyên, khi nào việc ghi thực sự hoàn tất? | Stream truyền dữ liệu khác gì pipeline phần tử lazy? | Chọn nhóm API Java I/O nào cho tác vụ cụ thể? | Truy cập ở vị trí nào, thao tác có phải chờ không? | Cần chuẩn bị gì và luyện tập theo thứ tự nào? | API và charset có tương thích với bản JDK mục tiêu không? |
+  | Giá trị đối với OOP/module | Định vị chính xác biên I/O của chương trình. | Giữ nguyên dữ liệu và tránh lỗi giải mã. | Giảm rò rỉ handle và lỗi ghi dữ liệu dang dở. | Tránh nhầm hợp đồng API và leak nguồn file. | Chọn abstraction phù hợp với yêu cầu module. | Thiết kế tương tác file/network theo quy mô phù hợp. | Xây kế hoạch tiếp thu module có thể tự kiểm tra. | Duy trì khả năng triển khai qua nhiều JDK. |
+  | Tư duy hình thành | Truy vết dòng dữ liệu theo từng thao tác. | Tách byte thô khỏi quy tắc giải mã/parse. | Tư duy vòng đời, ownership và failure boundary. | Tách vận chuyển dữ liệu khỏi biến đổi phần tử. | Chọn công cụ bằng data type, resource và pattern. | Phân loại hai trục độc lập và xử lý partial I/O. | Phân tầng prerequisite và đánh giá năng lực. | Xác minh API ở compile time và hành vi runtime. |

@@ -1,0 +1,34 @@
+sections:
+  lines-and-tokens-001:
+    difficulty: BASIC
+    isImportant: true
+  lines-and-tokens-002:
+    difficulty: BASIC
+    isImportant: true
+  lines-and-tokens-003:
+    difficulty: BASIC
+    isImportant: true
+  lines-and-tokens-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  lines-and-tokens-005:
+    difficulty: BASIC
+    isImportant: true
+  lines-and-tokens-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  lines-and-tokens-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  lines-and-tokens-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  lines-and-tokens-009:
+    difficulty: ADVANCED
+    isImportant: true
+  lines-and-tokens-010:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  lines-and-tokens-011:
+    difficulty: ADVANCED
+    isImportant: true

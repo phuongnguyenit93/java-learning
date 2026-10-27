@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "THUỘC TÍNH VÀ QUYỀN TỆP — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: file-attributes-and-permissions-001
+    order: 1
+    title: "BasicFileAttributes và BasicFileAttributeView"
+    description: "Nắm cấu trúc metadata cơ bản qua BasicFileAttributes và cách thao tác timestamp qua BasicFileAttributeView."
+    transition: 
+      to: file-attributes-and-permissions-002
+      description: "Từ cơ chế đọc metadata chuyển sang phân tích sâu cách đọc và cập nhật timestamp"
+  - id: file-attributes-and-permissions-002
+    order: 2
+    title: "Thời gian tạo, sửa, truy cập và FileTime"
+    description: "Đi sâu vào creation, modification và access time; thực hành với FileTime, độ chính xác, cập nhật và đồng bộ."
+    transition: 
+      to: file-attributes-and-permissions-003
+      description: "Từ một nhóm thuộc tính thời gian sang kích thước, loại file và danh tính tài nguyên"
+  - id: file-attributes-and-permissions-003
+    order: 3
+    title: "Kích thước, loại tệp và fileKey"
+    description: "Phân biệt kích thước byte, loại file và khóa nhận diện provider; thực hành với hard link và symlink."
+    transition: 
+      to: file-attributes-and-permissions-004
+      description: "Từ nội dung các thuộc tính sang hai chiến lược truy vấn typed và named"
+  - id: file-attributes-and-permissions-004
+    order: 4
+    title: "Đọc thuộc tính theo kiểu hoặc theo tên"
+    description: "So sánh truy vấn thuộc tính theo kiểu Java với theo tên chuỗi, bao gồm map động, view prefix và xử lý lỗi."
+    transition: 
+      to: file-attributes-and-permissions-005
+      description: "Từ cơ chế lấy giá trị sang quản lý quyền POSIX có tác động bảo mật"
+  - id: file-attributes-and-permissions-005
+    order: 5
+    title: "POSIX permission và PosixFileAttributeView"
+    description: "Giải thích quyền rwx và thực hành đọc/sửa bằng PosixFileAttributeView, có xét umask, symlink và ACL."
+    transition: 
+      to: file-attributes-and-permissions-006
+      description: "Từ POSIX sang bộ cờ DOS có ý nghĩa khác trên provider hỗ trợ"
+  - id: file-attributes-and-permissions-006
+    order: 6
+    title: "Thuộc tính DOS trên Windows"
+    description: "Tập trung bốn cờ DOS và cách dùng DosFileAttributeView, kiểm tra hỗ trợ và phân biệt với ACL."
+    transition: 
+      to: file-attributes-and-permissions-007
+      description: "Từ cờ đơn giản sang owner và ACL cho chính sách truy cập nhiều chiều"
+  - id: file-attributes-and-permissions-007
+    order: 7
+    title: "Owner, UserPrincipal và AclFileAttributeView"
+    description: "Phân tích owner, principal và ACL entry có thứ tự; đánh giá chính sách truy cập và rủi ro khi cập nhật ACL."
+    transition: 
+      to: file-attributes-and-permissions-008
+      description: "Từ thuộc tính phân quyền hệ thống sang metadata tùy biến của ứng dụng"
+  - id: file-attributes-and-permissions-008
+    order: 8
+    title: "UserDefinedFileAttributeView và hỗ trợ theo file system"
+    description: "Thực hành lưu metadata tên tùy chọn ở dạng byte và đánh giá giới hạn kích thước, hỗ trợ, copy/move."
+    transition: 
+      to: file-attributes-and-permissions-009
+      description: "Từ đọc/ghi metadata đã tồn tại sang thiết lập quyền an toàn ngay lúc tạo"
+  - id: file-attributes-and-permissions-009
+    order: 9
+    title: "Thiết lập thuộc tính khi tạo tệp"
+    description: "Thiết kế tạo file hoặc thư mục cùng initial FileAttribute, phân biệt CREATE_NEW, umask và quyền thực nhận."
+    transition: 
+      to: file-attributes-and-permissions-010
+      description: "Từ thuộc tính trên file sang khả năng và dung lượng của nơi lưu trữ"
+  - id: file-attributes-and-permissions-010
+    order: 10
+    title: "FileStore, dung lượng và supportedFileAttributeViews"
+    description: "Hiểu không gian lưu trữ qua FileStore và cơ chế kiểm tra supported attribute views ở nhiều cấp."
+    transition: 
+      to: file-attributes-and-permissions-011
+      description: "Từ xác định khả năng của filesystem sang giới hạn suy đoán kiểu nội dung tệp"
+  - id: file-attributes-and-permissions-011
+    order: 11
+    title: "probeContentType và giới hạn suy đoán MIME type"
+    description: "Giải thích probeContentType và vì sao MIME suy đoán không thay cho kiểm chứng nội dung file."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | BasicFileAttributes và BasicFileAttributeView | Thời gian tạo, sửa, truy cập và FileTime | Kích thước, loại tệp và fileKey | Đọc thuộc tính theo kiểu hoặc theo tên | POSIX permission và PosixFileAttributeView | Thuộc tính DOS trên Windows | Owner, UserPrincipal và AclFileAttributeView | UserDefinedFileAttributeView và hỗ trợ theo file system | Thiết lập thuộc tính khi tạo tệp | FileStore, dung lượng và supportedFileAttributeViews | probeContentType và giới hạn suy đoán MIME type |
+  | Vấn đề cần hiểu | Phân biệt tập thuộc tính đã đọc với view có thể thao tác ra sao? | Timestamp có ý nghĩa và độ chính xác thực tế như thế nào? | Path trỏ đến loại đối tượng nào và có thể nhận diện nó ra sao? | Nên đọc metadata bằng kiểu tĩnh hay tên chuỗi? | Đọc và đổi permission POSIX mà không vô tình mở rộng quyền thế nào? | Bốn cờ DOS thay đổi hành vi hiển thị và sử dụng file thế nào? | Ai sở hữu file và danh sách ACE tác động quyền ra sao? | Metadata mở rộng của ứng dụng có thể lưu và đọc thế nào? | Làm sao yêu cầu quyền an toàn ngay tại thời điểm tạo file? | Kho lưu trữ còn bao nhiêu dung lượng và hỗ trợ metadata nào? | MIME suy đoán có thể tin đến mức nào? |
+  | Giá trị đối với OOP/module | Nền tảng đọc metadata đáng tin cậy | Tránh lỗi đối soát và cache theo thời gian | Phân loại file và tránh nhầm danh tính | Thiết kế công cụ metadata linh hoạt | Kiểm soát truy cập trên hệ thống hỗ trợ POSIX | Quản lý flags trên provider hỗ trợ DOS | Hiểu và kiểm soát quyền truy cập tinh vi | Mở rộng metadata khi provider cho phép | Giảm nguy cơ rò rỉ quyền khi khởi tạo | Xây xử lý filesystem portable | Giảm sai lầm khi phân loại file tải lên |
+  | Tư duy hình thành | Quan sát có thời điểm và giới hạn | Thời gian lưu trữ không phải bằng chứng tuyệt đối | Chọn dấu hiệu theo câu hỏi đang giải | Đánh đổi type safety và khả năng cấu hình | Tách bit quyền khỏi quyết định truy cập thực | Cờ metadata không thay thế chính sách quyền | Phân tích quyền từ nhiều yếu tố liên quan | Thiết kế fallback cho khả năng không đồng nhất | Đặt invariant bảo mật từ bước tạo | Kiểm tra khả năng và vẫn bắt lỗi khi thực thi | Tách heuristic khỏi xác thực định dạng |

@@ -1,0 +1,353 @@
+summaries:
+- id: file-attributes-and-permissions-001
+  title: BasicFileAttributes và BasicFileAttributeView
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **BasicFileAttributes và BasicFileAttributeView**
+
+    Bài học xây dựng nền tảng để quan sát metadata file một cách có cấu trúc. Người học phân biệt tập giá trị đã đọc `BasicFileAttributes` với `BasicFileAttributeView` dùng để đọc lại hoặc thay đổi timestamp, đồng thời biết rằng kết quả đọc có thể cũ ngay sau đó.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và dữ liệu
+
+    1. `BasicFileAttributes` khác `BasicFileAttributeView` về thời điểm đọc và khả năng cập nhật thế nào?
+    2. Vì sao `size()`, bốn cờ loại file và `fileKey()` không thể thay thế cho nhau?
+    3. `FileTime` biểu diễn thời điểm nào và vì sao không thể mặc định mọi timestamp đều đáng tin?
+
+    ### Thực hành và giới hạn
+
+    1. Khi nào chọn `Files.readAttributes` thay vì lấy một attribute view?
+    2. `NOFOLLOW_LINKS` làm thay đổi đối tượng được quan sát thế nào, nhất là với dangling symlink?
+    3. Tại sao không thể dùng lần đọc metadata trước đó để bảo đảm file không bị đổi ở bước xử lý sau?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt hai abstraction | Chọn API đọc nhóm thuộc tính hoặc view theo nhu cầu và giải thích được vòng đời dữ liệu nhận về |
+    | Đọc metadata cơ bản | Viết ví dụ lấy thời gian, kích thước, loại file và `fileKey`, xử lý ngoại lệ I/O |
+    | Kiểm soát liên kết và cập nhật thời gian | Dự đoán kết quả có hoặc không có `NOFOLLOW_LINKS` và giải thích giới hạn của `setTimes` |
+- id: file-attributes-and-permissions-002
+  title: Thời gian tạo, sửa, truy cập và FileTime
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thời gian tạo, sửa, truy cập và FileTime**
+
+    Bài học tập trung vào ba mốc thời gian của file và cách Java NIO.2 biểu diễn chúng bằng `FileTime`. Người học biết đọc, cập nhật và hiển thị timestamp đúng ngữ cảnh, tránh biến độ phân giải hoặc hành vi filesystem thành giả định sai trong cache và đồng bộ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất timestamp
+
+    1. Creation time, last-modified time và last-access time mô tả sự kiện nào, và sự kiện nào không được chúng bảo đảm ghi lại?
+    2. `FileTime`, `Instant` và múi giờ khác nhau ở điểm nào?
+    3. Vì sao access time hoặc creation time có thể thiếu ý nghĩa hoặc không cập nhật như mong đợi?
+
+    ### Cập nhật và đối soát
+
+    1. Làm sao chỉ đổi last-modified time mà không chủ ý thay các timestamp khác?
+    2. Vì sao phải đọc lại sau `setTimes` và không so sánh bằng độ chính xác tuyệt đối trên mọi filesystem?
+    3. Trong tình huống quét gia tăng, rủi ro nào xuất hiện khi dùng riêng `mtime` để quyết định file đã đổi?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc và trình bày thời gian | Đọc ba timestamp, chuyển `FileTime` sang `Instant` và hiển thị với múi giờ tường minh |
+    | Cập nhật có kiểm chứng | Chọn `Files.setLastModifiedTime` hoặc `BasicFileAttributeView.setTimes`, rồi đọc lại kết quả |
+    | Đánh giá độ tin cậy | Phân tích ảnh hưởng độ phân giải, copy/move, symlink và TOCTOU tới phép so sánh timestamp |
+- id: file-attributes-and-permissions-003
+  title: Kích thước, loại tệp và fileKey
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kích thước, loại tệp và fileKey**
+
+    Bài học giúp phân loại chính xác đối tượng mà một `Path` trỏ đến, đọc kích thước theo byte và hiểu ý nghĩa của `fileKey`. Trọng tâm là lựa chọn dấu hiệu phù hợp khi duyệt file, không nhầm kích thước trên đĩa với `size()` hoặc nhầm đường dẫn với danh tính tài nguyên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định nghĩa và định danh
+
+    1. `BasicFileAttributes.size()` đo đại lượng nào và khác dung lượng vật lý trên đĩa ra sao?
+    2. Bốn phương thức phân loại file thể hiện kiểu tài nguyên nào?
+    3. Vì sao `fileKey()` có thể là `null` và không được coi là ID toàn cục hoặc content hash?
+
+    ### Liên kết và thay đổi
+
+    1. `Path.equals()`, `Files.isSameFile()` và `fileKey()` trả lời các câu hỏi khác nhau thế nào?
+    2. Khi đọc một symlink với `NOFOLLOW_LINKS`, size và type có thể thay đổi cách hiểu ra sao?
+    3. Một lần rename, replace hoặc thay đổi nội dung ảnh hưởng thế nào đến cách diễn giải metadata đã chụp?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc size và loại file | Phân loại file thường, thư mục, symlink và đối tượng khác dựa trên attribute flags |
+    | Phân biệt danh tính | Giải thích giới hạn của path, fileKey và isSameFile qua kịch bản hard link, symlink hoặc replace |
+    | Thiết kế thống kê an toàn | Lựa chọn cách quét metadata và dự liệu I/O errors, race condition trong tập tin đang thay đổi |
+- id: file-attributes-and-permissions-004
+  title: Đọc thuộc tính theo kiểu hoặc theo tên
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đọc thuộc tính theo kiểu hoặc theo tên**
+
+    Bài học so sánh API typed và dynamic khi truy vấn thuộc tính NIO.2. Người học chọn `Files.readAttributes` theo lớp hoặc chuỗi tên, sử dụng `Files.getAttribute`, giải thích giá trị kiểu `Object`, đồng thời phát hiện sự khác nhau về khả năng hỗ trợ view giữa các filesystem.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế truy vấn
+
+    1. Hai overload của `Files.readAttributes` khác nhau ở kiểu kết quả và cách chỉ định thuộc tính thế nào?
+    2. Vì sao `readAttributes(path, "basic:*")` trả map giá trị `Object` và cần kiểm tra kiểu trước khi dùng?
+    3. Khi chỉ cần một giá trị, `Files.getAttribute` có ưu nhược điểm gì so với một lần đọc cả nhóm?
+
+    ### Tính tương thích và lỗi
+
+    1. Làm thế nào chọn prefix `basic`, `posix`, `dos` hoặc `owner` đúng với yêu cầu?
+    2. Cần phân biệt lỗi không hỗ trợ view, không có file và không có quyền đọc ra sao?
+    3. `NOFOLLOW_LINKS` và metadata thay đổi đồng thời tác động thế nào đến kết quả truy vấn động?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn chiến lược truy vấn | Viết ví dụ so sánh typed API, named map và single attribute |
+    | Đọc map an toàn | Kiểm tra trường tồn tại và kiểu runtime trước khi ép kiểu dữ liệu thuộc tính |
+    | Tự thích nghi với filesystem | Kiểm tra hỗ trợ view, xử lý IOException/UnsupportedOperationException và trường hợp symlink |
+- id: file-attributes-and-permissions-005
+  title: POSIX permission và PosixFileAttributeView
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **POSIX permission và PosixFileAttributeView**
+
+    Bài học giải thích quyền `rwx` theo owner, group và others và cách Java quản lý bằng `PosixFilePermission` cùng `PosixFileAttributeView`. Người học đọc, sửa và kiểm tra quyền khi filesystem hỗ trợ, đồng thời hiểu permission bits không đại diện đầy đủ cho mọi quyết định truy cập thực tế.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quyền POSIX
+
+    1. Chín ký tự `rwxr-x---` ánh xạ thành những quyền nào của owner, group và others?
+    2. Vì sao quyền đọc, ghi và thực thi có tác động khác nhau với file và thư mục?
+    3. `PosixFilePermissions.fromString`/`toString` liên hệ ra sao với `Set<PosixFilePermission>`?
+
+    ### Cập nhật và bảo mật
+
+    1. Làm sao bổ sung một quyền trong khi vẫn giữ các quyền cũ, và rủi ro khi ghi đè cả set là gì?
+    2. Vì sao phải kiểm tra hỗ trợ POSIX trước khi gọi API và xác nhận giá trị quyền sau khi tạo/sửa?
+    3. `umask`, ACL và symbolic link khiến kết luận về quyền hiệu lực có giới hạn gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải mã quyền POSIX | Chuyển chuỗi quyền thành enum set và giải thích tác động đối với file/thư mục |
+    | Thao tác an toàn | Đọc hoặc cập nhật quyền trên file tạm bằng `Files`/view khi được hỗ trợ, rồi kiểm tra lại |
+    | Đánh giá portability | Phân tích giới hạn POSIX trên các provider và tránh đồng nhất bit rwx với quyền hiệu lực |
+- id: file-attributes-and-permissions-006
+  title: Thuộc tính DOS trên Windows
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thuộc tính DOS trên Windows**
+
+    Bài học làm rõ bốn cờ Read-only, Hidden, System và Archive trong môi trường hỗ trợ thuộc tính DOS. Người học đọc và thay đổi cờ bằng `DosFileAttributes`, `DosFileAttributeView` hoặc tên động, biết hoàn nguyên thay đổi thử nghiệm và phân biệt những cờ này với ACL hay POSIX permission.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa bốn cờ
+
+    1. Read-only, Hidden, System và Archive mô tả trạng thái nào của file?
+    2. `DosFileAttributes` khác `DosFileAttributeView` về đọc và ghi như thế nào?
+    3. Vì sao DOS Read-only không tương đương chính sách ACL cấm ghi và DOS Hidden không đồng nghĩa tên bắt đầu dấu chấm?
+
+    ### Hỗ trợ và kiểm chứng
+
+    1. Vì sao nên kiểm tra khả năng hỗ trợ view thay vì dựa vào `os.name`?
+    2. Làm sao bật rồi khôi phục cờ Hidden trên file tạm, và lỗi nào cần bắt?
+    3. Đọc/ghi động với `dos:hidden` hoặc `dos:readonly` cần chú ý điều gì ở provider và symbolic link?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc bốn cờ DOS | Chọn typed API phù hợp và giải thích các giá trị isReadOnly/isHidden/isSystem/isArchive |
+    | Cập nhật có hoàn nguyên | Thử thay cờ trên file tạm, đọc kiểm chứng và phục hồi trạng thái ban đầu |
+    | Không nhầm cơ chế phân quyền | Giải thích vì sao DOS flags, POSIX permissions và Windows ACL giải quyết các bài toán khác nhau |
+- id: file-attributes-and-permissions-007
+  title: Owner, UserPrincipal và AclFileAttributeView
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Owner, UserPrincipal và AclFileAttributeView**
+
+    Bài học đi sâu vào chủ sở hữu, danh tính principal và danh sách kiểm soát truy cập ACL. Người học đọc owner/ACL đúng view, hiểu thành phần và thứ tự ACE, phân tích lý do một tên người dùng hoặc một entry riêng lẻ không đủ xác định quyền hiệu lực, rồi đề xuất quy trình cập nhật ACL thận trọng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Danh tính và cấu trúc ACL
+
+    1. `UserPrincipal`, `GroupPrincipal` và tên hiển thị khác nhau thế nào?
+    2. Một `AclEntry` có type, principal, permissions và flags để giải quyết vấn đề gì?
+    3. Vì sao thứ tự ACE và chính sách filesystem có thể ảnh hưởng quyết định truy cập?
+
+    ### Thao tác và giới hạn
+
+    1. Khi nào dùng `Files.getOwner`, `FileOwnerAttributeView` hoặc `AclFileAttributeView`?
+    2. Trước khi gọi `setOwner` hay `setAcl`, cần sao lưu, kiểm tra hỗ trợ và xác minh điều gì?
+    3. Vì sao không thể kết luận quyền hiệu lực chỉ từ POSIX mode, một ACL entry hoặc owner?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc owner và ACL | Tra cứu principal, lấy owner/ACL khi provider hỗ trợ và trình bày danh sách ACE theo thứ tự |
+    | Phân tích chính sách quyền | Giải thích effect của ACL entry, flags, thứ tự và bối cảnh filesystem |
+    | Thiết kế cập nhật thận trọng | Lập quy trình backup, kiểm tra trước và sau khi thay owner/ACL, xử lý lỗi quyền hạn |
+- id: file-attributes-and-permissions-008
+  title: UserDefinedFileAttributeView và hỗ trợ theo file system
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **UserDefinedFileAttributeView và hỗ trợ theo file system**
+
+    Bài học giới thiệu metadata tùy biến do ứng dụng đặt tên thông qua `UserDefinedFileAttributeView`. Người học kiểm tra hỗ trợ, thao tác tên/byte value bằng `ByteBuffer`, dự liệu race giữa truy vấn kích thước và đọc, và hiểu vì sao thuộc tính mở rộng không được đảm bảo qua copy, backup hoặc mọi provider.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thuộc tính mở rộng
+
+    1. Thuộc tính `user` khác nội dung file và các view chuẩn `basic`/`posix` ở đâu?
+    2. `list`, `size`, `read`, `write`, `delete` sử dụng tên và byte values thế nào?
+    3. Vì sao cần thống nhất charset/format khi ghi chuỗi vào byte attribute?
+
+    ### Portability và tính nhất quán
+
+    1. `size(name)` rồi `read(name, buffer)` có thể gặp race gì và xử lý ra sao?
+    2. Tại sao hỗ trợ view phải được kiểm tra theo filesystem/provider?
+    3. Khi copy, backup hoặc di chuyển sang filesystem khác, metadata tùy biến có được giữ mặc định không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thao tác extended attributes | Viết ví dụ ghi, đọc và xóa attribute qua `UserDefinedFileAttributeView` và `ByteBuffer` |
+    | Ứng phó thay đổi đồng thời | Xử lý độ dài dữ liệu thay đổi giữa size/read và ngoại lệ từ provider |
+    | Thiết kế lưu trữ phù hợp | Chỉ ra trường hợp nên dùng kho dữ liệu khác khi metadata cần portable hoặc bền vững |
+- id: file-attributes-and-permissions-009
+  title: Thiết lập thuộc tính khi tạo tệp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thiết lập thuộc tính khi tạo tệp**
+
+    Bài học giải quyết bài toán tạo file và thư mục với quyền phù hợp ngay tại bước tạo, đặc biệt với dữ liệu nhạy cảm. Người học phân biệt `FileAttribute<?>` với open option và thay đổi quyền sau tạo, sử dụng API `createFile`, `createDirectory`, `createTempFile` hoặc `newByteChannel`, đồng thời hiểu vì sao quyền thực nhận được phải kiểm chứng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tạo và cấu hình ban đầu
+
+    1. `FileAttribute<?>` cung cấp giá trị ban đầu theo contract nào và có khác open option `CREATE_NEW` không?
+    2. Những API tạo file/thư mục nào nhận varargs thuộc tính ban đầu?
+    3. Tại sao tạo file trước rồi gọi `setPosixFilePermissions` sau có thể tạo khoảng thời gian lộ quyền?
+
+    ### An toàn và portability
+
+    1. `umask` và provider có thể làm quyền sau tạo khác quyền yêu cầu ra sao?
+    2. Vì sao `CREATE` và `CREATE_NEW` khác nhau khi đường dẫn đã tồn tại?
+    3. Nếu filesystem không hỗ trợ POSIX initial attributes, thiết kế fallback an toàn cần cân nhắc điều gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo file có quyền ban đầu | Tạo file tạm/file mới với `PosixFilePermissions.asFileAttribute` khi view được hỗ trợ |
+    | Phân tích bảo mật tạo file | Đối chiếu chính sách quyền yêu cầu và quyền thực tế sau tạo, giải thích rủi ro create-then-chmod |
+    | Lựa chọn API và xử lý lỗi | Chọn createFile/createTempFile/newByteChannel và xử lý tồn tại sẵn, provider hạn chế, quyền truy cập |
+- id: file-attributes-and-permissions-010
+  title: FileStore, dung lượng và supportedFileAttributeViews
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **FileStore, dung lượng và supportedFileAttributeViews**
+
+    Bài học kết nối một `Path` với kho lưu trữ `FileStore`, phân biệt dung lượng tổng, chưa cấp phát và khả dụng, và lựa chọn attribute view dựa trên khả năng của `FileSystem`, `FileStore` hoặc `Path`. Người học hiểu các phép kiểm tra dung lượng/hỗ trợ chỉ là quan sát ở một thời điểm và cần xử lý lỗi khi thao tác thực tế.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình storage
+
+    1. `Path`, `FileSystem` và `FileStore` thể hiện các lớp trừu tượng khác nhau thế nào?
+    2. `getTotalSpace`, `getUnallocatedSpace` và `getUsableSpace` trả lời ba câu hỏi nào?
+    3. Vì sao không thể suy quyền ghi hoặc dung lượng sẽ còn đủ chỉ từ một lần quan sát?
+
+    ### Khả năng provider
+
+    1. `supportedFileAttributeViews()` của FileSystem khác `FileStore.supportsFileAttributeView` ở đâu?
+    2. Làm sao kiểm tra một tính năng DOS/POSIX/ACL/user tại path trước khi sử dụng?
+    3. Vì sao `FileStore.isReadOnly()` khác việc một file cụ thể bị cấm ghi?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vấn dung lượng | Đọc và hiển thị số byte total/unallocated/usable với kiểu long và đơn vị đúng |
+    | Kiểm tra feature hỗ trợ | So sánh khả năng FileSystem/FileStore và chọn đường xử lý theo view thực có |
+    | Đánh giá giới hạn tiền kiểm | Giải thích race khi kiểm tra dung lượng hoặc read-only trước thao tác ghi |
+- id: file-attributes-and-permissions-011
+  title: probeContentType và giới hạn suy đoán MIME type
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **probeContentType và giới hạn suy đoán MIME type**
+
+    Bài học giải thích vai trò `Files.probeContentType(Path)` trong suy đoán MIME type và ranh giới của kết quả này. Người học hiểu việc nhận diện có thể phụ thuộc tên file, provider và môi trường; khi xử lý upload không tin cậy cần kiểm chứng nội dung/định dạng thực thay vì dựa riêng vào nhãn MIME.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### MIME và API
+
+    1. MIME `type/subtype` khác phần mở rộng, charset và định dạng file hợp lệ như thế nào?
+    2. `Files.probeContentType` có thể trả về `null` trong những trường hợp nào?
+    3. Vì sao cùng file có thể được nhận diện khác nhau giữa máy hoặc provider?
+
+    ### Xác minh nội dung
+
+    1. Vì sao kết quả MIME suy đoán không thể dùng làm rào chắn bảo mật cho file upload?
+    2. Kiểm tra chữ ký PNG qua byte thực bổ sung điều gì nhưng vẫn chưa đủ để kết luận toàn bộ file hợp lệ?
+    3. Cần phối hợp giới hạn kích thước, giải mã/kiểm tra định dạng và chính sách nghiệp vụ ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Gọi API dò MIME | Viết ví dụ xử lý kết quả media type hoặc null mà không giả định chắc chắn |
+    | Đánh giá độ tin cậy | Giải thích vì sao extension, detector và kết quả trả về có thể không phản ánh nội dung |
+    | Thiết kế kiểm tra upload | Đề xuất chuỗi xác minh byte, định dạng, giới hạn và chính sách trước khi chấp nhận file |

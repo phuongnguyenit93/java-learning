@@ -1,0 +1,31 @@
+sections:
+  asynchronous-io-001:
+    difficulty: BASIC
+    isImportant: true
+  asynchronous-io-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  asynchronous-io-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  asynchronous-io-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  asynchronous-io-005:
+    difficulty: ADVANCED
+    isImportant: false
+  asynchronous-io-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  asynchronous-io-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  asynchronous-io-008:
+    difficulty: ADVANCED
+    isImportant: true
+  asynchronous-io-009:
+    difficulty: ADVANCED
+    isImportant: true
+  asynchronous-io-010:
+    difficulty: INTERMEDIATE
+    isImportant: true

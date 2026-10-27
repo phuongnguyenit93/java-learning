@@ -1,0 +1,280 @@
+summaries:
+- id: file-links-001
+  title: Symbolic link và hard link
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Symbolic link và hard link**
+
+    Bài mở đầu làm rõ quan hệ giữa đường dẫn và đối tượng tệp: hard link tạo thêm tên cho cùng dữ liệu, còn symbolic link là một mục độc lập lưu đường dẫn đích. So sánh vòng đời khi đổi tên, xóa, sửa nội dung và thay thế đối tượng giúp người học chọn đúng loại liên kết, biết rằng tính hỗ trợ phụ thuộc filesystem và quyền truy cập.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khái niệm và danh tính
+
+    1. Hard link và symbolic link khác nhau thế nào về đối tượng được lưu và cách truy cập dữ liệu?
+    2. Vì sao sửa nội dung qua hard link ảnh hưởng các tên khác nhưng thay thế hẳn đối tượng ở một tên có thể khiến kết quả khác?
+    3. Đường dẫn đích có cần tồn tại khi tạo hard link hoặc symbolic link hay không?
+
+    ### API và lựa chọn
+
+    1. Khi nào dùng Files.createLink thay vì Files.createSymbolicLink trong ví dụ có file và thư mục?
+    2. Khi xóa tên gốc, sự tồn tại và khả năng đọc qua mỗi loại link thay đổi theo điều kiện nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt loại liên kết | Vẽ được sơ đồ hai tên hard link và một symbolic link, mô tả đối tượng thực sự được tham chiếu. |
+    | Đánh giá vòng đời tệp | Dự đoán hậu quả của sửa, xóa, đổi tên và thay thế file gốc đối với hai loại liên kết. |
+    | Chọn API NIO.2 | Dùng đúng createLink/createSymbolicLink và trình bày điều kiện hỗ trợ trên filesystem. |
+- id: file-links-002
+  title: Tạo, đọc và nhận biết symbolic link
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tạo, đọc và nhận biết symbolic link**
+
+    Bài triển khai ba thao tác Files.createSymbolicLink, Files.readSymbolicLink và Files.isSymbolicLink với Path. Người học tự tạo liên kết tương đối, đọc đúng chuỗi đích được lưu, phân biệt nó với tệp đích, rồi kiểm tra symlink khi đích còn hoặc đã mất; các hạn chế nền tảng và đường dẫn không tin cậy là một phần của cách sử dụng đúng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các thao tác cốt lõi
+
+    1. Files.createSymbolicLink(link,target) tạo mục nào và target được lưu ra sao?
+    2. readSymbolicLink trả về thông tin nào, và tại sao không thể xem kết quả là nội dung của tệp đích?
+    3. isSymbolicLink có cần mở tệp được liên kết trỏ tới mới nhận diện được mục link hay không?
+
+    ### Thử nghiệm và xử lý lỗi
+
+    1. Trong ví dụ tệp đích bị xóa, kết quả tồn tại của link và kết quả đọc nội dung qua link khác nhau thế nào?
+    2. Nếu hệ thống từ chối tạo symbolic link vì quyền hoặc thiếu hỗ trợ, chương trình nên xử lý ngoại lệ và báo trạng thái ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo và nhận diện symlink | Viết chương trình tạo symlink tạm, đọc target lưu trữ và nhận biết loại mục liên kết. |
+    | Phân biệt link và referent | Trình bày đầu ra của exists mặc định và isSymbolicLink khi link bị đứt. |
+    | Xử lý lỗi môi trường | Nêu được ngoại lệ và điều kiện cấp quyền khi thao tác với symbolic link. |
+- id: file-links-003
+  title: Đường dẫn đích tương đối của symbolic link
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đường dẫn đích tương đối của symbolic link**
+
+    Bài tập trung vào quy tắc đích tương đối của symlink được diễn giải từ thư mục chứa chính symlink, không phải thư mục làm việc của tiến trình. Các ví dụ Path.resolve, normalize và readSymbolicLink làm rõ khác biệt giữa chuỗi lưu, đường dẫn dựng theo cú pháp và đường dẫn thực; việc di chuyển cây thư mục hoặc từng link riêng sẽ ảnh hưởng tính hợp lệ của tham chiếu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Gốc tương đối và quy tắc giải đường dẫn
+
+    1. Nếu symlink tại project/links/latest trỏ tới ../data/report.txt, đường dẫn đích được tính từ đâu và kết quả nào?
+    2. readSymbolicLink, parent.resolve(target).normalize() và toRealPath lần lượt trả lời các câu hỏi khác nhau như thế nào?
+    3. Vì sao thay đổi user.dir của chương trình không làm đổi ý nghĩa target tương đối đã lưu trong symlink?
+
+    ### Di chuyển và trường hợp biên
+
+    1. Khi copy cả cây thư mục giữ nguyên cấu trúc tương đối, tại sao symlink có thể còn hợp lệ?
+    2. Nếu link là Path.of("alias.txt") và getParent() trả null, cần chuẩn hóa vị trí link ra sao trước khi giải target tương đối?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải target tương đối | Tính được đường dẫn kết quả cho các target chứa dấu .. bắt đầu từ thư mục cha symlink. |
+    | Phân tích Path API | Phân biệt được đường dẫn lưu, đường dẫn normalize và đường dẫn thực có truy cập filesystem. |
+    | Đánh giá khi di chuyển | Dự đoán link còn hợp lệ hay bị đứt sau các phương án di chuyển link và thư mục đích. |
+- id: file-links-004
+  title: Liên kết hỏng và khác biệt khi theo hoặc không theo link
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Liên kết hỏng và khác biệt khi theo hoặc không theo link**
+
+    Bài đặt nền tảng cho việc diễn giải symlink còn tồn tại nhưng referent mất: mặc định nhiều phép kiểm tra đi theo liên kết, trong khi NOFOLLOW_LINKS cho phép xét chính mục symlink ở API hỗ trợ. Bảng exists, notExists, isSymbolicLink, thuộc tính và thao tác copy/move/delete giúp chẩn đoán dangling link mà không nhầm lẫn giữa mục liên kết, đối tượng đích và trạng thái không xác định do lỗi truy cập.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các trạng thái của liên kết
+
+    1. Symlink bị đứt khác mục đường dẫn không tồn tại hoàn toàn ở điểm nào?
+    2. Với dangling link, tồn tại của mục link và của referent được phản ánh thế nào qua exists mặc định, exists NOFOLLOW_LINKS và isSymbolicLink?
+    3. Vì sao exists(path)==false không đủ để khẳng định filesystem chắc chắn không có entry đó?
+
+    ### Hệ quả thực hành
+
+    1. Khi nào đọc thuộc tính theo đích và khi nào đọc chính entry symlink bằng NOFOLLOW_LINKS?
+    2. Vì sao thao tác kiểm tra và thao tác sử dụng tệp sau đó vẫn chịu rủi ro TOCTOU dù đã kiểm tra link?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chẩn đoán dangling link | Lập bảng kết quả logic của exists/notExists/isSymbolicLink khi link hợp lệ, đứt và mất entry. |
+    | Áp dụng follow và no-follow | Chọn LinkOption tại đúng API để đọc thông tin đích hoặc mục liên kết. |
+    | Nhận diện điều kiện bất định | Giải thích vì sao trạng thái kiểm tra không bảo đảm kết quả thao tác file về sau. |
+- id: file-links-005
+  title: NOFOLLOW_LINKS trong đọc thuộc tính và kiểm tra tệp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **NOFOLLOW_LINKS trong đọc thuộc tính và kiểm tra tệp**
+
+    Bài chuyên sâu về các overload có nhận LinkOption.NOFOLLOW_LINKS của Files.readAttributes, exists, isRegularFile và các phép kiểm tra tệp. Trọng tâm là đọc BasicFileAttributes theo hai góc nhìn, nhận biết bản thân symlink qua isSymbolicLink, và biết rằng kiểm tra metadata không tạo ra khả năng bảo vệ tự động khỏi thay đổi đồng thời hoặc link ở các thành phần cha.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thuộc tính và kiểu entry
+
+    1. Đọc BasicFileAttributes theo mặc định và với NOFOLLOW_LINKS trên cùng symlink cho thấy những thuộc tính loại tệp khác nhau thế nào?
+    2. Files.isRegularFile(link, NOFOLLOW_LINKS) có giống isRegularFile(link) khi link trỏ tới tệp thường không?
+    3. readSymbolicLink khác readAttributes ở loại thông tin lấy từ entry ra sao?
+
+    ### Ứng dụng và an toàn
+
+    1. Khi liệt kê một thư mục upload có symlink, phải chọn API nào để xác định đúng loại mục trước khi xử lý?
+    2. Tại sao NOFOLLOW_LINKS trên phép kiểm tra metadata không tự bảo vệ chống symlink ở thành phần cha hay TOCTOU?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc thuộc tính chính xác | Viết hai lệnh readAttributes với và không có NOFOLLOW_LINKS rồi giải thích khác biệt. |
+    | Kiểm tra loại entry | Dự đoán isRegularFile/isSymbolicLink/exists khi referent tồn tại hoặc bị mất. |
+    | Phân tích giới hạn bảo mật | Chỉ ra ranh giới của preflight metadata và thao tác mở/xóa tệp thực tế. |
+- id: file-links-006
+  title: Files.isSameFile khác Path.equals
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Files.isSameFile khác Path.equals**
+
+    Bài phân biệt so sánh biểu diễn Path bằng equals với nhận diện cùng một tệp thực tế bằng Files.isSameFile. Các tình huống path có dấu chấm, đường dẫn tương đối, hard link và symlink được dùng để dự đoán kết quả và chi phí I/O; người học cũng tách normalize, toAbsolutePath và toRealPath khỏi phép xác nhận file identity.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai hình thức so sánh
+
+    1. Path.equals dựa trên quy tắc biểu diễn của FileSystem và cần truy cập tệp hay không?
+    2. Files.isSameFile đánh giá sự đồng nhất theo đối tượng nào và khi nào có thể cần truy cập filesystem?
+    3. Vì sao hai đường dẫn khác chuỗi vẫn có thể cho isSameFile==true, ví dụ hard link hoặc symbolic link?
+
+    ### Tình huống biên và chọn lựa
+
+    1. Trường hợp hai Path bằng nhau nhưng tệp không tồn tại nói gì về cách dùng isSameFile để kiểm tra existence?
+    2. normalize, toAbsolutePath và toRealPath khác nhau thế nào về việc thay đổi cú pháp và kiểm tra filesystem?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn phép so sánh | Dùng Path.equals cho giá trị biểu diễn và Files.isSameFile cho định danh tệp theo yêu cầu cụ thể. |
+    | Dự đoán kết quả | Lập bảng true/false cho các path khác biểu diễn nhưng cùng file qua link hoặc phép chuẩn hóa. |
+    | Xử lý I/O có điều kiện | Biết khi nào Files.isSameFile có thể ném IOException và không dùng thay thế Files.exists. |
+- id: file-links-007
+  title: Thao tác copy, move, delete tác động vào link hay đích
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thao tác copy, move, delete tác động vào link hay đích**
+
+    Bài phân tích theo từng API chứ không giả định mọi thao tác Files đều có cùng chính sách follow. Nội dung mô tả copy nguồn là symlink mặc định có thể sao chép referent, copy với NOFOLLOW_LINKS sao chép mục link, move và delete thường tác động chính mục symlink, cùng khác biệt khi destination đã chứa một symlink và các tùy chọn REPLACE_EXISTING.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bảng hành vi thao tác
+
+    1. Files.copy(link,destination) và Files.copy(link,destination, NOFOLLOW_LINKS) khác nhau thế nào về đối tượng được sao chép?
+    2. Khi move một symlink sang tên khác, dữ liệu referent có được di chuyển theo không?
+    3. Files.delete(link) làm mất mục nào, và vì sao hard link cần phân tích riêng?
+
+    ### Đích đã tồn tại và an toàn
+
+    1. Khi destination là symlink đã có, REPLACE_EXISTING tác động lên entry hay referent như thế nào?
+    2. Vì sao đổi vị trí symlink có target tương đối có thể biến một link còn hoạt động thành broken link?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán copy/move/delete | Dựng bảng đối tượng nào thay đổi sau từng API và option cho source symlink. |
+    | Chọn phương án copy | Viết ví dụ tạo bản sao dữ liệu hoặc bản sao chính liên kết với tùy chọn đúng. |
+    | Bảo vệ thao tác đích | Giải thích REPLACE_EXISTING và kiểm tra nguy cơ xóa/thay nhầm entry symlink. |
+- id: file-links-008
+  title: Vòng liên kết và giới hạn khi duyệt cây
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vòng liên kết và giới hạn khi duyệt cây**
+
+    Bài mở rộng file link vào duyệt cây với Files.walk và Files.walkFileTree: mặc định không theo symlink, còn FOLLOW_LINKS có thể lặp qua tổ tiên hoặc vượt ra ngoài thư mục gốc. Qua maxDepth, FileSystemLoopException và FileVisitor, người học thiết kế cách xử lý vòng, giới hạn chi phí duyệt và phạm vi các tài nguyên được phép truy cập.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng lặp trong cây liên kết
+
+    1. Vì sao symlink trỏ về thư mục cha có thể gây vòng khi bật FOLLOW_LINKS?
+    2. Files.walkFileTree nhận diện file loop trên nhánh đang duyệt như thế nào và chuyển lỗi đến FileVisitor ra sao?
+    3. maxDepth được tính từ start thế nào và tại sao giới hạn này không bảo đảm không rời khỏi thư mục gốc?
+
+    ### Chính sách duyệt an toàn
+
+    1. Khi chỉ thống kê file trong một cây, vì sao chế độ không theo symbolic link thường là mặc định hợp lý?
+    2. Nếu thực sự phải theo symlink, cần quản lý các rủi ro duyệt trùng, ngoài vùng cho phép và tài nguyên mở ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng cây có vòng | Vẽ đường đi khi FOLLOW_LINKS và dự đoán callback hoặc ngoại lệ gặp tại link trỏ ngược. |
+    | Cấu hình file-tree walk | Chọn maxDepth, FileVisitOption và chính sách visitFileFailed phù hợp. |
+    | Thiết kế ranh giới duyệt | Nêu kiểm soát phạm vi, số lượng file, độ sâu và đóng stream khi dùng Files.walk. |
+- id: file-links-009
+  title: Quyền và tính hỗ trợ theo hệ điều hành
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Quyền và tính hỗ trợ theo hệ điều hành**
+
+    Bài đặt các API file link trong bối cảnh hệ điều hành và FileSystemProvider: thao tác tạo hard/symbolic link có thể thất bại do quyền, policy, filesystem hoặc option không được hỗ trợ dù code biên dịch đúng. Người học đọc Basic/Posix/Dos attribute views theo năng lực provider, giải thích điều kiện của Windows và POSIX, xử lý UnsupportedOperationException và FileSystemException có chủ đích, đồng thời nhận diện link traversal và TOCTOU.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khả năng hỗ trợ và cấp quyền
+
+    1. Tại sao tạo symlink thành công trên một máy không chứng minh thao tác tương tự dùng được trên mọi hệ điều hành hay volume?
+    2. Việc tạo entry link cần quyền ở thư mục chứa link như thế nào, và vì sao điều đó khác quyền truy cập nội dung referent?
+    3. PosixFileAttributeView và DosFileAttributeView được xác nhận hỗ trợ theo provider/file store như thế nào?
+
+    ### Thiết kế portable và an toàn
+
+    1. Làm cách nào xử lý lỗi thiếu hỗ trợ, thiếu quyền hoặc link đã tồn tại mà không che khuất nguyên nhân?
+    2. Nếu đường dẫn do người dùng điều khiển có thể đổi giữa bước kiểm tra và mở file, cần tính tới loại rủi ro nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đánh giá khả năng môi trường | Lập bảng hỗ trợ symlink/hard link theo hệ thống và quyền, nêu rõ giả định thay vì coi tuyệt đối. |
+    | Thiết kế xử lý exception | Xử lý có chủ đích tình huống UnsupportedOperationException, AccessDeniedException và lỗi filesystem. |
+    | Đọc thuộc tính phù hợp | Chọn Basic/Posix/Dos views dựa trên hỗ trợ thật và giải thích rủi ro symlink traversal/TOCTOU. |

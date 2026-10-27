@@ -1,0 +1,28 @@
+sections:
+  nio-networking-001:
+    difficulty: BASIC
+    isImportant: true
+  nio-networking-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  nio-networking-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  nio-networking-004:
+    difficulty: BASIC
+    isImportant: true
+  nio-networking-005:
+    difficulty: ADVANCED
+    isImportant: true
+  nio-networking-006:
+    difficulty: ADVANCED
+    isImportant: true
+  nio-networking-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  nio-networking-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  nio-networking-009:
+    difficulty: INTERMEDIATE
+    isImportant: true

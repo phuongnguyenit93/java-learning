@@ -1,0 +1,301 @@
+summaries:
+- id: nio-channel-001
+  title: Channel khác InputStream và OutputStream
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Channel khác InputStream và OutputStream**
+
+    Phân biệt mô hình byte stream của java.io với các channel Java NIO dựa trên ByteBuffer để chọn đúng API. Bài chỉ rõ chiều đọc/ghi, seek theo từng loại channel, blocking/non-blocking, partial I/O và adapter nối hai họ API mà không đồng nhất hiệu năng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và giới hạn
+
+    1. InputStream/OutputStream khác ReadableByteChannel/WritableByteChannel về kiểu dữ liệu truyền và trạng thái bộ đệm như thế nào?
+    2. Vì sao tên gọi NIO không có nghĩa mọi channel đều non-blocking hoặc cho phép seek?
+
+    ### Lựa chọn API
+
+    1. Một tác vụ đọc file UTF-8 theo dòng và một tác vụ ghi đè byte tại offset nên chọn API nào, vì sao?
+    2. Khi dùng Channels.newChannel từ stream, adapter có tự tạo thêm khả năng random access, non-blocking hoặc sở hữu nguồn độc lập không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh họ API | Lập bảng đối chiếu kiểu stream, channel, ByteBuffer, file offset và blocking mode bằng ví dụ cụ thể. |
+    | Chọn API theo yêu cầu | Đề xuất Files/Stream hoặc FileChannel/SocketChannel cho các tác vụ khác nhau kèm giới hạn. |
+    | Phân tích chuyển đổi | Giải thích đường chuyển dữ liệu và trách nhiệm đóng khi bọc stream bằng channel adapter. |
+- id: nio-channel-002
+  title: ReadableByteChannel, WritableByteChannel và ByteChannel
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ReadableByteChannel, WritableByteChannel và ByteChannel**
+
+    Xây dựng nền tảng về ba interface byte channel: đọc vào ByteBuffer, ghi từ ByteBuffer và kết hợp hai hướng bằng ByteChannel. Bài nhấn mạnh read/write chỉ trả lượng byte thực chuyển, trạng thái position/limit và sự khác nhau giữa khả năng gọi phương thức với quyền mở tài nguyên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng ba interface
+
+    1. ReadableByteChannel, WritableByteChannel và ByteChannel kế thừa nhau ra sao và mỗi kiểu cho phép gọi phương thức nào?
+    2. read(ByteBuffer) và write(ByteBuffer) thay đổi position/remaining thế nào khi truyền ít byte hơn dung lượng còn lại?
+
+    ### Thiết kế dữ liệu
+
+    1. Vì sao ByteChannel không tự có position(long) hay bảo đảm dùng được cả hai chiều trên một handle được mở READ?
+    2. Bạn chuyển buffer qua clear, flip và write thế nào để sao chép byte mà không bỏ phần dữ liệu chưa ghi?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc sơ đồ giao diện | Phân loại hướng đọc/ghi và API hợp lệ cho ReadableByteChannel, WritableByteChannel và ByteChannel. |
+    | Theo dõi ByteBuffer | Tính trạng thái position/limit trước và sau hai phép I/O với số byte đã chuyển cho trước. |
+    | Lập vòng lặp copy | Viết vòng lặp read–flip–write–clear trên channel có quản lý tài nguyên và EOF. |
+- id: nio-channel-003
+  title: SeekableByteChannel và khả năng thay đổi vị trí
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **SeekableByteChannel và khả năng thay đổi vị trí**
+
+    Hiểu random access trong channel tệp thông qua position, size, read/write và truncate. Bài hướng dẫn seek, ghi đè byte, mở rộng kích thước, bảo vệ dữ liệu khi truncate và phân biệt vị trí của channel với position của ByteBuffer.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vị trí và kích thước
+
+    1. position(long), position(), size() và truncate(long) thay đổi con trỏ/kích thước tệp theo quy tắc nào?
+    2. Vì sao position(100) không tự tạo dữ liệu và write tại offset giữa tệp ghi đè chứ không chèn byte?
+
+    ### An toàn khi truy cập vị trí
+
+    1. Làm thế nào phân biệt channel.position với buffer.position trong một phép đọc nhiều byte?
+    2. Khi hai thread cùng chia sẻ SeekableByteChannel, chuỗi position(offset) rồi read(buffer) có thể bị race như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thao tác vị trí | Dự đoán bytes và con trỏ sau các bước seek, overwrite, EOF và truncate trên một file mẫu. |
+    | Chọn chế độ mở | Mở SeekableByteChannel với READ/WRITE phù hợp và giải thích tác động của TRUNCATE_EXISTING hoặc APPEND. |
+    | Phân tích truy cập đồng thời | Chỉ ra rủi ro seek cộng read khi nhiều thread chia sẻ channel và đề xuất đồng bộ/positional FileChannel. |
+- id: nio-channel-004
+  title: Đọc hoặc ghi không đủ toàn bộ buffer
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đọc hoặc ghi không đủ toàn bộ buffer**
+
+    Tránh mất byte do tưởng mỗi lời gọi channel.read/write xử lý trọn buffer. Bài minh họa partial read/write qua channel giả lập giới hạn chunk, hướng dẫn đọc đủ header, ghi hết dữ liệu, giữ frame dang dở và dừng vòng lặp đúng khi non-blocking trả 0.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng partial I/O
+
+    1. Vì sao channel.read(dst) và write(src) có thể truyền ít byte hơn dst.remaining hoặc src.remaining dù không có exception?
+    2. Nếu channel chỉ nhận ba byte mỗi lần từ một payload chín byte, position thay đổi thế nào qua các lượt write?
+
+    ### Vòng lặp và khung dữ liệu
+
+    1. Đọc header cố định 4 byte và ghi hết payload bằng hasRemaining cần xử lý EOF/0 như thế nào?
+    2. Tại sao vòng lặp write trên SocketChannel non-blocking không được busy-spin khi n==0 và cần giữ trạng thái pending frame nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng partial I/O | Dự đoán số lần gọi, position và số byte còn lại với channel giới hạn kích thước chunk. |
+    | Viết read/write đầy đủ | Cài đặt vòng lặp dùng hasRemaining, kiểm tra EOF và tránh reset buffer khi còn dữ liệu. |
+    | Xử lý readiness | Phân biệt chiến lược blocking với non-blocking để tránh quay CPU và mất frame. |
+- id: nio-channel-005
+  title: Ý nghĩa của kết quả 0 và EOF -1
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ý nghĩa của kết quả 0 và EOF -1**
+
+    Phân biệt rõ kết quả read n>0, 0 và -1 của byte channel, không nhầm số lượng byte với nội dung byte. Bài đặt kết quả vào ngữ cảnh buffer hết chỗ, FileChannel, SocketChannel non-blocking, Selector và EOF để xây dựng điều kiện dừng đúng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đọc giá trị trả về
+
+    1. Điều kiện nào khiến read(ByteBuffer) trả 0 dù nguồn chưa EOF, và điều kiện nào dẫn đến -1?
+    2. Tại sao byte dữ liệu 0x00 hay 0xFF không tương ứng với read() trả 0 hoặc -1 trong API channel?
+
+    ### Điều phối đọc và ghi
+
+    1. Khi file channel trả 0 với buffer remaining==0, bạn phải sửa trạng thái ByteBuffer như thế nào?
+    2. SocketChannel không chặn trả 0 và -1 dẫn đến hành vi khác nhau nào trong event loop, và write()==0 có nghĩa gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải nghĩa trạng thái I/O | Giải thích n>0, n==0, n==-1 cùng tác động lên position trong ví dụ file và socket. |
+    | Sửa vòng lặp lỗi | Nhận diện lỗi if(n<=0) break và vòng lặp read với buffer đầy, đề xuất điều kiện đúng. |
+    | Thiết kế EOF handling | Tách EOF, zero progress, dữ liệu còn trong buffer và trạng thái ném IOException thành các nhánh xử lý. |
+- id: nio-channel-006
+  title: Vòng lặp đọc ghi dựa trên position và remaining
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vòng lặp đọc ghi dựa trên position và remaining**
+
+    Dùng position, limit, remaining và hasRemaining làm nguồn sự thật của tiến độ I/O. Bài minh họa sao chép file qua buffer nhỏ, ghi hết phần dư, compact khi frame chưa hoàn chỉnh và quản lý non-blocking 0 mà không spin.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Trạng thái buffer
+
+    1. Sau clear, read, flip, partial write và compact, position/limit/remaining của ByteBuffer thể hiện dữ liệu nào còn hiệu lực?
+    2. Vì sao không dùng capacity để quyết định write có còn dữ liệu sau khi flip?
+
+    ### Ứng dụng thực tế
+
+    1. Bạn tổ chức vòng lặp copy FileChannel để bảo toàn byte khi write chỉ tiêu thụ một phần như thế nào?
+    2. Khi EOF đến giữa frame 4-byte length + payload, làm sao phân biệt kết thúc hợp lệ và dữ liệu bị cắt cụt?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Theo dõi tiến độ | Lập trace position/limit/remaining của buffer qua một chu kỳ đọc/ghi có partial write. |
+    | Viết loop chắc chắn | Triển khai copy file và xác minh kết quả byte-for-byte với hasRemaining và kiểm tra EOF. |
+    | Giữ dữ liệu dang dở | Giải thích thời điểm dùng compact thay clear và tránh spin khi channel không chặn chưa sẵn sàng. |
+- id: nio-channel-007
+  title: Scattering read và gathering write
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Scattering read và gathering write**
+
+    Tổ chức thông điệp nhiều vùng như header/payload bằng ScatteringByteChannel và GatheringByteChannel, bao gồm thứ tự buffer, giá trị long và partial I/O. Bài so sánh việc gom/giải tán với nhiều lời gọi riêng, lưu ý frame động không thể coi một lần read là đầy đủ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân bố dữ liệu qua nhiều buffer
+
+    1. ScatteringByteChannel.read(dsts) phân phối 5 byte vào hai buffer có remaining lần lượt 4 và 3 theo thứ tự nào?
+    2. GatheringByteChannel.write(srcs) khi chỉ ghi hai byte sẽ điều chỉnh position buffer nguồn ra sao và giữ những byte nào?
+
+    ### Protocol và điều kiện dừng
+
+    1. Vì sao một lần scattering read không tự tách đúng header và payload có độ dài động từ TCP?
+    2. Khi frame header báo độ dài N, parser cần validate kích thước và tổ chức read/write nhiều lượt như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích vector I/O | Vẽ sơ đồ luân chuyển bytes và position qua scattering/gathering với hai buffer. |
+    | Lập vòng lặp multi-buffer | Kiểm tra tổng remaining trên mảng buffer và xử lý kết quả partial long một cách an toàn. |
+    | Thiết kế frame động | Đọc header trước, giới hạn độ dài và quản lý payload mà không giả định một lần I/O hoàn tất message. |
+- id: nio-channel-008
+  title: Channels.newChannel, newInputStream và newOutputStream
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Channels.newChannel, newInputStream và newOutputStream**
+
+    Kết nối các API byte IO và NIO qua Channels.newChannel, newInputStream, newOutputStream theo đúng hướng chuyển đổi. Bài phân biệt synchronous/async adapter, non-blocking mode, giới hạn seek, ByteBuffer và tác dụng lan truyền của close đến tài nguyên nền.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chọn adapter đúng chiều
+
+    1. Khi một phương thức nhận ReadableByteChannel nhưng caller đang có InputStream, cần gọi Channels.newChannel theo overload nào?
+    2. Muốn truyền FileChannel cho API chỉ nhận OutputStream, bạn sử dụng adapter nào và giới hạn seek còn thể hiện ra sao?
+
+    ### Vòng đời và đồng bộ
+
+    1. Vì sao adapter channel↔stream không tạo bản sao riêng và close wrapper có thể đóng cả nguồn được caller cấp?
+    2. AsynchronousByteChannel khác AsynchronousFileChannel ở khả năng dùng trực tiếp overload Channels.newInputStream dành cho asynchronous byte channel như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ánh xạ adapter | Chọn chính xác newChannel/newInputStream/newOutputStream cho bốn chiều byte stream và channel. |
+    | Viết bản sao byte qua adapter | Sao chép ByteArrayInputStream sang ByteArrayOutputStream bằng ByteBuffer và giữ nguyên nội dung. |
+    | Phân tích hợp đồng | Xác định khi adapter có thể đóng underlying stream/channel, phân biệt blocking adapter và non-blocking Selector. |
+- id: nio-channel-009
+  title: Channels.newReader, newWriter và chuyển đổi charset
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Channels.newReader, newWriter và chuyển đổi charset**
+
+    Nắm ranh giới byte/char khi chuyển channel thành Reader hoặc Writer: chọn overload, charset, CharsetDecoder/Encoder và CodingErrorAction. Bài thực nghiệm UTF-8 round-trip, REPORT so với REPLACE, transcode, BOM, minBufferCap và vòng đời adapter.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chuyển đổi ký tự
+
+    1. Channels.newReader/newWriter nối channel với Reader/Writer theo hướng byte và ký tự nào, và tại sao phải chỉ rõ charset?
+    2. CharsetDecoder/Encoder xử lý malformed và unmappable bằng REPORT hoặc REPLACE khác nhau thế nào?
+
+    ### Tính toàn vẹn dữ liệu
+
+    1. Khi transcoding ISO-8859-1 sang UTF-8, vì sao đổi tên charset của byte array không tạo văn bản hợp lệ?
+    2. BOM, line ending, bộ đệm decoder và close wrapper có thể thay đổi nội dung/vòng đời tài nguyên như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo adapter ký tự | Đọc/ghi chuỗi Unicode qua channel và Reader/Writer với charset tường minh. |
+    | Kiểm chứng lỗi charset | Lập thử nghiệm REPORT/REPLACE và nêu trường hợp dữ liệu không thể round-trip theo byte. |
+    | Thiết kế transcoding | Phân biệt sao chép bytes với decode–encode và bảo toàn ownership của channel nguồn/đích. |
+- id: nio-channel-010
+  title: Đóng channel, khả năng ngắt và tài nguyên bên dưới
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đóng channel, khả năng ngắt và tài nguyên bên dưới**
+
+    Thiết kế vòng đời và hủy thao tác I/O trên Channel, InterruptibleChannel và các wrapper. Bài giải thích ClosedChannelException, AsynchronousCloseException, ClosedByInterruptException, sự khác biệt interrupt/close/non-blocking và tài nguyên file/socket/selector/lock/mmap.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng đời và ngoại lệ
+
+    1. ClosedChannelException, AsynchronousCloseException và ClosedByInterruptException có quan hệ và điều kiện xuất hiện như thế nào?
+    2. Vì sao isOpen()==true không bảo đảm read tiếp theo thành công nếu thread khác có thể close channel?
+
+    ### Sở hữu và cancellation
+
+    1. Interrupt thread đang blocked trong InterruptibleChannel tác động ra sao tới channel và interrupt flag, khác close từ thread khác thế nào?
+    2. Khi lấy FileChannel từ stream hoặc map file qua MappedByteBuffer, những đối tượng nào có vòng đời riêng cần quản lý?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại lỗi đóng/ngắt | Phân tích trace blocking read với interrupt và async close, dự đoán exception cũng như trạng thái channel. |
+    | Quản lý tài nguyên | Đặt try-with-resources và chính sách ownership đúng cho channel, adapter, file lock và selector. |
+    | Thiết kế shutdown | Phân biệt ngừng thread, đóng channel, non-blocking readiness và quản lý mmap/executor. |

@@ -1,0 +1,34 @@
+sections:
+  directory-tree-traversal-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  directory-tree-traversal-002:
+    difficulty: BASIC
+    isImportant: true
+  directory-tree-traversal-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  directory-tree-traversal-004:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  directory-tree-traversal-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  directory-tree-traversal-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  directory-tree-traversal-007:
+    difficulty: ADVANCED
+    isImportant: true
+  directory-tree-traversal-008:
+    difficulty: ADVANCED
+    isImportant: true
+  directory-tree-traversal-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  directory-tree-traversal-010:
+    difficulty: ADVANCED
+    isImportant: true
+  directory-tree-traversal-011:
+    difficulty: BASIC
+    isImportant: true

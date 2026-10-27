@@ -1,0 +1,249 @@
+summaries:
+- id: random-access-001
+  title: RandomAccessFile và các chế độ r, rw, rws, rwd
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **RandomAccessFile và các chế độ r, rw, rws, rwd**
+
+    **RandomAccessFile** cho phép đọc và ghi ở offset byte tùy chọn trong cùng tệp. Bài này đặt cơ sở để chọn đúng `r`, `rw`, `rws`, `rwd`, giải thích tác dụng phụ của cập nhật tệp và sự khác nhau giữa yêu cầu đồng bộ lưu trữ, tính nguyên tử, cùng trách nhiệm quản lý file.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mở tệp và độ bền dữ liệu
+
+    1. Bốn mode `r`, `rw`, `rws`, `rwd` khác nhau thế nào về quyền ghi và yêu cầu đồng bộ nội dung/metadata?
+
+    2. Vì sao yêu cầu ghi đồng bộ không tương đương với transaction hay khả năng chống cập nhật đồng thời?
+
+    ### Đọc ghi tại offset
+
+    1. Điều gì xảy ra với dữ liệu hiện có khi gọi `seek` rồi ghi đè hoặc chuyển tới cuối tệp để nối thêm?
+
+    2. Khi dùng `RandomAccessFile`, vì sao phải xác định ai sở hữu file và dùng `try-with-resources` ở đúng cấp?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn mode | Giải thích lựa chọn `r`, `rw`, `rws` hoặc `rwd` cho các tình huống chỉ đọc, cập nhật dữ liệu hay yêu cầu đồng bộ metadata. |
+    | Dự đoán cập nhật | Chạy ví dụ ghi đè và nối vào cuối tệp, chỉ ra nội dung và độ dài tệp sau mỗi thao tác. |
+    | Đánh giá bảo đảm | Phân biệt durability, atomicity và cách kiểm tra lỗi I/O trong một lần cập nhật tệp. |
+- id: random-access-002
+  title: File pointer, seek và getFilePointer
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **File pointer, seek và getFilePointer**
+
+    Bài này đặt nền tảng cho **file pointer** của `RandomAccessFile`: `seek(pos)` đặt vị trí byte cho thao tác tiếp theo, `getFilePointer()` quan sát vị trí hiện tại. Bạn sẽ theo dõi con trỏ sau mỗi thao tác đọc/ghi, phân biệt vị trí với `length()` và tránh nhầm EOF hoặc ký tự với byte.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Con trỏ và vị trí
+
+    1. File pointer là vị trí của thao tác I/O kế tiếp hay độ dài tệp, và hai giá trị có thể khác nhau trong tình huống nào?
+
+    2. Sau `seek(2)`, một lần `readByte()` hoặc `writeByte()` làm pointer dịch chuyển bao nhiêu byte?
+
+    ### Giới hạn và kiểm chứng
+
+    1. Vì sao `seek` vượt EOF không tự mở rộng file, và điều gì xảy ra nếu đọc ngay tại vùng chưa có byte?
+
+    2. Khi tính offset bản ghi cố định bằng `index * recordSize`, vì sao nên dùng `long` và kiểm tra biên/tràn số?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập bảng trace | Dự đoán file pointer và `length()` qua chuỗi `seek`, `read`, `write`, EOF. |
+    | Tính offset | Tính offset byte của bản ghi theo index và kích thước, xác định vị trí hợp lệ. |
+    | Sửa thao tác sai | Nhận diện lỗi ghi nhầm vị trí hoặc hiểu sai `seek` là thao tác chèn byte. |
+- id: random-access-003
+  title: Đọc ghi dữ liệu nguyên thủy qua DataInput và DataOutput
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đọc ghi dữ liệu nguyên thủy qua DataInput và DataOutput**
+
+    Thông qua hợp đồng **DataInput/DataOutput** mà `RandomAccessFile` triển khai, bài dạy cách mã hóa và giải mã các kiểu nguyên thủy thành byte theo thứ tự cố định. Đọc và ghi phải đối xứng về kiểu, thứ tự, độ dài; phân biệt `writeUTF` theo modified UTF-8 với UTF-8 phổ thông và xử lý EOF/format lỗi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bố cục nhị phân
+
+    1. Tại sao một chuỗi `writeInt`, `writeLong`, `writeBoolean` phải được đọc lại đúng thứ tự và đúng kiểu đã ghi?
+
+    2. Vì sao các primitive nhiều byte được lưu theo big-endian trong DataInput/DataOutput, và điều gì sai nếu tự diễn giải little-endian?
+
+    ### Độ dài và tính tương thích
+
+    1. `writeUTF` lưu chuỗi theo quy ước độ dài và modified UTF-8 như thế nào, khác gì với ghi byte UTF-8 thông thường?
+
+    2. Khi file thiếu byte ở giữa một bản ghi, khi nào `readFully` hoặc phương thức đọc primitive phải báo EOF sớm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế binary layout | Mô tả thứ tự và số byte của các trường primitive, viết cặp lệnh ghi/đọc đối xứng. |
+    | Chẩn đoán file lỗi | Dự đoán `EOFException` hoặc dữ liệu sai kiểu khi payload ngắn hoặc layout không khớp. |
+    | Lựa chọn mã hóa chuỗi | Giải thích tại sao `writeUTF` không thay thế định dạng UTF-8 chuẩn trong file trao đổi hệ thống. |
+- id: random-access-004
+  title: length, setLength và vùng dữ liệu chưa được ghi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **length, setLength và vùng dữ liệu chưa được ghi**
+
+    Bài phân biệt `RandomAccessFile.length()` với `getFilePointer()`, khảo sát `setLength` khi cắt ngắn hoặc kéo dài tệp và những vùng byte mở rộng chưa có giá trị nghiệp vụ được ghi. Người học phải hiểu khác biệt giữa kích thước logic, nội dung được khởi tạo, sparse storage và dữ liệu hợp lệ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kích thước và mở rộng
+
+    1. Tại sao `seek` vượt EOF không đổi `length()`, còn `setLength` hoặc ghi vượt cuối có thể mở rộng file?
+
+    2. Khi `setLength` thu nhỏ tệp và pointer nằm ngoài độ dài mới, Java xử lý pointer ra sao?
+
+    ### Dữ liệu chưa khởi tạo và rủi ro
+
+    1. Vì sao byte trong vùng vừa mở rộng không nên được xem là một record có giá trị nghiệp vụ xác định?
+
+    2. Bạn cần kiểm tra hay khởi tạo gì nếu mở rộng file để giữ sẵn chỗ cho bản ghi kích thước cố định?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Trace state | Ghi lại `length`, file pointer và EOF sau các lần `seek`, `setLength`, đọc và ghi. |
+    | Khởi tạo vùng mở rộng | Đề xuất cách ghi rõ byte mặc định theo từng khối mà không cấp phát mảng khổng lồ. |
+    | Phân tích lỗi | Phân biệt tệp kéo dài hợp lệ về độ dài với dữ liệu vẫn chưa được khởi tạo theo schema. |
+- id: random-access-005
+  title: Thiết kế bản ghi có vị trí và kích thước xác định
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thiết kế bản ghi có vị trí và kích thước xác định**
+
+    Bài này ghép offset, schema và truy cập ngẫu nhiên thành **định dạng bản ghi kích thước cố định**: header, vị trí slot, mã hóa trường, tính offset an toàn và cơ chế xóa logic. Bạn sẽ kiểm tra tính tương thích/giới hạn của layout và lý giải vì sao một bản ghi được ghi đủ byte vẫn có thể chưa an toàn khi lỗi hoặc ghi đồng thời.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế bố cục record
+
+    1. Làm thế nào tính `offset = headerBytes + index * recordBytes` an toàn trước tràn số và giới hạn tệp?
+
+    2. Vì sao độ dài byte của chuỗi cần được xác định theo charset, không lấy số ký tự Java làm kích thước trường cố định?
+
+    ### Cập nhật và nhất quán
+
+    1. Khi dùng tombstone để xóa logic, file length và số slot vật lý thay đổi thế nào?
+
+    2. Vì sao cập nhật một record không mặc nhiên nguyên tử, và cần xác minh schema/độ dài/phiên bản nào khi mở file cũ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính slot | Từ header 16 byte, mỗi record 64 byte, tính offset của index bất kỳ và kiểm tra giới hạn số học. |
+    | Thiết kế dữ liệu | Phác thảo header và record có trường chiều dài xác định, vùng mã hóa và trạng thái tombstone. |
+    | Kiểm thử tính toàn vẹn | Tạo các ca file bị cắt, ID sai, record thiếu, offset vượt vùng để bảo vệ parser và cập nhật. |
+- id: random-access-006
+  title: getChannel và trạng thái vị trí được chia sẻ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **getChannel và trạng thái vị trí được chia sẻ**
+
+    `RandomAccessFile.getChannel()` trả `FileChannel` liên kết với cùng tệp và **cùng vị trí I/O tuần tự**. Bài này giúp theo dõi `raf.seek`, `channel.position`, I/O tương đối và I/O có offset rõ ràng, đồng thời phân biệt vị trí của `ByteBuffer` với vị trí tệp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ba loại position
+
+    1. File pointer của `RandomAccessFile`, `FileChannel.position()` và `ByteBuffer.position()` là ba trạng thái khác nhau ở đâu?
+
+    2. Khi gọi `raf.seek()` hay `channel.position()`, những thao tác tương đối nào sẽ quan sát vị trí mới?
+
+    ### I/O tương đối và tuyệt đối
+
+    1. Vì sao `channel.read(buffer, offset)` không thay đổi shared file position, còn `channel.read(buffer)` có thể làm vị trí tiến lên?
+
+    2. Điều gì xảy ra với vòng đời `FileChannel` khi đóng `RandomAccessFile` mà channel được lấy từ chính đối tượng đó?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán trạng thái | Lập trace `getFilePointer()` và `channel.position()` qua các lượt seek và đọc tương đối. |
+    | Chọn positional I/O | Viết ví dụ đọc theo offset tuyệt đối và chứng minh shared position không đổi. |
+    | Quản lý tài nguyên | Giải thích quan hệ lifecycle giữa RandomAccessFile và channel, tránh giữ handle đã đóng. |
+- id: random-access-007
+  title: Không chia sẻ file pointer giữa nhiều thao tác mà thiếu phối hợp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không chia sẻ file pointer giữa nhiều thao tác mà thiếu phối hợp**
+
+    Nhiều tác vụ cùng `seek` rồi đọc/ghi trên shared file pointer có thể xen kẽ và đặt dữ liệu sai offset dù từng lệnh hợp lệ. Bài này phân tích **race condition**, dùng positional I/O khi phù hợp, khóa toàn bộ thao tác nhiều bước khi bắt buộc chia sẻ cursor và phân biệt thread safety, file lock, atomicity, durability.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân tích race
+
+    1. Vì sao hai thread đều gọi `seek` trước `write` có thể làm vị trí ghi phụ thuộc thứ tự lập lịch?
+
+    2. Tại sao sự an toàn của từng lời gọi riêng lẻ không đủ bảo vệ một chuỗi `seek` rồi `write` có nghĩa nghiệp vụ?
+
+    ### Thiết kế phối hợp
+
+    1. Khi nào nên dùng `FileChannel.read/write(buffer, position)` để tách vị trí giữa tác vụ và vẫn cần phối hợp nếu vùng dữ liệu chồng lấn?
+
+    2. Khác biệt giữa đồng bộ trong JVM, file lock giữa tiến trình, atomicity khi cập nhật và `force(true)` về durability là gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tái hiện lỗi | Dùng các lịch interleaving khác nhau để chứng minh kết quả sai từ shared pointer. |
+    | Sửa thiết kế | Chọn positional read/write hoặc đồng bộ toàn bộ thao tác nhiều bước, giải thích phạm vi mỗi cơ chế. |
+    | Kiểm tra concurrent IO | Thiết kế test ghi hai vùng riêng, chờ tác vụ hoàn thành và kiểm tra dữ liệu cùng offset cuối. |
+- id: random-access-008
+  title: Khi nào chọn RandomAccessFile thay FileChannel
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khi nào chọn RandomAccessFile thay FileChannel**
+
+    Bài tổng hợp giúp lựa chọn giữa **RandomAccessFile** và **FileChannel** dựa trên API, mô hình dữ liệu và ranh giới truy cập. RAF phù hợp với primitive, `seek` và bản ghi đơn giản; FileChannel hữu ích khi cần ByteBuffer, positional I/O, chuyển vùng hoặc I/O NIO nâng cao. Bạn phải nêu điều kiện thay vì khẳng định API nào luôn nhanh hơn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### So sánh kiến trúc
+
+    1. Trong bài toán cập nhật một trường primitive tại offset cố định, ưu điểm của RandomAccessFile là gì?
+
+    2. Nếu nhiều tác vụ cần thao tác ở những offset độc lập, positional I/O của FileChannel giải quyết vấn đề vị trí nào?
+
+    ### Đánh đổi và giới hạn
+
+    1. Khi nào `ByteBuffer`, transfer, memory mapping hoặc file locking khiến FileChannel là lựa chọn phù hợp hơn?
+
+    2. Vì sao kết luận về tốc độ, atomicity hoặc tính an toàn giữa hai API phải dựa vào workload và các bảo đảm thực tế?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đưa ra quyết định | Chọn API cho ba tình huống file nhị phân nhỏ, đọc vùng lớn và truy cập theo offset từ nhiều tác vụ, nêu lý do. |
+    | So sánh code | Viết lại một thao tác ghi primitive bằng RAF và FileChannel + ByteBuffer, kiểm chứng byte đầu ra. |
+    | Đánh giá trade-off | Phân biệt cơ chế bảo vệ vị trí, thao tác với byte và chi phí cấu hình của từng API. |

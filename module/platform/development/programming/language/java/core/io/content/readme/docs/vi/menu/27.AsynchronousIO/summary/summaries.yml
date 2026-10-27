@@ -1,0 +1,321 @@
+summaries:
+- id: asynchronous-io-001
+  title: Phân biệt asynchronous I/O với non-blocking I/O
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt asynchronous I/O với non-blocking I/O**
+
+    Bài học xác lập cách phân biệt lời gọi không chặn với thao tác hoàn tất bất đồng bộ. Người học đối chiếu readiness của `Selector` với completion của các asynchronous channel và hiểu vì sao không thể đồng nhất mô hình Reactor/Proactor với việc không có thread bị chặn ở bất cứ lớp triển khai nào.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Readiness, completion và mô hình điều phối
+
+    1. Một lời gọi I/O non-blocking có ý nghĩa gì khi dữ liệu chưa sẵn sàng?
+    2. `Selector` báo readiness khác với `CompletionHandler` báo completion như thế nào?
+    3. Vì sao Reactor và Proactor chỉ là mô hình tổ chức xử lý, không phải hai kiểu channel Java bắt buộc?
+
+    ### Lựa chọn API trong tình huống thực tế
+
+    1. Vì sao `FileChannel` không thể đăng ký trực tiếp với `Selector` như socket channel?
+    2. Dùng `Future.get()` ngay sau khi submit có thể khiến luồng gọi chặn trở lại ra sao?
+    3. Với TCP có nhiều kết nối, khác biệt giữa event loop xử lý readiness và callback sau completion tác động thế nào đến thiết kế state?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt tín hiệu I/O | Vẽ và giải thích timeline readiness rồi gọi read/write so với submit rồi nhận kết quả completion |
+    | Thực hành hai mô hình | Chỉ ra các bước trong ví dụ `Pipe` với `Selector` và ví dụ asynchronous file read qua `Future` hoặc handler |
+    | Lựa chọn theo đối tượng | Giải thích khi nào cân nhắc selector cho socket và asynchronous channel cho file/socket |
+- id: asynchronous-io-002
+  title: AsynchronousFileChannel và vị trí thao tác tường minh
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **AsynchronousFileChannel và vị trí thao tác tường minh**
+
+    Bài học hướng dẫn đọc/ghi tệp bất đồng bộ với `AsynchronousFileChannel`, trong đó mỗi operation mang một `position` kiểu `long` tường minh. Người học quản lý offset và tiến độ từng phần mà không giả định channel có shared cursor giống một luồng tuần tự, đồng thời phân biệt `Future` và callback khi điều phối nhiều vùng file.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vị trí và trạng thái file
+
+    1. Vì sao `AsynchronousFileChannel` yêu cầu `position` cho read/write và không tự tăng một con trỏ chung?
+    2. Khi một operation trả `n` byte, offset và trạng thái `ByteBuffer` phải được cập nhật thế nào ở lần tiếp theo?
+    3. Hai thao tác với offset độc lập giúp gì cho xử lý record song song và gặp rủi ro gì khi ghi đè lên cùng một vùng?
+
+    ### Vòng đời và lựa chọn API
+
+    1. Khi nào dùng `Future<Integer>` và khi nào dùng `CompletionHandler` khi đọc tệp?
+    2. `size()`, `truncate()` và `force()` giúp giải quyết các yêu cầu khác nhau nào?
+    3. Timeout chờ Future, cancellation và việc đóng channel ảnh hưởng ra sao đến công việc đang pending?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc/ghi theo offset | Viết thuật toán cập nhật `position` và `buffer` sau mỗi số byte thực hoàn thành |
+    | Chọn cách nhận kết quả | Phân tích ưu/nhược điểm của Future và callback qua kịch bản truy cập nhiều record |
+    | Thiết kế truy cập file | Giải thích rủi ro ghi đè, buffer pending, close và giới hạn độ bền dữ liệu |
+- id: asynchronous-io-003
+  title: Future và CompletionHandler
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Future và CompletionHandler**
+
+    Bài học phân tích hai cách nhận kết quả của cùng một thao tác I/O bất đồng bộ: polling/đợi với `Future` và callback với `CompletionHandler`. Người học xác định ranh giới lỗi khi submit so với khi hoàn tất, giữ attachment tách biệt, không biến callback thành công việc nặng và chủ động xây trạng thái kết thúc khi partial I/O, timeout hay cancellation xảy ra.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kết quả và dòng thời gian
+
+    1. Lỗi ném ngay khi gọi API khác thế nào với lỗi được bọc trong `ExecutionException` hay chuyển đến `failed(...)`?
+    2. Khi nào `Future.get()` khiến luồng chờ và vì sao Future vẫn là API nhận kết quả bất đồng bộ?
+    3. Attachment trong `CompletionHandler<V,A>` giúp giữ thông tin mỗi request như thế nào?
+
+    ### Thiết kế flow và giới hạn
+
+    1. Vì sao callback không tự xử lý toàn bộ `ByteBuffer` khi chỉ ghi được một phần?
+    2. Tại sao callback làm blocking business logic có thể gây starvation cho nhóm luồng xử lý?
+    3. `get(timeout)` hoặc `cancel` có bảo đảm I/O ngừng và buffer được tái sử dụng ngay không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quan sát hai kết quả bất đồng bộ | Viết luồng xử lý success/failure cho Future và callback trên cùng nhiệm vụ I/O |
+    | Bảo toàn state request | Dùng attachment và giá trị số byte hoàn tất để quyết định bước tiếp hoặc kết thúc |
+    | Quản lý lỗi và hủy | Phân biệt timeout người chờ với kết thúc I/O, bố trí close và cleanup đúng trạng thái |
+- id: asynchronous-io-004
+  title: AsynchronousSocketChannel và AsynchronousServerSocketChannel
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **AsynchronousSocketChannel và AsynchronousServerSocketChannel**
+
+    Bài học đưa completion I/O vào giao tiếp TCP với `AsynchronousServerSocketChannel` để accept và `AsynchronousSocketChannel` để connect, read, write. Người học quản lý state theo từng kết nối, tiếp tục nhận client sau lần accept đầu, xử lý stream có partial I/O và tôn trọng giới hạn một pending read và một pending write trên mỗi socket.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng đời TCP bất đồng bộ
+
+    1. Server phải đặt lại `accept` ở thời điểm nào để không dừng sau client đầu?
+    2. Connect, accept, read và write có thể trả kết quả Future hoặc callback ra sao?
+    3. Vì sao TCP là byte stream nên một lượt đọc không thể đại diện chắc chắn cho một message hoàn chỉnh?
+
+    ### Pending operations và cleanup
+
+    1. Nếu phát sinh hai read pending trên cùng `AsynchronousSocketChannel`, điều gì có thể xảy ra?
+    2. Làm sao giữ state và buffer riêng của từng client khi callback hoàn tất không theo thứ tự người dùng dự đoán?
+    3. Khi một client ngắt hoặc channel đóng trong lúc read/write, ứng dụng xử lý lỗi và dọn tài nguyên thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế accept loop | Mô tả server gọi `accept` liên tiếp qua callback và xử lý mỗi client độc lập |
+    | Xử lý trao đổi TCP | Theo dõi partial read/write, EOF và framing trong tương tác client-server |
+    | Bảo đảm pending constraint | Phát hiện thao tác trùng loại và sắp xếp thứ tự gửi/nhận có kiểm soát |
+- id: asynchronous-io-005
+  title: AsynchronousChannelGroup và nhóm luồng thực thi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **AsynchronousChannelGroup và nhóm luồng thực thi**
+
+    Bài học giải thích cách `AsynchronousChannelGroup` dùng chung tài nguyên của các asynchronous socket channel và cách thread pool ảnh hưởng đến completion callback. Người học phân biệt group của socket với `ExecutorService` truyền cho `AsynchronousFileChannel`, cân nhắc kích thước pool và đảm bảo shutdown đúng thứ tự để tránh callback starvation hoặc rò rỉ tài nguyên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Group và luồng xử lý
+
+    1. Asynchronous socket channel gắn với group thế nào, và default group có ý nghĩa gì?
+    2. `withFixedThreadPool`, `withCachedThreadPool` và custom executor khác nhau ở cách quản lý thread ra sao?
+    3. Vì sao `AsynchronousFileChannel` mở với `ExecutorService` nhưng không tham gia `AsynchronousChannelGroup` trực tiếp?
+
+    ### Thiết kế vận hành
+
+    1. Callback chạy trên luồng nào và công việc lâu/blocking có thể ảnh hưởng completion của channel khác ra sao?
+    2. Tại sao `group.shutdown()` không thay thế cho việc đóng các channel còn hoạt động?
+    3. Cần theo dõi yếu tố nào để điều chỉnh kích thước pool và chờ termination có kiểm soát?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô hình hóa nhóm thực thi | Vẽ quan hệ channel, group, executor, callback và mô tả vai trò riêng của từng thành phần |
+    | Lựa chọn pool | Giải thích đánh đổi giữa fixed/cached/custom pool qua số kết nối và lượng callback |
+    | Dọn tài nguyên | Đề xuất thứ tự close channels, shutdown group/executor và kiểm tra termination |
+- id: asynchronous-io-006
+  title: Không sửa hoặc tái sử dụng buffer khi thao tác chưa hoàn tất
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không sửa hoặc tái sử dụng buffer khi thao tác chưa hoàn tất**
+
+    Bài học tập trung vào quy tắc ownership của `ByteBuffer` trong khoảng từ submit tới completion. Người học hiểu rằng lời gọi API trả về chưa trao quyền chỉnh sửa vùng nhớ cho ứng dụng, và `duplicate`, `slice` hay `asReadOnlyBuffer` không tạo ra dữ liệu độc lập để tránh race. Bài còn kiểm tra điều kiện trả buffer về pool sau thất bại, timeout hoặc hủy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thời điểm và vùng nhớ
+
+    1. Vì sao thao tác write chưa hoàn tất mà `clear`, `flip` hoặc sửa byte buffer có thể làm hỏng payload?
+    2. `duplicate()`, `slice()` và `asReadOnlyBuffer()` chia sẻ storage bên dưới đến mức nào?
+    3. Lúc nào ứng dụng có quyền tái sử dụng buffer sau Future hoặc handler?
+
+    ### Pool, lỗi và hủy
+
+    1. Tại sao timeout của `Future.get(timeout)` không đủ để trả buffer về pool?
+    2. Một operation đã gọi `cancel` có luôn thôi truy cập vùng nhớ ngay không?
+    3. Khi cần xử lý nhiều lượt đọc/ghi liên tiếp, ownership của buffer chuyển giữa ứng dụng và callback như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện race trên buffer | Chỉ ra lỗi ghi đè hoặc chỉnh position quá sớm trong ví dụ asynchronous write |
+    | Thiết kế handoff | Sắp xếp luồng submit–completion–reuse và xử lý trường hợp partial result |
+    | Quản lý buffer pool | Xây điều kiện hoàn trả buffer dựa trên lifecycle thực, bao gồm failure/cancellation |
+- id: asynchronous-io-007
+  title: Tiếp tục đọc ghi khi kết quả chỉ hoàn tất một phần
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tiếp tục đọc ghi khi kết quả chỉ hoàn tất một phần**
+
+    Bài học chỉ ra rằng completion của một lời gọi read/write không đồng nghĩa đã truyền đủ dữ liệu hoặc đủ một message. Người học dùng số byte hoàn tất, `ByteBuffer.position/limit`, file offset và protocol framing để tiếp tục operation đúng cách; đồng thời phân biệt `0`, EOF, lỗi, cancel và tình trạng không có tiến triển.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Partial result và trạng thái
+
+    1. Completion thành công nhưng chỉ `n` byte khác với hoàn tất toàn bộ buffer ở điểm nào?
+    2. Sau một lần đọc ghi từng phần, `buffer.hasRemaining()` và file offset cần được diễn giải thế nào?
+    3. Vì sao `flip`, `compact` và `clear` phải gắn với trạng thái đã xử lý thay vì gọi tùy tiện?
+
+    ### Điều kiện dừng và protocol
+
+    1. Giá trị `-1` của read khác `0` byte ra sao?
+    2. Khi callback viết chưa hết buffer, resubmit thế nào mà không làm phát sinh pending write chồng nhau?
+    3. Đọc một TCP frame có thể cần tích lũy bytes và parse length-delimiter thế nào trước khi coi message hoàn chỉnh?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tiếp tục I/O có tiến triển | Viết thuật toán lặp hoặc resubmit dựa trên số byte đã hoàn tất và bytes còn lại |
+    | Phân biệt trạng thái kết thúc | Xử lý EOF, zero progress, lỗi và cancelled operation để tránh vòng lặp vô hạn |
+    | Bảo toàn dữ liệu giao thức | Dự đoán các phần còn thiếu của frame hoặc vùng file sau nhiều lần partial read/write |
+- id: asynchronous-io-008
+  title: Xử lý lỗi, ngắt, timeout và đóng channel
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Xử lý lỗi, ngắt, timeout và đóng channel**
+
+    Bài học xây dựng cách quản lý vòng đời bất đồng bộ khi thao tác lỗi, luồng đợi bị ngắt, thời hạn chờ kết thúc hoặc channel đóng. Người học tách lỗi submit khỏi completion failure, hiểu sự khác biệt giữa `Future.get(timeout)` và timeout trên asynchronous socket, đồng thời thiết kế cleanup không dùng lại buffer hoặc operation đang có trạng thái chưa rõ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Error, interruption và timeout
+
+    1. `ExecutionException` chứa lỗi I/O như thế nào và callback `failed` đưa lỗi đến đâu?
+    2. Khi thread đang `Future.get()` bị interrupt, điều gì xảy ra với thao tác I/O đã submit?
+    3. `Future.get(timeout)` khác timeout được cung cấp cho read/write trên `AsynchronousSocketChannel` về phạm vi tác động như thế nào?
+
+    ### Cancellation và shutdown
+
+    1. Vì sao `Future.cancel` không thể được coi là rollback dữ liệu đã ghi?
+    2. Đóng channel khi còn pending operation có thể làm các completion kết thúc theo đường lỗi ra sao?
+    3. Ai sở hữu channel, buffer, group và executor để thực hiện shutdown theo thứ tự và không rò rỉ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân nhánh kết quả | Phân loại lỗi submit, completion, interrupt, timeout và cancellation cho mỗi API |
+    | Thiết kế timeout an toàn | Đề xuất cách kết thúc hoặc đóng tài nguyên sau timeout mà không giả định buffer an toàn ngay |
+    | Quản lý lifecycle | Viết checklist dọn channel/group và xử lý callback thất bại trong shutdown |
+- id: asynchronous-io-009
+  title: Giới hạn số thao tác đồng thời và áp lực lên tài nguyên
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn số thao tác đồng thời và áp lực lên tài nguyên**
+
+    Bài học chứng minh bất đồng bộ không làm mất chi phí RAM, pending buffer, file descriptor, thread pool hay queue. Người học tính ngân sách tài nguyên và áp dụng `Semaphore` cùng backpressure để giới hạn số operation in-flight, bảo đảm release permit trên mọi đường completion và đo thực tế trước khi mở rộng concurrency.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngân sách tài nguyên
+
+    1. Số channel, số operation in-flight và số callback threads khác nhau về ý nghĩa và chi phí thế nào?
+    2. Vì sao giới hạn chỉ theo thread pool vẫn có thể khiến hàng đợi hoặc pending buffers tăng vô hạn?
+    3. Một budget memory đơn giản được ước tính từ số operation đang pending và kích thước buffer ra sao?
+
+    ### Backpressure và vận hành
+
+    1. `Semaphore` cần acquire và release tại những thời điểm nào để kiểm soát đúng in-flight operations?
+    2. Khi hết permit, tạm dừng nhận, xếp hàng có giới hạn hoặc từ chối tác vụ thay đổi áp lực hệ thống ra sao?
+    3. Callback chậm hoặc quên release permit tạo ra triệu chứng gì và cần đo chỉ số nào để chẩn đoán?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính budget concurrency | Ước lượng dung lượng buffer đang giữ và chọn mức in-flight hợp lý |
+    | Xây giới hạn thực thi | Thiết kế flow acquire–submit–complete/fail–release để không rò permit |
+    | Điều chỉnh qua quan sát | Phân tích queue length, latency, throughput, memory và starvation để đặt backpressure |
+- id: asynchronous-io-010
+  title: Lựa chọn blocking, selector hoặc API bất đồng bộ theo bài toán
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lựa chọn blocking, selector hoặc API bất đồng bộ theo bài toán**
+
+    Bài học tổng hợp ba hướng tiếp cận I/O trong Java: blocking, selector theo readiness và asynchronous completion API. Người học so sánh theo workload, số kết nối, chi phí state management, partial I/O, thread/callback, backpressure và version JDK, từ đó giải thích lựa chọn kiến trúc có kiểm chứng thay vì mặc định async luôn nhanh hơn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đối chiếu ba mô hình
+
+    1. Một request–response TCP giản đơn có thể triển khai bằng blocking, `Selector` và async callback khác nhau thế nào?
+    2. Khi nào blocking với thread hoặc virtual thread là phương án hợp lý hơn event loop?
+    3. Selector xử lý readiness và asynchronous channel xử lý completion thay đổi responsibility của application state ra sao?
+
+    ### Ra quyết định theo workload
+
+    1. Vì sao không thể suy ra API asynchronous nhanh hơn trước khi đo latency, throughput và tài nguyên?
+    2. Partial I/O, timeout, cancellation, ownership của buffer vẫn xuất hiện trong mô hình nào?
+    3. Khi nào một hệ thống có thể phối hợp blocking cho tác vụ đơn giản và completion/selector cho tác vụ khác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh thiết kế | Lập bảng đánh đổi ba mô hình theo connection count, callback, thread và độ phức tạp state |
+    | Đề xuất theo ca sử dụng | Chọn API cho file, TCP số kết nối nhỏ/lớn hoặc workload hỗn hợp và bảo vệ lựa chọn |
+    | Kiểm tra giả định hiệu năng | Xác định số đo, SLO và rủi ro implementation cần xác nhận trước quyết định |

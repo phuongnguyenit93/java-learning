@@ -1,0 +1,331 @@
+summaries:
+- id: serialization-basics-001
+  title: Tuần tự hóa (serialization), Serializable và việc lưu đồ thị đối tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tuần tự hóa (serialization), Serializable và việc lưu đồ thị đối tượng**
+
+    Java serialization lưu trạng thái của một đồ thị đối tượng thành byte rồi khôi phục qua ObjectInputStream. Bài này giúp phân biệt `Serializable` với khả năng lưu cả graph, alias/cycle, trường bị bỏ qua và ranh giới bảo mật.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Marker interface và graph
+
+    1. Vì sao `Serializable` không khai báo phương thức bắt buộc để implement?
+    2. Nếu root serializable tham chiếu một object không serializable, việc ghi graph sẽ ra sao?
+
+    ### Identity và giới hạn
+
+    1. Vì sao sau khôi phục quan hệ `==` giữa hai field cùng trỏ một object có thể còn đúng?
+    2. Vì sao không nên mặc định dùng Java object serialization cho dữ liệu không tin cậy hoặc API đa ngôn ngữ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô tả pipeline | Vẽ `ObjectOutputStream → bytes → ObjectInputStream` và định vị graph trong quy trình. |
+    | Phân tích graph | Dự đoán alias, cycle và lỗi với object con không serializable. |
+    | Đánh giá sử dụng | Nêu phạm vi tin cậy và rủi ro khi nhận một object stream bất kỳ. |
+- id: serialization-basics-002
+  title: ObjectOutputStream và ObjectInputStream
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ObjectOutputStream và ObjectInputStream**
+
+    Tương tác với object stream cần đúng lớp bao, thứ tự đọc/ghi, đóng resource và xử lý dữ liệu đầu vào. Bài này thực hành `ObjectOutputStream`/`ObjectInputStream` trên byte streams, primitive và object, bao gồm header và filtering.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tạo cặp streams
+
+    1. ObjectOutputStream và ObjectInputStream bao bọc loại stream nào và truyền dữ liệu khác Reader/Writer ra sao?
+    2. Khi bên ghi đan xen primitive và object, bên đọc cần giữ thứ tự thế nào?
+
+    ### Resource lifecycle và input filtering
+
+    1. Vì sao close và flush phải được quản lý bằng try-with-resources, đặc biệt khi có socket?
+    2. Vì sao cast sau readObject không thay được ObjectInputFilter khi bytes không đáng tin?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập cặp streams | Ghi/đọc một graph qua byte array hoặc file bằng try-with-resources. |
+    | Kiểm tra thứ tự | So khớp trình tự primitive và object của writer/reader. |
+    | Xử lý input | Giải thích nơi cấu hình ObjectInputFilter và phân loại lỗi I/O. |
+- id: serialization-basics-003
+  title: writeObject, readObject và định dạng stream
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **writeObject, readObject và định dạng stream**
+
+    Object stream là một giao thức nhị phân chứa header, class descriptor, tags, block data và handles. Hiểu các thành phần này giúp lý giải cách `writeObject`/`readObject` truyền đồ thị, tái sử dụng reference và báo lỗi khi bytes không đúng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Protocol và stream header
+
+    1. Header `AC ED 00 05` biểu thị điều gì?
+    2. `TC_OBJECT`, `TC_REFERENCE` và class descriptor tham gia tái tạo graph như thế nào?
+
+    ### Thao tác và lỗi định dạng
+
+    1. Vì sao ghi cùng instance hai lần có thể chỉ gửi back-reference thay vì state mới?
+    2. Nếu trộn read primitive/object sai thứ tự hoặc gặp header giữa stream, reader có thể báo lỗi gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc wire format | Nhận biết header, token và descriptor trong sơ đồ stream. |
+    | Phân tích reference | Diễn giải các bước writeObject/readObject và `TC_REFERENCE`. |
+    | Chẩn đoán format | Giải thích lỗi stream corruption và lệch thứ tự đọc ghi. |
+- id: serialization-basics-004
+  title: Tham chiếu dùng chung, vòng tham chiếu và object handle
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tham chiếu dùng chung, vòng tham chiếu và object handle**
+
+    Các field trong một graph có thể cùng trỏ tới một instance hoặc tạo thành chu trình. Bài học chứng minh bảng handle giữ quan hệ identity khi serialize/deserialize và phân biệt sharing với equality, cùng giới hạn của reset/unshared.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Identity của graph
+
+    1. Vì sao hai field cùng tham chiếu một instance có thể vẫn bằng nhau qua `==` sau khi đọc lại?
+    2. Một cycle A→B→A được stream lưu mà không đệ quy vô hạn nhờ cơ chế nào?
+
+    ### Phạm vi handles
+
+    1. Hai instances `equals()` bằng nhau có được gộp thành một handle không?
+    2. Vì sao writeUnshared và reset không có nghĩa deep copy toàn graph?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô hình graph | Vẽ alias và cycle rồi dự đoán kết quả `==` sau restore. |
+    | Giải thích handle | Chỉ ra trường hợp ghi object mới hoặc ghi reference token. |
+    | So sánh giải pháp | Chọn writeObject/reset/writeUnshared theo snapshot và sharing. |
+- id: serialization-basics-005
+  title: Trường transient, static và trạng thái mặc định được lưu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Trường transient, static và trạng thái mặc định được lưu**
+
+    Default serialization không lưu mọi field. Bài này chỉ rõ state của instance được ghi, `transient` quay về default Java, `static` thuộc lớp đang chạy và hook `readObject` có thể khôi phục cache hoặc invariant.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chọn trạng thái mặc định
+
+    1. Default serialization lưu những instance fields nào, kể cả private field?
+    2. Sau khi deserialize, trường `transient int` và `transient String` thường nhận giá trị gì?
+
+    ### Class state và phục hồi
+
+    1. Vì sao static field khác giá trị lúc ghi nhưng ảnh hưởng object khôi phục trong JVM hiện tại?
+    2. Nếu cache transient phải tái dựng, `readObject` và `defaultReadObject` nên phối hợp ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn field | Phân loại instance, transient, static và state dẫn xuất. |
+    | Dự đoán khôi phục | Xác định kết quả field sau một lượt serialize/deserialize. |
+    | Bảo vệ invariant | Phác thảo hook tái dựng cache transient khi cần. |
+- id: serialization-basics-006
+  title: serialVersionUID và tương thích lớp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **serialVersionUID và tương thích lớp**
+
+    Dữ liệu lưu từ phiên bản class cũ có thể không đọc được khi định nghĩa class thay đổi. Bài này giải thích kiểm tra `serialVersionUID`, quy tắc tiến hóa field, giá trị mặc định của field mới và kiểm thử qua classpath V1/V2.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### UID và class evolution
+
+    1. serialVersionUID được kiểm tra dựa vào thông tin nào trong stream và class ở reader?
+    2. Giữ UID có đủ khi đổi kiểu field hay ý nghĩa nghiệp vụ không?
+
+    ### Khả năng đọc dữ liệu cũ
+
+    1. Vì sao field mới của class V2 nhận default Java khi đọc stream từ V1?
+    2. Làm sao xây test ghi V1 và đọc V2 bằng hai classpath riêng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quản lý UID | Khai báo UID rõ ràng và giải thích giới hạn của nó. |
+    | Dự đoán evolution | Phân tích thêm/xóa/đổi tên/đổi type field qua phiên bản. |
+    | Kiểm thử compatibility | Thiết kế thao tác write V1, read V2 để xác nhận khả năng khôi phục. |
+- id: serialization-basics-007
+  title: NotSerializableException, InvalidClassException và StreamCorruptedException
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **NotSerializableException, InvalidClassException và StreamCorruptedException**
+
+    Khi một lần write/read thất bại, nguyên nhân có thể nằm ở object graph, định nghĩa class hoặc cấu trúc bytes. Bài này phân biệt ba exception theo bước xảy ra và chọn hướng xác minh nguyên nhân thay vì retry mù.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ba nhóm failure
+
+    1. NotSerializableException thường gợi ý điều gì về graph lúc ghi?
+    2. InvalidClassException thường liên quan serialVersionUID, hierarchy hoặc constructor thế nào?
+
+    ### Chẩn đoán bytes và phục hồi
+
+    1. StreamCorruptedException khác EOFException trong các trường hợp nào?
+    2. Vì sao phải kiểm tra header, thứ tự writer/reader và class version trước khi quyết định sửa?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại lỗi | Gắn ba exception với graph, class và stream format. |
+    | Đọc ngữ cảnh lỗi | Lập checklist UID, fields, headers và thao tác đọc ghi. |
+    | Chọn cách sửa | Xác định khi nào sửa graph, thay đổi class hay phục hồi byte stream. |
+- id: serialization-basics-008
+  title: Constructor của lớp Serializable và lớp cha không Serializable
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Constructor của lớp Serializable và lớp cha không Serializable**
+
+    Deserialize đối tượng Serializable có đường khởi tạo khác `new`. Bài học cho thấy constructor của superclass đầu tiên không Serializable, yêu cầu no-arg phù hợp, các field được khôi phục trong inheritance và cơ chế riêng của Externalizable.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Constructor trong deserialization
+
+    1. Vì sao constructor thông thường của chính Serializable class không chạy khi đọc object?
+    2. Superclass đầu tiên không Serializable phải có constructor nào và nếu thiếu sẽ thế nào?
+
+    ### Hierarchy và Externalizable
+
+    1. Vì sao state của superclass không Serializable không được lưu mặc định như state của subclass?
+    2. Externalizable cần public no-arg constructor và readExternal/writeExternal khác gì Serializable?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích hierarchy | Dự đoán constructor nào chạy và fields nào được phục hồi. |
+    | Kiểm tra InvalidClassException | Tạo tình huống superclass thiếu no-arg và lý giải kết quả. |
+    | So sánh Externalizable | Phân biệt cơ chế khởi tạo và trách nhiệm lưu state. |
+- id: serialization-basics-009
+  title: Ghi lại đối tượng đã thay đổi, reset và cache handle
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ghi lại đối tượng đã thay đổi, reset và cache handle**
+
+    Khi một instance đã có handle trong stream, sửa field rồi writeObject lần nữa có thể chỉ tạo back-reference; người đọc vẫn nhìn thấy state cũ. Bài này tập trung vào reset epoch, writeUnshared và giới hạn snapshot khi graph biến đổi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Stale state và handles
+
+    1. Vì sao sửa field rồi writeObject cùng instance không buộc writer phát giá trị mới?
+    2. ObjectOutputStream.reset làm gì với handle table ở cả phía writer và reader?
+
+    ### Unshared và tính nhất quán
+
+    1. writeUnshared chỉ đảm bảo điều gì ở root và tại sao nested object vẫn có thể được chia sẻ?
+    2. Reset có bảo đảm atomic snapshot khi thread khác sửa graph trong lúc ghi không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tái hiện stale snapshot | Dự đoán hai lần read sau khi write cùng instance. |
+    | Dùng reset | Thiết kế chuỗi write/read với handle epoch mới. |
+    | Đánh giá unshared | Giải thích giới hạn nested sharing và tính nhất quán graph. |
+- id: serialization-basics-010
+  title: Stream header và lỗi khi nối tùy tiện nhiều object stream
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Stream header và lỗi khi nối tùy tiện nhiều object stream**
+
+    Mỗi ObjectOutputStream mới ghi một stream header riêng. Append một writer mới vào file có luồng serialization đang đọc liên tục dễ tạo header giữa stream và StreamCorruptedException. Bài này hướng dẫn một stream logic hoặc nhiều segment độc lập có framing rõ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Header và append
+
+    1. Vì sao append bằng ObjectOutputStream mới khiến reader gặp header sai vị trí?
+    2. Override writeStreamHeader để bỏ header có khắc phục mọi vấn đề handle state không?
+
+    ### Thiết kế nhiều object/batch
+
+    1. Khi ghi nhiều object trong một phiên, vì sao giữ một writer thường đơn giản hơn?
+    2. Với nhiều streams độc lập, vì sao cần length-prefix và xử lý segment dở dang?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện corruption | Mô phỏng append 2 object streams và chẩn đoán reader lỗi. |
+    | Thiết kế stream liên tục | Sắp xếp một writer và một reader đọc đúng số object. |
+    | Thiết kế framing | Phác họa nhiều segments có độ dài và reader riêng cho mỗi segment. |
+- id: serialization-basics-011
+  title: Khác biệt với định dạng trao đổi có schema độc lập Java
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khác biệt với định dạng trao đổi có schema độc lập Java**
+
+    Object serialization gắn dữ liệu với các class Java và phiên bản runtime. Bài này so sánh JSON Schema, Protobuf và Avro, backward/forward compatibility, DTO boundary và chiến lược migration `.ser` cho ứng dụng đa ngôn ngữ hoặc lưu trữ lâu dài.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Class coupling và schema
+
+    1. serialVersionUID khác version của schema API như thế nào?
+    2. Protobuf field numbers hoặc Avro writer/reader schemas xử lý evolution khác Java class descriptor ở đâu?
+
+    ### Compatibility và migration
+
+    1. Backward và forward compatibility cần test hai chiều writer/reader cũ mới ra sao?
+    2. Vì sao dữ liệu `.ser` không thể cho JSON/Protobuf reader đọc ngay và migration cần những bước nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh formats | Đối chiếu Java object streams với JSON Schema, Protobuf và Avro. |
+    | Phân tích compatibility | Lập ma trận reader/writer và thay đổi schema giữa phiên bản. |
+    | Thiết kế migration | Đề xuất đọc nguồn tin cậy, map DTO, validate và ghi định dạng mới. |

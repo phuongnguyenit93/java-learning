@@ -1,0 +1,379 @@
+summaries:
+- id: advanced-serialization-001
+  title: writeObject, readObject và defaultWriteObject, defaultReadObject
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **writeObject, readObject và defaultWriteObject, defaultReadObject**
+
+    Bài học xây dựng cơ chế tùy biến Java Object Serialization của một lớp `Serializable`: phân biệt lời gọi `ObjectOutputStream.writeObject` và `ObjectInputStream.readObject` với các callback `private` cùng tên, cùng hai phương thức `defaultWriteObject`/`defaultReadObject` được phép gọi trong callback. Người học kiểm chứng thứ tự dữ liệu tùy biến, vai trò `transient`, bản ghi phiên bản và việc phục hồi bất biến khi round-trip.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Callback và dữ liệu mặc định
+
+    1. Chữ ký `private writeObject(ObjectOutputStream)` và `private readObject(ObjectInputStream)` khác gì với phương thức công khai trên hai stream?
+    2. Vì sao `defaultWriteObject()` phải được gọi trong ngữ cảnh callback tương ứng và giải quyết phần dữ liệu nào?
+    3. Nếu bỏ `defaultReadObject()` nhưng vẫn kỳ vọng các field non-transient tự khôi phục, điều gì có thể sai?
+
+    ### Tính tương thích và kiểm thử
+
+    1. Khi thêm dữ liệu tùy biến sau default data, thứ tự đọc và ghi phải được giữ đối xứng như thế nào?
+    2. Làm sao thiết kế một test round-trip để phát hiện dữ liệu `transient` hoặc invariant được khôi phục sai?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt hai cấp API | Đọc code và chỉ ra chính xác method do ứng dụng gọi cùng hook do runtime serialization gọi. |
+    | Thiết kế round-trip | Viết cặp private callback có thứ tự dữ liệu phù hợp và giải thích khi dùng `defaultWriteObject`/`defaultReadObject`. |
+    | Kiểm tra dữ liệu khôi phục | Thiết lập ví dụ serialize–deserialize, so sánh giá trị và phát hiện field hoặc invariant không còn hợp lệ. |
+- id: advanced-serialization-002
+  title: readObjectNoData và thay đổi hệ phân cấp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **readObjectNoData và thay đổi hệ phân cấp**
+
+    Bài học khảo sát một tình huống tiến hóa schema: phiên bản mới thêm `Serializable` superclass nhưng stream cũ chưa có class-data slot tương ứng. Người học đọc điều kiện runtime gọi `private void readObjectNoData() throws ObjectStreamException`, hiểu giới hạn của constructor và field initializer, rồi thiết kế cách khôi phục hoặc từ chối trạng thái thiếu dữ liệu khi thử nghiệm hai phiên bản classpath.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hierarchy và callback khi thiếu class data
+
+    1. Khi thêm một Serializable superclass ở phiên bản mới, vì sao stream cũ không có dữ liệu class tương ứng?
+    2. `readObjectNoData()` được kích hoạt trong điều kiện nào, và vì sao việc thêm field thông thường không đồng nghĩa callback chắc chắn chạy?
+    3. Constructor của Serializable superclass có được gọi như một lần `new` bình thường khi đọc stream cũ không?
+
+    ### Kiểm thử tiến hóa
+
+    1. Để tái hiện hành vi, vì sao cần biên dịch và chạy hai phiên bản cùng tên lớp bằng classpath tách biệt?
+    2. Khi superclass mới chứa state bắt buộc, callback nên khởi tạo giá trị hợp lệ hay từ chối stream theo quy tắc nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận biết tình huống không có dữ liệu | Vẽ hierarchy v1/v2 và chỉ ra class-data slot thiếu trong serialized stream. |
+    | Kiểm tra callback | Lập thử nghiệm v1 ghi và v2 đọc, quan sát thời điểm `readObjectNoData` được gọi. |
+    | Quản lý bất biến khi nâng phiên bản | Đề xuất trạng thái mặc định hợp lệ hoặc exception thích hợp nếu không thể phục hồi. |
+- id: advanced-serialization-003
+  title: serialPersistentFields và điều khiển dạng lưu trữ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **serialPersistentFields và điều khiển dạng lưu trữ**
+
+    Bài học tách internal state của một class `Serializable` khỏi trường xuất hiện trong serialized form. Người học khai báo đúng `private static final ObjectStreamField[] serialPersistentFields`, sử dụng `PutField`/`GetField` cùng `writeFields`/`readFields`, và thực hành đổi tên field trong code mà vẫn giữ hợp đồng tên/kiểu trường cũ trên stream.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng persistent fields
+
+    1. `serialPersistentFields` quyết định danh sách field nào trên wire và khác gì với field instance Java hiện tại?
+    2. Vì sao cần đúng modifier và kiểu khai báo để Java serialization nhận ra mảng `ObjectStreamField`?
+    3. Trong callback, vai trò của `putFields`, `writeFields`, `readFields` và `GetField.get` khác default methods thế nào?
+
+    ### Tiến hóa tên field
+
+    1. Khi đổi một field nội bộ nhưng muốn đọc dữ liệu .ser cũ, làm sao giữ tên và kiểu persistent field tương thích?
+    2. Kiểm tra dữ liệu thiếu hoặc giá trị mặc định từ stream bằng cơ chế đọc field cần chú ý gì trước khi validate bất biến?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế serialized form | Khai báo tập `ObjectStreamField` ổn định độc lập với tên biến trong bộ nhớ. |
+    | Xây callback điều khiển field | Viết đường ghi PutField và đường đọc GetField khớp tên, kiểu và thứ tự thực hiện. |
+    | Kiểm tra compatibility | So sánh round-trip qua hai phiên bản class và nêu giới hạn của đổi kiểu hoặc UID. |
+- id: advanced-serialization-004
+  title: writeReplace, readResolve và thay thế đối tượng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **writeReplace, readResolve và thay thế đối tượng**
+
+    Bài phân tích hai hook thay thế đối tượng trong đồ thị serialization: `writeReplace()` đề xuất đại diện trước khi ghi, còn `readResolve()` đề xuất giá trị sử dụng sau khi đọc. Người học áp dụng serialization proxy hoặc canonical instance, đồng thời giải thích rủi ro ở identity, shared references, chu trình và kiểu không tương thích khi một instance được thay bằng instance khác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thời điểm và mục đích thay thế
+
+    1. `writeReplace()` và `readResolve()` chạy ở hai giai đoạn khác nhau như thế nào?
+    2. Serialization proxy giúp tránh ghi trực tiếp những trạng thái/tài nguyên khó serialize và phục hồi invariant theo cách nào?
+    3. Trong ví dụ singleton, vì sao readResolve cần trả về canonical instance nếu muốn giữ identity?
+
+    ### Object graph và giới hạn
+
+    1. Khi một đối tượng có nhiều tham chiếu trong graph, cơ chế handle và replacement tác động kết quả đọc ra sao?
+    2. Vì sao `readResolve()` trả đối tượng khác kiểu hoặc tạo vòng tham chiếu có thể phá giả định của caller?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ luồng replacement | Mô tả chính xác trước/sau read/write khi sử dụng `writeReplace` và `readResolve`. |
+    | Thiết kế serialization proxy | Đề xuất proxy chứa dữ liệu ổn định và constructor hoặc readResolve kiểm tra invariant. |
+    | Phân tích identity | Kiểm tra shared reference và singleton sau deserialize; chỉ ra các giới hạn của thay thế graph. |
+- id: advanced-serialization-005
+  title: Externalizable, writeExternal và readExternal
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Externalizable, writeExternal và readExternal**
+
+    Bài học xác định hợp đồng của `Externalizable`: ứng dụng tự ghi mọi dữ liệu cần phục hồi bằng `writeExternal(ObjectOutput)` và tự đọc cùng thứ tự trong `readExternal(ObjectInput)`. Qua chương trình ví dụ, người học so sánh với Serializable callbacks, tự đặt version trường dữ liệu, kiểm tra null, loại primitive/object, tham chiếu được chia sẻ, ngoại lệ và giới hạn tài nguyên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng Externalizable
+
+    1. `Externalizable` mở rộng interface nào nhưng khác serialized fields mặc định của `Serializable` ở điểm nào?
+    2. Vì sao thứ tự `writeInt`, `writeUTF`, `writeObject` phải đối xứng với các phép đọc và cần version marker khi tiến hóa format?
+    3. `writeExternal`/`readExternal` có tự động ghi các field không chỉ định hay tự khôi phục invariant không?
+
+    ### Đời sống và khả năng tương thích
+
+    1. Khi deserialize một lớp Externalizable thông thường, runtime cần constructor loại nào trước khi gọi `readExternal`?
+    2. Trong một object graph chứa shared references, Externalizable có còn chạy trong hạ tầng ObjectOutputStream hay chỉ là giao thức byte tùy ý?
+    3. Vì sao phải giới hạn kích thước dữ liệu và validate sau `readExternal` kể cả khi dùng filter?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết giao thức tự quản lý | Tạo cặp writeExternal/readExternal có dấu version và xử lý đối xứng từng field. |
+    | Kiểm thử round-trip | Quan sát hành vi constructor, giá trị field và tham chiếu khi ghi/đọc Externalizable. |
+    | Đánh giá hạn chế | Phân biệt Externalizable với Serializable hooks và chỉ rõ nhiệm vụ bảo mật, validation, compatibility. |
+- id: advanced-serialization-006
+  title: Yêu cầu constructor public không tham số của Externalizable
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Yêu cầu constructor public không tham số của Externalizable**
+
+    Bài giải thích riêng quá trình dựng instance khi `ObjectInputStream` khôi phục `Externalizable`: class thông thường cần một public constructor không tham số được truy cập hợp lệ, sau đó runtime mới gọi `readExternal` để gán state. Người học dự đoán tác dụng phụ constructor, phân biệt quy tắc với Serializable và quan sát lỗi khi constructor bị ẩn hoặc vắng mặt.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Constructor và vòng đời
+
+    1. Vì sao Externalizable cần public no-arg constructor trong khi cách dựng class Serializable thông thường khác?
+    2. Trong chu trình deserialize, constructor và readExternal chạy theo thứ tự nào?
+    3. Một static nested class Externalizable phải được khai báo như thế nào để tránh bẫy enclosing instance và constructor không hợp lệ?
+
+    ### Xử lý lỗi và thiết kế state
+
+    1. Lúc constructor public bị thay bằng private hoặc chỉ có constructor có tham số, khôi phục instance sẽ thất bại theo hướng nào?
+    2. Vì sao constructor nên khởi tạo state an toàn tối thiểu và tránh side effect trước khi dữ liệu đầu vào được xác minh?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra hợp đồng lớp | Đọc khai báo Externalizable và xác định constructor có public/no-arg và khả dụng hay không. |
+    | Mô phỏng thứ tự phục hồi | Dự đoán log theo trình tự constructor → readExternal từ ví dụ Java. |
+    | Sửa lỗi khôi phục | Chỉnh visibility/signature constructor và tách validation state sang readExternal phù hợp. |
+- id: advanced-serialization-007
+  title: Serializable với enum và record
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Serializable với enum và record**
+
+    Bài so sánh quy tắc serialization đặc biệt của enum và record trên Java 17: enum vốn serializable và được khôi phục từ tên constant, còn record cần triển khai `Serializable` và được dựng lại qua canonical constructor theo các record components. Người học phân biệt các hook thông thường không áp dụng giống class thường, đánh giá compatibility và vai trò validation trong constructor.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Enum và record trên serialized stream
+
+    1. Vì sao enum giữ đúng identity của hằng sau khôi phục thay vì tạo instance mới theo quy tắc Serializable class thông thường?
+    2. Record có tự động implements Serializable không, và khi có implements thì dữ liệu được lấy từ bộ phận nào?
+    3. Tại sao canonical constructor là nơi hợp lý để validate record khi deserialize?
+
+    ### Compatibility và giới hạn
+
+    1. Khi đổi tên hằng enum hoặc đổi record components, dữ liệu serialized cũ có thể gặp rủi ro tương thích nào?
+    2. Các hook private writeObject/readObject và replacement trên enum/record khác nhau thế nào so với class Serializable thông thường?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh hai loại Java type | Lập bảng enum/record/class về dữ liệu lưu, phương thức dựng lại và validation. |
+    | Kiểm thử identity và invariant | Viết round-trip cho enum và record serializable, quan sát identity enum và validate của record. |
+    | Đánh giá tiến hóa schema | Chỉ ra thay đổi component hoặc hằng enum có thể làm dữ liệu cũ không đọc được. |
+- id: advanced-serialization-008
+  title: '@Serial và kiểm tra khai báo thành viên đặc biệt'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **@Serial và kiểm tra khai báo thành viên đặc biệt**
+
+    Bài học dùng `@java.io.Serial` để compiler kiểm tra một số thành viên đặc biệt như `serialVersionUID`, `serialPersistentFields`, `writeObject`, `readObject`, `readObjectNoData`, `writeReplace`, `readResolve`. Người học bật lint thích hợp, nhận biết chữ ký sai khiến hook không được runtime gọi, và hiểu rằng đúng khai báo chưa chứng minh đúng thứ tự dữ liệu hay an toàn của quá trình deserialize.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khai báo và thời điểm kiểm tra
+
+    1. `@Serial` cung cấp kiểm tra gì tại thời gian biên dịch và có tự thay đổi cách JVM serialize đối tượng không?
+    2. Nếu dùng `private void writeObject(OutputStream)` thay vì `ObjectOutputStream`, vì sao callback không được gọi?
+    3. Trong nhóm field và method đặc biệt, vì sao visibility, static hoặc signature đều có thể quan trọng?
+
+    ### Lint và giới hạn
+
+    1. Làm thế nào sử dụng compiler lint hoặc IDE để nhận cảnh báo khai báo sai member được gắn @Serial?
+    2. Vì sao @Serial không bảo đảm logic deserialization an toàn hoặc compatibility giữa phiên bản?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Áp dụng annotation | Gắn @Serial vào member hợp lệ và giải thích signature được Java serialization mong đợi. |
+    | Sửa lỗi compiler diagnostics | Tìm và sửa khai báo sai tên/kiểu/modifier từ cảnh báo lint trong ví dụ. |
+    | Đánh giá phạm vi bảo vệ | Phân biệt kiểm tra khai báo lúc biên dịch với validation runtime hoặc security filtering. |
+- id: advanced-serialization-009
+  title: Kiểm tra bất biến sau khi khôi phục đối tượng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra bất biến sau khi khôi phục đối tượng**
+
+    Bài học đặt vấn đề constructor class Serializable thường không chạy theo cách tạo instance bình thường khi khôi phục, nên field và cả quan hệ object graph có thể vi phạm invariant dù constructor lúc tạo đối tượng có validate. Người học dùng readObject và `ObjectInputValidation` để kiểm tra dữ liệu sau khôi phục, xử lý null, độ dài, tràn số, alias/cycle và trường hợp schema tiến hóa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Điểm kiểm tra invariant
+
+    1. Vì sao validation trong constructor của lớp Serializable không đủ bảo đảm object được deserialized luôn hợp lệ?
+    2. Một private readObject có thể kiểm tra bất biến cục bộ ngay sau defaultReadObject như thế nào?
+    3. Vì sao validate toàn bộ quan hệ trong graph có thể cần ObjectInputValidation thay vì kiểm tra ngay khi một object chưa được khôi phục hết?
+
+    ### Cảnh giác state độc hại hoặc thay đổi
+
+    1. Khi dữ liệu thiếu field do schema cũ, làm sao phân biệt mặc định hợp lệ với state cần từ chối?
+    2. Với collection mutable hoặc đối tượng chứa tham chiếu vòng, cách defensive copy/validation nên chú ý giới hạn nào?
+    3. Vì sao validation không thay thế ObjectInputFilter hay chính sách từ chối native deserialization nguồn không tin cậy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định nghĩa invariant quan sát được | Liệt kê điều kiện null/range/quan hệ cần đúng sau round-trip. |
+    | Gắn validation vào đúng giai đoạn | Chọn readObject hoặc ObjectInputValidation theo đối tượng đơn lẻ và quan hệ graph. |
+    | Thiết kế fail-closed | Nêu cách từ chối dữ liệu không hợp lệ với exception thay vì để object sai lọt ra caller. |
+- id: advanced-serialization-010
+  title: 'ObjectInputFilter: giới hạn lớp, độ sâu, số tham chiếu và độ dài mảng'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ObjectInputFilter: giới hạn lớp, độ sâu, số tham chiếu và độ dài mảng**
+
+    Bài học thiết kế phòng vệ cho `ObjectInputStream` bằng `ObjectInputFilter` theo lớp cho phép và các chỉ số depth, references, arrayLength, streamBytes. Người học diễn giải ba trạng thái ALLOWED/REJECTED/UNDECIDED, kết hợp pattern `maxdepth`, `maxrefs`, `maxarray`, `maxbytes` và kiểm tra rằng bộ lọc không validate business fields cũng không được gọi cho mọi byte hoặc mọi giá trị scalar.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chính sách class và tài nguyên
+
+    1. ObjectInputFilter nhận các chỉ số độ sâu, tham chiếu, mảng và byte để giới hạn những nguy cơ nào?
+    2. `ALLOWED`, `REJECTED` và `UNDECIDED` có ý nghĩa gì đối với policy và vì sao UNDECIDED không đồng nghĩa luôn an toàn?
+    3. Trong pattern filter, tại sao một allowlist quá rộng có thể đánh bại mục đích kiểm soát class?
+
+    ### Thiết lập và kiểm chứng
+
+    1. Cần đặt per-stream filter vào thời điểm nào để chặn class không mong muốn trước khi đọc object?
+    2. Làm sao thử một graph hợp lệ và một mảng/quy mô vượt ngưỡng để xác nhận filter có hiệu lực?
+    3. Những loại kiểm tra nào phải nằm ngoài ObjectInputFilter, ví dụ schema dữ liệu và xác thực nguồn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế filter pattern | Tạo chuỗi policy có giới hạn class, maxdepth/maxrefs/maxarray/maxbytes phù hợp với giả định tải. |
+    | Giải thích kết quả filter | Dự đoán khi nào stream được phép, bị từ chối hoặc chưa quyết định theo FilterInfo. |
+    | Kiểm tra giới hạn phòng vệ | Dựng ví dụ vượt ngưỡng và nêu rõ filter không chứng minh data an toàn tuyệt đối. |
+- id: advanced-serialization-011
+  title: Filter theo stream, cấu hình JVM và phụ thuộc phiên bản JDK
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Filter theo stream, cấu hình JVM và phụ thuộc phiên bản JDK**
+
+    Bài học phân biệt `ObjectInputStream.setObjectInputFilter` cho một stream với filter tĩnh qua `jdk.serialFilter` và filter factory theo ngữ cảnh. Người học theo dõi thời điểm chọn/kết hợp policy, dùng JEP 290 (JDK 9) và JEP 415 (JDK 17) để quyết định phiên bản hỗ trợ, thử ALLOWED/REJECTED/UNDECIDED và tránh giả định global filter luôn được kết hợp cùng per-stream filter theo một quy tắc cố định.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nơi đặt chính sách
+
+    1. Per-stream filter khác JVM-wide `jdk.serialFilter` ở phạm vi và thời điểm thiết lập như thế nào?
+    2. Vì sao filter factory có thể ảnh hưởng cách kết hợp filter hiện có và filter được yêu cầu?
+    3. JEP 290 và JEP 415 gắn với các mốc JDK và nhu cầu cấu hình nào?
+
+    ### Triển khai và tương thích
+
+    1. Nếu ứng dụng có nhiều luồng nhận đối tượng khác nhau, nên tách policy theo stream/context bằng cách nào?
+    2. Trong quá trình vận hành, cần kiểm tra phiên bản JDK và hiệu lực của factory trước khi dựa vào cấu hình nào?
+    3. Làm sao thử cả trường hợp cho phép và từ chối class để phát hiện cấu hình filter tưởng đúng nhưng không được áp dụng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt phạm vi cấu hình | Vẽ luồng chọn policy giữa stream-specific, JVM-wide filter và factory. |
+    | Đánh giá JDK version | Chỉ ra các phiên bản có JEP 290 và JEP 415 cùng hậu quả khi dùng API không được hỗ trợ. |
+    | Kiểm chứng cấu hình | Thiết kế thử nghiệm đọc class hợp lệ và không hợp lệ trên từng ObjectInputStream. |
+- id: advanced-serialization-012
+  title: Không khôi phục trực tiếp dữ liệu đối tượng không tin cậy
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không khôi phục trực tiếp dữ liệu đối tượng không tin cậy**
+
+    Bài học tổng hợp rủi ro native Java deserialization: byte stream có thể yêu cầu nạp class, chạy các hook đặc biệt và dựng object graph phức tạp trước khi caller kịp kiểm tra kiểu trả về. Trọng tâm là tránh `ObjectInputStream.readObject` với nguồn không tin cậy; thiết kế protocol có framing, bounded length, schema validation, authentication và error handling fail-closed; nếu bắt buộc tương thích legacy, phải áp dụng filter và giới hạn bổ sung nhưng không coi đó là cơ chế khử độc tuyệt đối.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bề mặt tấn công của native serialization
+
+    1. Vì sao kiểm tra instanceof sau readObject không ngăn được những tác dụng có thể đã xảy ra trong quá trình deserialize?
+    2. Khác biệt giữa parse một frame dữ liệu hữu hạn có schema và khôi phục object graph Java native là gì?
+    3. Tại sao ObjectInputFilter không đủ để coi stream từ client Internet là an toàn để đọc trực tiếp?
+
+    ### Thiết kế giao thức và chuyển đổi legacy
+
+    1. Một frame dữ liệu tự định nghĩa cần giới hạn tổng bytes, độ dài chuỗi và lỗi UTF-8 như thế nào trước khi cấp phát bộ nhớ?
+    2. Nếu phải đọc dữ liệu legacy nội bộ, cần xác định provenance, giới hạn nguồn, filter, validation và khả năng rollback ra sao?
+    3. Khi một bước kiểm tra payload thất bại, cách fail-closed khác gì với thử một parser deserialization kém an toàn hơn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện đường đọc nguy hiểm | Tìm các điểm `new ObjectInputStream(...).readObject()` nhận dữ liệu không tin cậy trong một sơ đồ ứng dụng. |
+    | Thiết kế parser bounded | Mô tả frame byte có length limit, schema validation và từ chối lỗi mã hóa/dữ liệu. |
+    | Lập phương án migration | Chọn giao thức không dùng native Java Serialization cho network/untrusted data và mô tả bước chuyển dữ liệu legacy. |
+    | Đánh giá defense in depth | Giải thích provenance, authentication, ObjectInputFilter và invariant validation đóng vai trò khác nhau. |

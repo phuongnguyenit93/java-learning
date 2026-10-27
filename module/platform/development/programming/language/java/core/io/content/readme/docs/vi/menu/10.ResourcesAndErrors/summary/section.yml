@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "TÀI NGUYÊN VÀ LỖI — LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: resources-and-errors-001
+    order: 1
+    title: "IOException và các lỗi thường gặp khi mở, đọc hoặc ghi"
+    description: "Phân loại lỗi mở, đọc, ghi và đóng; giữ nguyên nguyên nhân trước khi chọn chính sách khôi phục."
+    transition:
+      to: resources-and-errors-002
+      description: "Phân biệt kết thúc luồng đúng quy ước với dữ liệu kết thúc quá sớm."
+  - id: resources-and-errors-002
+    order: 2
+    title: "EOF bình thường khác dữ liệu bị cắt cụt"
+    description: "Phân biệt EOF thường gặp với bản ghi bị cắt cụt qua quy tắc framing và kiểm tra dữ liệu bắt buộc."
+    transition:
+      to: resources-and-errors-003
+      description: "Quản lý tài nguyên hợp lý giúp đảm bảo đóng nguồn trên cả đường thành công lẫn thất bại."
+  - id: resources-and-errors-003
+    order: 3
+    title: "Closeable, AutoCloseable và try-with-resources"
+    description: "Giới thiệu AutoCloseable, Closeable và try-with-resources để đóng resource theo phạm vi."
+    transition:
+      to: resources-and-errors-004
+      description: "Phân tích sâu hơn thứ tự đóng và lỗi được suppressed trong những nhánh phức tạp."
+  - id: resources-and-errors-004
+    order: 4
+    title: "Thứ tự đóng tài nguyên và suppressed exception"
+    description: "Đi sâu vào thứ tự đóng ngược và hành vi của primary/suppressed exception khi khởi tạo, thân try hoặc close lỗi."
+    transition:
+      to: resources-and-errors-005
+      description: "Quy tắc ngôn ngữ rõ ràng rồi thì phải xác định resource thuộc trách nhiệm của ai."
+  - id: resources-and-errors-005
+    order: 5
+    title: "Ai mở, ai đóng: quy tắc sở hữu trong thiết kế API"
+    description: "Quy định owner của stream và thời điểm chuyển quyền giữa factory, callee và caller."
+    transition:
+      to: resources-and-errors-006
+      description: "Đem quy tắc ownership áp dụng vào wrapper nhiều lớp và những tài nguyên dùng chung."
+  - id: resources-and-errors-006
+    order: 6
+    title: "Đóng stream bọc, tài nguyên chia sẻ và tài nguyên do bên gọi truyền vào"
+    description: "Phân tích đóng lan truyền qua stream wrapper và trách nhiệm đối với resource mượn hoặc dùng chung."
+    transition:
+      to: resources-and-errors-007
+      description: "Nếu ghép wrapper thất bại, phải dọn những resource đã mở trước khi chuyển quyền sở hữu."
+  - id: resources-and-errors-007
+    order: 7
+    title: "Cleanup khi tạo hoặc ghép tài nguyên thất bại"
+    description: "Thu hồi resource đã tạo khi khởi tạo hoặc ghép wrapper thất bại, bảo toàn lỗi chính."
+    transition:
+      to: resources-and-errors-008
+      description: "Tiếp theo, xử lý lỗi I/O khi API lambda không chấp nhận checked exception."
+  - id: resources-and-errors-008
+    order: 8
+    title: "UncheckedIOException khi kết hợp I/O với Stream API"
+    description: "Chuyển checked IOException qua Stream API bằng UncheckedIOException, giữ cause và quản lý lazy stream."
+    transition:
+      to: resources-and-errors-009
+      description: "Dù lỗi xuất hiện ở giai đoạn nào, thao tác I/O có thể đã hoàn thành một phần."
+  - id: resources-and-errors-009
+    order: 9
+    title: "Đọc hoặc ghi dở dang khi có ngoại lệ"
+    description: "Phân tích dữ liệu I/O từng phần và ranh giới công bố để tránh retry hoặc commit sai."
+    transition:
+      to: resources-and-errors-010
+      description: "Cuối cùng cần hiểu cách một thao tác đang chặn có thể bị dừng hoặc bị đóng từ luồng khác."
+  - id: resources-and-errors-010
+    order: 10
+    title: "Ngắt, đóng từ luồng khác và hành vi phụ thuộc loại I/O"
+    description: "Phân biệt interrupt, asynchronous close và timeout theo từng loại I/O để dừng có kiểm soát."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | IOException và các lỗi thường gặp khi mở, đọc hoặc ghi | EOF bình thường khác dữ liệu bị cắt cụt | Closeable, AutoCloseable và try-with-resources | Thứ tự đóng tài nguyên và suppressed exception | Ai mở, ai đóng: quy tắc sở hữu trong thiết kế API | Đóng stream bọc, tài nguyên chia sẻ và tài nguyên do bên gọi truyền vào | Cleanup khi tạo hoặc ghép tài nguyên thất bại | UncheckedIOException khi kết hợp I/O với Stream API | Đọc hoặc ghi dở dang khi có ngoại lệ | Ngắt, đóng từ luồng khác và hành vi phụ thuộc loại I/O |
+  | Vấn đề cần hiểu | IOException phát sinh ở đâu và xử lý như thế nào? | EOF khác dữ liệu bị cắt cụt ở điều kiện nào? | Đóng resource đúng lúc bằng cơ chế gì? | Java giữ lỗi nào khi cleanup cũng thất bại? | Ai có nghĩa vụ và quyền đóng resource? | Đóng wrapper ảnh hưởng stream bên dưới ra sao? | Ai cleanup khi quá trình ghép resource lỗi? | Biểu diễn IOException checked trong lambda thế nào? | Ngoại lệ có nghĩa dữ liệu đã hoàn tác chưa? | Loại I/O nào có thể bị dừng bằng interrupt hoặc close? |
+  | Giá trị đối với OOP/module | Chẩn đoán lỗi và bảo toàn nguyên nhân | Tránh chấp nhận bản ghi không đầy đủ | Tránh rò rỉ handle và mất lỗi | Giữ đủ thông tin về lỗi | Tránh rò rỉ hoặc đóng nhầm stream | Giữ nguồn chung không bị đóng nhầm | Không bỏ quên resource mở một phần | Giữ cause và đóng stream lazy đúng lúc | Tránh ghi dở và nhân đôi dữ liệu | Tránh kẹt I/O và shutdown thiếu căn cứ |
+  | Tư duy hình thành | Đánh giá trạng thái thật trước khi phản ứng | Xác nhận completeness theo hợp đồng | Tư duy quản lý resource theo scope | Trace trình tự exception | Xem ownership là hợp đồng API | Theo dõi ownership qua nhiều lớp | Đánh giá rollback từng giai đoạn | Phân biệt pipeline setup và execution | Theo dõi trạng thái trước phục hồi | Đọc hợp đồng riêng của từng API |

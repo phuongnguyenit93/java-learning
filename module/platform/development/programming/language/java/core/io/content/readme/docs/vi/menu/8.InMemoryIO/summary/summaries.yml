@@ -1,0 +1,307 @@
+summaries:
+- id: in-memory-io-001
+  title: ByteArrayInputStream và ByteArrayOutputStream
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ByteArrayInputStream và ByteArrayOutputStream**
+
+    Bài đặt nền tảng I/O byte trong bộ nhớ để tái sử dụng API InputStream/OutputStream mà không mở file hoặc socket. Người học cần hiểu con trỏ đọc, giới hạn byte đã ghi, vòng đời và chi phí sao chép trước khi ghép các thao tác nâng cao.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế luồng mảng byte
+
+    1. Vì sao ByteArrayInputStream có thể dùng chung mảng nguồn, còn ByteArrayOutputStream tăng bộ đệm khi ghi?
+    2. Giá trị int trả về từ read() khác byte có dấu ra sao, và khi nào -1 có nghĩa EOF?
+    3. mark/reset của luồng đọc khác reset của luồng ghi ở trạng thái nào?
+
+    ### Sử dụng an toàn
+
+    1. Nếu lượt đọc cuối chỉ trả 2 byte trong buffer 8 byte, vì sao phải write(buffer, 0, count)?
+    2. Khi nào toByteArray() tạo thêm áp lực heap và khi nào chọn writeTo hoặc xử lý theo khối?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán trạng thái stream | Tính chính xác pos, available, dữ liệu snapshot và EOF qua chuỗi thao tác đọc/ghi. |
+    | Sao chép byte không sai lệch | Viết vòng lặp read/write dùng count thực tế và kiểm tra byte bằng Arrays.equals. |
+    | Quản lý dữ liệu bộ nhớ | Phân biệt mảng nguồn chia sẻ với snapshot độc lập và nêu giới hạn dung lượng. |
+- id: in-memory-io-002
+  title: toByteArray tạo bản sao và writeTo chuyển dữ liệu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **toByteArray tạo bản sao và writeTo chuyển dữ liệu**
+
+    Bài đào sâu hai con đường lấy dữ liệu từ ByteArrayOutputStream: tạo snapshot byte[] độc lập và chuyển trực tiếp đến OutputStream khác. Đây là quyết định thiết kế quan trọng khi cần giữ kết quả, tránh cấp phát trung gian hoặc quản lý trách nhiệm flush/close.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản sao và trạng thái nguồn
+
+    1. Vì sao sửa mảng do toByteArray() trả về không làm thay đổi bộ đệm nguồn?
+    2. Gọi writeTo() và reset() lần lượt ảnh hưởng đến byte nguồn, đích và snapshot trước đó như thế nào?
+
+    ### Thiết kế xuất dữ liệu
+
+    1. Trong trường hợp nào chọn writeTo thay vì toByteArray, và vì sao không thể suy ra writeTo đã flush hoặc close đích?
+    2. Khi đích ghi gặp IOException, chương trình phải xử lý điều gì về dữ liệu có thể đã ghi dở?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích snapshot | Dự đoán kết quả của ghi thêm, reset, sửa bản sao và nhiều lần writeTo. |
+    | Lựa chọn API | Chọn snapshot hay chuyển sang stream từ nhu cầu dữ liệu và ngân sách bộ nhớ. |
+    | Quản lý đích | Xác định ai flush/close OutputStream và cách phản ứng với ghi một phần. |
+- id: in-memory-io-003
+  title: StringReader, StringWriter và các luồng mảng char
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **StringReader, StringWriter và các luồng mảng char**
+
+    Bài giới thiệu StringReader, StringWriter, CharArrayReader và CharArrayWriter như các nguồn/đích ký tự trong RAM. Trọng tâm là hợp đồng Reader/Writer, đơn vị UTF-16 và ranh giới giữa stream ký tự với việc mã hóa byte.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân biệt các lớp ký tự
+
+    1. Bốn lớp StringReader, StringWriter, CharArrayReader, CharArrayWriter khác nhau ở nguồn dữ liệu và hướng đọc/ghi nào?
+    2. Vì sao Reader.read() trả một UTF-16 code unit chứ không nhất thiết là một Unicode code point?
+
+    ### Trạng thái và vòng đời
+
+    1. Một CharArrayReader có thể bị ảnh hưởng thế nào khi mảng nguồn bị sửa, còn toCharArray() của CharArrayWriter tạo kết quả ra sao?
+    2. close() và reset() của các reader/writer này có cùng hành vi không, và dùng thử nghiệm gì để phân biệt?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ghép API ký tự | Chọn Reader/Writer thích hợp để đưa String hoặc char[] qua một parser/formatter. |
+    | Kiểm tra Unicode | Giải thích cách surrogate pair ảnh hưởng tới số char đã đọc so với code point. |
+    | Bảo toàn ownership | Dự đoán hiệu ứng clone/snapshot, mark/reset, close và vòng đời luồng ký tự. |
+- id: in-memory-io-004
+  title: Chuyển byte[] sang String bằng charset xác định
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chuyển byte[] sang String bằng charset xác định**
+
+    Bài giúp chuyển byte[] có chủ đích thành String, dùng charset theo hợp đồng nguồn và xử lý dữ liệu UTF-8 lỗi. Nhờ đó, người học tránh mojibake, mất byte hoặc sai ranh giới ký tự khi đọc từng khối.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Charset và dữ liệu gốc
+
+    1. Vì sao byte[] tự nó không cho biết charset và cùng C3 A9 có thể hiển thị khác nhau khi dùng UTF-8 hoặc ISO-8859-1?
+    2. Tham số offset/length trong new String(bytes, offset, length, charset) chỉ byte nào và vì sao có nguy cơ cắt chuỗi UTF-8?
+
+    ### Lỗi giải mã và lựa chọn chính sách
+
+    1. Constructor new String(bytes, UTF_8) xử lý malformed input thế nào và khi nào phải dùng CharsetDecoder với CodingErrorAction.REPORT?
+    2. Khi có BOM UTF-8 hoặc dữ liệu thực ra là nhị phân, phải kiểm tra gì trước khi giải mã?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải mã tường minh | Chọn StandardCharsets phù hợp và minh họa round-trip văn bản đa byte. |
+    | Chẩn đoán lỗi | Phân tích hex, mojibake, U+FFFD và kiểm tra strict decoder với dữ liệu hỏng. |
+    | Xử lý phạm vi byte | Xác định offset/length đúng, tránh giải mã từng mảnh ký tự chưa hoàn chỉnh. |
+- id: in-memory-io-005
+  title: SequenceInputStream nối nhiều nguồn byte
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **SequenceInputStream nối nhiều nguồn byte**
+
+    Bài dạy cách trình bày nhiều InputStream thành một nguồn logic nối tuần tự, đặc biệt khi nguồn là các mảnh byte của một payload. Người học hiểu ranh giới EOF, quyền đóng stream thành phần và lý do giải mã sau khi nối hoàn chỉnh.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nối tuần tự
+
+    1. SequenceInputStream chuyển từ nguồn này sang nguồn kế khi nào, và vì sao nó không tự chèn delimiter hoặc đọc song song?
+    2. Hai constructor (hai nguồn và Enumeration) khác nhau ra sao trong việc xác định thứ tự nguồn?
+
+    ### Tính toàn vẹn và vòng đời
+
+    1. Vì sao nối các mảnh UTF-8 ở tầng byte rồi mới decode tránh lỗi khi emoji bị chia qua ranh giới nguồn?
+    2. Khi close luồng ghép hoặc một nguồn lỗi, cần quản lý những stream còn lại và đích ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế chuỗi nguồn | Lắp đúng thứ tự InputStream thành một nguồn logic và kiểm tra kết quả. |
+    | Bảo toàn UTF-8 | Ghép những byte bị cắt giữa code point trước khi giải mã. |
+    | Quản lý tài nguyên | Giải thích close/EOF của stream ghép và khi nào chọn vòng lặp streaming thay thế. |
+- id: in-memory-io-006
+  title: PushbackInputStream và PushbackReader
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **PushbackInputStream và PushbackReader**
+
+    Bài giải thích cách nhìn trước một số byte hoặc UTF-16 char rồi trả chúng về nguồn logic bằng pushback. Người học nhận biết bộ đệm có giới hạn và cách phối hợp đúng với parser, BOM, EOF cùng các lớp bọc khác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bộ đệm pushback
+
+    1. unread() làm thay đổi thứ tự đọc tiếp theo như thế nào, và vì sao đẩy trả nhiều phần tử cần chú ý LIFO?
+    2. Khi số phần tử unread vượt pushback buffer, điều gì xảy ra và kích thước nên được chọn từ yêu cầu parser ra sao?
+
+    ### Lookahead đúng dữ liệu
+
+    1. Khi kiểm tra BOM UTF-8, vì sao phải trả lại các byte đọc thử khi chúng không tạo BOM?
+    2. Pushback khác mark/reset ở năng lực nào và vì sao tuyệt đối không unread(-1) sau EOF?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán đọc trước | Mô phỏng chuỗi read/unread với byte và char, kể cả thứ tự LIFO. |
+    | Thiết kế parser | Chọn kích thước pushback và xử lý BOM hoặc token lookahead mà không mất dữ liệu. |
+    | Quản lý wrapper | Lựa chọn thứ tự bọc stream/reader, phân biệt EOF và đóng luồng nền. |
+- id: in-memory-io-007
+  title: PipedInputStream, PipedOutputStream và giao tiếp giữa luồng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **PipedInputStream, PipedOutputStream và giao tiếp giữa luồng**
+
+    Bài hướng dẫn nối producer và consumer trong cùng JVM bằng byte pipe có bộ đệm hữu hạn. Cần nắm blocking, backpressure, kết thúc EOF, framing thông điệp và truyền lỗi giữa thread để thiết kế không treo.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Truyền byte giữa thread
+
+    1. PipedInputStream/PipedOutputStream hình thành một pipe một chiều thế nào và điều gì xảy ra khi buffer đầy hoặc rỗng?
+    2. Đóng phía ghi ảnh hưởng tới các lần read còn lại và EOF của consumer như thế nào?
+
+    ### Thiết kế đồng thời an toàn
+
+    1. Vì sao gọi Future.get() trước khi consumer bắt đầu đọc có thể gây deadlock với buffer nhỏ?
+    2. Nếu truyền hai message qua pipe byte, vì sao consumer cần một quy ước framing và phải tính độ dài byte thay vì ký tự?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tổ chức producer–consumer | Viết mô hình reader/writer chạy đồng thời và dự đoán điểm blocking. |
+    | Chẩn đoán lỗi pipe | Phân biệt EOF, broken pipe, exception producer và sự kiện close ở hai đầu. |
+    | Thiết kế framing | Mô tả giao thức độ dài byte có giới hạn để khôi phục nhiều thông điệp. |
+- id: in-memory-io-008
+  title: PipedReader, PipedWriter và nguy cơ bế tắc khi dùng không đúng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **PipedReader, PipedWriter và nguy cơ bế tắc khi dùng không đúng**
+
+    Bài phân tích pipe ký tự cho hai thread, nhấn mạnh vì sao cùng thread đọc rồi mới ghi hoặc chờ producer sai thứ tự có thể bế tắc. Người học được rèn cách tạo lifecycle, phát hiện broken pipe và báo lỗi producer chính xác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế pipe ký tự
+
+    1. PipedReader và PipedWriter truyền đơn vị char nào, và buffer hữu hạn ảnh hưởng đến read/write blocking ra sao?
+    2. Vì sao reader.ready() không được xem là phép kiểm tra EOF hoặc cam kết về dữ liệu trong tương lai?
+
+    ### Deadlock và lỗi đối ứng
+
+    1. Hãy phân tích hai deadlock khi read() chạy trước write() cùng thread hoặc producer ghi đầy buffer nhưng consumer chưa chạy?
+    2. Khi producer thất bại, cần tổ chức close, join và truyền exception thế nào để consumer không chờ vô hạn hoặc mất nguyên nhân gốc?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập lịch đồng thời | Lập timeline producer/consumer chứng minh điều kiện gây deadlock và cách sắp xếp thread. |
+    | Hoàn tất lifecycle | Định nghĩa trạng thái đóng writer, EOF, flush và dọn hai đầu pipe. |
+    | Chẩn đoán sự cố | Phân biệt stuck read, stuck write, broken pipe và lỗi producer không được truyền. |
+- id: in-memory-io-009
+  title: Dùng stream bộ nhớ trong kiểm thử và các phép biến đổi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dùng stream bộ nhớ trong kiểm thử và các phép biến đổi**
+
+    Bài biến những khái niệm stream đã học thành kỹ thuật thiết kế mã kiểm thử được và thực hiện các phép biến đổi qua RAM. Người học dùng fixture byte/text để xác minh copy, charset, GZIP và DataInput/Output, đồng thời biết giới hạn của mô phỏng I/O thật.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế kiểm thử
+
+    1. Vì sao hàm nhận InputStream/OutputStream từ caller dễ kiểm thử hơn hàm mở cứng đường dẫn file?
+    2. Memory stream tạo test xác định ra sao và vì sao kết quả không chứng minh hành vi blocking/partial read của mạng?
+
+    ### Kiểm chứng biến đổi
+
+    1. Bạn kiểm tra tính toàn vẹn byte sau pipeline GZIP hoặc DataInputStream/DataOutputStream thế nào?
+    2. Khi nào chọn StringReader/StringWriter thay cho ByteArray streams, và cần test thêm charset theo đường byte khi nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế API dễ test | Tách cơ chế xử lý khỏi nguồn/đích và tiêm memory stream vào unit test. |
+    | Kiểm tra round-trip | Viết assertions về byte, UTF-8, nén/giải nén hoặc record nhị phân. |
+    | Nhận diện giới hạn test | Nêu tình huống cần bổ sung integration test với file, socket hoặc input từng khối. |
+- id: in-memory-io-010
+  title: Giới hạn dung lượng khi tích lũy toàn bộ nội dung
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn dung lượng khi tích lũy toàn bộ nội dung**
+
+    Bài tổng hợp rủi ro của việc tích lũy byte hoặc char không giới hạn và cách tính ngân sách bộ nhớ an toàn. Người học lựa chọn giới hạn trước/trong khi đọc, nhận biết snapshot tăng heap và chuyển sang streaming khi không cần giữ cả payload.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dung lượng và sao chép
+
+    1. Vì sao size của ByteArrayOutputStream khác capacity và sao chép qua toByteArray có thể cần thêm một mảng lớn?
+    2. InputStream.readAllBytes() và Files.readString() thuận tiện nhưng có những giới hạn bộ nhớ nào khi nguồn không kiểm soát?
+
+    ### Thiết kế giới hạn
+
+    1. Đặt maxBytes an toàn trong vòng lặp đọc thế nào để tránh tràn phép cộng và từ chối trước khi ghi quá mức?
+    2. Khi nào đọc N+1 byte để phát hiện dữ liệu vượt trần; khi nào chuyển sang copy streaming hoặc xử lý theo dòng?
+
+    ### Byte và ký tự
+
+    1. Vì sao giới hạn số ký tự UTF-16 không tương đương giới hạn byte UTF-8?
+    2. Vì sao reset/close của các buffer RAM không phải biện pháp giải phóng heap ngay hay xóa dữ liệu nhạy cảm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đánh giá ngân sách heap | Phân tích các bản sao, capacity và nguy cơ OutOfMemoryError cho payload lớn. |
+    | Thiết kế bounded read | Xây thuật toán đọc có giới hạn với điều kiện so sánh overflow-safe và lỗi vượt trần. |
+    | Chọn chiến lược streaming | Lựa chọn giữa snapshot, preview và xử lý theo khối theo yêu cầu nghiệp vụ. |

@@ -1,0 +1,31 @@
+sections:
+  nio-channel-001:
+    difficulty: BASIC
+    isImportant: true
+  nio-channel-002:
+    difficulty: BASIC
+    isImportant: true
+  nio-channel-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  nio-channel-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  nio-channel-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  nio-channel-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  nio-channel-007:
+    difficulty: ADVANCED
+    isImportant: false
+  nio-channel-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  nio-channel-009:
+    difficulty: ADVANCED
+    isImportant: true
+  nio-channel-010:
+    difficulty: ADVANCED
+    isImportant: true

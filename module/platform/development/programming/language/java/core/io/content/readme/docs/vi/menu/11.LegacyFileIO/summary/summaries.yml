@@ -1,0 +1,301 @@
+summaries:
+- id: legacy-file-io-001
+  title: File là biểu diễn đường dẫn, không phải nội dung tệp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **File là biểu diễn đường dẫn, không phải nội dung tệp**
+
+    Phân biệt đối tượng `java.io.File` trong JVM với tài nguyên thực trên đĩa để không nhầm thao tác đường dẫn, kiểm tra metadata và đọc/ghi byte. Đây là nền tảng để hiểu đúng các API I/O truyền thống.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất biểu diễn đường dẫn
+
+    1. Vì sao `new File("data/report.txt")` thành công ngay cả khi tệp chưa tồn tại?
+    2. Đối tượng `File` chứa nội dung tệp hay chỉ mô tả pathname, và những phép truy vấn nào cần hệ thống tệp?
+
+    ### Ranh giới với I/O thực
+
+    1. Điều gì khác nhau giữa `new File`, `createNewFile` và mở `FileInputStream`?
+    2. Khi nào một tác vụ cần `File`, khi nào phải dùng stream hoặc `Path` và `Files`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt pathname và tài nguyên | Dự đoán đúng trạng thái tệp trước và sau khi dựng `File` và gọi API tạo/ghi. |
+    | Chọn API theo tác vụ | Giải thích lúc nào cần metadata, lúc nào cần mở luồng để đọc/ghi nội dung. |
+    | Chẩn đoán giả định sai | Phát hiện đoạn mã coi đối tượng `File` hoặc `exists()` là bảo đảm truy cập thành công. |
+- id: legacy-file-io-002
+  title: Tạo File không đồng nghĩa tạo tệp vật lý
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tạo File không đồng nghĩa tạo tệp vật lý**
+
+    Biết chính xác lời gọi nào chỉ tạo pathname và lời gọi nào tạo file/thư mục hoặc mở đích ghi. Phân biệt hiệu ứng của `createNewFile`, `Files.createFile`, stream ghi và việc tạo thư mục cha để tránh ghi đè ngoài ý muốn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Constructor và thao tác tạo
+
+    1. Các constructor `File` có kiểm tra hay tạo file trên đĩa không?
+    2. `File.createNewFile()` báo `true`, `false` và `IOException` trong những tình huống khác nhau thế nào?
+
+    ### Tạo tài nguyên đúng yêu cầu
+
+    1. Khi thư mục cha chưa tồn tại, cần chuẩn bị gì trước khi tạo file?
+    2. Vì sao `if (!exists())` rồi ghi file có thể làm mất dữ liệu trong môi trường nhiều tiến trình?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích tác dụng phụ | Chỉ rõ những dòng mã chỉ tạo đối tượng, tạo file mới, tạo thư mục hoặc truncate file cũ. |
+    | Tạo file không ghi đè | Áp dụng `createNewFile` hoặc `CREATE_NEW` và xử lý kết quả/tình huống tranh chấp. |
+    | Quản lý luồng ghi | Viết đoạn ghi tệp có thư mục cha hợp lệ và đóng stream bằng try-with-resources. |
+- id: legacy-file-io-003
+  title: Đường dẫn tuyệt đối, tương đối và thư mục làm việc
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đường dẫn tuyệt đối, tương đối và thư mục làm việc**
+
+    Giải thích vì sao cùng một tên file có thể trỏ tới những vị trí khác nhau khi chạy bằng IDE, terminal, Gradle hoặc container. Biết chọn base directory rõ ràng, ghép path bằng API và phân biệt file vật lý với classpath resource.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cách giải đường dẫn
+
+    1. Vì sao `data/report.txt` thay đổi ý nghĩa khi `user.dir` hoặc working directory khác?
+    2. `Path.resolve`, `normalize`, `toAbsolutePath` và `toRealPath` khác nhau về tác dụng và truy cập filesystem ra sao?
+
+    ### Triển khai và an toàn
+
+    1. Khi file cấu hình nằm trong JAR, vì sao không nên tìm nó như file ở thư mục nguồn?
+    2. Dữ liệu tên file từ người dùng có thể vượt ra ngoài thư mục cho phép bằng những cách nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chẩn đoán working directory | Giải thích và kiểm chứng vị trí ứng dụng tìm một relative path trên nhiều môi trường chạy. |
+    | Ghép path đúng cách | Dùng root cấu hình và `resolve` để dựng đường dẫn đa nền tảng. |
+    | Phân biệt đường dẫn và tài nguyên | Chọn classpath stream cho nội dung nằm trong JAR và nêu giới hạn kiểm tra `normalize` trước path traversal. |
+- id: legacy-file-io-004
+  title: getPath, getAbsolutePath và getCanonicalPath
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **getPath, getAbsolutePath và getCanonicalPath**
+
+    Phân biệt pathname đang lưu, pathname tuyệt đối và canonical pathname trong `java.io.File`. Hiểu sự phụ thuộc filesystem, symbolic link, `IOException` và vì sao canonical hóa không thay thế xác thực truy cập hay bảo vệ trước race condition.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa ba phép lấy path
+
+    1. `getPath()`, `getAbsolutePath()` và `getCanonicalPath()` trả những dạng giá trị nào cho `reports/../notes.txt`?
+    2. Phương thức nào có thể cần hệ thống tệp và ném `IOException`, và có bắt buộc file tồn tại không?
+
+    ### So sánh và an toàn đường dẫn
+
+    1. Vì sao `Path.normalize()` không tương đương `toRealPath()` hoặc canonical hóa?
+    2. Khi nào nên dùng `Files.isSameFile` thay vì so sánh chuỗi canonical, và giới hạn TOCTOU còn gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích path theo môi trường | Dự đoán khác biệt relative, absolute và canonical mà không hard-code đường dẫn một hệ điều hành. |
+    | Chọn phép biến đổi | Giải thích lựa chọn `getPath`, `getAbsolutePath`, `getCanonicalPath` hoặc `toRealPath` theo yêu cầu. |
+    | Đánh giá giới hạn bảo mật | Phát hiện kiểm tra prefix chuỗi hoặc canonical path được sử dụng như biện pháp bảo vệ tuyệt đối. |
+- id: legacy-file-io-005
+  title: Kiểm tra tồn tại, loại tệp, kích thước và quyền truy cập
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra tồn tại, loại tệp, kích thước và quyền truy cập**
+
+    Sử dụng đúng `exists`, `isFile`, `isDirectory`, `length`, `canRead`, `canWrite`, `canExecute` và hiểu giới hạn kết quả khi filesystem thay đổi. Biết phân biệt kích thước byte với độ dài chuỗi, xử lý symbolic link và chuyển sang `Files` khi cần lỗi chi tiết.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Trạng thái và kích thước
+
+    1. Vì sao `exists()==true` không chứng minh đối tượng là file thường và `length()==0` không chứng minh file rỗng?
+    2. Với nội dung `A😀` mã hóa UTF-8, vì sao số byte file khác `String.length()`?
+
+    ### Quyền và độ tin cậy
+
+    1. Khi `canRead()` trả true, vì sao thao tác mở file vẫn có thể thất bại?
+    2. `Files.exists` và `Files.notExists` có thể cùng trả false trong tình huống nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc metadata thận trọng | Phân biệt file, thư mục, đường dẫn thiếu và tình trạng không xác định từ các kết quả boolean. |
+    | Giải thích byte và charset | Tính số byte UTF-8 của ví dụ Unicode và đối chiếu với `File.length()`. |
+    | Thiết kế kiểm tra đúng tầng | Đề xuất thao tác I/O thực kèm xử lý exception thay vì dựa hoàn toàn vào check-then-act. |
+- id: legacy-file-io-006
+  title: list, listFiles, FileFilter và FilenameFilter
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **list, listFiles, FileFilter và FilenameFilter**
+
+    Lựa chọn đúng API liệt kê các mục trực tiếp trong thư mục theo dạng tên hoặc `File`, và dùng bộ lọc phù hợp cho tên, loại hoặc metadata. Xử lý `null`, thứ tự không xác định và giới hạn duyệt một cấp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Liệt kê và lọc
+
+    1. Khác biệt kết quả của `list()` và `listFiles()` là gì?
+    2. `FilenameFilter.accept(dir,name)` khác `FileFilter.accept(pathname)` ra sao khi lọc file `.csv` thật?
+
+    ### Hành vi cần phòng tránh
+
+    1. Vì sao kết quả `null` phải tách khỏi mảng rỗng?
+    2. Khi cần thứ tự ổn định hoặc duyệt thư mục con, chương trình phải bổ sung thao tác nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn bộ lọc đúng kiểu | Viết lambda `FilenameFilter` và `FileFilter` cho yêu cầu lọc theo tên hay metadata. |
+    | Xử lý kết quả an toàn | Kiểm tra `null`, sắp xếp minh bạch và phân biệt tên file với loại tài nguyên. |
+    | Đối chiếu NIO | Giải thích khi nào chuyển sang `Files.list` và vì sao Stream đó cần đóng. |
+- id: legacy-file-io-007
+  title: mkdir, mkdirs, createNewFile, renameTo và delete
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **mkdir, mkdirs, createNewFile, renameTo và delete**
+
+    Thực hiện có chủ đích các thao tác tạo thư mục, tạo file rỗng, đổi tên và xóa bằng `java.io.File`. Nắm khác biệt giữa mkdir/mkdirs, kết quả boolean, tạo dở cây thư mục, move phụ thuộc nền tảng và giới hạn delete không đệ quy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thao tác tạo
+
+    1. `mkdir()` và `mkdirs()` khác nhau thế nào khi thiếu thư mục cha, và vì sao `mkdirs()==false` chưa đủ để kết luận lỗi?
+    2. `createNewFile()` bảo đảm gì về kiểm tra tồn tại và tạo file mới?
+
+    ### Đổi tên và xóa
+
+    1. Vì sao không thể giả định `renameTo()` luôn atomic, ghi đè hoặc làm việc qua các filesystem?
+    2. `delete()` tác động thế nào với thư mục không rỗng và API `Files.delete` hỗ trợ chẩn đoán gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo tài nguyên đúng semantics | Chọn `mkdir`, `mkdirs`, `createNewFile` theo độ sâu đường dẫn và hậu điều kiện cần đạt. |
+    | Phân tích thất bại | Giải thích nhiều nguyên nhân khiến `renameTo`/`delete` trả false mà không phỏng đoán một nguyên nhân duy nhất. |
+    | Lựa chọn NIO theo yêu cầu | Chuyển thao tác phù hợp sang `Files.move`, `delete`, `createDirectories` để nhận exception hoặc options rõ ràng. |
+- id: legacy-file-io-008
+  title: Giới hạn thông tin lỗi của API trả về boolean
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn thông tin lỗi của API trả về boolean**
+
+    Phân loại boolean biểu thị kết quả thao tác và boolean thăm dò trạng thái, nhận diện sự thiếu hụt thông tin chẩn đoán. Học cách lựa chọn API `Files` ném ngoại lệ cụ thể, xử lý TOCTOU và viết kiểm thử ổn định trên nhiều nền tảng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Diễn giải kết quả
+
+    1. Vì sao `delete()==false` không đủ để khẳng định file không tồn tại?
+    2. `createNewFile()` là ngoại lệ gì trong các phương thức trả boolean?
+
+    ### Chẩn đoán và kiểm thử
+
+    1. `Files.delete` phân biệt những tình huống nào mà `File.delete` không cung cấp?
+    2. Vì sao kiểm tra `exists()` trước thao tác không giải quyết TOCTOU, và nên kiểm thử thế nào để ít phụ thuộc hệ điều hành?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại tín hiệu thất bại | Phân biệt thất bại thao tác, trạng thái không xác định và `IOException` dựa trên contract. |
+    | Thiết kế xử lý lỗi | Viết nhánh xử lý `NoSuchFileException` và `DirectoryNotEmptyException` theo nhu cầu nghiệp vụ. |
+    | Đánh giá mã legacy | Phát hiện suy luận sai từ boolean, retry thiếu căn cứ và check-then-act gây race. |
+- id: legacy-file-io-009
+  title: Chuyển đổi File.toPath và Path.toFile
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chuyển đổi File.toPath và Path.toFile**
+
+    Chuyển đổi giữa `java.io.File` và `java.nio.file.Path` tại ranh giới tích hợp thư viện cũ với mã mới. Nắm rằng chuyển đổi không đọc, ghi hoặc xác thực sự tồn tại; đặc biệt xử lý đúng `Path.toFile()` trên filesystem provider không mặc định.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chuyển đổi hai chiều
+
+    1. `File.toPath()` giữ tính tương đối/tuyệt đối của pathname như thế nào?
+    2. Vì sao `Path.toFile()` không phải phương thức ép kiểu tổng quát cho mọi provider?
+
+    ### Ứng dụng vào migration
+
+    1. Khi nhận `File` từ API cũ, làm thế nào truy cập `Files.size`, `Files.readString` mà không làm mất ý nghĩa đường dẫn?
+    2. Vì sao `new File(path.toString())` không thay thế đúng cho `path.toFile()` trên ZIP filesystem?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kết nối hai API | Thực hiện round-trip trên default filesystem và giải thích phần nào được bảo toàn. |
+    | Xử lý provider khác | Nhận diện trường hợp `UnsupportedOperationException` khi chuyển ZIP `Path` sang `File`. |
+    | Refactor theo ranh giới | Đề xuất cầu nối `toPath`/`toFile` cho code legacy và dùng `Files` xử lý lỗi I/O. |
+- id: legacy-file-io-010
+  title: Khi nào nên ưu tiên Path và Files
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khi nào nên ưu tiên Path và Files**
+
+    Ra quyết định sử dụng `java.nio.file.Path` và `Files` cho chức năng mới nhờ thao tác đường dẫn rõ nghĩa, ngoại lệ phong phú, options và hỗ trợ provider/symbolic link. Biết lúc nào giữ `File` vì tương thích, và cách giảm TOCTOU, giới hạn atomic move hoặc ghi file dở dang.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lựa chọn API
+
+    1. Tại sao chức năng file mới trên Java 17+ thường nên dùng `Path` và `Files`?
+    2. Khi nào tiếp tục dùng `File` là hợp lý thay vì thay toàn bộ public API?
+
+    ### Yêu cầu nâng cao
+
+    1. Sự khác biệt giữa `Files.list`, `walk`, `walkFileTree` và stream cần đóng là gì?
+    2. `ATOMIC_MOVE`, kiểm tra symlink và ghi qua file tạm có những giới hạn gì trước cạnh tranh và lỗi provider?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đánh giá quyết định thiết kế | Lựa chọn `File` hay `Path`/`Files` cho tình huống legacy, thao tác mới và provider không mặc định. |
+    | Thiết kế thao tác rõ nghĩa | Chọn options create/move/delete, xử lý exception và tài nguyên streaming đúng vòng đời. |
+    | Nhận diện rủi ro filesystem | Giải thích giới hạn TOCTOU, atomic move và thứ tự ghi/validate/move để tránh file dở dang. |

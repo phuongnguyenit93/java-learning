@@ -1,0 +1,342 @@
+summaries:
+- id: byte-streams-001
+  title: InputStream và OutputStream
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **InputStream và OutputStream**
+
+    Bài mở đầu xây dựng mô hình đọc byte từ nguồn và ghi byte ra đích bằng hai lớp trừu tượng `InputStream`/`OutputStream`. Bạn cần biết thao tác nào đọc đến EOF, thao tác nào ghi byte, cách quản lý tài nguyên, và lúc nào nên chọn byte stream thay vì character stream.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình luồng và hợp đồng API
+
+    1. Vì sao cùng giao diện `InputStream` có thể đọc từ bộ nhớ, tệp hoặc nguồn bên ngoài mà vòng lặp xử lý vẫn giữ nguyên?
+
+    2. Phân biệt chức năng `InputStream` và `OutputStream` qua đường đi của byte từ nguồn đến đích như thế nào?
+
+    ### Ghép luồng và bảo toàn dữ liệu
+
+    1. Vì sao khi sao chép phải kiểm tra giá trị `read` trả về rồi mới ghi đúng số byte hợp lệ?
+
+    2. Thiết kế vòng đời hai stream bằng `try-with-resources` ra sao để không rò rỉ tài nguyên khi xảy ra `IOException`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn abstraction | Phân loại trường hợp nên dùng luồng byte, luồng ký tự và stream trong bộ nhớ, giải thích theo loại dữ liệu. |
+    | Lắp ghép copy loop | Viết đoạn đọc–ghi có buffer, EOF và `write(buffer, 0, n)`; dự đoán byte đầu ra. |
+    | Kiểm soát tài nguyên | Đặt đúng vị trí `try-with-resources` và chỉ ra nơi ngoại lệ có thể phát sinh. |
+- id: byte-streams-002
+  title: read trả về int từ 0 đến 255 và dấu hiệu EOF -1
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **read trả về int từ 0 đến 255 và dấu hiệu EOF -1**
+
+    `InputStream.read()` trả `int` vì phải biểu diễn đủ 256 giá trị byte không dấu và một trạng thái EOF tách biệt. Bài này ngăn lỗi nhầm byte `0xFF` với `-1`, kiểm tra kết thúc sai và ép kiểu trước khi xác nhận có dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giá trị đọc và EOF
+
+    1. Tại sao `read()` cần kiểu `int` thay vì `byte`, và `255` khác `-1` ở đâu?
+
+    2. Đâu là điều kiện vòng lặp đúng để không đánh mất byte có bit cao nhất bằng 1?
+
+    ### Giới hạn và đối chiếu
+
+    1. Vì sao EOF không thể suy ra chỉ từ một thời điểm chưa có dữ liệu đang sẵn trong nguồn?
+
+    2. Khi nào kết quả của `read(byte[])` cần được diễn giải khác với `read()`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải mã kết quả đọc | Từ chuỗi byte gồm `0`, `127`, `255`, dự đoán từng giá trị `int` và EOF sau cùng. |
+    | Sửa vòng lặp | Thay điều kiện dừng sai bằng `!= -1` và chỉ ép kiểu sau khi đã kiểm tra EOF. |
+    | Phân biệt hợp đồng | Giải thích khác nhau giữa một byte, số lượng byte của lần đọc mảng và dấu EOF. |
+- id: byte-streams-003
+  title: Đọc theo byte[], offset và length
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đọc theo byte[], offset và length**
+
+    Đọc vào mảng yêu cầu hiểu đúng vị trí bắt đầu và số byte được phép ghi. Bài này thực hành `read(byte[], off, len)`, kiểm tra ranh giới và phân biệt độ dài vùng yêu cầu với số byte thực đọc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phạm vi mảng
+
+    1. Trong `read(buffer, off, len)`, `off` và `len` xác định vùng nào, và vì sao `len` không phải vị trí kết thúc?
+
+    2. Các phần tử ngoài đoạn `[off, off + len)` phải được giữ nguyên ra sao sau khi đọc?
+
+    ### Dữ liệu thực tế và lỗi
+
+    1. Giá trị trả về quyết định đoạn mảng hợp lệ như thế nào khi luồng trả ít hơn `len` byte?
+
+    2. Làm thế nào kiểm tra điều kiện offset/length để tránh lỗi chỉ số và trường hợp `len = 0`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính vùng ghi | Với mảng 8 byte và lời gọi `(2, 3)`, chỉ ra ba vị trí có thể thay đổi. |
+    | Diễn giải short read | Xác định đúng đoạn dữ liệu mới khi kết quả đọc nhỏ hơn `len` và phần còn lại chứa byte cũ. |
+    | Viết code đọc vùng | Áp dụng `read(buffer, off, len)` và xử lý EOF/giới hạn chỉ số trong ví dụ độc lập. |
+- id: byte-streams-004
+  title: Một lần read không bảo đảm lấp đầy buffer
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Một lần read không bảo đảm lấp đầy buffer**
+
+    Luồng byte có thể trả kết quả ngắn dù buffer còn chỗ. Bạn sẽ mô phỏng nguồn chỉ cấp hai byte mỗi lượt, so sánh đọc đến EOF với đọc đúng N byte và xác định khi nào một lần `read` chưa đủ để kết luận đã hết dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Short read và ranh giới
+
+    1. Vì sao `read(buffer)` có thể trả số byte nhỏ hơn độ dài mảng mà chưa đạt EOF?
+
+    2. Vì sao kết quả `count < buffer.length` không thể thay thế phép thử `count == -1`?
+
+    ### Ghép đủ thông điệp
+
+    1. Thiết kế vòng lặp thu đủ N byte bằng cách cập nhật offset và lượng còn thiếu như thế nào?
+
+    2. Khi nào dùng `readNBytes` hoặc `DataInputStream.readFully`, và EOF sớm phải được xử lý thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích trace | Từ nguồn cấp tối đa hai byte và buffer dài năm, dự đoán các lượt đọc và nội dung mỗi lượt. |
+    | Sửa lỗi short read | Viết vòng lặp đọc đến EOF không xem phần còn trống là dữ liệu. |
+    | Đọc đủ khung | Xây dựng thuật toán điền đúng N byte và báo thiếu dữ liệu khi gặp EOF trước thời hạn. |
+- id: byte-streams-005
+  title: Ghi đúng số byte thực tế đã đọc
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ghi đúng số byte thực tế đã đọc**
+
+    Bài tập trung vào bất biến của vòng lặp sao chép: một lượt `read` hợp lệ có bao nhiêu byte thì `write` chỉ tiêu thụ đúng bấy nhiêu byte. Bạn sẽ quan sát lỗi đệm thừa và sửa bằng `write(buffer, 0, bytesRead)`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dữ liệu hợp lệ trong buffer
+
+    1. Điều gì xảy ra khi lượt đọc cuối chỉ có vài byte nhưng dùng `output.write(buffer)` cho cả mảng?
+
+    2. Vì sao kết quả trả về từ `read` mới xác định vùng byte đã được cập nhật của lượt hiện tại?
+
+    ### Sao chép chính xác
+
+    1. Một vòng lặp đọc–ghi đúng phải xử lý `-1`, số byte nhận và output như thế nào?
+
+    2. Bạn kiểm chứng tệp sao chép bằng cách nào để phát hiện byte thừa hoặc bị thiếu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện lỗi | Đọc code ghi cả buffer và dự đoán byte cũ/byte 0 bị chèn vào cuối kết quả. |
+    | Sửa chương trình | Thay bằng `write(buffer, 0, n)` và giải thích trường hợp lượt cuối ngắn. |
+    | Kiểm tra dữ liệu | So sánh nội dung và kích thước trước/sau sao chép để chứng minh bảo toàn byte. |
+- id: byte-streams-006
+  title: readNBytes và khác biệt với readAllBytes
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **readNBytes và khác biệt với readAllBytes**
+
+    `readNBytes` giới hạn số byte cần lấy, còn `readAllBytes` tiêu thụ phần còn lại đến EOF. Bài này giúp lựa chọn API theo ranh giới dữ liệu và bộ nhớ, đồng thời hiểu rằng kết quả `readNBytes` có thể ngắn hơn N khi gặp EOF.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa API và vị trí luồng
+
+    1. Sau `readNBytes(4)` trên nguồn mười byte, `readAllBytes()` còn nhận những byte nào?
+
+    2. Vì sao `readNBytes(n)` không mặc nhiên bảo đảm trả đủ n byte, và cần kiểm tra gì nếu giao thức yêu cầu đủ?
+
+    ### Bộ nhớ và chọn cách đọc
+
+    1. Tại sao `readAllBytes` không thích hợp với nguồn lớn hoặc không biết trước kích thước?
+
+    2. So sánh `readNBytes(byte[], off, len)` với `read(byte[], off, len)` theo mức độ cố gắng điền vùng nhận thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn API | Từ yêu cầu đọc header, prefix hay toàn bộ file nhỏ, chọn `readNBytes` hoặc `readAllBytes` và giải thích. |
+    | Kiểm tra độ dài | Viết kiểm tra EOF sớm sau `readNBytes(n)` khi khung phải đủ n byte. |
+    | Đánh giá bộ nhớ | Nhận diện nguy cơ cấp phát lớn và đề xuất đọc streaming theo buffer. |
+- id: byte-streams-007
+  title: skip, skipNBytes và giới hạn khi bỏ qua dữ liệu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **skip, skipNBytes và giới hạn khi bỏ qua dữ liệu**
+
+    `skip(n)` chỉ cho biết lượng byte thực sự bỏ qua, trong khi `skipNBytes(n)` cố gắng bỏ qua đủ hoặc báo lỗi. Bài giúp xử lý header cố định, EOF sớm và giới hạn của các triển khai stream mà không đồng nhất skip với seek.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng skip
+
+    1. Giá trị trả về của `skip(n)` nói lên điều gì và vì sao không được mặc định đã bỏ qua đủ n byte?
+
+    2. `skipNBytes(n)` xử lý tình huống chạm EOF trước khi đủ n byte ra sao?
+
+    ### Vị trí và độ tin cậy
+
+    1. Vì sao skip tính theo byte, không theo ký tự hay chỉ số ngẫu nhiên trong file?
+
+    2. Nếu phải bỏ qua header có chiều dài cố định, bạn chọn API nào và kiểm chứng phần payload còn lại thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán vị trí | Từ một nguồn ngắn, xác định số byte bị tiêu thụ sau `skip` và kết quả đọc tiếp. |
+    | Xử lý thiếu dữ liệu | Chứng minh `skipNBytes` phát hiện header thiếu và không tự khôi phục trạng thái nguồn. |
+    | Thiết kế parser | Quy định độ dài header theo byte và xử lý EOF/lỗi khi bước qua payload. |
+- id: byte-streams-008
+  title: available không phải kích thước toàn bộ dữ liệu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **available không phải kích thước toàn bộ dữ liệu**
+
+    `available()` chỉ đưa ra ước lượng byte có thể đọc không gây blocking ở thời điểm gọi. Bài này làm rõ vì sao nó không phải tổng dung lượng, không phải phép thử EOF và không thích hợp để quyết định kích thước buffer cho toàn luồng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giá trị available
+
+    1. Tại sao `available() == 0` không đồng nghĩa với EOF trên mọi nguồn dữ liệu?
+
+    2. Điều gì khiến cùng phương thức `available()` có kết quả khác nhau giữa stream bộ nhớ và stream có thể blocking?
+
+    ### Quyết định đọc đúng
+
+    1. Vì sao cấp phát mảng theo `available()` rồi đọc một lần có thể làm thiếu dữ liệu?
+
+    2. Bạn sẽ viết vòng lặp đọc tới EOF thế nào khi không biết trước tổng số byte?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích hợp đồng | Phân biệt lượng có thể đọc ngay, tổng dung lượng và EOF trong một tình huống nguồn mở. |
+    | Sửa code | Thay cách dùng `available()` sai bằng vòng lặp dựa trên kết quả `read`. |
+    | Chọn giới hạn | Đề xuất buffer cố định và giới hạn kích thước theo yêu cầu nghiệp vụ thay vì theo `available()`. |
+- id: byte-streams-009
+  title: transferTo và quyền sở hữu hai stream
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **transferTo và quyền sở hữu hai stream**
+
+    `InputStream.transferTo(OutputStream)` chuyển dữ liệu còn lại và trả số byte đã chuyển, nhưng không đóng cả hai stream. Bài đặt trọng tâm vào hợp đồng ownership giữa bên mở, bên mượn và bên đóng stream, kể cả khi có `IOException` hoặc thao tác mới hoàn tất một phần.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### transferTo và tài nguyên
+
+    1. `transferTo` đọc tới mốc nào và vì sao nó không thay thế trách nhiệm `close()` của caller?
+
+    2. Khi helper nhận hai stream từ caller, ranh giới sở hữu tài nguyên nên được diễn đạt và thực thi ra sao?
+
+    ### Đóng, flush và thất bại
+
+    1. Khi phương thức tự mở cả input/output, cấu trúc `try-with-resources` nào bảo đảm cả hai được đóng?
+
+    2. Tại sao exception khi `transferTo` có thể để lại output một phần, và điều đó khác atomic file replace thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế ownership | Chỉ rõ bên đóng tài nguyên trong ba tình huống tự mở, mượn và framework cấp stream. |
+    | Kiểm chứng lifecycle | Dùng wrapper theo dõi `close()` để giải thích trạng thái trước/sau `transferTo`. |
+    | Phân tích lỗi | Dự đoán output một phần khi copy thất bại và phân biệt flush với close. |
+- id: byte-streams-010
+  title: FileInputStream, FileOutputStream và chế độ append
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **FileInputStream, FileOutputStream và chế độ append**
+
+    `FileInputStream` và `FileOutputStream` nối abstraction byte stream với tệp thật. Bài tập trung vào tác dụng phụ khi mở luồng ghi, khác biệt giữa truncate và append, cách kiểm tra byte cuối cùng cùng yêu cầu đóng stream và mã hóa rõ ràng khi dữ liệu là text.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chế độ file output
+
+    1. Tệp đang chứa dữ liệu sẽ thay đổi thế nào khi mở `FileOutputStream(file)` so với `FileOutputStream(file, true)`?
+
+    2. Vì sao append không tự sinh dấu xuống dòng, không tạo thư mục cha và không bảo đảm một bản ghi ứng dụng nguyên tử?
+
+    ### Vận hành với file
+
+    1. Bạn dùng `FileInputStream` và vòng lặp buffer thế nào để đọc đủ các byte vừa ghi?
+
+    2. Khi nào nên dùng `Files.newOutputStream` với `StandardOpenOption` để diễn đạt rõ chính sách tạo mới, nối thêm hoặc thay thế?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thực hiện các chế độ | Chạy ví dụ ghi, append, overwrite và dự đoán mảng byte sau từng lượt. |
+    | Kiểm chứng file | Đọc ngược byte từ tệp, xác minh đúng nội dung và xử lý lỗi mở tệp. |
+    | Chọn chính sách ghi | Giải thích rủi ro truncate và chọn chế độ phù hợp khi dữ liệu cần giữ nguyên. |
+- id: byte-streams-011
+  title: nullInputStream, nullOutputStream và tình huống sử dụng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **nullInputStream, nullOutputStream và tình huống sử dụng**
+
+    `InputStream.nullInputStream()` cung cấp nguồn byte rỗng thật sự, còn `OutputStream.nullOutputStream()` nhận và bỏ byte mà không lưu trữ. Bài làm rõ khác biệt với tham chiếu Java `null`, hành vi sau khi đóng stream và những trường hợp dùng an toàn trong kiểm thử hay pipeline tùy chọn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa null stream
+
+    1. Vì sao một null input stream là đối tượng có EOF tức thì chứ không phải biến tham chiếu `null`?
+
+    2. Ghi vào null output stream tạo tác dụng gì, và nó có bảo tồn dữ liệu đã ghi hay không?
+
+    ### Hành vi và lựa chọn thiết kế
+
+    1. Sau khi đóng null stream, các thao tác đọc/ghi nào phát sinh `IOException` và vì sao cần phân biệt với trạng thái EOF thông thường?
+
+    2. Khi nào dùng null stream để biểu diễn nhánh tùy chọn hoặc sink thử nghiệm, và khi nào cách này che giấu dữ liệu bắt buộc?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích luồng rỗng | Dự đoán EOF và số byte sao chép từ `nullInputStream()` sang output. |
+    | Kiểm tra discard sink | Thực hiện ghi vào `nullOutputStream()` rồi giải thích vì sao không có kết quả lưu trữ. |
+    | Thiết kế nhánh tùy chọn | Lựa chọn giữa null stream, stream bộ nhớ và output thực trong tình huống kiểm thử. |
