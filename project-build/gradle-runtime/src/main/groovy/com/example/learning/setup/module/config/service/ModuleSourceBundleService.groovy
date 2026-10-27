@@ -4,12 +4,17 @@ import com.example.learning.setup.module.config.model.ModuleType
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.file.DuplicatesStrategy
+import org.gradle.api.artifacts.Configuration
+import org.gradle.api.artifacts.component.ModuleComponentIdentifier
+import org.gradle.api.artifacts.component.ProjectComponentIdentifier
+import org.gradle.api.artifacts.result.ResolvedArtifactResult
 import org.gradle.api.tasks.bundling.Zip
 
 /**
  * Creates an importable, standalone Gradle project for a single runnable module.
- * Module source is the only Java source in the bundle. Shared runtime modules
- * and external dependencies are distributed as compiled jars in libs/.
+ * Module source is the only Java source in the bundle. External dependencies
+ * use Maven coordinates obtained from the orchestration-resolved classpaths;
+ * only project(...) dependencies ship as binary jars in libs/.
  */
 class ModuleSourceBundleService {
     static void register(Project project, ModuleType type) {
@@ -27,11 +32,23 @@ class ModuleSourceBundleService {
 
         def runtime = project.configurations.getByName('runtimeClasspath')
         def compile = project.configurations.getByName('compileClasspath')
+        def testRuntime = project.configurations.getByName('testRuntimeClasspath')
+        def testCompile = project.configurations.getByName('testCompileClasspath')
 
         def prepare = project.tasks.register('prepareModuleSourceBundle') {
             group = 'Local Run'
             description = 'Assemble standalone source project for this runnable module.'
-            dependsOn(runtime, compile)
+            dependsOn(runtime, compile, testRuntime, testCompile)
+            // Gradle may expose another project's classes directory in
+            // compileClasspath, rather than its JAR. Always build the
+            // project-owned JAR explicitly for the standalone archive.
+            dependsOn {
+                [runtime, compile, testRuntime, testCompile]
+                        .collectMany { Configuration config -> resolvedArtifacts(config).projects }
+                        .toSet().collect { String path ->
+                            project.rootProject.project(path).tasks.named('jar')
+                        }
+            }
             doLast {
                 // This generated folder is exclusively owned by this task.
                 project.delete(stage)
@@ -53,12 +70,41 @@ class ModuleSourceBundleService {
                     into(new File(stage, 'gradle/wrapper'))
                 }
 
-                // The resolved jar files represent the effective runtime
-                // configuration, including the project-owned Swagger/Execution
-                // Context adapters. Include compileOnly dependencies as well.
-                List<File> jars = (runtime.files + compile.files)
-                        .findAll { File f -> f.isFile() && f.name.endsWith('.jar') }
-                        .toSet().toList().sort { it.name }
+                // Resolve the effective Gradle graphs AFTER orchestration has
+                // applied its dependency rules. Do not duplicate rules in the
+                // generated per-module build.gradle.
+                Map runtimeItems = resolvedArtifacts(runtime)
+                Map compileItems = resolvedArtifacts(compile)
+                Map testRuntimeItems = resolvedArtifacts(testRuntime)
+                Map testCompileItems = resolvedArtifacts(testCompile)
+                Map<String, String> runtimeModules = runtimeItems.modules
+                Map<String, String> compileOnlyModules =
+                        compileItems.modules.findAll { String id, String version ->
+                            !runtimeModules.containsKey(id)
+                        }
+                Map<String, String> testModules =
+                        (testRuntimeItems.modules + testCompileItems.modules)
+                                .findAll { String id, String version ->
+                                    !runtimeModules.containsKey(id) &&
+                                            !compileOnlyModules.containsKey(id)
+                                }
+
+                // Only jars produced by Gradle project dependencies are
+                // bundled: e.g. Swagger and Execution Context owned by this
+                // repository. Everything hosted in Maven repositories stays
+                // declared by its resolved group/artifact/version.
+                List<File> jars = (
+                        runtimeItems.projects + compileItems.projects +
+                        testRuntimeItems.projects + testCompileItems.projects
+                ).toSet().collect { String path ->
+                    def jarTask = project.rootProject.project(path).tasks.named('jar').get()
+                    File jar = jarTask.archiveFile.get().asFile
+                    if (!jar.isFile()) {
+                        throw new GradleException('Missing project dependency jar: ' + path +
+                                ' -> ' + jar)
+                    }
+                    jar
+                }.sort { it.name }
                 Map<String, File> filenames = [:]
                 jars.each { File jar ->
                     if (filenames.containsKey(jar.name) &&
@@ -67,23 +113,29 @@ class ModuleSourceBundleService {
                     }
                     filenames[jar.name] = jar
                 }
-                project.copy {
-                    from(jars)
-                    into(new File(stage, 'libs'))
-                    duplicatesStrategy = DuplicatesStrategy.FAIL
+                if (!jars.isEmpty()) {
+                    project.copy {
+                        from(jars)
+                        into(new File(stage, 'libs'))
+                        duplicatesStrategy = DuplicatesStrategy.FAIL
+                    }
                 }
 
                 new File(stage, 'settings.gradle').setText(
                         "rootProject.name = '${slug}'\n", 'UTF-8')
-                new File(stage, 'build.gradle').setText(standaloneGradle(type), 'UTF-8')
+                new File(stage, 'build.gradle').setText(
+                        standaloneGradle(runtimeModules, compileOnlyModules, testModules, !jars.isEmpty()), 'UTF-8')
                 new File(stage, 'README.md').setText(
                         """# ${serviceName} — standalone source
 
 This archive includes only the selected module's Java source and resources.
-Its `libs/` directory contains the resolved binary dependencies needed to
-build the project outside the original java-learning repository.
+Public dependencies are declared using their resolved Maven coordinates in
+`build.gradle` and downloaded from Maven Central. The `libs/` directory
+contains only compiled internal `java-learning` project dependencies
+(such as Swagger and Execution Context adapters).
 
-Requires **JDK 21**. Open this folder in IntelliJ IDEA as a Gradle project, or:
+Requires **JDK 21** and an internet connection for first-time dependency
+resolution. Open this folder in IntelliJ IDEA as a Gradle project, or:
 
 ```shell
 ./gradlew bootRun
@@ -92,10 +144,13 @@ Requires **JDK 21**. Open this folder in IntelliJ IDEA as a Gradle project, or:
 
 On Windows, use `gradlew.bat` instead of `./gradlew`.
 The Spring Boot app runs on the module's configured port (or use
-`--args='--server.port=9000'`). Dependencies in `libs/` correspond to
-the revision used to package this archive.
+`--args='--server.port=9000'`). Dependencies are derived from the
+orchestration-resolved module classpaths at export time, not from
+independently maintained per-module Gradle declarations.
 """, 'UTF-8')
-                project.logger.lifecycle('[SOURCE-BUNDLE] Staged {} ({} dependency jars)', serviceName, jars.size())
+                project.logger.lifecycle(
+                        '[SOURCE-BUNDLE] Staged {} ({} Maven runtime, {} compile-only, {} test dependencies, {} internal jars)',
+                        serviceName, runtimeModules.size(), compileOnlyModules.size(), testModules.size(), jars.size())
             }
         }
 
@@ -114,8 +169,46 @@ the revision used to package this archive.
         }
     }
 
-    private static String standaloneGradle(ModuleType type) {
-        String starter = type == ModuleType.REACTIVE ? 'webflux' : 'web'
+    private static Map resolvedArtifacts(Configuration configuration) {
+        Map<String, String> modules = [:]
+        Set<String> projects = [] as Set
+        configuration.incoming.artifacts.artifacts.each { ResolvedArtifactResult artifact ->
+            def identity = artifact.id.componentIdentifier
+            if (identity instanceof ModuleComponentIdentifier) {
+                String key = identity.group + ':' + identity.module
+                String existing = modules.put(key, identity.version)
+                if (existing != null && existing != identity.version) {
+                    throw new GradleException('Multiple resolved versions for ' + key +
+                            ' in ' + configuration.name)
+                }
+            } else if (identity instanceof ProjectComponentIdentifier) {
+                projects.add(identity.projectPath)
+            } else {
+                throw new GradleException('Unsupported source bundle dependency in ' +
+                        configuration.name + ': ' + identity)
+            }
+        }
+        return [modules: modules, projects: projects]
+    }
+
+    private static String gradleLines(String scope, Map<String, String> modules) {
+        return modules.sort { a, b -> a.key <=> b.key }
+                .collect { String name, String version ->
+                    "    ${scope} '${name}:${version}'"
+                }.join('\n')
+    }
+
+    private static String standaloneGradle(Map<String, String> runtimeModules,
+                                          Map<String, String> compileOnlyModules,
+                                          Map<String, String> testModules,
+                                          boolean hasProjectJars) {
+        String onlineRuntime = gradleLines('implementation', runtimeModules)
+        String onlineCompile = gradleLines('compileOnly', compileOnlyModules)
+        String onlineTests = gradleLines('testImplementation', testModules)
+        String internal = hasProjectJars
+                ? "    // Only binaries originating from java-learning project(...) dependencies.\n" +
+                        "    implementation fileTree(dir: 'libs', include: ['*.jar'])\n"
+                : ''
         return """plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.5'
@@ -135,10 +228,11 @@ repositories {
 }
 
 dependencies {
-    // Binary adapters and all resolved dependencies from the original
-    // module build are pinned inside this standalone archive.
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // Effective external dependencies, resolved by the original orchestration.
+${onlineRuntime}
+${onlineCompile}
+${onlineTests}
+${internal}
 }
 
 tasks.withType(Test).configureEach {
