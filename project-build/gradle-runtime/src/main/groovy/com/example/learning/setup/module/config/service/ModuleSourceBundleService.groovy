@@ -7,7 +7,8 @@ import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier
-import org.gradle.api.artifacts.result.ResolvedArtifactResult
+import org.gradle.api.artifacts.result.ResolvedComponentResult
+import org.gradle.api.artifacts.result.ResolvedDependencyResult
 import org.gradle.api.tasks.bundling.Zip
 
 /**
@@ -70,9 +71,10 @@ class ModuleSourceBundleService {
                     into(new File(stage, 'gradle/wrapper'))
                 }
 
-                // Resolve the effective Gradle graphs AFTER orchestration has
-                // applied its dependency rules. Do not duplicate rules in the
-                // generated per-module build.gradle.
+                // Read dependency edges after orchestration has configured the
+                // module. Traverse only the root and internal project nodes:
+                // Maven child dependencies belong to Gradle transitive
+                // resolution, not to this standalone build.gradle.
                 Map runtimeItems = resolvedArtifacts(runtime)
                 Map compileItems = resolvedArtifacts(compile)
                 Map testRuntimeItems = resolvedArtifacts(testRuntime)
@@ -149,7 +151,7 @@ orchestration-resolved module classpaths at export time, not from
 independently maintained per-module Gradle declarations.
 """, 'UTF-8')
                 project.logger.lifecycle(
-                        '[SOURCE-BUNDLE] Staged {} ({} Maven runtime, {} compile-only, {} test dependencies, {} internal jars)',
+                        '[SOURCE-BUNDLE] Staged {} ({} direct Maven runtime, {} compile-only, {} test dependencies, {} internal jars)',
                         serviceName, runtimeModules.size(), compileOnlyModules.size(), testModules.size(), jars.size())
             }
         }
@@ -172,20 +174,36 @@ independently maintained per-module Gradle declarations.
     private static Map resolvedArtifacts(Configuration configuration) {
         Map<String, String> modules = [:]
         Set<String> projects = [] as Set
-        configuration.incoming.artifacts.artifacts.each { ResolvedArtifactResult artifact ->
-            def identity = artifact.id.componentIdentifier
-            if (identity instanceof ModuleComponentIdentifier) {
-                String key = identity.group + ':' + identity.module
-                String existing = modules.put(key, identity.version)
-                if (existing != null && existing != identity.version) {
-                    throw new GradleException('Multiple resolved versions for ' + key +
-                            ' in ' + configuration.name)
+        Set<Object> visitedProjects = [] as Set
+        List<ResolvedComponentResult> stack = [configuration.incoming.resolutionResult.root]
+        while (!stack.isEmpty()) {
+            ResolvedComponentResult component = stack.remove(stack.size() - 1)
+            if (!visitedProjects.add(component.id)) continue
+            component.dependencies.each { dependency ->
+                if (!(dependency instanceof ResolvedDependencyResult)) {
+                    throw new GradleException('Unresolved source bundle dependency in ' +
+                            configuration.name + ': ' + dependency)
                 }
-            } else if (identity instanceof ProjectComponentIdentifier) {
-                projects.add(identity.projectPath)
-            } else {
-                throw new GradleException('Unsupported source bundle dependency in ' +
-                        configuration.name + ': ' + identity)
+                ResolvedComponentResult selected = dependency.selected
+                def identity = selected.id
+                if (identity instanceof ModuleComponentIdentifier) {
+                    String key = identity.group + ':' + identity.module
+                    String existing = modules.put(key, identity.version)
+                    if (existing != null && existing != identity.version) {
+                        throw new GradleException('Multiple resolved versions for ' + key +
+                                ' in ' + configuration.name)
+                    }
+                    // Its transitive Maven dependencies are resolved online.
+                } else if (identity instanceof ProjectComponentIdentifier) {
+                    projects.add(identity.projectPath)
+                    // Internal projects are distributed as JARs, without
+                    // published POM metadata. Their direct public dependencies
+                    // must therefore be represented in our build.gradle.
+                    stack.add(selected)
+                } else {
+                    throw new GradleException('Unsupported source bundle dependency in ' +
+                            configuration.name + ': ' + identity)
+                }
             }
         }
         return [modules: modules, projects: projects]
