@@ -915,7 +915,7 @@ enum ModuleListEnum {
     JAVA_IO(
             'module:platform:development:programming:language:java:core:io',
             'module/platform/development/programming/language/java/core/io',
-            'LIBRARY',
+            'SERVLET',
             'Java I/O and NIO',
             false,
             []

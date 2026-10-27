@@ -173,6 +173,8 @@ class ModuleTranslationCatalogService {
                 targets[DOC + 'en/menu/' + path] = 'INTERVIEW'
             } else if (path ==~ /[^\/]+\/questions\/summary\.yml/) {
                 targets[DOC + 'en/menu/' + path] = 'SUMMARY_QUESTIONS'
+            } else if (path ==~ /[^\/]+\/practice\/scenarios\.yml/) {
+                targets[DOC + 'en/menu/' + path] = 'PRACTICE'
             } else if (path ==~ /[^\/]+\/summary\/section\.yml/) {
                 targets[DOC + 'en/menu/' + path] = 'SUMMARY_SECTION'
             } else if (path ==~ /[^\/]+\/summary\/summaries\.yml/) {
@@ -211,13 +213,13 @@ class ModuleTranslationCatalogService {
                         it ==~ /menu\/[^\/]+\.md/ ||
                         it ==~ /menu\/[^\/]+\/knowledge\/[^\/]+\.md/ ||
                         it ==~ /menu\/[^\/]+\/metadata\/knowledge-metadata\.yml/ ||
-                        it ==~ /menu\/[^\/]+\/(quiz\/question|questions\/(interview|summary))\.yml/ ||
+                        it ==~ /menu\/[^\/]+\/(quiz\/question|questions\/(interview|summary)|practice\/scenarios)\.yml/ ||
                         it ==~ /menu\/[^\/]+\/summary\/(section\.yml|summaries\.yml)/ } as Set
                 b = b.findAll { it in ['BASE.md', 'LIST.md'] ||
                         it ==~ /menu\/[^\/]+\.md/ ||
                         it ==~ /menu\/[^\/]+\/knowledge\/[^\/]+\.md/ ||
                         it ==~ /menu\/[^\/]+\/metadata\/knowledge-metadata\.yml/ ||
-                        it ==~ /menu\/[^\/]+\/(quiz\/question|questions\/(interview|summary))\.yml/ ||
+                        it ==~ /menu\/[^\/]+\/(quiz\/question|questions\/(interview|summary)|practice\/scenarios)\.yml/ ||
                         it ==~ /menu\/[^\/]+\/summary\/(section\.yml|summaries\.yml)/ } as Set
             }
             if (a != b) throw new GradleException('VI/EN tree mismatch: ' + area)

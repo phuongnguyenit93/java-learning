@@ -78,6 +78,10 @@ class ModuleEnSheetPublishService {
             throw new GradleException('Template title is not unique.')
         }
         verifyTemplate(context, template)
+        if (ModuleEnSheetPublishService.hasPracticeSource(module) &&
+                (template.columns as int) < 33) {
+            throw new GradleException('STEP 15 Practice requires Template A:AG (33 columns).')
+        }
 
         String title = ModuleEnSheetPublishService.enTitle(vi.tabTitle as String)
         int gid = ModuleEnSheetPublishService.deterministicGid(
@@ -249,6 +253,15 @@ class ModuleEnSheetPublishService {
 
     protected void verifyTemplate(Map ctx, Map template) {
         inspectNativeFormatting(ctx, template)
+    }
+
+    private static boolean hasPracticeSource(File module) {
+        File chapters = new File(module, 'content/readme/docs/vi/menu')
+        if (!chapters.isDirectory()) return false
+        File[] dirs = chapters.listFiles()
+        return dirs != null && dirs.any { File chapter ->
+            chapter.isDirectory() && new File(chapter, 'practice/scenarios.yml').isFile()
+        }
     }
 
     protected void verifyClonedFormatting(Map ctx, Map cloned) {

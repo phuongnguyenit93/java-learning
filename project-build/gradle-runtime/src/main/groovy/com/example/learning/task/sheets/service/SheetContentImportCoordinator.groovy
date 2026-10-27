@@ -17,6 +17,7 @@ class SheetContentImportCoordinator {
     private final QuizSheetImportService quizImporter
     private final ReferenceSheetImportService referenceImporter
     private final SummarySheetImportService summaryImporter
+    private final PracticeSheetImportService practiceImporter
 
     SheetContentImportCoordinator(
             SheetsMetadataReaderService sheetsReader = new SheetsMetadataReaderService(),
@@ -26,7 +27,8 @@ class SheetContentImportCoordinator {
             InterviewSheetImportService interviewImporter = new InterviewSheetImportService(),
             QuizSheetImportService quizImporter = new QuizSheetImportService(),
             ReferenceSheetImportService referenceImporter = new ReferenceSheetImportService(),
-            SummarySheetImportService summaryImporter = new SummarySheetImportService()
+            SummarySheetImportService summaryImporter = new SummarySheetImportService(),
+            PracticeSheetImportService practiceImporter = new PracticeSheetImportService()
     ) {
         this.sheetsReader = sheetsReader
         this.roadmapImporter = roadmapImporter
@@ -36,6 +38,7 @@ class SheetContentImportCoordinator {
         this.quizImporter = quizImporter
         this.referenceImporter = referenceImporter
         this.summaryImporter = summaryImporter
+        this.practiceImporter = practiceImporter
     }
 
     Map<String, Object> importByLocation(
@@ -62,9 +65,9 @@ class SheetContentImportCoordinator {
             boolean apply,
             String part
     ) {
-        if (!(part in ['ALL', 'ROADMAP', 'README', 'VIDEO', 'INTERVIEW', 'QUIZ', 'REFERENCE', 'SUMMARY'])) {
+        if (!(part in ['ALL', 'ROADMAP', 'README', 'VIDEO', 'INTERVIEW', 'QUIZ', 'REFERENCE', 'SUMMARY', 'PRACTICE'])) {
             throw new GradleException(
-                    "Invalid Sheet import part '${part}'. Use ALL, ROADMAP, README, VIDEO, INTERVIEW, QUIZ, REFERENCE or SUMMARY."
+                    "Invalid Sheet import part '${part}'. Use ALL, ROADMAP, README, VIDEO, INTERVIEW, QUIZ, REFERENCE, SUMMARY or PRACTICE."
             )
         }
         File root = rootDirectory.canonicalFile
@@ -99,6 +102,8 @@ class SheetContentImportCoordinator {
                 return referenceImporter.execute(root, context, apply)
             case 'SUMMARY':
                 return summaryImporter.execute(root, context, apply)
+            case 'PRACTICE':
+                return practiceImporter.execute(root, context, apply)
             default:
                 return importTab(root, context, apply)
         }

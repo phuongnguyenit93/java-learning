@@ -300,6 +300,38 @@ questions:
         }
     }
 
+    @Test
+    void exportsOnePracticeFileIntoParentAdAgAndPreservesOriginalYaml() {
+        Map f = fixture()
+        File module = f.module as File
+        File base = f.source as File
+        new XSSFWorkbook(new ByteArrayInputStream(base.bytes)).withCloseable { book ->
+            def sheet = book.getSheetAt(0)
+            cell(sheet, 18, 30, 'Real-world Practice')
+            (30..33).each { int col -> cell(sheet, 19, col, 'Practice YAML') }
+            base.withOutputStream { book.write(it) }
+        }
+        String vi = PracticeSheetImportServiceTest.SCENARIO
+        String en = vi.replace('Phân tích hotfix','Hotfix analysis')
+                .replace('Một bản production cần vá lỗi.', 'Production needs a hotfix.')
+        write(module, 'content/readme/docs/vi/menu/1.Basic/practice/scenarios.yml', vi)
+        write(module, 'content/readme/docs/en/menu/1.Basic/practice/scenarios.yml', en)
+        byte[] viExcel = base.bytes
+        Map report = new ModuleContentExcelSyncService().execute(
+                f.root as File, module, 'PRACTICE', true)
+        assertEquals('EXPORTED', report.status)
+        assertArrayEquals(viExcel, base.bytes)
+        (f.target as File).withInputStream { stream ->
+            new XSSFWorkbook(stream).withCloseable { book ->
+                def s = book.getSheetAt(0)
+                assertEquals(en, (30..33).collect {
+                    ModuleContentExcelSyncService.text(s, 20, it)
+                }.join(''))
+                assertEquals('', ModuleContentExcelSyncService.text(s, 20, 31))
+            }
+        }
+    }
+
     private Map fixture() {
         File root = tmp.newFolder('repo')
         File module = new File(root, 'module/demo')

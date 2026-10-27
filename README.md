@@ -68,7 +68,7 @@ Chi tiết workflow: [`GENERAL_AGENT_RULES.md`](module-generate-agent/GENERAL_AG
 - [`STEP_5.md`](./module-generate-agent/STEP_5.md) — review Knowledge, metadata và Java chapter skeleton.
 - [`STEP_6.md`](./module-generate-agent/STEP_6.md) — Java API và tests.
 - [`STEP_7.md`](./module-generate-agent/STEP_7.md) — Swagger VI/EN theo chương.
-- **STEP 8** — Chưa định nghĩa, để dành cho bước mới.
+- **STEP 8** — Real-world Problems & Practical Exercises: worker tạo skeleton rồi nội dung trong cùng một phiên, ghi YAML ở Sheet AD:AG; Prime QA, Gradle import thuần code thành `content/readme/docs/vi/menu/<chapter>/practice/scenarios.yml`.
 - [`STEP_9.md`](./module-generate-agent/STEP_9.md) — Interview + Summary Questions YAML, import thành hai file riêng trong `questions/`.
 - [`STEP_10.md`](./module-generate-agent/STEP_10.md) — Quiz YAML.
 - [`STEP_11.md`](./module-generate-agent/STEP_11.md) — Related metadata cho Swagger, Quiz, Interview theo chương và Roadmap toàn module.

@@ -92,6 +92,7 @@ class SheetsTaskPlugin
                 syncModuleVideoToExcel: 'VIDEO',
                 syncModuleReferenceToExcel: 'REFERENCE',
                 syncModuleSummaryToExcel: 'SUMMARY',
+                syncModulePracticeToExcel: 'PRACTICE',
                 syncModuleContentToExcel: 'ALL'
         ].each { String name, String part ->
             project.tasks.register(name, SyncModuleContentToExcelTask) { task ->
@@ -159,7 +160,8 @@ class SheetsTaskPlugin
                 generateModuleInterviewFromSheetByLocation: 'INTERVIEW',
                 generateModuleQuizFromSheetByLocation: 'QUIZ',
                 generateModuleReferenceFromSheetByLocation: 'REFERENCE',
-                generateModuleSummaryFromSheetByLocation: 'SUMMARY'
+                generateModuleSummaryFromSheetByLocation: 'SUMMARY',
+                generateModulePracticeFromSheetByLocation: 'PRACTICE'
         ].each { String taskName, String part ->
             project.tasks.register(
                     taskName, GenerateModuleContentFromSheetByLocationTask

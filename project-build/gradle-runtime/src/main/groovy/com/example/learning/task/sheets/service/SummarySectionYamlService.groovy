@@ -35,7 +35,7 @@ class SummarySectionYamlService {
         List<String> tableRows = (value.comparisonMarkdown as String).readLines()
                 .collect { it.trim() }.findAll { it.startsWith('|') && it.endsWith('|') }
         if (tableRows.size() < 6 || tableRows.any { String row ->
-            row.tokenize('|').size() != ids.size() + 1
+            comparisonColumnCount(row) != ids.size() + 1
         } || !(tableRows[0].toLowerCase(Locale.ROOT).contains('bài 1') ||
                 tableRows[0].toLowerCase(Locale.ROOT).contains('lesson 1')) ||
                 !tableRows[1].replaceAll(/[|:\-\s]/, '').isEmpty()) {
@@ -66,6 +66,18 @@ class SummarySectionYamlService {
                 throw new GradleException('Invalid roadmap transition at index ' + i)
             }
         }
+    }
+
+    /** GFM escaped pipes are cell content, not column separators. */
+    private static int comparisonColumnCount(String row) {
+        int count = 1
+        int backslashes = 0
+        for (int index = 1; index < row.length() - 1; index++) {
+            char character = row.charAt(index)
+            if (character == ('|' as char) && backslashes % 2 == 0) count++
+            backslashes = character == ('\\' as char) ? backslashes + 1 : 0
+        }
+        return count
     }
 
 }

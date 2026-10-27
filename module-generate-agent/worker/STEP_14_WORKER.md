@@ -21,6 +21,7 @@
 | `QUIZ` | `questions[].question`, `questions[].answers[].answer`, `questions[].answers[].explanation` |
 | `INTERVIEW` | `questions[].question`, `questions[].answer` |
 | `SUMMARY_QUESTIONS` | `questions[].question`, `questions[].answer` trong `questions/summary.yml`; không có relation |
+| `PRACTICE` | `scenarios[].title/context/problem/analysis.{possibleCauses,application,tradeoffs}/exercise.{requirements[],deliverables[],acceptanceCriteria[],hints[],referenceSolution}`; dịch **toàn bộ một `practice/scenarios.yml`**, không tách file theo scenario |
 | `ROADMAP` | `roadmap[].title`, `roadmap[].purpose`, từng phần tử `roadmap[].objectives[]`, `roadmap[].relatedModules[].label` và `note` |
 | `SWAGGER_CONTROLLER_DESCRIPTION` | `<Controller>.description` (chỉ text trong HTML, không thay tag/attrs) |
 | `SWAGGER_API_DESCRIPTIONS` | `<Controller>.<method>.summary`, `description` |

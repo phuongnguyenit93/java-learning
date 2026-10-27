@@ -50,6 +50,33 @@ class ModuleTranslationCatalogServiceTest {
     }
 
     @Test
+    void chapterPracticeIsOneTranslationJobWithProtectedTechnicalFields() {
+        Map f = fixture()
+        File module = f.module as File
+        String source = PracticeSheetImportServiceTest.SCENARIO
+        for (String lang : ['vi', 'en']) {
+            write(module, "content/readme/docs/${lang}/menu/1.Basic/practice/scenarios.yml", source)
+        }
+        List<Map> inventory = ModuleTranslationCatalogService.inventory(module)
+        assertEquals(8, inventory.size())
+        assertEquals(1, inventory.count { it.type == 'PRACTICE' })
+        File en = new File(module, 'content/readme/docs/en/menu/1.Basic/practice/scenarios.yml')
+        en.setText(source.replace('Phân tích hotfix', 'Hotfix analysis')
+                .replace('Một bản production cần vá lỗi.', 'The production version needs a hotfix.'),
+                'UTF-8')
+        ModuleTranslationValidationService.compare('PRACTICE',
+                source.getBytes('UTF-8'), en.bytes)
+        try {
+            ModuleTranslationValidationService.compare('PRACTICE',
+                    source.getBytes('UTF-8'),
+                    en.text.replace('scenario-01', 'scenario-02').getBytes('UTF-8'))
+            fail('Scenario identity must not be translated')
+        } catch (GradleException expected) {
+            assertTrue(expected.message.contains('Protected translation field'))
+        }
+    }
+
+    @Test
     void preparesOneJobPerFileAndValidatesOnlyTranslatableFields() {
         Map f = fixture()
         def service = new ModuleTranslationCatalogService()

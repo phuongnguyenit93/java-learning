@@ -152,4 +152,23 @@ class SummarySheetImportServiceTest {
             }
         }
     }
+
+    @Test
+    void acceptsEscapedGfmPipeInsideComparisonCellAndRejectsExtraColumn() {
+        List<String> ids = ['bits-001', 'bits-002']
+        Map chapter = new Yaml().load(section('Bits', ids)) as Map
+        String original = '| Kỹ năng | Nội dung | Nội dung |'
+        String escaped = '| Kỹ năng | A ' + ((char) 92) + '| B | Nội dung |'
+        chapter.comparisonMarkdown = chapter.comparisonMarkdown.replace(original, escaped)
+        assertEquals(ids, (SummarySectionYamlService.read(new Yaml().dump(chapter), ids).roadmap as List)*.id)
+
+        chapter.comparisonMarkdown = chapter.comparisonMarkdown.replace(escaped,
+                '| Kỹ năng | A | B | Nội dung |')
+        try {
+            SummarySectionYamlService.read(new Yaml().dump(chapter), ids)
+            fail('Unescaped extra comparison column accepted.')
+        } catch (GradleException expected) {
+            assertTrue(expected.message.contains('comparison table columns/shape'))
+        }
+    }
 }

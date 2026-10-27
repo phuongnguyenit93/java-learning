@@ -100,6 +100,23 @@ class ModuleLanguageCloneServiceTest {
     }
 
     @Test
+    void clonesOneCompletePracticeDocumentWithoutReformatting() {
+        Map f = fixture()
+        File module = f.module as File
+        String yaml = PracticeSheetImportServiceTest.SCENARIO
+        String path = 'content/readme/docs/vi/menu/1.Basic/practice/scenarios.yml'
+        write(module, path, yaml)
+        File source = file(module, path)
+        assertEquals('CLONED', new ModuleLanguageCloneService()
+                .execute(f.root as File, module, true).status)
+        File translated = file(module,
+                'content/readme/docs/en/menu/1.Basic/practice/scenarios.yml')
+        assertArrayEquals(source.bytes, translated.bytes)
+        assertFalse(file(module,
+                'content/readme/docs/en/menu/1.Basic/practice/scenario-01.yml').exists())
+    }
+
+    @Test
     void oldInterviewFolderMustBeMigratedBeforeCloningEnglish() {
         Map f = fixture()
         File module = f.module as File

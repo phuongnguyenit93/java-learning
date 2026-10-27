@@ -87,6 +87,7 @@ Chỉ khi **cả 6 gate = PASS** thì ghi `STEP_14_PRECHECK=PASS` vào báo cáo
 | QUIZ | Mỗi `content/readme/docs/en/menu/<chapter>/quiz/question.yml` |
 | INTERVIEW | Mỗi `content/readme/docs/en/menu/<chapter>/questions/interview.yml` |
 | SUMMARY_QUESTIONS | Mỗi `content/readme/docs/en/menu/<chapter>/questions/summary.yml` (chỉ question/answer) |
+| PRACTICE | Mỗi `content/readme/docs/en/menu/<chapter>/practice/scenarios.yml` (toàn bộ scenarios của chương trong một file) |
 | ROADMAP | Toàn bộ `content/roadmap/en/roadmap.yml` |
 | SWAGGER | **Mỗi file riêng**: `controller-description.yml`, `api-descriptions.yml`, `api-execution.yml`, `api-cases.yml`, `api-params.yml` dưới `src/main/resources/swagger/en/` nếu hiện hữu |
 

@@ -2,7 +2,7 @@
 
 
 
-> **2026-10-26:** verify snapshot retains Reference L2/L3 and Summary AC18/19 plus all parent/child AC values: **AC parent stores full `section.yml` YAML**, AC children store Summary Markdown 0/1/2/3. Export these cell values verbatim to 29-column Excel, respecting Excel's 32,767 UTF-16 character limit; do not convert AC parent YAML back into chapter Markdown. A 28-column workbook is insufficient if the source tab already has AC.
+> **STEP 8 extension:** Khi Sheet có Practice, snapshot phải giữ đủ **33 cột A:AG**, bao gồm AD18/AD19:AG19 và toàn bộ YAML AD:AG hàng cha. `AD:AG` là **một YAML `scenarios[]` của mỗi chapter chia thành fragment**, không được xuất riêng từng scenario. AC vẫn chứa Summary theo quy tắc cũ. Excel giữ giới hạn 32.767 UTF-16 units/ô.
 
 ## 0. Mục tiêu và phạm vi
 
@@ -51,7 +51,7 @@ Chạy ở **root `java-learning`**, thay đủ **ba placeholder** (`<EXACT_MODU
 Prime phải **tự mở và kiểm tra file offline**, không chỉ tin exit code hoặc dòng `EXPORTED`:
 
 1. Đường dẫn **chính xác** `<I3>/content/sheet/vi/module.xlsx`, file `.xlsx` hợp lệ, không phải file rỗng; mở được bằng Apache POI/openpyxl hoặc trình đọc XLSX phù hợp. **Đúng 1 worksheet**, tên trùng tab/gid đã xác minh. Không có worksheet khác trong workbook.
-2. Đối chiếu tổng ô được xuất với log `cells`, hàng/cột có dữ liệu thực, các mốc `A1`, `B1`, `I3`, `A17:B17`, `A19:B19`, Menu Cấp 1/Cấp 2, `C:N` Knowledge, `O` Difficulty, `P:S` Interview, `T:W` Quiz, `X:AA` Video, `AB` isImportant và `AC` Summary **nếu vùng đó có dữ liệu**. Vùng trống hợp lệ không phải lý do tự sinh dữ liệu. So sánh snapshot với nguồn Sheet bằng giá trị effective; **không yêu cầu Excel chứa tiến độ master.json**.
+2. Đối chiếu tổng ô được xuất với log `cells`, hàng/cột có dữ liệu thực, các mốc `A1`, `B1`, `I3`, `A17:B17`, `A19:B19`, Menu Cấp 1/Cấp 2, `C:N` Knowledge, `O` Difficulty, `P:S` Interview, `T:W` Quiz, `X:AA` Video, `AB` isImportant, `AC` Summary và **`AD:AG` Practice**, nếu nguồn có. Với Practice: kiểm tra đúng header, 33 cột, ghép AD→AG không separator, YAML COMPLETE và exact readback. Vùng trống hợp lệ không phải lý do tự sinh dữ liệu. So sánh snapshot với nguồn Sheet bằng giá trị effective; **không yêu cầu Excel chứa tiến độ master.json**.
 3. Kiểm tra **newline/Unicode**, rich text cơ bản/format quan trọng, freeze panes, merged cells, note, row height, column width và dropdown cơ bản; báo rõ `unsupported-dropdowns` từ task. Nếu dropdown quan trọng (đặc biệt Difficulty `O` hoặc isImportant `AB`) bị mất/không tương thích, `BLOCKER: XLSX VALIDATION LOSS` hoặc giải trình và nhận xác nhận rõ trước khi coi là bản sao đạt yêu cầu. Không mặc định mọi định dạng Google-only đều có thể tái hiện trong Excel.
 4. **Formula:** task lưu **giá trị đã tính (effective/cached)**, không giữ công thức live. So sánh theo giá trị hiển thị/effective, không đòi formula gốc còn tồn tại. Nếu công thức lỗi/chưa resolve, text dài hơn **32.767 ký tự mỗi ô**, lỗi đọc Sheets hoặc giới hạn Excel thì task phải FAIL; **không cắt bớt/truncated**, không tự thay công thức.
 5. Sau APPLY, đọc lại Google Sheet hoặc snapshot nguồn đã xác thực: **không thay đổi bất kỳ nội dung/tiến độ Sheet nào**, không chạm Template hoặc module khác. Xác minh `.xlsx` vẫn bị Git ignore. Nếu bất kỳ QA fail: giữ bằng chứng/hash, **không ghi `CURRENT_STEP.VALUE`**.
