@@ -38,18 +38,17 @@ ClassDesignExperimentsController:
   readmeRelated:
     file: ''
 CompositionExperimentController:
-  description: '<h2>Th? nghi?m Composition, Delegation v? quy?n s? h?u</h2>
+  description: '<h2>Thí nghiệm Composition, Delegation và quyền sở hữu tài nguyên</h2>
 
-    <p><code>CompositionExperimentController</code> cung c?p b?n API POST minh h?a ??i t??ng c?ng t?c theo quan h? has-a: l?p b? ??nh d?ng v? transport ?? t?o th?ng
-    b?o; thay ch?nh s?ch ??nh gi? khi ch?y; ?y quy?n l?u ??n qua repository; v? ph?n ??nh ai ph?i ??ng t?i nguy?n.</p>
+    <p><code>CompositionExperimentController</code> cung cấp bốn API POST minh họa quan hệ has-a giữa các đối tượng: kết hợp bộ định dạng với transport để tạo thông
+    báo; thay chính sách tính giá khi chạy; ủy quyền lưu đơn qua repository; và phân định trách nhiệm đóng tài nguyên.</p>
 
-    <ul><li><code>notification</code> t?o <code>Notifier</code> t? <code>Formatter</code>, <code>Transport</code> v? t?y ch?n decorator audit.</li><li><code>policies</code>
-    th?c h?nh thay <code>Policy</code> b?ng <code>AtomicReference</code> v? injection theo l?i g?i.</li><li><code>placeOrder</code> ph?i h?p <code>OrderService</code>
-    v?i repository trong b? nh?, t?ch tr?ch nhi?m nghi?p v? v? l?u tr?.</li><li><code>resources</code> so s?nh h?p ??ng <code>OWNED</code> v? <code>BORROWED</code>
-    ??i v?i <code>AutoCloseable</code>.</li></ul>
+    <ul><li><code>notification</code> ghép <code>Formatter</code>, <code>Transport</code> và decorator audit thành <code>Notifier</code>.</li><li><code>policies</code>
+    thay chính sách bằng <code>AtomicReference</code> hoặc truyền riêng cho một lần báo giá.</li><li><code>placeOrder</code> phối hợp <code>OrderService</code>
+    với repository trong bộ nhớ.</li><li><code>resources</code> so sánh hợp đồng <code>OWNED</code> và <code>BORROWED</code> của <code>AutoCloseable</code>.</li></ul>
 
-    <p>To?n b? l? m? ph?ng trong m?t request, kh?ng g?i th?ng b?o th?t, kh?ng l?u b?n v? kh?ng m? t?i nguy?n h? ?i?u h?nh th?t. Handler c?a ch??ng ?nh x? l?i input
-    ho?c tr?n s? th?nh HTTP 400; l?i transport, l?u ??n ho?c ghi gi? l?p c? th? ???c tr? v? ngay trong DTO HTTP 200 ?? ph?n t?ch.</p>'
+    <p>Tất cả chỉ là mô phỏng trong phạm vi request, không gửi tin thật, lưu bền vững hay mở tài nguyên hệ điều hành. Handler chuyển đầu vào không hợp lệ hoặc tràn
+    số thành HTTP 400; lỗi vận chuyển, lưu đơn hoặc ghi tài nguyên giả lập có thể xuất hiện trong kết quả HTTP 200.</p>'
   readmeRelated:
     file: ''
 DesignPatternExperimentController:
@@ -91,18 +90,17 @@ EncapsulationExperimentController:
   readmeRelated:
     file: ''
 InheritanceExperimentsController:
-  description: '<h2>Th? nghi?m k? th?a v? m? r?ng h?nh vi trong Java</h2>
+  description: '<h2>Thí nghiệm kế thừa và mở rộng hành vi trong Java</h2>
 
-    <p><code>InheritanceExperimentsController</code> cung c?p b?n API POST ?? quan s?t quan h? cha/con, ghi ?? ph??ng th?c, g?i <code>super</code>, chu?i constructor
-    v? c?ch Java gi?i quy?t xung ??t default method. M?i request ???c x? l? qua service v? tr? d? li?u m? ph?ng, kh?ng t?c ??ng h? th?ng l??ng hay giao v?n th?c.</p>
+    <p><code>InheritanceExperimentsController</code> cung cấp bốn API POST về lớp cha/lớp con, ghi đè phương thức, gọi <code>super</code>, thứ tự khởi tạo và xung đột
+    default method của interface. Mỗi request được xử lý bằng service với dữ liệu mô phỏng, không vận hành bảng lương hay dịch vụ giao hàng thật.</p>
 
-    <ul><li><code>calculatePay</code>: d?ng tham chi?u <code>Employee</code> ?? g?i h?nh vi l??ng ri?ng c?a <code>Salaried</code> ho?c <code>Hourly</code>.</li><li><code>compareDelivery</code>:
-    ??i chi?u c?y <code>DeliveryPlan</code> c? nhi?u m?c override v?i ph?p c?ng ch?nh s?ch b?ng composition.</li><li><code>constructorTrace</code>: quan s?t g?i method
-    override t? constructor cha tr??c l?c l?p con g?n field.</li><li><code>resolveCapabilities</code>: gi?i quy?t hai default method tr?ng t?n v? ?u ti?n ph??ng th?c
-    instance c?a class.</li></ul>
+    <ul><li><code>calculatePay</code>: gọi phép tính lương của <code>Salaried</code> hoặc <code>Hourly</code> qua tham chiếu <code>Employee</code>.</li><li><code>compareDelivery</code>:
+    so sánh cây kế thừa <code>DeliveryPlan</code> nhiều tầng với quy tắc tính phí bằng composition.</li><li><code>constructorTrace</code>: quan sát constructor cha
+    gọi phương thức bị ghi đè trước khi field lớp con được khởi tạo.</li><li><code>resolveCapabilities</code>: giải quyết các default method trùng tên và ưu tiên
+    phương thức cụ thể của class.</li></ul>
 
-    <p><code>InheritanceExceptionHandler</code> ?nh x? l?i ??u v?o th?nh HTTP 400, l?i tr?ng th?i th?nh 409, v? l?i tr?n s? th?nh 422; c?c endpoint ch? minh h?a c?
-    ch? Java ?? ki?m ch?ng.</p>'
+    <p><code>InheritanceExceptionHandler</code> ánh xạ đầu vào sai thành HTTP 400, lỗi trạng thái thành HTTP 409 và tràn số thành HTTP 422.</p>'
   readmeRelated:
     file: ''
 InterfaceExperimentsController:
@@ -131,31 +129,32 @@ LanguageMechanicsExperimentsController:
   readmeRelated:
     file: ''
 LifecycleExperimentController:
-  description: '<h2>Th? nghi?m v?ng ??i ??i t??ng Java</h2>
+  description: '<h2>Thí nghiệm vòng đời đối tượng Java</h2>
 
-    <p><code>LifecycleExperimentController</code> nh?m b?n API POST ??c l?p ?? kh?o s?t t?o ??i t??ng h?p l?, ?? th? tham chi?u, ??ng t?i nguy?n v? nguy c? c?ng b?
-    ??i t??ng tr??c khi ho?n t?t kh?i t?o. Controller nh?n JSON DTO v? ?y quy?n <code>LifecycleExperimentService</code>, kh?ng l?u d? li?u gi?a c?c request.</p>
+    <p><code>LifecycleExperimentController</code> cung cấp bốn API POST để khảo sát cách khởi tạo đối tượng hợp lệ, khả năng truy cập qua đồ thị tham chiếu, đóng
+    tài nguyên có kiểm soát và nguy cơ công bố đối tượng khi chưa khởi tạo xong. Controller nhận JSON và ủy quyền cho <code>LifecycleExperimentService</code>,
+    không giữ trạng thái giữa các request.</p>
 
-    <ul><li><code>creation</code>: so s?nh constructor, static factory v? Builder tr?n <code>CourseEnrollment</code>.</li><li><code>references</code>: duy?t ?? th?
-    t? root logic, kh?ng ?o GC th?c t?.</li><li><code>resources</code>: theo d?i th? t? close v? suppressed exception.</li><li><code>publication</code>: minh h?a
-    <code>this</code>-escape qua callback ??ng b?.</li></ul>
+    <ul><li><code>creation</code>: so sánh constructor, static factory và Builder của <code>CourseEnrollment</code>.</li><li><code>references</code>: duyệt đồ thị từ
+    tập root logic, không đo hoạt động GC thực tế.</li><li><code>resources</code>: quan sát thứ tự đóng tài nguyên và suppressed exception.</li><li><code>publication</code>:
+    minh họa <code>this</code>-escape qua callback đồng bộ.</li></ul>
 
-    <p>L?i <code>IllegalArgumentException</code> tr? HTTP 400 <code>INVALID_INPUT</code>; JSON kh?ng ??c ???c tr? <code>INVALID_JSON</code>. ??y l? m? ph?ng h?c t?p,
-    kh?ng ch?y GC hay m? file/socket th?t.</p>'
+    <p><code>IllegalArgumentException</code> được trả thành HTTP 400 <code>INVALID_INPUT</code>; JSON không đọc được trả <code>INVALID_JSON</code>. Các API không
+    kích hoạt GC hoặc mở file/socket thật.</p>'
   readmeRelated:
     file: ''
 ModelingExperimentController:
-  description: '<h2>M? h?nh h?a mi?n nghi?p v? b?ng ??i t??ng v? tr?ng th?i</h2>
+  description: '<h2>Mô hình hóa miền nghiệp vụ bằng đối tượng và trạng thái</h2>
 
-    <p><code>ModelingExperimentController</code> c? hai API POST cho ph?p ki?m ch?ng m? h?nh Java t? y?u c?u s? d?ng th?c t?, thay v? ch? ??c UML t?nh. Controller
-    ch? chuy?n DTO sang <code>ModelingExperimentService</code>; quy?t ??nh nghi?p v? thu?c c?c ??i t??ng model.</p>
+    <p><code>ModelingExperimentController</code> cung cấp hai API POST kiểm chứng mô hình Java bằng tình huống thực thi thay vì chỉ xem sơ đồ UML tĩnh. Controller
+    chuyển DTO sang <code>ModelingExperimentService</code>; các đối tượng miền nghiệp vụ quyết định quy tắc và trạng thái.</p>
 
-    <ul><li><code>library</code> d?ng <code>BookTitle</code>, <code>BookCopy</code>, <code>Member</code>, <code>Loan</code> v? <code>LibraryModel</code>, tr? object-graph
-    snapshot c?ng trace theo t?ng h?nh ??ng BORROW/RETURN.</li><li><code>orders</code> ?i?u khi?n <code>ModeledOrder</code> qua SUBMIT, CONFIRM_PAYMENT, START_PACKING,
-    SHIP, CONFIRM_DELIVERY v? CANCEL ?? quan s?t chuy?n tr?ng th?i, guard v? ???ng t? ch?i.</li></ul>
+    <ul><li><code>library</code> kết hợp <code>BookTitle</code>, <code>BookCopy</code>, <code>Member</code>, <code>Loan</code> và <code>LibraryModel</code>, trả snapshot
+    đồ thị đối tượng và trace thao tác BORROW/RETURN.</li><li><code>orders</code> điều khiển <code>ModeledOrder</code> qua SUBMIT, CONFIRM_PAYMENT, START_PACKING, SHIP,
+    CONFIRM_DELIVERY và CANCEL để quan sát các điều kiện chuyển trạng thái và sự kiện bị từ chối.</li></ul>
 
-    <p>?i?m nh?n l? ph?n chia tr?ch nhi?m, CRC, s? ?? l?p/??i t??ng/tu?n t?/tr?ng th?i v? ki?m tra b?t bi?n b?ng k?t qu? th?c thi. C? hai m? h?nh ???c t?o m?i cho
-    t?ng HTTP request, kh?ng c? database, thanh to?n th?t hay v?n chuy?n ngo?i; trace kh?ng ph?i ch?ng c? t?nh nh?t qu?n xuy?n request.</p>'
+    <p>Các ví dụ gắn phân chia trách nhiệm và cộng tác (CRC) với sơ đồ lớp, đối tượng, tuần tự và trạng thái thông qua hành vi thực thi. Mỗi request tạo mô hình mới
+    trong bộ nhớ; không có database, thanh toán, giao vận thật hoặc đồng bộ trạng thái giữa nhiều request.</p>'
   readmeRelated:
     file: ''
 ObjectExperimentsController:

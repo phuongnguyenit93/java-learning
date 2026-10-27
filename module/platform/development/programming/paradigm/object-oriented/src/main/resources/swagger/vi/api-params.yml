@@ -1,10 +1,10 @@
 request:
-  summary: D? li?u y?u c?u c?a API
-  description: Tham s? request nh?n d? li?u theo ki?u DTO ???c khai b?o t?i t?ng method c?a Controller. C?c tr??ng v? quy t?c h?p l? ph? thu?c endpoint c? th?; tham
-    kh?o API case ?? x?y d?ng ??u v?o ph? h?p.
+  summary: Dữ liệu yêu cầu của API
+  description: Tham số request nhận dữ liệu theo kiểu DTO được khai báo tại từng phương thức của Controller. Các trường bắt buộc và quy tắc kiểm tra tính hợp lệ
+    phụ thuộc vào từng endpoint; tham khảo các API case để xây dựng đầu vào phù hợp.
   usage: true
 input:
-  summary: D? li?u ??u v?o c?a API
-  description: Tham s? input nh?n d? li?u theo ki?u Java ???c khai b?o t?i endpoint. T?n v? gi? tr? c?c tr??ng ph? thu?c API t??ng ?ng, kh?ng c? m?t payload chung
-    cho to?n module.
+  summary: Dữ liệu đầu vào của API
+  description: Tham số input nhận dữ liệu theo kiểu Java được khai báo tại endpoint. Tên trường và giá trị hợp lệ phụ thuộc vào API tương ứng; không có một payload
+    chung cho toàn bộ module.
   usage: true

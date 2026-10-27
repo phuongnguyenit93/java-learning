@@ -226,12 +226,13 @@ ClassDesignExperimentsController:
     usage: true
 CompositionExperimentController:
   notification(NotificationRequest):
-    summary: Gh?p Formatter, Transport v? decorator ?? g?i th?ng b?o m? ph?ng
-    description: '<p>Nh?n th?ng tin ??n, ng??i nh?n, s? ti?n, ki?u hi?n th? <code>FULL</code>/<code>COMPACT</code>, k?nh <code>EMAIL</code>/<code>SMS</code> v? t?y
-      ch?n audit. Service gh?p <code>Formatter</code> v?i <code>RecordingTransport</code>, c? th? b?c b?ng <code>AuditedTransport</code>, r?i ?y quy?n cho <code>Notifier</code>.</p>
+    summary: Kết hợp Formatter, Transport và decorator để mô phỏng gửi thông báo
+    description: '<p>Nhận thông tin đơn hàng, người nhận, số tiền, định dạng <code>FULL</code>/<code>COMPACT</code>, kênh <code>EMAIL</code>/<code>SMS</code> và tùy
+      chọn audit. Service kết hợp <code>Formatter</code> với <code>RecordingTransport</code>, có thể bọc bằng <code>AuditedTransport</code>, rồi ủy quyền cho
+      <code>Notifier</code>.</p>
 
-      <p>Ph?n h?i ch?a n?i dung ?? format, tr?ng th?i ch?p nh?n v? trace theo th? t?. N?u transport t? ch?i, audit kh?ng ghi th?nh c?ng gi?. API gi?p hi?u Strategy,
-      Decorator v? delegation b?ng c?c ??i t??ng ??c l?p c? th? thay th?, kh?ng g?i tin nh?n th?t.</p>'
+      <p>Phản hồi gồm nội dung đã định dạng, trạng thái chấp nhận và trace theo thứ tự. Nếu transport từ chối, decorator audit không ghi thành công giả.
+      API minh họa Strategy, Decorator và delegation qua các đối tượng cộng tác có thể thay thế, không gửi thông báo thật.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -251,12 +252,13 @@ CompositionExperimentController:
     consumes: []
     usage: true
   policies(PolicyRequest):
-    summary: Thay ch?nh s?ch t?nh gi? v? ch?n policy cho t?ng l?n b?o gi?
-    description: '<p>T?o <code>SwitchablePricing</code> t? policy ban ??u (<code>NONE</code>, <code>FIXED</code>, <code>PERCENT</code>) r?i x? l? t?i ?a 20 b??c <code>SWITCH</code>,
-      <code>QUOTE</code> ho?c <code>QUOTE_WITH_POLICY</code>. K?t qu? l? timeline cho bi?t policy ?ang ho?t ??ng, policy th?c d?ng v? s? ti?n ph?i tr?.</p>
+    summary: Thay chính sách tính giá và truyền policy riêng cho một lần báo giá
+    description: '<p>Khởi tạo <code>SwitchablePricing</code> với chính sách <code>NONE</code>, <code>FIXED</code> hoặc <code>PERCENT</code>, rồi xử lý tối đa 20 bước
+      <code>SWITCH</code>, <code>QUOTE</code> hoặc <code>QUOTE_WITH_POLICY</code>. Timeline ghi chính sách đang hoạt động, chính sách thực sự được áp dụng, giá gốc
+      và số tiền phải trả.</p>
 
-      <p><code>SWITCH</code> thay collaborator trong <code>AtomicReference</code>, c?n <code>QUOTE_WITH_POLICY</code> truy?n collaborator v?o ri?ng m?t l?i g?i m?
-      kh?ng thay policy m?c ??nh. Ch?nh s?ch gi? l? b?t bi?n v? ch? t?n t?i trong request, kh?ng chia s? tr?ng th?i gi?a ng??i d?ng.</p>'
+      <p><code>SWITCH</code> thay đối tượng cộng tác trong <code>AtomicReference</code>; <code>QUOTE_WITH_POLICY</code> truyền chính sách tạm chỉ cho một lần
+      báo giá mà không thay đổi chính sách đang hoạt động. Chính sách bất biến và trạng thái tính giá chỉ tồn tại trong request.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -276,12 +278,12 @@ CompositionExperimentController:
     consumes: []
     usage: true
   placeOrder(PlaceOrderRequest):
-    summary: ??t ??n qua OrderService v? repository c?ng t?c
-    description: '<p>Nh?n ID ??n h?ng v? 1?20 d?ng h?ng, sau ?? x?y d?ng <code>OrderPlacement.Order</code> c? danh s?ch d?ng h?ng b?t bi?n. <code>OrderService</code>
-      nh?n <code>OrderRepository</code> qua constructor v? g?i <code>save</code>, t?ch quy t?c ??n h?ng kh?i tri?n khai l?u tr?.</p>
+    summary: Đặt đơn hàng qua OrderService với repository được truyền vào
+    description: '<p>Nhận ID đơn hàng và từ 1 đến 20 dòng hàng để tạo <code>OrderPlacement.Order</code> với danh sách dòng hàng bất biến. <code>OrderService</code>
+      nhận <code>OrderRepository</code> qua constructor rồi gọi <code>save</code>, tách quy tắc nghiệp vụ khỏi chi tiết lưu trữ.</p>
 
-      <p><code>InMemoryOrderRepository</code> c? th? t? ch?i l?u c? ch? ? ?? quan s?t vi?c m?t l?n l?u th?t b?i kh?ng b? b?o th?nh c?ng. API tr? accepted, l? do l?i,
-      s? l?n th? l?u, c?c ??n th?c s? c? trong kho m? ph?ng v? ch? r? <code>IN_MEMORY_ONLY</code>.</p>'
+      <p><code>InMemoryOrderRepository</code> có thể chủ động từ chối lưu để chứng minh một lần lưu thất bại không được báo thành công. Phản hồi gồm trạng thái
+      chấp nhận, lý do lỗi, số lần thử lưu, các đơn hiện có trong kho mô phỏng và giới hạn <code>IN_MEMORY_ONLY</code>.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -301,12 +303,12 @@ CompositionExperimentController:
     consumes: []
     usage: true
   resources(ResourceRequest):
-    summary: M? ph?ng quy?n s? h?u khi ??ng t?i nguy?n ???c ch?a
-    description: '<p>T?o m?t <code>TrackedHandle</code> gi? l?p v? gh?p v?o <code>Exporter</code>. V?i <code>OWNED</code>, exporter c? tr?ch nhi?m ??ng handle khi
-      ??ng ch?nh n?; v?i <code>BORROWED</code>, exporter ch? ??ng b?n th?n v? caller s? ??ng handle sau ??.</p>
+    summary: Quan sát trách nhiệm đóng tài nguyên được sở hữu hoặc được mượn
+    description: '<p>Tạo một <code>TrackedHandle</code> mô phỏng và ghép với <code>Exporter</code>. Khi dùng <code>OWNED</code>, exporter có trách nhiệm đóng cả
+      handle lúc chính nó đóng; với <code>BORROWED</code>, exporter chỉ đóng bản thân còn bên gọi sẽ đóng handle sau đó.</p>
 
-      <p>K?t qu? ghi nh?n trace t?o/ghi/??ng, tr?ng th?i ?? ??ng ? hai th?i ?i?m v? l?i ghi n?u c?. Th? nghi?m l?m r? quy?n s? h?u v? <code>try-with-resources</code>,
-      kh?ng suy di?n t? garbage collection v? kh?ng d?ng file hay socket th?t.</p>'
+      <p>Phản hồi ghi trace tạo, ghi và đóng, trạng thái đóng tại hai thời điểm và lỗi ghi giả lập nếu có. Ví dụ làm rõ quyền sở hữu tài nguyên và
+      <code>try-with-resources</code> mà không dựa vào garbage collection hoặc dùng file/socket thật.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -553,11 +555,11 @@ EncapsulationExperimentController:
     usage: true
 InheritanceExperimentsController:
   calculatePay(PayrollRequest):
-    summary: T?nh l??ng qua l?p cha v? ghi ?? ??ng
-    description: <p>Nh?n lo?i nh?n vi?n, m?, t?n v? th?ng tin l??ng ?? kh?i t?o m?t <code>Employee.Salaried</code> ho?c <code>Employee.Hourly</code>. Tr? ki?u khai
-      b?o <code>Employee</code>, ki?u runtime, c?ng th?c v? l??ng th?ng t?nh b?ng VND.</p><p>V? d? minh h?a l?p cha <code>abstract</code> b?o v? ID/t?n v?i tr??ng
-      private v? getter final, c?n hai l?p con ghi ?? <code>monthlyPayVnd()</code> v? <code>calculation()</code>. T?nh l??ng theo gi? d?ng <code>Math.multiplyExact</code>,
-      v? v?y overflow l? l?i r? r?ng.</p>
+    summary: Tính lương qua lớp cha và cơ chế ghi đè động
+    description: <p>Nhận loại nhân viên, mã định danh, tên và thông tin lương để khởi tạo <code>Employee.Salaried</code> hoặc <code>Employee.Hourly</code>. Phản
+      hồi gồm kiểu khai báo <code>Employee</code>, kiểu runtime, công thức áp dụng và lương tháng mô phỏng tính bằng VND.</p><p>Lớp cha <code>abstract</code> bảo vệ
+      mã nhân viên và tên bằng trường private cùng getter final; hai lớp con ghi đè <code>monthlyPayVnd()</code> và <code>calculation()</code>. Nhánh tính lương theo
+      giờ dùng <code>Math.multiplyExact</code> để phát hiện tràn số, tránh trả kết quả sai do cuộn giá trị.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -577,11 +579,11 @@ InheritanceExperimentsController:
     consumes: []
     usage: true
   compareDelivery(DeliveryRequest):
-    summary: So s?nh k? th?a s?u v?i composition trong t?nh ph?
-    description: '<p>Nh?n kho?ng c?ch, t?y ch?n ?u ti?n v? ng?y l? ?? t?nh ph? b?ng hai c?ch: c?y l?p <code>DeliveryPlan</code> t? city t?i holiday priority; v? chu?i
-      quy t?c c?ng ph? composition ???c vi?t tr?c ti?p trong service. Ph?n h?i g?m lo?i l?p, hai t?ng ph? v? trace c?a hai c?ch.</p><p>Minh h?a <code>super.distanceFee</code>
-      n?i ti?p qua nhi?u t?ng, trong khi <code>quote</code> final ??m b?o ki?m tra chung. K?t qu? b?ng nhau cho c?c t?y ch?n h?p l? d? m?c ph? thu?c trong k? th?a
-      ph?c t?p h?n.</p>'
+    summary: So sánh hệ phân cấp kế thừa sâu với composition khi tính phí giao hàng
+    description: '<p>Nhận khoảng cách, tùy chọn giao ưu tiên và ngày lễ để tính phí theo hai cách: qua cây lớp <code>DeliveryPlan</code> nhiều tầng và qua các
+      quy tắc phụ phí ghép bằng composition trong service. Phản hồi gồm lớp cụ thể, hai mức phí, trace của từng cách và kết quả so sánh bằng nhau.</p><p>Các
+      lời gọi <code>super.distanceFee</code> nối tiếp qua nhiều tầng, trong khi <code>quote</code> final thực hiện kiểm tra chung. Composition biểu đạt những
+      khoản phụ phí tùy chọn mà không cần tạo lớp con cho mỗi tổ hợp.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -601,10 +603,10 @@ InheritanceExperimentsController:
     consumes: []
     usage: true
   constructorTrace(ConstructorRequest):
-    summary: Theo d?i constructor cha g?i override qu? s?m
-    description: <p>Ch?y hai chu?i kh?i t?o l?p cha/l?p con theo c?ng nh?n ??u v?o. Nh?nh unsafe c? constructor cha g?i method b? l?p con override tr??c khi field
-      initializer c?a con ch?y; nh?nh safe ch? ki?m tra sau khi constructor con ho?n t?t.</p><p>Tr? hai danh s?ch th? t? th?c thi, gi? tr? l?p cha quan s?t v? gi?
-      tr? cu?i. H?nh vi n?y gi?i th?ch r?i ro g?i ph??ng th?c c? th? b? override trong constructor, kh?ng ph?i th? nghi?m ??ng th?i.</p>
+    summary: Theo dõi lời gọi phương thức ghi đè khi constructor cha đang chạy
+    description: <p>Chạy hai chuỗi khởi tạo lớp cha/lớp con với cùng nhãn đầu vào. Ở nhánh unsafe, constructor cha gọi một phương thức có thể bị ghi đè trước
+      khi bộ khởi tạo field của lớp con chạy; nhánh safe chỉ quan sát sau khi constructor con hoàn tất.</p><p>Phản hồi gồm hai trace thứ tự thực thi, giá trị lớp
+      cha quan sát và giá trị cuối. Ví dụ cho thấy rủi ro gọi phương thức có thể bị ghi đè trong constructor mà không liên quan đến xử lý đồng thời.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -624,11 +626,11 @@ InheritanceExperimentsController:
     consumes: []
     usage: true
   resolveCapabilities(CapabilitiesRequest):
-    summary: Gi?i quy?t xung ??t default method v? t?i s? d?ng h?nh vi
-    description: <p>Nh?n <code>itemId</code> v? chu?i nh?n CSV ?? ch?y <code>CapabilityResolution</code>. <code>MixedCapability</code> ch? ??ng k?t h?p <code>Printable.super.label()</code>
-      v? <code>Searchable.super.label()</code>; l?p c? ph??ng th?c th?c c?a superclass th?ng default method c?ng t?n.</p><p>??ng th?i <code>Taggable</code> t?i s?
-      d?ng default method ?? chu?n h?a c?c nh?n v? ch? th??ng v? lo?i b? kho?ng tr?ng ??u/cu?i. API cho th?y Java h? tr? nhi?u interface nh?ng xung ??t h?nh vi ph?i
-      ???c x? l? r? r?ng.</p>
+    summary: Giải quyết xung đột default method và tái sử dụng hành vi của interface
+    description: <p>Nhận <code>itemId</code> và chuỗi nhãn CSV để chạy <code>CapabilityResolution</code>. <code>MixedCapability</code> kết hợp tường minh
+      <code>Printable.super.label()</code> và <code>Searchable.super.label()</code>; phương thức cụ thể kế thừa từ class được ưu tiên hơn default method cùng
+      tên của interface.</p><p>Default method trong <code>Taggable</code> còn chuẩn hóa nhãn phân tách bằng dấu phẩy thành chữ thường và xóa khoảng trắng
+      đầu/cuối. Ví dụ minh họa tái sử dụng hành vi từ nhiều interface mà không cần đa kế thừa lớp.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -796,10 +798,10 @@ LanguageMechanicsExperimentsController:
     usage: true
 LifecycleExperimentController:
   create(CreationRequest):
-    summary: So s?nh ba c?ch kh?i t?o CourseEnrollment
-    description: <p>T?o ??i t??ng <code>CourseEnrollment</code> t? m? kh?a h?c, capacity, danh s?ch h?c vi?n v? <code>style</code> l? <code>CONSTRUCTOR</code>, <code>STATIC_FACTORY</code>
-      ho?c <code>BUILDER</code>. API tr? h?c vi?n v? s? gh? c?n l?i.</p><p>C? ba nh?nh g?i chung constructor ki?m tra m? 1?40 k? t?, capacity 1?100, h?c vi?n h?p
-      l?, duy nh?t v? kh?ng v??t s?c ch?a. Danh s?ch ???c sao ch?p ?? b?o v? tr?ng th?i.</p>
+    summary: So sánh ba cách khởi tạo CourseEnrollment
+    description: <p>Tạo <code>CourseEnrollment</code> từ mã khóa học, sức chứa, danh sách học viên và <code>style</code> là <code>CONSTRUCTOR</code>,
+      <code>STATIC_FACTORY</code> hoặc <code>BUILDER</code>. Trả danh sách học viên và số ghế còn lại.</p><p>Cả ba cách dùng chung constructor kiểm tra mã
+      dài từ 1 đến 40 ký tự, sức chứa từ 1 đến 100, học viên hợp lệ, duy nhất và không vượt sức chứa. Danh sách được sao chép phòng vệ để bảo vệ trạng thái.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -819,10 +821,10 @@ LifecycleExperimentController:
     consumes: []
     usage: true
   references(ReferenceRequest):
-    summary: Quan s?t c?c node reachable t? root logic
-    description: <p>M? ph?ng ?? th? t?i ?a 15 node, t?p root logic v? t?i ?a 30 thao t?c <code>RETAIN</code>/<code>RELEASE</code>. API tr? snapshot b??c 0 v? sau
-      t?ng thao t?c, ph?n bi?t node c? ???ng ?i t? root v? node kh?ng reachable.</p><p>Chu tr?nh gi?a c?c node kh?ng c? ngh?a ?? th? c?n ???c truy c?p n?u c?c root
-      ??u b? th?. ??y l? ph?n t?ch ???ng ?i logic, kh?ng ph?i ph?p ?o GC root hay th?i ?i?m thu h?i b? nh? JVM.</p>
+    summary: Theo dõi node có thể truy cập từ tập root logic
+    description: <p>Mô phỏng đồ thị tối đa 15 node, tập root logic và tối đa 30 thao tác <code>RETAIN</code>/<code>RELEASE</code>. Trả snapshot ban đầu và
+      sau từng thao tác, phân biệt node có đường đi từ root và node không thể truy cập.</p><p>Chu trình giữa các node không giúp giữ khả năng truy cập nếu
+      mọi đường đi từ root đã bị loại bỏ. Đây là duyệt đồ thị logic, không phải đo GC root hoặc thời điểm JVM thu hồi bộ nhớ.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -842,10 +844,11 @@ LifecycleExperimentController:
     consumes: []
     usage: true
   resources(ResourceRequest):
-    summary: Theo d?i try-with-resources v? ngo?i l? ??ng
-    description: <p>Th?c hi?n kh?i <code>try-with-resources</code> v?i hai <code>TrackedResource</code> v? ba c? ch? ??ng g?y l?i body, ??ng outer, ??ng inner. K?t
-      qu? tr? s? ki?n, l?i ch?nh, l?i suppressed, tr?ng th?i ??ng v? ho?n th?nh.</p><p>Ch?ng minh Java t? ??ng ??ng inner tr??c outer d? body l?i, c?ng quy t?c ?u
-      ti?n l?i body ho?c l?i close ??u ti?n. ??ng t?i nguy?n l? h?nh ??ng x?c ??nh th?i ?i?m, kh?c thu h?i heap b?i GC.</p>
+    summary: Quan sát try-with-resources và ngoại lệ khi đóng tài nguyên
+    description: <p>Thực thi <code>try-with-resources</code> với hai <code>TrackedResource</code> và các cờ gây lỗi giả lập trong phần thân, khi đóng outer
+      hoặc khi đóng inner. Kết quả gồm trace sự kiện, lỗi chính, suppressed exception, trạng thái đóng và hoàn thành.</p><p>Java đóng inner trước outer
+      ngay cả khi phần thân gặp lỗi; ngoại lệ từ phần thân hoặc lần đóng thất bại đầu tiên được ưu tiên. Đóng tài nguyên có thời điểm xác định, khác việc GC
+      thu hồi heap.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -865,10 +868,11 @@ LifecycleExperimentController:
     consumes: []
     usage: true
   publication(PublicationRequest):
-    summary: So s?nh c?ng b? this s?m v? an to?n
-    description: <p>Ch?y hai ki?u ??ng k? listener v?i <code>label</code> h?p l?. <code>UnsafeListener</code> ??ng k? <code>this</code> tr??c l?c g?n field; callback
-      ??ng b? nh?n th?y <code>null</code>. <code>SafeListener</code> ???c t?o xong r?i m?i ??ng k? qua factory, n?n callback th?y label ?? kh?i t?o.</p><p>Tr? s?u
-      tr??ng quan s?t v? s? subscription ?? gi?i th?ch l?i <code>this</code>-escape m?t c?ch x?c ??nh, kh?ng d?a v?o race condition ho?c timing.</p>
+    summary: So sánh công bố this quá sớm với cách công bố an toàn
+    description: <p>Chạy hai cách đăng ký listener với <code>label</code> hợp lệ. <code>UnsafeListener</code> đăng ký <code>this</code> trước khi gán field
+      nên callback đồng bộ nhìn thấy <code>null</code>. <code>SafeListener</code> khởi tạo xong rồi mới đăng ký qua factory, nên callback thấy label đã
+      được gán.</p><p>Phản hồi cho biết giá trị quan sát và số lần đăng ký để giải thích <code>this</code>-escape theo cách xác định, không phụ thuộc race
+      condition hay timing.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -889,13 +893,13 @@ LifecycleExperimentController:
     usage: true
 ModelingExperimentController:
   library(LibraryRequest):
-    summary: M? ph?ng m??n/tr? th? vi?n v?i snapshot v? lu?t nghi?p v?
-    description: '<p>Nh?n danh s?ch ??u s?ch, th?nh vi?n, b?n s?ch v?t l? v? chu?i h?nh ??ng BORROW/RETURN c? ng?y r? r?ng. Ph?n h?i th? hi?n object graph ban ??u,
-      tr??c/sau m?i h?nh ??ng, c?c l?i g?i gi?a ??i t??ng, m? lu?t nghi?p v? b? t? ch?i v? tr?ng th?i cu?i.</p>
+    summary: Mô phỏng mượn và trả sách với snapshot cùng quy tắc nghiệp vụ
+    description: '<p>Nhận danh sách đầu sách, thành viên, bản sách vật lý và chuỗi hành động BORROW/RETURN có ngày cụ thể. Phản hồi gồm đồ thị đối tượng ban đầu,
+      snapshot trước/sau từng hành động, trace lời gọi cộng tác, mã quy tắc bị vi phạm và trạng thái cuối cùng.</p>
 
-      <p>M? h?nh t?ch <code>BookTitle</code> kh?i <code>BookCopy</code>, d?ng <code>Member</code> qu?n l? quy?n m??n v? gi?i h?n t?i ?a ba kho?n m??n, <code>Loan</code>
-      l?u l?ch s?/h?n tr? 14 ng?y v? <code>LibraryModel</code> ph?i h?p c?c b?t bi?n xuy?n ??i t??ng. T? ch?i nghi?p v? ???c ghi trong step, kh?ng t? ??ng l? HTTP
-      400; input c?u tr?c sai th? HTTP 400.</p>'
+      <p>Mô hình phân biệt <code>BookTitle</code> với <code>BookCopy</code>. <code>Member</code> kiểm tra điều kiện mượn và giới hạn tối đa ba khoản mượn đang hoạt
+      động; <code>Loan</code> lưu lịch sử cùng hạn trả sau 14 ngày; <code>LibraryModel</code> phối hợp các bất biến giữa nhiều đối tượng. Từ chối theo nghiệp vụ
+      được ghi trong bước mô phỏng, không tự động trả HTTP 400; request có cấu trúc sai mới trả HTTP 400.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -915,13 +919,14 @@ ModelingExperimentController:
     consumes: []
     usage: true
   orders(OrderRequest):
-    summary: Th? state machine ??n h?ng v? guard chuy?n tr?ng th?i
-    description: '<p>Nh?n orderId, totalVnd v? chu?i s? ki?n ??n h?ng ?? ch?y <code>ModeledOrder</code>, ghi snapshot tr??c/sau t?ng b??c c?ng k?t qu? accepted, m?
-      rule v? detail. M? h?nh b?t ??u ? <code>DRAFT</code>, c? th? qua <code>WAITING_PAYMENT</code>, <code>PAID</code>, <code>PACKING</code>, <code>SHIPPED</code>,
-      <code>DELIVERED</code> ho?c h?y h?p l? th?nh <code>CANCELLED</code>.</p>
+    summary: Thử máy trạng thái đơn hàng và điều kiện chuyển trạng thái
+    description: '<p>Nhận <code>orderId</code>, <code>totalVnd</code> và chuỗi sự kiện đơn hàng để chạy <code>ModeledOrder</code>. Phản hồi ghi snapshot trước/sau
+      mỗi bước cùng trạng thái chấp nhận, mã quy tắc và thông tin chi tiết. Mô hình bắt đầu tại <code>DRAFT</code>, có thể đi qua <code>WAITING_PAYMENT</code>,
+      <code>PAID</code>, <code>PACKING</code>, <code>SHIPPED</code>, <code>DELIVERED</code> hoặc chuyển sang <code>CANCELLED</code> khi được phép.</p>
 
-      <p><code>CONFIRM_PAYMENT</code> ph?i kh?p ch?nh x?c totalVnd; <code>SHIP</code> c?n trackingCode h?p l?; s? ki?n kh?ng c? c?nh cho tr?ng th?i hi?n t?i b? t?
-      ch?i m? kh?ng l?m ??i state. API cung c?p b?ng ch?ng th?c thi ?? ??i chi?u state diagram, kh?ng x? l? thanh to?n/v?n chuy?n th?t.</p>'
+      <p><code>CONFIRM_PAYMENT</code> phải khớp chính xác <code>totalVnd</code>; <code>SHIP</code> yêu cầu <code>trackingCode</code> hợp lệ. Sự kiện không có
+      chuyển tiếp hợp lệ từ trạng thái hiện tại sẽ bị từ chối mà không thay đổi state. API tạo bằng chứng thực thi để đối chiếu sơ đồ trạng thái,
+      không thực hiện thanh toán hoặc vận chuyển thật.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video

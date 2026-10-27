@@ -1482,8 +1482,8 @@ CompositionExperimentController:
     usage: true
     cases:
     - id: case_001
-      title: Th?ng b?o FULL ???c audit sau khi g?i gi? l?p
-      description: Formatter t?o n?i dung; transport ???c ch?p nh?n n?n decorator ghi d?u audit.
+      title: "Thông báo FULL được ghi audit sau khi gửi giả lập"
+      description: "Formatter tạo nội dung thông báo; transport gửi thành công thì decorator ghi nhận audit."
       input:
         pathParams: {}
         queryParams: {}
@@ -1507,12 +1507,11 @@ CompositionExperimentController:
         - format:Order ORD1 paid 1500 cents
         - transport:EMAIL:student@example.test:Order ORD1 paid 1500 cents
         - audit:accepted
-      detailDescription: <p><code>FullFormatter</code> t?o n?i dung <code>Order ORD1 paid 1500 cents</code>; <code>Notifier</code> ghi <code>format:</code> r?i g?i
-        <code>RecordingTransport</code>, ghi s? ki?n <code>transport:EMAIL:...</code>. Do failTransport=false, decorator <code>AuditedTransport</code> ch? khi delegate
-        th?nh c?ng m?i ghi <code>audit:accepted</code>. K?t qu? HTTP 200 accepted=true v?i ba s? ki?n; ??y l? ghi v?t, kh?ng g?i email th?t.</p>
+      detailDescription: >-
+        <p><code>FullFormatter</code> tạo <code>Order ORD1 paid 1500 cents</code>; <code>Notifier</code> ghi <code>format:</code>, rồi <code>RecordingTransport</code> ghi <code>transport:EMAIL:...</code>. Vì failTransport=false, <code>AuditedTransport</code> chỉ ghi <code>audit:accepted</code> sau khi delegate thành công. HTTP 200 trả accepted=true cùng ba sự kiện trace; không gửi email thật.</p>
     - id: case_002
-      title: Transport t? ch?i, kh?ng ghi audit th?nh c?ng
-      description: L?i g?i gi? l?p ???c b?t trong Notifier v? ph?n h?i HTTP 200 accepted=false.
+      title: "Transport từ chối nên không ghi audit thành công"
+      description: "Lỗi gửi giả lập được xử lý và trả HTTP 200 với accepted=false."
       input:
         pathParams: {}
         queryParams: {}
@@ -1535,12 +1534,11 @@ CompositionExperimentController:
         trace:
         - format:ORD1:PAID:100
         - transport:EMAIL:user@example.test:ORD1:PAID:100
-      detailDescription: <p><code>CompactFormatter</code> t?o <code>ORD1:PAID:100</code>. <code>RecordingTransport.send</code> ghi s? ki?n transport tr??c khi n?m
-        <code>IllegalStateException(&quot;Simulated transport rejection&quot;)</code>. <code>Notifier</code> b?t l?i, tr? accepted=false v? failure; <code>AuditedTransport</code>
-        kh?ng t?i l?nh <code>audit:accepted</code>, n?n trace ch? c? hai s? ki?n.</p>
+      detailDescription: >-
+        <p><code>CompactFormatter</code> tạo <code>ORD1:PAID:100</code>. <code>RecordingTransport.send</code> ghi sự kiện rồi ném <code>IllegalStateException(&quot;Simulated transport rejection&quot;)</code>. <code>Notifier</code> bắt lỗi và trả accepted=false kèm thông báo. Decorator không thêm <code>audit:accepted</code>, nên trace chỉ có hai sự kiện.</p>
     - id: case_003
-      title: Ng??i nh?n r?ng b? t? ch?i tr??c khi l?p pipeline
-      description: Regex requireId ki?m tra recipient tr??c khi t?o Formatter v? Transport.
+      title: "Người nhận rỗng bị từ chối trước khi dựng các thành phần"
+      description: "requireId kiểm tra recipient trước khi tạo formatter hoặc transport."
       input:
         pathParams: {}
         queryParams: {}
@@ -1558,9 +1556,8 @@ CompositionExperimentController:
       response:
         code: INVALID_INPUT
         message: recipient must be 1-60 ASCII letters/digits or _ @ . -
-      detailDescription: <p><code>CompositionExperimentService.notification</code> g?i <code>requireId(request.recipient(), &quot;recipient&quot;)</code>. Chu?i r?ng
-        kh?ng kh?p regex 1?60 k? t? ASCII, n?n n?m <code>IllegalArgumentException</code> tr??c khi t?o b?t c? collaborator ho?c trace n?o. Advice tr? HTTP 400 <code>INVALID_INPUT</code>
-        v?i th?ng b?o g?c.</p>
+      detailDescription: >-
+        <p><code>CompositionExperimentService.notification</code> gọi <code>requireId(request.recipient(), &quot;recipient&quot;)</code>. Chuỗi rỗng không thỏa mẫu định danh ASCII dài 1 đến 60 ký tự, nên ném <code>IllegalArgumentException</code> trước khi tạo thành phần cộng tác hay trace. Handler trả HTTP 400 <code>INVALID_INPUT</code> cùng thông báo gốc.</p>
   policies(PolicyRequest):
     methodName: policies
     httpMethods:
@@ -1570,8 +1567,8 @@ CompositionExperimentController:
     usage: true
     cases:
     - id: case_001
-      title: Thay policy v? injection ri?ng theo t?ng l??t
-      description: QUOTE_WITH_POLICY d?ng FIXED t?m th?i m? kh?ng ??i activePolicy PERCENT.
+      title: "Thay chính sách đang dùng và ghi đè riêng cho một lần gọi"
+      description: "QUOTE_WITH_POLICY dùng FIXED tạm thời nhưng vẫn giữ PERCENT đang hoạt động."
       input:
         pathParams: {}
         queryParams: {}
@@ -1620,12 +1617,11 @@ CompositionExperimentController:
           usedPolicy: PERCENT
           subtotalCents: 100
           payableCents: 90
-      detailDescription: <p><code>SWITCH</code> ??t policy ho?t ??ng th?nh PERCENT 10%. <code>QUOTE</code> tr?n subtotal=100 tr? 90. <code>QUOTE_WITH_POLICY</code>
-        truy?n <code>FixedDiscount(30)</code> cho <code>quoteWith</code> n?n tr? 70 nh?ng <code>AtomicReference</code> v?n gi? PERCENT. L??t QUOTE cu?i quay l?i 90;
-        timeline step SWITCH kh?ng c? usedPolicy, subtotalCents hay payableCents.</p>
+      detailDescription: >-
+        <p><code>SWITCH</code> kích hoạt PERCENT 10%. <code>QUOTE</code> của subtotal=100 trả 90. <code>QUOTE_WITH_POLICY</code> truyền <code>FixedDiscount(30)</code> vào <code>quoteWith</code> nên trả 70, còn <code>AtomicReference</code> vẫn giữ PERCENT. QUOTE cuối lại trả 90. Ở bước SWITCH, usedPolicy, subtotalCents và payableCents đều là null.</p>
     - id: case_002
-      title: Gi?m gi? c? ??nh l?n h?n subtotal
-      description: FixedDiscount d?ng min(discount,subtotal), kh?ng t?o payable ?m.
+      title: "Mức giảm cố định không vượt quá tổng tiền"
+      description: "FixedDiscount dùng min(discount,subtotal) để số tiền phải trả không âm."
       input:
         pathParams: {}
         queryParams: {}
@@ -1648,11 +1644,11 @@ CompositionExperimentController:
           usedPolicy: FIXED
           subtotalCents: 30
           payableCents: 0
-      detailDescription: <p><code>FixedDiscount(40)</code> nh?n subtotal=30. <code>payable</code> t?nh <code>30 - Math.min(40,30) = 0</code>, ??ng h?p ??ng 0?subtotal.
-        Kh?ng c? SWITCH n?n initialPolicy v? finalPolicy ??u FIXED, response HTTP 200 ch?a m?t b??c b?o gi?.</p>
+      detailDescription: >-
+        <p><code>FixedDiscount(40)</code> nhận subtotal=30. <code>payable</code> tính <code>30 - Math.min(40,30) = 0</code>, thỏa ràng buộc từ 0 đến subtotal. Không có SWITCH nên initialPolicy và finalPolicy đều là FIXED. HTTP 200 chứa một bước báo giá.</p>
     - id: case_003
-      title: Percent 150 b? t? ch?i ngay khi prevalidation
-      description: Service x?c th?c t?t c? steps tr??c khi th?c thi thay policy.
+      title: "Phần trăm 150 bị từ chối khi kiểm tra trước"
+      description: "Service xác thực mọi bước trước khi thay đổi chính sách đang hoạt động."
       input:
         pathParams: {}
         queryParams: {}
@@ -1668,9 +1664,8 @@ CompositionExperimentController:
       response:
         code: INVALID_INPUT
         message: percent must be 0-100
-      detailDescription: <p>Service t?o policy NONE nh?ng tr??c v?ng l?p th?c thi ki?m tra step SWITCH b?ng <code>SwitchablePricing.create</code>. Constructor <code>PercentDiscount</code>
-        nh?n percent=150 v? n?m <code>IllegalArgumentException(&quot;percent must be 0-100&quot;)</code>. HTTP 400 tr? <code>INVALID_INPUT</code>; kh?ng c? timeline
-        hay thay ??i policy.</p>
+      detailDescription: >-
+        <p>Service khởi tạo NONE, rồi kiểm tra SWITCH bằng <code>SwitchablePricing.create</code> trước vòng lặp thực thi. Constructor <code>PercentDiscount</code> từ chối 150 bằng <code>IllegalArgumentException(&quot;percent must be 0-100&quot;)</code>. HTTP 400 trả <code>INVALID_INPUT</code> và không có timeline.</p>
   placeOrder(PlaceOrderRequest):
     methodName: placeOrder
     httpMethods:
@@ -1680,8 +1675,8 @@ CompositionExperimentController:
     usage: true
     cases:
     - id: case_001
-      title: L?u m?t ??n v?o repository trong b? nh?
-      description: OrderService d?ng collaborator save ??ng m?t l?n v? snapshot d?ng h?ng.
+      title: "Lưu một đơn hàng vào repository trong bộ nhớ"
+      description: "OrderService gọi save một lần và sao chép bất biến các dòng hàng."
       input:
         pathParams: {}
         queryParams: {}
@@ -1713,12 +1708,11 @@ CompositionExperimentController:
             quantity: 1
             unitPriceCents: 10
         storageDurability: IN_MEMORY_ONLY; no durable persistence or transaction implied
-      detailDescription: <p>Hai <code>OrderPlacement.Line</code> h?p l? c? subtotal 2?300=600 v? 1?10=10; <code>Order.create</code> t?nh total=610 v? sao ch?p danh
-        s?ch b?ng <code>List.copyOf</code>. <code>OrderService</code> delegate <code>save</code> t?i <code>InMemoryOrderRepository</code>, t?ng attempts=1 v? l?u
-        m?t ??n. HTTP 200 tr? accepted=true; d? li?u ch? t?n t?i trong request.</p>
+      detailDescription: >-
+        <p>Hai dòng <code>OrderPlacement.Line</code> hợp lệ có thành tiền 2×300=600 và 1×10=10. <code>Order.create</code> tính tổng 610 và sao chép các dòng bằng <code>List.copyOf</code>. <code>OrderService</code> ủy quyền <code>save</code> cho <code>InMemoryOrderRepository</code>, tăng số lần thử lưu lên một và lưu một đơn. HTTP 200 trả accepted=true; dữ liệu chỉ tồn tại trong request này.</p>
     - id: case_002
-      title: Repository t? ch?i l?u n?n kh?ng c? ??n ???c ghi
-      description: S? l?n g?i save v?n l? m?t nh?ng danh s?ch storedOrders r?ng.
+      title: "Repository từ chối nên không lưu đơn hàng"
+      description: "Có một lần thử lưu, nhưng storedOrders vẫn rỗng."
       input:
         pathParams: {}
         queryParams: {}
@@ -1738,12 +1732,11 @@ CompositionExperimentController:
         saveAttempts: 1
         storedOrders: []
         storageDurability: IN_MEMORY_ONLY; no durable persistence or transaction implied
-      detailDescription: <p>Order ???c t?o h?p l? v?i subtotal=10. <code>InMemoryOrderRepository.save</code> t?ng <code>saveAttempts</code> l?n 1 tr??c khi th?y failStorage=true
-        v? n?m <code>IllegalStateException(&quot;Simulated repository failure before save&quot;)</code>. Service b?t l?i, tr? HTTP 200 accepted=false v? storedOrders
-        r?ng, tr?nh kh?ng ??nh l?u th?nh c?ng.</p>
+      detailDescription: >-
+        <p>Đơn hợp lệ có subtotal=10. <code>InMemoryOrderRepository.save</code> tăng <code>saveAttempts</code> lên 1 trước khi failStorage=true gây <code>IllegalStateException(&quot;Simulated repository failure before save&quot;)</code>. Service bắt lỗi, trả HTTP 200 accepted=false và không lưu đơn hàng; không báo thành công sai.</p>
     - id: case_003
-      title: S? l??ng b?ng 0 b? t? ch?i tr??c khi l?u
-      description: OrderPlacement.Line ki?m tra quantity tr??c b??c t?o repository.
+      title: "Số lượng bằng 0 bị từ chối trước khi lưu"
+      description: "OrderPlacement.Line xác thực quantity trước khi tạo repository."
       input:
         pathParams: {}
         queryParams: {}
@@ -1760,8 +1753,8 @@ CompositionExperimentController:
       response:
         code: INVALID_INPUT
         message: quantity must be 1-1000
-      detailDescription: <p>Service duy?t lines v? kh?i t?o <code>OrderPlacement.Line(&quot;A&quot;,0,5)</code>. Constructor record th?y quantity &lt; 1 n?n n?m <code>IllegalArgumentException(&quot;quantity
-        must be 1-1000&quot;)</code>. V? repository ch?a ???c t?o, kh?ng c? saveAttempt; handler tr? HTTP 400 <code>INVALID_INPUT</code>.</p>
+      detailDescription: >-
+        <p>Service duyệt các dòng và tạo <code>OrderPlacement.Line(&quot;A&quot;,0,5)</code>. Constructor record từ chối số lượng nhỏ hơn một bằng <code>IllegalArgumentException(&quot;quantity must be 1-1000&quot;)</code>. Chưa có repository hay lần thử lưu nào; handler trả HTTP 400 <code>INVALID_INPUT</code>.</p>
   resources(ResourceRequest):
     methodName: resources
     httpMethods:
@@ -1771,8 +1764,8 @@ CompositionExperimentController:
     usage: true
     cases:
     - id: case_001
-      title: OWNED t? ??ng handle d? l?i ghi
-      description: Exporter s? h?u handle, try-with-resources ??ng c? exporter v? handle.
+      title: "Handle thuộc quyền sở hữu tự đóng dù ghi thất bại"
+      description: "Exporter sở hữu handle; try-with-resources bảo đảm cả hai được đóng."
       input:
         pathParams: {}
         queryParams: {}
@@ -1795,12 +1788,11 @@ CompositionExperimentController:
         - handle:write:hello
         - exporter:close
         - handle:close
-      detailDescription: <p><code>TrackedHandle.write</code> ghi <code>handle:write:hello</code> r?i n?m <code>IllegalStateException(&quot;Simulated write failure&quot;)</code>.
-        Khi scope k?t th?c, <code>Exporter.close</code> ghi s? ki?n exporter v? g?i <code>handle.close</code> v? ownsHandle=true. Service b?t l?i ghi v?o response
-        HTTP 200, c? hai c? afterExporter/afterCaller ??u true.</p>
+      detailDescription: >-
+        <p><code>TrackedHandle.write</code> ghi <code>handle:write:hello</code> rồi ném <code>IllegalStateException(&quot;Simulated write failure&quot;)</code>. Khi thoát phạm vi, <code>Exporter.close</code> ghi sự kiện đóng exporter và gọi <code>handle.close</code> vì ownsHandle=true. Service trả lỗi ghi giả lập trong HTTP 200; cả hai cờ afterExporter và afterCaller đều true.</p>
     - id: case_002
-      title: BORROWED ?? caller ??ng handle sau exporter
-      description: ??ng exporter kh?ng ??ng handle m??n; service g?i close sau khi scope k?t th?c.
+      title: "Handle mượn vẫn mở cho đến khi caller đóng"
+      description: "Đóng exporter không đóng handle được mượn."
       input:
         pathParams: {}
         queryParams: {}
@@ -1823,11 +1815,11 @@ CompositionExperimentController:
         - handle:write:OK
         - exporter:close
         - handle:close
-      detailDescription: <p><code>Exporter</code> nh?n ownsHandle=false n?n <code>close()</code> ch? ghi <code>exporter:close</code>. Do ?? l?c ki?m tra <code>resourceClosedAfterExporter</code>,
-        handle v?n m? (false). Service ??i di?n caller th?c hi?n <code>handle.close()</code> v? <code>resourceClosedAfterCaller</code> th?nh true, kh?ng c? failure.</p>
+      detailDescription: >-
+        <p><code>Exporter</code> được tạo với ownsHandle=false nên <code>close()</code> chỉ ghi <code>exporter:close</code>. Ở mốc after-exporter, <code>handle.closed()</code> vẫn false. Service đóng vai trò caller, gọi <code>handle.close()</code> và làm resourceClosedAfterCaller=true mà không phát sinh lỗi.</p>
     - id: case_003
-      title: N?i dung r?ng b? t? ch?i tr??c khi m? handle
-      description: Service y?u c?u content nonblank, t?i ?a 100 k? t?.
+      title: "Nội dung rỗng bị từ chối trước khi cấp phát handle"
+      description: "Service yêu cầu nội dung không trống và dài tối đa 100 ký tự."
       input:
         pathParams: {}
         queryParams: {}
@@ -1841,8 +1833,8 @@ CompositionExperimentController:
       response:
         code: INVALID_INPUT
         message: content must be nonblank and at most 100 characters
-      detailDescription: <p><code>CompositionExperimentService.resource</code> th?y <code>content.isBlank()</code> v?i chu?i r?ng n?n n?m <code>IllegalArgumentException</code>
-        tr??c khi t?o <code>TrackedHandle</code>. Handler tr? HTTP 400 <code>INVALID_INPUT</code>; kh?ng c? trace hay thao t?c close v? handle ch?a t?n t?i.</p>
+      detailDescription: >-
+        <p><code>CompositionExperimentService.resource</code> kiểm tra <code>content.isBlank()</code>, phát hiện chuỗi rỗng và ném <code>IllegalArgumentException</code> trước khi cấp phát <code>TrackedHandle</code>. Handler trả HTTP 400 <code>INVALID_INPUT</code>; không có trace hay thao tác đóng tài nguyên.</p>
 DesignPatternExperimentController:
   pricing(PricingRequest):
     methodName: pricing
@@ -3992,8 +3984,8 @@ InheritanceExperimentsController:
     usage: true
     cases:
     - id: case_001
-      title: Nh?n vi?n l??ng c? ??nh qua l?p cha
-      description: M? v? t?n ???c trim, ph?p t?nh tr? m?c l??ng th?ng c? ??nh.
+      title: "Nhân viên nhận lương cố định qua tham chiếu lớp cha"
+      description: "Danh tính được chuẩn hóa; override của Salaried tính lương cố định hằng tháng."
       input:
         pathParams: {}
         queryParams: {}
@@ -4016,12 +4008,11 @@ InheritanceExperimentsController:
         calculation: FIXED_MONTHLY
         monthlyPayVnd: 20000000
         simulatedOnly: true
-      detailDescription: <p><code>PayrollInheritanceService</code> chu?n h?a kind t? salaried th?nh SALARIED, x?c nh?n hourlyRateVnd/workedHours b?ng 0 r?i t?o <code>Employee.Salaried</code>.
-        Constructor cha trim ID v? t?n th?nh E-01/Ada. M?c d? tham chi?u khai b?o <code>Employee</code>, dispatch g?i <code>Salaried.monthlyPayVnd()</code> tr? 20000000
-        v? <code>calculation()</code> tr? FIXED_MONTHLY. HTTP 200, simulatedOnly=true.</p>
+      detailDescription: >-
+        <p><code>PayrollInheritanceService</code> chuẩn hóa salaried thành SALARIED, xác nhận hai trường tính lương theo giờ đều bằng 0 và tạo <code>Employee.Salaried</code>. Constructor lớp cha trim E-01 và Ada. Dù biến tham chiếu khai báo kiểu <code>Employee</code>, dynamic dispatch gọi phương thức trả lương của lớp con, cho 20000000 và FIXED_MONTHLY. HTTP 200 đánh dấu simulatedOnly=true.</p>
     - id: case_002
-      title: Nh?n vi?n t?nh l??ng theo gi?
-      description: Runtime class Hourly ghi ?? c?ng th?c l??ng tr?n tham chi?u Employee.
+      title: "Override theo giờ nhân đơn giá với số giờ"
+      description: "Tham chiếu lớp cha được dispatch đến phép tính của Hourly."
       input:
         pathParams: {}
         queryParams: {}
@@ -4044,12 +4035,11 @@ InheritanceExperimentsController:
         calculation: HOURLY_RATE_TIMES_HOURS
         monthlyPayVnd: 20800000
         simulatedOnly: true
-      detailDescription: <p>Nh?nh HOURLY y?u c?u monthlySalaryVnd=0 v? t?o <code>Employee.Hourly</code> v?i 130000 VND/gi?, 160 gi?. <code>monthlyPayVnd()</code>
-        d?ng <code>Math.multiplyExact</code>, k?t qu? 20800000. M?c d? bi?n l? <code>Employee</code>, runtime dispatch t?i <code>Hourly</code>; response ph?n bi?t
-        r? declaredType v? runtimeClass.</p>
+      detailDescription: >-
+        <p>Nhánh HOURLY yêu cầu monthlySalaryVnd=0, rồi tạo <code>Employee.Hourly</code> với đơn giá 130000 và 160 giờ làm việc. <code>monthlyPayVnd()</code> gọi <code>Math.multiplyExact</code>, cho kết quả 20800000. Kiểu khai báo là <code>Employee</code>, còn lớp runtime và phép tính thuộc về <code>Hourly</code>.</p>
     - id: case_003
-      title: T? ch?i tr??ng l??ng theo gi? c?a SALARIED
-      description: Salaried kh?ng cho ph?p g?i d? li?u hourlyRateVnd kh?c 0.
+      title: "Từ chối trường lương theo giờ ở SALARIED"
+      description: "Kiểu SALARIED không được có hourlyRateVnd khác 0."
       input:
         pathParams: {}
         queryParams: {}
@@ -4066,12 +4056,11 @@ InheritanceExperimentsController:
       response:
         code: INVALID_INPUT
         message: Salaried employees must not supply hourly fields
-      detailDescription: <p>Service nh?n kind SALARIED nh?ng th?y hourlyRateVnd=5, kh?ng th?a ?i?u ki?n hai tr??ng hourly ??u ph?i b?ng 0. <code>PayrollInheritanceService.calculate</code>
-        n?m <code>IllegalArgumentException</code> tr??c khi t?o <code>Employee.Salaried</code>. <code>InheritanceExceptionHandler</code> tr? HTTP 400 v?i th?ng ?i?p
-        ??u v?o nguy?n g?c.</p>
+      detailDescription: >-
+        <p>Nhánh SALARIED phát hiện hourlyRateVnd=5 trong khi các trường lương giờ phải bằng 0. <code>PayrollInheritanceService.calculate</code> ném <code>IllegalArgumentException</code> trước khi tạo nhân viên. <code>InheritanceExceptionHandler</code> trả HTTP 400 với đúng thông báo xác thực đầu vào.</p>
     - id: case_004
-      title: Tr?n s? long khi t?nh l??ng gi?
-      description: Math.multiplyExact ph?t hi?n 9223372036854775807 nh?n 2 v??t long.
+      title: "Tràn số khi tính lương trả HTTP 422"
+      description: "Math.multiplyExact phát hiện phép nhân Long.MAX_VALUE với 2 bị tràn."
       input:
         pathParams: {}
         queryParams: {}
@@ -4088,9 +4077,8 @@ InheritanceExperimentsController:
       response:
         code: ARITHMETIC_OVERFLOW
         message: Calculation exceeded supported numeric limits
-      detailDescription: <p>Gi? tr? hourlyRateVnd b?ng <code>Long.MAX_VALUE</code> v? workedHours=2 ??u qua ki?m tra kh?ng ?m v? gi?i h?n gi?. Khi <code>Employee.Hourly.monthlyPayVnd()</code>
-        g?i <code>Math.multiplyExact</code>, ph?p nh?n n?m <code>ArithmeticException</code>. Advice chuy?n bi?t ?nh x? ngo?i l? n?y th?nh HTTP 422 <code>ARITHMETIC_OVERFLOW</code>,
-        kh?ng tr? s? l??ng sai do wraparound.</p>
+      detailDescription: >-
+        <p>Đơn giá giờ là <code>Long.MAX_VALUE</code> và workedHours=2 đều vượt qua kiểm tra không âm và giới hạn hợp lệ. <code>Employee.Hourly.monthlyPayVnd()</code> gọi <code>Math.multiplyExact</code> và ném <code>ArithmeticException</code>. Bộ xử lý của chương chuyển thành HTTP 422 <code>ARITHMETIC_OVERFLOW</code>, tránh kết quả lương bị tràn số.</p>
   compareDelivery(DeliveryRequest):
     methodName: compareDelivery
     httpMethods:
@@ -4100,8 +4088,8 @@ InheritanceExperimentsController:
     usage: true
     cases:
     - id: case_001
-      title: Giao h?ng th??ng d?ng h?nh vi k? th?a
-      description: CityDelivery th?a h??ng distanceFee v? t?nh ph? c? b?n b?ng hai c?ch nh? nhau.
+      title: "Giao hàng thông thường kế thừa hành vi cơ sở"
+      description: "CityDelivery kế thừa distanceFee; kế thừa và composition tính cùng một mức phí."
       input:
         pathParams: {}
         queryParams: {}
@@ -4122,11 +4110,11 @@ InheritanceExperimentsController:
         compositionTrace: *id027
         equal: true
         simulatedOnly: true
-      detailDescription: <p>Service ch?n <code>DeliveryPlan.CityDelivery</code> kh?ng override <code>distanceFee</code>. <code>quote(3)</code> t?nh 3?1000=3000 r?i
-        c?ng base=10000, b?ng 13000. Composition d?ng c?ng hai th?nh ph?n ph?; hai trace l? base distance r?i fixed base v? equal=true.</p>
+      detailDescription: >-
+        <p>Service chọn <code>DeliveryPlan.CityDelivery</code>, kế thừa <code>distanceFee</code> mà không override. <code>quote(3)</code> tính 3×1000=3000, cộng phí gốc 10000 thành 13000. Composition áp dụng cùng thành phần và trace, nên equal=true.</p>
     - id: case_002
-      title: K? th?a s?u v?i super c?ng hai ph? ph?
-      description: HolidayPriorityDelivery g?i super xuy?n qua PriorityCityDelivery v? DeliveryPlan.
+      title: "Chuỗi kế thừa sâu với super cộng hai phụ phí"
+      description: "HolidayPriorityDelivery xếp chồng override qua PriorityCityDelivery và DeliveryPlan."
       input:
         pathParams: {}
         queryParams: {}
@@ -4149,12 +4137,11 @@ InheritanceExperimentsController:
         compositionTrace: *id028
         equal: true
         simulatedOnly: true
-      detailDescription: '<p><code>HolidayPriorityDelivery.distanceFee</code> g?i <code>super.distanceFee</code>: l?p Priority l?i g?i l?p cha t?nh 3000 r?i c?ng
-        5000; l?p Holiday c?ng ti?p 7000. <code>DeliveryPlan.quote</code> final th?m base=10000, t?ng 25000. Composition ??c l?p c?ng c?ng ba th?nh ph?n ph? ph? v?
-        cho k?t qu? 25000, equal=true.</p>'
+      detailDescription: >-
+        <p><code>HolidayPriorityDelivery.distanceFee</code> gọi <code>super.distanceFee</code>, kích hoạt lời gọi super của Priority để lấy phí quãng đường 3000 và phụ phí ưu tiên 5000, rồi cộng phụ phí ngày lễ 7000. <code>DeliveryPlan.quote</code> cuối cùng cộng phí gốc 10000 thành 25000. Composition độc lập tính cùng phí và trace, nên equal=true.</p>
     - id: case_003
-      title: Priority ghi ?? v? d?ng l?i super
-      description: L?p con m? r?ng ph? kho?ng c?ch b?ng surcharge 5000.
+      title: "Priority override và mở rộng hành vi super"
+      description: "Lớp con giữ phí quãng đường của cha và cộng phụ phí cố định."
       input:
         pathParams: {}
         queryParams: {}
@@ -4176,11 +4163,11 @@ InheritanceExperimentsController:
         compositionTrace: *id029
         equal: true
         simulatedOnly: true
-      detailDescription: <p><code>PriorityCityDelivery.distanceFee</code> g?i <code>super.distanceFee(3)</code> ?? l?y 3000 t? l?p cha r?i c?ng 5000. <code>quote</code>
-        th?m fixed base=10000 th?nh 18000. Service c?ng c?ng t??ng t? theo t?y ch?n priority b?ng composition n?n c? hai trace v? t?ng ti?n b?ng nhau.</p>
+      detailDescription: >-
+        <p><code>PriorityCityDelivery.distanceFee</code> gọi lớp cha để tính 3000 cho 3 km, rồi cộng 5000. <code>quote</code> cuối cộng phí gốc 10000 thành 18000. Composition kiểm tra cùng cờ priority, tạo phí và trace trùng khớp.</p>
     - id: case_004
-      title: Ch?n t?y ch?n holiday thi?u priority
-      description: Nh?nh holiday ???c thi?t k? ch? h?p l? khi priority=true.
+      title: "Tùy chọn holiday yêu cầu bật priority"
+      description: "Phân cấp chỉ cho phép holiday khi priority được bật."
       input:
         pathParams: {}
         queryParams: {}
@@ -4194,9 +4181,8 @@ InheritanceExperimentsController:
       response:
         code: INVALID_INPUT
         message: Holiday option requires priority in this hierarchy
-      detailDescription: <p><code>DeliveryComparisonService.compare</code> ch?p nh?n distanceKm=5 nh?ng ki?m tra <code>holiday &amp;&amp; !priority</code> l? true.
-        Service n?m <code>IllegalArgumentException</code> tr??c khi ch?n l?p k? th?a ho?c t?nh composition. HTTP 400 tr? <code>INVALID_INPUT</code> v?i l? do holiday
-        ph?i c? priority.</p>
+      detailDescription: >-
+        <p><code>DeliveryComparisonService.compare</code> nhận distanceKm=5 nhưng phát hiện điều kiện <code>holiday &amp;&amp; !priority</code> đúng. Service ném <code>IllegalArgumentException</code> trước khi chọn phân cấp kế thừa hoặc tính composition. HTTP 400 trả <code>INVALID_INPUT</code> với đúng thông báo ràng buộc.</p>
   constructorTrace(ConstructorRequest):
     methodName: constructorTrace
     httpMethods:
@@ -4206,8 +4192,8 @@ InheritanceExperimentsController:
     usage: true
     cases:
     - id: case_001
-      title: Constructor cha dispatch ??n field ch?a kh?i t?o
-      description: UnsafeParent g?i value b? override n?n th?y null; SafeParent kh?ng g?i virtual method.
+      title: "Constructor cha quan sát field con chưa khởi tạo"
+      description: "Lời gọi virtual không an toàn thấy null; cách an toàn quan sát sau khi xây dựng xong."
       input:
         pathParams: {}
         queryParams: {}
@@ -4228,12 +4214,11 @@ InheritanceExperimentsController:
         unsafeValueObservedByParent: 'null'
         finalValue: READY
         simulatedOnly: true
-      detailDescription: <p><code>UnsafeChild</code> b?t ??u b?ng constructor <code>UnsafeParent</code>, n?i <code>value()</code> dispatch t?i l?p con tr??c field
-        initializer. Java chuy?n gi? tr? null th?nh ch? <code>null</code> trong log. Sau ?? con g?n READY. V?i <code>SafeChild</code>, cha kh?ng g?i override v? ch?
-        ki?m tra sau khi con g?n xong n?n trace an to?n quan s?t READY.</p>
+      detailDescription: >-
+        <p><code>UnsafeChild</code> chạy constructor của <code>UnsafeParent</code> trước. Lời gọi <code>value()</code> ở cha được dispatch động đến con trước khi field initializer chạy. Phép nối chuỗi ghi <code>null</code> vào trace; sau đó field con mới nhận READY. <code>SafeChild</code> tránh gọi virtual từ constructor cha và chỉ quan sát READY sau khi khởi tạo.</p>
     - id: case_002
-      title: T? ch?i nh?n ch? g?m kho?ng tr?ng
-      description: ConstructorProbe x?c th?c nonblank tr??c khi d?ng trace.
+      title: "Từ chối label chỉ chứa khoảng trắng"
+      description: "ConstructorProbe xác thực nội dung không trắng trước khi tạo trace."
       input:
         pathParams: {}
         queryParams: {}
@@ -4245,8 +4230,8 @@ InheritanceExperimentsController:
       response:
         code: INVALID_INPUT
         message: initialLabel must contain 1..80 nonblank characters
-      detailDescription: <p><code>ConstructorTraceService.trace</code> chuy?n chu?i hai d?u c?ch cho <code>ConstructorProbe.run</code>. <code>label.isBlank()</code>
-        ??ng n?n n?m <code>IllegalArgumentException</code> tr??c khi kh?i t?o UnsafeChild ho?c SafeChild; advice tr? HTTP 400 <code>INVALID_INPUT</code>.</p>
+      detailDescription: >-
+        <p><code>ConstructorTraceService.trace</code> truyền hai dấu cách vào <code>ConstructorProbe.run</code>. <code>label.isBlank()</code> là true nên ném <code>IllegalArgumentException</code> trước khi tạo lớp con nào. Advice ánh xạ lỗi thành HTTP 400 <code>INVALID_INPUT</code>.</p>
   resolveCapabilities(CapabilitiesRequest):
     methodName: resolveCapabilities
     httpMethods:
@@ -4256,8 +4241,8 @@ InheritanceExperimentsController:
     usage: true
     cases:
     - id: case_001
-      title: K?t h?p default v? ?u ti?n method l?p
-      description: MixedCapability g?i r? t?ng interface super; Taggable chu?n h?a CSV.
+      title: "Giải quyết xung đột default và ưu tiên phương thức lớp"
+      description: "MixedCapability gọi tường minh hai default của interface; Taggable chuẩn hóa CSV."
       input:
         pathParams: {}
         queryParams: {}
@@ -4275,12 +4260,11 @@ InheritanceExperimentsController:
         - oop
         - java17
         simulatedOnly: true
-      detailDescription: <p><code>CapabilityResolution</code> trim itemId th?nh DOC-1. <code>MixedCapability.label()</code> g?i <code>Printable.super.label()</code>
-        v? <code>Searchable.super.label()</code> ?? t?o PRINT+SEARCH:DOC-1. <code>ConcreteSuperclassWins.label()</code> l?y ph??ng th?c th?c t? ConcreteBase n?n l?
-        CLASS_WINS; Taggable t?ch CSV, trim/lowercase th?nh java, oop, java17.</p>
+      detailDescription: >-
+        <p><code>CapabilityResolution</code> trim itemId thành DOC-1. <code>MixedCapability.label()</code> kết hợp <code>Printable.super.label()</code> và <code>Searchable.super.label()</code> thành PRINT+SEARCH:DOC-1. Phương thức cụ thể kế thừa từ <code>ConcreteBase.label()</code> được ưu tiên hơn Printable, cho CLASS_WINS. Taggable tách, trim và chuyển java, oop, java17 sang chữ thường.</p>
     - id: case_002
-      title: T? ch?i ph?n t? CSV r?ng
-      description: Taggable gi? ph?n t? r?ng khi split r?i b?o l?i.
+      title: "Từ chối phần tử CSV rỗng"
+      description: "Taggable giữ cả các đoạn rỗng khi split rồi xác thực từng tag."
       input:
         pathParams: {}
         queryParams: {}
@@ -4293,11 +4277,11 @@ InheritanceExperimentsController:
       response:
         code: INVALID_INPUT
         message: Tags must not be empty
-      detailDescription: <p><code>Taggable.parseTags</code> g?i <code>csv.split(&quot;,&quot;,-1)</code> n?n chu?i a,,b t?o ph?n t? r?ng ? gi?a. Sau trim, ph?n t?
-        n?y k?ch ho?t <code>IllegalArgumentException(&quot;Tags must not be empty&quot;)</code>. Advice tr? HTTP 400; kh?ng tr? m?t ph?n normalizedTags.</p>
+      detailDescription: >-
+        <p><code>Taggable.parseTags</code> dùng <code>csv.split(&quot;,&quot;,-1)</code>, giữ phần tử rỗng trong a,,b. Trim phần tử này cho chuỗi rỗng, dẫn đến <code>IllegalArgumentException(&quot;Tags must not be empty&quot;)</code>. HTTP 400 không trả normalizedTags một phần.</p>
     - id: case_003
-      title: Kh?ng nh?n itemId r?ng
-      description: Item ID ???c ki?m tra tr??c khi t?o capability v? parse tags.
+      title: "Từ chối mã định danh item rỗng"
+      description: "Xác thực itemId diễn ra trước khi tạo capability và phân tích tag."
       input:
         pathParams: {}
         queryParams: {}
@@ -4310,8 +4294,8 @@ InheritanceExperimentsController:
       response:
         code: INVALID_INPUT
         message: itemId must contain 1..80 characters
-      detailDescription: <p><code>CapabilityResolution.resolve</code> ki?m tra itemId b?ng <code>isBlank()</code>, nh?n chu?i r?ng n?n n?m <code>IllegalArgumentException(&quot;itemId
-        must contain 1..80 characters&quot;)</code>. Service d?ng tr??c b??c t?o MixedCapability; HTTP 400 tr? <code>INVALID_INPUT</code>.</p>
+      detailDescription: >-
+        <p><code>CapabilityResolution.resolve</code> kiểm tra <code>itemId.isBlank()</code> và từ chối chuỗi rỗng bằng <code>IllegalArgumentException(&quot;itemId must contain 1..80 characters&quot;)</code>. MixedCapability chưa được tạo; HTTP 400 trả <code>INVALID_INPUT</code>.</p>
 InterfaceExperimentsController:
   shipping(ShippingRequest):
     methodName: shipping
@@ -5185,8 +5169,8 @@ LifecycleExperimentController:
     usage: true
     cases:
     - id: case_001
-      title: Builder t?o kh?a h?c h?p l?
-      description: Hai h?c vi?n ???c ghi danh qua Builder, c?n m?t gh? tr?ng.
+      title: "Builder tạo khóa học hợp lệ"
+      description: "Builder ghi danh hai học viên vào khóa học còn một chỗ trống."
       input:
         pathParams: {}
         queryParams: {}
@@ -5208,11 +5192,11 @@ LifecycleExperimentController:
         - S1
         - S2
         availableSeats: 1
-      detailDescription: <p>Nh?nh <code>BUILDER</code> g?i <code>CourseEnrollment.builder</code>, th?m S1/S2 r?i <code>build()</code>. Constructor ki?m tra capacity=3
-        v? c?c ID kh?ng tr?ng, sau ?? gi? danh s?ch b?o v?. <code>availableSeats()</code> t?nh 3 - 2 = 1; API tr? HTTP 200.</p>
+      detailDescription: >-
+        <p>Nhánh <code>BUILDER</code> gọi <code>CourseEnrollment.builder</code>, thêm S1/S2 rồi gọi <code>build()</code>. Constructor kiểm tra capacity=3 và các ID không trùng nhau, sau đó lưu bản sao phòng vệ. <code>availableSeats()</code> tính 3 - 2 = 1 và trả HTTP 200.</p>
     - id: case_002
-      title: Kh?ng g?i students
-      description: Constructor hai tham s? t?o kh?a h?c ch?a c? h?c vi?n.
+      title: "Không truyền danh sách students"
+      description: "Constructor hai tham số tạo khóa học chưa có học viên."
       input:
         pathParams: {}
         queryParams: {}
@@ -5229,11 +5213,11 @@ LifecycleExperimentController:
         capacity: 2
         students: []
         availableSeats: 2
-      detailDescription: <p>V? <code>students</code> v?ng m?t, service thay null b?ng <code>List.of()</code> v? ch?n <code>new CourseEnrollment(&quot;JAVA&quot;,2)</code>.
-        Constructor 2 tham s? ?y quy?n constructor ch?nh v?i danh s?ch r?ng. Hai gh? ??u c?n tr?ng, k?t qu? HTTP 200.</p>
+      detailDescription: >-
+        <p>Khi thiếu <code>students</code>, service thay bằng <code>List.of()</code> và gọi <code>new CourseEnrollment(&quot;JAVA&quot;,2)</code>. Constructor hai tham số ủy quyền cho constructor chính với danh sách rỗng. Cả hai chỗ đều còn trống trong phản hồi HTTP 200.</p>
     - id: case_003
-      title: Static factory c?ng t? ch?i ID tr?ng
-      description: C?ch t?o b?ng static factory v?n tu?n th? b?t bi?n h?c vi?n kh?ng tr?ng.
+      title: "Static factory cũng từ chối ID trùng"
+      description: "Cách tạo bằng static factory vẫn kiểm tra ID học viên duy nhất."
       input:
         pathParams: {}
         queryParams: {}
@@ -5250,11 +5234,11 @@ LifecycleExperimentController:
       response:
         code: INVALID_INPUT
         message: 'Duplicate student ID: A'
-      detailDescription: '<p><code>CourseEnrollment.of</code> chuy?n ti?p t?i constructor. <code>HashSet</code> nh?n ID A l?n ??u, r?i t? ch?i ph?n t? A th? hai b?ng
-        <code>IllegalArgumentException(&quot;Duplicate student ID: A&quot;)</code>. Advice tr? HTTP 400 v? m? <code>INVALID_INPUT</code>.</p>'
+      detailDescription: >-
+        <p><code>CourseEnrollment.of</code> ủy quyền cho constructor. <code>HashSet</code> nhận ID A đầu tiên, rồi từ chối ID A thứ hai bằng <code>IllegalArgumentException(&quot;Duplicate student ID: A&quot;)</code>. Controller advice trả HTTP 400 <code>INVALID_INPUT</code>.</p>
     - id: case_004
-      title: S?c ch?a kh?ng h?p l?
-      description: capacity=0 v??t gi?i h?n 1?100.
+      title: "Sức chứa bằng 0 không hợp lệ"
+      description: "capacity=0 vi phạm khoảng cho phép từ 1 đến 100."
       input:
         pathParams: {}
         queryParams: {}
@@ -5268,8 +5252,8 @@ LifecycleExperimentController:
       response:
         code: INVALID_INPUT
         message: capacity must be between 1 and 100
-      detailDescription: <p>Service chuy?n request h?p c? ph?p sang constructor. <code>CourseEnrollment</code> ki?m tra <code>capacity &lt; 1</code> v? n?m <code>IllegalArgumentException</code>
-        tr??c khi thi?t l?p tr?ng th?i. Advice tr? HTTP 400 c?ng th?ng b?o gi?i h?n.</p>
+      detailDescription: >-
+        <p>Service chuyển request hợp lệ về cú pháp vào constructor. <code>CourseEnrollment</code> kiểm tra <code>capacity &lt; 1</code> và ném <code>IllegalArgumentException</code> trước khi gán trạng thái. Advice trả HTTP 400 cùng thông báo ràng buộc chính xác.</p>
   references(ReferenceRequest):
     methodName: references
     httpMethods:
@@ -5279,8 +5263,8 @@ LifecycleExperimentController:
     usage: true
     cases:
     - id: case_001
-      title: Chu tr?nh A?B m?t reachability khi th? root
-      description: C?nh v?ng kh?ng thay th? ???c ???ng ?i t? root logic.
+      title: "Chu trình A↔B không thể truy cập sau khi thả root"
+      description: "Chu trình A↔B không thay thế được đường đi từ root logic được cung cấp."
       input:
         pathParams: {}
         queryParams: {}
@@ -5332,12 +5316,11 @@ LifecycleExperimentController:
           - B
         interpretation: These are paths from the supplied logical roots, not observed JVM GC roots. No garbage collection, collection timing or native resource cleanup
           is inferred.
-      detailDescription: <p>Ban ??u root A l?m A v? B reachable d? C t?ch ri?ng. <code>RELEASE A</code> b? root duy nh?t n?n c? ba ID chuy?n sang notReachable; <code>RETAIN
-        C</code> ch? l?m C reachable tr? l?i. <code>ReferenceGraph.snapshot</code> duy?t t?p visited ?? kh?ng l?p v? h?n tr?n chu tr?nh. ??y kh?ng ph?i k?t qu? thu
-        gom r?c JVM.</p>
+      detailDescription: >-
+        <p>Ban đầu root A đi tới A và B, còn C tách biệt. <code>RELEASE A</code> xóa root duy nhất, khiến cả ba ID đều thuộc notReachable; <code>RETAIN C</code> chỉ làm C có thể truy cập trở lại. <code>ReferenceGraph.snapshot</code> dùng visited set để xử lý chu trình. Ví dụ không quan sát việc thu gom rác của JVM.</p>
     - id: case_002
-      title: C?nh tr? ??n node kh?ng t?n t?i
-      description: ?? th? t? ch?i ID tham chi?u kh?ng khai b?o.
+      title: "Liên kết trỏ tới node không tồn tại"
+      description: "Khi dựng đồ thị, liên kết tới ID chưa khai báo bị từ chối."
       input:
         pathParams: {}
         queryParams: {}
@@ -5354,11 +5337,11 @@ LifecycleExperimentController:
       response:
         code: INVALID_INPUT
         message: 'Unknown node ID: MISSING'
-      detailDescription: <p>Sau khi t?o node A, <code>ReferenceGraph</code> x? l? links v? g?i <code>requireNode(&quot;MISSING&quot;)</code>. Kh?ng t?m th?y ID, constructor
-        n?m <code>IllegalArgumentException</code> tr??c khi t?o snapshot; HTTP 400 tr? <code>INVALID_INPUT</code>.</p>
+      detailDescription: >-
+        <p>Sau khi tạo A, <code>ReferenceGraph</code> phân giải liên kết bằng <code>requireNode(&quot;MISSING&quot;)</code>. ID này không tồn tại, nên quá trình dựng đồ thị ném <code>IllegalArgumentException</code> trước khi có snapshot; kết quả là HTTP 400 <code>INVALID_INPUT</code>.</p>
     - id: case_003
-      title: Kh?ng th? th? root ch?a gi?
-      description: RELEASE y?u c?u root n?m trong t?p ?ang gi?.
+      title: "Không thể thả root chưa được giữ"
+      description: "RELEASE yêu cầu ID nằm trong tập root hiện tại."
       input:
         pathParams: {}
         queryParams: {}
@@ -5376,8 +5359,8 @@ LifecycleExperimentController:
       response:
         code: INVALID_INPUT
         message: 'Root was not retained: A'
-      detailDescription: '<p>Graph c? node A nh?ng <code>initialRoots</code> r?ng. Khi <code>RootStep</code> y?u c?u RELEASE A, <code>roots.remove</code> tr? false
-        v? <code>ReferenceGraph.apply</code> n?m <code>IllegalArgumentException(&quot;Root was not retained: A&quot;)</code>. HTTP 400 kh?ng tr? snapshot t?ng ph?n.</p>'
+      detailDescription: >-
+        <p>Đồ thị có A nhưng ban đầu không có root. Khi RELEASE A, <code>roots.remove</code> trả false và <code>ReferenceGraph.apply</code> ném <code>IllegalArgumentException(&quot;Root was not retained: A&quot;)</code>. HTTP 400 không trả các snapshot một phần.</p>
   resources(ResourceRequest):
     methodName: resources
     httpMethods:
@@ -5387,8 +5370,8 @@ LifecycleExperimentController:
     usage: true
     cases:
     - id: case_001
-      title: ??ng t?i nguy?n theo th? t? ng??c
-      description: C? body v? close ??u th?nh c?ng.
+      title: "Đóng tài nguyên theo thứ tự ngược"
+      description: "Phần thân và cả hai thao tác đóng tài nguyên đều thành công."
       input:
         pathParams: {}
         queryParams: {}
@@ -5413,11 +5396,11 @@ LifecycleExperimentController:
           outer: true
           inner: true
         completedWithoutFailure: true
-      detailDescription: <p>Service m? outer tr??c inner r?i ch?y body th?nh c?ng. <code>try-with-resources</code> g?i <code>inner.close()</code> r?i <code>outer.close()</code>.
-        C? hai c? closed th?nh true; primaryFailure=null v? suppressedFailures r?ng; HTTP 200 b?o completedWithoutFailure=true.</p>
+      detailDescription: >-
+        <p>Service mở outer trước inner rồi hoàn thành phần thân. <code>try-with-resources</code> gọi <code>inner.close()</code> trước <code>outer.close()</code>. Cả hai cờ closed đều true, primaryFailure là null và suppressedFailures rỗng; HTTP 200 xác nhận hoàn thành thành công.</p>
     - id: case_002
-      title: L?i body ch?nh, l?i close suppressed
-      description: Body v? c? hai l?n close ??u b?o l?i.
+      title: "Lỗi phần thân là lỗi chính, lỗi đóng bị suppressed"
+      description: "Phần thân và cả hai thao tác đóng đều thất bại."
       input:
         pathParams: {}
         queryParams: {}
@@ -5443,12 +5426,11 @@ LifecycleExperimentController:
           outer: true
           inner: true
         completedWithoutFailure: false
-      detailDescription: <p>Body n?m <code>IllegalStateException(&quot;body failed&quot;)</code> tr??c <code>body:success</code>. Hai l?n close v?n ch?y theo th?
-        t? inner/outer, ??nh d?u closed r?i n?m l?i; Java g?n c?c l?i n?y v?o <code>getSuppressed()</code>, gi? body failed l? primary. Service tr? k?t qu? m? ph?ng
-        qua HTTP 200.</p>
+      detailDescription: >-
+        <p>Phần thân ném <code>IllegalStateException(&quot;body failed&quot;)</code> trước sự kiện body:success. Cả hai thao tác đóng vẫn chạy theo thứ tự inner/outer, đánh dấu tài nguyên đã đóng rồi ném lỗi. Java lưu lỗi đóng trong <code>getSuppressed()</code>, còn lỗi phần thân vẫn là lỗi chính. HTTP 200 trả kết quả giả lập.</p>
     - id: case_003
-      title: L?i ??ng inner th?nh primary
-      description: N?u body th?nh c?ng th? l?n close l?i ??u ti?n quy?t ??nh primary.
+      title: "Lỗi đóng inner trở thành lỗi chính"
+      description: "Khi phần thân thành công, lỗi đóng đầu tiên trở thành lỗi chính."
       input:
         pathParams: {}
         queryParams: {}
@@ -5474,8 +5456,8 @@ LifecycleExperimentController:
           outer: true
           inner: true
         completedWithoutFailure: false
-      detailDescription: <p>Body ghi <code>body:success</code>. <code>inner.close()</code> l?i tr??c v? l? primaryFailure; <code>outer.close()</code> v?n ch?y, l?i
-        c?a n? b? suppressed. Trace cho th?y c? hai ?? ??ng, completedWithoutFailure=false v? HTTP 200.</p>
+      detailDescription: >-
+        <p>Phần thân ghi <code>body:success</code>. <code>inner.close()</code> thất bại trước và trở thành primaryFailure; <code>outer.close()</code> vẫn chạy, lỗi của nó bị suppressed. Cả hai tài nguyên đều đã đóng, completedWithoutFailure=false và HTTP 200.</p>
   publication(PublicationRequest):
     methodName: publication
     httpMethods:
@@ -5485,8 +5467,8 @@ LifecycleExperimentController:
     usage: true
     cases:
     - id: case_001
-      title: Callback s?m nh?n th?y null
-      description: UnsafeListener c?ng b? this tr??c khi g?n label; SafeListener kh?i t?o xong m?i c?ng b?.
+      title: "Callback chạy sớm quan sát thấy null"
+      description: "UnsafeListener công bố this trước khi gán field; SafeListener đăng ký sau khởi tạo."
       input:
         pathParams: {}
         queryParams: {}
@@ -5502,12 +5484,11 @@ LifecycleExperimentController:
         safeObservedAfterConstruction: READY
         unsafeSubscriptions: 1
         safeSubscriptions: 1
-      detailDescription: <p><code>UnsafeListener</code> g?i <code>register(this)</code> trong constructor tr??c khi g?n label. Callback ???c g?i ngay v? l?u null;
-        l?n g?i ti?p theo sau kh?i t?o th?y READY. <code>SafeListener</code> t?o xong tr??c khi ??ng k? n?n hai l?n quan s?t ??u l? READY. Hai registry ri?ng m?i
-        n?i c? m?t subscription.</p>
+      detailDescription: >-
+        <p><code>UnsafeListener</code> gọi <code>register(this)</code> ngay trong constructor trước khi gán label. Callback đồng bộ ghi nhận null; callback về sau thấy READY. <code>SafeListener</code> dựng xong đối tượng rồi mới đăng ký, nên cả hai quan sát đều là READY. Mỗi registry độc lập có một subscription.</p>
     - id: case_002
-      title: Label r?ng b? t? ch?i
-      description: Kh?ng th? t?o k?ch b?n listener v?i ??nh danh r?ng.
+      title: "Label rỗng bị từ chối"
+      description: "Định danh rỗng không thể bắt đầu phép so sánh listener."
       input:
         pathParams: {}
         queryParams: {}
@@ -5519,8 +5500,8 @@ LifecycleExperimentController:
       response:
         code: INVALID_INPUT
         message: label must be 1-40 letters, digits, '_' or '-'
-      detailDescription: <p><code>PublicationScenario.compare</code> x?c th?c regex <code>[A-Za-z0-9_-]{1,40}</code>. Chu?i r?ng kh?ng th?a ?i?u ki?n, v? v?y n?m
-        <code>IllegalArgumentException</code> tr??c khi t?o registry; advice tr? HTTP 400 <code>INVALID_INPUT</code> v? th?ng b?o g?c.</p>
+      detailDescription: >-
+        <p><code>PublicationScenario.compare</code> kiểm tra mẫu <code>[A-Za-z0-9_-]{1,40}</code>. Chuỗi rỗng không thỏa điều kiện, nên ném <code>IllegalArgumentException</code> trước khi tạo registry; advice trả HTTP 400 <code>INVALID_INPUT</code> cùng thông báo gốc.</p>
 ModelingExperimentController:
   library(LibraryRequest):
     methodName: library
@@ -5531,8 +5512,8 @@ ModelingExperimentController:
     usage: true
     cases:
     - id: case_001
-      title: M??n, t? ch?i m??n tr?ng b?n s?ch r?i tr?
-      description: Ba h?nh ??ng ki?m ch?ng BR-03, h?n tr? 14 ng?y, trace c?ng t?c v? vi?c gi? l?ch s? sau khi tr?.
+      title: "Mượn sách, từ chối mượn bản đang bận rồi trả sách"
+      description: "Ba hành động kiểm chứng BR-03, hạn trả 14 ngày, trace cộng tác và lịch sử khoản mượn sau khi trả."
       input:
         pathParams: {}
         queryParams: {}
@@ -5760,15 +5741,13 @@ ModelingExperimentController:
             status: RETURNED
         invariantsSatisfied: true
         scope: REQUEST_LOCAL_ONLY_SIMULATED_LIBRARY_NO_DATABASE_OR_CROSS_REQUEST_CONCURRENCY
-      detailDescription: '<p><code>LibraryModel.borrow</code> nh?n MEM-1/COPY-1 ng?y 2026-10-20, ki?m tra eligibility/capacity/availability tr??c khi t?o LOAN-1 v?i
-        dueOn 2026-11-03. Snapshot sau b??c 1 c? m?t loan ACTIVE v? COPY-1.borrowed=true.</p>
+      detailDescription: >-
+        <p><code>LibraryModel.borrow</code> xử lý MEM-1/COPY-1 ngày 2026-10-20, kiểm tra tư cách mượn, giới hạn số sách và trạng thái bản sao trước khi tạo LOAN-1 với dueOn=2026-11-03. Snapshot đầu tiên có khoản mượn ACTIVE và COPY-1.borrowed=true.</p>
 
-        <p>B??c 2 MEM-2 m??n c?ng COPY-1 n?n <code>BookCopy.ensureAvailable</code> n?m <code>ModelRuleViolation(BR-03)</code>; service b?t l?i, ghi accepted=false
-        v? before=after, kh?ng t?o LOAN-2. B??c 3 tr? LOAN-1 ng?y 2026-10-25, gi? record trong history v?i RETURNED, gi?i ph?ng COPY-1, gi?m activeLoans c?a MEM-1
-        v? 0. K?t qu? HTTP 200 v? invariantsSatisfied=true; trace ph?n ?nh th? t? method g?i th?t.</p>'
+        <p>Lần mượn thứ hai của MEM-2 đối với cùng COPY-1 gây <code>ModelRuleViolation(BR-03)</code> trong <code>BookCopy.ensureAvailable</code>. Service ghi accepted=false, before/after không đổi và không tạo LOAN-2. Hành động RETURN LOAN-1 ngày 2026-10-25 giữ lịch sử khoản mượn với trạng thái RETURNED, giải phóng COPY-1 và đưa activeLoans của MEM-1 về 0. HTTP 200 trả invariantsSatisfied=true kèm đúng chuỗi lời gọi phương thức.</p>
     - id: case_002
-      title: Th?nh vi?n inactive kh?ng ???c m??n
-      description: BR-01 thu?c Member, y?u c?u th?t b?i nh?ng tr?ng th?i to?n ?? th? v?n nguy?n v?n.
+      title: "Thành viên inactive không được mượn"
+      description: "Quy tắc BR-01 thuộc Member; yêu cầu bị từ chối mà không thay đổi đồ thị miền."
       input:
         pathParams: {}
         queryParams: {}
@@ -5837,12 +5816,11 @@ ModelingExperimentController:
         current: *id048
         invariantsSatisfied: true
         scope: REQUEST_LOCAL_ONLY_SIMULATED_LIBRARY_NO_DATABASE_OR_CROSS_REQUEST_CONCURRENCY
-      detailDescription: <p><code>LibraryModel.borrow</code> t?m th?y MEM-1 v? COPY-1, r?i g?i <code>Member.ensureEligible</code>. V? active=false, Member n?m <code>ModelRuleViolation</code>
-        v?i m? BR-01 v? th?ng b?o <code>member is inactive</code> tr??c khi t?o Loan ho?c ??nh d?u copy. Step 1 accepted=false, affectedLoanId=null, trace ch? c?
-        hai l?i g?i v? before gi?ng after. HTTP 200 d?nh cho t? ch?i nghi?p v? d? ki?n.</p>
+      detailDescription: >-
+        <p><code>LibraryModel.borrow</code> phân giải MEM-1 và COPY-1, rồi gọi <code>Member.ensureEligible</code>. Vì active=false, Member ném <code>ModelRuleViolation</code> với mã BR-01 và thông báo <code>member is inactive</code> trước khi tạo Loan hay đánh dấu bản sách đang mượn. Bước 1 có accepted=false, affectedLoanId=null, chỉ hai lời gọi được ghi và before/after giống nhau. HTTP 200 biểu diễn việc từ chối theo quy tắc nghiệp vụ đã dự kiến.</p>
     - id: case_003
-      title: T? ch?i th?nh vi?n kh?ng t?n t?i
-      description: Model ki?m tra identity map tr??c khi truy c?p collaborator kh?c.
+      title: "Từ chối mã thành viên không tồn tại"
+      description: "Aggregate kiểm tra bảng định danh trước khi truy cập các thành phần cộng tác khác."
       input:
         pathParams: {}
         queryParams: {}
@@ -5910,12 +5888,11 @@ ModelingExperimentController:
         current: *id049
         invariantsSatisfied: true
         scope: REQUEST_LOCAL_ONLY_SIMULATED_LIBRARY_NO_DATABASE_OR_CROSS_REQUEST_CONCURRENCY
-      detailDescription: <p><code>LibraryModel.borrow</code> ghi l?i g?i ch?nh r?i tra <code>members.get(&quot;MEM-77&quot;)</code>. Kh?ng t?m th?y th?nh vi?n n?y
-        n?n n?m <code>ModelRuleViolation(UNKNOWN_MEMBER)</code> tr??c b??c t?m copy ho?c g?i Member. Service ghi accepted=false, detail=<code>unknown member</code>,
-        before=after, invariantsSatisfied=true v? HTTP 200.</p>
+      detailDescription: >-
+        <p><code>LibraryModel.borrow</code> ghi lời gọi cấp cao rồi tra <code>members.get(&quot;MEM-77&quot;)</code>. Vì ID không có trong bảng, nó ném <code>ModelRuleViolation(UNKNOWN_MEMBER)</code> trước khi tra bản sách hay gọi phương thức Member. Service trả accepted=false, detail=<code>unknown member</code>, before/after không đổi, invariantsSatisfied=true và HTTP 200.</p>
     - id: case_004
-      title: T? ch?i danh m?c tr?ng ngay t?i bi?n
-      description: Request vi ph?m c?u tr?c kh?i t?o tr??c khi t?o b?t k? object graph n?o.
+      title: "Từ chối đồ thị miền rỗng trước khi tạo đối tượng"
+      description: "Request vi phạm ràng buộc cấu trúc của đồ thị miền ban đầu."
       input:
         pathParams: {}
         queryParams: {}
@@ -5929,9 +5906,8 @@ ModelingExperimentController:
       status: 400
       response:
         error: require 1..20 titles, 1..20 members, 1..30 copies
-      detailDescription: <p><code>ModelingExperimentService.library</code> y?u c?u ?t nh?t m?t Title, Member v? BookCopy, trong gi?i h?n 20/20/30. C? ba danh s?ch
-        ??u r?ng, n?n service n?m <code>IllegalArgumentException</code> v?i th?ng b?o <code>require 1..20 titles, 1..20 members, 1..30 copies</code> ngay ? ??u method.
-        <code>ModelingExceptionHandler</code> tr? HTTP 400 v?i DTO ch? c? tr??ng <code>error</code>, kh?ng c? initial/steps/current.</p>
+      detailDescription: >-
+        <p><code>ModelingExperimentService.library</code> yêu cầu ít nhất một Title, một Member và một BookCopy; giới hạn trên tương ứng là 20, 20 và 30. Cả ba danh sách đều rỗng, nên bước kiểm tra ban đầu ném <code>IllegalArgumentException</code> với <code>require 1..20 titles, 1..20 members, 1..30 copies</code>. <code>ModelingExceptionHandler</code> trả HTTP 400 chỉ có DTO <code>error</code>, không trả đồ thị đối tượng một phần.</p>
   orders(OrderRequest):
     methodName: orders
     httpMethods:
@@ -5941,8 +5917,8 @@ ModelingExperimentController:
     usage: true
     cases:
     - id: case_001
-      title: T? DRAFT ??n DELIVERED v?i l?i payment guard
-      description: M?c thanh to?n sai b? ghi nh?n nh?ng kh?ng ??i state, c?c b??c ??ng sau ?? ho?n t?t giao h?ng m? ph?ng.
+      title: "Từ DRAFT đến DELIVERED kèm lần kiểm tra payment thất bại"
+      description: "Thanh toán sai được ghi nhận mà không đổi trạng thái; các sự kiện hợp lệ tiếp theo hoàn tất giao hàng giả lập."
       input:
         pathParams: {}
         queryParams: {}
@@ -6065,14 +6041,13 @@ ModelingExperimentController:
           totalVnd: 100
           trackingCode: TRACK-1
         scope: REQUEST_LOCAL_ONLY_SIMULATED_ORDER_NO_PAYMENT_OR_EXTERNAL_SHIPPING
-      detailDescription: '<p>S? ki?n SUBMIT chuy?n DRAFT sang WAITING_PAYMENT. B??c <code>CONFIRM_PAYMENT</code> v?i receivedVnd=75 kh?ng b?ng totalVnd=100 n?n <code>ModeledOrder.apply</code>
-        n?m <code>ModelRuleViolation(PAYMENT_GUARD)</code>, ?? <code>before.state</code> v? <code>after.state</code> c?ng WAITING_PAYMENT.</p>
+      detailDescription: >-
+        <p>SUBMIT chuyển DRAFT sang WAITING_PAYMENT. <code>CONFIRM_PAYMENT</code> với receivedVnd=75 không đạt totalVnd=100 và phát sinh <code>ModelRuleViolation(PAYMENT_GUARD)</code>; <code>before.state</code> và <code>after.state</code> đều giữ WAITING_PAYMENT.</p>
 
-        <p>X?c nh?n l?i 100 th?nh c?ng: PAID ? START_PACKING th?nh PACKING ? SHIP v?i TRACK-1 th?nh SHIPPED ? CONFIRM_DELIVERY th?nh DELIVERED. TrackingCode ???c
-        l?u khi SHIP h?p l?. HTTP 200 tr? s?u b??c v? scope m? ph?ng kh?ng thanh to?n/giao h?ng th?c.</p>'
+        <p>Xác nhận 100 thành công: PAID → START_PACKING chuyển sang PACKING → SHIP với TRACK-1 chuyển sang SHIPPED → CONFIRM_DELIVERY chuyển sang DELIVERED. Tracking code chỉ được lưu sau SHIP hợp lệ. HTTP 200 chứa cả sáu bước và đánh dấu phạm vi mô phỏng.</p>
     - id: case_002
-      title: C?m SHIP s?m v? kh?ng h?i sinh ??n ?? h?y
-      description: Tr?ng th?i DRAFT ch?a th? SHIP; CANCELLED l? terminal v? t? ch?i SUBMIT sau ??.
+      title: "Cấm SHIP quá sớm và không khôi phục đơn đã hủy"
+      description: "DRAFT không có chuyển trạng thái SHIP; CANCELLED là trạng thái kết thúc và từ chối SUBMIT sau đó."
       input:
         pathParams: {}
         queryParams: {}
@@ -6145,14 +6120,13 @@ ModelingExperimentController:
           totalVnd: 50
           trackingCode: null
         scope: REQUEST_LOCAL_ONLY_SIMULATED_ORDER_NO_PAYMENT_OR_EXTERNAL_SHIPPING
-      detailDescription: '<p>Trong <code>DRAFT</code>, event SHIP kh?ng c? c?nh h?p l? n?n <code>ModeledOrder.apply</code> ghi <code>INVALID_TRANSITION</code>, kh?ng
-        thay trackingCode ho?c state. Event CANCEL t? DRAFT ???c ph?p v? chuy?n sang CANCELLED.</p>
+      detailDescription: >-
+        <p>SHIP không hợp lệ từ <code>DRAFT</code>, nên <code>ModeledOrder.apply</code> ghi <code>INVALID_TRANSITION</code> mà không đổi trạng thái hay trackingCode. CANCEL hợp lệ từ DRAFT và chuyển đơn hàng sang CANCELLED.</p>
 
-        <p>Khi ?? ? tr?ng th?i terminal CANCELLED, SUBMIT b? t? ch?i v?i detail <code>CANCELLED cannot handle SUBMIT</code>. C? hai b??c l?i c? before b?ng after;
-        HTTP 200 gi? ??y ?? ch?ng c? chuy?n tr?ng th?i v? ???ng l?i.</p>'
+        <p>Khi đơn đã ở trạng thái kết thúc CANCELLED, SUBMIT thất bại với <code>CANCELLED cannot handle SUBMIT</code>. Cả hai bước bị từ chối đều có snapshot before/after giống nhau. HTTP 200 lưu bằng chứng chuyển trạng thái thay vì làm cả request thất bại.</p>
     - id: case_003
-      title: Tracking sai kh?ng l?m ??i PACKING
-      description: Kh?ng th? SHIP v?i trackingCode ch? th??ng; retry h?p l? m?i ghi m? v?n ??n.
+      title: "Tracking code sai không thay đổi trạng thái PACKING"
+      description: "Mã theo dõi chữ thường bị từ chối; lần SHIP hợp lệ sau đó mới lưu số theo dõi."
       input:
         pathParams: {}
         queryParams: {}
@@ -6259,14 +6233,13 @@ ModelingExperimentController:
           totalVnd: 100
           trackingCode: TRACK-2
         scope: REQUEST_LOCAL_ONLY_SIMULATED_ORDER_NO_PAYMENT_OR_EXTERNAL_SHIPPING
-      detailDescription: '<p>Sau SUBMIT, x?c nh?n ?? 100 v? START_PACKING, state l? PACKING. SHIP v?i trackingCode <code>bad</code> kh?ng kh?p regex ch? hoa <code>[A-Z0-9-]{3,32}</code>,
-        n?n <code>ModeledOrder</code> ph?t <code>TRACKING_GUARD</code> tr??c khi g?n field, tr? before=after=PACKING.</p>
+      detailDescription: >-
+        <p>Sau SUBMIT, xác nhận đủ thanh toán và START_PACKING, đơn hàng ở PACKING. SHIP với trackingCode <code>bad</code> không khớp mẫu chữ hoa <code>[A-Z0-9-]{3,32}</code>; <code>ModeledOrder</code> ném <code>TRACKING_GUARD</code> trước khi ghi trường nào, nên before/after vẫn là PACKING.</p>
 
-        <p>L?n SHIP ti?p theo d?ng TRACK-2 ??ng quy t?c, chuy?n sang SHIPPED v? l?u trackingCode. HTTP 200 c? b??c b? t? ch?i v? b??c h?p l? m? kh?ng g?y ??t bi?n
-        t?ng ph?n.</p>'
+        <p>Lần SHIP kế tiếp với TRACK-2 hợp lệ, chuyển sang SHIPPED và lưu trackingCode. HTTP 200 thể hiện cả bước từ chối lẫn bước chấp nhận mà không có thay đổi trạng thái một phần.</p>
     - id: case_004
-      title: T? ch?i event kh?ng thu?c state machine
-      description: Event UNKNOWN b? lo?i khi parse enum tr??c v?ng ch?y, kh?ng t?o OrderResult t?ng ph?n.
+      title: "Từ chối sự kiện ngoài state machine"
+      description: "UNKNOWN không phân tích được thành enum trước khi chạy các hành động nên không có OrderResult một phần."
       input:
         pathParams: {}
         queryParams: {}
@@ -6280,9 +6253,8 @@ ModelingExperimentController:
       status: 400
       response:
         error: unsupported order event
-      detailDescription: <p><code>ModelingExperimentService.order</code> duy?t tr??c to?n b? danh s?ch action v? g?i <code>ModeledOrder.Event.valueOf(&quot;UNKNOWN&quot;)</code>.
-        Enum kh?ng c? gi? tr? ?? n?n service chuy?n l?i th?nh <code>IllegalArgumentException(&quot;unsupported order event&quot;)</code>. Handler tr? HTTP 400 v?i
-        <code>{"error":"unsupported order event"}</code> thay v? m?t b??c rejected trong HTTP 200.</p>
+      detailDescription: >-
+        <p><code>ModelingExperimentService.order</code> kiểm tra trước mọi hành động qua <code>ModeledOrder.Event.valueOf(&quot;UNKNOWN&quot;)</code>. Enum không có hằng số này, nên service ném <code>IllegalArgumentException(&quot;unsupported order event&quot;)</code>. Handler trả HTTP 400 với <code>{&quot;error&quot;:&quot;unsupported order event&quot;}</code> thay vì một bước bị từ chối trong HTTP 200.</p>
 ObjectExperimentsController:
   references(ObjectExperimentDto.ReferenceRequest):
     methodName: references

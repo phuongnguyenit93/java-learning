@@ -123,63 +123,76 @@ ClassDesignExperimentsController:
     usage: true
 CompositionExperimentController:
   notification(NotificationRequest):
-    execution: '<h3>Lu?ng l?p gh?p th?ng b?o</h3><ol>
+    execution: '<h3>Luồng kết hợp các thành phần thông báo</h3><ol>
 
-      <li><code>CompositionExperimentController.notification</code> chuy?n DTO cho <code>CompositionExperimentService.notification</code>. Service x?c th?c format,
-      channel, ID ??n, recipient theo regex v? totalCents trong 0?100000000; vi ph?m g?y HTTP 400 <code>INVALID_INPUT</code>.</li>
+      <li><code>CompositionExperimentController.notification</code> chuyển DTO tới <code>CompositionExperimentService.notification</code>. Service kiểm tra
+      format, channel, mã đơn hàng và người nhận theo mẫu cho phép, cùng totalCents từ 0 đến 100000000; đầu vào không hợp lệ trả HTTP 400 <code>INVALID_INPUT</code>.</li>
 
-      <li>Service ch?n <code>FullFormatter</code> ho?c <code>CompactFormatter</code> theo request, t?o <code>RecordingTransport</code> gi? channel v? c? failTransport;
-      n?u <code>audited</code> th? b?c n? b?ng <code>AuditedTransport</code>. <code>Notifier</code> nh?n c? hai collaborator qua constructor.</li>
+      <li>Service chọn <code>FullFormatter</code> hoặc <code>CompactFormatter</code> theo request, tạo <code>RecordingTransport</code> với channel và cờ
+      failTransport; nếu <code>audited</code> được bật thì bọc transport bằng <code>AuditedTransport</code>. <code>Notifier</code> nhận formatter và
+      transport qua constructor.</li>
 
-      <li><code>notifyPaid</code> g?i formatter t?o n?i dung, ghi <code>format:</code> r?i delegate <code>send</code> ghi <code>transport:</code>. N?u send th?nh
-      c?ng v? audit ???c b?t, decorator m?i ghi <code>audit:accepted</code>; khi send n?m <code>IllegalStateException</code>, Notifier b?t v? tr? accepted=false v?i
-      l? do l?i, kh?ng ghi audit.</li>
+      <li><code>notifyPaid</code> gọi formatter tạo nội dung và ghi dấu vết <code>format:</code>, sau đó ủy quyền cho <code>send</code> ghi
+      <code>transport:</code>. Chỉ khi gửi thành công và bật audit, decorator mới ghi <code>audit:accepted</code>. Nếu send ném
+      <code>IllegalStateException</code>, Notifier bắt lỗi, trả accepted=false kèm nguyên nhân và không ghi audit thành công.</li>
 
-      <li>HTTP 200 tr? <code>NotificationResponse</code> g?m channel, content, accepted, failure, trace; m?i request d?ng m?t pipeline m? ph?ng ??c l?p.</li></ol>'
+      <li>HTTP 200 trả <code>NotificationResponse</code> gồm channel, content, accepted, failure và trace; mỗi request sử dụng một pipeline
+      mô phỏng độc lập.</li></ol>'
     usage: true
   policies(PolicyRequest):
-    execution: '<h3>Lu?ng ho?n ??i v? injection theo l?i g?i</h3><ol>
+    execution: '<h3>Thay thế chính sách và truyền phụ thuộc theo từng lời gọi</h3><ol>
 
-      <li>Service ki?m tra danh s?ch <code>steps</code> c? 1?20 m?c, t?o <code>Policy</code> ban ??u qua <code>SwitchablePricing.create</code>, r?i x?c th?c to?n
-      b? action, tham s? policy v? subtotal 0?100000000 tr??c khi thay ??i b?t c? collaborator n?o. Gi? tr? FIXED ???c gi?i h?n 0?100000000, PERCENT 0?100.</li>
+      <li>Service yêu cầu <code>steps</code> có từ 1 đến 20 mục, tạo <code>Policy</code> ban đầu bằng <code>SwitchablePricing.create</code>, rồi
+      xác thực toàn bộ action, tham số policy và subtotal từ 0 đến 100000000 trước khi thực thi. Mức giảm FIXED nằm trong
+      0 đến 100000000; PERCENT trong 0 đến 100.</li>
 
-      <li><code>SwitchablePricing</code> l?u policy trong <code>AtomicReference</code>. <code>SWITCH</code> g?i <code>replace</code>; <code>QUOTE</code> ch?p m?t
-      tham chi?u policy r?i t?nh v?i n?; <code>QUOTE_WITH_POLICY</code> t?o policy t?m qua <code>quoteWith</code>, kh?ng s?a policy ?ang ho?t ??ng.</li>
+      <li><code>SwitchablePricing</code> giữ policy đang dùng trong <code>AtomicReference</code>. <code>SWITCH</code> gọi <code>replace</code>;
+      <code>QUOTE</code> lấy tham chiếu policy hiện tại để tính giá; <code>QUOTE_WITH_POLICY</code> dùng <code>quoteWith</code> với một
+      policy tạm thời, không thay đổi policy đang hoạt động.</li>
 
-      <li><code>NoDiscount</code> gi? nguy?n subtotal, <code>FixedDiscount</code> tr? t?i ?a t?i 0, <code>PercentDiscount</code> tr? theo ph?n tr?m ph?p to?n integer.
-      <code>quoteWith</code> ki?m tra k?t qu? payable trong kho?ng 0 t?i subtotal; timeline ghi <code>activePolicy</code> v? <code>usedPolicy</code> ri?ng bi?t.</li>
+      <li><code>NoDiscount</code> giữ nguyên subtotal, <code>FixedDiscount</code> giảm nhưng không để số tiền phải trả âm, còn
+      <code>PercentDiscount</code> dùng phép tính phần trăm trên số nguyên. <code>quoteWith</code> kiểm tra payable từ 0 đến subtotal;
+      timeline ghi riêng <code>activePolicy</code> và <code>usedPolicy</code>.</li>
 
-      <li>Tr? HTTP 200 <code>PolicyResponse</code> v?i policy ban ??u/cu?i v? c?c b??c; l?i ??u v?o ho?c s? h?c tr?n tr? HTTP 400. State l? c?c b? t?ng request, kh?ng
-      d?ng policy to?n c?c.</li></ol>'
+      <li>HTTP 200 trả <code>PolicyResponse</code> gồm policy ban đầu, policy cuối cùng và lịch sử các bước; đầu vào sai hoặc
+      tràn số học trả HTTP 400. Trạng thái policy chỉ tồn tại trong từng request, không dùng chung trên toàn ứng dụng.</li></ol>'
     usage: true
   placeOrder(PlaceOrderRequest):
-    execution: '<h3>Lu?ng ?y quy?n l?u ??n</h3><ol>
+    execution: '<h3>Luồng ủy quyền lưu đơn hàng</h3><ol>
 
-      <li><code>CompositionExperimentService.placeOrder</code> y?u c?u 1?20 d?ng. M?i <code>OrderLineInput</code> tr? th?nh <code>OrderPlacement.Line</code> ki?m
-      tra SKU, quantity 1?1000, unitPriceCents 0?100000000 v? t?nh ti?n b?ng <code>Math.multiplyExact</code>.</li>
+      <li><code>CompositionExperimentService.placeOrder</code> yêu cầu từ 1 đến 20 dòng hàng. Mỗi <code>OrderLineInput</code> trở thành
+      <code>OrderPlacement.Line</code>, kiểm tra SKU, quantity từ 1 đến 1000 và unitPriceCents từ 0 đến 100000000;
+      thành tiền được tính bằng <code>Math.multiplyExact</code>.</li>
 
-      <li><code>OrderPlacement.Order.create</code> c?ng subtotal b?ng <code>Math.addExact</code>, ki?m tra ID v? l?u snapshot b?ng <code>List.copyOf</code>. Tr??c
-      khi l?u, service t?o <code>InMemoryOrderRepository</code> theo c? failStorage r?i truy?n v?o constructor <code>OrderService</code>.</li>
+      <li><code>OrderPlacement.Order.create</code> cộng subtotal bằng <code>Math.addExact</code>, kiểm tra mã đơn và lưu bản sao
+      bất biến của các dòng qua <code>List.copyOf</code>. Service tạo <code>InMemoryOrderRepository</code> theo cờ failStorage,
+      rồi truyền repository vào constructor <code>OrderService</code>.</li>
 
-      <li><code>OrderService.place</code> ?y quy?n <code>repository.save</code>. Repository t?ng <code>saveAttempts</code> tr??c khi quy?t ??nh l?u ho?c n?m <code>IllegalStateException(&quot;Simulated
-      repository failure before save&quot;)</code>. Service b?t l?i n?y ?? tr? accepted=false v? storedOrders r?ng; validation l?i tr??c try tr? HTTP 400.</li>
+      <li><code>OrderService.place</code> ủy quyền cho <code>repository.save</code>. Repository tăng <code>saveAttempts</code>
+      trước khi lưu hoặc ném <code>IllegalStateException(&quot;Simulated repository failure before save&quot;)</code>.
+      Service bắt lỗi mô phỏng để trả accepted=false và storedOrders rỗng; lỗi xác thực xảy ra trước khối try trả HTTP 400.</li>
 
-      <li>HTTP 200 tr? <code>PlaceOrderResponse</code> g?m s? l?n th?, ??n ?? l?u v? chu?i <code>IN_MEMORY_ONLY; no durable persistence or transaction implied</code>;
-      kh?ng kh?ng ??nh c? transaction hay l?u b?n.</li></ol>'
+      <li>HTTP 200 trả <code>PlaceOrderResponse</code> gồm số lần thử lưu, các đơn đã lưu và chuỗi
+      <code>IN_MEMORY_ONLY; no durable persistence or transaction implied</code>. Đây là mô phỏng trong bộ nhớ, không có
+      giao dịch hay lưu trữ bền vững.</li></ol>'
     usage: true
   resources(ResourceRequest):
-    execution: '<h3>Lu?ng s? h?u v? ??ng handle</h3><ol>
+    execution: '<h3>Quyền sở hữu và đóng tài nguyên</h3><ol>
 
-      <li>Service ki?m tra ownership kh?c null, content kh?ng r?ng v? d?i t?i ?a 100, r?i t?o <code>TrackedHandle</code> ghi <code>handle:open</code>. Service t?o
-      <code>Exporter</code> b?n trong <code>try-with-resources</code>, truy?n <code>ownsHandle=true</code> khi OWNED.</li>
+      <li>Service yêu cầu ownership khác null, content không trống và dài tối đa 100 ký tự. Service tạo <code>TrackedHandle</code>
+      ghi <code>handle:open</code>, rồi tạo <code>Exporter</code> trong <code>try-with-resources</code> với
+      <code>ownsHandle=true</code> khi chọn OWNED.</li>
 
-      <li><code>Exporter.export</code> ?y quy?n <code>TrackedHandle.write</code>, ghi <code>handle:write:</code>, c? th? n?m <code>IllegalStateException(&quot;Simulated
-      write failure&quot;)</code>. Khi r?i scope, <code>Exporter.close</code> lu?n ghi <code>exporter:close</code>, ??ng handle n?u OWNED.</li>
+      <li><code>Exporter.export</code> ủy quyền cho <code>TrackedHandle.write</code>, ghi <code>handle:write:</code> và có thể
+      ném <code>IllegalStateException(&quot;Simulated write failure&quot;)</code>. Khi ra khỏi scope, <code>Exporter.close</code>
+      luôn ghi <code>exporter:close</code> và đóng handle nếu sở hữu nó (OWNED).</li>
 
-      <li>Service b?t l?i ghi ???c m? ph?ng v? l?y c? <code>resourceClosedAfterExporter</code>. N?u BORROWED, handle v?n m? l?c ?? n?n caller (service) ??ng sau;
-      c? <code>resourceClosedAfterCaller</code> lu?n ph?n ?nh tr?ng th?i sau b??c n?y.</li>
+      <li>Service bắt lỗi ghi mô phỏng và kiểm tra <code>resourceClosedAfterExporter</code>. Nếu BORROWED, handle vẫn
+      mở ở thời điểm đó vì bên gọi (service) chịu trách nhiệm đóng sau. <code>resourceClosedAfterCaller</code> phản ánh
+      trạng thái sau bước đóng của bên gọi.</li>
 
-      <li>Tr? HTTP 200 <code>ResourceResponse</code> v?i trace/c?/l?i. ??y l? handle gi?, th? hi?n h?p ??ng v?ng ??i thay v? ph? thu?c th?i ?i?m GC.</li></ol>'
+      <li>HTTP 200 trả <code>ResourceResponse</code> gồm trace, các cờ trạng thái và lỗi nếu có. Handle mô phỏng minh họa
+      hợp đồng quản lý vòng đời tài nguyên một cách tường minh, không phụ thuộc thời điểm chạy GC.</li></ol>'
     usage: true
 DesignPatternExperimentController:
   pricing(PricingRequest):
@@ -321,63 +334,76 @@ EncapsulationExperimentController:
     usage: true
 InheritanceExperimentsController:
   calculatePay(PayrollRequest):
-    execution: '<h3>Lu?ng t?nh l??ng ?a h?nh</h3><ol>
+    execution: '<h3>Luồng tính lương đa hình</h3><ol>
 
-      <li><code>InheritanceExperimentsController.calculatePay</code> g?i <code>PayrollInheritanceService.calculate</code>. Service ki?m tra <code>kind</code>, chu?n
-      h?a trim/uppercase b?ng <code>Locale.ROOT</code> r?i ch?n nh?nh <code>SALARIED</code> ho?c <code>HOURLY</code>.</li>
+      <li><code>InheritanceExperimentsController.calculatePay</code> gọi <code>PayrollInheritanceService.calculate</code>. Service kiểm tra
+      <code>kind</code>, loại bỏ khoảng trắng thừa, chuẩn hóa chữ hoa bằng <code>Locale.ROOT</code>, rồi chọn nhánh
+      <code>SALARIED</code> hoặc <code>HOURLY</code>.</li>
 
-      <li>Nh?nh salaried y?u c?u hourlyRateVnd/workedHours b?ng 0, t?o <code>Employee.Salaried</code>; hourly y?u c?u monthlySalaryVnd b?ng 0, t?o <code>Employee.Hourly</code>.
-      Constructor cha <code>Employee</code> ki?m tra ID/t?n kh?ng tr?ng v? trim hai tr??ng.</li>
+      <li>Nhân viên hưởng lương cố định phải có hourlyRateVnd và workedHours bằng 0, sau đó tạo
+      <code>Employee.Salaried</code>. Nhân viên hưởng lương theo giờ phải có monthlySalaryVnd bằng 0, sau đó tạo
+      <code>Employee.Hourly</code>. Constructor cha <code>Employee</code> kiểm tra ID và tên không trống, rồi trim cả hai trường.</li>
 
-      <li>Service gi? tham chi?u khai b?o <code>Employee</code>. Java dispatch <code>calculation()</code> v? <code>monthlyPayVnd()</code> t?i l?p runtime; salaried
-      tr? m?c c? ??nh, hourly d?ng <code>Math.multiplyExact(hourlyRateVnd, workedHours)</code>, gi?i h?n workedHours 0?744.</li>
+      <li>Service sử dụng tham chiếu khai báo kiểu <code>Employee</code>. Java điều phối <code>calculation()</code> và
+      <code>monthlyPayVnd()</code> tới lớp thực tế lúc chạy. Salaried trả mức lương cố định; Hourly dùng
+      <code>Math.multiplyExact(hourlyRateVnd, workedHours)</code> với workedHours từ 0 đến 744.</li>
 
-      <li>Th?nh c?ng tr? <code>PayrollResponse</code> HTTP 200 v?i ki?u khai b?o, l?p runtime v? <code>simulatedOnly=true</code>. <code>IllegalArgumentException</code>
-      th?nh HTTP 400 <code>INVALID_INPUT</code>; nh?n qu? gi?i h?n long th?nh HTTP 422 <code>ARITHMETIC_OVERFLOW</code>.</li></ol>'
+      <li>Thành công trả HTTP 200 với <code>PayrollResponse</code> gồm kiểu khai báo, lớp runtime và
+      <code>simulatedOnly=true</code>. <code>IllegalArgumentException</code> được chuyển thành HTTP 400
+      <code>INVALID_INPUT</code>; phép nhân vượt giới hạn long trả HTTP 422 <code>ARITHMETIC_OVERFLOW</code>.</li></ol>'
     usage: true
   compareDelivery(DeliveryRequest):
-    execution: '<h3>Lu?ng so s?nh k? th?a v? composition</h3><ol>
+    execution: '<h3>So sánh cách tính phí bằng kế thừa và kết hợp</h3><ol>
 
-      <li><code>compareDelivery</code> chuy?n <code>DeliveryRequest</code> cho <code>DeliveryComparisonService.compare</code>, y?u c?u <code>distanceKm &gt; 0</code>
-      v? holiday ch? c? khi priority=true; l?i tr? HTTP 400.</li>
+      <li><code>compareDelivery</code> chuyển <code>DeliveryRequest</code> tới <code>DeliveryComparisonService.compare</code>,
+      yêu cầu <code>distanceKm &gt; 0</code> và chỉ cho phép bật holiday khi priority=true. Đầu vào không hợp lệ trả HTTP 400.</li>
 
-      <li>Service ch?n <code>CityDelivery</code>, <code>PriorityCityDelivery</code> ho?c <code>HolidayPriorityDelivery</code>. <code>DeliveryPlan.quote()</code> l?
-      final: ki?m tra distance, g?i <code>distanceFee()</code> theo runtime, ki?m tra surcharge kh?ng ?m r?i th?m base 10000.</li>
+      <li>Service chọn <code>CityDelivery</code>, <code>PriorityCityDelivery</code> hoặc <code>HolidayPriorityDelivery</code>.
+      Phương thức final <code>DeliveryPlan.quote()</code> kiểm tra khoảng cách, gọi <code>distanceFee()</code> theo lớp thực tế,
+      kiểm tra phụ phí không âm rồi cộng phí cơ bản cố định 10000 VND.</li>
 
-      <li>Nh?ng override g?i <code>super.distanceFee</code> ?? c?ng 1000?km, th?m 5000 khi priority v? th?m 7000 khi holiday. Trace ghi theo ??ng th? t? g?i cha tr??c
-      con; class cu?i holiday l? final.</li>
+      <li>Các phương thức override gọi <code>super.distanceFee</code> để cộng phí quãng đường 1000 VND/km, thêm
+      5000 VND nếu ưu tiên và 7000 VND nếu ngày lễ. Trace ghi thứ tự xử lý từ lớp cha đến lớp con;
+      <code>HolidayPriorityDelivery</code> là lớp final.</li>
 
-      <li>Service c?n t?nh ??c l?p b?ng composition qua c?c t?y ch?n v? <code>Math.addExact</code>, ghi compositionTrace. HTTP 200 tr? hai ph?p t?nh, ki?u hierarchy,
-      traces, c? equal v? simulatedOnly; <code>ArithmeticException</code> th?nh HTTP 422.</li></ol>'
+      <li>Service đồng thời tính phí bằng cách kết hợp các tùy chọn độc lập với <code>Math.addExact</code>, ghi vào
+      compositionTrace. HTTP 200 trả phí từ hai cách tính, tên lớp kế thừa, các trace, cờ so sánh bằng nhau và
+      simulatedOnly. Tràn số học trả HTTP 422.</li></ol>'
     usage: true
   constructorTrace(ConstructorRequest):
-    execution: '<h3>Lu?ng constructor cha v? con</h3><ol>
+    execution: '<h3>Trình tự chạy constructor lớp cha và lớp con</h3><ol>
 
-      <li><code>constructorTrace</code> g?i <code>ConstructorTraceService.trace</code>, ki?m tra request kh?c null; <code>ConstructorProbe.run</code> y?u c?u <code>initialLabel</code>
-      kh?ng tr?ng v? d?i t?i ?a 80 k? t?.</li>
+      <li><code>constructorTrace</code> gọi <code>ConstructorTraceService.trace</code> và yêu cầu request khác null.
+      <code>ConstructorProbe.run</code> kiểm tra <code>initialLabel</code> không trống và dài tối đa 80 ký tự.</li>
 
-      <li><code>UnsafeChild</code> tr??c h?t g?i constructor <code>UnsafeParent</code>. Constructor cha th?m log r?i g?i <code>value()</code> c? th? override; dynamic
-      dispatch t?i <code>UnsafeChild.value()</code> khi field <code>label</code> c?n m?c ??nh null.</li>
+      <li>Khi tạo <code>UnsafeChild</code>, constructor của <code>UnsafeParent</code> chạy trước, ghi trace và gọi
+      phương thức có thể override <code>value()</code>. Cơ chế điều phối động gọi <code>UnsafeChild.value()</code>
+      dù field <code>label</code> của lớp con vẫn mang giá trị mặc định null.</li>
 
-      <li>Sau constructor cha, field initializer con v? constructor con thi?t l?p nh?n ng??i d?ng; unsafe trace ch?a gi? tr? quan s?t s?m l? chu?i <code>null</code>.
-      <code>SafeParent</code> tr?nh g?i override; <code>SafeChild</code> g?n nh?n r?i m?i <code>inspectAfterInitialization()</code>.</li>
+      <li>Sau khi constructor cha hoàn tất, field initializer và constructor con mới gán nhãn. Vì vậy, trace của nhánh
+      unsafe ghi chuỗi <code>null</code> tại lần quan sát sớm. <code>SafeParent</code> tránh gọi phương thức có thể override;
+      <code>SafeChild</code> chỉ gọi <code>inspectAfterInitialization()</code> sau khi khởi tạo nhãn.</li>
 
-      <li>Service tr? HTTP 200 <code>ConstructorResponse</code> ch?a unsafeSequence/safeSequence v? gi? tr? cu?i; nh?n kh?ng h?p l? tr? HTTP 400. C?c danh s?ch trace
-      ???c sao ch?p b?t bi?n.</li></ol>'
+      <li>HTTP 200 trả <code>ConstructorResponse</code> chứa unsafeSequence, safeSequence và các giá trị quan sát được;
+      danh sách trace được sao chép bất biến. Nhãn không hợp lệ trả HTTP 400.</li></ol>'
     usage: true
   resolveCapabilities(CapabilitiesRequest):
-    execution: '<h3>Lu?ng ph?n gi?i default method</h3><ol>
+    execution: '<h3>Giải quyết xung đột default method</h3><ol>
 
-      <li><code>resolveCapabilities</code> nh?n <code>CapabilitiesRequest</code> v? g?i <code>CapabilityService.resolve</code>; model <code>CapabilityResolution.resolve</code>
-      ki?m tra itemId v? tagsCsv kh?ng tr?ng, gi?i h?n ?? d?i l?n l??t 80 v? 200.</li>
+      <li><code>resolveCapabilities</code> chuyển <code>CapabilitiesRequest</code> tới <code>CapabilityService.resolve</code>,
+      sau đó gọi <code>CapabilityResolution.resolve</code>. Model yêu cầu itemId và tagsCsv không trống, độ dài tối đa
+      lần lượt là 80 và 200 ký tự.</li>
 
-      <li><code>MixedCapability</code> th?c hi?n hai interface <code>Printable</code> v? <code>Searchable</code> ??u c? <code>label()</code> default. Override bu?c
-      gi?i quy?t b?ng <code>Printable.super.label()</code> c?ng <code>Searchable.super.label()</code> r?i th?m itemId ?? trim.</li>
+      <li><code>MixedCapability</code> triển khai cả <code>Printable</code> và <code>Searchable</code>, hai interface
+      cùng có default method <code>label()</code>. Phương thức override giải quyết xung đột bằng cách kết hợp
+      <code>Printable.super.label()</code>, <code>Searchable.super.label()</code> rồi thêm itemId đã được trim.</li>
 
-      <li><code>ConcreteSuperclassWins</code> k? th?a <code>ConcreteBase.label()</code> v? th?c hi?n Printable; ph??ng th?c class ???c ?u ti?n n?n tr? <code>CLASS_WINS</code>.
-      <code>Taggable.parseTags</code> t?ch CSV, trim, lowercase v? t? ch?i nh?n r?ng.</li>
+      <li><code>ConcreteSuperclassWins</code> kế thừa <code>ConcreteBase.label()</code> và triển khai Printable.
+      Phương thức của lớp cha cụ thể được ưu tiên, cho kết quả <code>CLASS_WINS</code>.
+      <code>Taggable.parseTags</code> tách CSV, trim, chuyển thành chữ thường và từ chối thẻ rỗng.</li>
 
-      <li>HTTP 200 tr? <code>CapabilitiesResponse</code> v?i gi?i quy?t xung ??t, class-wins v? normalizedTags; input sai tr? HTTP 400. Nh?n ???c sao ch?p b?ng <code>List.copyOf</code>.</li></ol>'
+      <li>HTTP 200 trả <code>CapabilitiesResponse</code> gồm kết quả giải quyết xung đột, giá trị class-wins và
+      normalizedTags bất biến qua <code>List.copyOf</code>. Đầu vào không hợp lệ trả HTTP 400.</li></ol>'
     usage: true
 InterfaceExperimentsController:
   shipping(ShippingRequest):
@@ -472,67 +498,94 @@ LanguageMechanicsExperimentsController:
     usage: true
 LifecycleExperimentController:
   create(CreationRequest):
-    execution: <h3>T?o ??i t??ng</h3><ol><li>Controller chuy?n <code>CreationRequest</code> cho <code>LifecycleExperimentService.create</code>; null request, capacity
-      ho?c style g?y <code>IllegalArgumentException</code>. Danh s?ch students v?ng m?t ???c thay b?ng <code>List.of()</code>.</li><li>Nh?nh <code>CONSTRUCTOR</code>
-      g?i constructor hai ho?c ba tham s? t?y danh s?ch r?ng; <code>STATIC_FACTORY</code> g?i <code>CourseEnrollment.of</code>; <code>BUILDER</code> l?n l??t <code>addStudent</code>
-      r?i <code>build</code>.</li><li>Constructor trung t?m ki?m tra m?, capacity, s? l??ng h?c vi?n v? ID duy nh?t; gi? <code>List.copyOf</code> v? t?nh <code>availableSeats()</code>.
-      Th?nh c?ng tr? <code>CreationResult</code> HTTP 200; vi ph?m b?t bi?n tr? HTTP 400 <code>INVALID_INPUT</code>, JSON sai ki?u tr? <code>INVALID_JSON</code>.</li></ol>
+    execution: <h3>Khởi tạo đối tượng</h3><ol><li>Controller chuyển <code>CreationRequest</code> tới
+      <code>LifecycleExperimentService.create</code>. Request, capacity hoặc style bằng null gây
+      <code>IllegalArgumentException</code>; nếu không truyền students thì dùng danh sách rỗng
+      <code>List.of()</code>.</li><li>Nhánh <code>CONSTRUCTOR</code> gọi constructor hai hoặc ba tham số tùy danh sách
+      students có rỗng không; <code>STATIC_FACTORY</code> gọi <code>CourseEnrollment.of</code>; <code>BUILDER</code>
+      lần lượt gọi <code>addStudent</code> rồi <code>build</code>.</li><li>Constructor chung kiểm tra mã khóa học,
+      sức chứa, số học viên và các ID duy nhất, lưu danh sách bất biến bằng <code>List.copyOf</code> và tính
+      <code>availableSeats()</code>. Thành công trả HTTP 200 <code>CreationResult</code>; dữ liệu vi phạm ràng
+      buộc trả HTTP 400 <code>INVALID_INPUT</code>, JSON không hợp lệ trả <code>INVALID_JSON</code>.</li></ol>
     usage: true
   references(ReferenceRequest):
-    execution: <h3>Duy?t ?? th? logic</h3><ol><li>Service y?u c?u steps kh?ng null, t?i ?a 30; t?o <code>ReferenceGraph</code> t? 1?15 node v? t?i ?a 15 root. Graph
-      ki?m tra ID, c?nh li?n k?t v? root, r?i ghi snapshot ban ??u.</li><li>V?i m?i <code>RootStep</code>, <code>RETAIN</code> th?m root ch?a gi? ho?c <code>RELEASE</code>
-      b? root ?? gi?. <code>snapshot</code> duy?t b?ng stack v? visited set n?n x? l? ???c chu tr?nh.</li><li>HTTP 200 tr? <code>ReferenceResult</code> ch?a snapshot
-      theo th? t? node ??u v?o v? l?i nh?c ??y kh?ng ph?i ?o GC. Node ho?c thao t?c root sai th?nh <code>IllegalArgumentException</code> v? HTTP 400 <code>INVALID_INPUT</code>.</li></ol>
+    execution: <h3>Duyệt đồ thị tham chiếu logic</h3><ol><li>Service yêu cầu danh sách steps không null và
+      tối đa 30 bước, sau đó tạo <code>ReferenceGraph</code> gồm từ 1 đến 15 node và tối đa 15 root.
+      Graph kiểm tra ID, các cạnh và root trước khi ghi snapshot ban đầu.</li><li>Với mỗi <code>RootStep</code>,
+      <code>RETAIN</code> thêm một root chưa được giữ, còn <code>RELEASE</code> bỏ một root đang được giữ.
+      <code>snapshot</code> duyệt bằng stack và tập visited để xử lý cả đồ thị có chu trình.</li><li>HTTP 200
+      trả <code>ReferenceResult</code> với snapshot theo thứ tự node đầu vào và chú thích rõ đây không
+      phải phép đo hoạt động của GC. Tham chiếu node hoặc thao tác root không hợp lệ gây
+      <code>IllegalArgumentException</code> và trả HTTP 400 <code>INVALID_INPUT</code>.</li></ol>
     usage: true
   resources(ResourceRequest):
-    execution: <h3>??ng t?i nguy?n</h3><ol><li>Service m? <code>TrackedResource</code> outer r?i inner trong <code>try-with-resources</code>, ghi <code>open:outer</code>,
-      <code>open:inner</code>, <code>body:start</code>. T?y <code>bodyFails</code>, body n?m l?i ho?c ghi <code>body:success</code>.</li><li>Khi r?i scope, Java g?i
-      <code>close()</code> inner r?i outer, m?i l?n ??t closed=true v? ghi trace tr??c khi c? th? n?m <code>close failed</code>. N?u body ?? l?i, c?c l?i close ???c
-      suppressed; n?u body th?nh c?ng, l?i close ??u ti?n l? primary.</li><li>Service b?t <code>IllegalStateException</code> v? tr? HTTP 200 v?i <code>ResourceResult</code>
-      g?m trace, primaryFailure, suppressedFailures, closed v? completedWithoutFailure. Null request g?y HTTP 400.</li></ol>
+    execution: <h3>Đóng tài nguyên</h3><ol><li>Service mở hai <code>TrackedResource</code> outer và inner
+      trong <code>try-with-resources</code>, ghi lần lượt <code>open:outer</code>, <code>open:inner</code> và
+      <code>body:start</code>. Tùy cờ <code>bodyFails</code>, phần thân ném lỗi hoặc ghi
+      <code>body:success</code>.</li><li>Khi ra khỏi scope, Java gọi <code>close()</code> của inner trước outer.
+      Mỗi lần đóng đều đánh dấu closed=true và ghi trace trước khi có thể ném <code>close failed</code>.
+      Nếu phần thân đã lỗi, các lỗi đóng sẽ bị ghi dưới dạng suppressed; nếu phần thân thành công, lỗi đóng
+      đầu tiên là lỗi chính.</li><li>Service bắt <code>IllegalStateException</code> và trả HTTP 200 với
+      <code>ResourceResult</code> gồm trace, primaryFailure, suppressedFailures, closed và
+      completedWithoutFailure. Request bằng null trả HTTP 400.</li></ol>
     usage: true
   publication(PublicationRequest):
-    execution: <h3>C?ng b? ??i t??ng</h3><ol><li>Controller g?i service v? <code>PublicationScenario.compare</code>, n?i ki?m tra label theo <code>[A-Za-z0-9_-]{1,40}</code>;
-      input sai tr? HTTP 400.</li><li><code>UnsafeListener</code> g?i <code>registry.register(this)</code> tr??c ph?p g?n field; registry k?ch ho?t <code>onEvent()</code>
-      ngay, v? v?y l?n ??u ??c null. Callback th? hai sau constructor th?y label.</li><li><code>SafeListener.createAndRegister</code> ho?n t?t g?n label tr??c khi
-      ??ng k?, c? hai callback ??u th?y label. HTTP 200 tr? <code>PublicationResult</code> v? m?i registry c? m?t subscription.</li></ol>
+    execution: <h3>Công bố đối tượng cho bên đăng ký sự kiện</h3><ol><li>Controller chuyển request tới
+      service và <code>PublicationScenario.compare</code>, nơi kiểm tra label theo mẫu
+      <code>[A-Za-z0-9_-]{1,40}</code>; đầu vào không hợp lệ trả HTTP 400.</li><li><code>UnsafeListener</code>
+      gọi <code>registry.register(this)</code> trước khi gán field. Registry lập tức gọi
+      <code>onEvent()</code>, nên callback đầu tiên đọc được null; callback sau khi constructor hoàn tất mới
+      thấy label.</li><li><code>SafeListener.createAndRegister</code> khởi tạo label xong mới đăng ký, nên
+      cả hai callback đều đọc được label. HTTP 200 trả <code>PublicationResult</code> cho biết mỗi registry
+      có một lượt đăng ký.</li></ol>
     usage: true
 ModelingExperimentController:
   library(LibraryRequest):
-    execution: '<h3>Lu?ng object graph v? CRC th? vi?n</h3><ol>
+    execution: '<h3>Đồ thị đối tượng và trách nhiệm CRC trong thư viện</h3><ol>
 
-      <li><code>ModelingExperimentController.library</code> g?i <code>ModelingExperimentService.library</code>. Service y?u c?u 1?20 titles, 1?20 members, 1?30 copies
-      v? 1?25 actions; t?o c?c record/class ??ng ??nh danh, ki?m tra titleCode ???c copy tham chi?u v? ki?m tra action type, ID, ng?y ISO 2000?2099 kh?ng gi?m theo
-      th?i gian tr??c khi th?c thi.</li>
+      <li><code>ModelingExperimentController.library</code> gọi <code>ModelingExperimentService.library</code>. Service yêu cầu từ 1 đến 20 titles,
+      1 đến 20 members, 1 đến 30 copies và 1 đến 25 actions. Trước khi thực thi, service tạo các đối tượng miền,
+      kiểm tra titleCode mà từng bản sách tham chiếu, loại thao tác, ID và ngày theo định dạng ISO (năm 2000 đến 2099)
+      theo thứ tự không giảm.</li>
 
-      <li><code>LibraryModel</code> d?ng map identity cho Member, BookCopy v? l?ch s? Loan; <code>BookTitle</code> ri?ng bi?t v?i m?i b?n s?ch. Service ch?p <code>initial</code>
-      r?i t?ng b??c l?y <code>before</code>, g?i <code>borrow</code>/<code>returnLoan</code> v? thu th?p danh s?ch <code>calls</code> nh? m?t sequence diagram ki?m
-      ch?ng.</li>
+      <li><code>LibraryModel</code> quản lý map định danh cho Member, BookCopy và lịch sử Loan; mỗi <code>BookTitle</code> là đầu sách
+      riêng với bản sách vật lý. Service chụp snapshot <code>initial</code>, rồi ở từng bước ghi <code>before</code>, gọi
+      <code>borrow</code> hoặc <code>returnLoan</code>, thu thập <code>calls</code> thực tế và chụp <code>after</code>
+      để minh họa trình tự tương tác như sequence diagram.</li>
 
-      <li>Khi m??n, domain ki?m tra th?nh vi?n t?n t?i/active (BR-01), gi?i h?n ba l??t ?ang ho?t ??ng (BR-02), b?n sao ch?a b? m??n (BR-03), r?i t?o Loan c? dueOn
-      b?ng borrowedOn+14 ng?y (BR-04) tr??c khi c?p nh?t copy, member v? history. Khi tr?, ki?m tra loan, ng?y v? tr?ng th?i ch?a tr? (BR-05), ??ng Loan, gi?i ph?ng
-      copy, gi?m activeLoans nh?ng v?n gi? l?ch s? (BR-06). C?c h?m LibraryModel n?y ???c synchronized tr?n object trong m?t request.</li>
+      <li>Khi mượn, mô hình kiểm tra thành viên tồn tại và đang hoạt động (BR-01), chưa vượt ba lượt mượn đang mở (BR-02),
+      bản sách chưa được mượn (BR-03), rồi tạo Loan có dueOn sau borrowedOn 14 ngày (BR-04) trước khi cập nhật bản sách,
+      thành viên và lịch sử. Khi trả, mô hình kiểm tra khoản mượn, ngày trả và trạng thái chưa trả (BR-05), đánh dấu hoàn trả,
+      giải phóng bản sách, giảm activeLoans nhưng vẫn giữ lịch sử (BR-06). Các phương thức của <code>LibraryModel</code> được
+      synchronized trên đối tượng riêng của request.</li>
 
-      <li><code>ModelRuleViolation</code> ???c b?t b?n trong t?ng action: <code>LibraryStep</code> c? accepted=false, rule/detail v? <code>before</code> b?ng <code>after</code>;
-      kh?ng tr? HTTP l?i cho vi ph?m d? ki?n. Sau m?i b??c ch?y <code>assertInvariants</code> ??i chi?u to?n ?? th?, tr? HTTP 200 <code>LibraryResult</code> v?i <code>invariantsSatisfied=true</code>
-      v? scope request-local. Input sai g?y <code>IllegalArgumentException</code> v? HTTP 400 body c? tr??ng <code>error</code>; b?t bi?n n?i b? sai g?y HTTP 422.</li></ol>'
+      <li><code>ModelRuleViolation</code> được bắt trong từng action: <code>LibraryStep</code> ghi accepted=false, rule, detail
+      và snapshot <code>before</code>/<code>after</code> không thay đổi; vi phạm quy tắc nghiệp vụ dự kiến không gây lỗi HTTP.
+      Sau từng bước, <code>assertInvariants</code> kiểm tra toàn bộ đồ thị. HTTP 200 trả <code>LibraryResult</code> với
+      <code>invariantsSatisfied=true</code> và phạm vi request-local. Dữ liệu đầu vào sai gây
+      <code>IllegalArgumentException</code>, trả HTTP 400 với trường <code>error</code>; vi phạm bất biến nội bộ trả HTTP 422.</li></ol>'
     usage: true
   orders(OrderRequest):
-    execution: '<h3>Lu?ng m?y tr?ng th?i ??n h?ng</h3><ol>
+    execution: '<h3>Luồng máy trạng thái đơn hàng</h3><ol>
 
-      <li>Controller chuy?n <code>OrderRequest</code> cho <code>ModelingExperimentService.order</code>; service y?u c?u totalVnd kh?ng null, 1?20 actions v? m?i event
-      thu?c enum <code>ModeledOrder.Event</code>. Event sai t?n b? t? ch?i tr??c khi b?t ??u ch?y, v?i HTTP 400 <code>error</code>.</li>
+      <li>Controller chuyển <code>OrderRequest</code> tới <code>ModelingExperimentService.order</code>. Service yêu cầu totalVnd
+      khác null, từ 1 đến 20 actions và mỗi event phải thuộc enum <code>ModeledOrder.Event</code>. Tên event không hỗ trợ
+      bị từ chối trước khi mô phỏng bắt đầu, trả HTTP 400 với trường <code>error</code>.</li>
 
-      <li><code>ModeledOrder</code> ki?m tra orderId theo regex v? totalVnd trong 1?1000000000000 r?i b?t ??u ? <code>DRAFT</code>. M?i action ch?p snapshot tr??c,
-      g?i <code>apply</code> v? ch?p snapshot sau. H?m apply d?ng switch theo state: DRAFT cho SUBMIT/CANCEL; WAITING_PAYMENT cho CONFIRM_PAYMENT/CANCEL; PAID cho
-      START_PACKING; PACKING cho SHIP; SHIPPED cho CONFIRM_DELIVERY; DELIVERED/CANCELLED l? terminal.</li>
+      <li><code>ModeledOrder</code> kiểm tra orderId theo mẫu hợp lệ và totalVnd từ 1 đến 1000000000000, rồi khởi tạo trạng thái
+      <code>DRAFT</code>. Mỗi action chụp snapshot trước và sau khi gọi <code>apply</code>. Máy trạng thái cho phép SUBMIT/CANCEL
+      từ DRAFT; CONFIRM_PAYMENT/CANCEL từ WAITING_PAYMENT; START_PACKING từ PAID; SHIP từ PACKING; CONFIRM_DELIVERY từ SHIPPED.
+      DELIVERED và CANCELLED là các trạng thái kết thúc.</li>
 
-      <li>Kh?ng c? transition h?p l? sinh <code>INVALID_TRANSITION</code>; x?c nh?n s? ti?n kh?c total sinh <code>PAYMENT_GUARD</code>; SHIP thi?u trackingCode d?ng
-      <code>[A-Z0-9-]{3,32}</code> sinh <code>TRACKING_GUARD</code>. T?t c? guard ???c ki?m tra tr??c khi g?n trackingCode v? state n?n kh?ng c? ??t bi?n t?ng ph?n.</li>
+      <li>Chuyển trạng thái không được phép gây <code>INVALID_TRANSITION</code>; xác nhận thanh toán với số tiền khác total gây
+      <code>PAYMENT_GUARD</code>; SHIP với trackingCode không khớp <code>[A-Z0-9-]{3,32}</code> gây
+      <code>TRACKING_GUARD</code>. Các điều kiện bảo vệ được kiểm tra trước khi gán trackingCode và state, tránh thay đổi
+      trạng thái một phần khi thao tác thất bại.</li>
 
-      <li>Service b?t <code>ModelRuleViolation</code> ? c?p t?ng b??c v? ghi accepted=false, rule, detail, before/after gi? nguy?n trong <code>OrderStep</code>; c?c
-      b??c sau v?n ch?y. HTTP 200 tr? <code>OrderResult</code> v?i initial, steps, current v? scope <code>REQUEST_LOCAL_ONLY_SIMULATED_ORDER_NO_PAYMENT_OR_EXTERNAL_SHIPPING</code>.
-      ??y l? m? ph?ng, kh?ng c? thanh to?n ho?c giao h?ng ngo?i h? th?ng.</li></ol>'
+      <li>Service bắt <code>ModelRuleViolation</code> tại từng bước, ghi accepted=false, rule, detail và before/after giữ nguyên
+      trong <code>OrderStep</code>; các bước tiếp theo vẫn được thực thi. HTTP 200 trả <code>OrderResult</code> với initial,
+      steps, current và scope <code>REQUEST_LOCAL_ONLY_SIMULATED_ORDER_NO_PAYMENT_OR_EXTERNAL_SHIPPING</code>.
+      Đây là mô phỏng nội bộ, không xử lý thanh toán hay vận chuyển thực tế.</li></ol>'
     usage: true
 ObjectExperimentsController:
   references(ObjectExperimentDto.ReferenceRequest):
