@@ -26,10 +26,10 @@ class PortalChapterQuestionProjectionServiceTest {
                 [questions: [quizQuestion('quiz-1', 'local-first')]])
         writeYaml(fixture.moduleDir, '2.Advanced/quiz/question.yml',
                 [questions: [quizQuestion('quiz-2', 'local-second')]])
-        writeYaml(fixture.moduleDir, '2.Advanced/interview/question.yml',
+        writeYaml(fixture.moduleDir, '2.Advanced/questions/interview.yml',
                 [questions: [interviewQuestion('local-second')]])
         writeYaml(fixture.moduleDir, '3.Empty/quiz/question.yml', [questions: []])
-        writeYaml(fixture.moduleDir, '3.Empty/interview/question.yml', [questions: []])
+        writeYaml(fixture.moduleDir, '3.Empty/questions/interview.yml', [questions: []])
 
         String source = new File(fixture.moduleDir,
                 'content/readme/docs/vi/menu/2.Advanced/quiz/question.yml').getText('UTF-8')
@@ -106,7 +106,7 @@ class PortalChapterQuestionProjectionServiceTest {
         article.parentFile.mkdirs()
         article.setText('# Title\n\n## <a id="duplicated">One</a>\n\n' +
                 '## <a id="duplicated">Two</a>\n', 'UTF-8')
-        writeYaml(fixture.moduleDir, '1.Basics/interview/question.yml',
+        writeYaml(fixture.moduleDir, '1.Basics/questions/interview.yml',
                 [questions: [interviewQuestion('duplicated')]])
         expectFailure('ambiguous') {
             new PortalInterviewProjectionService(fixture.root.logger).generate(fixture.root)
@@ -134,7 +134,7 @@ class PortalChapterQuestionProjectionServiceTest {
     void emptyOnlyChapterSkeletonsDoNotAdvertiseQuizOrInterview() {
         Fixture fixture = fixture()
         writeYaml(fixture.moduleDir, '1.Basics/quiz/question.yml', [questions: []])
-        writeYaml(fixture.moduleDir, '1.Basics/interview/question.yml', [questions: []])
+        writeYaml(fixture.moduleDir, '1.Basics/questions/interview.yml', [questions: []])
 
         new PortalQuizProjectionService(fixture.root.logger).generate(fixture.root)
         new PortalInterviewProjectionService(fixture.root.logger).generate(fixture.root)
@@ -147,6 +147,24 @@ class PortalChapterQuestionProjectionServiceTest {
         counts.accessible = true
         assertEquals([:], counts.invoke(null, fixture.moduleDir, ['vi'], 'quiz'))
         assertEquals([:], counts.invoke(null, fixture.moduleDir, ['vi'], 'interview'))
+    }
+
+    @Test
+    void legacyInterviewRemainsReadableUntilStep9MigratesToQuestionsFolder() {
+        Fixture fixture = fixture()
+        lesson(fixture.moduleDir, '1.Basics', 'One.md', 'one')
+        writeYaml(fixture.moduleDir, '1.Basics/interview/question.yml',
+                [questions: [interviewQuestion('one')]])
+        new PortalInterviewProjectionService(fixture.root.logger).generate(fixture.root)
+        assertEquals(1, readJson(fixture.root, 'DEMO/interview/vi/index.json').totalQuestions)
+        writeYaml(fixture.moduleDir, '1.Basics/questions/interview.yml',
+                [questions: [interviewQuestion('one')]])
+        new PortalInterviewProjectionService(fixture.root.logger).generate(fixture.root)
+        assertEquals(1, readJson(fixture.root, 'DEMO/interview/vi/index.json').totalQuestions)
+        def counts = ProjectStructureService.getDeclaredMethod(
+                'findQuestionCounts', File, List, String)
+        counts.accessible = true
+        assertEquals([vi: 1], counts.invoke(null, fixture.moduleDir, ['vi'], 'interview'))
     }
 
     private Fixture fixture() {

@@ -31,6 +31,7 @@ class ModuleLanguageCloneServiceTest {
         Map applied = service.execute(f.root as File, module, true)
         assertEquals('CLONED', applied.status)
         assertNotNull(applied.backup)
+        assertTrue((applied.backup as String).replace('\\', '/').contains('/build/step13-backups/'))
         assertFalse(file(module, 'content/readme/docs/en/menu/Old.md').exists())
         assertEquals('Vietnamese knowledge body', file(module,
                 'content/readme/docs/en/menu/1.Basic/knowledge/Basic.md').text.readLines().last())
@@ -42,7 +43,9 @@ class ModuleLanguageCloneServiceTest {
                 'content/readme/docs/en/menu/1.Basic/quiz/question.yml').text
                 .contains('anchor: basic-001'))
         assertTrue(file(module,
-                'content/readme/docs/en/menu/1.Basic/interview/question.yml').isFile())
+                'content/readme/docs/en/menu/1.Basic/questions/interview.yml').isFile())
+        assertEquals(file(module, 'content/readme/docs/vi/menu/1.Basic/questions/summary.yml').text,
+                file(module, 'content/readme/docs/en/menu/1.Basic/questions/summary.yml').text)
         assertTrue(file(module, 'content/readme/docs/en/LIST.md').text
                 .contains('content/readme/docs/en/menu/1.Basic/knowledge/Basic.md'))
         assertFalse(file(module, 'content/readme/docs/en/LIST.md').text
@@ -83,7 +86,7 @@ class ModuleLanguageCloneServiceTest {
     }
 
     @Test
-    void optionalViVideoCanExistWithoutAnyEnVideoDuringStep12a() {
+    void optionalViVideoCanExistWithoutAnyEnVideoDuringStep13() {
         Map f = fixture()
         File module = f.module as File
         write(module, 'content/readme/docs/vi/menu/1.Basic/video/video-script.yml',
@@ -94,6 +97,20 @@ class ModuleLanguageCloneServiceTest {
         assertFalse(file(module,
                 'content/readme/docs/en/menu/1.Basic/video/video-script.yml').exists())
         assertEquals('UNCHANGED', service.execute(f.root as File, module, true).status)
+    }
+
+    @Test
+    void oldInterviewFolderMustBeMigratedBeforeCloningEnglish() {
+        Map f = fixture()
+        File module = f.module as File
+        write(module, 'content/readme/docs/vi/menu/1.Basic/interview/question.yml',
+                'questions: []')
+        try {
+            new ModuleLanguageCloneService().execute(f.root as File, module, false)
+            fail('Legacy Interview folder should block STEP 13')
+        } catch (GradleException expected) {
+            assertTrue(expected.message.contains('run STEP 9 import'))
+        }
     }
 
     @Test
@@ -272,7 +289,7 @@ questions:
     readmeRelated: {anchor: basic-001}
     apiRelated: {controller: ExampleController, methodSignature: "demo()"}
 '''.trim())
-        write(module, 'content/readme/docs/vi/menu/1.Basic/interview/question.yml', '''
+        write(module, 'content/readme/docs/vi/menu/1.Basic/questions/interview.yml', '''
 questions:
   - question: Vietnamese interview question?
     answer: Vietnamese answer
@@ -280,6 +297,11 @@ questions:
 
     readmeRelated: {anchor: basic-001}
     apiRelated: {controller: "", methodSignature: ""}
+'''.trim())
+        write(module, 'content/readme/docs/vi/menu/1.Basic/questions/summary.yml', '''
+questions:
+  - question: Encapsulation solves which problem?
+    answer: It protects state invariants.
 '''.trim())
         write(module, 'content/video/vi/menu/1.Basic/video-script.yml', '''
 title: Vietnamese title

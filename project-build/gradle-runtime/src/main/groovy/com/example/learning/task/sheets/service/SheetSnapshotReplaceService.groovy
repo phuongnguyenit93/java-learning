@@ -57,7 +57,7 @@ class SheetSnapshotReplaceService {
                             ['content', 'readme', 'docs', 'vi', 'menu'] &&
                     (parts[-2] ==~ /[0-9]+\.[A-Za-z0-9][A-Za-z0-9 _.-]*/) &&
                     !parts[-2].contains('..') &&
-                    parts[-1] in ['knowledge', 'metadata', 'interview', 'quiz', 'video', 'summary']
+                    parts[-1] in ['knowledge', 'metadata', 'interview', 'questions', 'quiz', 'video', 'summary']
             boolean roadmapFolder = ALLOWED_SUFFIXES.any { List<String> suffix ->
                 parts.size() > suffix.size() + 1 && parts.takeRight(suffix.size()) == suffix
             }

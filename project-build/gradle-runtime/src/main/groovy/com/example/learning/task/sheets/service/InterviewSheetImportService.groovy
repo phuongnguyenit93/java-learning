@@ -1,6 +1,7 @@
 package com.example.learning.task.sheets.service
 
 import com.example.learning.setup.module.interview.service.InterviewQuestionSchemaService
+import com.example.learning.utils.schema.validate.ContractSchemaValidateUtils
 import com.google.api.services.sheets.v4.Sheets
 import org.gradle.api.GradleException
 import org.yaml.snakeyaml.DumperOptions
@@ -9,7 +10,8 @@ import org.yaml.snakeyaml.Yaml
 import java.nio.file.Files
 
 /**
- * Sheet Interview YAML (and legacy JSON) -> each chapter's interview/question.yml.
+ * Sheet Interview YAML (and legacy JSON) -> each chapter's questions/interview.yml
+ * and questions/summary.yml when summaryQuestions were authored.
  * Only Groovy/Sheets API/SnakeYAML are used; no AI, Sheet writes or metadata inference.
  */
 class InterviewSheetImportService {
@@ -57,14 +59,19 @@ class InterviewSheetImportService {
                            chapterCount: 0, clearedOldFiles: 0]
         }
         Map assembled = collectQuestions(groups, rows)
-        Map<String, String> chapterFiles = [:]
-        (assembled.byChapter as Map<String, List<Map>>).each { String chapter, List<Map> items ->
-            chapterFiles[chapter] = renderYaml(items)
+        Map<String, Map<String,String>> chapterFiles = [:]
+        (assembled.byChapter as Map<String, Map>).each { String chapter, Map document ->
+            Map<String,String> files = [ 'interview.yml': renderYaml(document.questions as List<Map>) ]
+            if (document.containsKey('summaryQuestions')) {
+                files['summary.yml'] = renderSummaryYaml(document.summaryQuestions as List<Map>)
+            }
+            chapterFiles[chapter] = files
         }
-        Map sync = ChapterQuestionSnapshotService.replace(root, module, 'interview',
+        Map sync = ChapterQuestionSnapshotService.replaceInterview(root, module,
                 chapterFiles, apply)
         return base + sync + [
                 questionCount: (assembled.questions as List).size(),
+                summaryQuestionCount: (assembled.summaryQuestions as List).size(),
                 chapterCount: assembled.chapterCount
         ]
     }
@@ -96,7 +103,8 @@ class InterviewSheetImportService {
         }
 
         List<Map> questions = []
-        Map<String, List<Map>> byChapter = new LinkedHashMap<>()
+        List<Map> summaryQuestions = []
+        Map<String, Map> byChapter = new LinkedHashMap<>()
         int chapters = 0
         groups.eachWithIndex { Map group, int i ->
             int sheetRow = (group.parentRow as Number).intValue()
@@ -122,12 +130,25 @@ class InterviewSheetImportService {
             )
             List<Map> authored = normalized.questions as List<Map>
             String chapter = "${i + 1}.${filename.substring(0, filename.length() - 3)}"
-            byChapter[chapter] = authored
+            byChapter[chapter] = normalized
             questions.addAll(authored)
+            summaryQuestions.addAll((normalized.summaryQuestions ?: []) as List<Map>)
             chapters++
         }
-        return [status: 'READY', questions: questions, chapterCount: chapters,
+        return [status: 'READY', questions: questions, summaryQuestions: summaryQuestions, chapterCount: chapters,
                 byChapter: byChapter]
+    }
+
+    static String renderSummaryYaml(List<Map> questions) {
+        if (!questions) throw new GradleException('Cannot render an empty Summary Questions snapshot.')
+        DumperOptions options = new DumperOptions()
+        options.defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
+        options.allowUnicode = true
+        options.indent = 2
+        options.width = 120
+        Map document = [questions: questions]
+        ContractSchemaValidateUtils.validateData('summaryQuestions', document)
+        return new Yaml(options).dump(document)
     }
 
     /** Complete schema fields are serialized; content is not rewritten by AI. */

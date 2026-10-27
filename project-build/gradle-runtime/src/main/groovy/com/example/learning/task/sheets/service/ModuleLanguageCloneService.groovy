@@ -9,9 +9,9 @@ import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 
 /**
- * STEP 12A. The final VI module tree is authoritative; EN is a translated-later
+ * STEP 13. The final VI module tree is authoritative; EN is a translated-later
  * structural clone. All validation happens before any EN subtree is moved.
- * Old EN subtrees are saved under module/build/step12a-backups/ for recovery.
+ * Old EN subtrees are saved under module/build/step13-backups/ for recovery.
  */
 class ModuleLanguageCloneService {
     static final List<String> OWNED = [
@@ -25,7 +25,7 @@ class ModuleLanguageCloneService {
         File modulesRoot = new File(root, 'module').canonicalFile
         if (module == modulesRoot || !module.toPath().startsWith(modulesRoot.toPath()) ||
                 !module.isDirectory() || !new File(module, 'gradle.properties').isFile()) {
-            throw new GradleException('STEP 12A requires a real Gradle module within module/.')
+            throw new GradleException('STEP 13 requires a real Gradle module within module/.')
         }
         String location = root.toPath().relativize(module.toPath())
                 .toString().replace(File.separatorChar, '/' as char)
@@ -37,7 +37,7 @@ class ModuleLanguageCloneService {
             File en = new File(module, area + '/en')
             ModuleLanguageCloneService.checkPaths(module, vi, en)
             // Video is authored after STEP 15. Preserve existing EN Video even
-            // when mandatory STEP 12A is re-run from a newer VI tree.
+            // when mandatory STEP 13 is re-run from a newer VI tree.
             expected[area] = ModuleLanguageCloneService.sourceTree(module, area)
             before[area] = ModuleLanguageCloneService.readTree(en)
         }
@@ -57,12 +57,12 @@ class ModuleLanguageCloneService {
         OWNED.each { String key ->
             if (!ModuleLanguageCloneService.equalTrees(before[key], ModuleLanguageCloneService.readTree(new File(module, key + '/en'))) ||
                     !ModuleLanguageCloneService.equalTrees(expected[key], ModuleLanguageCloneService.sourceTree(module, key))) {
-                throw new GradleException('VI or EN changed since STEP 12A preflight: ' + key)
+                throw new GradleException('VI or EN changed since STEP 13 preflight: ' + key)
             }
         }
 
         String runId = UUID.randomUUID().toString()
-        File backupRoot = new File(module, 'build/step12a-backups/' + runId)
+        File backupRoot = new File(module, 'build/step13-backups/' + runId)
         List<Map> operations = []
         try {
             // Stage *all* new EN data before moving any current target.
@@ -71,7 +71,7 @@ class ModuleLanguageCloneService {
                 Files.createDirectories(target.parentFile.toPath())
                 // Use the Git-ignored module/build/ area: interrupted staging
                 // must never accidentally appear as commit-ready content.
-                File staged = new File(module, 'build/step12a-staging/' + runId +
+                File staged = new File(module, 'build/step13-staging/' + runId +
                         '/' + String.format('%02d', index) + '/' + key + '/en')
                 File backup = new File(backupRoot, String.format('%02d', index) + '/' + key + '/en')
                 Map record = [key: key, target: target, stage: staged,
@@ -126,7 +126,7 @@ class ModuleLanguageCloneService {
                     problems.add(op.key + ': ' + rollbackError.message)
                 }
             }
-            throw new GradleException('STEP 12A aborted: ' + failure.message +
+            throw new GradleException('STEP 13 aborted: ' + failure.message +
                     (problems ? '. ROLLBACK INCOMPLETE: ' + problems.join('; ') +
                             ', inspect ' + backupRoot.absolutePath : '. Prior EN restored.'), failure)
         } finally {

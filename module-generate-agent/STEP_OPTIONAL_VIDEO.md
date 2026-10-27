@@ -2,7 +2,7 @@
 
 
 
-**Không thuộc chuỗi STEP bắt buộc.** Chỉ chạy khi người dùng yêu cầu Video, **sau khi STEP_FINAL của module đã hoàn thành**. Không cần Video để hoàn thành STEP 11/12/12A/14/15/FINAL; không gọi STEP_OPTIONAL_VIDEO_TRANSLATE tự động. Mỗi worker có file riêng `worker/STEP_OPTIONAL_VIDEO_WORKER.md`, một worker trên một Menu Cấp 1. Nếu Video VI đã được viết trước đây, đối chiếu nguồn và giữ nguyên nội dung hợp lệ. Không chạm Video EN, vùng EN Sheet, Quiz/Interview/Swagger relations.
+**Không thuộc chuỗi STEP bắt buộc.** Chỉ chạy khi người dùng yêu cầu Video, **sau khi STEP_FINAL của module đã hoàn thành**. Không cần Video để hoàn thành STEP 11/12/13/14/15/FINAL; không gọi STEP_OPTIONAL_VIDEO_TRANSLATE tự động. Mỗi worker có file riêng `worker/STEP_OPTIONAL_VIDEO_WORKER.md`, một worker trên một Menu Cấp 1. Nếu Video VI đã được viết trước đây, đối chiếu nguồn và giữ nguyên nội dung hợp lệ. Không chạm Video EN, vùng EN Sheet, Quiz/Interview/Swagger relations.
 
 **Runtime progress:** This optional step runs after STEP_FINAL. Keep `CURRENT_STEP.VALUE = "FINAL"` in the verified module `master.json`, never update Sheet/Excel progress, and never add an optional-step status. After writing Video VI and importing it, Prime runs module-local `exportModuleSheetToExcel` DRY_RUN -> APPLY when VI Excel exists, then reads back Sheet X:AA, module YAML, and Excel. Missing credentials/tasks or failed readback are blockers.
 

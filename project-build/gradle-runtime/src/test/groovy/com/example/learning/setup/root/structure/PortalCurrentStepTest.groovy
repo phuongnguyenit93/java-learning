@@ -13,7 +13,7 @@ class PortalCurrentStepTest {
         method.accessible = true
         File directory = new File('demo')
         assertEquals('0', method.invoke(null, [:], directory))
-        ['0', '5', '12A', '15', 'FINAL'].each { String stage ->
+        ['0', '5', '12A', '13', '15', 'FINAL'].each { String stage ->
             assertEquals(stage, method.invoke(null,
                     [CURRENT_STEP: [TYPE:'string', VALUE: stage]], directory))
         }

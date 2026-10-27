@@ -11,6 +11,71 @@ class InterviewSheetNormalizeServiceTest {
     private static final String FILE = '1.OOPBasic/knowledge/OOPBasic.md'
 
     @Test
+    void combinedInterviewAndSummaryQuestionsNormalizeWithoutMixingRelations() {
+        String source = '''questions:
+  - question: Why use OOP?
+    answer: To group state and behavior.
+summaryQuestions:
+  - question: What is encapsulation?
+    answer: |-
+      It protects **invariants**.
+  - question: When is inheritance appropriate?
+    answer: When the subtype maintains the base contract.
+'''
+        Map result = InterviewSheetNormalizeService.normalizeYaml(source, FILE, 20)
+        assertEquals(1, result.questions.size())
+        assertEquals([anchor: ''], result.questions[0].readmeRelated)
+        assertEquals(2, result.summaryQuestions.size())
+        assertEquals(['question', 'answer'], result.summaryQuestions[0].keySet().toList())
+        assertEquals(result, InterviewSheetNormalizeService.normalizeYaml(
+                InterviewSheetNormalizeService.renderYaml(result), FILE, 20))
+    }
+
+    @Test
+    void independentlyAuthoredSummaryMergesWithoutChangingInterview() {
+        String interview = '''questions:
+  - question: Interview?
+    answer: Existing answer.
+    readmeRelated:
+      anchor: oop-001
+    apiRelated:
+      controller: Demo
+      methodSignature: show()
+'''
+        String separate = '''summaryQuestions:
+  - question: Summary?
+    answer: Independent answer.
+'''
+        Map merged = InterviewSheetNormalizeService.mergeSummaryQuestions(interview,
+                separate, FILE, 20)
+        assertEquals('oop-001', merged.questions[0].readmeRelated.anchor)
+        assertEquals('Demo', merged.questions[0].apiRelated.controller)
+        assertEquals('Independent answer.', merged.summaryQuestions[0].answer)
+        assertEquals(merged, InterviewSheetNormalizeService.mergeSummaryQuestions(
+                InterviewSheetNormalizeService.renderYaml(merged), separate, FILE, 20))
+        try {
+            InterviewSheetNormalizeService.mergeSummaryQuestions(
+                    InterviewSheetNormalizeService.renderYaml(merged),
+                    separate.replace('Independent answer.', 'Changed answer.'), FILE, 20)
+            fail('Changed summary should fail')
+        } catch (GradleException expected) {
+            assertTrue(expected.message.contains('refusing overwrite'))
+        }
+    }
+
+    @Test
+    void rejectsInvalidSummaryWithoutDamagingInterview() {
+        assertInvalid([questions: [[question: 'Q', answer: 'A']],
+                summaryQuestions: [[question: 'Q', answer: 'A',
+                                    readmeRelated: [anchor: '']]]], 'summary question')
+        assertInvalid([questions: [[question: 'Q', answer: 'A']],
+                summaryQuestions: []], 'summaryQuestions must be a nonempty list')
+        assertInvalid([questions: [[question: 'Q', answer: 'A']],
+                summaryQuestions: [[question: '', answer: 'A']]], 'summary question')
+        assertInvalid([questions: [[question: 'Q', answer: 'A']], other: []], 'root must contain')
+    }
+
+    @Test
     void authoredYamlPreservesMarkdownAnswersAndNormalizesDeterministically() {
         String source = '''questions:
   - question: "Composition khác inheritance thế nào?"

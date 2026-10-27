@@ -5,9 +5,9 @@ import org.gradle.api.Project
 import org.gradle.api.logging.Logger
 
 /**
- * Chapter Interview question.yml belongs beside the chapter Knowledge under
- * content/readme/docs/<lang>/menu/<chapter>/interview/. The Sheet importer
- * creates that folder when its chapter has authored content. Never recreate
+ * Chapter Questions live beside Knowledge under
+ * content/readme/docs/<lang>/menu/<chapter>/questions/{interview,summary}.yml.
+ * The STEP 9 importer creates that folder from the Sheet. Never recreate
  * legacy content/interview during Gradle configuration.
  */
 class InterviewStructureService {

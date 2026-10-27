@@ -20,6 +20,7 @@
 | `SUMMARY_LESSONS` | **Chỉ** `summaries[].title` và `summaries[].summary` trong `summary/summaries.yml`; `summaries[].id`, root, thứ tự/đếm bài và schema khóa bất biến |
 | `QUIZ` | `questions[].question`, `questions[].answers[].answer`, `questions[].answers[].explanation` |
 | `INTERVIEW` | `questions[].question`, `questions[].answer` |
+| `SUMMARY_QUESTIONS` | `questions[].question`, `questions[].answer` trong `questions/summary.yml`; không có relation |
 | `ROADMAP` | `roadmap[].title`, `roadmap[].purpose`, từng phần tử `roadmap[].objectives[]`, `roadmap[].relatedModules[].label` và `note` |
 | `SWAGGER_CONTROLLER_DESCRIPTION` | `<Controller>.description` (chỉ text trong HTML, không thay tag/attrs) |
 | `SWAGGER_API_DESCRIPTIONS` | `<Controller>.<method>.summary`, `description` |
@@ -32,6 +33,7 @@
 - **README/INTRODUCTION:** Giữ nguyên số/tầng heading, các anchor `<a id="...">`, `id` trong HTML, code fences (ngôn ngữ và thân), inline code, tag/attribute HTML, địa chỉ hyperlink và file ảnh; không thêm bớt section, list item, table row/column. Menu item label có thể dịch nhưng anchor liên kết bất biến.
 - **QUIZ:** `id`, thứ tự `questions` và thứ tự đáp án `A/B/C/D`, `correctAnswerId`, `readmeRelated`, `apiRelated`, metadata đều khóa. `explanation` của **mọi** lựa chọn đúng/sai đều phải dịch, không chỉ giải thích đáp án đúng. Không đảo vị trí đáp án.
 - **INTERVIEW:** Không tự tạo question ID; giữ **chính xác số lượng và thứ tự** câu, cặp `question/answer` tương ứng, metadata và relation. Không thêm phỏng vấn mới hoặc rút ngắn câu trả lời.
+- **SUMMARY_QUESTIONS:** Chỉ dịch question/answer; không thêm câu, không trộn với Interview hoặc Summary STEP 5, không thêm metadata/related.
 - **ROADMAP:** `id`, `dependsOn`, `relatedKnowledge`, `relatedModules[].routeId`, số lượng/thứ tự milestone là khóa. Không dịch route/category ID.
 - **VIDEO không thuộc STEP 14:** file Video phải được chuyển sang `STEP_OPTIONAL_VIDEO_TRANSLATE` sau `STEP_FINAL`; nếu nhận file Video trong bước này, worker báo `BLOCKER: WRONG STEP`.
 - **SWAGGER:** Controller name, exact method signature, `usage`, `methodName`, `params`, `path`, `mapping`, `httpMethods`, `mappingPaths`, `consumes/produces`, `enableVideoYoutube`, `videoYoutubeId/title`, case `id`, `input`, `status`, `response`, `readmeRelated`, metadata đều khóa. Không "dịch" literal JSON body, lỗi kỹ thuật, Java code hoặc response gốc. `api-params.yml`: param keys và `usage` khóa.
@@ -39,7 +41,7 @@
 
 ## W3. Quy trình thực thi
 
-1. Kiểm tra đúng `EN_TARGET` và `FILE_TYPE` do Prime cấp, đủ quyền chỉ một file, nội dung EN ban đầu còn tiếng Việt từ STEP 12A. Kiểm tra hash; khác → `BLOCKER: SOURCE_CHANGED`. Không tìm phần "thiếu" từ VI hoặc file khác.
+1. Kiểm tra đúng `EN_TARGET` và `FILE_TYPE` do Prime cấp, đủ quyền chỉ một file, nội dung EN ban đầu còn tiếng Việt từ STEP 13. Kiểm tra hash; khác → `BLOCKER: SOURCE_CHANGED`. Không tìm phần "thiếu" từ VI hoặc file khác.
 2. Đọc **toàn bộ** file, xác định các trường/text span cần dịch. Tự theo dõi số mục cần hoàn thành (section/question/answer/API/milestone/scene). Với file dài, làm tuần tự **trong một lượt, không bỏ sót**.
 3. Dịch chỉ whitelist, bảo toàn source markup và khóa fields; thực hiện thay đổi **tại chính file EN được giao**. Không dùng YAML serializer nếu làm mất comments, thứ tự hay formatting cần giữ.
 4. QA ngay tại file: Markdown anchor/link/fences còn nguyên; YAML parse hợp lệ, keys/list structure nguyên; số mục giữ nguyên; không còn tiếng Việt trong **các trường cần dịch** (ngoại trừ chuỗi kỹ thuật được phép giữ), không thêm câu, không đảo ý. Đọc lại file đã ghi. Nếu không kiểm chứng được → báo REVIEW, không claim PASS.

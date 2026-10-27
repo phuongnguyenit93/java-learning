@@ -41,13 +41,13 @@ Chỉ có **hai mode**. Prime áp dụng giới hạn tổng worker `ACTIVE` + `
 
 ```json
 "CURRENT_STEP": {
-  "DESCRIPTION": "Last successfully completed module generation step (0, numeric STEP, 12A, FINAL)",
+  "DESCRIPTION": "Last successfully completed module generation step (0, numeric STEP including 13, FINAL)",
   "TYPE": "string",
   "VALUE": "0"
 }
 ```
 
-- Giá trị **JSON string**, không phải số: `"0"` là chưa bắt đầu; các STEP hiện hành theo thứ tự **`0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 9 → 10 → 11 → 12 → 12A → 14 → 15 → FINAL`**. `"12A"` và `"FINAL"` là chuỗi nguyên văn, **không** chuyển thành số. STEP 8 và 13 hiện không được định nghĩa, không được tự đánh dấu hoàn tất. Giá trị `"8"` trong module được nhập từ J3 lịch sử không chứng minh đã hoàn thành STEP 8 của workflow hiện hành; đối chiếu bằng chứng cũ trước khi tiếp tục.
+- Giá trị **JSON string**, không phải số: `"0"` là chưa bắt đầu; các STEP hiện hành theo thứ tự **`0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 9 → 10 → 11 → 12 → 13 → 14 → 15 → FINAL`**. `"13"` và `"FINAL"` là chuỗi nguyên văn, **không** chuyển thành số. Giá trị `"12A"` cũ tương đương STEP 13 khi có bằng chứng QA, chỉ đọc/giữ nguyên để tương thích, không ghi `"12A"` mới. STEP 8 hiện chưa được định nghĩa, không được tự đánh dấu hoàn tất. Giá trị `"8"` trong module được nhập từ J3 lịch sử không chứng minh đã hoàn thành STEP 8 của workflow hiện hành; đối chiếu bằng chứng cũ trước khi tiếp tục.
 - **Không đọc hoặc ghi trạng thái tiến độ ở Google Sheets/Excel J2/J3**, dù các tab/template cũ vẫn giữ nhãn `Current STEP`. Google Sheets `I3` vẫn được dùng để xác minh đường dẫn module; không phải nguồn trạng thái. Mọi backfill lịch sử phải có phạm vi và phép đối chiếu riêng được người dùng yêu cầu; không tự reset module về `"0"` hoặc cập nhật hàng loạt.
 - Prime chỉ cập nhật sau completion gate **của chính STEP và module**; worker không có quyền chỉnh trạng thái. Rerun STEP cũ không được ghi lùi; Video tùy chọn sau FINAL luôn giữ `"FINAL"`.
 
@@ -58,7 +58,7 @@ Chỉ có **hai mode**. Prime áp dụng giới hạn tổng worker `ACTIVE` + `
 5. Snapshot trước khi ghi, chống sửa đồng thời, dùng patch/atomic replace an toàn hoặc backup/rollback, **giữ nguyên toàn bộ các key và VALUE khác**. Exact readback trên `master.json`, không ghi vào ô Excel/Sheet; thất bại phải báo blocker và không tuyên bố hoàn tất toàn STEP.
 6. Báo `CURRENT_STEP_MODULE_PATH`, `CURRENT_STEP_BEFORE`, `CURRENT_STEP_AFTER`, `CURRENT_STEP_READBACK=PASS/FAIL`, blocker nếu có. STEP_FINAL chỉ ghi `"FINAL"` sau khi đủ QA và đưa cập nhật này vào commit/push kết thúc. Các STEP_OPTIONAL_VIDEO/TRANSLATE không đổi `CURRENT_STEP`.
 
-**Luồng dữ liệu Portal:** `<module>/master.json` → `ProjectStructureService` → `module-catalog.json.currentStep` → `build-module-navigation.mjs` → `module-navigation.json` → Module Picker. FE ẩn `"0"`/field chưa có, hiển thị `Step N`/`Step 12A` và `Finished` cho `"FINAL"`. Sau khi cập nhật trạng thái cần regenerate/publish Java data, sync vào learning-platform và deploy mới thấy trên web.
+**Luồng dữ liệu Portal:** `<module>/master.json` → `ProjectStructureService` → `module-catalog.json.currentStep` → `build-module-navigation.mjs` → `module-navigation.json` → Module Picker. FE ẩn `"0"`/field chưa có, hiển thị `Step N` (bao gồm `Step 13`; `Step 12A` chỉ dành cho dữ liệu cũ) và `Finished` cho `"FINAL"`. Sau khi cập nhật trạng thái cần regenerate/publish Java data, sync vào learning-platform và deploy mới thấy trên web.
 
 ## 3. Checklist đóng STEP cho Prime
 

@@ -108,7 +108,7 @@ class ModuleEnSheetPublishServiceTest {
     void detectsDriftWithinChapterInterviewSource() {
         Map f = fixture()
         File question = new File(f.module,
-                'content/readme/docs/en/menu/1.Basic/interview/question.yml')
+                'content/readme/docs/en/menu/1.Basic/questions/interview.yml')
         assertTrue(question.parentFile.mkdirs())
         question.setText('questions:\n  - question: Original question\n', 'UTF-8')
         List<String> events = []

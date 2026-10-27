@@ -90,6 +90,27 @@ class InterviewSheetImportServiceTest {
     }
 
     @Test
+    void twoRootGroupsProduceSeparateChapterDocuments() {
+        String authored = '''questions:
+  - question: Design trade-off?
+    answer: Compare composition and inheritance.
+summaryQuestions:
+  - question: Define composition?
+    answer: Combines objects to share behavior.
+'''
+        Map assembled = InterviewSheetImportService.collectQuestions(CHAPTERS, rowsWith([20: [authored]]))
+        assertEquals(1, assembled.questions.size())
+        assertEquals(1, assembled.summaryQuestions.size())
+        Map chapter = assembled.byChapter['1.OOPBasic'] as Map
+        assertEquals(1, chapter.questions.size())
+        assertEquals(1, chapter.summaryQuestions.size())
+        Map summaryFile = new Yaml().load(
+                InterviewSheetImportService.renderSummaryYaml(chapter.summaryQuestions as List<Map>)) as Map
+        assertEquals(['questions'] as Set, summaryFile.keySet())
+        assertEquals(['question', 'answer'] as Set, (summaryFile.questions[0] as Map).keySet())
+    }
+
+    @Test
     void acceptsLegacyJsonHeaderAndRejectsMixedHeaderLabels() {
         List<List<Object>> legacy = rowsWith([
                 20: [JsonOutput.toJson([questions: [[question: 'Q', answer: 'A']]])]
@@ -169,15 +190,20 @@ class InterviewSheetImportServiceTest {
                 apiRelated: [controller: '', methodSignature: '']
         ]])
 
-        Map dryRun = ChapterQuestionSnapshotService.replace(
-                root, new File(root, location), 'interview', ['1.OOPBasic': yaml], false)
+        Map documents = ['1.OOPBasic': ['interview.yml': yaml,
+                'summary.yml': InterviewSheetImportService.renderSummaryYaml([
+                        [question: 'S', answer: 'A']])]]
+        Map dryRun = ChapterQuestionSnapshotService.replaceInterview(
+                root, new File(root, location), documents, false)
         assertEquals('DRY_RUN', dryRun.status)
         assertEquals('old interview', existing.text)
 
-        Map applied = ChapterQuestionSnapshotService.replace(
-                root, new File(root, location), 'interview', ['1.OOPBasic': yaml], true)
+        Map applied = ChapterQuestionSnapshotService.replaceInterview(
+                root, new File(root, location), documents, true)
         assertEquals('UPDATED', applied.status)
-        assertEquals(yaml, existing.getText('UTF-8'))
+        assertFalse(existing.exists())
+        assertEquals(yaml, new File(chapter, 'questions/interview.yml').getText('UTF-8'))
+        assertTrue(new File(chapter, 'questions/summary.yml').isFile())
         assertEquals('preserve metadata', metadata.text)
         assertEquals('existing roadmap', roadmap.text)
     }

@@ -387,13 +387,17 @@ class ModuleContentExcelSyncService {
         File menu = new File(module, 'content/readme/docs/en/menu')
         boolean anyChapter = groups.any { Map group ->
             String chapter = group.source.toString().replaceFirst('/[^/]+$', '')
-            new File(menu, chapter + '/' + kind + '/question.yml').isFile()
+            File file = kind == 'interview'
+                    ? new File(menu, chapter + '/questions/interview.yml')
+                    : new File(menu, chapter + '/quiz/question.yml')
+            file.isFile()
         }
         groups.each { Map group ->
             String chapter = group.source.toString().replaceFirst('/[^/]+$', '')
-            File yamlFile = new File(menu, chapter + '/' + kind + '/question.yml')
+            String relative = kind == 'interview' ? 'questions/interview.yml' : 'quiz/question.yml'
+            File yamlFile = new File(menu, chapter + '/' + relative)
             File vi = new File(module, 'content/readme/docs/vi/menu/' +
-                    chapter + '/' + kind + '/question.yml')
+                    chapter + '/' + relative)
             if (!yamlFile.isFile()) {
                 if (vi.isFile() || (kind == 'quiz' && anyChapter)) {
                     throw new GradleException('Missing EN ' + kind + ' for chapter ' + chapter)
@@ -419,7 +423,23 @@ class ModuleContentExcelSyncService {
                             ' readmeRelated anchor #' + (index + 1) + ': ' + anchor)
                 }
             }
-            String yamlText = new Yaml().dump([questions: items])
+            Map output = [questions: items]
+            if (kind == 'interview') {
+                File summaryFile = new File(menu, chapter + '/questions/summary.yml')
+                File viSummary = new File(module,
+                        'content/readme/docs/vi/menu/' + chapter + '/questions/summary.yml')
+                if (!summaryFile.isFile() && viSummary.isFile()) {
+                    throw new GradleException('Missing EN Summary Questions for chapter ' + chapter)
+                }
+                if (summaryFile.isFile()) {
+                    Map summaryDocument = parseYaml(summaryFile)
+                    com.example.learning.utils.schema.validate.ContractSchemaValidateUtils
+                            .validateData('summaryQuestions', summaryDocument)
+                    output.summaryQuestions = summaryDocument.questions
+                    report.items += (summaryDocument.questions as List).size()
+                }
+            }
+            String yamlText = new Yaml().dump(output)
             fragments(sheet, group.row as int, firstColumn, 4, yamlText, report)
             report.items += items.size()
         }

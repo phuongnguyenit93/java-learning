@@ -1,6 +1,6 @@
 {
     "CURRENT_STEP": {
-        "DESCRIPTION": "Last successfully completed module generation step (0, numeric STEP, 12A, FINAL)",
+        "DESCRIPTION": "Last successfully completed module generation step (0, numeric STEP including 13, FINAL)",
         "TYPE": "string",
         "VALUE": "0"
     },

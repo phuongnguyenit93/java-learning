@@ -1,99 +1,48 @@
-# STEP 9 — PRIME ONLY: Generate Interview Q&A YAML theo từng Menu Cấp 1
+# STEP 9 — PRIME ONLY: Interview + Independent Summary Questions
 
+## 0. Mục tiêu và thứ tự
 
+Mỗi Menu Cấp 1 có **hai nhóm câu hỏi**:
+- **Interview**: câu hỏi phỏng vấn chuyên sâu, tình huống, cơ chế, trade-off, debug. Worker được đọc toàn bộ Knowledge C:N của chương.
+- **Summary Questions**: tự kiểm tra kiến thức **toàn chương**, do worker độc lập chỉ nhận tên module, tên các Menu Cấp 1 toàn module, tên Menu Cấp 2 của chương. **Tuyệt đối không đọc Knowledge/README, Summary STEP 5, Swagger/API, Interview/Quiz, worker khác hoặc lịch sử chat.**
+STEP 8 dành riêng Real-world Problems & Exercises; STEP 9 không làm Video hay filename. Một chapter có hai công việc sáng tác độc lập; Prime chủ trì toàn bộ việc ghép và nghiệm thu.
 
-## 0. Mục tiêu
+## 1. Hợp đồng Google Sheet
 
-STEP 9 hiện là bước **sinh nội dung phỏng vấn / hệ thống hóa kiến thức** trên Google Sheets, **KHÔNG phải** bước đặt filename (đã gộp vào STEP 5). **Video đã tách thành STEP_OPTIONAL_VIDEO**, nằm sau STEP_FINAL.
+A1/B1 = module; A cha = tên chương; B cha = filename thuộc STEP 5; B hàng con = tên bài. Interview nguồn nằm **trọn trong bốn ô P:S ở cùng hàng cha**. Header chuẩn: `P18=Interview`, `P19:S19=Interview YAML`; chấp nhận **đồng nhất** legacy `Interview JSON`. Không chia cứng P:Q/R:S; P→Q→R→S là **một chuỗi liên tục không separator**; mỗi ô tối đa 30.000 Unicode code points.
 
-- **Một worker = một Menu Cấp 1** (một chương); worker đọc toàn văn Knowledge của các Menu Cấp 2 trong chương, tự thiết kế **câu hỏi thực tế cùng câu trả lời tham khảo** rồi ghi **MỘT YAML hoàn chỉnh** vào tối đa **4 ô P:S trên CHÍNH hàng Menu Cấp 1**.
-- YAML chỉ chứa `questions:` với các phần tử `question:` và `answer:` (câu trả lời là YAML string, có thể chứa README Markdown trong block `|-`); **không có** `readmeRelated`, `apiRelated` hoặc các field khác ở STEP 9.
-- **Worker STEP 9 tạo mới chỉ YAML nguồn, KHÔNG tự bổ sung defaults/related, chỉnh module hoặc gọi importer.** Ngoại lệ: nếu YAML **đã tồn tại** nhưng lỗi cú pháp, worker được `FORMAT_FIX` mà **giữ nguyên tất cả fields kể cả metadata đã Normalize**, không tạo lại từ đầu. Sau khi **TOÀN BỘ worker STEP 9 của tab hoàn tất và Prime QA PASS**, Prime **phải chạy Gradle root task** `normalizeInterviewQuestionsFromSheet` để code thuần parse YAML P:S, bổ sung default fields/`readmeRelated.anchor` **không có `file`** và ghi lại YAML chuẩn hóa cùng P:S. **Sau Normalize, chính Prime chạy tiếp task module-local `generateModuleInterviewFromSheetByLocation`** để xuất một `interview/question.yml` trong **từng** `content/readme/docs/vi/menu/<chapter>/`. **Cả hai thao tác là nhiệm vụ Prime, không giao cho worker.**
-- Mỗi worker làm đủ **một lượt**: đọc → soạn YAML → QA → chia 4 ô → preflight → ghi → exact readback → báo Prime → SLEEPING. Không có PHA A/B hoặc hàng Interview riêng.
-- Pool theo **Mode A/B của session (A=3 mặc định; B=N do user chỉ định, thiếu N → BLOCKER; tính cả ACTIVE + SLEEPING)**; phải tái sử dụng worker SLEEPING trước và spawn từng worker một.
-
-### Prime/Worker và nguồn quy định
-
-- **`STEP_9.md` này chỉ dành cho Prime**. Prime đọc `/java-learning/module-generate-agent/GENERAL_AGENT_RULES.md`, **liệt kê và đọc tất cả file `module-generate-agent/rules/`**, `module-generate-info.txt`, toàn bộ `STEP_9.md` và `worker/STEP_9_WORKER.md` trước khi giao; đọc lại sau mất context.
-- **Worker bắt buộc TỰ đọc TOÀN VĂN duy nhất `/java-learning/module-generate-agent/worker/STEP_9_WORKER.md`** (kể cả sau compaction). Worker không đọc tài liệu Prime, STEP khác, rule/TXT, repo hay lịch sử chat để thay cho nhiệm vụ.
-- Prime **chỉ gửi đúng 4 dòng**: URL tab, tọa độ nguồn, tọa độ 4 ô đích, đường dẫn file worker-only. **Không gửi nội dung Knowledge, mẫu câu hỏi, tiêu chí chất lượng, tóm tắt worker file hoặc filename đề xuất**.
-
-## 1. Mapping Sheet
-
-| Thành phần | Vùng | Quyền |
-| --- | --- | --- |
-| Định danh module | `A1`, `B1` | Chỉ đọc |
-| Tiêu đề Menu Cấp 1 | `A<PARENT_ROW>` | Chỉ đọc; chính là chủ đề Interview |
-| Filename của chương | `B<PARENT_ROW>` | Chỉ đọc; đã được STEP 5 điền |
-| Danh sách Menu Cấp 2 | `B<CHILD_ROWS>` | Chỉ đọc; Prime xác định đúng các hàng con |
-| Nội dung từng bài Knowledge | `C<CHILD_ROWS>:N<CHILD_ROWS>` | Chỉ đọc; ghép C→N trên **từng hàng con**, không có ký tự nối |
-| Difficulty từng bài (nếu cần ngữ cảnh) | `O<CHILD_ROWS>` | Chỉ đọc, không ảnh hưởng ràng buộc phân bố câu hỏi |
-| **Interview YAML** | **`P<PARENT_ROW>:S<PARENT_ROW>`** | **Chỉ worker sở hữu chương được ghi; tối đa 4 ô, 30.000 Unicode/ô** |
-
-Schema Template mới: `A19 = Menu Cấp 1`, `B19 = Menu Cấp 2`, `C19:N19 = Câu trả lời`, `O19 = Difficulty`, **`P18 = Interview`, `P19:S19 = Interview YAML`**, `T18 = Quiz`, `T19:W19 = Quiz YAML`, `X18 = Video`, `X19:AA19 = Video Script`. Template phải có tối thiểu cột AA. **Header legacy `Interview JSON` trên cả bốn ô được importer/Normalize chấp nhận để không phá dữ liệu cũ**, nhưng Prime phải báo `LEGACY_INTERVIEW_HEADER`; không đổi header hoặc dữ liệu của tab trong STEP 9. Thiếu P:S hoặc header không hợp lệ/mixed → `BLOCKER: INTERVIEW SCHEMA`. Khi cập nhật Template dùng nhãn `Interview YAML`.
-
-**Ví dụ mapping:** A20 (chương thứ nhất) → P20:S20, các bài B21:B28 + C21:N28; A29 (chương tiếp theo) → P29:S29. **Không dùng số thứ tự chương để suy ra hàng khác, không dùng hàng con để ghi Interview**, không đụng Quiz T:W hay Video X:AA.
-
-## 2. Prime điều phối
-
-1. Đọc mapping tên module → gid từ `module-generate-info.txt`, xác nhận URL tab và `A1/B1`; không nhầm spreadsheet ID với gid. Đọc Menu A/B để nhận diện **mọi hàng cha** (A có tiêu đề, B cùng hàng là filename .md hoặc trống bất thường) cùng tất cả hàng con B; bảo toàn đúng ownership và thứ tự. Filename B cha phải hợp lệ theo STEP 5. Nếu tên/menu cấu trúc sai → `BLOCKER`.
-2. Preflight Template/tab schema và **C:N trên toàn bộ hàng con** của chương sắp giao: dữ liệu không thiếu hoặc không liên tục, các bài có nội dung thực, không tạo câu hỏi chỉ từ tiêu đề. Nếu thiếu nguồn → `BLOCKER: INCOMPLETE KNOWLEDGE`.
-3. Preflight **cả 4 ô P:S trên hàng cha** gồm `userEnteredValue`/formula, `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns` và quyền sở hữu. Trống hết → giao tạo mới (`NEW_FILL`). Có YAML gốc/đã Normalize từ trước và hợp lệ → `UNCHANGED`, không ghi. Có **lỗi cú pháp/định dạng YAML hoặc Markdown nhúng thật sự** → có thể giao worker `FORMAT_FIX` tối thiểu trong đúng P:S, với snapshot/diff chứng minh **câu hỏi, đáp án, metadata và thứ tự không đổi**. Không giao sửa nội dung hoặc tạo lại YAML đã Normalize; không chứng minh bảo toàn → BLOCKER. Không coi 4 ô Interview trên hàng con là hợp lệ.
-4. Quản lý pool **theo Mode A/B của session** (`PRIME_RULES.md §0`); **reuse sleeping** trước, spawn tuần tự khi cần, giao mỗi worker đúng một chương, không giao trùng `P:S` cùng hàng; giữ ownership đến khi worker báo cáo/readback xong. Cho phép các chương độc lập chạy song song.
-5. Prime **chỉ định tọa độ thực, không soạn nội dung**. Sau worker, đọc lại đủ 4 ô P:S, ghép **P→S không separator**, YAML parse được, root đúng `questions`, danh sách không trống; `NEW_FILL` có mỗi item đúng 2 trường string `question` và `answer` chưa metadata/related; **`FORMAT_FIX` với YAML đã Normalize được giữ nguyên các field/giá trị metadata hiện hữu**, không ép về 2 field. Đối chiếu diff trước–sau, bảo toàn mọi nội dung và exact readback bản sửa. `UNCHANGED` chỉ khi QA PASS mà không write. QA tính phù hợp với Knowledge/chương và tình huống phỏng vấn/ôn tập.
-6. Theo dõi `PARENT_CELL → CHILD_ROWS → OUTPUT_RANGE_P_S → OWNER_WORKER → STATUS → READBACK → QA`. Tiếp tục tất cả chương trong scope đã giao, xử lý blocker theo rule ownership, không dừng sau batch đầu. **Khi toàn tab đạt PASS ở phase worker, chạy NGAY task code Normalize bên dưới; sau Normalize APPLY/readback PASS, BẮT BUỘC tiếp tục task Interview ByLocation của đúng module (DRY_RUN → APPLY)** theo `GENERAL_AGENT_RULES.md §6`. **Chỉ sau khi CẢ HAI task PASS**, Prime đối chiếu I3 và preflight `master.json`, rồi ghi/readback `CURRENT_STEP.VALUE = "9"` theo `rules/PRIME_RULES.md §2`. Không đọc/ghi tiến độ từ Sheet J3. Nếu chỉ thử nghiệm vài chương, không chạy APPLY normalize/import toàn tab và **không đổi CURRENT_STEP.VALUE**. Không tự chạy STEP_OPTIONAL_VIDEO hoặc task ByFiles.
-
-### 3. Prime chạy root Gradle Normalize — BẮT BUỘC khi kết thúc toàn STEP 9
-
-Task đã đăng ký tại root repository `java-learning`: **`normalizeInterviewQuestionsFromSheet`**.
-
-- **Hai input**: `-PfileUrl=<URL spreadsheet>`, `-PsheetID=<gid tab>` (khác spreadsheet ID). Task cũng hỗ trợ alias `-PsheetFileUrl` và `-PsheetId`. Prime lấy hai giá trị từ mapping đã xác minh, không hardcode ví dụ.
-- **Credentials**: `DRY_RUN` chỉ cần Google Sheets **scope `spreadsheets.readonly`**; `APPLY` dùng ADC/Service Account Impersonation với **scope `spreadsheets`** để ghi dữ liệu và file Sheet phải share Service Account **quyền Editor**. Những task import cũ tiếp tục chỉ đọc. Nếu chưa có quyền hoặc credentials không đạt, `BLOCKER: INTERVIEW NORMALIZE AUTH`, không báo hoàn thành.
-- Lần 1 (chỉ kiểm tra và báo số chương/câu hỏi sẽ đổi, không ghi):
-
-```powershell
-.\gradlew.bat normalizeInterviewQuestionsFromSheet -PfileUrl="<URL_GOOGLE_SHEETS>" -PsheetID=<GID_TAB> -PinterviewMode=DRY_RUN
+```yaml
+questions:
+  - question: "Khi nào nên dùng composition thay inheritance?"
+    answer: |-
+      Trả lời phỏng vấn có giải thích trade-off.
+summaryQuestions:
+  - question: "Composition giải quyết vấn đề gì?"
+    answer: |-
+      Tổ hợp hành vi thông qua các đối tượng.
 ```
 
-- **Sau khi DRY_RUN PASS**, lần 2 thực sự ghi **ngược về chính Sheet/tab đó**:
+`questions[]` bắt buộc không rỗng. Interview worker chỉ tạo `question`/`answer`; pure-code Normalize thêm `readmeRelated.anchor` và `apiRelated{controller,methodSignature}`. `summaryQuestions[]` có đúng **question/answer**, không metadata/related. Dữ liệu lịch sử chỉ có `questions[]` được giữ nguyên, **không tự chế Summary**; với chương STEP 9 được làm mới đầy đủ, cần đủ hai nhóm.
 
-```powershell
-.\gradlew.bat normalizeInterviewQuestionsFromSheet -PfileUrl="<URL_GOOGLE_SHEETS>" -PsheetID=<GID_TAB> -PinterviewMode=APPLY
-```
+## 2. Prime giao việc và ownership
 
-- Task Normalize tìm **các hàng Menu Cấp 1 có YAML ở P:S**, nối P→S không separator, parse `questions`; với từng question/answer thêm `readmeRelated:{anchor:""}`, `apiRelated:{controller:"",methodSignature:""}`. **Nếu metadata hợp lệ đã tồn tại, giữ nguyên** (anchor, API); `readmeRelated.file` legacy chỉ được chấp nhận khi khớp chapter cũ/mới rồi loại khỏi dữ liệu normalized.
-- **Riêng task Normalize** không gọi AI và không ghi file module; nó đọc YAML nguồn (hoặc JSON legacy), **xuất YAML chuẩn hóa** về đúng bốn ô P:S hàng cha, tự chia 30.000 Unicode/ô. **Task ByLocation ngay sau đó** sinh `content/readme/docs/vi/menu/<chapter>/interview/question.yml` cho từng chương từ Sheet đã normalize.
-- Toàn tab được preflight đầy đủ trước **một batch ghi duy nhất**, đọc lại sau ghi và so khớp từng mảnh YAML; nếu có lỗi parse, vượt 4 ô, menu không hợp lệ hoặc nguồn bị chỉnh cùng lúc, **không dispatch batch**. Chạy lại với cùng trạng thái là **idempotent** (`UNCHANGED`), không nhân đôi câu hỏi.
-- Prime ghi nhận **`NORMALIZE_STATUS`, `NORMALIZED_ROWS`, `QUESTION_COUNT`, `READBACK`**; **Normalize không tự tạo file module và chưa đủ điều kiện hoàn tất STEP 9**. Nếu chưa có YAML hoặc bất kỳ chương nào chưa được worker QA, chặn `BLOCKER: INCOMPLETE STEP 9`; không chạy APPLY để tránh chuẩn hóa một phần rồi báo hoàn tất.
+Trước giao đọc GENERAL_AGENT_RULES, toàn bộ rules/, file STEP này, `worker/STEP_9_WORKER.md`, mapping module-generate-info; xác minh URL/gid/I3/module và tất cả hàng Menu Cấp 1/Cấp 2. Giữ worker pool Mode A/B và worker-only đúng role; không tự gửi nội dung hay gợi ý câu hỏi.
 
-### 4. Prime đồng bộ Interview YAML đã Normalize về ĐÚNG một module
+- **ROLE=INTERVIEW**: quyền đọc A/B chương + C:N tất cả hàng con + Difficulty O nếu được cấp. Quyền ghi P:S hàng cha **chỉ khi trống/FORMAT_FIX được chứng minh**; không đọc Summary staging, không chỉnh YAML hợp lệ đã Normalize.
+- **ROLE=SUMMARY**: quyền đọc **chỉ A/B tên module, Menu Cấp 1 toàn module, Menu Cấp 2 của chương được giao**. Quyền ghi **duy nhất** `<MODULE>/build/step9/summary/<chapter>/summary.yml` mà Prime đã xác nhận/khởi tạo ownership. Không đọc hay ghi P:S, dữ liệu Knowledge, file README, API, phỏng vấn/quiz, metadata, chapter khác. File staging là một YAML với root `summaryQuestions[]`, từng item chỉ question/answer.
+- Prime giao bốn dòng: (1) tab URL/gid, (2) role + tọa độ đọc được phép, (3) vùng ghi/staging thuộc ownership, (4) file worker-only. Hai role không bao giờ cùng sở hữu vùng P:S.
 
-**Ngay sau khi Normalize APPLY/readback PASS**, Prime **BẮT BUỘC** chạy task **module-local** `generateModuleInterviewFromSheetByLocation` (đã đăng ký cho module có Sheets plugin), **không dùng `generateModuleContentFromSheetByFiles` hoặc task tổng hợp**. Prime xác minh `I3` bằng module path Gradle đã đăng ký và extension `fileUrl/sheetId` đúng tab. Từ root `java-learning`:
+## 3. Merge — Normalize — Import (thuần CODE)
 
-```powershell
-.\gradlew.bat :<EXACT_MODULE_GRADLE_PATH>:generateModuleInterviewFromSheetByLocation -PfileUrl=<URL> -PsheetID=<GID> -PsheetMode=DRY_RUN
-.\gradlew.bat :<EXACT_MODULE_GRADLE_PATH>:generateModuleInterviewFromSheetByLocation -PfileUrl=<URL> -PsheetID=<GID> -PsheetMode=APPLY
-```
+1. Prime QA toàn tab và kết quả từng worker, exact readback P:S cùng staging; kiểm tra notes/formulas/chips/validation, 30k codepoints mỗi fragment, fingerprint trước ghi và tình trạng concurrent edits. Không ghi nếu có BLOCKER hoặc Sheet thay đổi.
+2. Sau toàn bộ chương PASS, Prime chạy root `normalizeInterviewQuestionsFromSheet` **DRY_RUN → APPLY**, bằng `-PfileUrl=<URL> -PsheetID=<GID> -PinterviewMode=...`. **Chính task này** đọc Interview P:S và Summary staging tại `<I3>/build/step9/summary/<chapter>/summary.yml`, gọi pure-code `InterviewSheetNormalizeService.mergeSummaryQuestions`, kiểm tra Interview giữ nguyên, từ chối overwrite Summary đã có khác, rồi normalize/serialize/split fragments và ghi P:S **một batch có fingerprint + exact readback**. Không yêu cầu Prime tự ghép nội dung, không AI tham gia parse/merge/split/validation/import. Khi YAML >120k code points → BLOCKER; không lấn sang Quiz/Video.
+3. Normalize chỉ thêm defaults cho `questions[]`, giữ `summaryQuestions[]` nguyên ý nghĩa và hai scalar; không tạo/dịch câu hỏi. Nếu staging đổi trong quá trình preflight hoặc staging có mà Interview trống → BLOCKER.
+4. Prime chạy module-local `:<MODULE_GRADLE_PATH>:generateModuleInterviewFromSheetByLocation` DRY_RUN → APPLY, tham số `-PfileUrl=<URL> -PsheetID=<GID> -PsheetMode=...`. Import code thuần, **mỗi Menu Cấp 1** ghi:
+   - `content/readme/docs/vi/menu/<chapter>/questions/interview.yml`: root `questions[]`, có relations.
+   - `content/readme/docs/vi/menu/<chapter>/questions/summary.yml`: root `questions[]`, chỉ question/answer; nếu chưa có nguồn Summary (legacy) thì không tạo.
+5. CLEAN/FILL atomic và rollback: chỉ sở hữu `questions/` mới và `interview/` cũ, loại file Interview cũ sau QA, không sửa Knowledge, Quiz, Video, EN. STEP 11 gắn related cho Interview, không cho Summary.
+6. Sau ALL PASS/UNCHANGED, đối chiếu exact readback, Prime cập nhật `CURRENT_STEP.VALUE="9"` trong master.json đúng module. Không dùng J3, không tự chạy STEP 10, Video, commit/push.
 
-- Chỉ chạy lệnh thứ hai khi DRY_RUN có dữ liệu hợp lệ, exit code PASS, không có blocker; `SKIPPED_NO_INTERVIEW_SCHEMA`, `SKIPPED_EMPTY_INTERVIEW` hoặc status `SKIPPED_*` **không phải sync thành công**.
-- Kiểm tra sau APPLY: status thực, số câu hỏi/chương, **từng** file `<MODULE_ROOT>/content/readme/docs/vi/menu/<chapter>/interview/question.yml` được ghi và exact readback. Importer phải preflight mọi chương, chuẩn bị toàn bộ trước khi thay snapshot Interview, rollback khi ghi lỗi; Knowledge, Metadata, Quiz và Video không đổi. Relation nguồn chỉ có anchor; file được resolve khi `generatePortalData`.
-- Nếu thiếu Gradle module/task/config/ADC, `I3` mismatch, lỗi schema hoặc file chưa cập nhật: **`BLOCKER: MODULE INTERVIEW SYNC`**, báo trạng thái Normalize đã làm (không thử lại ghi Sheet mù) và **không cập nhật CURRENT_STEP.VALUE**. Chỉ sau **Normalize + module-local Interview import PASS/UNCHANGED được xác minh**, Prime cập nhật/readback `CURRENT_STEP.VALUE = "9". Báo cả `NORMALIZE_STATUS` và `MODULE_SYNC_STATUS` riêng.
+## 4. Completion gate
 
-### Mẫu tin nhắn Prime giao worker — CHỈ bốn dòng
-
-```text
-<URL_TAB_ĐÚNG_GID>
-A1, B1, <PARENT_CELL_A>, <PARENT_FILENAME_CELL_B>, <CHILD_B_RANGE>, <CHILD_KNOWLEDGE_C_TO_N_RANGE>, <CHILD_DIFFICULTY_O_RANGE>
-<OUTPUT_INTERVIEW_P_TO_S_CÙNG_HÀNG_PARENT>
-/java-learning/module-generate-agent/worker/STEP_9_WORKER.md
-```
-
-Thay placeholder bằng địa chỉ thực, không gửi dấu `...` hay ranges có thể bao gồm chương ngoài nhiệm vụ. Nếu các hàng con không liền nhau, liệt kê chính xác các ô trong dòng nguồn. **Prime không chép nội dung từ worker-only vào tin giao; worker phải tự đọc file này**.
-
-## 3. Điều kiện hoàn thành
-
-- Mỗi chương đã được worker độc lập đọc **đủ Knowledge**, tạo một **YAML list câu hỏi–trả lời có giá trị thực tế**, không cố nhồi câu hỏi vô dụng hoặc ép số lượng theo bài.
-- **Chỉ đúng `P:S` của hàng cha**, mỗi ô `<= 30.000` Unicode code points; cả YAML tối đa 120.000; không truncate, không ghi một phần nếu vượt 4 ô (`BLOCKER: INTERVIEW CAPACITY`).
-- **Worker** viết YAML gốc chỉ có `question` và `answer`; sau QA toàn tab, **Prime chạy task code** bổ sung defaults/related anchor **và exact readback chính YAML đầy đủ trên Sheet**, không phải worker làm.
-- A/B, Knowledge C:N, Difficulty O, Video X:AA, Template, tab khác, source/repo và CURRENT_STEP.VALUE của worker đều giữ nguyên.
-- **STEP 9 hoàn thành = mọi worker YAML PASS + root Normalize DRY_RUN/APPLY/readback PASS + `generateModuleInterviewFromSheetByLocation` DRY_RUN/APPLY/QA trên ĐÚNG module PASS + CURRENT_STEP.VALUE exact readback PASS**. Filename vẫn thuộc STEP 5; Video là STEP_OPTIONAL_VIDEO sau STEP_FINAL. Không chạy ByFiles, task tổng hợp, STEP_OPTIONAL_VIDEO hoặc commit/push.
+Hai role độc lập và toàn bộ chương đã QA; nguồn YAML một document, header hợp lệ, không orphan dữ liệu P:S hàng con, không vượt capacity, không drift/race; Normalize DRY_RUN/APPLY/readback PASS, importer DRY_RUN/APPLY/readback PASS (SKIPPED không đủ); Interview schema và Summary Questions schema PASS; output và cleanup/rollback đúng scope; đếm Interview và Summary riêng; CURRENT_STEP readback PASS. STEP 13 clone cả hai file VI→EN, STEP 14 dịch riêng, STEP 15 ghép hai file lại về YAML P:S trong Sheet EN. Existing Interview chính là nguồn truth; không tái tạo phỏng vấn hợp lệ để chèn Summary.

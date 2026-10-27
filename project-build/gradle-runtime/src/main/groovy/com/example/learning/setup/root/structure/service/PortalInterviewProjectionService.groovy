@@ -68,7 +68,14 @@ class ChapterQuestionProjectionSupport {
                 Map<String, Map<String, List<String>>> anchorCache = new LinkedHashMap<>()
                 int total = 0
                 chapters.each { File chapter ->
-                    File source = new File(chapter, "${kind}/${QUESTION_FILE}")
+                    File source = kind == 'interview'
+                            ? new File(chapter, 'questions/interview.yml')
+                            : new File(chapter, "${kind}/${QUESTION_FILE}")
+                    // Read-only legacy compatibility while existing modules are
+                    // migrated by the STEP 9 importer. Never write legacy files.
+                    if (kind == 'interview' && !source.isFile()) {
+                        source = new File(chapter, 'interview/question.yml')
+                    }
                     if (!source.isFile()) return
 
                     Map document = readAndValidate(source, kind)

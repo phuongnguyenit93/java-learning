@@ -14,6 +14,43 @@ class ChapterSheetCleanFillService {
             video: 'video-script.yml'
     ].asImmutable()
 
+    /** Clean the new questions/ folder and retired interview/ in one atomic snapshot. */
+    static Map<String,Object> replaceInterview(File root, File module,
+                                               Map<String,Map<String,String>> chapters,
+                                               boolean apply, Closure afterMutation = null) {
+        if (chapters == null) throw new GradleException('Null chapter Interview snapshot.')
+        File menu = new File(module, 'content/readme/docs/vi/menu')
+        Map<File, Map<String,String>> targets = new LinkedHashMap<>()
+        if (menu.isDirectory()) {
+            File[] folders = menu.listFiles()
+            if (folders == null) throw new GradleException('Cannot list Interview chapters: ' + menu)
+            folders.findAll { it.isDirectory() }.each { File chapter ->
+                if (new File(chapter, 'questions').exists() || new File(chapter, 'interview').exists()) {
+                    if (!(chapter.name ==~ CHAPTER)) throw new GradleException('Unexpected Interview chapter: ' + chapter)
+                    targets[new File(chapter, 'questions')] = [:]
+                    targets[new File(chapter, 'interview')] = [:]
+                }
+            }
+        }
+        chapters.each { String chapter, Map<String,String> documents ->
+            if (!(chapter ==~ CHAPTER) || chapter.contains('..') || documents == null ||
+                    documents.keySet().any { !(it in ['interview.yml','summary.yml']) } ||
+                    !documents.containsKey('interview.yml') || documents.values().any { it == null }) {
+                throw new GradleException('Invalid Interview chapter snapshot: ' + chapter)
+            }
+            File home = new File(menu, chapter)
+            if (!new File(home, 'knowledge').isDirectory()) {
+                throw new GradleException('Missing Knowledge chapter for Interview import: ' + home)
+            }
+            targets[new File(home, 'questions')] = documents
+            targets[new File(home, 'interview')] = [:]
+        }
+        File legacy = new File(module, 'content/interview/vi')
+        if (legacy.exists()) targets[legacy] = [:]
+        return SheetSnapshotReplaceService.replaceAll(root, targets, apply, afterMutation) +
+                [chapterCount: chapters.size()]
+    }
+
     static Map<String, Object> replace(File repositoryRoot, File moduleDirectory,
                                        String kind, Map<String, String> chapters,
                                        boolean apply, Closure afterMutation = null) {

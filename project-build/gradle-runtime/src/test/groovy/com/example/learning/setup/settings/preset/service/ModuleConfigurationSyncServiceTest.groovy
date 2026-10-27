@@ -22,11 +22,11 @@ class ModuleConfigurationSyncServiceTest {
         Map root = new JsonSlurper().parse(master) as Map
         assertEquals('string', root.CURRENT_STEP.TYPE)
         assertEquals('0', root.CURRENT_STEP.VALUE)
-        root.CURRENT_STEP.VALUE = '12A'
+        root.CURRENT_STEP.VALUE = '13'
         master.setText(groovy.json.JsonOutput.prettyPrint(
                 groovy.json.JsonOutput.toJson(root)) + '\n', 'UTF-8')
         service.sync(dir)
-        assertEquals('12A', (new JsonSlurper().parse(master) as Map).CURRENT_STEP.VALUE)
+        assertEquals('13', (new JsonSlurper().parse(master) as Map).CURRENT_STEP.VALUE)
     }
 
     @Test

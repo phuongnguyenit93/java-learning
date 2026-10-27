@@ -109,6 +109,8 @@ class ModuleContentExcelSyncServiceTest {
                 assertEquals('English roadmap', ModuleContentExcelSyncService.text(sheet, 3, 6))
                 assertEquals('Understand the example', ModuleContentExcelSyncService.text(sheet, 3, 7))
                 assertTrue(ModuleContentExcelSyncService.text(sheet, 20, 16).contains('English interview?'))
+                assertTrue(ModuleContentExcelSyncService.text(sheet, 20, 16).contains('summaryQuestions:'))
+                assertTrue(ModuleContentExcelSyncService.text(sheet, 20, 16).contains('English summary?'))
                 assertTrue(ModuleContentExcelSyncService.text(sheet, 20, 20).contains('English quiz?'))
                 assertEquals('', ModuleContentExcelSyncService.text(sheet, 20, 24))
                 assertEquals('unchanged background', ModuleContentExcelSyncService.text(sheet, 1, 1))
@@ -251,7 +253,7 @@ questions:
     readmeRelated: {anchor: more-001}
     apiRelated: {controller: "", methodSignature: ""}
 '''.trim())
-        write(module, 'content/readme/docs/en/menu/2.More/interview/question.yml', '''
+        write(module, 'content/readme/docs/en/menu/2.More/questions/interview.yml', '''
 questions:
   - question: Second chapter interview?
     answer: Second chapter answer
@@ -354,11 +356,16 @@ roadmap:
     objectives: [Objective A, Objective B]
     relatedKnowledge: [Basic]
 '''.trim())
-        write(module, 'content/readme/docs/en/menu/1.Basic/interview/question.yml', '''
+        write(module, 'content/readme/docs/en/menu/1.Basic/questions/interview.yml', '''
 questions:
   - question: English interview?
     answer: The answer
     readmeRelated: {anchor: basic-001}
+'''.trim())
+        write(module, 'content/readme/docs/en/menu/1.Basic/questions/summary.yml', '''
+questions:
+  - question: English summary?
+    answer: An independent answer.
 '''.trim())
         write(module, 'content/readme/docs/en/menu/1.Basic/quiz/question.yml', '''
 questions:

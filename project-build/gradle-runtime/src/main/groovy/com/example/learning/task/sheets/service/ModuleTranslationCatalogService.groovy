@@ -59,7 +59,7 @@ class ModuleTranslationCatalogService {
             inventory.each { Map entry ->
                 // Only the first preparation may require byte-identical VI/EN.
                 if (entry.viSha256 != entry.enSha256) {
-                    throw new GradleException('STEP 12A VI/EN clone not intact for ' +
+                    throw new GradleException('STEP 13 VI/EN clone not intact for ' +
                             entry.enPath + '. Refusing a new translation baseline.')
                 }
                 ModuleTranslationValidationService.compare(entry.type as String,
@@ -77,7 +77,7 @@ class ModuleTranslationCatalogService {
                             StandardOpenOption.CREATE_NEW)
                 }
                 Map document = [module: location, runId: runId,
-                                baselinePhase: 'STEP_12A_CLONED',
+                                baselinePhase: 'STEP_13_CLONED',
                                 files: inventory]
                 // File is created last; interrupted preparation must not appear complete.
                 Files.write(manifest.toPath(),
@@ -169,8 +169,10 @@ class ModuleTranslationCatalogService {
                 targets[DOC + 'en/menu/' + path] = 'README'
             } else if (path ==~ /[^\/]+\/quiz\/question\.yml/) {
                 targets[DOC + 'en/menu/' + path] = 'QUIZ'
-            } else if (path ==~ /[^\/]+\/interview\/question\.yml/) {
+            } else if (path ==~ /[^\/]+\/questions\/interview\.yml/) {
                 targets[DOC + 'en/menu/' + path] = 'INTERVIEW'
+            } else if (path ==~ /[^\/]+\/questions\/summary\.yml/) {
+                targets[DOC + 'en/menu/' + path] = 'SUMMARY_QUESTIONS'
             } else if (path ==~ /[^\/]+\/summary\/section\.yml/) {
                 targets[DOC + 'en/menu/' + path] = 'SUMMARY_SECTION'
             } else if (path ==~ /[^\/]+\/summary\/summaries\.yml/) {
@@ -209,13 +211,13 @@ class ModuleTranslationCatalogService {
                         it ==~ /menu\/[^\/]+\.md/ ||
                         it ==~ /menu\/[^\/]+\/knowledge\/[^\/]+\.md/ ||
                         it ==~ /menu\/[^\/]+\/metadata\/knowledge-metadata\.yml/ ||
-                        it ==~ /menu\/[^\/]+\/(quiz|interview)\/question\.yml/ ||
+                        it ==~ /menu\/[^\/]+\/(quiz\/question|questions\/(interview|summary))\.yml/ ||
                         it ==~ /menu\/[^\/]+\/summary\/(section\.yml|summaries\.yml)/ } as Set
                 b = b.findAll { it in ['BASE.md', 'LIST.md'] ||
                         it ==~ /menu\/[^\/]+\.md/ ||
                         it ==~ /menu\/[^\/]+\/knowledge\/[^\/]+\.md/ ||
                         it ==~ /menu\/[^\/]+\/metadata\/knowledge-metadata\.yml/ ||
-                        it ==~ /menu\/[^\/]+\/(quiz|interview)\/question\.yml/ ||
+                        it ==~ /menu\/[^\/]+\/(quiz\/question|questions\/(interview|summary))\.yml/ ||
                         it ==~ /menu\/[^\/]+\/summary\/(section\.yml|summaries\.yml)/ } as Set
             }
             if (a != b) throw new GradleException('VI/EN tree mismatch: ' + area)

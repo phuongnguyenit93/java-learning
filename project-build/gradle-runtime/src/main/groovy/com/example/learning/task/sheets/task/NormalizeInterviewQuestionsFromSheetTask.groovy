@@ -41,14 +41,15 @@ abstract class NormalizeInterviewQuestionsFromSheetTask extends DefaultTask {
             )
         }
         Map report = new InterviewSheetNormalizeService().execute(
-                fileUrl.get(), sheetId.get(), selectedMode == 'APPLY'
+                fileUrl.get(), sheetId.get(), selectedMode == 'APPLY',
+                project.rootProject.projectDir
         )
         logger.lifecycle(
                 '[INTERVIEW-NORMALIZE] {} tab="{}" gid={} scanned={} populated={} ' +
-                        'changed={} unchanged={} questions={} written={} readback={}',
+                        'changed={} unchanged={} questions={} summaryQuestions={} written={} readback={}',
                 report.status, report.tab, report.gid, report.scanned,
                 report.populated, report.changed, report.unchanged,
-                report.questions, report.written, report.readback
+                report.questions, report.summaryQuestions, report.written, report.readback
         )
     }
 }

@@ -6,7 +6,7 @@ import org.gradle.api.GradleException
 /** Reads pinned contracts from packaged resources, never from a cwd-relative path. */
 final class ContractSchemaLoaderUtils {
     static final Map<String, String> NAMES = [
-            quiz: 'quiz', interview: 'interview', roadmap: 'roadmap',
+            quiz: 'quiz', interview: 'interview', summaryQuestions: 'summary-questions', roadmap: 'roadmap',
             reference: 'reference', videoAuthoring: 'video-authoring',
             videoScript: 'video-script', videoIndex: 'video-index',
             apiDocs: 'api-docs', knowledge: 'knowledge',

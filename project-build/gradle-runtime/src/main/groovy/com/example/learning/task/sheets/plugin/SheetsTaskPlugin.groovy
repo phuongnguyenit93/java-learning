@@ -32,7 +32,7 @@ class SheetsTaskPlugin
 
         project.tasks.register('cloneModuleViToEn', CloneModuleViToEnTask) { task ->
             task.group = 'sheets'
-            task.description = 'STEP 12A: replace module EN content with validated VI structure (DRY_RUN by default).'
+            task.description = 'STEP 13: replace module EN content with validated VI structure (DRY_RUN by default).'
             task.mode.convention(project.providers.gradleProperty('sheetMode').orElse('DRY_RUN'))
         }
 

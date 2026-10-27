@@ -40,7 +40,7 @@ class ChapterVideoSnapshotServiceTest {
         File metadata = new File(one, 'metadata/knowledge-metadata.yml')
         assertTrue(metadata.parentFile.mkdirs())
         metadata.setText('knowledge: protected', 'UTF-8')
-        File interview = new File(one, 'interview/question.yml')
+        File interview = new File(one, 'questions/interview.yml')
         assertTrue(interview.parentFile.mkdirs())
         interview.setText('interview: protected', 'UTF-8')
         File quiz = new File(one, 'quiz/question.yml')

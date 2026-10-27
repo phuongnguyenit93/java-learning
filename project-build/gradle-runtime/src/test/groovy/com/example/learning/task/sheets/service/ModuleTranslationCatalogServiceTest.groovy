@@ -55,7 +55,7 @@ class ModuleTranslationCatalogServiceTest {
         def service = new ModuleTranslationCatalogService()
         Map dry = service.execute(f.root as File, f.module as File, 'trial', 'PREPARE', false)
         assertEquals('DRY_RUN', dry.status)
-        assertEquals(6, dry.total)
+        assertEquals(7, dry.total)
         assertFalse((dry.manifest as File).exists())
         Map prepared = service.execute(f.root as File, f.module as File,
                 'trial', 'PREPARE', true)
@@ -63,6 +63,8 @@ class ModuleTranslationCatalogServiceTest {
         assertTrue((prepared.manifest as File).isFile())
         assertEquals('module/demo', new groovy.json.JsonSlurper()
                 .parse(prepared.manifest as File).module)
+        assertEquals('STEP_13_CLONED', new groovy.json.JsonSlurper()
+                .parse(prepared.manifest as File).baselinePhase)
         File quiz = new File(f.module as File,
                 'content/readme/docs/en/menu/1.Basic/quiz/question.yml')
         quiz.setText(quiz.getText('UTF-8').replace('Câu hỏi', 'English question')
@@ -75,9 +77,9 @@ class ModuleTranslationCatalogServiceTest {
         Map checked = service.execute(f.root as File, f.module as File,
                 'trial', 'VALIDATE', false)
         assertEquals('VALIDATED_STRUCTURE', checked.status)
-        assertEquals(6, checked.total)
+        assertEquals(7, checked.total)
         assertEquals(2, checked.translated)
-        assertEquals(4, checked.pending)
+        assertEquals(5, checked.pending)
         assertTrue(checked.semanticQaRequired)
         File snapshot = new File(f.module as File,
                 'build/step14/trial/baseline/content/readme/docs/en/menu/1.Basic/quiz/question.yml')
@@ -112,7 +114,7 @@ class ModuleTranslationCatalogServiceTest {
         try {
             new ModuleTranslationCatalogService().execute(f.root as File,
                     f.module as File, 'newrun', 'PREPARE', true)
-            fail('Translated module must not be baselined as STEP 12A clone')
+            fail('Translated module must not be baselined as STEP 13 clone')
         } catch (GradleException error) {
             assertTrue(error.message.contains('clone not intact'))
         }
@@ -186,10 +188,11 @@ System.out.println("KEEP");
         write(module, 'content/readme/docs/en/menu/LegacyRoot.md',
                 '# Legacy root Knowledge')
         List<Map> inventory = ModuleTranslationCatalogService.inventory(module)
-        assertEquals(7, inventory.size())
+        assertEquals(8, inventory.size())
         assertEquals(2, inventory.count { it.type == 'README' })
         assertEquals(1, inventory.count { it.type == 'QUIZ' })
         assertEquals(1, inventory.count { it.type == 'INTERVIEW' })
+        assertEquals(1, inventory.count { it.type == 'SUMMARY_QUESTIONS' })
         assertTrue(inventory.any { it.enPath ==
                 'content/readme/docs/en/menu/1.Basic/knowledge/Basic.md' })
         assertTrue(inventory.any { it.enPath ==
@@ -227,7 +230,7 @@ System.out.println("KEEP");
 
         def service = new ModuleTranslationCatalogService()
         List<Map> inventory = ModuleTranslationCatalogService.inventory(module)
-        assertEquals(6, inventory.size())
+        assertEquals(7, inventory.size())
         assertFalse(inventory.any { it.enPath?.contains('/video/') })
         assertEquals('PREPARED', service.execute(f.root as File, module,
                 'video-independent', 'PREPARE', true).status)
@@ -264,13 +267,17 @@ System.out.println("KEEP");
     readmeRelated: {anchor: basic-001}
     apiRelated: {controller: "", methodSignature: ""}
 ''',
-                'content/readme/docs/vi/menu/1.Basic/interview/question.yml': '''questions:
+                'content/readme/docs/vi/menu/1.Basic/questions/interview.yml': '''questions:
   - question: Câu phỏng vấn?
     answer: Trả lời thực hành
 
 
     readmeRelated: {anchor: basic-001}
     apiRelated: {controller: "", methodSignature: ""}
+''',
+                'content/readme/docs/vi/menu/1.Basic/questions/summary.yml': '''questions:
+  - question: Câu hỏi tổng hợp?
+    answer: Đáp án tự đánh giá.
 ''',
                 'content/readme/docs/vi/menu/1.Basic/video/video-script.yml':
                         'title: Tiêu đề\nsections:\n  - title: Bài học\n    items:\n      - {type: SCENE, time: "00:00-00:10", visual: Hình ảnh, script: Thuyết minh, purpose: Mục đích}',

@@ -125,6 +125,10 @@ class ModuleLanguageCloneValidationService {
             }
         }
         chapterAnchors.each { String chapter, Set<String> anchors ->
+            if (docs.containsKey('menu/' + chapter + '/interview/question.yml')) {
+                throw new GradleException('Legacy Interview source in ' + chapter +
+                        '; run STEP 9 import to migrate to questions/interview.yml before STEP 13.')
+            }
             String sectionPath = 'menu/' + chapter + '/summary/section.yml'
             String summariesPath = 'menu/' + chapter + '/summary/summaries.yml'
             boolean sectionExists = docs.containsKey(sectionPath)
@@ -152,20 +156,24 @@ class ModuleLanguageCloneValidationService {
                 }
                 SummarySectionYamlService.read(content(docs[sectionPath]), ids as List<String>)
             }
-            ['quiz', 'interview'].each { String kind ->
-                String path = 'menu/' + chapter + '/' + kind + '/question.yml'
+            ['quiz', 'interview', 'summaryQuestions'].each { String kind ->
+                String suffix = kind == 'quiz' ? 'quiz/question.yml' :
+                        kind == 'interview' ? 'questions/interview.yml' : 'questions/summary.yml'
+                String path = 'menu/' + chapter + '/' + suffix
                 if (!docs.containsKey(path)) return
                 Map document = yaml(docs[path], path)
                 ContractSchemaValidateUtils.validateData(kind, document)
                 (document.questions as List).eachWithIndex { Map question, int index ->
-                    checkChapterAnchor(question.readmeRelated, anchors,
-                            path + ' #' + (index + 1))
-                    checkApi(question.apiRelated, apiDescriptions,
-                            path + ' #' + (index + 1))
+                    if (kind != 'summaryQuestions') {
+                        checkChapterAnchor(question.readmeRelated, anchors,
+                                path + ' #' + (index + 1))
+                        checkApi(question.apiRelated, apiDescriptions,
+                                path + ' #' + (index + 1))
+                    }
                 }
             }
         }
-        docs.keySet().findAll { it ==~ /menu\/[^\/]+\/(quiz|interview)\/question\.yml/ }
+        docs.keySet().findAll { it ==~ /menu\/[^\/]+\/(quiz\/question|questions\/(interview|summary))\.yml/ }
                 .each { String path ->
                     String chapter = path.split('/')[1]
                     if (!chapterAnchors.containsKey(chapter)) {

@@ -2,7 +2,7 @@
 
 
 
-**Optional, không nằm trong chuỗi STEP 1–15 → STEP_FINAL.** Chỉ chạy theo yêu cầu, sau khi Video VI của `STEP_OPTIONAL_VIDEO` đã QA và import vào `content/readme/docs/vi/menu/<chapter>/video/video-script.yml`. Không chạy lại `STEP_12A`, `STEP_14` hoặc `STEP_15` để dịch Video; các bước đó đã hoàn thành trước Video và cố ý bỏ Video khỏi phạm vi dù Video cùng nằm trong Docs.
+**Optional, không nằm trong chuỗi STEP 1–15 → STEP_FINAL.** Chỉ chạy theo yêu cầu, sau khi Video VI của `STEP_OPTIONAL_VIDEO` đã QA và import vào `content/readme/docs/vi/menu/<chapter>/video/video-script.yml`. Không chạy lại `STEP_13`, `STEP_14` hoặc `STEP_15` để dịch Video; các bước đó đã hoàn thành trước Video và cố ý bỏ Video khỏi phạm vi dù Video cùng nằm trong Docs.
 
 ## 1. Prime preflight
 
@@ -29,7 +29,7 @@ READ/WRITE=EXACT_EN_TARGET_ONLY | OWNER=<WORKER_ID>
 ## 3. Đồng bộ EN sau STEP 15 (Prime only)
 
 - **Không tái chạy** `publishModuleEnSheet`, `cloneModuleViToEn`, `prepareModuleTranslation` của core: chúng có source hash/baseline riêng và có thể thay nội dung ngoài Video.
-- The canonical EN source is `content/readme/docs/en/menu/<chapter>/video/video-script.yml`. Update only EN Sheet `X:AA` on Menu Level 1 parent rows. Preserve `CURRENT_STEP.VALUE = "FINAL"` in module `master.json` (never read/write Sheet progress), the Template, A:W, AB, other metadata and translations. Re-export `content/sheet/en/module.xlsx` from the verified existing EN tab after exact readback. Do not rerun STEP 12A/14/15 for Video.
+- The canonical EN source is `content/readme/docs/en/menu/<chapter>/video/video-script.yml`. Update only EN Sheet `X:AA` on Menu Level 1 parent rows. Preserve `CURRENT_STEP.VALUE = "FINAL"` in module `master.json` (never read/write Sheet progress), the Template, A:W, AB, other metadata and translations. Re-export `content/sheet/en/module.xlsx` from the verified existing EN tab after exact readback. Do not rerun STEP 13/14/15 for Video.
 - Prime dùng task module-local `publishOptionalVideoEn` với `-PfileUrl=<SPREADSHEET_URL> -PviGid=<VI_GID> -PsheetMode=DRY_RUN` rồi `APPLY`. Task phải preflight đúng module/state/gid, validate file EN tương ứng từng chapter, chỉ cập nhật X:AA và verify exact readback; không được full-resync nội dung STEP 15 hoặc chấp nhận `DRY_RUN` là đã ghi. Nếu task không tồn tại/FAIL, báo `BLOCKER: OPTIONAL_VIDEO_EN_PUBLISH`; không tự gọi một task publish toàn Sheet thay thế.
 - Kiểm tra Excel VI/EN chứa Video phù hợp Sheet tại X:AA; nếu source thay đổi đồng thời hoặc workbook/export không khớp → BLOCKER, giữ trạng thái khôi phục và không tuyên bố completed.
 

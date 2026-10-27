@@ -10,4 +10,10 @@ class ChapterQuestionSnapshotService {
                                        Map<String, String> chapters, boolean apply) {
         return ChapterSheetCleanFillService.replace(root, module, kind, chapters, apply)
     }
+
+    static Map<String,Object> replaceInterview(File root, File module,
+                                               Map<String, Map<String,String>> chapters,
+                                               boolean apply, Closure afterMutation = null) {
+        return ChapterSheetCleanFillService.replaceInterview(root, module, chapters, apply, afterMutation)
+    }
 }

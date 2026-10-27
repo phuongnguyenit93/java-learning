@@ -20,7 +20,7 @@ modify VI Excel, or write to Google Sheets.
 1. Run STEP 12 first. `content/sheet/vi/module.xlsx` must contain exactly one
    worksheet with the correct module location in `I3` and the final VI menu
    row layout. Its values and styles are the workbook template.
-2. Complete STEP 12A's structural clone VI -> EN and STEP 14 translation of all
+2. Complete STEP 13's structural clone VI -> EN and STEP 14 translation of all
    requested
    module EN files. **VI/EN must use identical chapter filenames and README
    anchor identities**, with valid `readmeRelated.file` associations.
@@ -92,5 +92,5 @@ and is already covered by `.gitignore`.
   publishing/editing tab, not an EN content regeneration pipeline.
 - The original Excel exporter stores Google formulas as static values,
   subject to Excel's 32,767-character cell limit.
-- This does **not** perform STEP 12A's structural clone, translation, relation
+- This does **not** perform STEP 13's structural clone, translation, relation
   repair or workflow completion/J3 update. Those remain separate gates.

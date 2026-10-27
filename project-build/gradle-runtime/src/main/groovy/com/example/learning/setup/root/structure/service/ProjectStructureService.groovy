@@ -1233,7 +1233,12 @@ ${moduleDirectory.absolutePath}
             chapters.findAll { File chapter ->
                 chapter.isDirectory() && chapter.name ==~ /\d+\..+/
             }.each { File chapter ->
-                File source = new File(chapter, "${kind}/question.yml")
+                File source = kind == 'interview'
+                        ? new File(chapter, 'questions/interview.yml')
+                        : new File(chapter, "${kind}/question.yml")
+                if (kind == 'interview' && !source.isFile()) {
+                    source = new File(chapter, 'interview/question.yml')
+                }
                 if (!source.isFile()) return
                 Object document
                 try {

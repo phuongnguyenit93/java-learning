@@ -9,6 +9,8 @@ import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.LoaderOptions
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.SafeConstructor
+import java.nio.file.Files
+import java.nio.file.Path
 
 /**
  * Deterministic Interview normalization on the SAME Google Sheet:
@@ -26,7 +28,7 @@ class InterviewSheetNormalizeService {
         this.reader = reader
     }
 
-    Map execute(String fileUrl, String sheetId, boolean apply) {
+    Map execute(String fileUrl, String sheetId, boolean apply, File repositoryRoot = null) {
         Map context = apply
                 ? reader.openTabForWrite(fileUrl, sheetId)
                 : reader.openTab(fileUrl, sheetId)
@@ -58,16 +60,32 @@ class InterviewSheetNormalizeService {
         List<Map> updates = []
         int populated = 0
         int questionCount = 0
+        int summaryQuestionCount = 0
+        Map<File, String> stagingReads = new LinkedHashMap<>()
         groups.eachWithIndex { Map parent, int index ->
             int row = (parent.parentRow as Number).intValue()
             List<String> oldPieces = fragments(snapshot, row)
-            if (oldPieces.every { it.isEmpty() }) return
+            File summary = repositoryRoot == null ? null :
+                    summaryStagingFile(repositoryRoot, context.moduleLocation as String,
+                            (index + 1) + '.' + (parent.filename as String).replaceFirst(/\.md$/, ''))
+            if (oldPieces.every { it.isEmpty() }) {
+                if (summary?.isFile()) {
+                    throw new GradleException('Summary staging has no Interview source at row ' + row)
+                }
+                return
+            }
             populated++
             String filename = parent.filename as String
             String expectedFile = (index + 1) + '.' +
                     filename.substring(0, filename.length() - 3) + '/knowledge/' + filename
             Map normalized = normalizeYaml(joinFragments(oldPieces, row), expectedFile, row)
+            if (summary?.isFile()) {
+                String authored = summary.getText('UTF-8')
+                stagingReads[summary] = authored
+                normalized = mergeSummaryQuestions(renderYaml(normalized), authored, expectedFile, row)
+            }
             questionCount += (normalized.questions as List).size()
+            summaryQuestionCount += ((normalized.summaryQuestions ?: []) as List).size()
             List<String> newPieces = splitFragments(
                     renderYaml(normalized), row
             )
@@ -81,16 +99,23 @@ class InterviewSheetNormalizeService {
             }
         }
         if (!apply || updates.isEmpty()) {
-            return report(apply ? 'UNCHANGED' : 'DRY_RUN',
+            Map response = report(apply ? 'UNCHANGED' : 'DRY_RUN',
                     context, groups.size(), populated, updates.size(),
                     populated - updates.size(), questionCount, 0,
                     apply ? 'PASS' : 'N/A')
+            response.summaryQuestions = summaryQuestionCount
+            return response
         }
 
         // All rows are validated before writing. Recheck all source/target
         // cells immediately before one atomic batchUpdate.
         if (fingerprint(snapshot) != fingerprint(fetch(client, id, tab, gid))) {
             throw new GradleException('Sheet changed during Interview preflight; no write dispatched.')
+        }
+        stagingReads.each { File source, String original ->
+            if (!source.isFile() || source.getText('UTF-8') != original) {
+                throw new GradleException('Summary staging changed during Interview preflight: ' + source)
+            }
         }
         List<Request> requests = updates.collect { Map update ->
             int row = update.row as int
@@ -120,9 +145,36 @@ class InterviewSheetNormalizeService {
             }
             normalizeYaml(joinFragments(actual, row), update.file as String, row)
         }
-        return report('NORMALIZED', context, groups.size(), populated,
+        Map response = report('NORMALIZED', context, groups.size(), populated,
                 updates.size(), populated - updates.size(), questionCount,
                 updates.size(), 'PASS')
+        response.summaryQuestions = summaryQuestionCount
+        return response
+    }
+
+    private static File summaryStagingFile(File root, String location, String chapter) {
+        // Validate I3 with the canonical module-location guard (which returns
+        // a Roadmap file), then resolve the parent module explicitly.
+        RoadmapSheetImportService.resolveDestination(root.canonicalFile, location)
+        File module = new File(root.canonicalFile, location).canonicalFile
+        if (!module.isDirectory() || !new File(module, 'gradle.properties').isFile()) {
+            throw new GradleException('STEP 9 Summary staging requires a real Gradle module: ' + location)
+        }
+        File stageRoot = new File(module, 'build/step9/summary')
+        File candidate = new File(stageRoot, chapter + '/summary.yml')
+        Path modulePath = module.canonicalFile.toPath()
+        Path selected = candidate.toPath().toAbsolutePath().normalize()
+        if (!selected.startsWith(modulePath) || chapter.contains('..')) {
+            throw new GradleException('Unsafe STEP 9 Summary staging path: ' + candidate)
+        }
+        Path cursor = modulePath
+        for (Path segment : modulePath.relativize(selected)) {
+            cursor = cursor.resolve(segment)
+            if (Files.isSymbolicLink(cursor)) {
+                throw new GradleException('Linked STEP 9 Summary staging path: ' + cursor)
+            }
+        }
+        return candidate
     }
 
     static Map normalizeYaml(String raw, String file, int row = 0) {
@@ -137,9 +189,9 @@ class InterviewSheetNormalizeService {
         catch (Exception e) {
             throw new GradleException('Invalid Interview YAML/legacy JSON row ' + row + ': ' + e.message, e)
         }
-        if (!(parsed instanceof Map) || (parsed as Map).keySet() != (['questions'] as Set) ||
+        if (!(parsed instanceof Map) || !(parsed as Map).keySet().every { it in ['questions','summaryQuestions'] } ||
                 !(parsed.questions instanceof List) || (parsed.questions as List).isEmpty()) {
-            throw new GradleException('Interview row ' + row + ': root must contain only nonempty questions[].')
+            throw new GradleException('Interview row ' + row + ': root must contain nonempty questions[] and optional summaryQuestions[].')
         }
         // Read historical Sheet cells but NEVER write these retired flags.
         List<String> legacyOnly = ['aiGenerated', 'reviewed']
@@ -175,7 +227,53 @@ class InterviewSheetNormalizeService {
                                  methodSignature: api.methodSignature]
             ])
         }
-        return [questions: items]
+        Map result = [questions: items]
+        if ((parsed as Map).containsKey('summaryQuestions')) {
+            if (!(parsed.summaryQuestions instanceof List) || (parsed.summaryQuestions as List).isEmpty()) {
+                throw new GradleException('Interview row ' + row + ': summaryQuestions must be a nonempty list.')
+            }
+            List<Map> summaries = []
+            (parsed.summaryQuestions as List).eachWithIndex { Object value, int index ->
+                String at = 'Interview row ' + row + ' summary question #' + (index + 1)
+                if (!(value instanceof Map) || (value as Map).keySet() != (['question','answer'] as Set) ||
+                        !['question','answer'].every { String field ->
+                            (value as Map)[field] instanceof String && (value as Map)[field].trim()
+                        }) {
+                    throw new GradleException(at + ': expected only nonblank question/answer strings.')
+                }
+                summaries.add([question: value.question, answer: value.answer])
+            }
+            result.summaryQuestions = summaries
+        }
+        return result
+    }
+
+    /**
+     * Pure-code merge of two independently authored sources. Never lets a
+     * Summary worker rewrite existing Interview text, order or relations.
+     * The summary source contains only summaryQuestions[], not Interview data.
+     */
+    static Map mergeSummaryQuestions(String interviewYaml, String summaryYaml,
+                                     String file, int row = 0) {
+        Map interview = normalizeYaml(interviewYaml, file, row)
+        Object raw
+        try {
+            LoaderOptions options = new LoaderOptions()
+            options.allowDuplicateKeys = false
+            raw = new Yaml(new SafeConstructor(options)).load(summaryYaml)
+        } catch (Exception error) {
+            throw new GradleException('Invalid isolated Summary YAML row ' + row, error)
+        }
+        if (!(raw instanceof Map) || (raw as Map).keySet() != (['summaryQuestions'] as Set)) {
+            throw new GradleException('Isolated Summary YAML must contain only summaryQuestions[].')
+        }
+        Map normalized = normalizeYaml(renderYaml([questions: interview.questions,
+                summaryQuestions: (raw as Map).summaryQuestions]), file, row)
+        if (interview.containsKey('summaryQuestions') &&
+                interview.summaryQuestions != normalized.summaryQuestions) {
+            throw new GradleException('Existing Summary questions differ; refusing overwrite.')
+        }
+        return normalized
     }
 
     /** Retain the old entry point for existing Gradle callers/tests. */

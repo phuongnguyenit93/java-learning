@@ -85,7 +85,11 @@ All default to `DRY_RUN`; only `APPLY` mutates Sheets or local files.
    text or invalid YAML.
    Đọc `menu/<chapter>/knowledge/<file>.md`, metadata tại
    `menu/<chapter>/metadata/knowledge-metadata.yml`, và Interview/Quiz tại
-   `menu/<chapter>/{interview,quiz}/question.yml` của ngôn ngữ EN.
+   `menu/<chapter>/questions/{interview,summary}.yml` và `menu/<chapter>/quiz/question.yml` của ngôn ngữ EN.
+   Riêng Interview P:S, code ghép `questions/interview.yml.questions[]` thành root
+   `questions[]` và `questions/summary.yml.questions[]` thành root
+   `summaryQuestions[]` trong **một YAML** trước khi chia bốn ô.
+   Không AI, không tạo Summary nếu nguồn không có; không làm mất hai nhóm khi round-trip.
    Mỗi câu hỏi chỉ lưu `readmeRelated.anchor`; chapter được xác định bằng
    vị trí file, không dựa vào `readmeRelated.file`.
    **Summary:** đọc đầy đủ `menu/<chapter>/summary/section.yml` EN, validate
