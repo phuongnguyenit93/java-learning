@@ -3,6 +3,7 @@ package com.example.learning.setup.module.config.plugin
 import com.example.learning.setup.module.config.model.ModuleType
 import com.example.learning.setup.module.config.service.ModuleBuildConfigurationService
 import com.example.learning.setup.module.config.service.ModuleStructureService
+import com.example.learning.setup.module.config.service.ModuleSourceBundleService
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -95,5 +96,6 @@ class ConfigSetupPlugin
                 project,
                 moduleType
         )
+        ModuleSourceBundleService.register(project, moduleType)
     }
 }
