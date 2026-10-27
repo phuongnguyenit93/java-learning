@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "SỐ HỌC NGUYÊN — LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: integer-arithmetic-001
+    order: 1
+    title: "Cộng, trừ, nhân và kiểu của kết quả"
+    description: "Nắm quy tắc thăng cấp khi cộng, trừ, nhân và phân biệt kiểu phép toán với kiểu biến nhận. Kiểm tra tràn số, ép kiểu và cách tính chính xác."
+    transition:
+      to: integer-arithmetic-002
+      description: "Từ quy tắc kiểu và tràn của cộng, trừ, nhân, chuyển sang cách chia nguyên xử lý phần lẻ."
+  - id: integer-arithmetic-002
+    order: 2
+    title: "Chia số nguyên và việc cắt phần thập phân về phía 0"
+    description: "Làm rõ phép chia số nguyên cắt thương về 0, khác floor và phép chia số thực. Áp dụng vào tỷ lệ, chia nhóm và điều kiện biên."
+    transition:
+      to: integer-arithmetic-003
+      description: "Hiểu cách `/` lấy thương cắt về 0 để suy ra dấu của số dư `%`."
+  - id: integer-arithmetic-003
+    order: 3
+    title: "Toán tử % và dấu của số dư"
+    description: "Khám phá dấu của phần dư `%`, phép kiểm tra chẵn lẻ âm và chỉ số vòng. Đối chiếu với modulo không âm và API của `BigInteger`."
+    transition:
+      to: integer-arithmetic-004
+      description: "Khi đã biết dấu của phần dư, cần xử lý lỗi nghiêm trọng nếu số chia là 0."
+  - id: integer-arithmetic-004
+    order: 4
+    title: "Chia hoặc lấy dư cho 0 với số nguyên"
+    description: "Nghiên cứu ngoại lệ `ArithmeticException` khi mẫu số nguyên bằng 0, kể cả phép lấy dư. Thiết kế kiểm tra đầu vào và xử lý ngoại lệ phù hợp."
+    transition:
+      to: integer-arithmetic-005
+      description: "Sau khi kiểm soát lỗi chia, tiếp tục nghiên cứu phép tăng giảm và side effect trên biến số."
+  - id: integer-arithmetic-005
+    order: 5
+    title: "Phép toán đơn ngôi, tiền tố và hậu tố ++, --"
+    description: "Phân biệt dấu đơn ngôi, toán tử bù bit và tiền tố/hậu tố tăng giảm. Theo dõi giá trị trả về, side effect, kiểu và tràn số."
+    transition:
+      to: integer-arithmetic-006
+      description: "Tiền tố/hậu tố đặt nền để phân tích precedence, associativity và evaluation order của biểu thức phức tạp."
+  - id: integer-arithmetic-006
+    order: 6
+    title: "Độ ưu tiên, tính kết hợp và thứ tự đánh giá toán hạng"
+    description: "Tách độ ưu tiên, tính kết hợp và thứ tự đánh giá toán hạng, nhất là với side effect, bitwise và biểu thức ngắn mạch."
+    transition:
+      to: integer-arithmetic-007
+      description: "Từ cách nhóm và thứ tự đánh giá, kiểm tra sâu các giá trị trung gian khi thay đổi dấu ngoặc."
+  - id: integer-arithmetic-007
+    order: 7
+    title: "Dấu ngoặc và tác động tới giá trị trung gian"
+    description: "Dùng ngoặc để điều khiển cấu trúc biểu thức và khảo sát giá trị từng bước. Nhận diện chia nguyên làm mất phần lẻ và phép nhân tràn dù kết quả cuối vừa kiểu."
+    transition:
+      to: integer-arithmetic-008
+      description: "Hiểu ảnh hưởng của phép chia trung gian trước khi lựa chọn floor division cho dữ liệu âm."
+  - id: integer-arithmetic-008
+    order: 8
+    title: "floorDiv, floorMod và khác biệt với /, %"
+    description: "So sánh các API chia floor với `/` và `%` ở số âm. Áp dụng tính offset/index của bucket, tọa độ và vòng chỉ số; vẫn xét lỗi chia 0 và overflow."
+    transition:
+      to: integer-arithmetic-009
+      description: "Sau khi phân biệt các quy ước chia, kiểm tra biên tràn đặc biệt của phép chia nguyên."
+  - id: integer-arithmetic-009
+    order: 9
+    title: "Trường hợp MIN_VALUE chia cho -1"
+    description: "Phân tích trường hợp duy nhất thương nguyên có dấu tràn khi chia `MIN_VALUE` cho `-1`. Thiết kế kiểm tra tràn và kết quả chính xác với `long` hoặc `BigInteger`."
+    transition:
+      to: integer-arithmetic-010
+      description: "Kết thúc cơ chế số học bằng cách phân biệt phép cộng số với phép nối chuỗi trong Java."
+  - id: integer-arithmetic-010
+    order: 10
+    title: "Nối chuỗi bằng + khác phép cộng như thế nào"
+    description: "Làm rõ phép `+` nhị phân có thể cộng số hoặc nối `String`. Giải thích thứ tự cộng/nối, `char`, `null`, parse và cách định dạng kết quả."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Cộng, trừ, nhân và kiểu của kết quả | Chia số nguyên và việc cắt phần thập phân về phía 0 | Toán tử % và dấu của số dư | Chia hoặc lấy dư cho 0 với số nguyên | Phép toán đơn ngôi, tiền tố và hậu tố ++, -- | Độ ưu tiên, tính kết hợp và thứ tự đánh giá toán hạng | Dấu ngoặc và tác động tới giá trị trung gian | floorDiv, floorMod và khác biệt với /, % | Trường hợp MIN_VALUE chia cho -1 | Nối chuỗi bằng + khác phép cộng như thế nào |
+  | Vấn đề cần hiểu | Kiểu của phép tính là gì và kết quả trung gian có bị tràn không? | Tại sao phép chia mất phần lẻ và khác với floor? | Số dư âm xuất hiện khi nào, và làm sao tạo chỉ số không âm? | Khi nào phép chia cho 0 xảy ra và cần phòng ngừa ra sao? | Tăng giảm biến có trả giá trị cũ hay mới? | Biểu thức được nhóm và thực thi theo hai quy tắc nào? | Ngoặc thay đổi kiểu hay giá trị trung gian ở đâu? | Khi nào cần làm tròn thương xuống thay vì cắt về 0? | Vì sao chia MIN_VALUE cho -1 vẫn trả MIN_VALUE? | Khi nào + tính tổng và khi nào biến thành nối văn bản? |
+  | Giá trị đối với OOP/module | Đặt nền cho xử lý số nguyên chính xác | Giữ đúng ngữ nghĩa thương nguyên | Tránh lỗi chỉ số và phép kiểm tra chia hết | Bảo vệ phép tính và thông báo lỗi chính xác | Đọc đúng biến đổi trạng thái trong biểu thức | Giúp đọc biểu thức phức tạp có tính xác định | Giữ chính xác tính toán nhiều bước | Tạo bucket và index nhất quán trên miền âm | Ngăn overflow âm thầm tại biên | Tránh nhầm giá trị số với chuỗi hiển thị |
+  | Tư duy hình thành | Xét kiểu toán hạng trước khi tính | Chọn quy tắc làm tròn theo bài toán | Phân biệt phần dư Java với modulo toán học | Kiểm tra mẫu số trước khi dùng | Theo dõi giá trị và side effect riêng | Tách cây cú pháp khỏi thời điểm thực thi | Kiểm tra miền và kiểu của từng nút phép tính | Chọn quy ước số dư theo miền dữ liệu | Kiểm tra hợp đồng miền kết quả | Theo dõi kiểu từng toán hạng qua biểu thức |

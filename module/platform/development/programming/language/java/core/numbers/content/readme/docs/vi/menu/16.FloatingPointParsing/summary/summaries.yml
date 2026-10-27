@@ -1,0 +1,274 @@
+summaries:
+- id: floating-point-parsing-001
+  title: Float.parseFloat, Double.parseDouble và valueOf
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Float.parseFloat, Double.parseDouble và valueOf**
+
+    Phân biệt kiểu trả về primitive và wrapper của bốn API parse số thực để chọn đúng chữ ký, cách lưu dữ liệu và overload. Nhận ra boxing, unboxing, độ chính xác float/double và quy tắc so sánh wrapper có thể đổi hành vi của chương trình dù dữ liệu nhập trông giống nhau.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểu và phép chuyển đổi
+
+    1. Vì sao Float.parseFloat và Float.valueOf(String) có thể in cùng kết quả nhưng dẫn tới overload khác nhau?
+    2. Khi nào boxing hoặc unboxing xuất hiện dù lập trình viên không gọi phương thức chuyển đổi tường minh?
+
+    ### Giới hạn và lựa chọn API
+
+    1. Vì sao cùng chuỗi 0.1 có giá trị khác nhau giữa float và double sau khi widening?
+    2. Khi so sánh wrapper bằng equals và ==, NaN và zero có dấu tạo những hệ quả nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn kiểu trả về | Viết lời gọi parseFloat/parseDouble/valueOf phù hợp với biến primitive, wrapper và List<Double>. |
+    | Phân tích overload | Dự đoán overload được chọn khi truyền primitive hoặc wrapper và phát hiện unboxing null. |
+    | Giải thích precision | Dự đoán kết quả so sánh sau khi parse 0.1 thành float và double. |
+    | So sánh wrapper | Phân biệt identity, equals và == trên NaN, signed zero cùng wrapper khác loại. |
+- id: floating-point-parsing-002
+  title: Dạng thập phân, ký hiệu mũ và dạng hex được API hỗ trợ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dạng thập phân, ký hiệu mũ và dạng hex được API hỗ trợ**
+
+    Nắm ngữ pháp số thực mà Float.parseFloat và Double.parseDouble thực sự hỗ trợ: decimal, mũ e/E, hexadecimal 0x...p/P..., dấu, suffix, giá trị đặc biệt và ngoại lệ cú pháp. Phân biệt chuỗi runtime với literal trong source để xây dựng bộ kiểm tra đầu vào chính xác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biểu diễn đầu vào
+
+    1. Số mũ e/E và p/P dùng cơ số nào, và vì sao 0x1.8p1 bằng 3.0?
+    2. Vì sao hex float bắt buộc có p/P nhưng chuỗi thập phân có thể không có dấu chấm?
+
+    ### Ranh giới ngữ pháp
+
+    1. Tại sao 1_000.0 hợp lệ làm literal Java mà chuỗi cùng ký tự lại bị parseDouble từ chối?
+    2. Khi nào suffix f/d được nhận mà không thay đổi kiểu trả về của parser?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải mã cú pháp | Tính giá trị các chuỗi decimal, exponent và hex floating-point có dấu. |
+    | Kiểm chứng parser | Dự đoán thành công/NumberFormatException cho tập chuỗi chứa _, dấu phẩy và hex thiếu p. |
+    | Đối chiếu source và String | Giải thích khác biệt cú pháp literal biên dịch với nội dung được parse lúc chạy. |
+- id: floating-point-parsing-003
+  title: NaN, Infinity và dấu trong đầu vào
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **NaN, Infinity và dấu trong đầu vào**
+
+    Nhận diện cách parser xử lý NaN, Infinity, dấu cộng/trừ và zero âm, kể cả token hợp lệ nhưng bị từ chối bởi quy tắc nghiệp vụ. Bài nhấn mạnh phát hiện giá trị đặc biệt và nguy cơ NaN lọt qua điều kiện so sánh.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Token và dấu
+
+    1. Vì sao +NaN và -NaN có thể parse được nhưng không có thứ tự số học hữu dụng?
+    2. Cách nào nhận diện -0.0 bằng bit khi phép so sánh == cho kết quả bằng +0.0?
+
+    ### Xác thực đầu vào
+
+    1. Vì sao bắt NumberFormatException chưa đủ để loại Infinity và NaN?
+    2. Một giá trị NaN có thể lọt qua câu lệnh kiểm tra giới hạn dùng < hoặc > như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra giá trị đặc biệt | Dùng Double.isNaN/isInfinite/isFinite để phân loại kết quả parse. |
+    | Quan sát signed zero | Mô phỏng phép chia cho ±0.0 và đối chiếu raw bits. |
+    | Định nghĩa chính sách | Viết helper từ chối token đặc biệt và số không hữu hạn theo grammar định trước. |
+- id: floating-point-parsing-004
+  title: Đầu vào hợp lệ có thể làm tròn, overflow hoặc underflow
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đầu vào hợp lệ có thể làm tròn, overflow hoặc underflow**
+
+    Hiểu rằng parser nhận chuỗi hợp lệ nhưng kết quả vẫn có thể bị làm tròn, tràn vô cực, rơi vào vùng subnormal hoặc mất độ lớn về zero. Bài giúp người học chẩn đoán sai lệch biểu diễn và giữ lại dữ liệu decimal gốc khi cần kiểm chứng precision.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giới hạn biểu diễn
+
+    1. Vì sao số 0.1 và 2^53+1 có thể làm tròn dù kết quả double vẫn hữu hạn?
+    2. Sự khác nhau giữa subnormal, underflow về zero và overflow thành Infinity là gì?
+
+    ### Chẩn đoán chính xác
+
+    1. Tại sao Double.toString không đủ để chứng minh decimal đầu vào được giữ chính xác?
+    2. Trong trường hợp nào new BigDecimal(double) giúp quan sát sai lệch binary64 so với chuỗi gốc?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại kết quả | Dự đoán rounded, Infinity, subnormal hoặc signed zero cho chuỗi ở các biên float/double. |
+    | Đo sai lệch | So sánh BigDecimal từ String với BigDecimal từ double hữu hạn để kiểm tra rounding. |
+    | Chọn kiểu dữ liệu | Giải thích vì sao ID nguyên lớn hoặc decimal chính xác không nên qua double. |
+- id: floating-point-parsing-005
+  title: Phân biệt parse số theo cú pháp Java với parse theo locale
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt parse số theo cú pháp Java với parse theo locale**
+
+    Biết cách chọn parser theo hợp đồng dữ liệu máy hoặc dữ liệu người dùng theo Locale. Hiểu lý do NumberFormat có thể parse một tiền tố, vì sao phải kiểm tra ParsePosition và khi nào DecimalFormat cần parse trực tiếp thành BigDecimal để bảo toàn decimal.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa của locale
+
+    1. Vì sao chuỗi 1,5 và 1.234,56 có thể mang giá trị khác nhau tùy Locale?
+    2. Tại sao Locale.US không khiến NumberFormat trở thành bản sao của Double.parseDouble?
+
+    ### Kiểm tra dữ liệu đã parse
+
+    1. Dùng ParsePosition thế nào để phát hiện chuỗi 123xyz chỉ được đọc một phần?
+    2. Muốn giữ chính xác 1.234,56 theo quy ước Đức, vì sao nên dùng DecimalFormat.setParseBigDecimal(true)?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn API nhập liệu | So sánh parser số máy với NumberFormat US/Đức cho cùng tập chuỗi. |
+    | Viết parseWhole | Từ chối chuỗi thừa ký tự bằng ParsePosition và đánh giá giới hạn grouping. |
+    | Giữ giá trị localized | Cấu hình DecimalFormat nhận BigDecimal mà không qua double. |
+- id: floating-point-parsing-006
+  title: Chuỗi thập phân sang BigDecimal để giữ ý nghĩa thập phân
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chuỗi thập phân sang BigDecimal để giữ ý nghĩa thập phân**
+
+    Học cách tạo BigDecimal trực tiếp từ String thập phân để giữ giá trị cùng scale, rồi thực hiện phép toán decimal với quy tắc rounding tường minh. Hiểu cấu trúc unscaledValue, scale, precision, equals/compareTo và giới hạn của phép chia vô hạn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biểu diễn BigDecimal
+
+    1. unscaledValue, scale và precision khác nhau như thế nào với 1.20 và 1E+3?
+    2. Vì sao parse chuỗi decimal trực tiếp tránh được xấp xỉ binary64?
+
+    ### Tính toán và biểu diễn
+
+    1. Khi nào divide không chỉ định rounding ném ArithmeticException?
+    2. Vì sao equals và compareTo xử lý 1.20 với 1.2 khác nhau?
+    3. Làm sao giữ cả giá trị decimal và ký tự gốc nếu chuỗi nhập có số 0 hoặc dấu cộng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Parse decimal | Tạo BigDecimal từ chuỗi, chỉ ra scale và giá trị chính xác. |
+    | Vận dụng phép toán | Viết add/multiply/divide với RoundingMode và phân biệt setScale với MathContext. |
+    | Đối chiếu equality | Dự đoán kết quả HashSet/TreeSet cho BigDecimal khác scale. |
+    | Xuất dữ liệu | Chọn toString/toPlainString và lưu token gốc khi cần. |
+- id: floating-point-parsing-007
+  title: Vì sao new BigDecimal(double) khác new BigDecimal(String)
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vì sao new BigDecimal(double) khác new BigDecimal(String)**
+
+    Phân tích vì sao constructor nhận double biểu diễn đúng giá trị binary64 đã làm tròn, còn constructor nhận String đọc số decimal chính xác. Bài dùng 0.1 và 1.005 để chứng minh sự khác biệt có thể tác động đến compareTo, scale và kết quả làm tròn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn dữ liệu quyết định kết quả
+
+    1. new BigDecimal(0.1) lưu số nào, và vì sao chuỗi in dài hơn new BigDecimal("0.1")?
+    2. BigDecimal.valueOf(0.1) liên quan thế nào tới Double.toString?
+
+    ### Hệ quả tính toán
+
+    1. Vì sao hai constructor có thể làm tròn 1.005 thành 1.00 và 1.01 theo cùng HALF_UP?
+    2. Khi nào new BigDecimal(double) là lựa chọn đúng để quan sát bit-value, thay vì dựng giá tiền?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh constructors | Dự đoán giá trị, scale, equals và compareTo của BigDecimal từ String/double. |
+    | Giải thích rounding | Mô phỏng ví dụ 1.005 với RoundingMode.HALF_UP và nêu nguyên nhân. |
+    | Chọn đường chuyển đổi | Thiết kế parse CSV decimal để tránh chuyển trung gian sang double. |
+- id: floating-point-parsing-008
+  title: BigDecimal.valueOf(double) và giới hạn của giá trị double nguồn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **BigDecimal.valueOf(double) và giới hạn của giá trị double nguồn**
+
+    Hiểu hợp đồng BigDecimal.valueOf(double): lấy chuỗi chuẩn của Double.toString từ một double đang tồn tại. Đánh giá các giới hạn không thể khôi phục precision, số nguyên lớn, scale, signed zero hoặc kết quả đã overflow/underflow trước chuyển đổi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa valueOf
+
+    1. Tại sao BigDecimal.valueOf(0.1) thường ra 0.1 nhưng valueOf(0.1 + 0.2) vẫn ra 0.30000000000000004?
+    2. Điểm khác nhau giữa overload valueOf(double), valueOf(long) và valueOf(long, scale) là gì?
+
+    ### Thông tin bị mất
+
+    1. Vì sao 9007199254740993L và chuỗi 19.90 không thể phục hồi đầy đủ sau khi qua double?
+    2. Điều gì xảy ra khi truyền NaN, Infinity, âm zero hoặc double đã underflow vào valueOf?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích pipeline | Vẽ lại chuỗi Double.toString → BigDecimal khi gọi valueOf(double). |
+    | Phát hiện mất dữ liệu | Đối chiếu long qua double, chuỗi 19.90 qua double và decimal dài. |
+    | Chọn overload | Tạo BigDecimal chính xác từ long cents và scale; từ chối NaN/Infinity. |
+- id: floating-point-parsing-009
+  title: Kiểm tra giá trị hữu hạn và miền dữ liệu sau khi parse
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra giá trị hữu hạn và miền dữ liệu sau khi parse**
+
+    Thiết kế pipeline parse số thực có xác thực rõ ràng: grammar, null, hữu hạn, miền đóng/mở, số không có dấu và độ chính xác cần thiết. Tránh lỗi để NaN vượt qua so sánh giới hạn hoặc coi underflow về zero là hợp lệ mà không xét yêu cầu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thứ tự validation
+
+    1. Tại sao cần Double.isFinite trước các phép so sánh min/max để chặn NaN?
+    2. Khi nào phải kiểm tra chính cả min và max trước khi xác thực dữ liệu nhập?
+
+    ### Ranh giới nghiệp vụ
+
+    1. Miền đóng [0,100] và miền mở (0,100) khác nhau thế nào với 0, -0.0 và 100?
+    2. Vì sao kiểm tra hữu hạn chưa phát hiện underflow hoặc làm tròn số nguyên lớn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết validator | Xây parseFiniteInRange với null guard, catch NumberFormatException, isFinite và giới hạn hữu hạn. |
+    | Kiểm thử biên | Dự đoán accepted/rejected cho NaN, Infinity, 1e309, 101, -0.0 và 1e-400. |
+    | Xác định miền | Lựa chọn kiểu double/BigDecimal/long theo tính chính xác và quy tắc nghiệp vụ. |

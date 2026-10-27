@@ -1,0 +1,301 @@
+summaries:
+- id: integer-overflow-001
+  title: Overflow số nguyên và hiện tượng quay vòng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Overflow số nguyên và hiện tượng quay vòng**
+
+    Nắm được vì sao kết quả số học nguyên vượt miền biểu diễn lại quay vòng theo mẫu bit bù hai. Đây là nền tảng để phân biệt kết quả Java hợp lệ về mặt ngôn ngữ với kết quả sai theo yêu cầu tính toán.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Miền giá trị và mẫu bit
+
+    1. Vì sao `Integer.MAX_VALUE + 1` trở thành `Integer.MIN_VALUE` nếu nhìn theo modulo `2^32` và biểu diễn có dấu?
+    2. Tại sao miền giá trị của `int` và `long` không đối xứng quanh 0, và điều đó ảnh hưởng tới phép đổi dấu ra sao?
+
+    ### Phân biệt nguyên nhân và cách xử lý
+
+    1. Phân biệt tràn số học, ép kiểu hẹp, literal vượt phạm vi và lỗi khi parse chuỗi số như thế nào?
+    2. Khi kiểm thử phép tính có khả năng tràn thành số dương, vì sao kiểm tra dấu kết quả là không đủ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích quay vòng | Tự tính và giải thích kết quả của các phép cộng, trừ, nhân ở `MIN_VALUE`/`MAX_VALUE` bằng độ rộng bit. |
+    | Chẩn đoán kiểu phép tính | Xác định phép toán đã chạy ở `int` hay `long` trước khi được gán cho biến đích. |
+    | Chọn chính sách bảo toàn giá trị | Nêu được tình huống cần `Math.*Exact`, kiểu rộng hơn hoặc `BigInteger` thay vì cho phép wraparound. |
+- id: integer-overflow-002
+  title: Vì sao phép cộng hoặc nhân tràn không tự ném ngoại lệ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vì sao phép cộng hoặc nhân tràn không tự ném ngoại lệ**
+
+    Phân biệt hợp đồng của các toán tử nguyên thông thường với các thao tác chủ động kiểm tra lỗi. Nhờ đó người học xác định chính xác tình huống nào Java ném `ArithmeticException` và chọn chính sách kiểm soát số học phù hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng ngôn ngữ và ngoại lệ
+
+    1. Vì sao overflow của `+`, `-`, `*` là hành vi được xác định mà không tự tạo `ArithmeticException`?
+    2. Phép chia nguyên cho 0 khác thế nào với `Integer.MIN_VALUE / -1` xét về ngoại lệ và kết quả?
+
+    ### Chọn cơ chế phát hiện
+
+    1. Vì sao dấu âm sau phép nhân không đủ để phát hiện mọi overflow?
+    2. Khi nào nên cho phép phép toán modulo và khi nào cần phát hiện tràn trước khi dùng kết quả nghiệp vụ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại hành vi exception | Dự đoán phép toán nào quay vòng, phép toán nào ném `ArithmeticException`, và giải thích lý do. |
+    | Phân tích lỗi âm thầm | Chỉ ra trường hợp phép nhân hai số dương tràn thành số dương trông hợp lệ. |
+    | Thiết kế xử lý lỗi | Đề xuất cơ chế kiểm tra số học và validation nghiệp vụ riêng cho một phép tính tiền hoặc kích thước. |
+- id: integer-overflow-003
+  title: Kiểu của phép tính được xác định trước khi gán kết quả
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểu của phép tính được xác định trước khi gán kết quả**
+
+    Học cách lần theo kiểu của từng biểu thức con, quy tắc nâng kiểu số và chuyển đổi lúc gán. Kỹ năng này giúp giải thích vì sao biến `long`/`double` vẫn có thể nhận kết quả sai từ phép tính `int`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân tích kiểu biểu thức
+
+    1. Java chọn kiểu cho `int * int`, `int + long` và `int / int` theo quy tắc nào trước khi gán?
+    2. Khi nào phép cộng hai `byte` tạo ra `int`, và vì sao `byte += 1` có thể mất dữ liệu dù biên dịch được?
+
+    ### Thứ tự chuyển đổi
+
+    1. Vì sao `double x = 1 / 2` bằng `0.0` còn `(double) 1 / 2` bằng `0.5`?
+    2. Vì sao `(long) (a * b)` khác `(long) a * b` khi phép nhân ban đầu vượt miền `int`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập dấu vết kiểu | Ghi ra kiểu và giá trị trung gian của từng toán hạng, phép toán và phép gán trong một biểu thức. |
+    | Sửa phép tính bị tràn | Đặt cast hoặc literal kiểu rộng đúng vị trí trước phép toán gây lỗi. |
+    | Nhận diện chuyển kiểu hẹp | Giải thích sự khác biệt giữa gán thường, biểu thức hằng và gán ghép với `byte`/`short`. |
+- id: integer-overflow-004
+  title: Nâng kiểu toán hạng trước phép nhân thay vì ép kiểu sau
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Nâng kiểu toán hạng trước phép nhân thay vì ép kiểu sau**
+
+    Áp dụng trực tiếp quy tắc nâng kiểu vào phép nhân và chuỗi tích. Bài học giúp loại bỏ lỗi cast quá muộn, nhận diện phép nhân trung gian bị tràn và lựa chọn giữa cast sớm, `multiplyFull`, `multiplyExact` và `BigInteger`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vị trí nâng kiểu và nhóm biểu thức
+
+    1. Vì sao `(long) a * b` giữ được tích `int × int` còn `(long) (a * b)` có thể không?
+    2. Vì sao `a * b * 1L` khác `a * 1L * b` dù cùng các thừa số?
+
+    ### API và giới hạn miền
+
+    1. Khi nào `Math.multiplyFull(int,int)` phù hợp hơn một phép cast thủ công?
+    2. Nếu hai toán hạng đã là `long` mà tích có thể vượt 64 bit, cần chọn cách phát hiện hoặc biểu diễn nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Sửa chuỗi nhân | Chuyển kiểu trước phép nhân đầu tiên có nguy cơ tràn và dự đoán mọi kết quả trung gian. |
+    | Chọn API nhân đúng overload | Phân biệt `Math.multiplyExact(int,int)`, `Math.multiplyExact(long,int)` và `Math.multiplyFull(int,int)`. |
+    | Kiểm chứng biên tích | Đề xuất trường hợp thử khi tích tràn `int` và khi cả `long` không đủ. |
+- id: integer-overflow-005
+  title: Math.addExact, subtractExact và multiplyExact
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Math.addExact, subtractExact và multiplyExact**
+
+    Làm chủ các overload kiểm tra tràn cho ba phép toán cơ bản và cách xử lý `ArithmeticException`. Mục tiêu là bảo vệ đúng từng phép tính nghiệp vụ, tránh bọc một kết quả đã sai vào phương thức `Exact` rồi tưởng rằng lỗi sẽ được phát hiện.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng của phép tính có kiểm tra
+
+    1. Khi nào `Math.addExact`, `subtractExact` và `multiplyExact` trả kết quả, khi nào ném `ArithmeticException`?
+    2. Tại sao `Math.multiplyExact(100_000,100_000)` khác `Math.multiplyExact(100_000L,100_000)`?
+
+    ### Tính toán nhiều bước
+
+    1. Vì sao `Math.addExact(a + b, 0)` có thể bỏ sót overflow của `a + b`?
+    2. Khi một bước tính tiền bị tràn, nên chọn từ chối, tăng miền hay tính bằng `BigInteger` theo hợp đồng nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dùng checked arithmetic | Thay đúng phép cộng, trừ, nhân cần kiểm tra bằng overload `Exact` tương ứng. |
+    | Dự đoán ngoại lệ và giá trị | Phân biệt kết quả nằm đúng biên với phép toán vượt biên, kể cả tích âm. |
+    | Xử lý chính sách lỗi | Thiết kế `try/catch` hoặc lan truyền lỗi mà không tráo kết quả tràn thành giá trị hợp lệ giả. |
+- id: integer-overflow-006
+  title: incrementExact, decrementExact, negateExact và toIntExact
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **incrementExact, decrementExact, negateExact và toIntExact**
+
+    Biết sử dụng các phương thức `Exact` cho bộ đếm, đổi dấu và chuyển đổi về `int`. Bài học giúp giữ nguyên trạng thái khi phép cập nhật thất bại, đồng thời phân biệt kiểm tra overflow với quy tắc nghiệp vụ và đồng bộ giữa các luồng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thao tác một toán hạng
+
+    1. Những giá trị biên nào khiến `incrementExact`, `decrementExact` hoặc `negateExact` ném `ArithmeticException`?
+    2. Vì sao `decrementExact(0)` vẫn hợp lệ dù một ứng dụng có thể cấm số lượng âm?
+
+    ### Chuyển kiểu và trạng thái
+
+    1. `Math.toIntExact(longValue)` khác gì với ép kiểu `(int)` khi số vượt phạm vi?
+    2. Nếu `counter = Math.incrementExact(counter)` ném ngoại lệ, vì sao giá trị `counter` không đổi và thao tác này đã an toàn giữa các luồng chưa?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Áp dụng phương thức đúng mục tiêu | Chọn checked increment/decrement/negation cho từng ví dụ biến đếm và số đối. |
+    | Thu hẹp an toàn | Dùng `toIntExact` để nhận diện giá trị `long` không biểu diễn được trong `int`. |
+    | Đánh giá ranh giới lỗi | Giải thích việc kiểm tra overflow chưa bảo đảm điều kiện không âm hoặc tính nguyên tử của cập nhật. |
+- id: integer-overflow-007
+  title: Phép chia exact và các API bổ sung theo phiên bản JDK
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phép chia exact và các API bổ sung theo phiên bản JDK**
+
+    Phân biệt kiểm tra thương số nguyên tràn với yêu cầu chia hết và lựa chọn hướng làm tròn. Bài học còn giúp xây phương án tương thích Java 17 khi các phương thức `divideExact`, `floorDivExact`, `ceilDivExact` chỉ có từ Java 18.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa phép chia
+
+    1. Vì sao `divideExact(7,3)` vẫn trả 2, còn `divideExact(Integer.MIN_VALUE,-1)` ném lỗi?
+    2. `/`, `floorDivExact` và `ceilDivExact` cho kết quả khác nhau thế nào với `-7` chia `3`?
+
+    ### Tương thích và phần dư
+
+    1. Ứng dụng Java 17 có thể kiểm tra trường hợp `MIN_VALUE / -1` trước phép chia thế nào?
+    2. Khi nào dùng `%`, `floorMod` hoặc `ceilMod` để phần dư nhất quán với hướng làm tròn thương?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lựa chọn API theo JDK | Xác định phương thức chỉ sẵn từ Java 18 và kiểm tra tương thích khi build với `--release 17`. |
+    | Đọc chính xác ngữ nghĩa chia | So sánh thương truncate, floor, ceiling và phần dư tương ứng cho các dấu toán hạng. |
+    | Thiết kế chia có kiểm tra | Viết phương thức Java 17 bắt trường hợp chia 0 và `MIN_VALUE / -1` trước khi tính thương. |
+- id: integer-overflow-008
+  title: Math.abs với MIN_VALUE và lựa chọn absExact
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Math.abs với MIN_VALUE và lựa chọn absExact**
+
+    Nhận ra giả định `Math.abs(x)` luôn không âm là sai với số nguyên nhỏ nhất có dấu. Bài học hướng dẫn chọn `absExact`, mở rộng sang `long`, hoặc `BigInteger`, đồng thời tránh tính hiệu bị tràn trước khi lấy trị tuyệt đối.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biên bù hai và overload
+
+    1. Vì sao `Math.abs(Integer.MIN_VALUE)` vẫn âm, nhưng `Math.absExact(Integer.MIN_VALUE)` lại ném lỗi?
+    2. `Math.abs((long) value)` khác `(long) Math.abs(value)` thế nào khi `value` là `Integer.MIN_VALUE`?
+
+    ### Ứng dụng chỉ số và khoảng cách
+
+    1. Vì sao `Math.absExact(a-b)` có thể trả 2 dù khoảng cách toán học của hai `int` lớn hơn bốn tỷ?
+    2. Khi ánh xạ hash vào bucket, vì sao `Math.floorMod(hash, capacity)` thường thích hợp hơn `Math.abs(hash) % capacity`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn trị tuyệt đối theo hợp đồng | Quyết định giữa trả `int` có kiểm tra, trả `long` chính xác và `BigInteger` khi gặp `MIN_VALUE`. |
+    | Phát hiện phép trừ trước abs | Sửa hàm khoảng cách để nâng toán hạng trước phép trừ và kiểm tra miền đầu ra. |
+    | Tạo chỉ số hợp lệ | Giải thích điều kiện `capacity > 0` và kết quả modulo không âm với `floorMod`. |
+- id: integer-overflow-009
+  title: Kiểm tra giới hạn trước khi cấp phát hoặc tính kích thước
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra giới hạn trước khi cấp phát hoặc tính kích thước**
+
+    Xây được quy trình kiểm tra kích thước dữ liệu trước khi cấp phát mảng, buffer hoặc xử lý payload. Người học phải phát hiện tràn ở mọi phép cộng/nhân trung gian, đồng thời áp dụng giới hạn ứng dụng và hiểu vì sao kiểm tra kiểu số chưa đủ bảo đảm còn tài nguyên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phép tính kích thước
+
+    1. Vì sao `long size = count * bytesPerItem` vẫn có thể sai khi hai toán hạng đều là `int`?
+    2. Có thể kiểm tra lát `[offset, offset+length)` bằng phép trừ nào để không làm `offset + length` tràn?
+
+    ### Quản lý tài nguyên và đơn vị
+
+    1. Vì sao `Math.toIntExact(length)` thành công không bảo đảm cấp phát mảng sẽ thành công?
+    2. Khi đọc độ dài từ dữ liệu không tin cậy, cần kiểm tra số phần tử, byte payload và ngân sách bộ nhớ theo trình tự nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính kích thước có kiểm tra | Sử dụng `Math.multiplyExact`, `addExact` và `toIntExact` đúng thời điểm trước khi cấp phát. |
+    | Xác minh range không overflow | Viết và chứng minh điều kiện `length <= capacity - offset` sau khi kiểm tra đầu vào không âm. |
+    | Thiết lập quota | Phân biệt giới hạn phần tử, payload, heap và chi phí cấp phát trong một API mẫu. |
+- id: integer-overflow-010
+  title: Dùng BigInteger khi miền giá trị không có giới hạn phù hợp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dùng BigInteger khi miền giá trị không có giới hạn phù hợp**
+
+    Biết khi nào cần chuyển từ số nguyên primitive sang `BigInteger` để giữ số học chính xác, và hiểu các phương thức tạo, tính toán, so sánh, chuyển đổi của kiểu bất biến này. Bài học cũng yêu cầu xác định ranh giới tài nguyên và ý nghĩa số có dấu khi đọc dữ liệu nhị phân.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biểu diễn và bất biến
+
+    1. Vì sao `BigInteger.valueOf(a * b)` có thể đã sai khi `a` và `b` là `long`?
+    2. Một `BigInteger` bất biến cần được cập nhật thế nào sau khi gọi `add`, `multiply` hoặc `pow`?
+
+    ### Chia, chuyển đổi và tài nguyên
+
+    1. `remainder` khác `mod` thế nào khi số bị chia âm, và môđun phải thỏa điều kiện gì?
+    2. Khi nào dùng `longValueExact()` thay `longValue()`, và cần kiểm soát các giới hạn bộ nhớ nào đối với số rất lớn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính toán vượt `long` | Viết phép cộng hoặc nhân `BigInteger` với toán hạng đã chuyển trước và kiểm tra kết quả lớn hơn `Long.MAX_VALUE`. |
+    | Chuyển đổi có kiểm tra | Dùng `compareTo`, `intValueExact`/`longValueExact` đúng với hợp đồng xuất dữ liệu. |
+    | Đánh giá chi phí | Phân biệt `remainder`/`mod`, signed/unsigned byte input và giới hạn kích thước đầu vào số lớn. |

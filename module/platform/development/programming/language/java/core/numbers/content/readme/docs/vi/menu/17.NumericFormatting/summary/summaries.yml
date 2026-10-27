@@ -1,0 +1,391 @@
+summaries:
+- id: numeric-formatting-001
+  title: Integer.toString, Long.toString và radix
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Integer.toString, Long.toString và radix**
+
+    Đọc được chữ ký Integer.toString/Long.toString và quan hệ giữa giá trị nguyên với chữ số ở radix 2–36. Hiểu fallback khi radix sai, biểu diễn số âm có dấu, trường hợp MIN_VALUE và điều kiện parse ngược mà không đổi nghĩa dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cú pháp và miền
+
+    1. Vì sao bốn literal 42, 0x2A, 0b101010 và 052 cho cùng giá trị khi định dạng?
+    2. Điều gì xảy ra khi Integer.toString nhận radix 1 hoặc 37, và vì sao API nghiệp vụ có thể cần guard?
+
+    ### Có dấu và round-trip
+
+    1. Tại sao Integer.toString(-42,16) tạo -2a mà toHexString(-42) không có dấu trừ?
+    2. Chọn cặp formatter/parser nào để khôi phục int âm từ một chuỗi radix 16?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định dạng có cơ số | Tính và kiểm tra chuỗi signed trong radix 2, 8, 10, 16 và 36. |
+    | Xác thực radix | Viết hàm từ chối cơ số ngoài 2..36 trước khi gọi toString. |
+    | Giữ giá trị nguyên | Phân tích Long.MIN_VALUE và lỗi làm hẹp long thành int trước format. |
+- id: numeric-formatting-002
+  title: toBinaryString, toHexString và toUnsignedString
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **toBinaryString, toHexString và toUnsignedString**
+
+    Phân biệt cách in giá trị signed và cách đọc cùng mẫu bit 32/64 bit theo unsigned. Bài trang bị kỹ năng quan sát bitmask qua binary/hex, xử lý sign extension của byte/short và parseUnsignedInt/parseUnsignedLong chính xác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mẫu bit và signedness
+
+    1. Vì sao Integer.toBinaryString(-1) in 32 bit 1 và toUnsignedString(-1) in 4294967295?
+    2. Khi ép byte âm sang int trước toHexString, sign extension ảnh hưởng chuỗi thế nào?
+
+    ### Đọc lại dữ liệu
+
+    1. Vì sao parseInt("ffffffff",16) lỗi nhưng parseUnsignedInt nhận mẫu bit đó?
+    2. Khi nào nên dùng toString(value,16) thay vì toHexString cho số âm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quan sát bit | Dự đoán chuỗi binary/hex của int và long âm, dương và giá trị biên. |
+    | Chặn sign extension | Sử dụng mặt nạ 0xff hoặc 0xffff khi mục tiêu là biểu diễn đúng chiều rộng byte/short. |
+    | Round-trip unsigned | Chọn toUnsignedString và parseUnsignedInt để giữ nguyên bit pattern. |
+- id: numeric-formatting-003
+  title: Float.toString, Double.toString và tính chất round-trip
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Float.toString, Double.toString và tính chất round-trip**
+
+    Hiểu cách Float.toString và Double.toString tạo biểu diễn decimal cho phép parse ngược cùng kiểu floating-point. Phân biệt chuỗi ngắn round-trip với giá trị decimal toán học, và kiểm tra biên số, zero âm, NaN, Infinity một cách đúng đắn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng round-trip
+
+    1. Tại sao Double.toString(0.1) hiển thị 0.1 dù new BigDecimal(0.1) in chuỗi dài?
+    2. Dạng số E xuất hiện khi nào trong Double.toString trên Java 17?
+
+    ### Kiểm chứng giá trị
+
+    1. Vì sao nên kiểm tra raw bits với signed zero nhưng không bắt NaN giữ nguyên payload?
+    2. Việc định dạng bằng %.2f làm mất điều kiện round-trip theo cách nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm thử round-trip | Kiểm tra parseDouble(toString(value)) giữ cùng bit cho số hữu hạn và signed zero. |
+    | Phân biệt biểu diễn | So sánh double 0.1, float 0.1f, widening và BigDecimal(double). |
+    | Phân loại trường hợp đặc biệt | Dự đoán toString của subnormal, NaN và ±Infinity. |
+- id: numeric-formatting-004
+  title: toHexString cho dấu phẩy động
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **toHexString cho dấu phẩy động**
+
+    Giải thích cú pháp 0x...p... do Float.toHexString và Double.toHexString sinh ra, từ normal/subnormal tới signed zero, NaN và Infinity. Biết phân biệt số thực hex với raw IEEE 754 bitstring khi debug ULP, sai số và số kề.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giải mã notation
+
+    1. Vì sao Double.toHexString(3.0) là 0x1.8p1 và ký tự p dùng mũ của cơ số nào?
+    2. Định dạng normal 0x1... khác dạng subnormal 0x0... ra sao?
+
+    ### Quan sát bit
+
+    1. Tại sao Double.toHexString(1.0) khác Long.toHexString(Double.doubleToRawLongBits(1.0))?
+    2. Trường hợp nào parseDouble(toHexString(x)) giữ raw bits và khi nào NaN là ngoại lệ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc hexadecimal float | Chuyển phần trị hex và số mũ nhị phân thành giá trị thập phân. |
+    | Đối chiếu bit pattern | Giải thích normal/subnormal và khác nhau giữa toHexString với raw bit hex. |
+    | Phân tích ULP | Dùng Math.nextUp và toHexString để mô tả hai số double kề nhau. |
+- id: numeric-formatting-005
+  title: String.format, printf và Formatter
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **String.format, printf và Formatter**
+
+    Chọn đúng String.format, System.out.printf hoặc Formatter theo nơi nhận đầu ra; làm chủ width, flags, precision, argument index và conversion cho số nguyên, số thực. Bài cũng giải thích lỗi format runtime và tại sao chuỗi đã làm tròn không đổi giá trị nguồn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chữ ký và format specifier
+
+    1. String.format, printf và Formatter khác nhau ở kết quả tạo ra và đích ghi như thế nào?
+    2. Ý nghĩa của %1$+08d, %,d, %.2f, %g và %% có gì khác nhau?
+
+    ### Lỗi và ổn định
+
+    1. Vì sao %.2f chỉ thay đổi chuỗi hiển thị, không đổi dữ liệu double?
+    2. Khi format string không khớp kiểu đối số, Java có thể ném lỗi ở giai đoạn nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế format | Viết pattern có padding, alignment, grouping và precision theo yêu cầu. |
+    | Chọn API | Sử dụng String.format, printf hoặc Formatter đúng đích output. |
+    | Chẩn đoán lỗi | Dự đoán IllegalFormatException khi conversion hoặc argument index sai. |
+- id: numeric-formatting-006
+  title: NumberFormat cho số thường, phần trăm và tiền tệ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **NumberFormat cho số thường, phần trăm và tiền tệ**
+
+    Sử dụng đúng NumberFormat factory cho số thường, số nguyên, phần trăm và tiền tệ theo Locale. Phân biệt ý nghĩa hệ số ×100 của percent, currency display với chuyển đổi tiền, và cài đặt grouping/chữ số ở tầng hiển thị.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lựa chọn formatter
+
+    1. NumberFormat.getNumberInstance, getIntegerInstance, getPercentInstance và getCurrencyInstance giải quyết các nhu cầu nào?
+    2. Tại sao getPercentInstance.format(0.25) cho 25% còn format(25) có nghĩa khác?
+
+    ### Độ chính xác và ngữ cảnh
+
+    1. Vì sao định dạng tiền bằng Currency không tự thực hiện đổi tỷ giá?
+    2. Khi dùng NumberFormat theo Locale, cần kiểm tra điều kiện gì trước khi dùng chuỗi làm input máy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn NumberFormat | Tạo formatter số thường/percent/currency phù hợp với Locale.US và Locale.GERMANY. |
+    | Cấu hình hiển thị | Điều chỉnh grouping và minimum/maximum fraction digits không sửa số nguồn. |
+    | Phân biệt nghiệp vụ | Giải thích ký hiệu tiền tệ, rounding hiển thị và dữ liệu decimal gốc. |
+- id: numeric-formatting-007
+  title: DecimalFormat, pattern và DecimalFormatSymbols
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **DecimalFormat, pattern và DecimalFormatSymbols**
+
+    Tạo và giải thích pattern DecimalFormat với 0, #, grouping, tiền tố/hậu tố, phần âm, multiplier %, scientific E và ký hiệu tiền tệ. Biết phân biệt pattern chuẩn với localized pattern và tác dụng của DecimalFormatSymbols.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ pháp pattern
+
+    1. Khác biệt giữa 0 và # trong #,##0.00 là gì, và dấu trong pattern có nhất thiết là ký tự được in?
+    2. Subpattern âm và ký tự quote thay đổi prefix/suffix thế nào?
+
+    ### Symbols và hành vi
+
+    1. Vì sao applyPattern và applyLocalizedPattern không thể dùng thay thế tùy ý?
+    2. Pattern phần trăm, E và ký hiệu tiền tệ ảnh hưởng chuỗi đầu ra như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế pattern | Dự đoán output của pattern với nhóm chữ số, dạng âm, percentage, scientific. |
+    | Tùy chỉnh symbols | Tạo DecimalFormatSymbols US/DE và giải thích khác biệt glyph đầu ra. |
+    | Áp dụng pattern | Chọn applyPattern hoặc applyLocalizedPattern theo cú pháp template nhận được. |
+- id: numeric-formatting-008
+  title: Locale, dấu thập phân, nhóm chữ số và dấu âm
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Locale, dấu thập phân, nhóm chữ số và dấu âm**
+
+    Xác định Locale của dữ liệu, hiểu vai trò dấu thập phân, dấu nhóm, Unicode digits và dấu âm trong output/input. Bài hướng dẫn tránh đoán nghĩa của 1,234 và dùng parser locale cùng validation toàn chuỗi khi cần.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa locale
+
+    1. Vì sao cùng chuỗi 1,234 có thể là giá trị khác nhau ở US và Germany?
+    2. DecimalFormatSymbols xác định dấu phân cách và ký hiệu âm thế nào?
+
+    ### Nhập số an toàn
+
+    1. Vì sao Double.parseDouble không chấp nhận dấu phẩy theo locale mặc định?
+    2. Tại sao parse toàn chuỗi vẫn có thể không đủ để chấp nhận placement của grouping?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh Locale | Định dạng cùng số âm trong Locale.US/Germany và diễn giải ký hiệu. |
+    | Nhận dạng nhập liệu | Kiểm tra đầy đủ chuỗi và chỉ ra vùng rủi ro Unicode/grouping. |
+    | Giữ decimal | Sử dụng DecimalFormat parse thành BigDecimal khi nguồn localized yêu cầu chính xác. |
+- id: numeric-formatting-009
+  title: Phân biệt chữ số tối thiểu, tối đa và độ chính xác giá trị
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt chữ số tối thiểu, tối đa và độ chính xác giá trị**
+
+    Phân biệt số chữ số tối thiểu/tối đa khi in, width và precision của Formatter với precision/scale thực của BigDecimal và float/double. Bài làm rõ khi nào formatter thêm zero, làm tròn hiển thị hoặc che mất dữ liệu nguồn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Độ rộng hiển thị
+
+    1. Pattern 0.00## và các setter min/max fraction digits thay đổi phần lẻ được in thế nào?
+    2. Vì sao width %8.2f khác precision %.2g hoặc độ rộng bit của double?
+
+    ### Giá trị nền
+
+    1. BigDecimal.precision, scale và MathContext precision khác với min/max digits như thế nào?
+    2. Khi format rồi parse lại 1.23456 thành 1.23, bước nào làm thay đổi giá trị dùng cho tính toán?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình digits | Thiết lập min/max fraction/integer digits và dự đoán output. |
+    | So sánh precision | Phân biệt Formatter width với số chữ số có nghĩa của BigDecimal. |
+    | Tránh mất giá trị | Chỉ ra rủi ro format rồi parse khi bản gốc cần bảo toàn. |
+- id: numeric-formatting-010
+  title: RoundingMode của bộ định dạng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **RoundingMode của bộ định dạng**
+
+    Giải thích đầy đủ tám RoundingMode, đặc biệt HALF_UP, HALF_EVEN, FLOOR, CEILING và UNNECESSARY trên số dương/âm. Biết chọn vị trí làm tròn bằng pattern/digit limits và phân biệt hiển thị làm tròn với kết quả tính bằng BigDecimal.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy tắc làm tròn
+
+    1. Tại điểm hòa 2.345, HALF_EVEN và HALF_UP tạo kết quả nào khi in hai chữ số?
+    2. Với số âm, tại sao FLOOR khác DOWN và CEILING khác UP?
+
+    ### Policy nghiệp vụ
+
+    1. RoundingMode.UNNECESSARY báo lỗi trong điều kiện nào?
+    2. Vì sao format(...).toString không phải cách cập nhật giá trị số đã làm tròn để tính tiếp?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh mode | Dự đoán kết quả của tám RoundingMode với giá trị dương và âm. |
+    | Cấu hình formatter | Kết hợp pattern 0.00 hoặc max fraction digits với rounding mode đúng. |
+    | Đưa rounding vào dữ liệu | Dùng BigDecimal.setScale/MathContext khi nghiệp vụ cần kết quả số thực sự. |
+- id: numeric-formatting-011
+  title: ParsePosition và kiểm tra toàn bộ chuỗi khi parse theo locale
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ParsePosition và kiểm tra toàn bộ chuỗi khi parse theo locale**
+
+    Thiết kế parser NumberFormat/DecimalFormat nhận trọn chuỗi theo Locale, sử dụng ParsePosition để tách prefix success và whole-input success. Hiểu index, errorIndex, offset UTF-16 và giới hạn của kiểm tra toàn chuỗi đối với grouping.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế vị trí
+
+    1. ParsePosition.getIndex và getErrorIndex biểu thị trạng thái nào sau parse?
+    2. Vì sao NumberFormat.parse("123abc") có thể thành công nhưng không hợp lệ cho một trường chỉ chứa số?
+
+    ### Giới hạn xác thực
+
+    1. Nếu bắt đầu ParsePosition từ vị trí khác 0, kiểm tra index cuối có nói được gì về phần prefix?
+    2. Vì sao parse hết chuỗi chưa chứng minh placement nhóm chữ số đáp ứng grammar nghiêm ngặt?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết parseWhole | Kiểm tra Number khác null và ParsePosition.index == input.length. |
+    | Chẩn đoán parser | Phân loại null result, tiền tố hợp lệ và toàn bộ chuỗi hợp lệ. |
+    | Thiết kế trường nhập | Thêm kiểm tra miền số và cú pháp grouping nếu schema yêu cầu. |
+- id: numeric-formatting-012
+  title: setParseBigDecimal và giới hạn an toàn khi dùng formatter đồng thời
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **setParseBigDecimal và giới hạn an toàn khi dùng formatter đồng thời**
+
+    Dùng DecimalFormat.setParseBigDecimal(true) khi cần decimal chính xác, nhưng hiểu ngoại lệ NaN/Infinity, mất dấu -0.0, parseIntegerOnly và actual subtype của Number. Bài còn hướng dẫn cách sử dụng DecimalFormat mutable an toàn trong xử lý đồng thời.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kết quả parse
+
+    1. Vì sao setParseBigDecimal(true) có thể vẫn trả Double cho token đặc biệt?
+    2. Điều gì xảy ra với dấu -0.0 khi chuyển sang BigDecimal?
+
+    ### Sử dụng an toàn đồng thời
+
+    1. Tại sao không được chia sẻ cùng DecimalFormat mutable cho nhiều request mà không đồng bộ?
+    2. Ba cách instance cục bộ, ThreadLocal và synchronized có ưu/nhược điểm gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Parse BigDecimal | Cấu hình DecimalFormat locale và kiểm tra Number subtype cùng ParsePosition. |
+    | Phân tích edge cases | Giải thích NaN/Infinity, -0.0 và setParseIntegerOnly. |
+    | Thiết kế concurrency | Lựa chọn local, ThreadLocal hoặc synchronized theo vòng đời request. |
+- id: numeric-formatting-013
+  title: Không dùng chuỗi đã định dạng cho người đọc làm dạng trao đổi dữ liệu mặc định
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không dùng chuỗi đã định dạng cho người đọc làm dạng trao đổi dữ liệu mặc định**
+
+    Thiết kế wire representation có schema rõ cho JSON, CSV, database và API: phân biệt numeric value, localized presentation và dữ liệu trao đổi. Bài giúp tránh đưa grouping/percent/currency từ UI vào payload, mất scale/precision hoặc lỗi parse khác locale.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới biểu diễn
+
+    1. Vì sao chuỗi UI 1.234,50 không nên dùng trực tiếp làm token numeric trong JSON?
+    2. Trường decimal là JSON number hay String có những hệ quả gì với phía nhận?
+
+    ### Tính chính xác và schema
+
+    1. Khi CSV dùng dấu phẩy phân cột, chuỗi tiền 1,234.50 phải được bảo vệ thế nào?
+    2. Những quy định nào về signedness, decimal scale, NaN/Infinity và 2^53 cần ghi trong schema?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế wire format | Đề xuất schema cho long ID, BigDecimal tiền và double đo đạc. |
+    | Giữ độ chính xác | Dùng toString/toPlainString cùng parser tương ứng khi hợp đồng yêu cầu. |
+    | Ngăn lỗi trao đổi | Chỉ ra chỗ làm tròn, grouping và parse theo locale có thể thay đổi dữ liệu. |

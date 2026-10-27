@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "BOXING VÀ UNBOXING — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: boxing-and-unboxing-001
+    order: 1
+    title: "Autoboxing và các ngữ cảnh chuyển primitive thành wrapper"
+    description: "Boxing tự động nối primitive với API đối tượng, nhưng mỗi ngữ cảnh chỉ cho phép một số quy tắc chuyển kiểu. Bài học phân tích assignment, method invocation, return, lambda, generic và cách overload resolution ưu tiên widening primitive."
+    transition:
+      to: boxing-and-unboxing-002
+      description: "Đã hiểu boxing, người học tiếp tục tìm chiều unboxing và hiệu ứng của phép toán trên wrapper."
+  - id: boxing-and-unboxing-002
+    order: 2
+    title: "Unboxing trong gán, phép toán và lời gọi phương thức"
+    description: "Unboxing có thể diễn ra trong phép gán, số học, so sánh và gọi method. Theo dõi numeric promotion, overflow, method overload và null giúp hiểu kiểu kết quả cũng như NPE xảy ra vào lúc nào."
+    transition:
+      to: boxing-and-unboxing-003
+      description: "Những điểm cần unbox cũng là điểm có thể NPE khi dữ liệu wrapper thiếu."
+  - id: boxing-and-unboxing-003
+    order: 3
+    title: "NullPointerException khi unbox giá trị null"
+    description: "Unboxing wrapper null dẫn tới NullPointerException, không có mặc định 0. Bài phân tích nguồn null ở Map, array, DTO, stream, cùng khác biệt NPE do unbox và do gọi method trên receiver null để chọn validation hoặc fallback đúng nghĩa."
+    transition:
+      to: boxing-and-unboxing-004
+      description: "Đã xác định đường lỗi null, cần phân biệt khi nào == so tham chiếu và khi nào buộc unbox."
+  - id: boxing-and-unboxing-004
+    order: 4
+    title: "So sánh == giữa hai wrapper và giữa wrapper với primitive"
+    description: "Toán tử == với wrapper có thể hỏi về identity hoặc numeric equality khi bên kia là primitive. Bài học đối chiếu == với equals, cache, null và trường hợp số thực NaN, signed zero hoặc widening long sang double."
+    transition:
+      to: boxing-and-unboxing-005
+      description: "Để giải thích identity bất ngờ của wrapper, bài kế tiếp làm rõ cache và giới hạn cam kết."
+  - id: boxing-and-unboxing-005
+    order: 5
+    title: "Cache wrapper và giới hạn không nên dùng làm hợp đồng nhận dạng"
+    description: "Cache wrapper tái sử dụng một số object nhỏ nhưng identity ngoài vùng bảo đảm phụ thuộc cách triển khai. Bài học giải thích valueOf, equality trong collection và vì sao không dùng wrapper làm monitor hoặc mã định danh bền vững."
+    transition:
+      to: boxing-and-unboxing-006
+      description: "Rời identity của một object để xem cách wrapper được lưu trong List khác primitive array."
+  - id: boxing-and-unboxing-006
+    order: 6
+    title: "List<Integer> không phải int[]"
+    description: "int[] chứa primitive, Integer[] chứa tham chiếu, List<Integer> là API collection với mutability phụ thuộc implementation. Bài luyện chuyển đổi từng phần tử, phân biệt Arrays.asList(int[]), Stream.toList và remove(int)/remove(Object)."
+    transition:
+      to: boxing-and-unboxing-007
+      description: "Khác biệt lưu trữ và chuyển kiểu dẫn sang đánh giá hiệu năng ở vòng lặp và collection."
+  - id: boxing-and-unboxing-007
+    order: 7
+    title: "Chi phí boxing trong vòng lặp và cấu trúc dữ liệu"
+    description: "Boxing trong vòng lặp/collection có thể ảnh hưởng bộ nhớ, allocation, GC và locality nhưng JVM/JIT cũng có thể loại bỏ object tạm. Bài học đánh giá chi phí thật và xây phép đo JMH đủ warmup, fork, input thực tế."
+    transition:
+      to: boxing-and-unboxing-008
+      description: "Khi biết tối ưu biểu diễn, cần so sánh các nullable wrapper đúng theo hợp đồng equality."
+  - id: boxing-and-unboxing-008
+    order: 8
+    title: "Objects.equals và xử lý wrapper có thể null"
+    description: "Objects.equals xử lý null-safe cho wrapper nhưng không tự nâng Integer thành Long, so sâu mảng hay thay null bằng zero. Bài học chọn equals, deepEquals, null guard, comparator và default theo đúng hợp đồng dữ liệu."
+    transition:
+      to: boxing-and-unboxing-009
+      description: "Ngay cả khi equality đã null-safe, toán tử ?: vẫn có thể unbox giá trị được chọn."
+  - id: boxing-and-unboxing-009
+    order: 9
+    title: "Toán tử ?: có thể unbox nhánh wrapper"
+    description: "Toán tử ?: có kiểu riêng xác định từ hai nhánh, có thể unbox Integer null khi nhánh còn lại là int dù đích gán là Integer. Bài phân tích chỉ nhánh được chọn được đánh giá, Boolean condition nullable và cách giữ null hoặc fallback."
+    transition:
+      to: boxing-and-unboxing-010
+      description: "Từ những lỗi chuyển kiểu ẩn, chuyển sang vấn đề dùng identity wrapper để đồng bộ nhiều luồng."
+  - id: boxing-and-unboxing-010
+    order: 10
+    title: "Không dùng wrapper làm khóa đồng bộ"
+    description: "synchronized khóa theo identity object; cache wrapper và việc Integer count++ gán lại tham chiếu khiến monitor không ổn định. Bài đánh giá race, volatile, và lựa chọn private final Object, AtomicInteger, LongAdder, ReentrantLock."
+    transition:
+      to: boxing-and-unboxing-011
+      description: "Sau an toàn concurrency, bài cuối làm rõ khác biệt nghiệp vụ giữa null và số 0."
+  - id: boxing-and-unboxing-011
+    order: 11
+    title: "Phân biệt tham chiếu null với giá trị số 0"
+    description: "Null, không có field và số 0 có thể là ba trạng thái nghiệp vụ khác nhau. Bài liên hệ Integer, Map.containsKey, JDBC getInt/wasNull, JSON DTO và OptionalInt để không làm mất thông tin missing khi chuyển đổi."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Autoboxing và các ngữ cảnh chuyển primitive thành wrapper | Unboxing trong gán, phép toán và lời gọi phương thức | NullPointerException khi unbox giá trị null | So sánh == giữa hai wrapper và giữa wrapper với primitive | Cache wrapper và giới hạn không nên dùng làm hợp đồng nhận dạng | List<Integer> không phải int[] | Chi phí boxing trong vòng lặp và cấu trúc dữ liệu | Objects.equals và xử lý wrapper có thể null | Toán tử ?: có thể unbox nhánh wrapper | Không dùng wrapper làm khóa đồng bộ | Phân biệt tham chiếu null với giá trị số 0 |
+  | Vấn đề cần hiểu | Tám primitive được ánh xạ tới wrapper như thế nào? | `Integer` gán cho `long` qua những bước chuyển đổi nào? | Vì sao `int x = boxedNull` biên dịch được nhưng ném NPE khi chạy? | `Integer a == Integer b` so sánh điều gì? | Integer/Long/Short/Byte valueOf bảo đảm cache phạm vi nào? | Tại sao không thể viết List<int> hoặc cast int[] thành List<Integer>? | Integer sum += i thực hiện các phép chuyển kiểu nào? | Objects.equals(null,null) có ý nghĩa gì? | Vì sao `Integer r = choose ? nullable : 0` vẫn có thể NPE? | synchronized sử dụng identity hay giá trị số của object khóa? | Integer null khác Integer chứa số 0 ra sao? |
+  | Giá trị đối với OOP/module | Dùng primitive trong API yêu cầu object/generic mà vẫn đúng kiểu. | Tránh phép toán và overload với chuyển đổi không dự kiến. | Kiểm tra nullable data trước khi chuyển sang primitive. | Chọn equality đúng trong điều kiện và khóa dữ liệu. | Tránh định danh và đồng bộ dựa trên identity wrapper. | Chọn API lưu dãy số phù hợp, chuyển dữ liệu an toàn. | Đánh giá bộ nhớ/GC và hot path bằng benchmark có kiểm soát. | So sánh DTO và collection nullable nhất quán. | Loại NPE khó thấy trong logic điều kiện. | Thiết kế monitor ổn định và cập nhật nguyên tử. | Bảo toàn trạng thái thiếu và giá trị 0 qua các tầng dữ liệu. |
+  | Tư duy hình thành | Xét kiểu nguồn, kiểu đích và quy tắc conversion. | Lần theo biểu thức và các bước unboxing/promotion. | Khoanh vùng nguồn null và điều kiện nguyên thủy. | Chọn phép so sánh từ kiểu tĩnh và nullability. | Phân biệt hợp đồng API với tối ưu của JVM. | Đối chiếu element type, mutability và null. | Tách chi phí ngữ nghĩa khỏi chi phí runtime. | Không đồng nhất object equality với numeric equality. | Xác định kiểu ?: trước khi xét đích gán. | Khóa theo invariant cần bảo vệ, không theo số. | Định nghĩa chính sách missing trước khi cấp default. |

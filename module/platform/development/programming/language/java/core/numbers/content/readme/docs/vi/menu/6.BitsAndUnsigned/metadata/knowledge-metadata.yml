@@ -1,0 +1,37 @@
+sections:
+  bits-and-unsigned-001:
+    difficulty: BASIC
+    isImportant: true
+  bits-and-unsigned-002:
+    difficulty: BASIC
+    isImportant: true
+  bits-and-unsigned-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  bits-and-unsigned-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  bits-and-unsigned-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  bits-and-unsigned-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  bits-and-unsigned-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  bits-and-unsigned-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  bits-and-unsigned-009:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  bits-and-unsigned-010:
+    difficulty: ADVANCED
+    isImportant: false
+  bits-and-unsigned-011:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  bits-and-unsigned-012:
+    difficulty: ADVANCED
+    isImportant: true

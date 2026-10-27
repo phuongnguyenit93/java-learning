@@ -1,0 +1,361 @@
+summaries:
+- id: random-numbers-001
+  title: Số giả ngẫu nhiên, seed và yêu cầu tái lập
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Số giả ngẫu nhiên, seed và yêu cầu tái lập**
+
+    PRNG có trạng thái, seed và tái lập Seed khởi tạo PRNG xác định, nhưng phát lại phụ thuộc thuật toán và lịch sử gọi. Phân biệt tái lập, chất lượng thống kê và khó đoán.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. Seed khác trạng thái hiện tại của PRNG thế nào?
+    2. Vì sao cùng seed nhưng thứ tự nextInt khác có thể tạo kết quả nghiệp vụ khác?
+
+    ### Vận dụng và giới hạn
+
+    1. Khi muốn phát lại lỗi mô phỏng, cần lưu gì ngoài seed?
+    2. Tại sao PRNG tái lập được không bảo đảm an toàn bảo mật?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Dựng sơ đồ seed→trạng thái→giá trị→trạng thái mới. |
+    | Áp dụng kỹ thuật | Thiết kế kịch bản chạy lại với seed và chuỗi lời gọi cố định. |
+    | Kiểm chứng và lựa chọn | Giải thích khi nào cần exact replay, thống kê tương đương hoặc nguồn khó đoán. |
+- id: random-numbers-002
+  title: Random và chuỗi giá trị theo seed
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Random và chuỗi giá trị theo seed**
+
+    Random theo seed và setSeed Random(seed) sinh chuỗi có thể kiểm chứng; setSeed đặt lại trạng thái và cache Gaussian, còn Random cổ điển sử dụng trạng thái 48 bit.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. Hai đối tượng new Random(42L) gọi nextInt(100) năm lần cho kết quả ra sao?
+    2. Vì sao tạo new Random(42L) liên tục trong vòng lặp có thể lặp cùng số đầu?
+
+    ### Vận dụng và giới hạn
+
+    1. Sau hai lần rút, setSeed(42L) ảnh hưởng giá trị tiếp theo thế nào?
+    2. Tại sao hai seed long chỉ khác ở bit cao ngoài 48 bit có thể cùng chuỗi?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Viết chương trình so sánh hai Random có cùng seed. |
+    | Áp dụng kỹ thuật | Dự đoán đúng trạng thái sau reseed và nextGaussian. |
+    | Kiểm chứng và lựa chọn | Phát hiện lỗi seed cố định đặt sai vị trí trong chương trình. |
+- id: random-numbers-003
+  title: Math.random và giới hạn sử dụng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Math.random và giới hạn sử dụng**
+
+    Math.random và cận số thực Math.random tạo double [0,1) nhưng không nhận seed và dùng trạng thái chia sẻ. Những biểu thức nhân, ép kiểu hoặc round có thể sai miền hoặc lệch xác suất.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. Math.random có thể trả 1.0 không?
+    2. Vì sao biểu thức (int)Math.random()*6 luôn là 0?
+
+    ### Vận dụng và giới hạn
+
+    1. Viết công thức sinh xúc xắc nhỏ bằng Math.random và đối chiếu nextInt(1,7)?
+    2. Khi nào nên dùng Random(seed), ThreadLocalRandom hoặc SecureRandom thay Math.random?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Giải thích cận 0.0 bao gồm và 1.0 loại trừ. |
+    | Áp dụng kỹ thuật | Dự đoán các phép toán cast, multiply và round trên sample. |
+    | Kiểm chứng và lựa chọn | Thiết kế kiểm tra bất biến thay vì hardcode sample không seeded. |
+- id: random-numbers-004
+  title: ThreadLocalRandom khi nhiều luồng sinh số
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ThreadLocalRandom khi nhiều luồng sinh số**
+
+    ThreadLocalRandom theo luồng ThreadLocalRandom.current() cung cấp bộ sinh của thread đang thực thi; tránh dùng instance chéo luồng, không có setSeed để replay và không xử lý race của dữ liệu ứng dụng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. Tại sao phải lấy ThreadLocalRandom.current() trong worker?
+    2. Vì sao setSeed của ThreadLocalRandom ném UnsupportedOperationException?
+
+    ### Vận dụng và giới hạn
+
+    1. Nếu nhiều worker cùng counts[face]++, race xuất hiện ở đâu?
+    2. Khi cần replay từng task, RNG theo task khác RNG theo thread như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Viết worker sinh nextInt(1,7) với current(). |
+    | Áp dụng kỹ thuật | Gộp bộ đếm cục bộ sau Future.get để tránh race. |
+    | Kiểm chứng và lựa chọn | Chọn giải pháp seeded hoặc SecureRandom khi thread-local không đáp ứng. |
+- id: random-numbers-005
+  title: SplittableRandom và chia nguồn ngẫu nhiên
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **SplittableRandom và chia nguồn ngẫu nhiên**
+
+    SplittableRandom và chia nguồn SplittableRandom.split() tạo generator con có trạng thái riêng cho nhánh task. Cần giữ thứ tự split và sở hữu instance nếu muốn replay, và split không bảo đảm các số không trùng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. split() có sửa trạng thái cha hay chỉ clone nó?
+    2. Vì sao hai task cùng tạo SplittableRandom(2026L) có thể sinh một chuỗi giống nhau?
+
+    ### Vận dụng và giới hạn
+
+    1. Làm sao giao childA/childB cho task mà lịch scheduler không đổi mapping?
+    2. Vì sao childA và childB vẫn có thể cùng sinh giá trị 7?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Tạo cây root→child bằng split và phân công ownership. |
+    | Áp dụng kỹ thuật | Kiểm tra replay với cùng seed, thứ tự split và số lần rút. |
+    | Kiểm chứng và lựa chọn | Phân biệt chia generator với phân vùng giá trị hoặc bảo đảm uniqueness. |
+- id: random-numbers-006
+  title: RandomGenerator và RandomGeneratorFactory từ Java 17
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **RandomGenerator và RandomGeneratorFactory từ Java 17**
+
+    RandomGenerator và lựa chọn thuật toán RandomGenerator tách logic sinh số khỏi implementation; RandomGeneratorFactory chọn thuật toán theo tên, seed và metadata splittable/jumpable. Thuật toán mặc định không phải hợp đồng replay dài hạn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. RandomGenerator khác RandomGeneratorFactory ở vai trò gì?
+    2. Vì sao RandomGenerator.getDefault không cố định tên thuật toán qua mọi JDK?
+
+    ### Vận dụng và giới hạn
+
+    1. isSplittable cho biết gì và muốn gọi split phải dùng interface nào?
+    2. Cần ghi thuật toán, seed và dữ liệu gì khi tái lập qua phiên bản Java?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Tạo thuật toán L64X128MixRandom theo factory và seed. |
+    | Áp dụng kỹ thuật | Đọc metadata isSplittable, stateBits mà không suy ra bảo mật. |
+    | Kiểm chứng và lựa chọn | Viết dịch vụ nhận RandomGenerator và xử lý khả năng tùy thuật toán. |
+- id: random-numbers-007
+  title: Các khoảng origin, bound và quy tắc cận trên loại trừ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Các khoảng origin, bound và quy tắc cận trên loại trừ**
+
+    Khoảng nửa mở và biên Các overload nextInt/nextLong/nextDouble nhận [origin,bound), loại trừ bound; khoảng rỗng bị từ chối và chuyển khoảng đóng phải tránh overflow cực trị int.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. nextInt(1,7) có thể trả 7 không?
+    2. Vì sao nextInt(7,8) hợp lệ nhưng nextInt(7,7) ném lỗi?
+
+    ### Vận dụng và giới hạn
+
+    1. Làm sao sinh gồm cả Integer.MAX_VALUE mà không tràn khi max+1?
+    2. Những cận float/double nào không hợp lệ và vì sao list rỗng cần kiểm tra?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Dự đoán tập kết quả theo origin/bound. |
+    | Áp dụng kỹ thuật | Chuyển khoảng đóng kiểu int qua long khi max là cực trị. |
+    | Kiểm chứng và lựa chọn | Viết kiểm thử singleton, bound ngược và biên âm/dương. |
+- id: random-numbers-008
+  title: Sinh số nguyên, số thực và phân phối Gaussian
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Sinh số nguyên, số thực và phân phối Gaussian**
+
+    Uniform và Gaussian nextInt tạo uniform discrete, nextDouble uniform float và nextGaussian phân phối chuẩn không bị chặn; mean và standard deviation khác variance. Clamp và rejection đổi phân phối.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. nextInt(6), nextDouble và nextGaussian khác nhau thế nào về miền?
+    2. Trong N(80,25), độ lệch chuẩn bằng bao nhiêu?
+
+    ### Vận dụng và giới hạn
+
+    1. Kẹp Gaussian vào [0,100] khác lấy mẫu lại ngoài khoảng thế nào?
+    2. Vì sao Math.round(nextDouble()*5) không tạo xúc xắc đồng đều?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Chọn API theo phân phối uniform integer, double hoặc normal. |
+    | Áp dụng kỹ thuật | Sinh Gaussian có trung bình và độ lệch chuẩn tùy chọn. |
+    | Kiểm chứng và lựa chọn | Kiểm tra giới hạn precision và ý nghĩa của clamp/truncation. |
+- id: random-numbers-009
+  title: Vì sao dùng phép % tùy tiện có thể tạo thiên lệch
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vì sao dùng phép % tùy tiện có thể tạo thiên lệch**
+
+    Modulo bias và rejection sampling Phép x%n có thể lệch nếu miền nguồn không chia đều cho n; rejection sampling chỉ giữ bội số nguyên của n. Math.abs(MIN_VALUE) và floorMod không khắc phục bias.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. Với nguồn 0..7 đều, vì sao x%6 ưu ái kết quả 0 và 1?
+    2. Nguồn N giá trị, khi nào phép %n không tạo modulo bias riêng?
+
+    ### Vận dụng và giới hạn
+
+    1. Vì sao loại byte 250..255 trước khi chia dư cho 10 và phải rút lại?
+    2. Tại sao Math.floorMod và Math.abs(nextInt())%n không bảo đảm đều?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Lập bảng tiền ảnh của phép modulo và tính xác suất. |
+    | Áp dụng kỹ thuật | Xây thuật toán rejection với ngưỡng chấp nhận chia hết n. |
+    | Kiểm chứng và lựa chọn | Chọn nextInt(bound) thay phép dư tùy tiện khi cần mẫu đều. |
+- id: random-numbers-010
+  title: SecureRandom cho yêu cầu không thể dự đoán
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **SecureRandom cho yêu cầu không thể dự đoán**
+
+    SecureRandom cho bí mật SecureRandom dùng provider mật mã, tạo token byte và OTP qua API bounded. Độ dài, entropy, TTL, hạn chế thử, lưu trữ hash và logging quyết định an toàn của toàn hệ thống.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. SecureRandom giải quyết rủi ro nào mà Random không bảo đảm?
+    2. Vì sao token 32 byte Base64URL không padding có 43 ký tự?
+
+    ### Vận dụng và giới hạn
+
+    1. Vì sao OTP sáu chữ số vẫn cần TTL, rate limit và dùng một lần?
+    2. setSeed cố định hoặc getInstanceStrong có tạo hợp đồng replay và tốc độ như mọi provider không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Tạo token SecureRandom.nextBytes và Base64URL. |
+    | Áp dụng kỹ thuật | Tạo mã sáu chữ số giữ số 0 đầu bằng nextInt(bound). |
+    | Kiểm chứng và lựa chọn | Phân tích vòng đời token, entropy/provider và bảo vệ bí mật. |
+- id: random-numbers-011
+  title: Chọn thuật toán, seed và cách kiểm thử mà không nhầm với bảo đảm bảo mật
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn thuật toán, seed và cách kiểm thử mà không nhầm với bảo đảm bảo mật**
+
+    Chọn RNG và kiểm thử theo mục đích Bài tổng hợp so sánh seeded PRNG, per-task splitting, thread-local, named RandomGenerator và CSPRNG; phân biệt regression, kiểm tra biên, thống kê và kiểm thử bảo mật.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. Vì sao kiểm thử tái lập, tính thống kê và bảo mật không chứng minh thay nhau?
+    2. Vì sao seed đơn lẻ chưa đủ phát lại một workload nhiều task?
+
+    ### Vận dụng và giới hạn
+
+    1. Kiểm thử SecureRandom nên so sánh byte cố định hay kiểm tra hình dạng và đường gọi CSPRNG?
+    2. Khi nào lưu seed để debug có ích, khi nào log seed/token nguy hiểm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Lập bảng quyết định Random/Splittable/ThreadLocal/Factory/SecureRandom. |
+    | Áp dụng kỹ thuật | Thiết kế metadata replay gồm seed, thuật toán, version và thứ tự rút. |
+    | Kiểm chứng và lựa chọn | Phân loại test deterministic, property, statistical và integration security. |
+- id: random-numbers-012
+  title: Stream giá trị ngẫu nhiên và giới hạn kích thước
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Stream giá trị ngẫu nhiên và giới hạn kích thước**
+
+    Stream, lazy và giới hạn kích thước ints/longs/doubles có các overload streamSize và origin/bound khác nhau. filter/limit, lazy, count optimization và parallel stream ảnh hưởng số mẫu, khả năng kết thúc và bộ nhớ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. ints(5), ints(0,5) và ints(5,0,5) khác nhau thế nào?
+    2. filter(even).limit(10) có thể không kết thúc khi điều kiện không bao giờ đúng vì sao?
+
+    ### Vận dụng và giới hạn
+
+    1. Tại sao limit(10).filter(even) khác filter(even).limit(10)?
+    2. count() có chắc rút từng giá trị và vì sao toArray trên nguồn vô hạn nguy hiểm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Tạo IntStream/LongStream/DoubleStream hữu hạn đúng size/range. |
+    | Áp dụng kỹ thuật | Chặn lượt thử và số kết quả qua vị trí filter/limit thích hợp. |
+    | Kiểm chứng và lựa chọn | Giải thích lazy, tối ưu count, rủi ro memory và parallel nondeterminism. |

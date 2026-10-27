@@ -1,0 +1,31 @@
+sections:
+  integer-arithmetic-001:
+    difficulty: BASIC
+    isImportant: true
+  integer-arithmetic-002:
+    difficulty: BASIC
+    isImportant: true
+  integer-arithmetic-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  integer-arithmetic-004:
+    difficulty: BASIC
+    isImportant: true
+  integer-arithmetic-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  integer-arithmetic-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  integer-arithmetic-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  integer-arithmetic-008:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  integer-arithmetic-009:
+    difficulty: ADVANCED
+    isImportant: true
+  integer-arithmetic-010:
+    difficulty: BASIC
+    isImportant: true

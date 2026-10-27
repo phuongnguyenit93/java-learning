@@ -1,0 +1,103 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "BIỂU DIỄN VÀ ĐỊNH DẠNG — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: numeric-formatting-001
+    order: 1
+    title: "Integer.toString, Long.toString và radix"
+    description: "Nền tảng chuyển int/long signed thành văn bản theo radix, giá trị biên và parse ngược."
+    transition: 
+      to: numeric-formatting-002
+      description: "Từ định dạng số có dấu theo radix, phân biệt cách in mẫu bit với diễn giải unsigned."
+  - id: numeric-formatting-002
+    order: 2
+    title: "toBinaryString, toHexString và toUnsignedString"
+    description: "Làm rõ biểu diễn bit unsigned, sign extension và parseUnsigned để khôi phục mẫu 32/64 bit."
+    transition: 
+      to: numeric-formatting-003
+      description: "Sau định dạng bit nguyên, chuyển sang biểu diễn số thực decimal có khả năng parse round-trip."
+  - id: numeric-formatting-003
+    order: 3
+    title: "Float.toString, Double.toString và tính chất round-trip"
+    description: "Giải thích toString decimal, round-trip qua parse, scientific notation và ngoại lệ NaN payload."
+    transition: 
+      to: numeric-formatting-004
+      description: "Từ chuỗi decimal round-trip, khảo sát cách viết chính xác giá trị nhị phân bằng hex floating-point."
+  - id: numeric-formatting-004
+    order: 4
+    title: "toHexString cho dấu phẩy động"
+    description: "Giải mã hex floating-point, các biên normal/subnormal và phân biệt raw bit pattern."
+    transition: 
+      to: numeric-formatting-005
+      description: "Từ các API toString/toHexString, mở rộng sang cách kiểm soát chuỗi trình bày bằng Formatter."
+  - id: numeric-formatting-005
+    order: 5
+    title: "String.format, printf và Formatter"
+    description: "Nắm cú pháp Formatter, conversion số, width/precision, locale và xử lý lỗi runtime."
+    transition: 
+      to: numeric-formatting-006
+      description: "Từ cú pháp Formatter chung, chọn NumberFormat cho số, tỷ lệ và tiền tệ theo locale."
+  - id: numeric-formatting-006
+    order: 6
+    title: "NumberFormat cho số thường, phần trăm và tiền tệ"
+    description: "Định dạng số, phần trăm, tiền tệ qua NumberFormat và chọn Locale/cấu hình hiển thị."
+    transition: 
+      to: numeric-formatting-007
+      description: "Từ các factory NumberFormat, tìm hiểu DecimalFormat pattern khi cần tùy chỉnh chi tiết."
+  - id: numeric-formatting-007
+    order: 7
+    title: "DecimalFormat, pattern và DecimalFormatSymbols"
+    description: "Tập trung syntax pattern, positive/negative subpatterns, DecimalFormatSymbols và localized pattern."
+    transition: 
+      to: numeric-formatting-008
+      description: "Từ ký hiệu trong pattern, xem Locale quyết định dấu thập phân, dấu nhóm và dấu âm."
+  - id: numeric-formatting-008
+    order: 8
+    title: "Locale, dấu thập phân, nhóm chữ số và dấu âm"
+    description: "Đọc dấu nhóm/thập phân/âm theo Locale và xác thực chuỗi localized."
+    transition: 
+      to: numeric-formatting-009
+      description: "Từ sự khác biệt locale, phân biệt giới hạn chữ số được in với precision của giá trị gốc."
+  - id: numeric-formatting-009
+    order: 9
+    title: "Phân biệt chữ số tối thiểu, tối đa và độ chính xác giá trị"
+    description: "Đối chiếu min/max digits, Formatter precision, BigDecimal scale và precision lưu trữ."
+    transition: 
+      to: numeric-formatting-010
+      description: "Từ giới hạn chữ số, tìm hiểu RoundingMode điều khiển cách chọn giá trị hiển thị."
+  - id: numeric-formatting-010
+    order: 10
+    title: "RoundingMode của bộ định dạng"
+    description: "So sánh các mode làm tròn, tác động lên chữ số và chính sách tính toán."
+    transition: 
+      to: numeric-formatting-011
+      description: "Từ formatting và rounding, chuyển sang bước đọc lại dữ liệu với ParsePosition."
+  - id: numeric-formatting-011
+    order: 11
+    title: "ParsePosition và kiểm tra toàn bộ chuỗi khi parse theo locale"
+    description: "Khai thác ParsePosition, errorIndex/offset và kiểm tra tiêu thụ toàn chuỗi localized."
+    transition: 
+      to: numeric-formatting-012
+      description: "Từ xác thực chuỗi đã được đọc hết, bảo toàn decimal và chọn cách quản lý formatter giữa các thread."
+  - id: numeric-formatting-012
+    order: 12
+    title: "setParseBigDecimal và giới hạn an toàn khi dùng formatter đồng thời"
+    description: "Tập trung parseBigDecimal, loại Number, edge cases và an toàn khi dùng formatter nhiều luồng."
+    transition: 
+      to: numeric-formatting-013
+      description: "Từ parser chính xác và an toàn, chốt nguyên tắc tách định dạng UI khỏi wire representation."
+  - id: numeric-formatting-013
+    order: 13
+    title: "Không dùng chuỗi đã định dạng cho người đọc làm dạng trao đổi dữ liệu mặc định"
+    description: "Tách output giao diện với wire representation; thiết kế schema số cho JSON/CSV/DB."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 | Bài 13 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Integer.toString, Long.toString và radix | toBinaryString, toHexString và toUnsignedString | Float.toString, Double.toString và tính chất round-trip | toHexString cho dấu phẩy động | String.format, printf và Formatter | NumberFormat cho số thường, phần trăm và tiền tệ | DecimalFormat, pattern và DecimalFormatSymbols | Locale, dấu thập phân, nhóm chữ số và dấu âm | Phân biệt chữ số tối thiểu, tối đa và độ chính xác giá trị | RoundingMode của bộ định dạng | ParsePosition và kiểm tra toàn bộ chuỗi khi parse theo locale | setParseBigDecimal và giới hạn an toàn khi dùng formatter đồng thời | Không dùng chuỗi đã định dạng cho người đọc làm dạng trao đổi dữ liệu mặc định |
+  | Vấn đề cần hiểu | toString(value, radix) đổi cách viết thế nào? | Cùng mẫu bit có thể mang nghĩa unsigned nào? | Chuỗi ngắn có khôi phục đúng float/double không? | toHexString mô tả giá trị IEEE 754 ra sao? | Chọn API và format specifier nào? | Định dạng số/percent/currency khác nhau ra sao? | Pattern và symbols quyết định văn bản nào? | Một chuỗi số phụ thuộc Locale ở những đâu? | Chữ số hiển thị khác độ chính xác ở đâu? | Chọn cách làm tròn tại biên chữ số thế nào? | Làm sao biết parser đã đọc trọn chuỗi? | Giữ decimal và chia sẻ formatter sao cho đúng? | Trao đổi số giữa hệ thống cần quy ước gì? |
+  | Giá trị đối với OOP/module | Định dạng số nguyên signed chính xác theo cơ số | Debug cờ bit và giao thức word unsigned | Kiểm chứng tính khôi phục của giá trị floating-point | Phân tích số thực ở cấp significand, exponent và ULP | Tạo chuỗi và báo cáo số có định dạng kiểm soát | Thiết kế giao diện số phụ thuộc mục đích | Tạo định dạng số chi tiết có thể cấu hình | Bảo vệ diễn giải số nhập giữa các vùng ngôn ngữ | Thiết kế format có độ rộng và làm tròn phù hợp | Kiểm soát kết quả trình bày và lượng tử hóa theo luật | Ngăn nhập sai bị chấp nhận vì parser dừng ở tiền tố | Xử lý parse decimal chính xác và concurrency an toàn | Tránh mất giá trị và nhập nhằng locale qua API/file |
+  | Tư duy hình thành | Giữ giá trị và metadata radix khi chuyển thành chữ số | Chọn signedness, chiều rộng và parser tương ứng | Đo round-trip theo giá trị/bit phù hợp từng loại | Đọc bit-level giá trị bằng ký pháp hex có mũ 2 | Xem format string là hợp đồng giữa kiểu đối số và trình bày | Chọn factory theo vai trò con số trước khi chỉnh symbols | Phân biệt cấu trúc pattern với glyph hiển thị | Không suy đoán ý nghĩa từ dấu phẩy/chấm đơn lẻ | Tách precision của chuỗi với precision của giá trị số | Chọn vị trí và hướng rounding một cách tường minh | Xét đồng thời kết quả Number và vị trí parser | Tách cấu hình formatter mutable khỏi lời gọi song song | Định nghĩa kiểu, cú pháp và precision tại ranh giới hệ thống |

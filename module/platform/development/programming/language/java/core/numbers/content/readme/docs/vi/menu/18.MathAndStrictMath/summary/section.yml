@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "MATH VÀ STRICTMATH — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: math-and-strict-math-001
+    order: 1
+    title: "abs, min, max, signum và clamp theo phiên bản JDK"
+    description: "Ứng dụng abs, min, max, signum và clamp với các quy tắc overflow, NaN, signed zero và phiên bản JDK."
+    transition: 
+      to: math-and-strict-math-002
+      description: "Từ giới hạn và thao tác cơ bản chuyển sang chọn đúng phép mũ và căn."
+  - id: math-and-strict-math-002
+    order: 2
+    title: "pow, sqrt, cbrt và lựa chọn phép tính phù hợp"
+    description: "Chọn pow, sqrt, cbrt theo miền thực và kiểm soát mất chính xác khi lũy thừa nguyên hoặc tính căn."
+    transition: 
+      to: math-and-strict-math-003
+      description: "Khi đã phân biệt lũy thừa và căn, học nhóm hàm mũ/log cùng công thức ổn định."
+  - id: math-and-strict-math-003
+    order: 3
+    title: "exp, log, log10, expm1 và log1p"
+    description: "Dùng exp, log, log10 và hai hàm ổn định expm1/log1p khi thao tác gần zero."
+    transition: 
+      to: math-and-strict-math-004
+      description: "Từ hàm siêu việt tiếp tục với góc và các phép lượng giác nhận radian."
+  - id: math-and-strict-math-004
+    order: 4
+    title: "sin, cos, tan và chuyển độ sang radian"
+    description: "Chuyển độ sang radian trước khi tính sin/cos/tan và giải thích sai số gần góc đặc biệt."
+    transition: 
+      to: math-and-strict-math-005
+      description: "Sau các hàm lượng giác thuận, học khôi phục góc và phân biệt góc phần tư."
+  - id: math-and-strict-math-005
+    order: 5
+    title: "asin, acos, atan và atan2"
+    description: "Phân biệt góc chính từ asin/acos/atan với hướng đầy đủ của vector qua atan2(y,x)."
+    transition: 
+      to: math-and-strict-math-006
+      description: "Từ tọa độ và hướng của vector chuyển sang tính độ dài an toàn với hypot."
+  - id: math-and-strict-math-006
+    order: 6
+    title: "hypot và việc giảm nguy cơ overflow trung gian"
+    description: "Tính độ dài vector bằng hypot để tránh tràn hoặc mất giá trị ở bình phương trung gian."
+    transition: 
+      to: math-and-strict-math-007
+      description: "Tiếp theo khảo sát cách các phép toán làm tròn khi đầu ra cần giá trị nguyên."
+  - id: math-and-strict-math-007
+    order: 7
+    title: "ceil, floor, rint và round"
+    description: "Phân biệt ceil, floor, rint và round ở số âm, tie, kiểu trả về và giá trị đặc biệt."
+    transition: 
+      to: math-and-strict-math-008
+      description: "Từ các quy tắc làm tròn chuyển tới độ giãn lưới float/double và giá trị liền kề."
+  - id: math-and-strict-math-008
+    order: 8
+    title: "nextUp, nextDown, nextAfter và ulp"
+    description: "Khảo sát số float/double liền kề bằng nextUp, nextDown, nextAfter và bước ULP."
+    transition: 
+      to: math-and-strict-math-009
+      description: "Từ bước ULP tiếp tục khám phá các thành phần dấu, scale và exponent."
+  - id: math-and-strict-math-009
+    order: 9
+    title: "copySign, scalb và getExponent"
+    description: "Thao tác bit dấu, scale lũy thừa 2 và trường số mũ bằng copySign, scalb, getExponent."
+    transition: 
+      to: math-and-strict-math-010
+      description: "Hiểu biểu diễn bit giúp phân biệt accuracy với bitwise reproducibility của Math/StrictMath."
+  - id: math-and-strict-math-010
+    order: 10
+    title: "Phân biệt yêu cầu tái lập của Math và StrictMath"
+    description: "So sánh độ chính xác, khả năng tái lập bit và yêu cầu kiểm soát toàn pipeline của Math/StrictMath."
+    transition: 
+      to: math-and-strict-math-011
+      description: "Sau yêu cầu tái lập, tổng hợp cách đọc Javadoc và kiểm thử các hợp đồng số học."
+  - id: math-and-strict-math-011
+    order: 11
+    title: "Miền xác định, NaN, vô cực và độ chính xác được Javadoc quy định"
+    description: "Đọc Javadoc để xác minh miền xác định, NaN/vô cực, signed zero, giới hạn ULP và quy tắc QA."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | abs, min, max, signum và clamp theo phiên bản JDK | pow, sqrt, cbrt và lựa chọn phép tính phù hợp | exp, log, log10, expm1 và log1p | sin, cos, tan và chuyển độ sang radian | asin, acos, atan và atan2 | hypot và việc giảm nguy cơ overflow trung gian | ceil, floor, rint và round | nextUp, nextDown, nextAfter và ulp | copySign, scalb và getExponent | Phân biệt yêu cầu tái lập của Math và StrictMath | Miền xác định, NaN, vô cực và độ chính xác được Javadoc quy định |
+  | Vấn đề cần hiểu | Cận, overflow và phiên bản clamp? | Mũ hay căn chuyên dụng, miền nào? | Logarit nào giữ precision gần zero? | Góc đầu vào đang là độ hay radian? | Làm sao tìm đúng hướng/góc chính? | Làm sao tránh bình phương trung gian tràn? | Các quy tắc làm tròn chọn hướng nào? | Bước liền kề và ULP được xác định thế nào? | Dấu, scale và exponent có ý nghĩa gì? | Khi nào cần kết quả trùng từng bit? | API cam kết domain, special cases và sai số gì? |
+  | Giá trị đối với OOP/module | Hợp đồng biên, loại bỏ cast sai | Phép toán số thực hoặc nguyên chính xác | Thuật toán ổn định cho số mũ/logarit | Hợp đồng đơn vị góc trong API | Vector và tọa độ có góc đúng | Khoảng cách không tràn trung gian | Chính sách rounding của dữ liệu | Kiểm thử sát ngưỡng binary64 | Phân tích biểu diễn bit và scale | Mô hình tính toán tái lập có điều kiện | Validation và test dựa trên Javadoc |
+  | Tư duy hình thành | Phân biệt saturation và rejection | Chọn API theo miền, không theo biểu thức | Ưu tiên công thức ổn định số | Kiểm tra đơn vị trước tính toán | Giữ dấu tọa độ, biết principal angle | Phân tích giá trị trung gian | Gọi đúng tie rule và kiểu đầu ra | Đọc độ giãn lưới biểu diễn | Phân loại bit và sentinel | Tách accuracy khỏi reproducibility | Đọc từng hợp đồng và dựng test theo mức |

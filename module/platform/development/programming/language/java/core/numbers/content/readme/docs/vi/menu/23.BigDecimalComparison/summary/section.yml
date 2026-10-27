@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "SO SÁNH BIGDECIMAL — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: big-decimal-comparison-001
+    order: 1
+    title: "compareTo so sánh giá trị số"
+    description: "BigDecimal.compareTo trả thứ tự **theo giá trị số học** mà không yêu cầu cùng scale. Bài học giúp kiểm tra ngưỡng, khoảng và giá trị âm/dương chính xác."
+    transition:
+      to: big-decimal-comparison-002
+      description: "Từ compareTo theo số học sang equals có xét cả scale."
+  - id: big-decimal-comparison-002
+    order: 2
+    title: "equals đồng thời xét giá trị và scale"
+    description: "BigDecimal.equals kiểm tra **cả giá trị và scale**. Bài học phân biệt representation với equality số học và bảo đảm quy tắc hashCode đi cùng equals."
+    transition:
+      to: big-decimal-comparison-003
+      description: "Từ phân biệt equals và compareTo đến thí nghiệm 2.0 với 2.00."
+  - id: big-decimal-comparison-003
+    order: 3
+    title: "Ví dụ 2.0 và 2.00 theo từng cách so sánh"
+    description: "Cặp 2.0/2.00 giúp thực hành bốn phép `==`, `equals`, `compareTo` và `compareTo == 0`; kết quả còn phụ thuộc constructor và phép tính làm thay đổi scale."
+    transition:
+      to: big-decimal-comparison-004
+      description: "Từ ví dụ hai representation đến hệ quả khóa hash."
+  - id: big-decimal-comparison-004
+    order: 4
+    title: "hashCode và hệ quả trong HashSet hoặc HashMap"
+    description: "HashSet/HashMap xác định khóa theo equals và hashCode nên hai BigDecimal có cùng số học vẫn có thể khác khóa. Bài tập trung vào cache miss và canonical key."
+    transition:
+      to: big-decimal-comparison-005
+      description: "Từ khóa hash sang hợp đồng Comparable và natural ordering."
+  - id: big-decimal-comparison-005
+    order: 5
+    title: "Thứ tự tự nhiên không nhất quán với equals"
+    description: "Natural ordering của BigDecimal không nhất quán với equals theo tiêu chí của Comparable. Bài đi sâu vào comparator, binarySearch, min/max và sorted collection."
+    transition:
+      to: big-decimal-comparison-006
+      description: "Từ natural ordering sang thao tác thực tế TreeSet và TreeMap."
+  - id: big-decimal-comparison-006
+    order: 6
+    title: "Hệ quả khi dùng TreeSet hoặc TreeMap"
+    description: "TreeSet và TreeMap dùng comparator để coi khóa tương đương, dẫn tới add/contains/remove hoặc put/get theo giá trị số, bất kể scale khác."
+    transition:
+      to: big-decimal-comparison-007
+      description: "Từ hiện tượng khóa bị gộp sang chính sách chuẩn hóa scale."
+  - id: big-decimal-comparison-007
+    order: 7
+    title: "Chính sách chuẩn hóa scale trước khi lưu hoặc so sánh"
+    description: "Chính sách scale tách riêng kiểm tra số học, chuẩn hóa khóa và lưu có độ rộng thập phân cố định. Bài trình bày rounding và các ranh giới DB/JSON."
+    transition:
+      to: big-decimal-comparison-008
+      description: "Từ chính sách scale sang nhận diện zero theo giá trị số."
+  - id: big-decimal-comparison-008
+    order: 8
+    title: "Kiểm tra số 0 bằng signum hoặc compareTo"
+    description: "signum và compareTo(BigDecimal.ZERO) nhận diện zero theo **giá trị số**, kể cả 0.00 và -0.00. Bài phân biệt giá trị gốc, số đã làm tròn và gần zero."
+    transition:
+      to: big-decimal-comparison-009
+      description: "Từ operand có giá trị sang trường hợp null và hợp đồng API."
+  - id: big-decimal-comparison-009
+    order: 9
+    title: "So sánh null và lựa chọn hợp đồng API"
+    description: "Null là trạng thái thiếu dữ liệu, khác zero hay kết quả bằng nhau. Bài đặt hợp đồng reject, null ordering hoặc unknown rõ ràng cho API và comparator."
+    transition:
+      to: big-decimal-comparison-010
+      description: "Từ API cục bộ đến ranh giới thay đổi equality của model."
+  - id: big-decimal-comparison-010
+    order: 10
+    title: "Không thay đổi equals toàn hệ thống chỉ để giải quyết một phép so sánh cụ thể"
+    description: "Một phép đối soát số học cần compareTo ở đúng chỗ; đổi equals toàn model có thể phá hashCode, cache và identity. Bài còn chứng minh tolerance không bắc cầu."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | compareTo so sánh giá trị số | equals đồng thời xét giá trị và scale | Ví dụ 2.0 và 2.00 theo từng cách so sánh | hashCode và hệ quả trong HashSet hoặc HashMap | Thứ tự tự nhiên không nhất quán với equals | Hệ quả khi dùng TreeSet hoặc TreeMap | Chính sách chuẩn hóa scale trước khi lưu hoặc so sánh | Kiểm tra số 0 bằng signum hoặc compareTo | So sánh null và lựa chọn hợp đồng API | Không thay đổi equals toàn hệ thống chỉ để giải quyết một phép so sánh cụ thể |
+  | Vấn đề cần hiểu | Thứ tự compareTo | Equals xét cả scale | Ví dụ 2.0/2.00 | HashCode và khóa | Comparable consistency | TreeSet/TreeMap gộp khóa | Scale normalization policy | Zero và signum | Null comparison contract | Không đổi equals toàn hệ thống |
+  | Giá trị đối với OOP/module | So sánh decimal chính xác | Giữ đúng equality biểu diễn | Minh họa thực nghiệm equality | Tránh cache miss và gộp sai | Thiết kế ordering hợp lệ | Tránh ghi đè ngoài ý muốn | Bảo toàn số học khi lưu | Phòng sai zero hoặc chia cho 0 | Tránh đồng nhất null với 0 | Bảo vệ identity và hash contract |
+  | Tư duy hình thành | Quan tâm giá trị thay vì scale | Tách nghĩa bằng nhau theo số và representation | Phân biệt tham chiếu, số và scale | Chuẩn hóa nhất quán khi tạo và tra khóa | Phân biệt equivalence của thứ tự với equality | Đọc quy tắc comparator khi thao tác | Tách canonicalization và rounding | Xác định giá trị trước/sau rounding | Phân biệt unknown với equality | Giới hạn chính sách equality theo nghiệp vụ |

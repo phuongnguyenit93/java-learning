@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "TRÀN SỐ NGUYÊN VÀ KIỂM TRA BIÊN — LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: integer-overflow-001
+    order: 1
+    title: "Overflow số nguyên và hiện tượng quay vòng"
+    description: "Thiết lập miền giá trị của `int`/`long`, biểu diễn bù hai và cơ chế kết quả quay vòng khi vượt biên. Phân biệt overflow với literal sai, ép kiểu hẹp và parse dữ liệu."
+    transition:
+      to: integer-overflow-002
+      description: "Sau khi quan sát cơ chế quay vòng, cần hiểu vì sao các toán tử Java lại không tự báo lỗi."
+  - id: integer-overflow-002
+    order: 2
+    title: "Vì sao phép cộng hoặc nhân tràn không tự ném ngoại lệ"
+    description: "Giải thích lý do `+`, `-`, `*` trên `int`/`long` không ném ngoại lệ khi tràn, trong khi chia 0 và các lời gọi `Math.*Exact` có thể ném. Đặt quy tắc ngôn ngữ vào bối cảnh thiết kế nghiệp vụ."
+    transition:
+      to: integer-overflow-003
+      description: "Biết toán tử không tự kiểm tra tràn rồi, cần nhận ra kiểu biểu thức được chốt trước lúc gán."
+  - id: integer-overflow-003
+    order: 3
+    title: "Kiểu của phép tính được xác định trước khi gán kết quả"
+    description: "Phân tích binary numeric promotion, kiểu biểu thức trước ngữ cảnh gán, phép chia nguyên và chuyển kiểu khi gán ghép. Nhấn mạnh rằng biến đích rộng hơn không thể phục hồi phép tính hẹp đã sai."
+    transition:
+      to: integer-overflow-004
+      description: "Từ nguyên tắc tổng quát về kiểu biểu thức, chuyển sang cách đặt phép nâng kiểu đúng chỗ trong chuỗi phép nhân."
+  - id: integer-overflow-004
+    order: 4
+    title: "Nâng kiểu toán hạng trước phép nhân thay vì ép kiểu sau"
+    description: "Đi sâu vào vị trí cast trước phép nhân, tính kết hợp trái của chuỗi `*` và cách gọi `multiplyFull`/`multiplyExact`. Kiểm tra giới hạn ngay ở tích trung gian thay vì tin kiểu trả về."
+    transition:
+      to: integer-overflow-005
+      description: "Khi kiểu đã được chọn đúng, cần chủ động phát hiện tràn thay vì chỉ tăng miền biểu diễn."
+  - id: integer-overflow-005
+    order: 5
+    title: "Math.addExact, subtractExact và multiplyExact"
+    description: "Thực hành `Math.addExact`, `subtractExact`, `multiplyExact`, chọn overload theo toán hạng và xử lý `ArithmeticException`. Kiểm tra ngay thao tác tạo kết quả để tránh bỏ sót tràn đã xảy ra."
+    transition:
+      to: integer-overflow-006
+      description: "Từ ba phép tính hai toán hạng, mở rộng sang tăng giảm một đơn vị, đổi dấu và chuyển hẹp `long` về `int`."
+  - id: integer-overflow-006
+    order: 6
+    title: "incrementExact, decrementExact, negateExact và toIntExact"
+    description: "Giới thiệu bốn phương thức `Exact` cho tăng, giảm, đổi dấu và chuyển `long` sang `int`, kèm các biên thất bại. Phân biệt tính toán trả giá trị mới với gán trạng thái và đồng bộ luồng."
+    transition:
+      to: integer-overflow-007
+      description: "Các phép toán có kiểm tra phụ thuộc phiên bản JDK; đặc biệt phép chia exact cần xem cả kiểu làm tròn."
+  - id: integer-overflow-007
+    order: 7
+    title: "Phép chia exact và các API bổ sung theo phiên bản JDK"
+    description: "Đối chiếu chia truncate, floor, ceiling và các API exact bắt đầu từ Java 18. Có phương án kiểm tra thương tràn trên Java 17 và phân biệt exact với yêu cầu chia hết."
+    transition:
+      to: integer-overflow-008
+      description: "Một trường hợp biên đơn toán hạng khác cũng dễ bị bỏ sót là lấy trị tuyệt đối của `MIN_VALUE`."
+  - id: integer-overflow-008
+    order: 8
+    title: "Math.abs với MIN_VALUE và lựa chọn absExact"
+    description: "Phân tích ngoại lệ `MIN_VALUE` của `Math.abs`, vai trò của `absExact`, cách nâng kiểu trước thao tác và bẫy abs sau phép trừ tràn. Áp dụng vào khoảng cách và hash bucket."
+    transition:
+      to: integer-overflow-009
+      description: "Từ lỗi số học tại một giá trị, chuyển sang cách kiểm tra biên trước khi dùng kết quả để cấp phát tài nguyên."
+  - id: integer-overflow-009
+    order: 9
+    title: "Kiểm tra giới hạn trước khi cấp phát hoặc tính kích thước"
+    description: "Đưa kiểm tra overflow vào công thức kích thước mảng, buffer, packet và slice trước cấp phát. Kết hợp quota, `Math.toIntExact`, kiểm soát đơn vị và giới hạn bộ nhớ JVM."
+    transition:
+      to: integer-overflow-010
+      description: "Khi mọi miền số nguyên cố định đều có thể không đủ, cần kiểu biểu diễn kết quả lớn hơn `long`."
+  - id: integer-overflow-010
+    order: 10
+    title: "Dùng BigInteger khi miền giá trị không có giới hạn phù hợp"
+    description: "Tổng hợp quyết định khi `int`/`long` không đủ, cấu trúc bất biến và các phép toán `BigInteger`. Giải thích chuyển đổi exact, số dư, dữ liệu byte có dấu và giới hạn tài nguyên."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Overflow số nguyên và hiện tượng quay vòng | Vì sao phép cộng hoặc nhân tràn không tự ném ngoại lệ | Kiểu của phép tính được xác định trước khi gán kết quả | Nâng kiểu toán hạng trước phép nhân thay vì ép kiểu sau | Math.addExact, subtractExact và multiplyExact | incrementExact, decrementExact, negateExact và toIntExact | Phép chia exact và các API bổ sung theo phiên bản JDK | Math.abs với MIN_VALUE và lựa chọn absExact | Kiểm tra giới hạn trước khi cấp phát hoặc tính kích thước | Dùng BigInteger khi miền giá trị không có giới hạn phù hợp |
+  | Vấn đề cần hiểu | Kết quả phép toán nguyên vượt miền biến thành mẫu bit có dấu nào? | Vì sao Java không tự ném lỗi khi phép cộng hoặc nhân bị tràn? | Biểu thức chọn kiểu trước khi kết quả được gán ra sao? | Đặt `long` vào đâu để bảo vệ chính phép nhân cần tính? | Phát hiện overflow ngay tại phép cộng, trừ hoặc nhân bằng cách nào? | Làm sao tăng giảm, đổi dấu và thu hẹp kiểu mà không mất giá trị âm thầm? | Kiểm tra overflow của phép chia đồng thời chọn hướng làm tròn nào? | Trị tuyệt đối của số nguyên nhỏ nhất biểu diễn và kiểm tra ra sao? | Làm sao ngăn phép tính kích thước tràn trước khi kiểm tra quota hoặc cấp phát? | Làm sao giữ số nguyên chính xác vượt 64 bit mà vẫn kiểm soát chi phí? |
+  | Giá trị đối với OOP/module | Đặt nền để phát hiện lỗi tính toán và kiểm thử biên trong module numbers. | Làm rõ hợp đồng toán tử và cách chọn xử lý lỗi có chủ đích. | Giúp đọc đúng giá trị và kiểu của biểu thức số học Java. | Hình thành kỹ năng viết phép nhân chính xác cho tổng tiền, diện tích và kích thước. | Đưa kiểm tra số học rõ ràng vào các phép tính quan trọng của module. | Bảo vệ bộ đếm và hợp đồng dữ liệu tại ranh giới kiểu số. | Bảo đảm số học chia và tương thích phiên bản JDK của module. | Loại lỗi chỉ số, độ lệch và phân nhóm dữ liệu phát sinh từ dấu âm bất ngờ. | Giảm nguy cơ cấp phát sai, dùng vượt quota và xử lý dữ liệu đầu vào không tin cậy. | Hoàn thiện lựa chọn kiểu số và bảo toàn dữ liệu qua ranh giới API. |
+  | Tư duy hình thành | Suy luận từ miền biểu diễn và bit trước khi tin kết quả biến. | Tách hành vi được JLS định nghĩa khỏi tính đúng đắn của ứng dụng. | Lần theo từng phép toán trung gian thay vì suy từ kiểu biến nhận. | Chọn độ rộng ở đầu chuỗi và kiểm chứng từng tích trung gian. | Bảo vệ từng bước tính và tách kiểm tra overflow khỏi luật nghiệp vụ. | Xác định biên của từng phép thao tác và hiệu ứng gán riêng. | Tách ba vấn đề: overflow, phần dư và môi trường API. | Bảo vệ cả biểu thức tạo đối số trước khi lấy trị tuyệt đối. | Xác minh đơn vị, phép tính, giới hạn và tài nguyên theo đúng thứ tự. | Chọn kiểu từ miền giá trị và hợp đồng chuyển đổi, không từ dữ liệu mẫu. |

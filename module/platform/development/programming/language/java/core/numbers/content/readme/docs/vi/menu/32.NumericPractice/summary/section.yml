@@ -1,0 +1,96 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "THỰC HÀNH SỐ HỌC JAVA — LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: numeric-practice-001
+    order: 1
+    title: "Viết bảng kiểm chứng kiểu kết quả của các biểu thức số"
+    description: "Luyện lập bảng kiểu compile-time và giá trị runtime cho biểu thức số; kết hợp numeric promotion, phép chia, shift, ba ngôi và gán hợp thành. Kiểm chứng bằng Java với kiểu khai báo tường minh."
+    transition:
+      to: numeric-practice-002
+      description: "Từ kiểu kết quả của phép toán chuyển sang bài thực hành tính kích thước, nơi tràn số phải được phát hiện."
+  - id: numeric-practice-002
+    order: 2
+    title: "Xây dựng phép tính kích thước có kiểm tra tràn"
+    description: "Xây bộ tính kích thước ảnh/buffer có phát hiện overflow ở từng phép nhân cộng; tính stride bằng padding và số trang bằng chia dư. Phân biệt giới hạn kiểu, đơn vị và tài nguyên cấp phát thực tế."
+    transition:
+      to: numeric-practice-003
+      description: "Sau đại lượng kích thước, chuyển sang cách parse và xuất số có radix, độ rộng bit và quy tắc signed/unsigned rõ ràng."
+  - id: numeric-practice-003
+    order: 3
+    title: "Đọc ghi số theo nhiều cơ số và dạng không dấu"
+    description: "Luyện signed/unsigned parse/format ở các radix, round-trip của uint32/uint64 và BigInteger. Phân biệt cú pháp Java literal với text parser, độ rộng hex, leading zero và endian."
+    transition:
+      to: numeric-practice-004
+      description: "Chuyển từ số nguyên biểu diễn bit chính xác sang thực nghiệm sai số số chấm động."
+  - id: numeric-practice-004
+    order: 4
+    title: "Khảo sát sai số của 0.1, tổng lặp và thứ tự cộng"
+    description: "Thực nghiệm IEEE binary64 của 0.1, tổng lặp và việc cộng double không kết hợp. Đo ULP và sai số, so sánh Kahan/BigDecimal cùng các giới hạn của từng phương pháp."
+    transition:
+      to: numeric-practice-005
+      description: "Sau khi quan sát sai số, thiết kế hàm so sánh gần bằng với dung sai và xử lý giá trị đặc biệt."
+  - id: numeric-practice-005
+    order: 5
+    title: "Xây dựng hàm so sánh gần bằng có hợp đồng rõ ràng"
+    description: "Thiết kế nearlyEqual(double) theo absTol/relTol có hợp đồng, kiểm chứng IEEE special values, overflow, near-zero và không bắc cầu. Nhấn mạnh không dùng tolerance làm equality của set/map."
+    transition:
+      to: numeric-practice-006
+      description: "Sau chính sách gần bằng với double, tiếp tục bài tính số nguyên lớn cần độ chính xác tuyệt đối."
+  - id: numeric-practice-006
+    order: 6
+    title: "Tính giai thừa hoặc dãy số lớn bằng BigInteger"
+    description: "Thực hành BigInteger với factorial và Fibonacci, gồm vòng lặp, bất biến và fast doubling. So mốc vượt long, tính đúng, chi phí thao tác số lớn và giới hạn tài nguyên."
+    transition:
+      to: numeric-practice-007
+      description: "Từ số nguyên rất lớn nhưng chính xác chuyển sang chính sách làm tròn trong phép tính thập phân BigDecimal."
+  - id: numeric-practice-007
+    order: 7
+    title: "Thiết kế phép tính thập phân với MathContext và RoundingMode"
+    description: "Thực hành thiết kế policy BigDecimal có MathContext, RoundingMode, precision và scale phân biệt. Test phép chia vô hạn, halfway, làm tròn từng dòng/tổng và double rounding."
+    transition:
+      to: numeric-practice-008
+      description: "Sau thiết kế decimal policy, xem tác động của scale lên equality khi đưa BigDecimal vào Set."
+  - id: numeric-practice-008
+    order: 8
+    title: "So sánh HashSet với TreeSet khi chứa BigDecimal"
+    description: "Thực nghiệm BigDecimal equality theo scale trong HashSet và TreeSet, tác động tới size/contains/remove và đại diện lưu. Dùng comparator value-then-scale hoặc canonical keys theo yêu cầu."
+    transition:
+      to: numeric-practice-009
+      description: "Từ biểu diễn BigDecimal trong collection chuyển sang biểu diễn số dành cho người đọc theo Locale."
+  - id: numeric-practice-009
+    order: 9
+    title: "Parse và format cùng một giá trị theo nhiều locale"
+    description: "Thực hành NumberFormat/DecimalFormat theo bốn locale, parse BigDecimal có ParsePosition và kiểm tra round-trip. Phân tích Unicode separator, input mơ hồ, rounding khi format và thread safety."
+    transition:
+      to: numeric-practice-010
+      description: "Sau phân tích dữ liệu đầu vào xác định, thực hành mô phỏng có seed để làm phép thử số tái lập."
+  - id: numeric-practice-010
+    order: 10
+    title: "Mô phỏng số ngẫu nhiên có thể tái lập bằng seed"
+    description: "Tạo mô phỏng Random/SplittableRandom với seed, tung xúc xắc và Monte Carlo pi; phân biệt deterministic replay với kiểm định thống kê và xử lý chia generator ở nhiều task."
+    transition:
+      to: numeric-practice-011
+      description: "Từ điều phối nguồn ngẫu nhiên giữa nhiều task chuyển sang bài toán cập nhật bộ đếm khi nhiều luồng cùng chạy."
+  - id: numeric-practice-011
+    order: 11
+    title: "So sánh bộ đếm thường, atomic và adder"
+    description: "Thực hành so sánh plain count++, synchronized, AtomicLong, LongAdder khi concurrency; mô phỏng lost update, CAS quota, snapshot không atomic và test sau join. Tách an toàn số học khỏi hiệu năng."
+    transition:
+      to: numeric-practice-012
+      description: "Khép chương bằng ví dụ tích hợp các hợp đồng kiểu số, parsing, overflow, decimal rounding và test dữ liệu biên."
+  - id: numeric-practice-012
+    order: 12
+    title: "Hoàn thiện ví dụ tích hợp cùng bộ kiểm thử dữ liệu biên"
+    description: "Dựng NumericBoundaryLab tích hợp regex input decimal, chuyển cents bằng *ValueExact, Math.*Exact và tính thuế HALF_EVEN. Kết thúc bằng 30 test ca biên hợp lệ/không hợp lệ và kiểm tra loại lỗi."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Viết bảng kiểm chứng kiểu kết quả của các biểu thức số | Xây dựng phép tính kích thước có kiểm tra tràn | Đọc ghi số theo nhiều cơ số và dạng không dấu | Khảo sát sai số của 0.1, tổng lặp và thứ tự cộng | Xây dựng hàm so sánh gần bằng có hợp đồng rõ ràng | Tính giai thừa hoặc dãy số lớn bằng BigInteger | Thiết kế phép tính thập phân với MathContext và RoundingMode | So sánh HashSet với TreeSet khi chứa BigDecimal | Parse và format cùng một giá trị theo nhiều locale | Mô phỏng số ngẫu nhiên có thể tái lập bằng seed | So sánh bộ đếm thường, atomic và adder | Hoàn thiện ví dụ tích hợp cùng bộ kiểm thử dữ liệu biên |
+  | Vấn đề cần hiểu | Làm sao xác định kiểu biểu thức trước khi tính giá trị và kiểm tra overflow? | Làm thế nào tính byte, stride và số trang không tràn số học? | Giữ đúng giá trị, mẫu bit và format khi đọc ghi signed/unsigned ra sao? | Sai số binary64 tích lũy và phụ thuộc thứ tự cộng ra sao? | Làm sao định nghĩa gần bằng có kiểm soát và vì sao không dùng làm equality của collection? | Tính các dãy số vượt long chính xác và kiểm chứng thuật toán như thế nào? | Tại sao chính sách BigDecimal phải xác định precision, scale và thời điểm làm tròn? | Vì sao cùng dữ liệu BigDecimal có thể cho HashSet và TreeSet khác kết quả? | Parse và format theo locale thế nào để không đọc sai số hoặc âm thầm bỏ dữ liệu? | Điều kiện nào bảo đảm một mô phỏng giả ngẫu nhiên phát lại được? | Chọn plain/atomic/adder thế nào khi cần counter đúng và quan sát nhất quán? | Thiết kế và kiểm thử một pipeline số học đầy đủ với input, overflow và rounding thế nào? |
+  | Giá trị đối với OOP/module | Ngăn bug số học do promotion, cast muộn hoặc unboxing. | Bảo vệ kích thước buffer/offset và phát hiện lỗi đầu vào. | Giúp giao tiếp dữ liệu bitmask và protocol không sai signedness/radix. | Lựa chọn phép tổng và phép kiểm thử phù hợp tính toán gần đúng. | Xây so sánh kết quả đo/mô phỏng an toàn và tái lập theo hợp đồng. | Duy trì độ chính xác của thuật toán số nguyên tăng nhanh. | Tránh lệch số tiền, thuế và dữ liệu khi tính decimal nhiều bước. | Bảo đảm semantics của khóa decimal/collection nhất quán. | Bảo vệ dữ liệu số nhập địa phương hóa và giao thức liên dịch vụ. | Tái hiện lỗi và kiểm thử số học ngẫu nhiên có kiểm soát. | Giữ độ chính xác thống kê, ID và quota dưới nhiều luồng. | Kiểm chứng đúng đắn end-to-end của bộ xử lý số trong ứng dụng. |
+  | Tư duy hình thành | Tách ngữ nghĩa kiểu compile-time và giá trị runtime. | Đặt kiểm tra an toàn tại từng phép toán, không chờ kết quả cuối. | Tách giá trị toán học, mẫu bit, độ rộng và chuỗi trình bày. | Đo sai số thay vì coi số in ra là bằng toán học chính xác. | Xem tolerance là quy tắc nghiệm thu, không phải xấp xỉ vô điều kiện. | Kết hợp chứng minh bất biến, chọn thuật toán và giới hạn tài nguyên. | Mô hình hóa phép tính và điểm chốt như một hợp đồng có thể kiểm thử. | Định nghĩa rõ thế nào là cùng giá trị và cùng biểu diễn. | Tách giá trị chuẩn khỏi chuỗi UI và biết nguồn locale của input. | Kiểm soát trạng thái PRNG, chuỗi gọi và biến động ngoài RNG. | Ưu tiên linearizability và contract quan sát trước microbenchmark. | Xây hợp đồng trước, kiểm tính đúng bằng bộ dữ liệu biên tự động. |

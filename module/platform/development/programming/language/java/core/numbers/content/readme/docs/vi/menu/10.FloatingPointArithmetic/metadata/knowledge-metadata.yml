@@ -1,0 +1,34 @@
+sections:
+  floating-point-arithmetic-001:
+    difficulty: BASIC
+    isImportant: true
+  floating-point-arithmetic-002:
+    difficulty: BASIC
+    isImportant: true
+  floating-point-arithmetic-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  floating-point-arithmetic-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  floating-point-arithmetic-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  floating-point-arithmetic-006:
+    difficulty: ADVANCED
+    isImportant: true
+  floating-point-arithmetic-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  floating-point-arithmetic-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  floating-point-arithmetic-009:
+    difficulty: ADVANCED
+    isImportant: true
+  floating-point-arithmetic-010:
+    difficulty: ADVANCED
+    isImportant: false
+  floating-point-arithmetic-011:
+    difficulty: INTERMEDIATE
+    isImportant: false

@@ -1,0 +1,241 @@
+summaries:
+- id: numeric-performance-001
+  title: Primitive so với wrapper về cấp phát và bố trí dữ liệu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Primitive so với wrapper về cấp phát và bố trí dữ liệu**
+
+    Hiệu năng của kiểu primitive và wrapper chịu ảnh hưởng từ cách mảng lưu phần tử, số tham chiếu, object wrapper, CPU cache và GC. Bài học xây dựng mô hình cấp phát thực tế, có xét cache `Integer.valueOf` và tối ưu JIT, trước khi chọn cấu trúc lưu số.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình lưu dữ liệu
+
+    1. `int[]` chứa giá trị trực tiếp khác `Integer[]` và `ArrayList<Integer>` ở những lớp bộ nhớ nào?
+    2. Vì sao không thể lấy số byte cố định cho mọi `Integer` object trên tất cả JVM?
+
+    ### Tối ưu trong thực tế
+
+    1. Vì sao 1.000 lần `Integer.valueOf` không nhất thiết tạo 1.000 object mới?
+    2. Khi nào nên dùng `int[]`/primitive stream thay vì `List<Integer>`, và khi nào wrapper vẫn cần thiết?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ước lượng layout | Phác họa cấu trúc `int[]` và `Integer[]`, chỉ rõ chi phí header, reference và wrapper. |
+    | Giải thích allocation | Phân biệt boxing ngữ nghĩa với số allocation runtime sau cache, escape analysis. |
+    | Chọn cấu trúc | Đề xuất primitive array hoặc wrapper collection cho nhu cầu null, generic và tính toán khối lượng lớn. |
+- id: numeric-performance-002
+  title: Boxing trong collection, stream và vòng lặp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Boxing trong collection, stream và vòng lặp**
+
+    Autoboxing có thể xuất hiện tại `List<Integer>`, `Map.merge`, vòng lặp `Integer` và pipeline `Stream<Integer>`. Bài học giúp nhận ra chuyển đổi ẩn, tránh unboxing `null`, giữ tính đúng của tổng và đưa dữ liệu về `IntStream` tại ranh giới hợp lý.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới boxing
+
+    1. Trong `for (Integer i=0; i<1000; i++)`, các bước so sánh, tăng biến và tích lũy tạo conversion nào?
+    2. Vì sao `List<Integer>` có thể chứa null nhưng `int[]` và `IntStream` không biểu diễn được giá trị thiếu đó?
+
+    ### Stream và hiệu năng
+
+    1. `Stream<Integer>.mapToInt(Integer::intValue).sum()` khác `Stream<Integer>.reduce(0,Integer::sum)` ở mô hình phần tử nào?
+    2. Khi nào chuyển `boxed()`/`mapToInt`, và vì sao `IntStream.sum()` vẫn có thể overflow?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Trace conversion | Phân tích boxing/unboxing của phép gán, loop, List, Map và pipeline stream. |
+    | Thiết kế pipeline | Chọn `IntStream`/`LongStream`/`DoubleStream` để tính toán, nêu nơi phải boxing cho generic API. |
+    | Bảo vệ tính đúng | Viết test cho null, giới hạn `range`/`rangeClosed` và tràn tổng `int`. |
+- id: numeric-performance-003
+  title: Chi phí số học BigInteger theo độ dài toán hạng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chi phí số học BigInteger theo độ dài toán hạng**
+
+    `BigInteger` chính xác tùy ý nhưng chi phí số học tăng theo số bit/limb của cả hai toán hạng và kết quả trung gian. Bài học phân tích cộng, nhân, chia, lũy thừa, `modPow` và các đường thuật toán của JDK mà không đồng nhất độ phức tạp với kết quả benchmark cụ thể.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kích thước số và độ phức tạp
+
+    1. `BigInteger.bitLength()` của số âm khác độ dài trị tuyệt đối như thế nào?
+    2. Vì sao nhân hai số dài N limb có thể dùng schoolbook, Karatsuba hoặc Toom-Cook và có chi phí khác nhau?
+
+    ### Lựa chọn thuật toán
+
+    1. Khi nào `divideAndRemainder` tránh tính lặp, và vì sao `modPow` ưu việt hơn `pow().mod()` cho số mũ lớn?
+    2. Vì sao benchmark nhân số 4096×64 bit khác 4096×4096 bit dù cùng có toán hạng 4096 bit?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích kích thước | Dùng `abs().bitLength()`/ước lượng limb để dự đoán độ dài kết quả cộng, nhân, lũy thừa. |
+    | Chọn API | Phân biệt `modPow`, `divideAndRemainder`, phép chia nguyên và shift có dấu. |
+    | Thiết kế benchmark | Tạo ma trận kích thước cả hai toán hạng, kiểm tra kết quả rồi đo bằng JMH. |
+- id: numeric-performance-004
+  title: Chi phí BigDecimal theo precision và scale
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chi phí BigDecimal theo precision và scale**
+
+    Hiệu năng `BigDecimal` phụ thuộc đồng thời vào precision, scale, độ dài unscaled value và phép toán. Bài học giải thích trường hợp scale rất lệch, làm tròn phép chia, `setScale`, `stripTrailingZeros` và chi phí biểu diễn chuỗi để biết điều gì khiến CPU/bộ nhớ tăng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Precision, scale và phép toán
+
+    1. Vì sao `1E+1000000 + 1` đòi biểu diễn lớn dù mỗi toán hạng có precision thấp?
+    2. Phép cộng, nhân, chia và `setScale` tác động lên scale/precision kết quả ra sao?
+
+    ### Biểu diễn và hợp đồng
+
+    1. Vì sao `stripTrailingZeros` có thể tạo scale âm, làm `equals`/`hashCode` khác đi?
+    2. Khi nào `MathContext` hoặc `toPlainString()` giảm/tăng chi phí nhưng thay đổi ngữ nghĩa hoặc gây chuỗi cực dài?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc metadata | Dùng `precision()`, `scale()`, `unscaledValue()` để giải thích biểu diễn của số decimal. |
+    | Dự đoán chi phí | Phân tích căn scale, độ dài unscaled, rounding và format trên ví dụ cụ thể. |
+    | Thiết kế phép đo | Chọn ma trận precision/scale, tách parse/format khỏi phép cộng hoặc chia cần đo. |
+- id: numeric-performance-005
+  title: Tránh tăng precision hoặc scale không cần thiết
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tránh tăng precision hoặc scale không cần thiết**
+
+    Tăng precision hoặc scale vô điều kiện có thể tạo hàng loạt số 0 và chuỗi hiển thị lớn mà không tăng thông tin. Bài học áp dụng chuẩn hóa, `setScale` và `MathContext` đúng ranh giới, chỉ khi chúng giữ nguyên chính sách giá trị, biểu diễn và rounding.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phình biểu diễn
+
+    1. Vì sao nhân `1.000000` lặp 5 lần có thể làm precision lên 31 và scale lên 30 dù giá trị luôn là 1?
+    2. Khi nào `stripTrailingZeros()` giảm biểu diễn nhưng đổi scale và so sánh `BigDecimal.equals`?
+
+    ### Giữ tính đúng
+
+    1. Khác biệt giữa `setScale(2)` và `MathContext(2)` có tác động gì tới giá trị 123.456?
+    2. Vì sao round mỗi dòng `0.125` theo HALF_UP khác cộng chính xác trước rồi round tổng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện biểu diễn dư thừa | Theo dõi precision/scale qua phép nhân và chuyển đổi chuỗi. |
+    | Xác thực chuyển đổi | Dùng `UNNECESSARY` để kiểm chứng thay đổi scale không mất chữ số. |
+    | Thiết kế ranh giới | Đặt giới hạn scale/precision trước serialize/DB và bảo toàn quy tắc rounding. |
+- id: numeric-performance-006
+  title: Không thay đổi quy tắc chính xác chỉ để rút ngắn thời gian chạy
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không thay đổi quy tắc chính xác chỉ để rút ngắn thời gian chạy**
+
+    Thay kiểu số, hạ precision, dời điểm rounding hoặc bỏ kiểm tra overflow có thể khiến benchmark nhanh nhưng thay đổi hợp đồng tính toán. Bài học xác định tiêu chí equivalence, kiểm thử hồi quy và chỉ tối ưu khi cả correctness lẫn hiệu năng đều có chứng cứ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng số học
+
+    1. Vì sao round ba dòng `0.005` riêng cho 0.03 còn round tổng một lần cho 0.02?
+    2. Việc đổi `BigDecimal` sang `double`, `BigInteger` sang `long` hoặc `UNNECESSARY` sang `HALF_UP` có nguy cơ thay đổi gì?
+
+    ### Quy trình tối ưu
+
+    1. Vì sao đổi thứ tự cộng `double` hay parallel reduction có thể đổi kết quả từng bit?
+    2. Làm sao thiết kế correctness gate và benchmark gate để chứng minh một tối ưu giữ contract và thực sự tiết kiệm tài nguyên?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết hợp đồng | Liệt kê kiểu, miền, unit, scale, precision, rounding, overflow và exception phải giữ. |
+    | Kiểm chứng tương đương | Đối chiếu baseline, tối ưu và oracle trên zero, ties, big values, scale khác. |
+    | Đề xuất tối ưu an toàn | Loại parse/format thừa, kiểm soát allocation và đo mà không thay đổi phép tính yêu cầu. |
+- id: numeric-performance-007
+  title: Benchmark cần tránh constant folding và dead-code elimination
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Benchmark cần tránh constant folding và dead-code elimination**
+
+    Benchmark Java có thể đo phép tính đã bị JVM gập thành hằng hoặc loại bỏ nếu đầu ra không dùng. Bài học hướng dẫn `@State`, `@Param`, `Blackhole`, return value, warmup, fork và phân biệt hiệu năng thực với lỗi thiết kế thí nghiệm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tối ưu của JVM
+
+    1. Constant folding/propagation và dead-code elimination khác nhau thế nào trong microbenchmark số học?
+    2. Vì sao `return compute(7L)` vẫn có nguy cơ folding, còn `compute(input)` không dùng kết quả vẫn bị loại?
+
+    ### Thiết kế JMH
+
+    1. `@State`, `@Param`, `@Setup`, `Blackhole` và return value bảo vệ phạm vi đo ở đâu?
+    2. Vì sao một lần `System.nanoTime()` hoặc thêm println/volatile sink không chứng minh ns/op thực tế?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chẩn đoán benchmark | Chỉ ra input hằng, unused result, hoisting hoặc parse/log nằm trong vùng đo. |
+    | Viết thí nghiệm JMH | Tạo benchmark có runtime state, warmup/fork, consume output và số liệu kèm môi trường. |
+    | Diễn giải kết quả | Phân biệt ns/op trung bình với latency request và kiểm tra kết luận khi tốc độ bất thường. |
+- id: numeric-performance-008
+  title: Đo với miền dữ liệu thực tế và cả tình huống biên
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đo với miền dữ liệu thực tế và cả tình huống biên**
+
+    Một microbenchmark chỉ chạy với vài giá trị đẹp không đại diện cho workload thật hoặc tail latency. Bài học lập ma trận dữ liệu typical, mixed và boundary, giữ correctness trước khi benchmark rồi diễn giải tốc độ, GC, allocation và p99 theo đúng phạm vi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dữ liệu đại diện
+
+    1. Vì sao workload 99% BigDecimal ngắn, 1% dài không thể thay bằng một BigDecimal có độ dài trung bình?
+    2. Những trục dữ liệu nào cần thử với int/long, double, BigInteger và BigDecimal để phát hiện đổi thuật toán và lỗi biên?
+
+    ### Thiết kế đo và đọc kết quả
+
+    1. Khi nào chuẩn bị operand trong JMH `@Setup`, khi nào phải đo cả parse/format trong end-to-end benchmark?
+    2. Vì sao ns/op trung bình không suy ra request p99 và một phương án nhanh nhưng scale khác vẫn không đạt correctness gate?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập corpus | Thiết kế tập typical, mixed-scale, extreme, error và seed có phân bố có căn cứ. |
+    | Bảo vệ correctness | Dùng oracle và kiểm tra value, scale, exception/overflow trước khi xếp hạng ứng viên. |
+    | Báo cáo benchmark | Phân biệt ns/op, ops/s, bytes/op, GC, latency p95/p99; ghi JDK/CPU/flags. |

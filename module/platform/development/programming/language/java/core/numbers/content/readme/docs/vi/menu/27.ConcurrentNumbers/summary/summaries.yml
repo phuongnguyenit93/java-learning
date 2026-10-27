@@ -1,0 +1,322 @@
+summaries:
+- id: concurrent-numbers-001
+  title: count++ là nhiều bước, không phải thao tác nguyên tử
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **count++ là nhiều bước, không phải thao tác nguyên tử**
+
+    `count++` là phép đọc–tính–ghi nên có thể mất cập nhật khi nhiều luồng cùng thao tác một biến. Bài học giúp phân tích lịch xen kẽ gây lost update và xác định lúc nào cần khóa, AtomicInteger hoặc cơ chế đếm thống kê.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất của ++ đồng thời
+
+    1. Vì sao `count++` là read–modify–write thay vì một thao tác nguyên tử?
+    2. Hai luồng cùng đọc 0 có thể gây lost update ra sao?
+    3. Vì sao postfix/prefix và `+= 1` đều không tự giải quyết vấn đề?
+
+    ### Lựa chọn khắc phục
+
+    1. `Thread.join()` giúp đọc tổng cuối nhưng vì sao không sửa được cập nhật đã mất?
+    2. Trong trường hợp nào `synchronized`, `AtomicInteger`, `LongAdder` phù hợp với một bộ đếm dùng chung?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết lịch xen kẽ | Mô tả được hai cập nhật có thể chỉ ghi nhận một lần khi không đồng bộ. |
+    | Tái hiện lỗi có kiểm soát | Dùng CountDownLatch để tạo lịch đọc trước ghi, phân biệt với test phụ thuộc `sleep()`. |
+    | Chọn thao tác bảo vệ | Sửa lost update bằng monitor cùng khóa hoặc `incrementAndGet()`. |
+- id: concurrent-numbers-002
+  title: volatile không làm phép tăng trở thành nguyên tử
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **volatile không làm phép tăng trở thành nguyên tử**
+
+    `volatile` mang bảo đảm visibility và ordering, nhưng không gom nhiều bước cập nhật thành thao tác nguyên tử. Bài học giúp hiểu Java Memory Model, phân biệt cờ trạng thái độc lập với counter và tránh nhầm các lần đọc/ghi volatile với một giao dịch.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Visibility so với atomicity
+
+    1. Những bảo đảm nào thuộc `volatile` khi một luồng ghi và luồng khác đọc cùng trường?
+    2. Vì sao `volatile int count; count++` vẫn có thể làm mất lượt tăng?
+    3. Quan hệ happens-before từ volatile khác mutual exclusion ở monitor thế nào?
+
+    ### Các giao thức truy cập
+
+    1. Vì sao `volatile long` hay tham chiếu volatile không làm `++` hoặc update phần tử mảng nguyên tử?
+    2. Khi nào dùng cờ `volatile boolean` là hợp lý và khi nào phải dùng CAS/lock?
+    3. Vì sao `get()` rồi `set()` của AtomicInteger vẫn có race?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt bảo đảm bộ nhớ | Đặt đúng thuật ngữ atomicity, visibility, ordering vào ví dụ Java. |
+    | Nhận diện anti-pattern | Chỉ ra lost update trong volatile counter và check-then-act. |
+    | Chọn công cụ thích hợp | Viết cờ dừng volatile hoặc bộ đếm atomic theo hợp đồng. |
+- id: concurrent-numbers-003
+  title: AtomicInteger và AtomicLong
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **AtomicInteger và AtomicLong**
+
+    AtomicInteger và AtomicLong cung cấp các thao tác đọc, ghi, cộng và cập nhật điều kiện nguyên tử trên một giá trị số. Người học nắm API chính, CAS, các hiệu ứng bộ nhớ và giới hạn quan trọng: một atomic không bảo vệ cùng lúc nhiều trường hay tự ngăn overflow.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### API atomic căn bản
+
+    1. AtomicInteger khác AtomicLong ở phạm vi giá trị và kiểu trả về thế nào?
+    2. `getAndIncrement()` khác `incrementAndGet()` ở kết quả trả về ra sao?
+    3. Vì sao `counter.set(counter.get()+1)` không tương đương tăng nguyên tử?
+
+    ### CAS và bất biến
+
+    1. `compareAndSet(expected,newValue)` thành công trong điều kiện nào?
+    2. Vì sao `if(counter.get()<limit) counter.incrementAndGet()` không giữ quota dưới contention?
+    3. AtomicLong có thể tràn và hai atomic có thể tạo trạng thái trung gian ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Sử dụng API nguyên tử | Chọn get/set/getAndAdd/incrementAndGet theo mục tiêu và kiểu. |
+    | Lập luận về CAS | Đọc trạng thái kỳ vọng và phân tích thao tác cập nhật thành công/thất bại. |
+    | Nhận diện giới hạn | Phát hiện check-then-act, multi-field invariants và overflow. |
+- id: concurrent-numbers-004
+  title: getAndIncrement, incrementAndGet và các phép cập nhật
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **getAndIncrement, incrementAndGet và các phép cập nhật**
+
+    Nhóm API `getAnd...` trả giá trị trước khi cập nhật, còn `...AndGet` trả giá trị sau khi cập nhật. Bài học hướng người học tới cách chọn hàm update, accumulate và CAS đúng ý định, đồng thời tránh callback có side effect hoặc tự tách một thao tác thành hai lời gọi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giá trị trả về và phép cập nhật
+
+    1. Với counter bắt đầu 10, các lệnh `getAndIncrement` và `incrementAndGet` lần lượt trả gì?
+    2. Khi nào dùng `getAndAdd`, `addAndGet`, `getAndSet`?
+    3. Khác biệt giữa `getAndUpdate` và `updateAndGet` là gì?
+
+    ### Callback và cập nhật có điều kiện
+
+    1. Vì sao hàm truyền cho `updateAndGet` phải không có side effect?
+    2. `accumulateAndGet` nhận giá trị hiện tại và toán hạng theo thứ tự nào?
+    3. Làm sao viết phép lấy một đơn vị khi stock lớn hơn 0 bằng CAS hoặc update theo hàm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán API trả về | Tính chính xác giá trị cũ, giá trị mới và state cuối trong chuỗi cập nhật. |
+    | Viết cập nhật có điều kiện | Dùng CAS hoặc getAndUpdate để giữ giới hạn một biến. |
+    | Thiết kế callback an toàn | Viết IntUnaryOperator/IntBinaryOperator thuần và tránh gọi dịch vụ ngoài. |
+- id: concurrent-numbers-005
+  title: Compare-and-set và việc hàm cập nhật có thể bị gọi lại
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Compare-and-set và việc hàm cập nhật có thể bị gọi lại**
+
+    CAS chỉ cập nhật khi giá trị hiện tại khớp giá trị dự kiến; nếu tranh chấp xảy ra, callback có thể được tính lại nhiều lần. Bài học phân tích retry, side effect, ABA và cách giữ điều kiện nghiệp vụ trong cùng CAS loop để không chốt trạng thái cũ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### CAS và retry
+
+    1. Vì sao một lời gọi `updateAndGet(f)` có thể đánh giá `f` hai lần nhưng chỉ chốt một lần?
+    2. Điều gì xảy ra khi CAS mong đợi 10 nhưng luồng khác đã đặt 20?
+    3. Vì sao hàm `x -> x+3` dù không idempotent vẫn phù hợp với CAS retry?
+
+    ### Giới hạn và tác dụng phụ
+
+    1. Vì sao không được gửi email hoặc tính phí trong callback `updateAndGet`?
+    2. Một vòng CAS giữ số ghế không âm cần kiểm tra lại điều kiện tại thời điểm nào?
+    3. Hiện tượng ABA làm CAS không quan sát được lịch sử cập nhật như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết lần thử CAS | Phân biệt giá trị tính thử, CAS thất bại và cập nhật được commit. |
+    | Viết hàm tính thuần | Thiết kế callback không làm phát sinh side effect khi chạy lại. |
+    | Xây dựng vòng CAS | Viết quy trình đọc, kiểm tra, compareAndSet và retry theo trạng thái mới. |
+- id: concurrent-numbers-006
+  title: LongAdder, DoubleAdder và bài toán thống kê có tranh chấp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **LongAdder, DoubleAdder và bài toán thống kê có tranh chấp**
+
+    LongAdder và DoubleAdder phù hợp khi nhiều luồng cùng cộng dồn metrics với mức tranh chấp lớn. Bài học giúp hiểu cell/stripe, API sum/reset, quan sát tổng sau join và giới hạn của phép cộng double, tránh dùng adder cho quota hay sequence.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế cộng dồn và API
+
+    1. Vì sao LongAdder có thể giảm tranh chấp so với AtomicLong dưới tải nhiều writer?
+    2. LongAdder khác DoubleAdder ở miền giá trị, precision và phương thức hỗ trợ ra sao?
+    3. `ConcurrentHashMap.computeIfAbsent` giúp quản lý LongAdder theo nhãn thế nào?
+
+    ### Đọc tổng và reset
+
+    1. Khi nào `sum()` là số liệu quan sát và khi nào có tổng cuối ổn định?
+    2. Vì sao `sumThenReset` không phù hợp đóng kỳ chính xác khi writer vẫn cập nhật?
+    3. Tại sao DoubleAdder không thích hợp để ghi sổ tiền thập phân chính xác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn cấu trúc metrics | Phân biệt LongAdder/DoubleAdder với AtomicLong theo read/write contention. |
+    | Lập trình bộ đếm theo nhãn | Tạo map LongAdder và đọc tổng sau khi worker hoàn tất. |
+    | Đánh giá độ chính xác | Nêu rủi ro snapshot và floating-point rounding khi thống kê. |
+- id: concurrent-numbers-007
+  title: sum của adder không phải snapshot nguyên tử trong lúc đang cập nhật
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **sum của adder không phải snapshot nguyên tử trong lúc đang cập nhật**
+
+    `sum()` của LongAdder/DoubleAdder không phải atomic snapshot trong lúc có writer dù cập nhật từng phần thread-safe. Bài học đặt trọng tâm vào việc đóng kỳ đúng, đồng bộ lúc đọc và phân biệt metrics quan sát với quota, sequence và số liệu kiểm toán đòi chính xác tại mốc thời gian.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Snapshot và thời điểm đọc
+
+    1. Vì sao `LongAdder.sum()` có thể đọc các cell ở những thời điểm khác nhau?
+    2. Khi nào `Thread.join()` khiến tổng cuối từ sum đáng tin cậy?
+    3. Việc đọc hai bộ đếm LongAdder liên tiếp có tạo một snapshot chung không?
+
+    ### Đúng hợp đồng báo cáo
+
+    1. Tại sao `if(adder.sum()<limit) adder.increment()` có thể vượt hạn mức?
+    2. Vì sao `sumThenReset()` khác AtomicLong.getAndSet(0) khi đang có cập nhật?
+    3. Thiết kế ranh giới epoch/checkpoint cho báo cáo đúng tuyệt đối cần phối hợp những ai?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích snapshot thiếu nguyên tử | Mô tả các thành phần sum được đọc qua nhiều thời điểm. |
+    | Lựa chọn chế độ quan sát | Phân biệt metric gần đúng với giới hạn cứng hay báo cáo kiểm toán. |
+    | Thiết kế mốc đồng bộ | Đề xuất đợi writer hoặc phối hợp cắt epoch trước khi tổng hợp. |
+- id: concurrent-numbers-008
+  title: BigInteger, BigDecimal bất biến nhưng cập nhật tham chiếu dùng chung vẫn cần phối hợp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **BigInteger, BigDecimal bất biến nhưng cập nhật tham chiếu dùng chung vẫn cần phối hợp**
+
+    BigInteger và BigDecimal bất biến giúp nhiều luồng chia sẻ giá trị, nhưng việc thay tham chiếu bằng `balance = balance.add(delta)` vẫn là read–modify–write có thể mất cập nhật. Bài học giúp chọn synchronized hoặc AtomicReference, hiểu CAS so tham chiếu và đồng bộ snapshot nhiều trường.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bất biến không đồng nghĩa atomic update
+
+    1. Vì sao BigDecimal immutable vẫn bị lost update khi hai luồng cùng gán balance mới?
+    2. Volatile trên tham chiếu BigInteger bảo đảm gì và còn thiếu điều gì?
+    3. Vì sao `AtomicReference.set(ref.get().add(x))` vẫn bị race?
+
+    ### Cập nhật đúng và tính chính xác
+
+    1. `compareAndSet` của AtomicReference so reference hay so giá trị BigDecimal?
+    2. Callback `updateAndGet` cho BigDecimal phải tránh loại side effect nào?
+    3. Khi nào dùng một AtomicReference tới immutable record thay vì hai atomic độc lập?
+    4. Ngoài thread safety, phép tính BigDecimal còn phải xác định precision, scale và rounding ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích cập nhật tham chiếu | Chỉ ra nơi lost update xảy ra dù value object không đổi. |
+    | Cập nhật giá trị bất biến | Dùng synchronized hoặc AtomicReference.updateAndGet đúng cách. |
+    | Giữ invariant đa trường | Mô hình hóa snapshot immutable cùng chính sách BigDecimal hợp lệ. |
+- id: concurrent-numbers-009
+  title: Atomic không có nghĩa tự phát hiện tràn số
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Atomic không có nghĩa tự phát hiện tràn số**
+
+    AtomicInteger và AtomicLong ngăn lost update nhưng vẫn tính theo số nguyên hữu hạn và có thể wrap quanh MIN/MAX. Bài học giúp kết hợp Math.*Exact với updateAndGet hoặc vòng CAS, xây dựng chính sách reject, saturate hoặc chuyển kiểu và kiểm thử tràn cạnh biên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Atomicity và overflow
+
+    1. Vì sao AtomicInteger.incrementAndGet tại Integer.MAX_VALUE trả giá trị âm mà không ném exception?
+    2. `getAndIncrement` tại MAX trả giá trị trước hay sau tràn?
+    3. Tại sao `Math.addExact(counter.get(),1)` rồi `set` vẫn bị lost update?
+
+    ### Chính sách kiểm tra
+
+    1. Làm sao dùng `updateAndGet(Math::incrementExact)` từ chối overflow trong tranh chấp?
+    2. Khi nào nên bão hòa tại ngưỡng và khi nào phải dùng BigInteger?
+    3. Một counter 0–100 có được bảo vệ chỉ bằng Math.addExact không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán tràn trong atomic | Tính được giá trị sau MAX+1 và phân biệt với kết quả Math.incrementExact. |
+    | Viết cập nhật checked | Kết hợp kiểm tra tràn trong callback thuần hoặc CAS loop. |
+    | Xác định miền nghiệp vụ | Chọn reject/saturate/widen và kiểm thử biên trong nhiều luồng. |
+- id: concurrent-numbers-010
+  title: Chọn mức đồng bộ theo hợp đồng nhất quán cần có
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn mức đồng bộ theo hợp đồng nhất quán cần có**
+
+    Công cụ đồng bộ phải được chọn theo hợp đồng nhất quán: từ cờ trạng thái đơn đến bộ đếm, quota hoặc snapshot đa trường. Bài học giúp mô hình hóa đơn vị nguyên tử, bảo vệ check-then-act và invariant, phân biệt tính đúng trong một JVM với transaction tại DB hay nhiều dịch vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân loại hợp đồng
+
+    1. Cờ volatile và bộ đếm AtomicLong khác nhau về yêu cầu bảo đảm gì?
+    2. Khi nào LongAdder phù hợp hiển thị metric nhưng không phù hợp cấp số thứ tự?
+    3. Vì sao hai AtomicLong riêng không bảo đảm snapshot có invariant chung?
+
+    ### Giải pháp và thử nghiệm
+
+    1. Khi nào chọn CAS loop thay lock để giữ giới hạn một biến?
+    2. Một AtomicReference tới immutable State có thể bảo vệ cặp count/total thế nào?
+    3. Tại sao synchronized trong một JVM không đủ điều phối nhiều bản sao dịch vụ qua DB?
+    4. Future.get và join giúp khẳng định giá trị cuối nhưng không sửa được lỗi trong lúc cập nhật ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định nghĩa tính nhất quán | Nêu rõ đơn vị và thời điểm cần atomicity, visibility hoặc snapshot. |
+    | Thiết kế giao thức truy cập | Chọn volatile, atomic, adder, lock hoặc immutable snapshot theo invariant. |
+    | Kiểm chứng đúng phạm vi | Đặt assertion cho tổng cuối/snapshot và chỉ ra ranh giới giao dịch liên tiến trình. |

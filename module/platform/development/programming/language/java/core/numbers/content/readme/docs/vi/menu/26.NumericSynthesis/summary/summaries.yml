@@ -1,0 +1,330 @@
+summaries:
+- id: numeric-synthesis-001
+  title: int[], long[], double[] và các stream chuyên biệt
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **int[], long[], double[] và các stream chuyên biệt**
+
+    Bài mở đầu chỉ cách chọn mảng số nguyên thủy làm nguồn dữ liệu và tạo đúng `IntStream`, `LongStream`, `DoubleStream` để duyệt, lọc, biến đổi và tổng hợp. Người học phân biệt stream phần tử với stream chứa nguyên một mảng, hiểu nguồn theo chỉ số và phép chuyển kiểu trước phép nhân/cộng để không mất dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn mảng và kiểu stream
+
+    1. Các overload `Arrays.stream` tạo stream nào từ `int[]`, `long[]`, `double[]`, và vì sao `Stream.of(int[])` lại có một phần tử?
+    2. Mảng khác pipeline lazy và terminal operation của stream như thế nào?
+    3. Khi cần các chỉ số hoặc cặp phần tử của hai mảng, vì sao `IntStream.range` phù hợp hơn stream theo giá trị?
+
+    ### Tính toán từ nguồn dữ liệu
+
+    1. Làm sao tạo `long[]` từ mảng `int[]` mà phép nhân diễn ra ở kiểu `long`?
+    2. Một mảng rỗng tác động đến `sum`, `min`, `average` và `summaryStatistics` như thế nào?
+    3. Những trường hợp nào nên chọn vòng lặp thường, tạo stream mới hoặc `summaryStatistics()` cho một lần tiêu thụ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn stream đúng loại | Tạo các stream từ ba mảng primitive và dự đoán khác biệt count của `Stream.of(array)`. |
+    | Tạo pipeline có chỉ số | Viết `IntStream.range` tìm vị trí thoả điều kiện và ghép đúng hai mảng bằng chỉ số. |
+    | Tránh mất dữ liệu số học | Đặt widening trước phép nhân/tổng để tránh overflow trong các ví dụ số nguyên. |
+    | Tổng hợp dữ liệu rỗng | Kiểm tra Optional, count và phân biệt tổng rỗng 0 với trung bình không tồn tại. |
+- id: numeric-synthesis-002
+  title: IntStream, LongStream, DoubleStream và giảm boxing
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **IntStream, LongStream, DoubleStream và giảm boxing**
+
+    Bài học so sánh ba primitive stream với `Stream<Integer/Long/Double>` về kiểu phần tử, các terminal operation và chi phí boxing. Người học xác định đúng nơi dùng `mapToInt`, `mapToLong`, `boxed`, `mapToObj`, collector, đồng thời không hy sinh tính đúng số học để tối ưu cấp phát.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Primitive stream và boxing
+
+    1. Vì sao `Stream<Integer>` không có `sum()` và `IntStream` có thể tránh boxing ở từng bước?
+    2. Các phương thức `boxed`, `mapToObj`, `mapToInt`, `asLongStream` khác nhau về kiểu dữ liệu và thời điểm chuyển đổi thế nào?
+    3. Tại sao unboxing `Integer` null cần chính sách rõ ràng trước khi tính toán?
+
+    ### Đúng đắn và hiệu năng
+
+    1. Làm cách nào chuyển từ `int` sang `long` trước khi bình phương hoặc cộng để tránh overflow?
+    2. Khi nào không nên dùng `parallel()` hay boxing sớm dù pipeline hợp lệ?
+    3. Làm sao đánh giá lợi ích về hiệu năng bằng phép đo thay vì suy đoán từ tên API?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ánh xạ kiểu stream | Phân loại output primitive/object của `mapToX`, `boxed` và `mapToObj`. |
+    | Thiết kế pipeline ít boxing | Viết pipeline từ `int[]` đến tổng primitive rồi chỉ boxing nếu đầu ra cần `List<Integer>`. |
+    | Kiểm tra số học | Nhận biết overflow trước widening và sai số khi đổi `long` lớn sang `double`. |
+    | Đánh giá tính phù hợp | Nêu trường hợp có/không nên dùng parallel và cách đo hiệu năng trên workload thực. |
+- id: numeric-synthesis-003
+  title: sum có thể tràn đối với số nguyên
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **sum có thể tràn đối với số nguyên**
+
+    Bài học kiểm tra phép cộng `int`/`long` tràn trong vòng lặp, stream, collector và phép nhân trước khi cộng. Người học phân biệt kiểm tra từng phép cộng bằng `Math.addExact` với kiểm tra tổng cuối sau khi tích lũy rộng, và lựa chọn `BigInteger` khi kết quả vượt `long`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn overflow và miền kiểu
+
+    1. Vì sao gán `intA + intB` vào `long` vẫn có thể lưu kết quả sai?
+    2. `IntStream.sum`, `Collectors.summingInt`, `IntSummaryStatistics.getSum` khác nhau thế nào về miền tích lũy?
+    3. Khi nào `LongStream.sum()` cũng tràn và tại sao `double` không thay cho tổng nguyên chính xác?
+
+    ### Chính sách kiểm soát tràn
+
+    1. Trong dãy `[Integer.MAX_VALUE,1,-1]`, vì sao `Math.addExact` báo lỗi trung gian còn `Math.toIntExact` sau tổng `long` có thể thành công?
+    2. Muốn tổng nguyên vượt 64 bit và chuyển kiểu về `long` có kiểm tra, nên dùng API `BigInteger` nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tái hiện tràn số | Dự đoán kết quả `Integer.MAX_VALUE + 1` và so sánh các API sum. |
+    | Thực hiện widening sớm | Viết `asLongStream().sum()` và phép nhân `(long) price * quantity` đúng. |
+    | Phân biệt hợp đồng lỗi | Minh họa kiểm tra overflow từng bước và kiểm tra phạm vi tổng cuối. |
+    | Tổng lớn chính xác | Tổng hợp `long[]` bằng `BigInteger` và gọi `longValueExact` khi thu hẹp. |
+- id: numeric-synthesis-004
+  title: average và yêu cầu xử lý tập rỗng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **average và yêu cầu xử lý tập rỗng**
+
+    Bài học giải thích vì sao trung bình cộng không được xác định khi không có phần tử và Java biểu diễn điều đó bằng `OptionalDouble`. Người học đối chiếu `average()` với `Collectors.averaging*` và getter của `SummaryStatistics`, rồi chọn chính sách vắng mặt, lỗi hoặc fallback hợp lệ cho ứng dụng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Trung bình và sự hiện diện
+
+    1. Vì sao `IntStream.empty().average()` trả `OptionalDouble.empty()` trong khi `Collectors.averagingInt` rỗng trả `0.0`?
+    2. `OptionalDouble.of(0.0)` khác `OptionalDouble.empty()` ở ý nghĩa nghiệp vụ như thế nào?
+    3. Vì sao chỉ `getAverage()` của SummaryStatistics không cho biết mẫu có dữ liệu?
+
+    ### Chính sách dữ liệu
+
+    1. Khi nào giữ Optional, dùng `orElseThrow` hoặc `orElse(0.0)` là phù hợp?
+    2. Vì sao `NaN` có trong Optional không có nghĩa không tồn tại giá trị?
+    3. Khi dùng `BigDecimal` tính mean, vì sao cần guard tập rỗng và khai báo rounding?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán Optional | So sánh kết quả của average có phần tử, rỗng và có trung bình thật bằng 0. |
+    | Thiết kế API vắng mặt | Viết hàm trả `OptionalDouble` hoặc báo lỗi miền rõ ràng. |
+    | Sử dụng collector đúng | Kiểm tra `count` khi chuyển từ Optional sang collector hoặc statistics. |
+    | Tính trung bình decimal | Chặn mẫu số 0 và chia `BigDecimal` với scale/rounding đã chọn. |
+- id: numeric-synthesis-005
+  title: min, max và các Optional chuyên biệt
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **min, max và các Optional chuyên biệt**
+
+    Bài học chọn `min`/`max` theo kiểu primitive và dùng Optional chuyên biệt để phân biệt nguồn rỗng. Người học xử lý thứ tự của `NaN`, signed zero, comparator cho đối tượng có metadata và tie-breaker ổn định.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các cực trị và Optional
+
+    1. Vì sao `IntStream.min/max` trả `OptionalInt` còn `Stream<T>.min/max` cần Comparator và trả `Optional<T>`?
+    2. Khi filter loại hết phần tử, các lựa chọn `orElse`, `orElseThrow` và giữ Optional mang ý nghĩa khác nhau thế nào?
+    3. Nếu cần cả min và max trên nguồn chỉ đọc một lần, vì sao `summaryStatistics` phù hợp?
+
+    ### Double và xếp hạng đối tượng
+
+    1. Vì sao một NaN làm `DoubleStream.min/max` nhận giá trị NaN nhưng Optional vẫn hiện diện?
+    2. `-0.0` và `+0.0` được `DoubleStream.min/max` xử lý theo quy tắc gì?
+    3. Cách thêm `thenComparing` để xử lý hai bản ghi cùng điểm mà vẫn giữ metadata là gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dùng Optional primitive | Viết ví dụ `min/max` cho int/long/double và xử lý trường hợp rỗng. |
+    | Chọn Comparator | Giữ bản ghi gốc khi tìm max theo score và tie-breaker ID. |
+    | Xử lý double đặc biệt | Giải thích NaN, signed zero trong `DoubleStream.min/max` và chính sách lọc hoặc từ chối. |
+    | Lấy nhiều metric | Dùng `summaryStatistics` một lượt, kiểm tra `count` trước khi công bố cực trị. |
+- id: numeric-synthesis-006
+  title: SummaryStatistics và thu thập nhiều số đo
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **SummaryStatistics và thu thập nhiều số đo**
+
+    Bài học dùng `IntSummaryStatistics`, `LongSummaryStatistics`, `DoubleSummaryStatistics` để thu count/sum/min/max/mean trong một lần. Người học nâng lên accumulator nhiều metric với `accept`/`combine`, count riêng cho mẫu hợp lệ, `groupingBy` và tránh chia sẻ trạng thái mutable giữa các luồng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế accumulator
+
+    1. Khi nào `summaryStatistics()` tiết kiệm lượt duyệt so với gọi nhiều terminal operation?
+    2. `accept` và `combine` cập nhật count, sum, min, max ra sao; vì sao count phải được kiểm tra với bộ rỗng?
+    3. `IntSummaryStatistics.getSum()` và `LongSummaryStatistics.getSum()` khác nhau về giới hạn overflow nào?
+
+    ### Báo cáo nhiều trường và nhóm
+
+    1. Nếu có 4 dòng nhưng chỉ 3 nhiệt độ hữu hạn, phải dùng count nào để tính average nhiệt độ?
+    2. Custom `Collector.of` cần supplier/accumulator/combiner như thế nào để kết hợp nhiều metric và nhóm?
+    3. Cách giữ nhóm không có mẫu hợp lệ bằng downstream `Collectors.filtering` khác filter trước groupingBy ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc năm getter | Tính count/sum/min/max/average và phát hiện giá trị sentinel của bộ rỗng. |
+    | Kết hợp tích lũy | Viết accumulator có `accept` và `combine` trên dữ liệu nhóm. |
+    | Bảo vệ mẫu số | Phân biệt totalRows, validCount, invalidCount cho từng loại đo. |
+    | Phân tích parallel collector | Giải thích vì sao không share cùng accumulator mutable giữa các worker. |
+- id: numeric-synthesis-007
+  title: Thứ tự cộng ảnh hưởng tổng dấu phẩy động
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thứ tự cộng ảnh hưởng tổng dấu phẩy động**
+
+    Bài học phân tích tính không kết hợp của phép cộng `double` khi làm tròn và các tình huống mất số hạng nhỏ/cancellation. Người học chạy ví dụ `1e16`, thử thuật toán cộng bù Kahan/Neumaier, pairwise và chọn tiêu chuẩn sai số theo độ lớn và khả năng tái lập.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Sai số do thứ tự và biểu diễn
+
+    1. Vì sao `(1e16 + -1e16) + 1` có thể khác `1e16 + (-1e16 + 1)`?
+    2. Tác dụng của ULP, swamping và cancellation trong các dãy gồm số lớn và nhỏ như thế nào?
+    3. Vì sao lặp cộng `0.1` có thể khác nhân `10*0.1`?
+
+    ### Cải thiện và kiểm chứng
+
+    1. Trong bộ `[1e16,1,-1e16]`, khi nào Neumaier giúp hơn Kahan và khi nào cả hai chưa đủ?
+    2. Pairwise và parallel stream tác động đến cây cộng và kết quả tái lập bit như thế nào?
+    3. Đánh giá sai số tuyệt đối/tương đối có ý nghĩa nào khi tổng tham chiếu gần zero?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán kết quả không kết hợp | Giải thích bằng ULP vì sao hai nhóm cộng cho 1.0 và 0.0. |
+    | Chạy cộng bù | Cài Kahan, Neumaier và đối chiếu tổng với naive trên dữ liệu cancellation. |
+    | Kiểm thử đổi thứ tự | Thử đảo, sắp xếp và chia nhóm rồi so với tổng tham chiếu tốt hơn. |
+    | Đặt ngưỡng sai số | Chọn absolute/relative tolerance có xử lý near-zero, NaN và Infinity. |
+- id: numeric-synthesis-008
+  title: Reduce song song và yêu cầu tính kết hợp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Reduce song song và yêu cầu tính kết hợp**
+
+    Bài học định nghĩa điều kiện identity, associativity và compatibility giữa accumulator/combiner trong parallel `reduce`, đồng thời tránh mutation dùng chung. Người học đánh giá các phép không kết hợp như trừ, trung bình từng cặp, cộng `double` hay cộng `BigDecimal` đã làm tròn giữa chừng và thay thế bằng trạng thái sum/count hoặc `collect` phù hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng của reduce
+
+    1. Tại sao identity của sum phải là 0 và identity 10 có thể bị cộng nhiều lần khi parallel?
+    2. Tính kết hợp khác tính giao hoán thế nào và vì sao phép trừ không hợp lệ cho reducer song song?
+    3. Với reduce ba tham số, phương trình tương thích của accumulator với combiner là gì?
+
+    ### State và chính sách số học
+
+    1. Vì sao cập nhật biến ngoài bằng parallel forEach gây data race và dùng mutable identity trong reduce nguy hiểm?
+    2. Tại sao `(a+b)/2` không thể reduce thành trung bình nhiều phần tử bất kể cách chia?
+    3. Trong trường hợp nào `BigDecimal::add` chính xác dùng được parallel nhưng `add(mc)` hoặc `setScale` sau từng cộng thì không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra contract | Chứng minh identity, tính kết hợp và compatibility trên một reducer cụ thể. |
+    | Loại side effect | Sửa reducer có mutable identity thành collector hoặc immutable state. |
+    | Gộp tổng và số lượng | Viết record SumCount với phép gộp rồi chia một lần. |
+    | Quyết định parallel | Chọn sum/collect/reduce phù hợp và nhận biết không bảo đảm bit-exact với double. |
+- id: numeric-synthesis-009
+  title: Tổng BigDecimal và chính sách MathContext
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tổng BigDecimal và chính sách MathContext**
+
+    Bài học phân biệt cộng `BigDecimal` chính xác với cộng dùng `MathContext` precision giới hạn ở từng bước. Người học chọn `MathContext`, `RoundingMode`, `setScale`, chứng minh tác động của thời điểm làm tròn lên tổng và dùng `UNNECESSARY` để phát hiện dữ liệu không đáp ứng precision/scale hợp đồng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Scale, precision và phép cộng
+
+    1. `BigDecimal.add(other)` và `add(other, MathContext)` khác nhau thế nào về làm tròn trung gian?
+    2. `MathContext(3)` giới hạn chữ số có nghĩa như thế nào và khác `setScale(2)` ở đâu?
+    3. Vì sao cùng ba giá trị `1.234`, `0.004`, `0.004` có thể ra 1.24 hoặc 1.23 tùy điểm làm tròn?
+
+    ### Giới hạn và parallel
+
+    1. Khi nào `RoundingMode.UNNECESSARY` ném lỗi, khi nào có thể bỏ zero thừa mà không đổi giá trị?
+    2. Vì sao dùng `BigDecimal::add` không context trong parallel dễ kiểm soát hơn reducer làm tròn mỗi phép cộng?
+    3. Với `1.20` và `1.2`, vì sao `equals()` khác `compareTo()` dù cùng trị số?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Diễn giải decimal representation | Phân biệt unscaledValue, precision và scale trên một số BigDecimal. |
+    | So sánh hai chính sách tổng | Tính chính xác rồi round một lần và cộng với `MathContext` ở từng bước, đối chiếu output. |
+    | Thiết kế rounding | Chọn HALF_EVEN/HALF_UP/UNNECESSARY theo nghiệp vụ và xác nhận điểm áp dụng. |
+    | Kiểm chứng reduction | Nêu phản ví dụ associativity của phép `add(mc)` và đề xuất phép gộp chính xác. |
+- id: numeric-synthesis-010
+  title: Không trộn đơn vị, precision hoặc scale không được thống nhất
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không trộn đơn vị, precision hoặc scale không được thống nhất**
+
+    Bài học liên kết tính đúng số học với ý nghĩa của dữ liệu: đơn vị đo, mã tiền tệ, precision và scale. Người học chuẩn hóa cùng đơn vị trước khi cộng, phân biệt precision số học với độ tin cậy đo lường, và thiết kế record/DTO/API từ chối phép gộp không tương thích.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đồng nhất đại lượng và đơn vị
+
+    1. Vì sao cộng 1.20 mét với 30 centimet dưới dạng số thô cho kết quả sai, và nên quy đổi theo chiều nào?
+    2. Tại sao hai giá trị USD/EUR không thể cộng chỉ bằng `BigDecimal.add` khi thiếu tỷ giá và thời điểm?
+    3. Khi nào đổi phần trăm sang tỷ lệ 0–1 vẫn chưa đủ để hợp pháp hóa phép cộng?
+
+    ### Precision, scale, hợp đồng dữ liệu
+
+    1. `precision()` và `scale()` khác nhau thế nào, và vì sao `MathContext(2)` không đồng nghĩa hai chữ số sau dấu chấm?
+    2. Tại sao `stripTrailingZeros` hoặc `equals` có thể gây bất ngờ khi lưu làm khóa?
+    3. Nên mang đơn vị, currency, rounding policy và metadata sai số qua DTO/database như thế nào để bảo toàn ý nghĩa?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chuẩn hóa trước khi gộp | Viết chuyển 30 cm sang 0.30 m và chứng minh tổng 1.50 m. |
+    | Từ chối dữ liệu sai đơn vị | Thiết kế record Length/Money cùng kiểm tra unit/currency. |
+    | Phân biệt precision-scale | Tính `precision`/`scale` và dùng `setScale(..., UNNECESSARY)` để kiểm chứng đúng hợp đồng. |
+    | Mô tả schema số đo | Đề xuất JSON hoặc DB mang giá trị, đơn vị và chính sách làm tròn rõ ràng. |

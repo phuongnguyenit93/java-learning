@@ -1,0 +1,263 @@
+summaries:
+- id: overview-001
+  title: Số trong Java là gì và những bài toán cần biểu diễn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Số trong Java là gì và những bài toán cần biểu diễn**
+
+    Bài học giúp nhận ra một chuỗi chữ số có thể là số lượng, phép đo, tiền, mã định danh hoặc thời gian, mỗi loại đòi hỏi cách biểu diễn và kiểm chứng khác nhau. Từ một tình huống bán vé, người học hình thành câu hỏi về miền giá trị, độ chính xác, đơn vị, phép toán và quy tắc làm tròn trước khi chọn kiểu Java.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất dữ liệu
+
+    1. Những dấu hiệu nào cho biết một giá trị gồm chữ số thật sự cần phép toán số học?
+    2. Vì sao mã khách hàng 00123 và giá vé 19.90 không nên dùng cùng một kiểu dữ liệu?
+
+    ### Biểu diễn và hậu quả
+
+    1. Khi nào chọn int, long, double, BigInteger, BigDecimal hoặc String cho từng đại lượng trong hệ thống bán vé?
+    2. Tại sao ép kết quả nhân int sang long sau phép nhân có thể không tránh được tràn?
+    3. Vì sao phép chia BigDecimal 10 cho 3 phải xác định chính sách làm tròn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại đại lượng | Giải thích và chọn kiểu cho số lượng, phép đo, tiền, mã định danh và thời lượng từ ví dụ cụ thể. |
+    | Kiểm tra giới hạn | Dự đoán kết quả chia nguyên, tràn int và sai số 0.1 + 0.2; đề xuất biện pháp thích hợp. |
+    | Tổ chức biểu diễn | Viết chương trình nhỏ dùng long, BigInteger, BigDecimal và String, đối chiếu stdout với đầu ra mong đợi. |
+    | Đặt câu hỏi đúng | Lập checklist về miền giá trị, đơn vị, precision và rounding trước khi xử lý dữ liệu số. |
+- id: overview-002
+  title: Phân biệt giá trị toán học, kiểu dữ liệu và cách lưu trữ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt giá trị toán học, kiểu dữ liệu và cách lưu trữ**
+
+    Bài học tách ba tầng thường bị nhầm: con số toán học cần mô tả, kiểu dữ liệu quyết định phép toán hợp lệ và biểu diễn máy lưu giá trị đó. Sự phân tách này giải thích các trường hợp cùng giá trị nhưng khác scale, cùng bit nhưng khác diễn giải, hoặc giá trị hiển thị che khuất sai số nhị phân.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giá trị, kiểu và bit
+
+    1. Ba tầng giá trị toán học, kiểu Java và cách biểu diễn khác nhau ở những điểm nào?
+    2. Vì sao 42, 42.0 và BigDecimal 42.00 có thể bằng nhau về giá trị mà khác phép toán và scale?
+    3. Vì sao không thể suy trực tiếp tổng số byte đối tượng Java từ kích thước logic của primitive?
+
+    ### Chuyển đổi và biểu diễn
+
+    1. Đổi mẫu bit 11111111 giữa cách hiểu byte có dấu và không dấu dẫn đến hai kết quả nào, vì sao?
+    2. Chuyển một số nguyên lớn thành double có thể làm mất thông tin ở đâu dù số vẫn thuộc miền double?
+    3. Vì sao BigDecimal tạo từ 0.1 dạng double không tương đương BigDecimal tạo từ chuỗi 0.1?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích ba tầng | Phân tích một giá trị ở tầng toán học, kiểu Java, bit lưu và chuỗi hiển thị. |
+    | Dự đoán chuyển kiểu | Giải thích kết quả ép int sang byte, long sang double và số thực sang int trên dữ liệu biên. |
+    | Kiểm tra giá trị thập phân | Chạy ví dụ BigDecimal unscaledValue và scale, giải thích equals khác compareTo. |
+    | Phân tích ranh giới hệ thống | Chỉ ra đường truyền JSON hoặc CSV có nguy cơ đổi kiểu hay mất precision và đề xuất cách bảo toàn. |
+- id: overview-003
+  title: Số nguyên, số dấu phẩy động và số thập phân chính xác
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Số nguyên, số dấu phẩy động và số thập phân chính xác**
+
+    Bài học phân biệt ba mô hình tính toán: số nguyên chính xác trong miền cố định hoặc BigInteger, số thực nhị phân gần đúng và số thập phân hữu hạn chính xác với BigDecimal. Người học kiểm tra phép chia, tràn số, NaN, rounding và tính bất biến để quyết định mô hình phù hợp cho các phép toán thật.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế từng họ số
+
+    1. Chia nguyên với số âm, floorDiv và floorMod có thể cho những kết quả khác nhau ra sao?
+    2. Tại sao thứ tự cộng số thực có thể làm thay đổi kết quả và NaN không so sánh bằng chính nó?
+    3. Vì sao BigDecimal không tự tính chính xác một thương có khai triển thập phân vô hạn?
+
+    ### Thao tác và kiểm chứng
+
+    1. Cần thay đổi kiểu của toán hạng ở bước nào để phép nhân hai int lớn không tràn trước khi gán long?
+    2. Khi nào dùng BigDecimal compareTo thay cho equals, và hệ quả khi dùng HashSet khác TreeSet là gì?
+    3. Cách xác minh một kết quả 0.1 + 0.2 bằng double khác phép cộng BigDecimal tạo từ chuỗi thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thực hiện phép toán nguyên | Dự đoán chia, phần dư, tràn số rồi sửa phép tính bằng nâng kiểu hoặc Math.*Exact. |
+    | Đọc hành vi dấu phẩy động | Giải thích output NaN, Infinity, -0.0 và phép so sánh chính xác so với có dung sai. |
+    | Tính decimal | Viết phép cộng/nhân/chia BigDecimal với scale và RoundingMode được nêu rõ. |
+    | Chọn quan hệ so sánh | Minh họa sự khác nhau của equals và compareTo trên 2.0 và 2.00, giải thích ảnh hưởng tới collections. |
+- id: overview-004
+  title: Phạm vi giá trị khác độ chính xác như thế nào
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phạm vi giá trị khác độ chính xác như thế nào**
+
+    Bài học phân định range là miền cực trị có thể biểu diễn và precision là độ phân giải giữa các giá trị sát nhau. Quan sát ULP, mốc 2^24/2^53, float/double ở độ lớn lớn và BigDecimal precision/scale giúp tránh giả định sai rằng kiểu chứa số rất lớn thì giữ nguyên mọi chữ số.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Miền biểu diễn và độ phân giải
+
+    1. Tại sao một int trong miền luôn chính xác nhưng double ở 1e16 có thể bỏ qua phép cộng 1?
+    2. Mốc 2^24 của float và 2^53 của double bảo đảm điều gì và không bảo đảm điều gì?
+    3. Vì sao Double.MIN_VALUE không biểu diễn số hữu hạn âm nhỏ nhất?
+
+    ### Phép thử thực tế
+
+    1. Math.ulp(1.0) cho biết điều gì về hai giá trị double kề nhau?
+    2. Làm sao phân biệt overflow dẫn tới Infinity với mất độ phân giải khi cộng 1?
+    3. BigDecimal precision và scale khác nhau thế nào trên giá trị 123.4500?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt range/precision | Giải thích một kết quả sai lệch do vượt miền hay do độ phân giải hữu hạn. |
+    | Thử ngưỡng float/double | Chạy phép thử 16777216f + 1 và 1e16 + 1, mô tả vì sao không tăng. |
+    | Đọc hằng và ULP | Sử dụng Math.ulp, Float.MIN_VALUE, Double.MAX_VALUE để nhận diện ý nghĩa giới hạn. |
+    | Đối chiếu decimal | Tính precision và scale của BigDecimal rồi chọn rounding khi phép chia cần giới hạn chữ số. |
+- id: overview-005
+  title: Bản đồ primitive, wrapper, Number, BigInteger và BigDecimal
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bản đồ primitive, wrapper, Number, BigInteger và BigDecimal**
+
+    Bài học cung cấp bản đồ mối quan hệ giữa primitive, wrapper, abstract class Number và BigInteger/BigDecimal. Từ đó người học nhận biết nơi dùng object, nơi xảy ra boxing, unboxing null, phép chuyển đổi mất dữ liệu và tại sao một biến Number không tự cung cấp toán tử cộng chung.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc hệ kiểu
+
+    1. Vì sao int không kế thừa Number nhưng Integer, BigInteger và BigDecimal có thể được tham chiếu qua Number?
+    2. Character và Boolean khác các wrapper số học ở điểm nào?
+    3. Khi nào cần Integer thay vì int trong generic, collection hoặc trường tùy chọn?
+
+    ### Hành vi đối tượng và chuyển đổi
+
+    1. Vì sao unboxing một Integer null dẫn đến NullPointerException?
+    2. Khi nào Number.longValue hoặc doubleValue có thể đánh mất giá trị nguồn?
+    3. Dùng equals, compareTo hay == khác nhau thế nào trên Integer và BigDecimal?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ cây kiểu | Phân loại đầy đủ sáu numeric primitives, sáu wrapper số, Number, BigInteger, BigDecimal và Character. |
+    | Thử boxing | Viết ví dụ int → Integer → Number và đọc được kết quả intValue/doubleValue. |
+    | Xử lý giá trị thiếu | Tạo và sửa ví dụ lỗi unboxing null có kiểm tra đầu vào. |
+    | Chuyển đổi an toàn | Đối chiếu longValue và longValueExact trên BigInteger lớn, giải thích nơi cần kiểm soát mất dữ liệu. |
+- id: overview-006
+  title: Chọn kiểu theo ý nghĩa dữ liệu và yêu cầu tính toán
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn kiểu theo ý nghĩa dữ liệu và yêu cầu tính toán**
+
+    Bài học chuyển kiến thức kiểu số thành quy trình thiết kế. Với mỗi trường dữ liệu, người học xét ngữ nghĩa, miền, precision, phép toán, đơn vị và ranh giới trao đổi qua API/database, sau đó chọn kiểu và kiểm thử các tình huống như tính thuế, truyền long sang JavaScript hay mã có số 0 đầu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy trình chọn kiểu
+
+    1. Bốn câu hỏi nào phải được trả lời trước khi quyết định một trường dùng int, long, double hay BigDecimal?
+    2. Vì sao cùng số chữ số có thể dẫn tới lựa chọn khác nhau giữa dữ liệu cảm biến và số tiền?
+    3. Khi nào lựa chọn String hoặc java.time đúng hơn một kiểu số?
+
+    ### Kiểm thử và hợp đồng hệ thống
+
+    1. Tính thuế trên đơn giá 19.95 và số lượng 3 cần thỏa thuận những điểm nào về scale và thời điểm rounding?
+    2. Điều gì có thể sai khi long 9007199254740993 truyền qua JSON number tới JavaScript?
+    3. Cần xác minh những gì ở miền, trung gian phép nhân, null, đơn vị và database trước khi đưa phép tính vào môi trường thật?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ra quyết định có căn cứ | Giải thích lựa chọn kiểu cho từng trường của dịch vụ đặt hàng và đo lường. |
+    | Viết phép tính có hợp đồng | Tính subtotal, tax và total bằng BigDecimal theo rounding được chỉ định, kiểm chứng kết quả. |
+    | Thiết kế biên API | Chọn cách serialize một định danh long lớn để không mất bit tại JavaScript. |
+    | Lập bộ kiểm thử | Đề xuất trường hợp biên cho tràn số, NaN, rounding, unboxing null và sai đơn vị. |
+- id: overview-007
+  title: Kiến thức tiên quyết và trình tự học đề xuất
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiến thức tiên quyết và trình tự học đề xuất**
+
+    Bài học dùng như cổng kiểm tra mức sẵn sàng: người học xác minh đã biết JDK, biến, biểu thức, phương thức và xử lý ngoại lệ, rồi theo một trình tự luyện tập từ ý nghĩa dữ liệu đến khả năng tương thích JDK. Nó cung cấp bài kiểm tra đầu vào, kế hoạch ôn theo điểm yếu và tiêu chí tự xác nhận năng lực thay vì học lại toàn bộ lý thuyết của các bài trước.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Điều kiện bắt đầu
+
+    1. Những thao tác Java căn bản nào cần thực hiện được để tự chạy bài tập Numbers?
+    2. Làm sao dùng kết quả phép chia và thứ tự toán tử để biết mình cần ôn phần nào trước?
+
+    ### Lập lộ trình và tự đánh giá
+
+    1. Vì sao nên tìm hiểu ý nghĩa dữ liệu và kiểu trước khi quyết định thuật toán tính tiền?
+    2. Khi gặp sai số 0.1 + 0.2 hoặc overflow, nên quay về bước học và phép thử nào?
+    3. Làm sao xác minh đã sẵn sàng đối chiếu API JDK và làm bài tập Numbers độc lập?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra đầu vào | Biên dịch chương trình kiểm tra 7 / 2 và 2 + 3 * 4, dự đoán stdout và đối chiếu. |
+    | Xếp lịch học | Lập thứ tự ôn tám nội dung của chương dựa trên những khái niệm còn thiếu. |
+    | Tự chẩn đoán | Ghép từng lỗi về phép toán, biểu diễn, conversion, rounding hoặc JDK với bài cần học lại. |
+    | Chứng minh sẵn sàng | Hoàn thành checklist năng lực bằng ví dụ tự chạy và giải thích kết quả. |
+- id: overview-008
+  title: Phạm vi Java Core và cách đối chiếu phiên bản JDK
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phạm vi Java Core và cách đối chiếu phiên bản JDK**
+
+    Bài học hướng dẫn xác định Numbers thuộc cú pháp Java hay thư viện chuẩn java.base, rồi đối chiếu API theo phiên bản đích. Qua Math.clamp, compact number formatting và javac --release, người học phân biệt source, API, class-file và runtime compatibility để tránh kết luận sai rằng mã chạy được chỉ vì biên dịch trên JDK hiện tại.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phạm vi và các lớp tương thích
+
+    1. BigDecimal thuộc Java SE ở đâu và có cần Maven dependency riêng không?
+    2. Source compatibility, API compatibility, class-file compatibility và runtime behavior khác nhau thế nào?
+    3. Vì sao Math đã tồn tại lâu nhưng Math.clamp không dùng được với --release 17?
+
+    ### Chứng minh trên môi trường đích
+
+    1. --release 11 phát hiện API NumberFormat.getCompactNumberInstance chưa tồn tại bằng cách nào?
+    2. Tại sao class-file major 65 không chạy trên Java 17 có major 61?
+    3. Cần ghi những thông tin nào về build JDK, runtime JDK, vendor, API Since và phép thử để xác nhận khả năng tương thích?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tra cứu đúng phiên bản | Tìm phương thức và đọc Since, Deprecated, Throws ở tài liệu API của bản Java mục tiêu. |
+    | Kiểm chứng biên dịch | Dùng javac --release cho target và phân biệt lỗi cú pháp, thiếu API và class-file. |
+    | Phân tích runtime | Giải thích UnsupportedClassVersionError và nhu cầu thử trực tiếp trên JDK đích. |
+    | Lập bằng chứng tương thích | Viết bản ghi lệnh java -version, javac -version, --release, output và giới hạn cần kiểm tra. |

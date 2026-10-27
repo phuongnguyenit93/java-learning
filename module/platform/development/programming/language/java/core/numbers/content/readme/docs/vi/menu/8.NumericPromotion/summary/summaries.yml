@@ -1,0 +1,345 @@
+summaries:
+- id: numeric-promotion-001
+  title: Unary numeric promotion
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Unary numeric promotion**
+
+    Unary numeric promotion nâng `byte`, `short`, `char` thành `int` trong toán tử một ngôi và một số ngữ cảnh khác. Nắm quy tắc này giúp dự đoán đúng kiểu, giá trị phép bù bit, dịch bit và lỗi khi dùng wrapper null.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy tắc cơ bản
+
+    1. Vì sao `+byte` hoặc `~short` trả về `int`?
+    2. Tại sao `-Integer.MIN_VALUE` vẫn âm và cách nào lấy được số đối chính xác?
+    3. Điều gì xảy ra khi dùng toán tử một ngôi với `Byte` bằng null?
+
+    ### Dịch bit và mảng
+
+    1. Vì sao `byte << 33L` vẫn có kiểu `int` và dịch thực tế một bit?
+    2. Cần mask byte âm như thế nào trước khi dùng `>>>` để hiểu nó là số không dấu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định kiểu unary | Dự đoán kiểu và giá trị của `+`, `-`, `~` trên các kiểu nguyên nhỏ. |
+    | Phân tích phép dịch | Tính độ dịch hiệu dụng và giải thích vai trò riêng của toán hạng trái và phải. |
+    | Xử lý lỗi biên | Kiểm tra unboxing null và kiểu chỉ số mảng trước khi tính. |
+- id: numeric-promotion-002
+  title: Binary numeric promotion với int, long, float và double
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Binary numeric promotion với int, long, float và double**
+
+    Binary numeric promotion chọn kiểu chung cho toán tử số dựa trên `double`, `float`, `long`, `int`. Bài học giúp phát hiện tràn ở biểu thức con và nhận biết làm tròn khi số nguyên lớn chuyển sang kiểu dấu phẩy động.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểu của hai toán hạng
+
+    1. Tại sao `int * int` vẫn có kiểu `int` dù được gán vào `long`?
+    2. Các cặp `int/long/float/double` được nâng kiểu theo thứ tự nào?
+    3. Tại sao phép dịch bit không dùng cùng quy tắc binary numeric promotion?
+
+    ### Độ chính xác
+
+    1. Vì sao `16_777_217` so sánh bằng `float` có thể ra kết quả bất ngờ?
+    2. Vì sao `long` lớn hơn `2^53` có thể mất đơn vị khi đổi thành `double`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập bảng nâng kiểu | Chọn kiểu kết quả của phép tính với hai toán hạng hỗn hợp. |
+    | Tránh tràn trung gian | Cast toán hạng sang `long` trước phép nhân có nguy cơ overflow. |
+    | Phát hiện làm tròn | Giải thích kết quả của so sánh `int` với `float` và `long` với `double`. |
+- id: numeric-promotion-003
+  title: Vì sao byte cộng byte thường cho kết quả int
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vì sao byte cộng byte thường cho kết quả int**
+
+    Hai biến `byte` cộng nhau tạo biểu thức `int`, kể cả khi tổng nhỏ. Bài học tập trung vào ranh giới giữa kiểu phép cộng, constant narrowing, cast xuống `byte` và việc kiểm tra miền giá trị trong mã thực tế.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Byte và phép cộng
+
+    1. Tại sao `byte c = a + b` không hợp lệ với hai biến `byte` thông thường?
+    2. Tổng 150 của hai byte được tính chính xác ở `int` hay đã overflow?
+    3. Vì sao `Math.addExact(a,b)` không tự bảo đảm kết quả vừa kiểu `byte`?
+
+    ### Gán và suy luận kiểu
+
+    1. Khi nào `final byte` giúp tạo constant expression gán được về byte?
+    2. Vì sao overload nhận `int` được chọn cho `a + b` và `var` cũng suy luận `int`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện lỗi kiểu | Giải thích lỗi `possible lossy conversion` khi gán phép cộng byte. |
+    | Giữ nguyên giá trị | Tính trong `int`, kiểm tra miền byte rồi mới cast. |
+    | Thử nghiệm kiểu biểu thức | Phân biệt overload được chọn cho biến byte và biểu thức cộng byte. |
+- id: numeric-promotion-004
+  title: Gán biểu thức hằng trong phạm vi byte, short hoặc char
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Gán biểu thức hằng trong phạm vi byte, short hoặc char**
+
+    Java cho phép thu hẹp một số constant expression kiểu `int` vào `byte`, `short`, `char` nếu giá trị vừa miền. Bài học giúp phân biệt constant variable với `final` tính lúc chạy, cũng như sự khác nhau giữa ngữ cảnh gán và lời gọi phương thức.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Điều kiện gán hằng
+
+    1. Khi nào `byte x=100+20` hợp lệ còn `byte x=100+30` lỗi?
+    2. `final int` được xem là constant variable trong điều kiện nào?
+    3. Vì sao literal `42L` không hưởng quy tắc thu hẹp của hằng `int`?
+
+    ### Ngữ cảnh chuyển kiểu
+
+    1. Vì sao `consume((byte) 42)` hợp lệ nhưng `consume(42)` có thể không?
+    2. Cần kiểm tra gì trước khi ép một kết quả runtime từ `int` xuống `char`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại biểu thức hằng | Xác định dòng gán nào được chấp nhận và giải thích kiểu cùng phạm vi đích. |
+    | Phân biệt ngữ cảnh | So sánh assignment context với invocation và compound assignment. |
+    | Viết chuyển kiểu an toàn | Xây dựng guard miền `byte`, `short`, `char` trước cast. |
+- id: numeric-promotion-005
+  title: Compound assignment và phép thu hẹp ngầm định
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Compound assignment và phép thu hẹp ngầm định**
+
+    Compound assignment thực hiện phép toán rồi có thể thu hẹp kết quả về kiểu của vế trái, kể cả `int += double`. Bài học giải thích việc vế trái được đánh giá đúng một lần để tránh mất dữ liệu và lỗi side effect trong cập nhật mảng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phép gán kết hợp
+
+    1. Vì sao `b += 1` hợp lệ còn `b = b + 1` không hợp lệ với byte?
+    2. Vì sao `int n=7; n+=2.9` nhận 9?
+    3. Làm sao phân biệt overflow trong phép toán với narrowing lúc ghi lại?
+
+    ### Side effect và phạm vi
+
+    1. Giải thích diễn tiến `values[i++] += i` và vì sao vế trái chỉ được đánh giá một lần?
+    2. Vì sao `volatile count += 1` không đủ bảo đảm cập nhật nguyên tử?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết chuyển kiểu | Phân tích bốn bước đọc, tính, chuyển, ghi của `op=`. |
+    | Kiểm thử mất dữ liệu | Tính kết quả `byte += long`, `int += double` và thiết kế guard cần thiết. |
+    | Viết cập nhật an toàn | Sửa code thay `array[i++] += 1` mà không đánh giá chỉ số hai lần. |
+- id: numeric-promotion-006
+  title: Kiểu của phép tăng giảm khác phép cộng rồi gán
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểu của phép tăng giảm khác phép cộng rồi gán**
+
+    Tiền tố và hậu tố tăng giảm có kiểu của biến, khác phép cộng rồi gán có thể mang kiểu `int`. Bài học tập trung vào giá trị trả về cũ/mới, overflow ở kiểu nhỏ, wrapper nullable và checked increment theo miền đích.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểu của tăng giảm
+
+    1. Vì sao `byte x = ++b` có thể biên dịch còn `byte x = b+1` thường không?
+    2. `b++` và `++b` trả giá trị nào khi cả hai đều làm b tăng?
+    3. Kiểu biểu thức `b++ + 1` khác `b++` thế nào?
+
+    ### Overflow và trường hợp khó
+
+    1. Vì sao `Math.incrementExact((int) Byte.MAX_VALUE)` không ném lỗi byte overflow?
+    2. `Byte` null hay `Character.MAX_VALUE++` có tác động gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết tăng giảm | Phân biệt giá trị biểu thức tiền tố/hậu tố và biến cuối. |
+    | Kiểm tra miền nhỏ | Tạo phép tăng byte có guard khi vượt 127. |
+    | So sánh kiểu toán tử | Giải thích `b++`, `b += 1`, `b = b + 1` và lỗi mất dữ liệu. |
+- id: numeric-promotion-007
+  title: 'Toán tử điều kiện ?: và các quy tắc đặc biệt cho số'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Toán tử điều kiện ?: và các quy tắc đặc biệt cho số**
+
+    Toán tử `?:` chỉ đánh giá nhánh được chọn nhưng compiler xét kiểu cả hai nhánh. Các ngoại lệ `byte` với `short`, hằng `int` vừa miền, cặp primitive-wrapper và unboxing khiến kết quả khác phép cộng thông thường.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểu của toán tử điều kiện
+
+    1. Vì sao `flag ? b : s` với byte/short có kiểu `short`?
+    2. Vì sao nhánh `int` hằng 20 có thể giữ kết quả byte nhưng biến `int` giá trị 20 thì không?
+    3. Khi một nhánh là `long` và nhánh kia là `float`, có nguy cơ gì?
+
+    ### Nhánh được chạy
+
+    1. Điều gì xảy ra khi `Boolean condition` bằng null?
+    2. Hai nhánh cùng `Byte` và nhánh `Byte` với primitive có khác nhau về unboxing null không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định kiểu ?: | Dự đoán kiểu kết quả ternary cho các cặp số đặc biệt. |
+    | Lần theo nhánh | Chỉ ra nhánh nào chạy và trường hợp nào unbox null. |
+    | Thiết kế biểu thức rõ ràng | Dùng `if/else` hoặc guard thay ternary có kiểu và null phức tạp. |
+- id: numeric-promotion-008
+  title: Unboxing khi biểu thức chứa wrapper
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Unboxing khi biểu thức chứa wrapper**
+
+    Wrapper có thể bị unbox trong số học, so sánh, điều kiện và Stream, khiến giá trị `null` gây NPE. Bài học giúp phân biệt boxing/unboxing với chuyển kiểu số, so tham chiếu với so giá trị, và xử lý dữ liệu nullable theo hợp đồng API.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Unboxing số học
+
+    1. Vì sao cộng hai `Integer` có kiểu `int` trước khi boxing kết quả?
+    2. Vì sao `Long target = IntegerA + IntegerB` không phải phép gán hợp lệ?
+    3. Khi wrapper null tham gia `count++`, lỗi xảy ra ở bước nào?
+
+    ### So sánh và dữ liệu thiếu
+
+    1. `boxed == null` khác `boxed == 0` thế nào?
+    2. Vì sao hai wrapper `Integer` không nên được so giá trị bằng `==`?
+    3. Có những cách nào để kiểm tra an toàn `Boolean` có thể null?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết unbox | Phân tích chuỗi unbox, promotion, tính toán và boxing khi gán. |
+    | Kiểm tra null | Viết guard hoặc chính sách null trước phép toán và Stream `mapToInt`. |
+    | So giá trị đúng | Chọn `equals`/`Objects.equals` hoặc primitive comparison theo nhu cầu. |
+- id: numeric-promotion-009
+  title: 'Overload: nâng kiểu primitive, boxing và giới hạn kết hợp'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Overload: nâng kiểu primitive, boxing và giới hạn kết hợp**
+
+    Overload resolution chọn phương thức theo ba pha tại compile time. Bài học giúp hiểu vì sao widening primitive có thể thắng boxing, boxing+widening reference hợp lệ còn widening primitive rồi boxing không tự xảy ra, cùng giới hạn fixed arity và varargs.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy tắc chọn overload
+
+    1. Vì sao `m(7)` ưu tiên `m(long)` hơn `m(Integer)`?
+    2. Vì sao `m(Number)` có thể thắng `m(long)` khi đối số là `Integer`?
+    3. Khi nào varargs chỉ được xét sau hai pha fixed arity?
+
+    ### Giới hạn chuyển kiểu
+
+    1. Vì sao `int` không tự chuyển thành `Long`?
+    2. Tại sao `Integer` có thể unbox rồi widening sang `long`?
+    3. Vì sao gọi `process(null)` mơ hồ với overload `Integer` và `Long`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn chữ ký cụ thể | Xếp ứng viên theo ba pha rồi chọn overload phù hợp nhất. |
+    | Đánh giá chuyển đổi hợp lệ | Phân biệt boxing/widening reference với unboxing/widening primitive. |
+    | Giải thích lỗi overload | Sửa lời gọi mơ hồ bằng kiểu literal hoặc cast có chủ đích. |
+- id: numeric-promotion-010
+  title: var suy luận kiểu từ initializer, không từ cách dùng về sau
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **var suy luận kiểu từ initializer, không từ cách dùng về sau**
+
+    `var` xác định kiểu tĩnh một lần từ initializer; việc gán hay dùng biến về sau không thay đổi kiểu. Bài học cho thấy chọn sai literal, phép chia hoặc phép nhân ở initializer vẫn gây truncation/overflow và ảnh hưởng generic inference.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Suy luận kiểu từ giá trị khởi tạo
+
+    1. Vì sao `var x=1` không cho phép gán `x=1L`?
+    2. `var r=5/2` và `var r=5.0/2` khác nhau thế nào?
+    3. Tại sao `var x=50_000*50_000` vẫn overflow int?
+
+    ### Giới hạn sử dụng
+
+    1. Vì sao `var list = new ArrayList<>()` thường suy luận phần tử `Object`?
+    2. Tại sao `var x=null` hoặc lambda trần không hợp lệ khi thiếu target type?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Suy kiểu biến | Ghi đúng kiểu của initializer số, ternary, wrapper và generic. |
+    | Thiết kế initializer | Chuyển sang `long` trước phép toán hoặc dùng literal `double` khi cần. |
+    | Đánh giá giới hạn var | Phát hiện khai báo var không hợp lệ và giải thích lý do. |
+- id: numeric-promotion-011
+  title: Số trong switch và giới hạn theo phiên bản ngôn ngữ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Số trong switch và giới hạn theo phiên bản ngôn ngữ**
+
+    Kiểu selector và các nhãn `case` của switch phụ thuộc numeric promotion và phiên bản Java. Bài học phân biệt switch Java 17, pattern matching tham chiếu Java 21, primitive selector Java 27 preview và kiểm tra miền khi phải chuyển `long` về `int`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Selector và nhãn case
+
+    1. Vì sao `switch(byteA + byteB)` được chấp nhận trên Java 17?
+    2. Vì sao `case 128` không hợp lệ cho byte và `case 500` lại hợp lệ cho short?
+    3. Một biến final tính lúc chạy có thể dùng làm `case` hằng không?
+
+    ### Ngữ nghĩa và phiên bản
+
+    1. Khi nào switch expression cần `yield`, `default` và nhánh đầy đủ?
+    2. Pattern switch `Number` Java 21 khác primitive `long` selector như thế nào?
+    3. Tại sao cast `(int)` một long lớn có thể khớp nhầm case 0?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn switch hợp lệ | Viết selector, case và switch expression chính xác trên Java 17. |
+    | Giải thích khác biệt phiên bản | Phân biệt Java 21 pattern và Java 27 preview qua ví dụ. |
+    | Kiểm soát ép kiểu | Dùng `Math.toIntExact` hoặc chuyển hướng sang if/else khi cần. |

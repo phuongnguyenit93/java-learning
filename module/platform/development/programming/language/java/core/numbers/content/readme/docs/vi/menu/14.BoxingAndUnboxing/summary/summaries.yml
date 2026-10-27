@@ -1,0 +1,331 @@
+summaries:
+- id: boxing-and-unboxing-001
+  title: Autoboxing và các ngữ cảnh chuyển primitive thành wrapper
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Autoboxing và các ngữ cảnh chuyển primitive thành wrapper**
+
+    Boxing tự động nối primitive với API đối tượng, nhưng mỗi ngữ cảnh chỉ cho phép một số quy tắc chuyển kiểu. Bài học phân tích assignment, method invocation, return, lambda, generic và cách overload resolution ưu tiên widening primitive.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất boxing
+
+    1. Tám primitive được ánh xạ tới wrapper như thế nào?
+    2. Tại sao `Number n = 5` hợp lệ nhưng `Long n = 5` không hợp lệ?
+
+    ### Tương tác API
+
+    1. Vì sao `pick(long)` thắng `pick(Integer)` với đối số int?
+    2. Tại sao `List<Integer>` nhận một int nhưng `int[]` không đổi thành `Integer[]`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện boxing | Chỉ ra boxing trong gán, return, lambda, mảng và generic |
+    | Phân tích kiểu | Giải thích boxing rồi widening reference và trường hợp không được ghép conversion |
+    | Dự đoán overload | Chọn overload theo pha resolution. |
+- id: boxing-and-unboxing-002
+  title: Unboxing trong gán, phép toán và lời gọi phương thức
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Unboxing trong gán, phép toán và lời gọi phương thức**
+
+    Unboxing có thể diễn ra trong phép gán, số học, so sánh và gọi method. Theo dõi numeric promotion, overflow, method overload và null giúp hiểu kiểu kết quả cũng như NPE xảy ra vào lúc nào.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ cảnh unboxing
+
+    1. `Integer` gán cho `long` qua những bước chuyển đổi nào?
+    2. Vì sao cộng hai Integer cho kết quả int và vẫn có thể overflow?
+
+    ### Gọi method
+
+    1. Vì sao `route(Integer)` có thể được chọn khi truyền Integer?
+    2. Khi truyền Integer null cho method nhận int, NPE xảy ra ở bước nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết unboxing | Xác định chỗ wrapper thành primitive trong biểu thức |
+    | Dự đoán số học | Giải thích promotion, chia nguyên, overflow |
+    | Chọn overload | Đối chiếu strict invocation, widening và unboxing. |
+- id: boxing-and-unboxing-003
+  title: NullPointerException khi unbox giá trị null
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **NullPointerException khi unbox giá trị null**
+
+    Unboxing wrapper null dẫn tới NullPointerException, không có mặc định 0. Bài phân tích nguồn null ở Map, array, DTO, stream, cùng khác biệt NPE do unbox và do gọi method trên receiver null để chọn validation hoặc fallback đúng nghĩa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phát sinh ngoại lệ
+
+    1. Vì sao `int x = boxedNull` biên dịch được nhưng ném NPE khi chạy?
+    2. `boxed == null` và `boxed == 0` khác nhau về unboxing thế nào?
+
+    ### Nguồn dữ liệu nullable
+
+    1. Tại sao getOrDefault vẫn trả null khi key có mapping null?
+    2. Khi Stream<Integer> có null, cần lựa chọn lọc bỏ hay báo lỗi theo tiêu chí nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Khoanh vùng NPE | Chỉ ra lỗi unbox null trong toán tử, map, mảng và stream |
+    | Phân biệt nguyên nhân | Tách unboxing null khỏi gọi equals trên null |
+    | Xử lý thiếu | Chọn giữ nullable, báo validation hoặc default có căn cứ. |
+- id: boxing-and-unboxing-004
+  title: So sánh == giữa hai wrapper và giữa wrapper với primitive
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **So sánh == giữa hai wrapper và giữa wrapper với primitive**
+
+    Toán tử == với wrapper có thể hỏi về identity hoặc numeric equality khi bên kia là primitive. Bài học đối chiếu == với equals, cache, null và trường hợp số thực NaN, signed zero hoặc widening long sang double.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa equality
+
+    1. `Integer a == Integer b` so sánh điều gì?
+    2. So `Integer` với `int` khác thế nào khi wrapper là null?
+
+    ### Ngoại lệ số học
+
+    1. Vì sao Integer.equals(Long) có kết quả false dù hai số là 7?
+    2. Double.equals khác primitive double == với NaN và signed zero thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải nghĩa toán tử | Phân biệt identity và numeric equality qua kiểu tĩnh |
+    | So sánh nullable | Dùng equals hoặc Objects.equals sau khi xét null |
+    | Kiểm tra kiểu số | Giải thích NaN, zero có dấu và precision. |
+- id: boxing-and-unboxing-005
+  title: Cache wrapper và giới hạn không nên dùng làm hợp đồng nhận dạng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Cache wrapper và giới hạn không nên dùng làm hợp đồng nhận dạng**
+
+    Cache wrapper tái sử dụng một số object nhỏ nhưng identity ngoài vùng bảo đảm phụ thuộc cách triển khai. Bài học giải thích valueOf, equality trong collection và vì sao không dùng wrapper làm monitor hoặc mã định danh bền vững.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cache và giới hạn
+
+    1. Integer/Long/Short/Byte valueOf bảo đảm cache phạm vi nào?
+    2. Vì sao không được khẳng định Integer.valueOf(200) tạo hai object riêng?
+
+    ### Tác động tới ứng dụng
+
+    1. Vì sao HashSet<Integer> nhận diện phần tử trùng mà không cần cùng identity?
+    2. Điều gì sai khi dùng wrapper cached làm monitor?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc contract cache | Nêu phạm vi tối thiểu được bảo đảm |
+    | Dùng equality | Chọn equals/hashCode cho các collection |
+    | Tránh identity sai | Không dùng wrapper làm lock hoặc ID riêng. |
+- id: boxing-and-unboxing-006
+  title: List<Integer> không phải int[]
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **List<Integer> không phải int[]**
+
+    int[] chứa primitive, Integer[] chứa tham chiếu, List<Integer> là API collection với mutability phụ thuộc implementation. Bài luyện chuyển đổi từng phần tử, phân biệt Arrays.asList(int[]), Stream.toList và remove(int)/remove(Object).
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểu và cấu trúc
+
+    1. Tại sao không thể viết List<int> hoặc cast int[] thành List<Integer>?
+    2. Các phần tử mặc định của int[], Integer[] và ArrayList mới khác nhau thế nào?
+
+    ### Chuyển đổi và thao tác
+
+    1. Vì sao Arrays.asList(intArray) tạo List<int[]> size 1?
+    2. Trong List<Integer>, remove(1) và remove(Integer.valueOf(1)) xóa gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh cấu trúc | Phân biệt kiểu phần tử, null và khả năng resize |
+    | Chuyển hai chiều | Dùng boxed() hoặc mapToInt() và xử lý null |
+    | Tránh bẫy API | Giải thích Arrays.asList, toList và hai overload remove. |
+- id: boxing-and-unboxing-007
+  title: Chi phí boxing trong vòng lặp và cấu trúc dữ liệu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chi phí boxing trong vòng lặp và cấu trúc dữ liệu**
+
+    Boxing trong vòng lặp/collection có thể ảnh hưởng bộ nhớ, allocation, GC và locality nhưng JVM/JIT cũng có thể loại bỏ object tạm. Bài học đánh giá chi phí thật và xây phép đo JMH đủ warmup, fork, input thực tế.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chi phí chuyển đổi
+
+    1. Integer sum += i thực hiện các phép chuyển kiểu nào?
+    2. Vì sao mỗi boxing không luôn cấp phát một object mới?
+
+    ### Phân tích hiệu năng
+
+    1. int[] và ArrayList<Integer> khác nhau thế nào về memory locality?
+    2. Vì sao một phép đo System.nanoTime đơn lẻ không thay cho JMH?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện chi phí | Tách conversion, allocation, live object và GC |
+    | Chọn cấu trúc | Đánh đổi primitive array/stream và List wrapper |
+    | Thiết kế đo | Phân tích warmup, forks, consumption và workload. |
+- id: boxing-and-unboxing-008
+  title: Objects.equals và xử lý wrapper có thể null
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Objects.equals và xử lý wrapper có thể null**
+
+    Objects.equals xử lý null-safe cho wrapper nhưng không tự nâng Integer thành Long, so sâu mảng hay thay null bằng zero. Bài học chọn equals, deepEquals, null guard, comparator và default theo đúng hợp đồng dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Null-safe equality
+
+    1. Objects.equals(null,null) có ý nghĩa gì?
+    2. Vì sao Objects.equals(10,10L) khác primitive 10 == 10L?
+
+    ### API đặc thù
+
+    1. Objects.equals có so phần tử của hai array mới không?
+    2. Comparator.nullsFirst xử lý list chứa null ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Áp dụng equality | Chọn Objects.equals cho wrapper nullable |
+    | Hiểu giới hạn | Phân biệt deepEquals và numeric comparison |
+    | Bảo vệ nullable | Chọn validation, fallback và comparator phù hợp. |
+- id: boxing-and-unboxing-009
+  title: 'Toán tử ?: có thể unbox nhánh wrapper'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Toán tử ?: có thể unbox nhánh wrapper**
+
+    Toán tử ?: có kiểu riêng xác định từ hai nhánh, có thể unbox Integer null khi nhánh còn lại là int dù đích gán là Integer. Bài phân tích chỉ nhánh được chọn được đánh giá, Boolean condition nullable và cách giữ null hoặc fallback.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy tắc kiểu ?:
+
+    1. Vì sao `Integer r = choose ? nullable : 0` vẫn có thể NPE?
+    2. Hai nhánh Integer/Integer khác Integer/int ở bước chọn kiểu nào?
+
+    ### Thực thi nhánh
+
+    1. Nhánh ?: không được chọn có chạy khi điều kiện đã xác định không?
+    2. Nếu Boolean condition null, NPE xảy ra trước hay sau khi chọn nhánh?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Suy kiểu ?:  | Xác định kiểu numeric conditional và chỗ unboxing |
+    | Bảo toàn null | Dùng hai nhánh wrapper đồng kiểu |
+    | Tránh NPE | Viết null guard hoặc if/else và kiểm thử các nhánh. |
+- id: boxing-and-unboxing-010
+  title: Không dùng wrapper làm khóa đồng bộ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không dùng wrapper làm khóa đồng bộ**
+
+    synchronized khóa theo identity object; cache wrapper và việc Integer count++ gán lại tham chiếu khiến monitor không ổn định. Bài đánh giá race, volatile, và lựa chọn private final Object, AtomicInteger, LongAdder, ReentrantLock.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế monitor
+
+    1. synchronized sử dụng identity hay giá trị số của object khóa?
+    2. Vì sao synchronized(count) { count++; } có thể khóa nhiều monitor khác nhau?
+
+    ### Thiết kế concurrency
+
+    1. Tại sao volatile Integer vẫn không làm ++ nguyên tử?
+    2. Khi nào dùng private Object lock thay vì AtomicInteger hoặc LongAdder?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích race | Giải thích việc đổi tham chiếu monitor gây mất cập nhật |
+    | Thiết kế khóa | Tạo private final Object và đồng bộ read/write |
+    | Chọn atomic | Phân biệt AtomicInteger, LongAdder và ReentrantLock. |
+- id: boxing-and-unboxing-011
+  title: Phân biệt tham chiếu null với giá trị số 0
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt tham chiếu null với giá trị số 0**
+
+    Null, không có field và số 0 có thể là ba trạng thái nghiệp vụ khác nhau. Bài liên hệ Integer, Map.containsKey, JDBC getInt/wasNull, JSON DTO và OptionalInt để không làm mất thông tin missing khi chuyển đổi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa dữ liệu
+
+    1. Integer null khác Integer chứa số 0 ra sao?
+    2. Vì sao Map.get không phân biệt key vắng với mapping null?
+
+    ### Hợp đồng API
+
+    1. Vì sao phải gọi wasNull ngay sau ResultSet.getInt?
+    2. Khi nào OptionalInt hoặc metadata field presence cần thiết?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt trạng thái | Giải thích absent, explicit null, numeric zero |
+    | Map JDBC | Dùng getInt và wasNull đúng thứ tự |
+    | Chọn representation | Chọn int, Integer hay OptionalInt theo chính sách. |

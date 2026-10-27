@@ -1,0 +1,31 @@
+sections:
+  numeric-data-design-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-data-design-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-data-design-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-data-design-004:
+    difficulty: ADVANCED
+    isImportant: true
+  numeric-data-design-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-data-design-006:
+    difficulty: ADVANCED
+    isImportant: true
+  numeric-data-design-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-data-design-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-data-design-009:
+    difficulty: ADVANCED
+    isImportant: true
+  numeric-data-design-010:
+    difficulty: ADVANCED
+    isImportant: true

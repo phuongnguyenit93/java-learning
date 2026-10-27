@@ -1,0 +1,68 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "TRA CỨU SỐ TRONG JAVA — MẠCH ĐỐI CHIẾU QUY TẮC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: numeric-reference-001
+    order: 1
+    title: "Bảng kích thước, miền giá trị và hằng của kiểu số"
+    description: "Tra cứu bảng miền, số bit, hằng MIN/MAX và metadata primitive; phân biệt biểu diễn float/double và số lớn."
+    transition:
+      to: numeric-reference-002
+      description: "Từ miền và kiểu số sang quy tắc widening, narrowing và promotion quyết định kiểu thực sự của biểu thức."
+  - id: numeric-reference-002
+    order: 2
+    title: "Bảng widening, narrowing và numeric promotion"
+    description: "Hệ thống hóa bảng widening/narrowing, unary/binary promotion, kiểu biểu thức và ngoại lệ về shift/assignment."
+    transition:
+      to: numeric-reference-003
+      description: "Khi đã xác định kiểu toán hạng, vận dụng quy tắc chia, dư và rounding đặc biệt với số âm."
+  - id: numeric-reference-003
+    order: 3
+    title: "Bảng chia, lấy dư và làm tròn cho số âm"
+    description: "Tra quy tắc chia, dư, floor và rounding đối với số âm; tách `Math` và decimal `RoundingMode`."
+    transition:
+      to: numeric-reference-004
+      description: "Từ số âm và rounding đến các giá trị đặc biệt NaN và signed zero trong phép so sánh floating-point."
+  - id: numeric-reference-004
+    order: 4
+    title: "Bảng NaN, signed zero, equals và compare"
+    description: "Đối chiếu primitive equality, wrapper equals/order, NaN payload và signed zero trong collection và sorting."
+    transition:
+      to: numeric-reference-005
+      description: "Sau equality và order, tổng hợp tiêu chí chọn primitive, wrapper, BigInteger hay BigDecimal cho mô hình số."
+  - id: numeric-reference-005
+    order: 5
+    title: "Bảng chọn primitive, wrapper, BigInteger hoặc BigDecimal"
+    description: "Tổng hợp lựa chọn primitive, wrapper, BigInteger và BigDecimal theo miền, precision, null, generic và schema."
+    transition:
+      to: numeric-reference-006
+      description: "Từ chọn kiểu BigDecimal sang bảng chi tiết precision, scale, MathContext và RoundingMode."
+  - id: numeric-reference-006
+    order: 6
+    title: "Bảng precision, scale, MathContext và RoundingMode"
+    description: "Tra precision/scale, MathContext, tám RoundingMode và vị trí rounding trong các phép toán BigDecimal."
+    transition:
+      to: numeric-reference-007
+      description: "Khi phân biệt các cách làm tròn, đối chiếu bảng parse, format và conversion exact ở ranh giới input/output."
+  - id: numeric-reference-007
+    order: 7
+    title: "Bảng parse, format và chuyển đổi exact"
+    description: "Tra API parse radix/locale, format text và chuyển kiểu exact, xử lý các ranh giới precision và scale."
+    transition:
+      to: numeric-reference-008
+      description: "Từ bảng API thực hành đến nguồn JLS/Javadoc để xác minh chính xác từng quy tắc theo Java version."
+  - id: numeric-reference-008
+    order: 8
+    title: "Tra cứu JLS và Javadoc các API số"
+    description: "Học tra JLS/Javadoc Java 17 chính xác theo câu hỏi, overload, phiên bản, ví dụ và nguồn dẫn."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Bảng kích thước, miền giá trị và hằng của kiểu số | Bảng widening, narrowing và numeric promotion | Bảng chia, lấy dư và làm tròn cho số âm | Bảng NaN, signed zero, equals và compare | Bảng chọn primitive, wrapper, BigInteger hoặc BigDecimal | Bảng precision, scale, MathContext và RoundingMode | Bảng parse, format và chuyển đổi exact | Tra cứu JLS và Javadoc các API số |
+  | Vấn đề cần hiểu | Giới hạn biểu diễn số có ý nghĩa gì với việc chọn và chuyển kiểu? | Java tự chuyển kiểu trước khi thực hiện biểu thức theo những quy tắc nào? | Chia, phần dư và làm tròn số âm khác nhau ra sao? | NaN và signed zero khiến equality, hashing và thứ tự khác nhau thế nào? | Theo yêu cầu nào nên chọn primitive, wrapper, BigInteger hay BigDecimal? | Scale, precision và rounding policy tác động kết quả BigDecimal thế nào? | Phân biệt parse, format và exact conversion ở mọi kiểu số thế nào? | Cách tìm đúng JLS hay Javadoc cho một quy tắc số ở Java 17? |
+  | Giá trị đối với OOP/module | Đối chiếu cận của primitive và API metadata | Tránh overflow trước widening và lỗi promotion | Tránh sai bucket/index khi số âm và làm tròn | Bảo vệ collection và comparator floating point | Chọn kiểu dữ liệu đúng nghiệp vụ và ranh giới | Kiểm soát làm tròn và giới hạn precision decimal | Chọn parser và conversion phù hợp contract | Tự xác minh và dẫn nguồn đặc tả khi review |
+  | Tư duy hình thành | Tra giới hạn kiểu trước phép tính | Đọc kiểu toán hạng thay vì kiểu đích | Định nghĩa hướng chia và rounding rõ ràng | Chọn hợp đồng so sánh trước khi code | Đặt domain và precision trước cú pháp | Phân biệt fixed scale và chữ số có nghĩa | Không trộn xử lý văn bản với chuyển kiểu | Phân biệt hợp đồng ngôn ngữ và API |

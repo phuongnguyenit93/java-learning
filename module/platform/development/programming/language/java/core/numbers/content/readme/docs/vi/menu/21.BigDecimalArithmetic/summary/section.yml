@@ -1,0 +1,96 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "PHÉP TOÁN BIGDECIMAL — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: big-decimal-arithmetic-001
+    order: 1
+    title: "add, subtract, multiply và scale của kết quả"
+    description: "Phân tích quy tắc preferred scale cho add/subtract/multiply và biểu diễn theo unscaled value. So sánh phép toán chính xác với MathContext và scale cố định."
+    transition:
+      to: big-decimal-arithmetic-002
+      description: "Từ các phép toán luôn có kết quả decimal hữu hạn, xem vì sao phép chia exact có thể không cho thương hữu hạn."
+  - id: big-decimal-arithmetic-002
+    order: 2
+    title: "divide chính xác và số thập phân vô hạn tuần hoàn"
+    description: "Dạy điều kiện thương thập phân hữu hạn dựa trên mẫu tối giản chỉ có thừa số 2,5. Làm rõ divide exact, preferred scale và nhu cầu mô hình phân số."
+    transition:
+      to: big-decimal-arithmetic-003
+      description: "Sau khi hiểu vì sao có thương vô hạn, so sánh overload chia khi bài toán cho phép làm tròn có kiểm soát."
+  - id: big-decimal-arithmetic-003
+    order: 3
+    title: "divide với scale, RoundingMode hoặc MathContext"
+    description: "So sánh bốn overload divide theo fixed scale, dividend scale, MathContext precision và exact. Truy vết rounding mode, số âm, scale âm và các điểm chốt."
+    transition:
+      to: big-decimal-arithmetic-004
+      description: "Từ thương decimal được làm tròn, chuyển sang API lấy riêng phần nguyên thương và phần dư chính xác."
+  - id: big-decimal-arithmetic-004
+    order: 4
+    title: "divideToIntegralValue, remainder và divideAndRemainder"
+    description: "Giải thích thương nguyên cắt về 0 và remainder có dấu, invariant a=q*b+r. Phân tích divideAndRemainder và giới hạn MathContext với thương nguyên."
+    transition:
+      to: big-decimal-arithmetic-005
+      description: "Từ phép chia lấy phần nguyên, xem hai phép toán phi tuyến pow/sqrt và độ chính xác của kết quả."
+  - id: big-decimal-arithmetic-005
+    order: 5
+    title: "pow và sqrt theo precision được yêu cầu"
+    description: "Trình bày pow chính xác hay theo MathContext, mũ âm, sqrt và các ca không thể biểu diễn exact. Giải thích giới hạn precision và rủi ro làm tròn hai lần."
+    transition:
+      to: big-decimal-arithmetic-006
+      description: "Quay về các phép đơn ngôi và so sánh dấu đơn giản làm nền cho việc điều khiển giá trị."
+  - id: big-decimal-arithmetic-006
+    order: 6
+    title: "negate, abs, plus, min, max và signum"
+    description: "Phân biệt negate/abs/plus và signum, min/max dựa trên compareTo. Phân tích trường hợp bằng trị số khác scale và overload với MathContext."
+    transition:
+      to: big-decimal-arithmetic-007
+      description: "Từ phép toán trên các giá trị immutable, làm rõ setScale trả về giá trị nào và cần giữ kết quả ra sao."
+  - id: big-decimal-arithmetic-007
+    order: 7
+    title: "setScale và việc trả về đối tượng mới"
+    description: "Dạy setScale và tính bất biến, ba overload, tăng scale không đổi giá trị, giảm scale có hoặc không cần rounding. Phân biệt đối tượng trả về với instance identity."
+    transition:
+      to: big-decimal-arithmetic-008
+      description: "Khi đã hiểu thay đổi scale không đồng nghĩa thay giá trị, xét API dịch giá trị theo lũy thừa 10."
+  - id: big-decimal-arithmetic-008
+    order: 8
+    title: "movePointLeft, movePointRight và scaleByPowerOfTen"
+    description: "Giải thích movePointLeft/movePointRight so với scaleByPowerOfTen và khác biệt scale âm. Ứng dụng chuyển đơn vị qua power of ten với kiểm tra exact."
+    transition:
+      to: big-decimal-arithmetic-009
+      description: "Từ sự thay đổi scale khi dịch dấu, xem việc xóa trailing zeros có thể tạo scale âm bất ngờ."
+  - id: big-decimal-arithmetic-009
+    order: 9
+    title: "stripTrailingZeros có thể tạo scale âm"
+    description: "Theo dõi việc loại trailing zeros của unscaled value và scale âm, riêng zero trả scale 0. Phân biệt toPlainString, equals, compareTo và khóa collection."
+    transition:
+      to: big-decimal-arithmetic-010
+      description: "Từ scale sau chuẩn hóa, tính đơn vị chữ số cuối của BigDecimal bằng ulp."
+  - id: big-decimal-arithmetic-010
+    order: 10
+    title: "ulp của BigDecimal"
+    description: "Giải thích BigDecimal.ulp = 10^(-scale), kể cả zero và scale âm. Phân biệt đơn vị biểu diễn với error bound và Math.ulp của số thực nhị phân."
+    transition:
+      to: big-decimal-arithmetic-011
+      description: "Dùng kiến thức scale, precision và rounding để quyết định điểm chốt trong một pipeline nhiều bước."
+  - id: big-decimal-arithmetic-011
+    order: 11
+    title: "Tính nhiều bước và lựa chọn thời điểm làm tròn"
+    description: "Kết nối các phép tính thành pipeline với điểm chốt, guard digits, double rounding và phân bổ remainder. Minh họa khác biệt 59.93/59.94 theo chính sách."
+    transition:
+      to: big-decimal-arithmetic-012
+      description: "Kết thúc bằng cách chẩn đoán những ngoại lệ phát sinh khi yêu cầu exact không thể đáp ứng."
+  - id: big-decimal-arithmetic-012
+    order: 12
+    title: "ArithmeticException khi không thể đáp ứng yêu cầu chính xác"
+    description: "Tổng kết những failure mode từ exact divide, UNNECESSARY, MathContext thiếu precision và chia zero. Hướng dẫn phân loại lỗi và không che ArithmeticException."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | add, subtract, multiply và scale của kết quả | divide chính xác và số thập phân vô hạn tuần hoàn | divide với scale, RoundingMode hoặc MathContext | divideToIntegralValue, remainder và divideAndRemainder | pow và sqrt theo precision được yêu cầu | negate, abs, plus, min, max và signum | setScale và việc trả về đối tượng mới | movePointLeft, movePointRight và scaleByPowerOfTen | stripTrailingZeros có thể tạo scale âm | ulp của BigDecimal | Tính nhiều bước và lựa chọn thời điểm làm tròn | ArithmeticException khi không thể đáp ứng yêu cầu chính xác |
+  | Vấn đề cần hiểu | Scale của tổng, hiệu và tích được xác định thế nào? | Thương nào kết thúc trong hệ thập phân và tại sao? | Chọn overload divide nào cho scale, precision và rounding? | Thương nguyên, remainder và modulo khác nhau thế nào? | Power và square root chịu giới hạn precision nào? | Làm sao kiểm tra dấu, chọn min/max mà giữ đúng scale? | setScale làm thay đổi đối tượng gốc và giá trị khi nào? | Nhân/chia lũy thừa 10 có thay đổi scale thế nào? | Vì sao bỏ zero cuối có thể biến scale thành âm? | ULP mô tả hàng chữ số cuối hay sai số thuật toán? | Khi nào làm tròn để giữ đúng tổng và truy vết nghiệp vụ? | Khi nào exactness không đạt và cần chẩn đoán thế nào? |
+  | Giá trị đối với OOP/module | Thao tác số thập phân với biểu diễn có kiểm soát | Phân biệt phép chia exact với kết quả xấp xỉ | Kiểm soát kết quả phép chia theo hợp đồng | Chia nhóm và giữ đúng phần dư | Tính lũy thừa và căn có kiểm soát sai số | Xử lý dấu và giới hạn số decimal | Chốt biểu diễn số thập phân nhất quán | Chuyển đơn vị thập phân không mất thông tin | Chuẩn hóa decimal an toàn cho so sánh và lưu trữ | Quan sát độ chi tiết của kết quả decimal | Thiết kế quy trình tính và đối soát đáng tin cậy | Xử lý lỗi chính xác theo hợp đồng API |
+  | Tư duy hình thành | Theo dõi scale cùng với giá trị toán học | Xét phân số tối giản trước khi chọn API | Viết rõ từng yêu cầu scale và rounding | Chứng minh invariant thay vì chỉ nhìn chuỗi in | Tách thuật toán tính khỏi định dạng đầu ra | Phân biệt đại lượng với cách biểu diễn | Luôn dùng kết quả trả về của BigDecimal | Giữ riêng giá trị số với biểu diễn khoa học | Không đánh đồng zero bị bỏ với sai số | Không coi ulp là ngưỡng chính xác nghiệp vụ | Chốt số ở đúng ranh giới đã được xác định | Phân loại ngoại lệ trước khi thay đổi chính sách tính |

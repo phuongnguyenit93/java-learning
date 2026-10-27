@@ -1,0 +1,301 @@
+summaries:
+- id: big-decimal-comparison-001
+  title: compareTo so sánh giá trị số
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **compareTo so sánh giá trị số**
+
+    BigDecimal.compareTo trả thứ tự **theo giá trị số học** mà không yêu cầu cùng scale. Bài học giúp kiểm tra ngưỡng, khoảng và giá trị âm/dương chính xác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế compareTo
+
+    1. Vì sao 2.0 và 2.00 có compareTo bằng 0 dù scale khác nhau?
+    2. Vì sao nên kiểm tra dấu kết quả compareTo thay vì luôn so bằng -1 hoặc 1?
+
+    ### Lựa chọn phép so sánh
+
+    1. Làm thế nào kiểm tra BigDecimal thuộc khoảng đóng [min,max]?
+    2. Khi nào compareTo == 0 vẫn không thay thế được equals của BigDecimal?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Suy luận thứ tự số | Dự đoán dấu compareTo cho số âm, số 0 và số khác scale. |
+    | Viết điều kiện ngưỡng | Viết so sánh ngưỡng bằng compareTo mà không chuyển sang double. |
+    | Phân biệt equals | Giải thích khác biệt với equals và hậu quả trong collection. |
+- id: big-decimal-comparison-002
+  title: equals đồng thời xét giá trị và scale
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **equals đồng thời xét giá trị và scale**
+
+    BigDecimal.equals kiểm tra **cả giá trị và scale**. Bài học phân biệt representation với equality số học và bảo đảm quy tắc hashCode đi cùng equals.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giá trị và biểu diễn
+
+    1. Vì sao 2.0 và 2.00 khác unscaledValue và scale mà ngang giá trị?
+    2. Khi nào equals false nhưng compareTo == 0?
+
+    ### Hợp đồng equality
+
+    1. Vì sao 0.00.equals(BigDecimal.ZERO) false?
+    2. Nếu thay equality của một record để so amount theo số học, hashCode cần đáp ứng điều gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích scale và value | Tính scale, unscaledValue, equals của 2.0, 2.00 và 1E+3. |
+    | Chọn equality phù hợp | Chọn equals hay compareTo theo yêu cầu thực tế. |
+    | Kiểm tra hợp đồng hash | Phân tích hợp đồng hashCode và kết quả trong HashMap. |
+- id: big-decimal-comparison-003
+  title: Ví dụ 2.0 và 2.00 theo từng cách so sánh
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ví dụ 2.0 và 2.00 theo từng cách so sánh**
+
+    Cặp 2.0/2.00 giúp thực hành bốn phép `==`, `equals`, `compareTo` và `compareTo == 0`; kết quả còn phụ thuộc constructor và phép tính làm thay đổi scale.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bốn phép so sánh
+
+    1. Bốn biểu thức ==, equals, compareTo, compareTo == 0 lần lượt trả gì cho 2.0/2.00?
+    2. UnscaledValue, precision, scale của hai dạng khác nhau thế nào?
+
+    ### Tạo và biến đổi số
+
+    1. Vì sao BigDecimal.valueOf(2.00) không nhớ hai chữ số trong literal double?
+    2. Tại sao add và multiply của 2.0, 2.00 có thể trả kết quả với scale khác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đối chiếu bốn phép so sánh | Chạy BigDecimalComparisonDemo và giải thích output. |
+    | Phân tích cách khởi tạo | Phân biệt BigDecimal(String), valueOf(double), constructor double. |
+    | Dự đoán scale kết quả | Dự đoán scale của tổng và tích chính xác. |
+- id: big-decimal-comparison-004
+  title: hashCode và hệ quả trong HashSet hoặc HashMap
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **hashCode và hệ quả trong HashSet hoặc HashMap**
+
+    HashSet/HashMap xác định khóa theo equals và hashCode nên hai BigDecimal có cùng số học vẫn có thể khác khóa. Bài tập trung vào cache miss và canonical key.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hành vi hash collection
+
+    1. Vì sao HashSet giữ 2.0 và 2.00 nhưng contains(2.000) trả false?
+    2. Tại sao hai hashCode bằng nhau không đủ để khẳng định equals?
+
+    ### Chính sách khóa
+
+    1. Numeric key cần chuẩn hóa ở những đường put/get/remove nào?
+    2. Khi stripTrailingZeros tạo scale âm hoặc gộp khóa, ứng dụng phải xử lý payload ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết hash collection | Giải thích size và contains/get của HashSet/HashMap. |
+    | Thiết kế canonical key | Viết numericKey và áp dụng trên mọi thao tác tra cứu. |
+    | Xử lý khóa trùng | Đề xuất quy tắc xử lý trùng và lưu representation gốc khi cần. |
+- id: big-decimal-comparison-005
+  title: Thứ tự tự nhiên không nhất quán với equals
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thứ tự tự nhiên không nhất quán với equals**
+
+    Natural ordering của BigDecimal không nhất quán với equals theo tiêu chí của Comparable. Bài đi sâu vào comparator, binarySearch, min/max và sorted collection.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Comparable contract
+
+    1. Consistent with equals có điều kiện logic nào?
+    2. Vì sao compareTo của BigDecimal vẫn hợp lệ dù có cặp compareTo==0 nhưng equals false?
+
+    ### Tác động thứ tự
+
+    1. BinarySearch với target khác scale có thể trả phần tử nào?
+    2. Comparator naturalOrder().thenComparingInt(scale) giải quyết tình huống nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích Comparable contract | Nêu phản ví dụ về consistent with equals. |
+    | Đánh giá sorted API | Dự đoán hành vi min/max, binarySearch và sorted collection. |
+    | Thiết kế comparator theo scale | Cài comparator có tie-breaker scale và giải thích tính bắc cầu. |
+- id: big-decimal-comparison-006
+  title: Hệ quả khi dùng TreeSet hoặc TreeMap
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Hệ quả khi dùng TreeSet hoặc TreeMap**
+
+    TreeSet và TreeMap dùng comparator để coi khóa tương đương, dẫn tới add/contains/remove hoặc put/get theo giá trị số, bất kể scale khác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tương đương trong TreeSet
+
+    1. Thêm 2.0 và 2.00 rồi contains(2.000) trong TreeSet cho gì?
+    2. Vì sao remove(2.000) có thể xóa đối tượng 2.0?
+
+    ### Hệ quả trên TreeMap
+
+    1. Put 2.00 vào TreeMap đã có 2.0 sẽ ảnh hưởng value và stored key thế nào?
+    2. Cần comparator gì để phân biệt hai scale khi vẫn sắp theo giá trị số?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết TreeSet | Theo vết TreeSet.add/contains/remove. |
+    | Truy vết TreeMap | Giải thích kết quả TreeMap.put/get và stored key. |
+    | Chọn khóa có thứ tự | Chọn comparator số rồi scale hoặc khóa nghiệp vụ có ID. |
+- id: big-decimal-comparison-007
+  title: Chính sách chuẩn hóa scale trước khi lưu hoặc so sánh
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chính sách chuẩn hóa scale trước khi lưu hoặc so sánh**
+
+    Chính sách scale tách riêng kiểm tra số học, chuẩn hóa khóa và lưu có độ rộng thập phân cố định. Bài trình bày rounding và các ranh giới DB/JSON.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chính sách chuẩn hóa
+
+    1. Vì sao so sánh numeric qua compareTo không cần normalize?
+    2. stripTrailingZeros và setScale(2,UNNECESSARY) khác nhau khi xử lý 1000.00 và 12.345?
+
+    ### Ranh giới dữ liệu
+
+    1. Một cột DECIMAL(18,2) cần chọn từ chối hay rounding cho input 12.345 thế nào?
+    2. Vì sao canonical.toPlainString() có thể không round-trip equals với scale âm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn chính sách scale | Chọn policy theo comparison, key hoặc persistence. |
+    | Phân tích rounding | Dự đoán HALF_EVEN ở midpoint và UNNECESSARY với số vượt scale. |
+    | Thiết kế kiểm tra boundary | Thiết kế bước kiểm tra scale/precision, JSON, cache và DB. |
+- id: big-decimal-comparison-008
+  title: Kiểm tra số 0 bằng signum hoặc compareTo
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra số 0 bằng signum hoặc compareTo**
+
+    signum và compareTo(BigDecimal.ZERO) nhận diện zero theo **giá trị số**, kể cả 0.00 và -0.00. Bài phân biệt giá trị gốc, số đã làm tròn và gần zero.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dấu và số không
+
+    1. signum trả gì cho số âm, zero và dương?
+    2. Vì sao -0.00 có signum bằng 0 nhưng equals(BigDecimal.ZERO) có thể false?
+
+    ### Ứng dụng zero
+
+    1. Tại sao denominator 0.000 cần được chặn trước divide?
+    2. Zero của original 0.004 khác zero sau setScale(2,DOWN) thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện zero chính xác | So sánh signum và compareTo(ZERO) trên zero có nhiều scale. |
+    | Bảo vệ phép chia | Viết nhánh bảo vệ chia cho zero. |
+    | Thiết lập tolerance | Phân biệt zero chính xác và tolerance bằng abs/compareTo. |
+- id: big-decimal-comparison-009
+  title: So sánh null và lựa chọn hợp đồng API
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **So sánh null và lựa chọn hợp đồng API**
+
+    Null là trạng thái thiếu dữ liệu, khác zero hay kết quả bằng nhau. Bài đặt hợp đồng reject, null ordering hoặc unknown rõ ràng cho API và comparator.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng nullable
+
+    1. Vì sao không trả compare result 0 khi operand null?
+    2. Objects.equals(null,null) khác numeric equality khi hai số hiện diện thế nào?
+
+    ### Comparator và API
+
+    1. Muốn descending nhưng null cuối nên dùng nullsLast(reverseOrder()) vì sao?
+    2. Nếu Invoice và Invoice.amount đều có thể null, cần hai lớp null policy nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Từ chối null bắt buộc | Viết compareRequired dùng requireNonNull. |
+    | Sắp xếp nullable | Sắp xếp nullsFirst/nullsLast với record và field nullable. |
+    | Biểu diễn trạng thái unknown | Dùng OptionalInt.empty phân biệt unknown với so sánh bằng. |
+- id: big-decimal-comparison-010
+  title: Không thay đổi equals toàn hệ thống chỉ để giải quyết một phép so sánh cụ thể
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không thay đổi equals toàn hệ thống chỉ để giải quyết một phép so sánh cụ thể**
+
+    Một phép đối soát số học cần compareTo ở đúng chỗ; đổi equals toàn model có thể phá hashCode, cache và identity. Bài còn chứng minh tolerance không bắc cầu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Equality tại đúng phạm vi
+
+    1. Vì sao BigDecimal là final và wrapper/entity mới có khả năng bị sửa custom equals?
+    2. Khi chỉ cần xác nhận 100.0 bằng 100.00 thì sửa ở đâu?
+
+    ### Rủi ro kiến trúc
+
+    1. Đổi equals nhưng giữ hashCode có thể phá HashMap như thế nào?
+    2. Vì sao 0.00 gần 0.09, 0.09 gần 0.18 nhưng 0.00 không gần 0.18?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đặt so sánh tại nghiệp vụ | Viết predicate sameNumericValue ở đúng phép đối soát. |
+    | Bảo vệ equality và hash | Đề xuất test equals/hashCode và identity của model. |
+    | Chứng minh không bắc cầu | Chứng minh tolerance không bắc cầu nên không dùng làm comparator. |

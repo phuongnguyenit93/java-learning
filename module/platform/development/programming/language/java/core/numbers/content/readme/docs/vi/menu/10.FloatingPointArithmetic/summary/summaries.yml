@@ -1,0 +1,331 @@
+summaries:
+- id: floating-point-arithmetic-001
+  title: Cộng, trừ, nhân, chia và làm tròn về giá trị biểu diễn được
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Cộng, trừ, nhân, chia và làm tròn về giá trị biểu diễn được**
+
+    Bài học xây dựng mô hình từ toán hạng đã được biểu diễn bằng `float`/`double` đến kết quả mỗi phép `+`, `-`, `*`, `/` được làm tròn theo IEEE 754. Nắm cơ chế này giúp người học giải thích kết quả bất ngờ như `0.1 + 0.2`, xác định đúng kiểu biểu thức và chọn cách làm tròn hoặc biểu diễn dữ liệu phù hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế biểu diễn và làm tròn
+
+    1. Vì sao hai literal `0.1` và `0.2` được lưu gần đúng, và việc này tác động thế nào đến kết quả phép cộng?
+    2. Giữa kết quả số học chính xác và giá trị `double` cuối cùng có những bước nào, và trường hợp nằm giữa hai số biểu diễn được được quyết định ra sao?
+
+    ### Chọn kiểu số và kiểm chứng
+
+    1. Vì sao gán `7 / 2` cho biến `double` khác với tính `(double) 7 / 2`?
+    2. Làm thế nào dùng `Math.ulp`, `Math.rint`, `Math.round` và `BigDecimal` đúng theo các mục tiêu làm tròn khác nhau?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích phép toán làm tròn | Phân tích `0.1 + 0.2 == 0.3` dựa trên giá trị toán hạng đã lưu và kết quả IEEE 754. |
+    | Dự đoán kiểu và kết quả | Dự đoán phép chia số nguyên so với chia thực và chứng minh bằng đoạn Java ngắn. |
+    | Chọn chính sách làm tròn | Phân biệt tie-to-even, `Math.round`, định dạng hiển thị và phép tính thập phân bằng `BigDecimal` qua ví dụ cụ thể. |
+- id: floating-point-arithmetic-002
+  title: 'Chia cho 0: phân biệt kết quả vô cực và NaN'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chia cho 0: phân biệt kết quả vô cực và NaN**
+
+    Bài học giải thích vì sao phép chia nguyên cho zero ném `ArithmeticException` nhưng chia `float`/`double` nhận các giá trị `Infinity` hoặc `NaN` theo dấu tử và mẫu. Nhờ đó người học có thể thiết kế điều kiện kiểm tra đầu vào, xác minh kết quả và không vô tình cho giá trị không hữu hạn đi qua API.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểu phép chia và trường hợp zero
+
+    1. Với mẫu số bằng `+0.0` hoặc `-0.0`, khi nào thương là vô cực có dấu và khi nào là `NaN`?
+    2. Vì sao `double result = a / b` vẫn có thể ném `ArithmeticException` nếu cả `a` và `b` là `int`?
+
+    ### Bảo vệ hợp đồng tính toán
+
+    1. Khi API chỉ chấp nhận thương hữu hạn, cần kiểm tra điều gì trước và sau phép chia?
+    2. Vì sao phát hiện `Infinity` không đủ để kết luận phép chia cho zero đã xảy ra?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập bảng trường hợp phép chia | Dự đoán `/` cho các tổ hợp hữu hạn khác zero, ±0 và phân biệt với phép chia nguyên. |
+    | Kiểm tra trạng thái kết quả | Viết đoạn xử lý dùng `Double.isInfinite`, `Double.isNaN`, `Double.isFinite` phù hợp hợp đồng. |
+    | Xử lý lỗi đầu vào | Thiết kế một method từ chối mẫu zero và kết quả không hữu hạn, giải thích ngoại lệ do code tự tạo. |
+- id: floating-point-arithmetic-003
+  title: Overflow, underflow và giá trị subnormal
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Overflow, underflow và giá trị subnormal**
+
+    Bài học phân biệt giới hạn độ lớn với độ chính xác của `float`/`double`: kết quả có thể tràn thành vô cực hoặc đi qua vùng subnormal trước khi làm tròn về zero. Hiểu các giá trị `MIN_NORMAL`, `MIN_VALUE`, `MAX_VALUE` và việc mất thông tin ở phép toán trung gian giúp chọn thuật toán số an toàn hơn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biên biểu diễn
+
+    1. Vì sao `Double.MIN_VALUE` là số dương subnormal nhỏ nhất chứ không phải số âm nhỏ nhất?
+    2. Subnormal giúp gradual underflow như thế nào, và vì sao một kết quả subnormal vẫn có thể chính xác?
+
+    ### Ổn định số
+
+    1. Khi nào phép nhân trung gian cho `Infinity` dù kết quả cuối theo số thực toán học vẫn hữu hạn?
+    2. Vì sao `Math.hypot(x, y)` có thể thích hợp hơn `Math.sqrt(x*x + y*y)` với toán hạng rất lớn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại miền số | Dùng `MIN_NORMAL`, `MIN_VALUE` và `Double.isFinite` phân biệt normal, subnormal, zero, vô cực. |
+    | Giải thích underflow | Dự đoán `MIN_NORMAL/2` và `MIN_VALUE/2` theo biểu diễn và tie-to-even. |
+    | Đánh giá công thức | So sánh công thức khoảng cách trực tiếp với `Math.hypot` trên dữ liệu gần giới hạn. |
+- id: floating-point-arithmetic-004
+  title: Toán tử % khác Math.IEEEremainder
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Toán tử % khác Math.IEEEremainder**
+
+    Bài học đặt cạnh nhau hai ngữ nghĩa phần dư của Java: `%` chọn thương cắt về zero, còn `Math.IEEEremainder` chọn thương nguyên gần nhất và hòa chọn chẵn. Việc phân tích dấu, trường hợp đặc biệt và miền giá trị phần dư giúp dùng đúng API cho độ lệch chu kỳ, phần dư có dấu hay chỉ số vòng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy tắc chọn thương
+
+    1. Vì sao `7.0 % 2.0` cho `1.0` còn `Math.IEEEremainder(7.0,2.0)` cho `-1.0`?
+    2. Quy tắc hòa chọn thương chẵn ảnh hưởng thế nào đến phần dư của `5.0 / 2.0` và `7.0 / 2.0`?
+
+    ### Quyết định API theo bài toán
+
+    1. Tại sao `Math.IEEEremainder` không thể dùng thẳng cho chỉ số mảng luôn không âm?
+    2. Cần kiểm tra những ranh giới nào khi chuẩn hóa góc âm hoặc số chia bằng zero?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đối chiếu ngữ nghĩa | Lập bảng `%` và `IEEEremainder` cho số dương, âm, giá trị hòa, ±0 và vô cực. |
+    | Chọn phép toán đúng | Giải thích lựa chọn `%`, `Math.IEEEremainder`, `Math.floorMod` theo hợp đồng modulo. |
+    | Kiểm thử đường biên | Thiết kế ca kiểm thử góc 350°/360°, nửa chu kỳ và divisor bằng zero. |
+- id: floating-point-arithmetic-005
+  title: Lan truyền NaN và các trường hợp đặc biệt
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lan truyền NaN và các trường hợp đặc biệt**
+
+    Bài học khảo sát các nguồn tạo NaN, sự lan truyền qua chuỗi phép toán, hành vi so sánh primitive và thứ tự riêng của `Double.compare`/`Double.equals`. Người học sẽ biết phân biệt NaN với vô cực, nhận ra ngoại lệ ở một số hàm `Math` và quyết định chính sách xử lý số liệu không hữu hạn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phép toán và so sánh với NaN
+
+    1. Những phép tính nào tạo NaN ngay cả khi không chia `0.0 / 0.0`?
+    2. Vì sao `NaN == NaN` là false nhưng `Double.compare` và `Double.equals` có hợp đồng khác?
+
+    ### Lan truyền và dữ liệu
+
+    1. Vì sao một NaN trong tổng dữ liệu có thể biến toàn bộ kết quả thành NaN?
+    2. Vì sao không thể suy diễn rằng mọi phương thức `Math` nhận NaN đều phải trả NaN, và ví dụ `Math.pow` minh họa điều gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện giá trị đặc biệt | Dự đoán kết quả và so sánh của NaN, vô cực, signed zero ở các biểu thức minh họa. |
+    | Thiết kế bộ lọc dữ liệu | Viết ví dụ xử lý `DoubleStream` có NaN và giải thích tác động của lựa chọn lọc. |
+    | Áp dụng kiểm tra hợp lệ | Chọn `isNaN`, `isInfinite`, `isFinite` theo yêu cầu dữ liệu hữu hạn. |
+- id: floating-point-arithmetic-006
+  title: Tác động của signed zero tới phép chia và hàm toán học
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tác động của signed zero tới phép chia và hàm toán học**
+
+    Bài học đi sâu vào hai biểu diễn `+0.0` và `-0.0`, những phép toán bảo toàn hoặc đổi dấu zero, cách `Math.atan2`, `Math.pow`, `Math.min`/`max` và các collection xử lý chúng. Phân biệt phép `==`, bit identity và thứ tự của wrapper giúp bảo toàn thông tin dấu khi thuật toán thực sự cần.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dấu zero trong phép tính
+
+    1. Vì sao `+0.0 == -0.0` là true nhưng nghịch đảo của chúng có dấu vô cực khác nhau?
+    2. Dấu zero tác động ra sao tới `Math.atan2`, `Math.sqrt`, `Math.ceil` và `Math.copySign` tại biên?
+
+    ### Định danh và lưu trữ
+
+    1. Vì sao `HashSet<Double>` có thể chứa đồng thời `+0.0` và `-0.0`?
+    2. Khi nào nên dùng raw bits để phân biệt zero âm, và khi nào chuẩn hóa dấu zero sẽ làm mất thông tin cần thiết?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quan sát biểu diễn bit | Viết ví dụ đọc `Double.doubleToRawLongBits(±0.0)` và giải thích bit dấu. |
+    | Dự đoán API Math | Phân tích kết quả `Math.atan2(±0.0,-1.0)`, `min/max`, `signum`, `pow` ở trường hợp zero. |
+    | Thiết kế bảo toàn dấu | Chọn quy tắc chuẩn hóa hoặc lưu signed zero và kiểm thử hành vi collection và phép chia. |
+- id: floating-point-arithmetic-007
+  title: Vì sao phép toán không bảo đảm tính kết hợp của số thực toán học
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vì sao phép toán không bảo đảm tính kết hợp của số thực toán học**
+
+    Bài học giải thích vì sao đổi ngoặc trong phép cộng hoặc nhân `float`/`double` thay đổi vị trí làm tròn, overflow và underflow. Từ đó người học phân biệt cách nhóm cú pháp với thứ tự đánh giá Java, dự đoán kết quả tổng nhiều phần tử và cân nhắc thuật toán tổng ổn định, tái lập được.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tính kết hợp và cơ chế làm tròn
+
+    1. Vì sao `(1e16 + -1e16) + 1.0` khác `1e16 + (-1e16 + 1.0)` dù phép cộng số thực kết hợp?
+    2. Đổi dấu ngoặc thay đổi cây phép tính như thế nào, và điều đó khác gì thứ tự đánh giá toán hạng của Java?
+
+    ### Ứng dụng vào tính toán nhiều bước
+
+    1. Làm thế nào overflow hoặc underflow trung gian tạo phản ví dụ mất tính kết hợp của phép nhân?
+    2. Vì sao tổng tuần tự, pairwise hoặc parallel reduction có thể cho kết quả khác nhau và cần điều kiện gì để tái lập?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích cây phép tính | Dự đoán từng giá trị trung gian và kết quả khi đặt ngoặc khác nhau. |
+    | Chọn phương pháp tổng | So sánh tổng tuần tự với Neumaier hoặc pairwise trên bộ dữ liệu có số hạng chênh lệch. |
+    | Thiết kế kiểm thử tái lập | Nêu và kiểm chứng thứ tự đánh giá, điều kiện overflow và dung sai mục tiêu. |
+- id: floating-point-arithmetic-008
+  title: Mất thông tin khi cộng số rất nhỏ vào số rất lớn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Mất thông tin khi cộng số rất nhỏ vào số rất lớn**
+
+    Bài học phân tích hiện tượng absorption: một số hạng hợp lệ nhưng quá nhỏ so với ULP quanh tổng lớn nên phép cộng không đổi giá trị biểu diễn. Từ ví dụ `1e16 + 1.0`, người học học cách đánh giá độ phân giải, dùng tổng có bù như Kahan và chọn kiểu số chính xác trước khi cộng nếu bài toán yêu cầu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Độ phân giải và absorption
+
+    1. Vì sao `1e16 + 1.0` vẫn có thể bằng `1e16`, dù cả hai toán hạng đều biểu diễn chính xác?
+    2. Sự khác nhau giữa mốc `2^24` của `float` và `2^53` của `double` nói gì về các số nguyên liên tiếp?
+
+    ### Cộng dồn và biểu diễn
+
+    1. Vì sao cộng `1.0` nhiều lần vào accumulator lớn có thể mất toàn bộ mức tăng, và Kahan lưu phần sai số thế nào?
+    2. Trong trường hợp cần giữ chính xác từng đơn vị, vì sao chọn `long` hoặc `BigDecimal` từ đầu khác với chuyển kiểu sau phép cộng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đo ULP quanh tổng | Dùng `Math.ulp` và `Math.nextUp` để lý giải giới hạn thay đổi biểu diễn được. |
+    | Kiểm chứng cộng tích lũy | Chạy và so sánh vòng cộng thường với Kahan trên cùng dữ liệu. |
+    | Chọn biểu diễn đầu vào | Thiết kế phép cộng số đếm hoặc decimal exact bằng `long`/`BigDecimal` khi phù hợp. |
+- id: floating-point-arithmetic-009
+  title: Triệt tiêu chữ số khi trừ hai số gần bằng nhau
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Triệt tiêu chữ số khi trừ hai số gần bằng nhau**
+
+    Bài học làm rõ cancellation và catastrophic cancellation, kể cả trường hợp phép trừ hai giá trị biểu diễn được vẫn chính xác nhưng sai số đầu vào khiến hiệu sai nghiêm trọng. Qua bổ đề Sterbenz, `Math.expm1`, `Math.log1p`, liên hợp căn và nghiệm phương trình bậc hai, người học biết lựa chọn công thức ổn định hơn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất độ nhạy của phép trừ
+
+    1. Vì sao hiệu hai số gần bằng nhau có thể có sai số tương đối lớn dù từng toán hạng chỉ sai rất nhỏ?
+    2. Trong điều kiện nào phép trừ của hai số `double` gần nhau lại có thể chính xác, theo ý tưởng bổ đề Sterbenz?
+
+    ### Thiết kế công thức ổn định
+
+    1. Vì sao tính `sqrt(x+1)-sqrt(x)` trực tiếp dễ mất thông tin, và biến đổi liên hợp giải quyết phần nào vấn đề?
+    2. Khi nào nên dùng `Math.expm1` hoặc `Math.log1p`, và tại sao không thể chữa sai số bằng đổi sang `BigDecimal` sau phép toán?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích sai số | Tính hoặc ước lượng độ nhạy `(\|a\|+\|b\|)/\|a-b\|` cho hai toán hạng gần nhau. |
+    | Cải thiện biểu thức | So sánh công thức trừ căn trực tiếp, công thức liên hợp, `expm1` và `log1p`. |
+    | Đánh giá phương trình bậc hai | Giải thích và kiểm chứng cách tính nghiệm nhỏ bằng `q` và `c/q` cùng giới hạn đầu vào. |
+- id: floating-point-arithmetic-010
+  title: Math.fma và sự khác biệt với nhân rồi cộng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Math.fma và sự khác biệt với nhân rồi cộng**
+
+    Bài học phân biệt phép `Math.fma(a,b,c)` chỉ làm tròn một lần cuối với biểu thức `a*b+c` làm tròn ở tích rồi ở tổng. Những ví dụ bit thấp, overflow/underflow trung gian và Horner/dot product cho phép người học chủ động chọn FMA khi phù hợp độ chính xác, hiệu năng và yêu cầu tương thích kết quả.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa fused và phép tính thường
+
+    1. Vì sao phép `Math.fma(1+2^-27,1-2^-27,-1)` khác phép nhân rồi trừ `1` ở `double`?
+    2. FMA có thể giữ kết quả hữu hạn trong ví dụ nào mà phép nhân riêng lẻ đã overflow?
+
+    ### Giới hạn và ứng dụng
+
+    1. Tại sao FMA không khôi phục các chữ số bị mất trước khi gọi phương thức và không làm toàn bộ vòng lặp chính xác vô hạn?
+    2. Những điều kiện nào cần kiểm chứng trước khi thay phép nhân cộng trong dot product hoặc Horner bằng `Math.fma`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích số lần làm tròn | Tính và đối chiếu kết quả dạng hex của phép fused và hai phép toán riêng. |
+    | Kiểm thử edge cases | Dự đoán FMA với sản phẩm trung gian overflow, subnormal, NaN và vô cực. |
+    | Đánh giá lựa chọn API | Đề xuất dùng hoặc không dùng `Math.fma` theo độ chính xác và yêu cầu bit-for-bit của ứng dụng. |
+- id: floating-point-arithmetic-011
+  title: Always-strict từ Java 17 và vai trò lịch sử của strictfp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Always-strict từ Java 17 và vai trò lịch sử của strictfp**
+
+    Bài học lý giải JEP 306: từ Java 17 mọi biểu thức dấu phẩy động đều được đánh giá strict, trong khi `strictfp` từng giới hạn việc dùng tập giá trị trung gian có số mũ mở rộng ở Java cũ. Nhờ phân biệt modifier `strictfp`, thư viện `StrictMath` và thuật toán tính, người học đánh giá đúng thay đổi khi nâng JDK mà không hứa hẹn độ chính xác tuyệt đối.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa qua các phiên bản Java
+
+    1. Tại sao Java 1.2–16 từng cho phép extended-exponent value sets, và `strictfp` đã giới hạn điều gì?
+    2. Sau JEP 306 ở Java 17, vì sao thêm `strictfp` không thể làm biểu thức trở nên chính xác hơn?
+
+    ### Tính tái lập và migration
+
+    1. Vì sao strict evaluation không làm phép cộng có tính kết hợp và không đồng nhất `Math.fma` với `a*b+c`?
+    2. Khi bỏ `strictfp` trong code cũ, cần kiểm tra yêu cầu tương thích JDK và các yếu tố nào quyết định tái lập kết quả?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đối chiếu các giai đoạn JDK | Giải thích vai trò `strictfp` ở Java 1.2–16 và sự thay đổi Java 17 bằng ví dụ overflow. |
+    | Phân biệt ngôn ngữ với API | Chỉ ra điểm khác nhau giữa `strictfp`, `Math`, `StrictMath` và `Math.fma`. |
+    | Rà soát nâng cấp Java | Đề xuất checklist kiểm thử mã nhạy với rounding, biểu thức và thứ tự reduction khi nâng JDK. |

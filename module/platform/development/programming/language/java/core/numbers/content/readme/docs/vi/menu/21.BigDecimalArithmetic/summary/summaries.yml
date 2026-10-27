@@ -1,0 +1,385 @@
+summaries:
+- id: big-decimal-arithmetic-001
+  title: add, subtract, multiply và scale của kết quả
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **add, subtract, multiply và scale của kết quả**
+
+    Biết cách cộng, trừ, nhân số thập phân chính xác trong BigDecimal mà không nhầm scale biểu diễn với precision hay số chữ số hiển thị; phân tích tác động của MathContext lên scale kết quả.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy tắc scale trong số học
+
+    1. Vì sao add và subtract chọn scale lớn hơn của hai số hạng?
+    2. Vì sao multiply cộng scale của hai toán hạng và có thể sinh số 0 tận cùng?
+    3. Scale của kết quả nhân với đối số dạng 1E+3 có thể âm ra sao?
+
+    ### Chính xác và biểu diễn
+
+    1. MathContext thay đổi kết quả add, subtract, multiply khác thế nào so với setScale?
+    2. Vì sao hai kết quả 3.600 và 3.60 có compareTo bằng 0 nhưng equals sai?
+    3. Tại sao gọi add mà bỏ giá trị trả về không thay đổi toán hạng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích scale | Tính đúng giá trị và scale của các phép cộng, trừ, nhân trên 1.20 và 3.004. |
+    | Phân biệt ngữ nghĩa | Giải thích kết quả của MathContext(3) so với phép tính chính xác. |
+    | Thiết kế biểu diễn | Đặt scale theo hợp đồng đầu ra mà không thay đổi thầm giá trị gốc. |
+- id: big-decimal-arithmetic-002
+  title: divide chính xác và số thập phân vô hạn tuần hoàn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **divide chính xác và số thập phân vô hạn tuần hoàn**
+
+    Giải thích vì sao phép chia BigDecimal exact không thể biểu diễn 1/3 và khi nào mẫu số rút gọn chỉ chứa 2,5 bảo đảm decimal hữu hạn. Bài giúp chọn đúng biểu diễn phân số khi không được làm tròn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ sở toán học
+
+    1. Vì sao 1/8 biểu diễn decimal chính xác còn 1/3 thì không?
+    2. Điều kiện trên thừa số nguyên tố của mẫu sau rút gọn là gì?
+    3. Tại sao phải rút gọn 3/6 trước khi xét thương có kết thúc không?
+
+    ### Hợp đồng chia
+
+    1. Vì sao divide(divisor) và MathContext.UNLIMITED cùng từ chối 1/3?
+    2. Điều gì quyết định preferred scale và scale cuối của thương exact 10.00/4?
+    3. Khi nghiệp vụ bắt buộc giữ đúng 1/3, vì sao nên dùng tử/mẫu BigInteger?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chứng minh tính kết thúc | Phân loại 1/8, 1/6, 3/6, 1/40 theo mẫu số tối giản. |
+    | Dự đoán exception | Giải thích các kết quả divide exact với thương hữu hạn và vô hạn. |
+    | Chọn mô hình | Mô tả biểu diễn phân số chính xác khi BigDecimal không chứa được thương vô hạn. |
+- id: big-decimal-arithmetic-003
+  title: divide với scale, RoundingMode hoặc MathContext
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **divide với scale, RoundingMode hoặc MathContext**
+
+    Chọn overload divide theo yêu cầu về scale, số chữ số có nghĩa và chế độ làm tròn; tránh mất tiền hoặc tỷ lệ vì overload dùng ngầm scale của dividend. Luyện phân biệt HALF_UP và HALF_EVEN tại điểm giữa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lựa chọn overload
+
+    1. divide(divisor, roundingMode) lấy scale ở đâu và khi nào trả 0 cho 1/3?
+    2. Khác biệt giữa divide(divisor, 2, HALF_UP) và divide(divisor, MathContext(2)) là gì?
+    3. Vì sao MathContext.UNLIMITED vẫn không thể biểu diễn chính xác 1/3?
+
+    ### Rounding và quy trình
+
+    1. Vì sao 1/8 tới scale 2 cho 0.12 dưới HALF_EVEN nhưng 0.13 dưới HALF_UP?
+    2. Khi nào cần dùng UNNECESSARY thay cho làm tròn tùy ý?
+    3. Tại sao rounding từng khoản và rounding sau khi cộng có thể khác nhau?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn API | Viết bốn lời gọi divide tương ứng exact, fixed scale, dividend scale và significant digits. |
+    | Dự đoán kết quả | Giải thích 1/3, 1/8 và 123.45/2 dưới các context và mode khác nhau. |
+    | Rà hợp đồng | Phát hiện và sửa phép chia dùng scale ngầm gây mất chữ số. |
+- id: big-decimal-arithmetic-004
+  title: divideToIntegralValue, remainder và divideAndRemainder
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **divideToIntegralValue, remainder và divideAndRemainder**
+
+    Hiểu chia lấy thương nguyên và phần dư BigDecimal kể cả số âm, trường hợp scale khác nhau và MathContext không đủ precision. Bài cung cấp invariant kiểm chứng a=q×b+r.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thương và phần dư
+
+    1. divideToIntegralValue lấy q theo truncation hay floor khi a âm?
+    2. Vì sao remainder của -17.5 chia 3 thành -2.5 chứ không phải modulo dương?
+    3. Mảng divideAndRemainder trả phần tử theo thứ tự nào?
+
+    ### Giới hạn và kiểm chứng
+
+    1. Vì sao 1.divideAndRemainder(3) hoạt động khi 1.divide(3) exact lại lỗi?
+    2. Khi precision của MathContext quá thấp để biểu diễn thương nguyên 6172, API xử lý ra sao?
+    3. Kiểm tra những invariant nào để phát hiện lỗi xử lý thương và dư?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán dấu | Tính q và r của 17.5 và -17.5 với divisor ±3. |
+    | Phân biệt modulo | Chuẩn hóa remainder âm theo môđun dương bằng phép cộng modulus. |
+    | Kiểm tra invariant | Viết mã xác minh a=q×b+r và trị tuyệt đối phần dư nhỏ hơn trị tuyệt đối của số chia bằng compareTo. |
+- id: big-decimal-arithmetic-005
+  title: pow và sqrt theo precision được yêu cầu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **pow và sqrt theo precision được yêu cầu**
+
+    Phân tích phép lũy thừa với mũ nguyên, căn bậc hai và độ chính xác hữu hạn cùng giới hạn thuật toán. Đây là ứng dụng chuyên sâu, không phải prerequisite cho mọi phép toán BigDecimal.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lũy thừa và căn
+
+    1. Khi nào pow(n) exact được và vì sao mũ âm cần overload có MathContext precision dương?
+    2. Vì sao sqrt(2) với MathContext.UNLIMITED không thể trả một BigDecimal exact?
+    3. Điều gì xảy ra khi căn bậc hai nhận số âm hoặc lũy thừa 0 với số mũ âm?
+
+    ### Độ chính xác và sai số
+
+    1. Vì sao precision của MathContext không là số vị trí sau dấu thập phân?
+    2. Tại sao pow(n, mc) không luôn giống pow(n).round(mc) ở mọi n?
+    3. Khi nào cần guard digits và kiểm tra double rounding trong phép căn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Sử dụng API | Viết pow và sqrt với MathContext, thử đầu vào hợp lệ và lỗi. |
+    | Dự đoán giới hạn | Giải thích lỗi pow(-3) thiếu context và sqrt(-4). |
+    | Kiểm soát chữ số | Tính căn với working precision rồi chốt scale kết quả phù hợp. |
+- id: big-decimal-arithmetic-006
+  title: negate, abs, plus, min, max và signum
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **negate, abs, plus, min, max và signum**
+
+    Cung cấp các tiện ích thao tác dấu, kiểm tra signum, chọn min/max và dấu khi so sánh scale khác nhau; hữu ích nhưng có thể học độc lập sau các phép số học nền.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phép đơn ngôi
+
+    1. negate, abs và plus khác nhau theo hành vi số học thế nào?
+    2. Vì sao plus() không phải phép cộng một đối số khác?
+    3. MathContext thay đổi kết quả abs/plus như thế nào?
+
+    ### So sánh và scale
+
+    1. signum xử lý -0.00 thế nào?
+    2. Vì sao min của 2.0 và 2.00 trả biểu diễn của toán hạng gọi method khi chúng có compareTo bằng 0?
+    3. Khi nào nên so sánh compareTo thay cho equals?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán dấu | Giải thích kết quả của negate, abs, plus và signum trên -12.340. |
+    | So sánh biểu diễn | Chứng minh min(a,b) và min(b,a) có thể khác scale khi a,b cùng giá trị. |
+    | Xác thực ngưỡng | Thiết kế giới hạn lower/upper bằng max().min(). |
+- id: big-decimal-arithmetic-007
+  title: setScale và việc trả về đối tượng mới
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **setScale và việc trả về đối tượng mới**
+
+    setScale là nền tảng để chốt decimal theo đơn vị nhỏ nhất và tránh sai lầm bỏ kết quả khi BigDecimal immutable. Phải phân biệt tăng scale chính xác với giảm scale có nguy cơ cần rounding.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy tắc setScale
+
+    1. Vì sao setScale(3) trên 7.2 trả 7.200 mà không sửa x?
+    2. Khi giảm scale, trường hợp nào được phép với overload không truyền rounding mode?
+    3. UNNECESSARY khác HALF_UP thế nào ở 7.235?
+
+    ### Thiết kế kết quả
+
+    1. Tại sao không nên kiểm tra bằng tham chiếu để chứng minh setScale luôn cấp phát object mới?
+    2. Vì sao equals có thể đổi khi setScale giữ nguyên giá trị số học?
+    3. Khi nào cần chốt scale để lưu giao dịch và khi nào chỉ cần format?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thực hành bất biến | Sửa code bỏ kết quả setScale để giữ kết quả rounded trong biến mới. |
+    | Kiểm soát scale | Phân biệt tăng, giảm và giữ nguyên scale qua ví dụ 12.340 và 12.345. |
+    | Thiết lập chính sách | Áp dụng RoundingMode ở ranh giới chốt giá trị. |
+- id: big-decimal-arithmetic-008
+  title: movePointLeft, movePointRight và scaleByPowerOfTen
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **movePointLeft, movePointRight và scaleByPowerOfTen**
+
+    Chuyển đổi số theo lũy thừa 10 mà không qua double, so sánh khác biệt scale của movePointRight và scaleByPowerOfTen. Điều này cần thiết khi đổi đơn vị và bảo toàn số nguyên nhỏ nhất.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dịch dấu và scale
+
+    1. movePointLeft(n) thay đổi giá trị toán học theo hướng nào?
+    2. Vì sao movePointRight(3) và scaleByPowerOfTen(3) có thể compareTo bằng 0 nhưng equals khác?
+    3. Các phương thức xử lý n âm, 0 và scale âm như thế nào?
+
+    ### Đổi đơn vị an toàn
+
+    1. Vì sao movePointRight(2) trên 12.345 không tạo ra một số nguyên?
+    2. Làm sao dùng toBigIntegerExact kiểm tra kết quả theo đơn vị nhỏ nhất?
+    3. Những rủi ro nào xảy ra với số mũ quá lớn hoặc toPlainString?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán scale | Tính value/scale của 1.23 khi movePointRight(3) và scaleByPowerOfTen(3). |
+    | Chuyển đơn vị | Viết phép đổi đơn vị 100:1 và kiểm tra tính nguyên của đơn vị nhỏ. |
+    | Phân biệt thao tác | Nêu được khi nào setScale và movePointRight không thay thế cho nhau. |
+- id: big-decimal-arithmetic-009
+  title: stripTrailingZeros có thể tạo scale âm
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **stripTrailingZeros có thể tạo scale âm**
+
+    Hiểu biểu diễn tối giản và scale âm khi stripTrailingZeros; tránh lỗi equals, hash key, serialized decimal và kiểm tra tính nguyên chỉ bằng scale == 0.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế chuẩn hóa
+
+    1. Vì sao 600.00 được stripTrailingZeros thành 6E+2 với scale -2?
+    2. Khi gọi stripTrailingZeros cho 0.000, scale kết quả bằng bao nhiêu?
+    3. Vì sao phương thức bỏ cả zero phần nguyên của unscaled value?
+
+    ### Tác động chương trình
+
+    1. Tại sao 600.00.equals(6E+2) trả false trong khi compareTo bằng 0?
+    2. Vì sao scale == 0 không phải điều kiện tổng quát để nhận diện số nguyên?
+    3. Khi nào toPlainString có thể làm mất scale nếu parse lại?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Theo dõi biểu diễn | Giải thích từng bước biến đổi unscaled value/scale của 600.00. |
+    | Chọn kiểu so sánh | Đề xuất compareTo hoặc chuẩn hóa có chủ đích trước khi dùng HashMap key. |
+    | Kiểm tra tính nguyên | Sử dụng toBigIntegerExact thay vì phán đoán chỉ từ scale == 0. |
+- id: big-decimal-arithmetic-010
+  title: ulp của BigDecimal
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ulp của BigDecimal**
+
+    ulp hỗ trợ phân tích độ phân giải của biểu diễn BigDecimal theo scale, nhưng không phải prerequisite bắt buộc để sử dụng add/divide/setScale đúng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa ulp
+
+    1. Công thức ulp(x)=10^(-scale(x)) giải thích 123.45 và 123.4500 ra sao?
+    2. Vì sao 6E+2 có ulp bằng 100 và zero 0.00 có ulp bằng 0.01?
+    3. BigDecimal.ulp khác Math.ulp(double) ở điểm nào?
+
+    ### Phân tích sau phép tính
+
+    1. Vì sao stripTrailingZeros có thể làm ulp đổi mạnh dù giá trị toán học không đổi?
+    2. Khi setScale(2) từ 1.236, vì sao ulp của kết quả không phải sai số thật?
+    3. Tại sao không nên dùng BigDecimal.ulp làm epsilon nghiệp vụ mặc định?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính đơn vị | Tính ulp của 0.00, 123.4500 và 6E+2 từ scale. |
+    | Đọc tác động scale | Giải thích sự thay đổi ulp sau setScale và stripTrailingZeros. |
+    | Kiểm soát sai số | Phân biệt đơn vị chữ số cuối với sai số tính được từ giá trị tham chiếu. |
+- id: big-decimal-arithmetic-011
+  title: Tính nhiều bước và lựa chọn thời điểm làm tròn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tính nhiều bước và lựa chọn thời điểm làm tròn**
+
+    Kết hợp tính toán nhiều bước, precision làm việc, thời điểm chốt và phân bổ cent để giữ tổng; đây là năng lực kiến trúc quan trọng khi xử lý tiền, thuế, lãi và đối soát.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Rounding pipeline
+
+    1. Vì sao làm tròn ba khoản 0.335 trước khi cộng ra khác cộng trước rồi làm tròn?
+    2. Làm tròn hai lần có thể cho kết quả khác làm tròn trực tiếp bằng cách nào?
+    3. MathContext ở từng bước có tác động gì lên chữ số trung gian?
+
+    ### Phân bổ và đối soát
+
+    1. Làm sao phân bổ 1.00 cho ba người mà tổng các phần vẫn là 1.00?
+    2. Vì sao phải phân biệt giá trị tính thô, giá trị đã chốt và chuỗi hiển thị?
+    3. Những ca biên nào cần test để phát hiện đặt sai điểm làm tròn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích pipeline | Giải thích hai quy trình cho kết quả 59.93 và 59.94 theo các bước chốt khác nhau. |
+    | Phân bổ số dư | Thiết kế và kiểm tra invariant tổng phân bổ bằng tổng đã chốt. |
+    | Đặc tả chính sách | Ghi rõ scale, rounding mode và thời điểm chốt theo từng ranh giới nghiệp vụ. |
+- id: big-decimal-arithmetic-012
+  title: ArithmeticException khi không thể đáp ứng yêu cầu chính xác
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ArithmeticException khi không thể đáp ứng yêu cầu chính xác**
+
+    Nhận diện và xử lý ArithmeticException từ exact divide, UNNECESSARY, MathContext và zero divisor; tránh bắt tất cả rồi trả 0 hay âm thầm chuyển qua double.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân loại nguyên nhân lỗi
+
+    1. Vì sao 1/3 divide exact và 1/0 đều ném ArithmeticException nhưng thuộc hai lỗi khác nhau?
+    2. UNNECESSARY vì sao chấp nhận 1.230→1.23 nhưng từ chối 1.234→1.23?
+    3. MathContext precision nhỏ dẫn tới exception dù phép nhân toán học hợp lệ ra sao?
+
+    ### Xử lý theo hợp đồng
+
+    1. Làm sao phân biệt lỗi số chia zero với thương decimal không kết thúc trước khi báo cho caller?
+    2. Khi nào nghiệp vụ phải từ chối input thay vì áp đặt rounding mode tùy ý?
+    3. Vì sao catch ArithmeticException rồi trả BigDecimal.ZERO làm hỏng tính chính xác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chẩn đoán exception | Phân loại các case 1/3, 1/0, giảm scale mất chữ số và precision UNNECESSARY. |
+    | Thiết kế API | Viết helper requireTwoDecimals thông báo vi phạm scale có nguyên nhân rõ ràng. |
+    | Phòng lỗi ẩn | Đề xuất xử lý theo hợp đồng cho chia số tiền, rounding và xác thực input. |

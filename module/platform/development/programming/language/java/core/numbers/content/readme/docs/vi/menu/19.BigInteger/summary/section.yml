@@ -1,0 +1,117 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "BIGINTEGER — LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: big-integer-001
+    order: 1
+    title: "Số nguyên độ chính xác tùy ý và tính bất biến"
+    description: "Nêu bản chất số nguyên độ chính xác tùy ý, hợp đồng immutable và cách chọn kiểu trước khi dữ liệu primitive tràn. Định vị các nhóm API được học tiếp theo."
+    transition:
+      to: big-integer-002
+      description: "Sau khi hiểu giá trị bất biến và miền mở rộng, cần biết cách tạo giá trị đúng từ nguồn văn bản hay nhị phân."
+  - id: big-integer-002
+    order: 2
+    title: "Tạo từ String, radix, long hoặc mảng byte"
+    description: "Trình bày các cách dựng `BigInteger` từ String, radix, `long` và mảng byte, bao gồm cách phân biệt bytes của văn bản với biểu diễn nhị phân số nguyên."
+    transition:
+      to: big-integer-003
+      description: "Đầu vào byte còn có hai mô hình dấu riêng cần được phân tích kỹ bằng các mẫu bit cụ thể."
+  - id: big-integer-003
+    order: 3
+    title: "Biểu diễn byte bù hai có dấu và constructor sign-magnitude"
+    description: "Phân biệt hai constructor nhị phân bằng big-endian, two's complement, signum và magnitude; làm rõ quy tắc zero và byte dấu để tránh đổi dấu dữ liệu."
+    transition:
+      to: big-integer-004
+      description: "Sau khi hiểu constructor nhị phân, có thể sử dụng các hằng và factory đơn giản cho giá trị số thường gặp."
+  - id: big-integer-004
+    order: 4
+    title: "ZERO, ONE, TWO, TEN và valueOf"
+    description: "Tập trung vào bốn hằng số BigInteger và factory `valueOf(long)`, cách tái sử dụng giá trị bất biến và giới hạn khi dữ liệu vượt `long`."
+    transition:
+      to: big-integer-005
+      description: "Các giá trị đã được tạo cần kết hợp qua những phương thức cộng, trừ, nhân, chia và lấy dư."
+  - id: big-integer-005
+    order: 5
+    title: "add, subtract, multiply, divide và remainder"
+    description: "Dạy các phép số học cơ bản và phép chia nguyên cắt về 0; phân biệt `remainder` có dấu với modulo chuẩn, qua ví dụ đầu vào lớn."
+    transition:
+      to: big-integer-006
+      description: "Khi cùng cần thương và dư, API kết hợp giúp giải bài toán chia hết và chia lô rõ ràng hơn."
+  - id: big-integer-006
+    order: 6
+    title: "divideAndRemainder và kiểm tra chia hết"
+    description: "Đi sâu vào `divideAndRemainder`, phần dư bằng 0 để kiểm tra chia hết và ví dụ chia nhóm/phân lô với kiểm tra divisor."
+    transition:
+      to: big-integer-007
+      description: "Kỹ năng chia nguyên mở đường cho các phép toán lớn hơn như lũy thừa, căn nguyên và ước chung."
+  - id: big-integer-007
+    order: 7
+    title: "pow, sqrt, sqrtAndRemainder và gcd"
+    description: "Làm chủ `pow(int)`, `sqrt`, `sqrtAndRemainder` và `gcd` với điều kiện đầu vào, bất biến kết quả và ứng dụng rút gọn phân số."
+    transition:
+      to: big-integer-008
+      description: "Khi các phép toán trên cần tính theo lớp đồng dư, phải chọn modulo, lũy thừa modulo và nghịch đảo đúng điều kiện."
+  - id: big-integer-008
+    order: 8
+    title: "mod, modPow, modInverse và các điều kiện đầu vào"
+    description: "Đối chiếu các điều kiện của `mod`, `modPow`, `modInverse`, gồm m>0, số mũ âm và điều kiện nguyên tố cùng nhau để có nghịch đảo."
+    transition:
+      to: big-integer-009
+      description: "Modulo thường đi kèm thao tác bit; cần phân biệt biểu diễn BigInteger có dấu với bitvector độ rộng cố định."
+  - id: big-integer-009
+    order: 9
+    title: "Phép bit trên số nguyên có độ dài mở rộng"
+    description: "Giải thích AND/OR/XOR/NOT, dịch bit và sign extension của BigInteger; thực hành mask độ rộng cố định và sự khác biệt với int/long/BitSet."
+    transition:
+      to: big-integer-010
+      description: "Từ phép logic bit tổng quát, cần đo và chỉnh từng vị trí bit bằng các API chuyên biệt."
+  - id: big-integer-010
+    order: 10
+    title: "bitLength, bitCount, testBit, setBit và shift"
+    description: "Đi sâu vào `bitLength`, `bitCount`, test/set/clear/flip bit, `getLowestSetBit` và shift theo mô hình dấu mở rộng."
+    transition:
+      to: big-integer-011
+      description: "Khi đã thao tác trên số nguyên lớn, cần so sánh giá trị và dấu mà không ép về primitive."
+  - id: big-integer-011
+    order: 11
+    title: "compareTo, equals, signum, abs và negate"
+    description: "Giải thích so thứ tự, bằng nhau về giá trị, dấu, trị tuyệt đối và số đối trên BigInteger, bao gồm khác biệt giữa `equals` và `==`."
+    transition:
+      to: big-integer-012
+      description: "Khi API bên ngoài chỉ nhận int/long, cần biết chuyển đổi nào cắt bit và chuyển đổi nào báo lỗi."
+  - id: big-integer-012
+    order: 12
+    title: "intValue, longValue khác intValueExact, longValueExact"
+    description: "Phân tích chuyển đổi low 32/64 bits so với các phương thức Exact, cả số âm, 2^32/2^64 và ranh giới signed/unsigned."
+    transition:
+      to: big-integer-013
+      description: "Chuyển sang primitive chỉ là một hướng; xuất byte cũng cần giữ đúng dấu và độ rộng của schema."
+  - id: big-integer-013
+    order: 13
+    title: "Chuyển sang byte[] và vấn đề byte dấu bổ sung"
+    description: "Chuyên sâu vào `toByteArray()`, signed minimal representation, byte dấu thêm vào số dương và codec unsigned/signed fixed width."
+    transition:
+      to: big-integer-014
+      description: "Sau biểu diễn dữ liệu số lớn, có thể dùng các phép kiểm tra nguyên tố xác suất với giới hạn tin cậy rõ ràng."
+  - id: big-integer-014
+    order: 14
+    title: "Kiểm tra số nguyên tố xác suất và ý nghĩa certainty"
+    description: "Chuyên sâu về `isProbablePrime(certainty)`, bảo đảm xác suất, trường hợp certainty<=0, phương thức tạo prime và yêu cầu nguồn ngẫu nhiên."
+    transition:
+      to: big-integer-015
+      description: "Những phép thử và tính toán số lớn vẫn tiêu hao CPU/bộ nhớ, nên chương kết thúc bằng quản lý ngân sách tài nguyên."
+  - id: big-integer-015
+    order: 15
+    title: "Giới hạn tài nguyên dù không có độ rộng cố định như long"
+    description: "Tổng hợp giới hạn implementation, CPU/heap, bitLength, kiểm tra bit budget trước nhân/pow và chính sách input/output."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 | Bài 13 | Bài 14 | Bài 15 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Số nguyên độ chính xác tùy ý và tính bất biến | Tạo từ String, radix, long hoặc mảng byte | Biểu diễn byte bù hai có dấu và constructor sign-magnitude | ZERO, ONE, TWO, TEN và valueOf | add, subtract, multiply, divide và remainder | divideAndRemainder và kiểm tra chia hết | pow, sqrt, sqrtAndRemainder và gcd | mod, modPow, modInverse và các điều kiện đầu vào | Phép bit trên số nguyên có độ dài mở rộng | bitLength, bitCount, testBit, setBit và shift | compareTo, equals, signum, abs và negate | intValue, longValue khác intValueExact, longValueExact | Chuyển sang byte[] và vấn đề byte dấu bổ sung | Kiểm tra số nguyên tố xác suất và ý nghĩa certainty | Giới hạn tài nguyên dù không có độ rộng cố định như long |
+  | Vấn đề cần hiểu | Giữ số nguyên vượt `long` mà không mất giá trị và không hiểu nhầm đối tượng immutable. | Chọn constructor nào để không diễn giải sai dấu hoặc cơ số đầu vào? | Cùng bytes, giá trị thay đổi ra sao khi dấu nằm trong bit hay trường riêng? | Khởi tạo số 0, 1, 2, 10 và giá trị long đúng chuẩn Java bằng cách nào? | Thực hiện phép tính BigInteger và đọc đúng thương số dư như thế nào? | Khi cần cả thương và dư, làm sao kiểm tra chia hết và phân lô dữ liệu? | Tính lũy thừa, căn nguyên và UCLN chính xác trên số rất lớn? | Tính toán modulo đúng với giá trị âm, mũ âm và khả nghịch ra sao? | Phép bit trên BigInteger có dấu và vô hạn bit dấu hoạt động ra sao? | Đọc, chỉnh và đo bit BigInteger mà không nhầm với word 32/64 bit? | So sánh và đổi dấu số nguyên lớn mà không đánh mất giá trị bằng cách nào? | Chuyển BigInteger thành int/long ra sao để kiểm soát mất dữ liệu? | Xuất byte thế nào để không đổi dấu hoặc phá vỡ chiều dài giao thức? | Kết luận probable prime đáng tin đến đâu và phải kiểm tra đầu vào nào? | Độ chính xác tùy ý đi kèm những giới hạn tài nguyên nào và kiểm soát ra sao? |
+  | Giá trị đối với OOP/module | Nền tảng để sử dụng đúng các API BigInteger của module. | Bảo toàn số nguyên khi đi từ dữ liệu thô vào API của module. | Nền tảng decode giao thức và serialization byte đúng dấu. | Giúp xây phép toán số lớn ít lỗi và dễ đọc. | Năng lực số học nguyên chính xác khi primitive không đủ miền. | Liên kết BigInteger với thuật toán chia công việc và các kiểm tra ranh giới. | Cung cấp thuật toán toán học cơ bản để xây bài toán số nguyên lớn. | Tránh áp dụng sai API modulo trong thuật toán số lớn và mật mã minh họa. | Giữ đúng ngữ nghĩa bit và số nguyên khi xử lý nhị phân lớn. | Hỗ trợ xử lý bitfield, mask, thống kê bit và ước lượng độ lớn. | Dùng BigInteger chính xác trong tập hợp, kiểm tra miền và thuật toán có dấu. | Bảo vệ giới hạn kích thước và tính nhất quán API khi thu hẹp số lớn. | Chuẩn hóa định dạng nhị phân cho dữ liệu lớn, hash và ID. | Ứng dụng số học nguyên lớn trong kiểm tra nguyên tố có độ tin cậy kiểm soát được. | Bảo đảm xử lý số lớn hiệu quả và giảm rủi ro cạn tài nguyên. |
+  | Tư duy hình thành | Xem miền giá trị và trạng thái tham chiếu trước khi thao tác. | Bắt đầu từ hợp đồng mã hóa nguồn trước khi gọi constructor. | Đọc toàn bộ mẫu bit với độ rộng và quy tắc dấu đã thống nhất. | Phân biệt hằng bất biến, giá trị toán học và identity của đối tượng. | Kiểm tra bất biến toán học cho từng kết quả, đặc biệt cặp thương và dư. | Dùng tính chất `a=q*b+r` như điều kiện kiểm chứng kết quả. | Kiểm chứng kết quả qua phương trình và cận toán học thay vì gần đúng floating-point. | Xem lớp đồng dư và precondition trước khi thử tính. | Quy định độ rộng word trước khi mô phỏng unsigned bits. | Phân biệt số bit khác dấu với số bit 1 của word cố định. | So sánh giá trị số học, không dựa vào tham chiếu object. | Đặt quy tắc miền đầu ra trước khi chọn chuyển đổi. | Coi serialization là hợp đồng byte order, sign và width độc lập giá trị số. | Hiểu giới hạn của thử xác suất và ngữ nghĩa tham số certainty. | Ước lượng độ lớn và chi phí trước phép toán, không dựa vào khả năng cấp phát may rủi. |

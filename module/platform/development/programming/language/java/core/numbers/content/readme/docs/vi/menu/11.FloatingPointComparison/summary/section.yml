@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "SO SÁNH SỐ THỰC — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: floating-point-comparison-001
+    order: 1
+    title: "Toán tử ==, !=, <, <=, > và >="
+    description: "Nắm rõ toán tử, NaN unordered, promotion và mục tiêu của từng phép so sánh."
+    transition:
+      to: floating-point-comparison-002
+      description: "Từ sáu toán tử, khảo sát NaN là trường hợp không bằng chính nó."
+  - id: floating-point-comparison-002
+    order: 2
+    title: "NaN không bằng chính nó trong so sánh primitive"
+    description: "Hiểu tính unordered của NaN và dùng predicate trước các nhánh kiểm tra."
+    transition:
+      to: floating-point-comparison-003
+      description: "Sau khi gặp NaN, dùng API phân loại cả vô cực và giá trị hữu hạn."
+  - id: floating-point-comparison-003
+    order: 3
+    title: "Float.isNaN, Double.isNaN, isInfinite và isFinite"
+    description: "Phân biệt NaN, infinity, finite và kiểm soát ranh giới dữ liệu."
+    transition:
+      to: floating-point-comparison-004
+      description: "Từ các giá trị đặc biệt, xem zero có dấu và sự khác biệt ở bit."
+  - id: floating-point-comparison-004
+    order: 4
+    title: "+0.0 và -0.0 với toán tử =="
+    description: "Khảo sát bit dấu zero và tác động đến phép chia, comparator, collection."
+    transition:
+      to: floating-point-comparison-005
+      description: "Từ signed zero, xây dựng thứ tự sắp xếp toàn phần của Java."
+  - id: floating-point-comparison-005
+    order: 5
+    title: "Float.compare, Double.compare và thứ tự toàn phần"
+    description: "Áp dụng thứ tự toàn phần của Double/Float cho sorting."
+    transition:
+      to: floating-point-comparison-006
+      description: "Khi đã có thứ tự, xem hợp đồng equals của wrapper và collection."
+  - id: floating-point-comparison-006
+    order: 6
+    title: "equals của Float, Double với NaN và signed zero"
+    description: "Hiểu bit canonical, wrapper equality và ảnh hưởng đến hash collections."
+    transition:
+      to: floating-point-comparison-007
+      description: "Từ equality chính xác, chuyển sang truy vấn gần bằng theo đơn vị."
+  - id: floating-point-comparison-007
+    order: 7
+    title: "So sánh bằng sai số tuyệt đối"
+    description: "Sử dụng absolute tolerance theo đơn vị và giới hạn của nó."
+    transition:
+      to: floating-point-comparison-008
+      description: "Khi ngưỡng tuyệt đối không phù hợp mọi thang, xét sai số tương đối."
+  - id: floating-point-comparison-008
+    order: 8
+    title: "So sánh bằng sai số tương đối"
+    description: "Lựa chọn mẫu số của tỷ lệ và xử lý near-zero/overflow."
+    transition:
+      to: floating-point-comparison-009
+      description: "Từ vấn đề gần zero, ghép dung sai tuyệt đối với tương đối."
+  - id: floating-point-comparison-009
+    order: 9
+    title: "Kết hợp sai số tuyệt đối và tương đối"
+    description: "Kết hợp ngưỡng tuyệt đối và tương đối theo miền."
+    transition:
+      to: floating-point-comparison-010
+      description: "Sau hai thước đo nghiệp vụ, tìm hiểu ULP khi đặc tả dùng bước máy."
+  - id: floating-point-comparison-010
+    order: 10
+    title: "Khi nào cần giới hạn theo ULP"
+    description: "Phân biệt khoảng cách ULP cục bộ và số bước biểu diễn."
+    transition:
+      to: floating-point-comparison-011
+      description: "Cuối cùng xác định ranh giới giữa gần bằng và hợp đồng equals/Comparator."
+  - id: floating-point-comparison-011
+    order: 11
+    title: "Không dùng so sánh gần bằng tùy tiện làm quan hệ equals hoặc thứ tự sắp xếp"
+    description: "Chứng minh tính không bắc cầu và thiết kế khóa/comparator hợp lệ."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Toán tử ==, !=, <, <=, > và >= | NaN không bằng chính nó trong so sánh primitive | Float.isNaN, Double.isNaN, isInfinite và isFinite | +0.0 và -0.0 với toán tử == | Float.compare, Double.compare và thứ tự toàn phần | equals của Float, Double với NaN và signed zero | So sánh bằng sai số tuyệt đối | So sánh bằng sai số tương đối | Kết hợp sai số tuyệt đối và tương đối | Khi nào cần giới hạn theo ULP | Không dùng so sánh gần bằng tùy tiện làm quan hệ equals hoặc thứ tự sắp xếp |
+  | Vấn đề cần hiểu | Toán tử so sánh hoạt động ra sao khi có NaN hoặc mất precision? | Vì sao NaN có thể lọt qua một phép kiểm tra giới hạn? | Làm sao loại số không hữu hạn đúng thời điểm? | Zero có dấu bằng nhau ở `==` nhưng khác nhau ở đâu? | Sắp xếp NaN và ±0 theo hợp đồng nào? | Khi nào hai wrapper bằng nhau khác kết quả `==` số học? | Cho phép chênh lệch cố định bao nhiêu đơn vị là hợp lý? | Sai lệch này đáng kể bao nhiêu so với quy mô? | Làm sao so gần bằng cả gần 0 lẫn thang lớn? | Một ULP là ngưỡng khoảng cách hay số bước giá trị? | Vì sao epsilon equality khiến equals và sort mâu thuẫn? |
+  | Giá trị đối với OOP/module | Viết điều kiện đúng theo quy tắc floating point. | Tránh bỏ lọt số bất định trong logic nghiệp vụ. | Hợp thức hóa dữ liệu trước khi lưu và tính toán. | Tránh mất dấu hoặc nhập nhằng danh tính số. | Tạo comparator hợp lệ cho cấu trúc có thứ tự. | Bảo đảm nhất quán equals/hashCode khi lưu số thực. | Định nghĩa tiêu chí nghiệm thu đo lường rõ ràng. | So kết quả nhiều bậc độ lớn theo tỷ lệ có nghĩa. | Tạo API tolerance linh hoạt và có thể kiểm thử. | Kiểm thử thuật toán mức bit theo đặc tả thực. | Bảo toàn hợp đồng Object.equals, hashCode và Comparator. |
+  | Tư duy hình thành | Xác định kiểu và nghĩa của toán tử trước khi so. | Chặn trường hợp đặc biệt trước khi suy luận từ dấu quan hệ. | Kiểm tra từng loại số ở đúng ranh giới API. | Tách so sánh số học khỏi nhận dạng bit và khóa. | Dùng quan hệ có thứ tự tổng thay vì bất đẳng thức giả định. | Chú ý kiểu object và quy ước canonicalization. | Gắn ngưỡng với đơn vị và nguồn sai số. | Định nghĩa mẫu số trước khi đặt ngưỡng. | Kết hợp thước đo với chính sách miền rõ ràng. | Nêu chính xác đơn vị ULP đang dùng. | Phân biệt gần bằng, danh tính và thứ tự tổng. |

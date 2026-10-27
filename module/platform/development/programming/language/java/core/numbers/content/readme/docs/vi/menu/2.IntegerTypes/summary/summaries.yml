@@ -1,0 +1,351 @@
+summaries:
+- id: integer-types-001
+  title: byte, short, int và long
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **byte, short, int và long**
+
+    Bài học đặt nền tảng cho bốn kiểu số nguyên có dấu của Java: độ rộng, literal, phép chuyển kiểu và kiểu thực sự tham gia phép toán. Nhờ đó, người học có thể giải thích kết quả chia nguyên, cast và overflow thay vì chỉ nhìn kiểu của biến nhận.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Miền biểu diễn và cách khai báo
+
+    1. Làm thế nào suy ra miền giá trị từ độ rộng 8, 16, 32 và 64 bit?
+    2. Vì sao literal thập phân vượt miền int cần hậu tố L ngay cả khi được gán cho long?
+
+    ### Chuyển kiểu và phép toán
+
+    1. Vì sao byte cộng byte cho biểu thức kiểu int và phép gán rút gọn có thể làm quấn vòng?
+    2. Điều gì xảy ra khi ép int 130 thành byte, và vì sao cast không kiểm tra miền?
+
+    ### Đọc kết quả và bảo vệ tính toán
+
+    1. Làm thế nào nâng kiểu trước khi nhân để tránh tràn trung gian?
+    2. Khi nào dùng Math.addExact, Math.toIntExact hoặc BigInteger thay phép toán thông thường?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt bốn primitive | Lập bảng byte/short/int/long về độ rộng, miền signed và vai trò literal L. |
+    | Dự đoán kiểu biểu thức | Giải thích kiểu và đầu ra của byte+byte, int*int gán vào long, phép chia âm và gán +=. |
+    | Xử lý tràn/chuyển hẹp | Tính kết quả cast ngoài miền và sửa đoạn tính toán bằng promotion hoặc Math.*Exact phù hợp. |
+- id: integer-types-002
+  title: Kích thước bit và miền giá trị của từng kiểu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kích thước bit và miền giá trị của từng kiểu**
+
+    Bài học giải thích vì sao n bit tạo 2^n mẫu và cách tính miền signed theo bù hai, thay vì chỉ học thuộc các con số. Người học cũng đối chiếu short với char và kiểm tra các biên bằng hằng wrapper.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Suy luận phạm vi từ bit
+
+    1. Vì sao kiểu signed n bit có miền từ -2^(n-1) đến 2^(n-1)-1?
+    2. Làm thế nào giải thích bit pattern 10000000 là -128 đối với byte?
+
+    ### Phân biệt độ rộng và giá trị
+
+    1. Vì sao short và char đều 16 bit nhưng có miền biểu diễn khác nhau?
+    2. Làm sao chứng minh SIZE/BYTES không cho biết kích thước đối tượng wrapper trên heap?
+
+    ### Kiểm chứng tại biên
+
+    1. Kết quả nào cho thấy Byte.MAX_VALUE+1 vẫn là phép toán int?
+    2. Làm thế nào phát hiện chuyển long sang int vượt miền trước khi cast?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Suy ra miền giá trị | Từ số bit bất kỳ, tính đúng số mẫu và cận dưới/cận trên của kiểu có dấu. |
+    | Giải thích bit pattern | Đọc và diễn giải các mẫu byte 00000000, 01111111 và 10000000. |
+    | Đối chiếu char/short | So sánh signedness, phạm vi số và mục đích UTF-16 dù cùng rộng 16 bit. |
+- id: integer-types-003
+  title: Biểu diễn số âm bằng bù hai
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Biểu diễn số âm bằng bù hai**
+
+    Bài học đi vào cách mã hóa và giải mã số âm ở độ rộng cố định, cách mở rộng dấu và những thay đổi khi mask hoặc dịch bit. Đây là cơ sở để đọc đúng byte từ file/giao thức và phân tích overflow dựa trên bit pattern.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mã hóa và giải mã
+
+    1. Làm thế nào tìm 8 bit bù hai của -25 bằng đảo bit cộng một?
+    2. Vì sao một mẫu 11111011 có thể là 251 hoặc -5 tùy signedness?
+
+    ### Mở rộng dấu và masking
+
+    1. Tại sao byte -5 chuyển thành int vẫn là -5 nhưng byte & 0xFF thành 251?
+    2. Làm thế nào ghép hai octet thành số 16 bit không dấu mà không bị sign extension làm sai?
+
+    ### Dịch bit và ngoại lệ biên
+
+    1. Vì sao -5 >> 1 khác -5 >>> 1 và khác -5 / 2?
+    2. Tại sao Integer.MIN_VALUE không có số đối dương biểu diễn được trong int?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mã hóa signed n bit | Tự chuyển -18 thành bù hai 8 bit và giải mã bit pattern 11010000 theo hai cách. |
+    | Xử lý byte nhị phân | Viết phép mask 0xFF và phép ghép big-endian hai byte có signedness rõ ràng. |
+    | Giải thích dịch bit | Dự đoán kết quả >>, >>> với số âm sau khi xét numeric promotion và độ rộng int/long. |
+- id: integer-types-004
+  title: MIN_VALUE, MAX_VALUE, SIZE và BYTES
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **MIN_VALUE, MAX_VALUE, SIZE và BYTES**
+
+    Bài học hướng dẫn dùng đúng bốn hằng của wrapper để tra giới hạn miền giá trị và độ rộng dữ liệu nguyên thủy. Những ví dụ kiểm tra trước narrowing, thiết kế bản ghi nhị phân và cảnh báo về object overhead giúp chuyển kiến thức bit thành thao tác mã nguồn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa từng hằng
+
+    1. MIN_VALUE/MAX_VALUE trả lời câu hỏi nào khác SIZE/BYTES?
+    2. Vì sao Integer.BYTES bằng 4 nhưng không kết luận một Integer object chiếm đúng bốn byte?
+
+    ### Áp dụng trong chương trình
+
+    1. Làm thế nào dùng MIN_VALUE/MAX_VALUE hoặc Math.toIntExact để bảo vệ việc chuyển long sang int?
+    2. Khi tính recordBytes từ Integer.BYTES và Long.BYTES, thông tin endianness còn thiếu là gì?
+
+    ### Giới hạn và so sánh API
+
+    1. Vì sao Float.MIN_VALUE không mang ý nghĩa giống Integer.MIN_VALUE?
+    2. Điều gì khiến 1 << 32 khác 1L << 32 khi dùng Integer.SIZE?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tra cứu hằng wrapper | In được các MIN_VALUE, MAX_VALUE, SIZE, BYTES cho byte/short/int/long/char. |
+    | Bảo vệ chuyển kiểu | Viết hàm kiểm tra miền long trước khi đưa dữ liệu vào API nhận int. |
+    | Mô tả định dạng nhị phân | Tính số byte phần dữ liệu int+long và nêu endianness, overhead ngoài BYTES. |
+- id: integer-types-005
+  title: char là số nguyên không dấu biểu diễn đơn vị mã UTF-16
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **char là số nguyên không dấu biểu diễn đơn vị mã UTF-16**
+
+    Bài học phân biệt giá trị nguyên không dấu 16 bit của char với ý nghĩa code unit UTF-16, code point và ký tự hiển thị. Từ surrogate pair, codePointAt đến phân đoạn grapheme, người học tránh cắt đôi ký tự hoặc đo độ dài văn bản sai yêu cầu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### char ở hai vai trò
+
+    1. Vì sao char có thể tham gia số học nhưng vẫn chủ yếu biểu diễn đơn vị mã UTF-16?
+    2. Vì sao một mã điểm ngoài BMP cần hai char, còn vùng surrogate đứng lẻ vẫn chứa được trong biến char?
+
+    ### Duyệt và đo văn bản Unicode
+
+    1. String.length, codePointCount và số grapheme cluster trả lời những câu hỏi khác nhau ra sao?
+    2. Làm thế nào duyệt String theo code point mà không tách đôi surrogate pair?
+
+    ### Đầu vào không hợp lệ
+
+    1. Vì sao Character.isValidCodePoint chưa đủ để xác nhận Unicode scalar value?
+    2. Khi nào cần xử lý surrogate lẻ thay vì giả định mọi String đều chứa mã điểm hợp lệ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích UTF-16 | Giải thích vì sao A😀Z dài bốn code unit nhưng có ba code point. |
+    | Viết vòng lặp Unicode đúng | Duyệt codePointAt với Character.charCount và xác nhận chỉ số đầu của surrogate pair. |
+    | Phát hiện rủi ro văn bản | Phân biệt surrogate lẻ, code point và grapheme khi kiểm tra/giới hạn chuỗi. |
+- id: integer-types-006
+  title: Phân biệt char số với giá trị chữ số được viết dưới dạng ký tự
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt char số với giá trị chữ số được viết dưới dạng ký tự**
+
+    Bài học giải thích vì sao '7', 7 và "7" khác kiểu và khác giá trị, rồi đưa ra phép đổi ASCII, Character.digit và parseInt theo từng loại đầu vào. Người học biết khi nào trừ '0' phù hợp và vì sao cần code point cho chữ số Unicode ngoài BMP.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân biệt ký tự và số
+
+    1. Vì sao ép (int) '7' cho 55 thay vì giá trị chữ số 7?
+    2. Vì sao '7'+'2' khác phép cộng hai số 7 và 2, còn "7"+1 là nối chuỗi?
+
+    ### Chuyển đổi đúng miền
+
+    1. Làm sao kiểm tra ký tự trước khi thực hiện c-'0' cho chữ số ASCII?
+    2. Khi nào Character.digit(codePoint, radix) cần thiết thay cho phép trừ '0'?
+
+    ### Chuỗi nhiều chữ số
+
+    1. Vì sao một char không thể biểu diễn số nguyên 2048 như một chuỗi chữ số?
+    2. Làm thế nào chọn Integer.parseInt, Long.parseLong hoặc BigInteger khi giá trị đầu vào có giới hạn khác nhau?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đối chiếu kiểu và kết quả | Dự đoán và giải thích kết quả in của char, cast int, phép toán char và nối String. |
+    | Chuyển chữ số an toàn | Cài đặt chuyển ASCII có kiểm tra và chuyển Unicode digit theo radix. |
+    | Phân tích số dạng text | Chọn API parse chuỗi nhiều chữ số, xử lý giá trị lỗi và phân biệt số với mã ký tự. |
+- id: integer-types-007
+  title: Giá trị mặc định của field và yêu cầu gán biến cục bộ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giá trị mặc định của field và yêu cầu gán biến cục bộ**
+
+    Bài học phân biệt giá trị mặc định của field và phần tử mảng với quy tắc definite assignment của biến cục bộ. Qua if/else, vòng lặp, final field và wrapper null, người học giải thích được lỗi biên dịch và trạng thái runtime xuất hiện trong các chương trình Java.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khởi tạo theo vị trí khai báo
+
+    1. Vì sao instance/static field và phần tử int[] có mặc định 0 nhưng local int chưa gán không được đọc?
+    2. Các field kiểu boolean, char, String và Integer nhận giá trị mặc định khác nhau ra sao?
+
+    ### Luồng điều khiển và definite assignment
+
+    1. Làm thế nào phân tích if/else để chứng minh mọi đường đi tới lần đọc đã gán biến?
+    2. Vì sao count++ hoặc count+=1 không thể dùng như phép gán đầu tiên cho local chưa khởi tạo?
+
+    ### Khởi tạo lớp và tham chiếu
+
+    1. Vì sao initializer có thể đọc giá trị mặc định của field được khai báo sau?
+    2. Definite assignment và quy tắc final khác kiểm tra non-null thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt loại biến | Lập bảng field, local, parameter và array element về quy tắc khởi tạo. |
+    | Sửa lỗi biên dịch | Tìm nhánh/vòng lặp làm local chưa được gán rồi sửa flow hoặc initializer. |
+    | Phân tích initialization order | Dự đoán observed=0/later=5 trong ví dụ khởi tạo và phát hiện nguy cơ unboxing null. |
+- id: integer-types-008
+  title: Vì sao boolean không phải kiểu số
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vì sao boolean không phải kiểu số**
+
+    Bài học phân loại boolean là primitive logic, tách khỏi các kiểu số của Java dù JVM có thể dùng biểu diễn bit hoặc byte. Nhờ hiểu ranh giới kiểu, người học viết điều kiện tường minh, biết cách mã hóa cờ 0/1 theo giao thức và phân biệt toán tử logic đoản mạch.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân loại kiểu Java
+
+    1. Vì sao boolean không thuộc integral types dù chỉ có hai giá trị?
+    2. Tại sao các biểu thức if(1), (boolean)1 hoặc true+false bị trình biên dịch từ chối?
+
+    ### Logic và quy ước dữ liệu
+
+    1. Làm thế nào chuyển cờ 0/1 từ giao thức thành boolean khi giá trị ngoài miền phải báo lỗi?
+    2. Vì sao && tránh chia cho 0 ở ví dụ guard, còn & không đoản mạch?
+
+    ### Tầng JVM và wrapper
+
+    1. Tại sao bytecode có thể dùng biểu diễn số nhưng boolean của mã nguồn không chuyển kiểu thành int?
+    2. Boolean khác Number ở quan hệ kế thừa và rủi ro unboxing null như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt numeric và logical | Xác định các phép toán hợp lệ/không hợp lệ đối với boolean và kiểu số. |
+    | Viết điều kiện an toàn | Chuyển if(count) thành điều kiện có nghĩa và chọn && cho guard cần short-circuit. |
+    | Mã hóa dữ liệu logic | Thiết kế decodeZeroOne chỉ chấp nhận 0/1 và mô tả cách xử lý input khác. |
+- id: integer-types-009
+  title: Chọn int hay long cho số đếm, chỉ số và kích thước
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn int hay long cho số đếm, chỉ số và kích thước**
+
+    Bài học đưa cách chọn int và long dựa trên miền thực tế, đơn vị đo và chữ ký API. Người học xử lý tổng số đếm, kích thước tệp, index mảng, overflow trong tích và chuyển long sang int ở biên mà không làm mất dữ liệu âm thầm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa và hợp đồng API
+
+    1. Khi nào index, count, size và byte offset cần những kiểu khác nhau?
+    2. Vì sao mảng/List thường dùng int nhưng Files.size và Stream.count trả long?
+
+    ### Rủi ro kết quả trung gian
+
+    1. Vì sao long total = intA+intB vẫn có thể nhận số đã tràn?
+    2. Làm thế nào thiết kế rows*columns hoặc bytesPerItem*itemCount để kiểm tra tràn ở kiểu long?
+
+    ### Ranh giới và môi trường sử dụng
+
+    1. Math.toIntExact còn thiếu điều kiện nào để xác nhận chỉ số mảng hợp lệ?
+    2. Lựa chọn AtomicLong hay LongAdder thay đổi điều gì so với chỉ đổi int thành long?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn kiểu theo API | Phân loại index mảng, kích thước tập hợp, offset tệp và tổng đếm theo int/long có lý do. |
+    | Ngăn tràn trung gian | Chỉnh int+int và int*int để promotion diễn ra trước phép tính hoặc dùng Math.multiplyExact. |
+    | Thiết kế chuyển đổi an toàn | Kết hợp Math.toIntExact với kiểm tra index, hoặc chia xử lý tệp lớn thành nhiều chunk. |
+- id: integer-types-010
+  title: Giới hạn của kiểu cố định so với số nguyên toán học
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn của kiểu cố định so với số nguyên toán học**
+
+    Bài học kết nối kết quả nguyên toán học không giới hạn với biểu diễn cố định của byte/short/int/long và quy tắc modulo khi tràn. Người học phân biệt overflow phép toán, narrowing và chia nguyên, rồi lựa chọn long, Math.*Exact hoặc BigInteger tùy yêu cầu chính xác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai mô hình số nguyên
+
+    1. Vì sao cộng hai số nguyên toán học luôn có kết quả trong Z nhưng kết quả int có thể quấn vòng?
+    2. Làm thế nào dùng modulo 2^32 để lý giải Integer.MAX_VALUE+1?
+
+    ### Phép toán và phép chuyển đổi
+
+    1. Vì sao gán kết quả int*int vào long sau phép tính không phục hồi độ chính xác?
+    2. Điểm khác nhau giữa overflow, phép chia nguyên làm tròn về 0 và narrowing cast là gì?
+
+    ### Chọn chiến lược bảo toàn kết quả
+
+    1. Khi nào Math.addExact thích hợp hơn việc chấp nhận wraparound theo giao thức?
+    2. Vì sao phải chuyển số thành BigInteger trước khi cộng nếu kết quả vượt Long.MAX_VALUE?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích giới hạn số | Mô hình hóa phép cộng int theo modulo 2^32 và xác định khi nào kết quả khác toán học. |
+    | Phân biệt nguồn mất dữ liệu | Phân tích các ví dụ overflow, MIN_VALUE/-1 và cast long→int để nêu nguyên nhân riêng. |
+    | Chọn số nguyên phù hợp | Sửa phép toán sang long, Math.*Exact hoặc BigInteger với giải thích về giới hạn và tài nguyên. |

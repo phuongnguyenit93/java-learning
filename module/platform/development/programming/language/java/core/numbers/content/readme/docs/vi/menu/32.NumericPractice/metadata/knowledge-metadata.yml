@@ -1,0 +1,37 @@
+sections:
+  numeric-practice-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-practice-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-practice-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-practice-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-practice-005:
+    difficulty: ADVANCED
+    isImportant: true
+  numeric-practice-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-practice-007:
+    difficulty: ADVANCED
+    isImportant: true
+  numeric-practice-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-practice-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-practice-010:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  numeric-practice-011:
+    difficulty: ADVANCED
+    isImportant: true
+  numeric-practice-012:
+    difficulty: ADVANCED
+    isImportant: true

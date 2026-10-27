@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "KIỂM THỬ VÀ CHẨN ĐOÁN SỐ — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: numeric-testing-and-diagnostics-001
+    order: 1
+    title: "Kiểm tra MIN_VALUE, MAX_VALUE, số 0 và lân cận biên"
+    description: "Xây ma trận ca kiểm thử tại biên kiểu số, phép toán và miền nghiệp vụ. Phân biệt số nguyên sát biên theo đơn vị 1 với số thực sát biên theo lưới biểu diễn IEEE 754."
+    transition:
+      to: numeric-testing-and-diagnostics-002
+      description: "Từ phân vùng biên sang thời điểm overflow và narrowing."
+  - id: numeric-testing-and-diagnostics-002
+    order: 2
+    title: "Kiểm tra overflow trước và sau chuyển kiểu"
+    description: "Phân biệt mất dữ liệu khi tính bằng kiểu hẹp với mất dữ liệu trong phép ép kiểu. Thực hành nâng kiểu trước phép toán, Math.*Exact và các phép chuyển đổi exact khi hợp đồng yêu cầu giữ nguyên giá trị."
+    transition:
+      to: numeric-testing-and-diagnostics-003
+      description: "Từ cast sai chuyển sang phép chia và rounding của số âm."
+  - id: numeric-testing-and-diagnostics-003
+    order: 3
+    title: "Số âm với phép chia, lấy dư và làm tròn"
+    description: "Đối chiếu chia nguyên hướng về zero với floorDiv, remainder với floorMod và cách RoundingMode xử lý số âm. Dùng các giá trị sát zero, điểm giữa và MIN_VALUE để tạo phản ví dụ kiểm thử."
+    transition:
+      to: numeric-testing-and-diagnostics-004
+      description: "Sau phép toán có dấu, khảo sát special values IEEE 754."
+  - id: numeric-testing-and-diagnostics-004
+    order: 4
+    title: "NaN, vô cực, signed zero và subnormal"
+    description: "Khảo sát những giá trị IEEE 754 đặc biệt ảnh hưởng so sánh, phép chia, wrapper, collection và dữ liệu trao đổi. Phân biệt zero có dấu, NaN, Infinity, subnormal và thời điểm cần kiểm tra isFinite."
+    transition:
+      to: numeric-testing-and-diagnostics-005
+      description: "Sau NaN và signed zero, chọn tiêu chí so sánh gần đúng."
+  - id: numeric-testing-and-diagnostics-005
+    order: 5
+    title: "Kiểm tra phép so sánh với sai số phù hợp"
+    description: "Chọn điều kiện so sánh floating-point phù hợp miền giá trị: absolute tolerance, relative tolerance hoặc kết hợp. Trình bày ngoại lệ gần zero, NaN, Infinity và cách giữ độ chính xác khi đối chiếu BigDecimal."
+    transition:
+      to: numeric-testing-and-diagnostics-006
+      description: "Từ tolerance của double sang phép so BigDecimal chính xác."
+  - id: numeric-testing-and-diagnostics-006
+    order: 6
+    title: "Kiểm tra BigDecimal cả giá trị và scale khi hợp đồng yêu cầu"
+    description: "Thiết kế phép kiểm thử BigDecimal đúng hợp đồng giá trị số học, scale, precision và chuỗi biểu diễn. Nhận biết khác biệt equals với compareTo, rủi ro stripTrailingZeros và quy tắc setScale."
+    transition:
+      to: numeric-testing-and-diagnostics-007
+      description: "Kiểm tra cụ thể các lựa chọn RoundingMode tại midpoint."
+  - id: numeric-testing-and-diagnostics-007
+    order: 7
+    title: "Đối chiếu mọi RoundingMode tại trường hợp đúng giữa"
+    description: "Xây oracle cho toàn bộ tám RoundingMode ở các điểm đúng giữa theo hai dấu, parity và scale đích. Kiểm tra điều kiện dưới/trên tie, mode UNNECESSARY và khác biệt tạo BigDecimal từ chuỗi với từ double."
+    transition:
+      to: numeric-testing-and-diagnostics-008
+      description: "Từ rounding chuyển sang parse/format và kiểm thử round-trip."
+  - id: numeric-testing-and-diagnostics-008
+    order: 8
+    title: "Kiểm thử round-trip parse, format và cơ số"
+    description: "Xác định round-trip cần giữ giá trị, scale, bit hay chuỗi gốc; áp dụng cho int/long nhiều cơ số, unsigned, BigInteger, BigDecimal và double. Kiểm tra tác động format theo Locale và parser chưa tiêu thụ hết văn bản."
+    transition:
+      to: numeric-testing-and-diagnostics-009
+      description: "Từ giá trị đã parse chuyển sang oracle BigInteger cho overflow."
+  - id: numeric-testing-and-diagnostics-009
+    order: 9
+    title: "Dùng BigInteger hoặc phép tính tham chiếu để phát hiện tràn"
+    description: "Dùng BigInteger làm oracle độc lập để phát hiện overflow của int/long và đối chiếu Math.*Exact. Phân biệt yêu cầu mọi bước không tràn với yêu cầu kết quả cuối vừa miền, bổ sung dữ liệu ngẫu nhiên có seed và các trường hợp MIN/MAX."
+    transition:
+      to: numeric-testing-and-diagnostics-010
+      description: "Từ oracle cố định sang kiểm thử ngẫu nhiên có điều khiển."
+  - id: numeric-testing-and-diagnostics-010
+    order: 10
+    title: "Kiểm thử số ngẫu nhiên bằng seed hoặc nguồn được truyền vào"
+    description: "Biến tính ngẫu nhiên thành dữ liệu kiểm thử kiểm soát được bằng seed cố định, thuật toán xác định và tiêm RandomGenerator từ bên ngoài. Dùng scripted fake để ép nhánh và thử bất biến, phân biệt PRNG thông thường với SecureRandom dành cho bảo mật."
+    transition:
+      to: numeric-testing-and-diagnostics-011
+      description: "Cuối cùng truy nguyên bit, kiểu và precision khi kết quả bất ngờ."
+  - id: numeric-testing-and-diagnostics-011
+    order: 11
+    title: "In mẫu bit, kiểu biểu thức và precision để điều tra kết quả bất ngờ"
+    description: "Truy vết loại toán hạng, kiểu biểu thức compile-time, raw bits float/double và precision/scale BigDecimal để tìm điểm đầu tiên gây lỗi số. Thực hành in hex khi overflow, quan sát signed zero và phân biệt độ chính xác nhị phân với decimal."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Kiểm tra MIN_VALUE, MAX_VALUE, số 0 và lân cận biên | Kiểm tra overflow trước và sau chuyển kiểu | Số âm với phép chia, lấy dư và làm tròn | NaN, vô cực, signed zero và subnormal | Kiểm tra phép so sánh với sai số phù hợp | Kiểm tra BigDecimal cả giá trị và scale khi hợp đồng yêu cầu | Đối chiếu mọi RoundingMode tại trường hợp đúng giữa | Kiểm thử round-trip parse, format và cơ số | Dùng BigInteger hoặc phép tính tham chiếu để phát hiện tràn | Kiểm thử số ngẫu nhiên bằng seed hoặc nguồn được truyền vào | In mẫu bit, kiểu biểu thức và precision để điều tra kết quả bất ngờ |
+  | Vấn đề cần hiểu | Biên kiểu và miền nghiệp vụ | Overflow trước/sau cast | Chia và rounding số âm | Non-finite và signed zero | Sai số so sánh | Giá trị và scale decimal | Tie và parity của rounding | Round-trip qua văn bản | Oracle overflow số nguyên | Flaky RNG test | Điểm phát sinh kết quả lạ |
+  | Giá trị đối với OOP/module | Thiết kế ca kiểm thử tại biên | Tính và chuyển kiểu an toàn | Bucket và remainder chính xác | Validator và collection chính xác | Assertion số học có căn cứ | Hợp đồng BigDecimal cho API/DB | RoundingMode xác minh bằng oracle | Codec số bảo toàn contract | Phát hiện kết quả wrap sai | Dependency injection cho nguồn số | Điều tra theo kiểu, bit, precision |
+  | Tư duy hình thành | Tạo expected từ contract | Theo dấu điểm mất dữ liệu | Không suy từ ca dương | Tách số học khỏi bit | Không dùng epsilon tùy tiện | Tách giá trị và biểu diễn | Bắt đầu từ scale đích | Định nghĩa mức bảo toàn | Không lấy code đang test làm oracle | Điều khiển đầu vào ngẫu nhiên | Truy nguyên bước mất dữ liệu |

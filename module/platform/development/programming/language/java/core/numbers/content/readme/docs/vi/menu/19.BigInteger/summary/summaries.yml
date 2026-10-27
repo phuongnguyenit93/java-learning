@@ -1,0 +1,451 @@
+summaries:
+- id: big-integer-001
+  title: Số nguyên độ chính xác tùy ý và tính bất biến
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Số nguyên độ chính xác tùy ý và tính bất biến**
+
+    Nhận diện thời điểm `int` và `long` không còn đủ miền biểu diễn, đồng thời hiểu `BigInteger` lưu giá trị nguyên có dấu và là đối tượng bất biến. Từ nền tảng này, người học tránh tràn trước khi chuyển kiểu và biết vì sao mọi phép tính phải giữ giá trị trả về.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Miền số và giá trị bất biến
+
+    1. Khác biệt căn bản giữa tràn `long` và phép cộng hai `BigInteger` vượt 64 bit là gì?
+    2. Vì sao `n.add(BigInteger.ONE)` không làm thay đổi biến `n` nếu bỏ qua giá trị trả về?
+
+    ### Lựa chọn kiểu và hợp đồng dữ liệu
+
+    1. Khi nào nên chọn `BigInteger` thay vì `long` hoặc `BigDecimal`?
+    2. Vì sao chuyển dữ liệu sang `BigInteger` sau khi phép nhân primitive đã tràn không thể cứu lại kết quả?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt miền biểu diễn | Dự đoán kết quả vượt `Long.MAX_VALUE` và biểu diễn nó chính xác bằng `BigInteger`. |
+    | Thao tác bất biến | Viết vòng lặp cộng số lớn với `sum = sum.add(...)` và chứng minh đối tượng nguồn không đổi. |
+    | Chọn kiểu theo bài toán | Giải thích lựa chọn giữa `long`, `BigInteger` và `BigDecimal` theo miền và loại số cần xử lý. |
+- id: big-integer-002
+  title: Tạo từ String, radix, long hoặc mảng byte
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tạo từ String, radix, long hoặc mảng byte**
+
+    Chọn đúng constructor hoặc factory để tạo `BigInteger` từ văn bản thập phân, cơ số 2–36, `long` và `byte[]`. Người học phải phân biệt dữ liệu ký tự với dữ liệu nhị phân, hiểu yêu cầu về dấu và thứ tự byte, và nhận ra đầu vào không hợp lệ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chuỗi, cơ số và giá trị primitive
+
+    1. `new BigInteger(text, radix)` xử lý dấu và cơ số như thế nào, và vì sao chuỗi `0xFF` không phải input hợp lệ trực tiếp cho radix 16?
+    2. Khi nào dùng `BigInteger.valueOf(long)` thay vì parse chuỗi số nguyên rất dài?
+
+    ### Nguồn byte và định dạng
+
+    1. Cùng byte `FF`, vì sao `new BigInteger(bytes)` và `new BigInteger(1,bytes)` cho kết quả khác dấu?
+    2. Vì sao các byte UTF-8 của chuỗi `123` không được đưa thẳng vào constructor signed để parse số thập phân?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Khởi tạo đúng theo nguồn | Viết ví dụ sử dụng constructor decimal, radix và `valueOf` mà bảo toàn nguyên giá trị đầu vào. |
+    | Giải mã byte đúng hợp đồng | Chọn signed two's complement hoặc unsigned magnitude khi tạo BigInteger từ byte array. |
+    | Kiểm soát parse | Chỉ ra nguồn ném `NumberFormatException`, kiểm tra đầu vào và đối chiếu giá trị round trip. |
+- id: big-integer-003
+  title: Biểu diễn byte bù hai có dấu và constructor sign-magnitude
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Biểu diễn byte bù hai có dấu và constructor sign-magnitude**
+
+    Hiểu sâu sự khác biệt giữa mảng byte bù hai có dấu và mảng magnitude không dấu đi kèm `signum`. Bài học giải thích big-endian, mở rộng dấu, biểu diễn zero và trường hợp một mẫu byte giống nhau cho giá trị khác nhau.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mẫu bit và dấu
+
+    1. Tại sao một byte `80` được hiểu là −128 theo signed constructor nhưng thành +128 khi truyền `signum=1`?
+    2. Vì sao `FF 7F` theo signed hai byte là −129, trong khi magnitude unsigned là 65407?
+
+    ### Zero và byte bảo vệ dấu
+
+    1. Khi nào `new BigInteger(0, magnitude)` ném `NumberFormatException` do magnitude không bằng zero?
+    2. Tại sao cần byte `00` phía trước `80` để biểu diễn +128 trong signed two's complement?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải mã mẫu byte | Tính đúng giá trị signed và sign-magnitude từ cùng một mảng big-endian. |
+    | Xác minh cặp dấu và độ lớn | Dự đoán zero, signum không hợp lệ và ngoại lệ của constructor. |
+    | Kiểm chứng round trip | So sánh trường bytes trước và sau `toByteArray` theo giá trị, dấu và độ dài mã hóa. |
+- id: big-integer-004
+  title: ZERO, ONE, TWO, TEN và valueOf
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ZERO, ONE, TWO, TEN và valueOf**
+
+    Nhận biết các hằng `BigInteger.ZERO`, `ONE`, `TWO`, `TEN` và vai trò của `valueOf(long)` khi khởi tạo phép đếm, tích, lũy thừa và các giá trị nhỏ. Người học phân biệt giá trị số với tham chiếu đối tượng và biết giới hạn của factory nhận `long`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hằng số và factory
+
+    1. `BigInteger.TWO` có từ phiên bản Java nào, và mỗi hằng ZERO, ONE, TWO, TEN thích hợp trong phép tính nào?
+    2. Vì sao `valueOf(Long.MAX_VALUE + 1L)` giữ kết quả sai còn chuyển sang `BigInteger` trước phép cộng cho đúng?
+
+    ### So sánh và vòng đời giá trị
+
+    1. Vì sao không được dùng `==` để kiểm tra hai `BigInteger` có cùng giá trị?
+    2. Khi cộng thêm ONE vào biến ban đầu bằng ZERO, cần viết câu lệnh nào để lưu kết quả vì đối tượng immutable?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn hằng thích hợp | Khởi tạo và kiểm thử tổng, tích, lũy thừa đơn giản từ các hằng BigInteger. |
+    | Chuyển từ long đúng thời điểm | Dùng `valueOf` cho giá trị `long` đã hợp lệ và tránh tràn primitive trước factory. |
+    | So sánh giá trị | Dùng `equals`, `compareTo` hoặc `signum` thay cho so sánh tham chiếu. |
+- id: big-integer-005
+  title: add, subtract, multiply, divide và remainder
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **add, subtract, multiply, divide và remainder**
+
+    Thực hiện năm phép toán cơ bản trên `BigInteger` với kết quả nguyên chính xác và đúng quy tắc dấu. Bài học đặc biệt nhấn mạnh thương nguyên cắt về 0, phần dư theo dấu số bị chia, chia 0 và tính bất biến của toán hạng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Số học và bất biến
+
+    1. Làm sao cộng, trừ, nhân hai số vượt `long` mà không dùng toán tử primitive và không đánh mất kết quả trả về?
+    2. Tại sao `a.divide(b)` là thương nguyên cắt về 0, kể cả khi phép chia có số âm?
+
+    ### Phần dư và kiểm chứng
+
+    1. Đẳng thức `a = q*b+r` ràng buộc `divide` và `remainder` thế nào khi `b != 0`?
+    2. Với `a=-17, b=5`, `remainder` khác `mod` thế nào và vì sao chia 0 phải báo lỗi?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết phép số học BigInteger | Áp dụng `add`, `subtract`, `multiply` với toán hạng lớn và giữ kết quả bất biến. |
+    | Tính chia nguyên có dấu | Dự đoán thương và dư cho các cặp số dương, âm, và kiểm tra đẳng thức đại số. |
+    | Xử lý lỗi số chia | Phân biệt phép chia 0 với kết quả thương/dư hợp lệ bằng exception. |
+- id: big-integer-006
+  title: divideAndRemainder và kiểm tra chia hết
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **divideAndRemainder và kiểm tra chia hết**
+
+    Học cách nhận đồng thời thương và dư bằng `divideAndRemainder` để kiểm tra chia hết, chia lô, phân nhóm và xác minh phương trình chia nguyên. Bài học làm rõ điều kiện divisor khác 0, tính chia hết không phụ thuộc dấu và tình huống cần `remainder` hoặc `mod`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thương, dư và chia hết
+
+    1. Mảng trả về từ `divideAndRemainder(b)` chứa những gì ở chỉ số 0 và 1?
+    2. Vì sao điều kiện `remainder.signum() == 0` xác định chia hết chính xác, còn kiểm tra thương bằng 0 không đủ?
+
+    ### Dấu và ứng dụng
+
+    1. Với số bị chia âm, làm sao dùng `q*b+r=a` để kiểm chứng thương và dư?
+    2. Khi phân chia số vật phẩm không âm vào các thùng có sức chứa dương, tính số thùng đầy và số dư như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc mảng thương-dư | Viết phép chia cho số lớn và lấy đúng `qr[0]`, `qr[1]`, kiểm chứng đẳng thức. |
+    | Kiểm tra chia hết | Xây hàm nhận BigInteger, từ chối divisor 0 và trả kết quả bằng phần dư bằng zero. |
+    | Ứng dụng phân lô | Tính số lô đầy, phần còn lại và số lô tổng cộng khi số lượng không âm. |
+- id: big-integer-007
+  title: pow, sqrt, sqrtAndRemainder và gcd
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **pow, sqrt, sqrtAndRemainder và gcd**
+
+    Thực hiện các phép lũy thừa nguyên, căn bậc hai nguyên, căn kèm phần dư và ước chung lớn nhất mà không chuyển số lớn qua `double`. Bài học nhấn mạnh điều kiện số mũ không âm, căn số không âm, chứng minh bằng bất biến và ứng dụng rút gọn phân số.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lũy thừa và căn nguyên
+
+    1. Vì sao `pow(int)` không nhận số mũ âm, và `BigInteger.ZERO.pow(0)` trả giá trị nào?
+    2. `sqrt()` và `sqrtAndRemainder()` cần đầu vào ra sao, và hai kết quả căn/dư thỏa điều kiện toán học nào?
+
+    ### Ước chung và ứng dụng
+
+    1. `gcd(0,0)` cho giá trị gì theo BigInteger và vì sao phải kiểm tra mẫu số trước khi rút gọn phân số?
+    2. Vì sao lũy thừa hoặc căn nguyên số lớn không nên tính bằng `Math.pow`/`Math.sqrt` qua `double`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Sử dụng pow và sqrt | Tính lũy thừa nguyên, căn nguyên và kiểm chứng cận `s²<=n<(s+1)²`. |
+    | Đọc căn và phần dư | Xác minh `n=s²+r` từ `sqrtAndRemainder` và phát hiện số chính phương. |
+    | Tối giản phân số | Dùng `gcd` rút gọn tử/mẫu BigInteger, xử lý zero và chuẩn hóa dấu. |
+- id: big-integer-008
+  title: mod, modPow, modInverse và các điều kiện đầu vào
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **mod, modPow, modInverse và các điều kiện đầu vào**
+
+    Phân biệt phép lấy phần dư chuẩn, lũy thừa modulo và nghịch đảo modulo, đặc biệt với số âm, modulus không dương hoặc số mũ âm. Người học phải xét điều kiện khả nghịch và kiểm chứng kết quả bằng đồng dư thay vì suy luận như phép chia số thực.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng modulo
+
+    1. `remainder` và `mod` khác nhau ở đâu khi receiver âm, và vì sao modulus của `mod` bắt buộc dương?
+    2. Khi nào `modPow` chấp nhận exponent âm, và phải chứng minh quan hệ gì giữa cơ số với modulus?
+
+    ### Nghịch đảo và biên
+
+    1. `a.modInverse(m)` tồn tại khi và chỉ khi điều kiện gì về `gcd(a,m)`?
+    2. Modulus bằng 1 có hợp lệ theo API không, và cần phân biệt điều kiện toán học với chính sách nghiệp vụ ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích phần dư chuẩn | Tính kết quả `mod` cho số âm và so với `remainder`. |
+    | Áp dụng lũy thừa modulo | Dùng `modPow` với số mũ lớn hoặc âm hợp lệ mà không tạo lũy thừa toàn phần. |
+    | Xác minh nghịch đảo | Kiểm tra modulus dương, `gcd=1` và đồng dư `a*x≡1 (mod m)`. |
+- id: big-integer-009
+  title: Phép bit trên số nguyên có độ dài mở rộng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phép bit trên số nguyên có độ dài mở rộng**
+
+    Hiểu cách `BigInteger` thực hiện AND, OR, XOR, NOT và dịch bit trên mô hình bù hai mở rộng dấu. Người học phân biệt thao tác trên số nguyên có dấu với một bitvector 8/32/64 bit và biết dùng mask khi định dạng yêu cầu độ rộng cố định.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Logic bit và dấu
+
+    1. Vì sao `BigInteger.valueOf(5).not()` trả −6 chứ không phải 250 của phép NOT 8 bit?
+    2. Khi AND/XOR hai số có dấu khác nhau, mô hình mở rộng dấu ảnh hưởng các bit cao thế nào?
+
+    ### Dịch và mask
+
+    1. Vì sao `shiftRight` trên số âm tương đương chia lũy thừa hai theo floor, khác thương nguyên cắt về 0?
+    2. Cần tạo mask 8 bit như thế nào để mô phỏng unsigned NOT hoặc dịch trên một word có độ rộng cố định?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thực hiện logic bit | Dự đoán giá trị `and`, `or`, `xor`, `not` và giải thích theo bù hai. |
+    | Mô phỏng word cố định | Tạo mask `2^w-1` để giới hạn kết quả hoặc tái hiện NOT unsigned 8 bit. |
+    | Phân tích dịch số âm | Phân biệt `shiftRight` và `divide` khi đầu vào âm có phần dư. |
+- id: big-integer-010
+  title: bitLength, bitCount, testBit, setBit và shift
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **bitLength, bitCount, testBit, setBit và shift**
+
+    Thao tác trực tiếp với từng vị trí bit và đo độ dài nhị phân của số nguyên có dấu mở rộng. Bài học làm rõ `bitLength`, `bitCount` trên số âm, chỉ số bit không âm, các phép set/clear/flip bất biến và shift arithmetic.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quan sát bit
+
+    1. Vì sao `BigInteger.valueOf(-1).bitCount()` và `bitLength()` đều bằng 0, khác việc đếm bit 1 của `int -1`?
+    2. `testBit(100)` trên số −1 cho kết quả gì theo sign extension, trong khi vị trí bit âm gây lỗi nào?
+
+    ### Chỉnh sửa và dịch
+
+    1. `setBit`, `clearBit`, `flipBit` ảnh hưởng giá trị mới mà không thay đổi BigInteger nguồn như thế nào?
+    2. `shiftLeft(-3)` và `shiftRight(3)` liên hệ với nhau ra sao; vì sao điều đó khác quy tắc bit index không âm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đo bit đúng nghĩa | Giải thích `bitLength`, `bitCount`, `getLowestSetBit` của số 0, số dương và số âm. |
+    | Thao tác bit bất biến | Viết phép set/clear/flip tại bit xác định và kiểm tra kết quả bằng `testBit`. |
+    | Giải thích shift arithmetic | Dự đoán giá trị dịch của số âm và kiểm tra giới hạn vị trí bit. |
+- id: big-integer-011
+  title: compareTo, equals, signum, abs và negate
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **compareTo, equals, signum, abs và negate**
+
+    Sử dụng phương thức so sánh, xác định dấu, trị tuyệt đối và số đối trực tiếp trên `BigInteger`. Bài học tách so sánh giá trị khỏi identity, xử lý giá trị vượt `long` và tránh tự biến đổi đối tượng bất biến theo giả định sai.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### So sánh và nhận diện giá trị
+
+    1. `compareTo` và `equals` khác với toán tử `==` ở điểm nào khi so hai đối tượng BigInteger?
+    2. Khi nào dùng `signum()` thay vì chuyển BigInteger sang `long` để xác định âm/zero/dương?
+
+    ### Trị tuyệt đối và số đối
+
+    1. Tại sao `BigInteger.valueOf(Long.MIN_VALUE).abs()` trả đúng độ lớn dương mà `Math.abs(Long.MIN_VALUE)` không thể?
+    2. `abs` và `negate` khác nhau như thế nào với đầu vào dương, âm và zero?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh chính xác | Viết comparator và kiểm tra equality của hai số nguyên lớn với `compareTo`/`equals`. |
+    | Phân nhánh theo dấu | Xác định âm, zero, dương bằng `signum` và kiểm soát giá trị `null`. |
+    | Biến đổi dấu bất biến | Dùng `abs` và `negate` để tính khoảng cách hoặc số đối mà giữ nguyên nguồn. |
+- id: big-integer-012
+  title: intValue, longValue khác intValueExact, longValueExact
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **intValue, longValue khác intValueExact, longValueExact**
+
+    Phân biệt chuyển đổi lấy bit thấp với chuyển đổi được kiểm tra trong phạm vi signed `int` hoặc `long`. Bài học giúp tránh lỗi BigInteger rất lớn bị cắt thành 0 hoặc giá trị âm nhỏ khi đưa qua API cấp phát, ID hay giới hạn số lượng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chuyển hẹp và miền signed
+
+    1. Vì sao `BigInteger.ONE.shiftLeft(32).intValue()` là 0 nhưng `intValueExact()` ném `ArithmeticException`?
+    2. `longValue()` của số `2^64-1` trả giá trị nào và vì sao không thể xem đây là chuyển exact?
+
+    ### Quyết định tại biên API
+
+    1. Khi nào có thể cố ý dùng `intValue()` để lấy bit thấp, và khi nào bắt buộc phải dùng `intValueExact()`?
+    2. Vì sao `Math.toIntExact(big.longValue())` có thể đã quá muộn để phát hiện giá trị BigInteger vượt `long`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán chuyển đổi có mất thông tin | Tính bit thấp signed 32/64 của số ngoài phạm vi bằng `intValue`/`longValue`. |
+    | Từ chối thu hẹp sai | Dùng `intValueExact`/`longValueExact` và xử lý exception tại biên API. |
+    | Phân biệt signed và unsigned | Kiểm tra miền unsigned của giao thức trước khi xuất bit pattern, không nhầm với signed Exact. |
+- id: big-integer-013
+  title: Chuyển sang byte[] và vấn đề byte dấu bổ sung
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chuyển sang byte[] và vấn đề byte dấu bổ sung**
+
+    Thực hiện mã hóa BigInteger sang `byte[]` với bù hai có dấu tối thiểu, và thiết kế codec signed/unsigned fixed-width với đúng byte order. Bài học nhấn mạnh byte bảo vệ dấu `00`, sign extension `FF`, kiểm tra miền và round trip giá trị khi truyền qua giao thức.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mã hóa bù hai
+
+    1. Vì sao `BigInteger.valueOf(128).toByteArray()` chứa `00 80`, trong khi `-128` chỉ cần `80`?
+    2. `new BigInteger(bytes)` và `new BigInteger(1,bytes)` phù hợp với hai hợp đồng đầu vào nào?
+
+    ### Codec và round trip
+
+    1. Muốn xuất unsigned 64-bit big-endian, cần kiểm tra và padding những gì trước khi gửi?
+    2. Vì sao không thể xóa tất cả byte `00` phía trước khi schema cần một trường cố định N byte?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mã hóa signed minimal | Dự đoán byte array của 127,128,255,−1,−129 và round-trip qua signed constructor. |
+    | Tạo codec có độ rộng cố định | Viết hàm xuất unsigned/signed N byte có kiểm tra miền và padding đúng dấu. |
+    | Kiểm thử giao thức | Phân biệt big-endian/little-endian và xác minh zero, các biên bit dấu, fixed-width. |
+- id: big-integer-014
+  title: Kiểm tra số nguyên tố xác suất và ý nghĩa certainty
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra số nguyên tố xác suất và ý nghĩa certainty**
+
+    Hiểu hợp đồng `isProbablePrime(certainty)` và lý do kết luận true chỉ là probable prime trong khi false với certainty dương loại được hợp số. Bài học yêu cầu kiểm tra `certainty > 0`, phân biệt kiểm tra và sinh ứng viên, và không coi API số học là cả một quy trình tạo khóa an toàn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đọc kết quả thử nguyên tố
+
+    1. Vì sao `isProbablePrime(0)` có thể trả true ngay cả cho số 9, và cần validate điều gì?
+    2. Khi certainty dương, ý nghĩa của true và false khác nhau thế nào xét về tính chắc chắn?
+
+    ### Sinh ứng viên và độ tin cậy
+
+    1. `probablePrime(bitLength, random)` khác `new BigInteger(numBits, random)` ở mục tiêu nào?
+    2. Vì sao việc sinh số nguyên tố cho mật mã còn cần `SecureRandom`, chính sách khóa và kiểm soát tài nguyên?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra probable-prime | Gọi `isProbablePrime` với certainty dương và phân biệt kết luận xác suất với chứng minh. |
+    | So sánh API tạo số | Dùng `probablePrime` và `nextProbablePrime` đúng mục tiêu và điều kiện đầu vào. |
+    | Đánh giá rủi ro | Xác định giới hạn đầu vào, certainty và yêu cầu random phù hợp ứng dụng. |
+- id: big-integer-015
+  title: Giới hạn tài nguyên dù không có độ rộng cố định như long
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn tài nguyên dù không có độ rộng cố định như long**
+
+    Phân biệt miền giá trị rộng của `BigInteger` với tài nguyên JVM hữu hạn. Bài học xây các chính sách giới hạn chuỗi nhập, số bit, số mũ, thao tác nhân/lũy thừa và serialize trước khi thực hiện phép tính tốn kém.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kích thước và chi phí
+
+    1. Vì sao đầu vào vài chữ số vẫn có thể sinh kết quả hàng triệu bit qua `pow` hoặc `shiftLeft`?
+    2. `bitLength()` giúp ước lượng cận trên kích thước kết quả nhân/lũy thừa trước khi tính như thế nào?
+
+    ### Thiết kế bảo vệ ứng dụng
+
+    1. Vì sao giới hạn số chữ số sau khi parse chưa thay thế giới hạn request body trước parse?
+    2. Tại sao bắt `OutOfMemoryError` hoặc chỉ tăng `-Xmx` không phải chính sách kiểm soát tài nguyên phù hợp?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giới hạn đầu vào | Viết hàm parse decimal có ràng buộc độ dài và cú pháp trước khi tạo BigInteger. |
+    | Ước lượng kết quả | Tính cận bit cho phép nhân, lũy thừa và từ chối khi vượt ngân sách. |
+    | Thiết kế vận hành | Đề xuất quota, timeout, giới hạn song song và logging tránh tạo chuỗi BigInteger khổng lồ. |

@@ -1,0 +1,421 @@
+summaries:
+- id: numeric-practice-001
+  title: Viết bảng kiểm chứng kiểu kết quả của các biểu thức số
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Viết bảng kiểm chứng kiểu kết quả của các biểu thức số**
+
+    Bài thực hành yêu cầu lập bảng xác định kiểu của biểu thức số ngay khi biên dịch trước khi tính giá trị. Qua numeric promotion, chia nguyên, toán tử dịch bit, điều kiện ba ngôi, gán hợp thành và unboxing, người học phân biệt compile-time type với giá trị runtime, tránh ép kiểu muộn và tràn số.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy tắc suy ra kiểu
+
+    1. Vì sao byte cộng short và phép phủ định byte có kiểu int?
+    2. Tại sao long cộng float có kiểu float và điều đó có thể làm mất chữ số nào?
+
+    ### Toán tử ngoại lệ và thời điểm cast
+
+    1. Tại sao 1 << 33 khác 1L << 33 dù cùng khoảng dịch?
+    2. Vì sao (double)(7 / 2) khác (double)7 / 2 cả về giá trị trung gian lẫn kết quả?
+
+    ### Kiểm chứng bằng mã chạy
+
+    1. Bảng kiểu cần bổ sung cột nào để không nhầm compile-time type với runtime value?
+    2. Vì sao b += 1 biên dịch khi b là byte nhưng b = b + 1 không hợp lệ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích expression type | Điền đúng kiểu và giá trị của ít nhất tám biểu thức chứa byte, long, float, shift và so sánh. |
+    | Chỉ ra lỗi chuyển đổi | Sửa các câu lệnh gán float/byte sai, lý giải cast trước hay sau chia hoặc cộng. |
+    | Thiết kế bảng kiểm chứng | Tạo bảng toán hạng, quy tắc, kiểu kết quả, giá trị và cảnh báo overflow/unboxing. |
+- id: numeric-practice-002
+  title: Xây dựng phép tính kích thước có kiểm tra tràn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Xây dựng phép tính kích thước có kiểm tra tràn**
+
+    Bài thực hành thiết kế bộ tính byte, stride căn chỉnh và số trang không làm tràn trung gian. Người học sử dụng Math.multiplyExact, addExact, toIntExact, kiểm tra miền tham số và đơn vị, đồng thời hiểu rằng tính đúng độ dài chưa bảo đảm JVM có thể cấp phát tài nguyên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểm tra phép toán nguyên
+
+    1. Vì sao long result = width * height không tự tránh overflow int?
+    2. Math.multiplyExact với overload int và long xử lý 70000 nhân 70000 khác nhau ra sao?
+
+    ### Căn chỉnh và phân trang an toàn
+
+    1. Vì sao phép tính raw + alignment - 1 có thể tràn ngay cả khi kết quả cần thiết hợp lệ?
+    2. Công thức dùng thương và phần dư tính số trang như thế nào mà không cộng trước để ceil?
+
+    ### Hợp đồng dữ liệu và ca biên
+
+    1. Khi nào cần IllegalArgumentException, ArithmeticException và BigInteger trong một API kích thước?
+    2. Vì sao Math.toIntExact không bảo đảm việc cấp phát mảng thật sự thành công?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây dựng số byte có kiểm tra | Viết elementBytes và gridBytes với kiểm tra miền, Math.multiplyExact. |
+    | Tính alignment/pageCount | Áp dụng phần dư và Math.addExact để căn chỉnh 9 byte lên 12 và tính trang không tràn. |
+    | Kiểm thử biên kích thước | Bao phủ 0, âm, Long.MAX_VALUE, alignment 0 và giá trị vượt giới hạn int/long. |
+- id: numeric-practice-003
+  title: Đọc ghi số theo nhiều cơ số và dạng không dấu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đọc ghi số theo nhiều cơ số và dạng không dấu**
+
+    Bài thực hành xây quy trình đọc–ghi số theo radix 2..36 và kiểm tra round-trip của giá trị có dấu hoặc mẫu bit không dấu. Người học phân biệt cú pháp literal với parser runtime, biểu diễn uint32/uint64 trong int/long, cách xử lý BigInteger và yêu cầu fixed-width, endian của dữ liệu giao thức.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Parse và format theo radix
+
+    1. Vì sao parseInt("FF",16) hợp lệ nhưng parseInt("0xFF",16) báo lỗi?
+    2. Integer.toString(-1,16) khác Integer.toHexString(-1) ở ý nghĩa signedness nào?
+
+    ### Mẫu bit unsigned
+
+    1. Vì sao parseUnsignedInt("FFFFFFFF",16) lưu int -1 nhưng có thể hiển thị 4294967295?
+    2. Cần API nào để biểu diễn giá trị dương uint64 tối đa khi vượt Long.MAX_VALUE?
+
+    ### Round-trip và giao thức
+
+    1. Dùng toUnsignedString và parseUnsignedInt làm sao chứng minh round-trip đủ 32 bit?
+    2. Tại sao padding hex, leading zeros và byte order phải được quyết định độc lập với radix?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chuyển radix có kiểm chứng | Format và parse một giá trị ở binary/octal/decimal/hex/base36 bằng API đúng. |
+    | Xử lý unsigned 32/64 | Dùng Integer.toUnsignedLong, Long.toUnsignedString và BigInteger để bảo toàn bit. |
+    | Kiểm thử giao thức | Đưa các trường hợp sai radix, quá phạm vi, prefix, fixed-width và endian vào test. |
+- id: numeric-practice-004
+  title: Khảo sát sai số của 0.1, tổng lặp và thứ tự cộng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khảo sát sai số của 0.1, tổng lặp và thứ tự cộng**
+
+    Bài thực hành khảo sát dữ liệu double thông qua biểu diễn 0.1, phép cộng lặp 100 lần, thay đổi thứ tự cộng và thuật toán Kahan. Người học đo sai số/ULP, đối chiếu BigDecimal từ chuỗi và không mặc định toán học có tính kết hợp ở máy tính dấu phẩy động.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biểu diễn double
+
+    1. Vì sao println(0.1) hiển thị ngắn hơn giá trị decimal chính xác của double?
+    2. 0.1+0.2 khác literal 0.3 tại các bit nào và vì sao == trả false?
+
+    ### Tích lũy và thứ tự cộng
+
+    1. Vì sao cộng lặp 0.1 một trăm lần có thể khác 100*0.1?
+    2. Vì sao (1e16 - 1e16) + 1 và (1e16 + 1) - 1e16 cho hai kết quả khác?
+
+    ### Đo sai số và chọn thuật toán
+
+    1. Kahan compensation làm giảm sai số cộng dồn trong ví dụ bằng cách nào?
+    2. Khi nào dùng BigDecimal từ chuỗi thay vì epsilon hoặc Kahan để bảo toàn số thập phân?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chạy thí nghiệm binary64 | Xuất Double.toHexString(0.1) và decimal chính xác, giải thích 0.1+0.2. |
+    | So sánh tích lũy | Đo tổng tuần tự/nhân/Kahan cho 0.1 qua 10, 100 lượt và đổi thứ tự cộng. |
+    | Định lượng sai lệch | Tính absolute/relative error và Math.ulp, chọn mô hình decimal exact khi cần. |
+- id: numeric-practice-005
+  title: Xây dựng hàm so sánh gần bằng có hợp đồng rõ ràng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Xây dựng hàm so sánh gần bằng có hợp đồng rõ ràng**
+
+    Bài thực hành triển khai hàm nearlyEqual cho double theo dung sai tuyệt đối/tương đối đã công bố, có kiểm soát NaN, Infinity, signed zero và hiệu số overflow. Người học phải hiểu quan hệ gần bằng không có tính bắc cầu, do đó không được tùy tiện dùng làm equals, hashCode hay Comparator.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định nghĩa tolerance
+
+    1. Vì sao hợp đồng dùng max(absTol, relTol*max(|a|,|b|)) thay vì chỉ một epsilon?
+    2. Khi so sánh gần zero, tại sao absolute tolerance cần được xác định theo đơn vị bài toán?
+
+    ### Giá trị đặc biệt và overflow
+
+    1. Vì sao cần kiểm tra NaN, Infinity và tolerance bất hợp lệ trước khi lấy hiệu số?
+    2. Hai double hữu hạn có thể cho phép trừ ra Infinity như thế nào và hàm xử lý ra sao?
+
+    ### Thuộc tính và giới hạn API
+
+    1. Làm thế nào chứng minh nearlyEqual không bắc cầu bằng bộ a,b,c cách nhau 0.75?
+    2. Vì sao không dùng gần bằng để định nghĩa khóa HashMap hay comparator TreeSet?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết hợp đồng nearlyEqual | Cài đặt validation tolerance và xử lý NaN, hai vô cực, signed zero, finite difference. |
+    | Kiểm tra sát ngưỡng | Thiết lập test với Math.nextUp, Math.ulp, MIN_VALUE và chênh lệch đúng ngưỡng. |
+    | Đánh giá tính chất quan hệ | Chứng minh tính đối xứng và phản ví dụ không bắc cầu, chọn equality phù hợp collections. |
+- id: numeric-practice-006
+  title: Tính giai thừa hoặc dãy số lớn bằng BigInteger
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tính giai thừa hoặc dãy số lớn bằng BigInteger**
+
+    Bài thực hành dùng BigInteger để tính giai thừa và Fibonacci vượt miền int/long, với vòng lặp, fast doubling và đối chiếu bằng bất biến. Người học chứng minh tính đúng từ base case/cập nhật trạng thái, đồng thời đánh giá giới hạn CPU/bộ nhớ và tránh chuyển sang BigInteger sau khi primitive đã tràn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định nghĩa và giới hạn kiểu
+
+    1. Vì sao 13! vượt int và 21! vượt long dù long có 64 bit?
+    2. Vì sao BigInteger.valueOf(wrongLong) không thể sửa giá trị đã overflow?
+
+    ### Thuật toán và bất biến
+
+    1. Vòng lặp factorial cần giữ bất biến gì sau mỗi số k?
+    2. Fast doubling tính cặp F(n), F(n+1) như thế nào và giảm số tầng tính ra sao?
+
+    ### Đánh giá tính đúng và tài nguyên
+
+    1. Vì sao dùng BigInteger.add/multiply ngay từ bước đầu và gán lại kết quả bất biến?
+    2. Làm thế nào test chéo Fibonacci tuần tự với fast doubling và hạn chế input quá lớn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính giai thừa chính xác | Viết factorial(0), factorial(21), factorial(100) bằng BigInteger và kiểm các mốc. |
+    | Triển khai Fibonacci | Cài vòng lặp và fast doubling; đối chiếu F(0..100) và F(93). |
+    | Kiểm tra hợp đồng/tài nguyên | Từ chối n âm, chỉ ra giới hạn tài nguyên và không cast qua double để so kết quả. |
+- id: numeric-practice-007
+  title: Thiết kế phép tính thập phân với MathContext và RoundingMode
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thiết kế phép tính thập phân với MathContext và RoundingMode**
+
+    Bài thực hành thiết kế policy BigDecimal phân tách precision tính toán, scale chốt tiền và thời điểm làm tròn. Người học quản lý divide vô hạn, HALF_EVEN/HALF_UP, UNNECESSARY và kiểm thử khác biệt giữa round từng dòng với round tổng cũng như double rounding.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Precision và scale theo hợp đồng
+
+    1. Vì sao MathContext(4, HALF_EVEN) không tương đương setScale(4, HALF_EVEN)?
+    2. BigDecimal.divide cần chỉ định mode/precision trong tình huống 1/3 nào?
+
+    ### Ranh giới làm tròn
+
+    1. Ba khoản 1.005 làm tròn từng dòng hay cuối tổng cho hai số nào, tại sao?
+    2. Vì sao 2.345 qua scale 2 rồi scale 1 có thể khác làm tròn trực tiếp scale 1?
+
+    ### Chuyển đổi và kiểm thử số học
+
+    1. UNNECESSARY giải quyết ràng buộc chính xác và ném ngoại lệ ở những trường hợp nào?
+    2. Làm sao tách input decimal, policy tính toán và format locale để không mất dữ liệu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế decimal policy | Quy định MathContext, scale, rounding mode và lúc chốt kết quả cho một giao dịch giả định. |
+    | Kiểm tra chia và tie | Dự đoán 1/3, 2.345, -2.345 dưới các chế độ và kiểm ngoại lệ UNNECESSARY. |
+    | Đối chiếu hai quy trình | Tính kết quả round từng dòng so với tổng và giải thích nguồn chênh lệch. |
+- id: numeric-practice-008
+  title: So sánh HashSet với TreeSet khi chứa BigDecimal
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **So sánh HashSet với TreeSet khi chứa BigDecimal**
+
+    Bài thực hành đối chiếu HashSet dựa vào equals/hashCode với TreeSet dựa vào compareTo cho các BigDecimal có cùng giá trị nhưng khác scale. Người học dự đoán size/contains/remove, nhận ra đại diện TreeSet phụ thuộc thứ tự chèn và thiết kế cách chuẩn hóa hoặc comparator phù hợp hợp đồng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Equality và scale
+
+    1. Vì sao BigDecimal("1.0").equals(BigDecimal("1.00")) false nhưng compareTo bằng 0?
+    2. Khi thêm 1.0, 1.00 và 1.000, số phần tử HashSet và TreeSet khác nhau ra sao?
+
+    ### Tra cứu và đại diện
+
+    1. Vì sao TreeSet.contains(1.0000) có thể true dù phần tử được lưu có scale 1?
+    2. Đảo thứ tự chèn 6.0/6.00 tác động thế nào tới đối tượng đại diện trong TreeSet?
+
+    ### Thiết kế cấu trúc dữ liệu
+
+    1. Comparator valueThenScale phải so sánh theo những bước nào để giữ hai scale khác nhau?
+    2. Khi nào stripTrailingZeros hoặc setScale(2, UNNECESSARY) phù hợp với key canonical?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra hành vi hai Set | Dự đoán size, contains, remove của HashSet và TreeSet trên dữ liệu BigDecimal đa scale. |
+    | Thiết kế comparator | Viết valueThenScale để giữ đồng thời giá trị và scale khi sắp xếp. |
+    | Chuẩn hóa key | Chọn chuẩn hóa theo giá trị hay scale cố định và giải thích ảnh hưởng equals/hashCode. |
+- id: numeric-practice-009
+  title: Parse và format cùng một giá trị theo nhiều locale
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Parse và format cùng một giá trị theo nhiều locale**
+
+    Bài thực hành format một BigDecimal theo en-US, de-DE, fr-FR, vi-VN và parse lại bằng đúng Locale. Người học phát hiện mơ hồ dấu nhóm/dấu thập phân, kiểm tra ParsePosition tiêu thụ hết chuỗi, giữ độ chính xác với DecimalFormat và tách giá trị máy khỏi chuỗi hiển thị.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Locale và định dạng số
+
+    1. Cùng 1234567.89 vì sao được in khác nhau theo en-US, de-DE và fr-FR?
+    2. Tại sao String "1,234" có thể là 1234 ở Mỹ nhưng 1.234 ở Đức?
+
+    ### Parse đúng và parse hết
+
+    1. Vì sao phải bật setParseBigDecimal(true) khi tính decimal cần độ chính xác?
+    2. ParsePosition giúp phát hiện input "1,234.50foo" thế nào và còn hạn chế gì?
+
+    ### Bảo toàn dữ liệu và chia sẻ formatter
+
+    1. Format 1.005 với hai chữ số và HALF_UP rồi parse lại vì sao mất thông tin?
+    2. Vì sao DecimalFormat mutable không nên chia sẻ giữa các luồng không đồng bộ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Format đa locale | In cùng BigDecimal ở bốn locale và nhận dạng dấu thập phân/nhóm Unicode. |
+    | Parse kiểm tra toàn chuỗi | Dùng DecimalFormat, ParsePosition và compareTo xác minh round-trip giá trị. |
+    | Thiết kế biên máy/người | Chọn toPlainString cho trao đổi trung lập, tách formatting UI khỏi giá trị tính toán. |
+- id: numeric-practice-010
+  title: Mô phỏng số ngẫu nhiên có thể tái lập bằng seed
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Mô phỏng số ngẫu nhiên có thể tái lập bằng seed**
+
+    Bài thực hành điều khiển Random và SplittableRandom bằng seed, mô phỏng tung xúc xắc và Monte Carlo ước lượng pi. Người học phân biệt tái lập chuỗi với tính đúng thống kê, kiểm soát số lần gọi, thuật toán, chiến lược split và nhật ký dữ liệu để phát lại lỗi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Seed và dãy PRNG
+
+    1. Vì sao hai Random cùng seed, cùng chuỗi nextInt có thể tái hiện chính xác dãy số?
+    2. Tạo lại Random(seed) trong mỗi lần tung xúc xắc gây hệ quả gì?
+
+    ### Mô phỏng và thống kê
+
+    1. Monte Carlo ước lượng pi bằng tỉ lệ điểm trong hình tròn như thế nào?
+    2. Vì sao kết quả lặp lại từ một seed không chứng minh mô phỏng có chất lượng thống kê?
+
+    ### Nhiều luồng và phát lại lỗi
+
+    1. Cùng root seed nhưng thay thứ tự split hoặc thứ tự gọi có giữ kết quả từng task không?
+    2. Cần lưu những metadata nào ngoài seed để tái tạo một phiên mô phỏng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo nguồn PRNG tái lập | Viết rollDice(seed,n) và xác minh mảng kết quả khi chạy hai lần. |
+    | Lập trình Monte Carlo | Sinh điểm trong [-1,1) và tính 4*inside/trials, kiểm tra bound và seed. |
+    | Thiết kế kiểm thử tái lập | Ghi seed, thuật toán, tham số, thứ tự gọi và chiến lược tách thread. |
+- id: numeric-practice-011
+  title: So sánh bộ đếm thường, atomic và adder
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **So sánh bộ đếm thường, atomic và adder**
+
+    Bài thực hành so sánh mất update của count++ không đồng bộ với AtomicLong, LongAdder và synchronized. Người học xác định yêu cầu linearizable read/CAS, giải thích tại sao sum() không atomic khi đang update, kiểm tra after-join, overflow và chọn benchmark JMH theo contention thật.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lost update và atomicity
+
+    1. Vì sao count++ hoặc volatile count++ không bảo đảm cập nhật chính xác giữa hai luồng?
+    2. Điều phối CountDownLatch để hai thread cùng đọc trước khi ghi tái hiện lost update thế nào?
+
+    ### Atomic so với Adder
+
+    1. Vì sao AtomicLong.getAndIncrement có thể cấp số theo lượt còn LongAdder.sum không phù hợp?
+    2. LongAdder.sum và sumThenReset thiếu snapshot nguyên tử khi có update đồng thời như thế nào?
+
+    ### Hợp đồng và hiệu năng
+
+    1. Vì sao nếu atomic.get() nhỏ hơn limit rồi increment vẫn có thể vượt limit?
+    2. Làm sao kiểm tra tràn Long.MAX_VALUE và benchmark throughput JMH mà không nhầm tốc độ với tính đúng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng race | Dùng latch tạo forced lost update và đối chiếu với ba counter an toàn. |
+    | Áp dụng CAS/Adder | Thiết kế counter phát ID bằng AtomicLong hoặc metric contention bằng LongAdder. |
+    | Đánh giá đồng thời | Kiểm total sau join, giới hạn quota, overflow và lập kịch bản benchmark riêng. |
+- id: numeric-practice-012
+  title: Hoàn thiện ví dụ tích hợp cùng bộ kiểm thử dữ liệu biên
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Hoàn thiện ví dụ tích hợp cùng bộ kiểm thử dữ liệu biên**
+
+    Bài tổng kết triển khai NumericBoundaryLab nhập decimal dạng chuỗi, chuyển sang cents long bằng phép exact, parse số lượng, tính thuế HALF_EVEN và kiểm tra mọi phép nhân/cộng. Bộ 30 ca biên tạo một thí nghiệm tích hợp chứng minh hợp đồng đầu vào, độ chính xác, loại ngoại lệ và báo lỗi khi overflow.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng dữ liệu đầu vào
+
+    1. Vì sao parser price chỉ cho hai chữ số thập phân và cấm exponent hay dấu nhóm?
+    2. BigInteger.intValueExact và BigDecimal.longValueExact khác phép cast ở yêu cầu bảo toàn nào?
+
+    ### Tính tiền và rounding chính xác
+
+    1. Tại sao subtotal phải dùng Math.multiplyExact và total dùng Math.addExact?
+    2. Vì sao thuế của 5 cents và 15 cents ở mức 10% thành 0 và 2 cents theo HALF_EVEN?
+
+    ### Thiết kế bộ kiểm thử biên
+
+    1. Những trường hợp nào phải phân biệt IllegalArgumentException với ArithmeticException?
+    2. Tại sao test Long.MAX_VALUE và ngay ngoài biên mạnh hơn chỉ kiểm 19.99 nhân 3?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Triển khai chuỗi tính toán | Viết pipeline String -> BigDecimal/BigInteger -> cents -> subtotal/tax/total. |
+    | Bảo vệ giới hạn kiểu | Dùng *ValueExact, Math.*Exact, giới hạn chuỗi và validation để chặn dữ liệu vượt miền. |
+    | Xây bộ ca biên | Chạy bộ 30 cases, kiểm giá trị và exception type, báo lỗi ngay nếu một case sai. |

@@ -1,0 +1,96 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "BIT VÀ SỐ KHÔNG DẤU — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: bits-and-unsigned-001
+    order: 1
+    title: "Các toán tử &, |, ^ và ~"
+    description: "Học AND, OR, XOR, NOT và công thức bật, tắt, đảo cờ; diễn giải kết quả qua độ rộng và promotion."
+    transition:
+      to: bits-and-unsigned-002
+      description: "Từ bốn toán tử bitwise sang phép dịch để tạo và trích mask theo vị trí."
+  - id: bits-and-unsigned-002
+    order: 2
+    title: "Dịch trái <<, dịch phải >> và dịch phải không dấu >>>"
+    description: "Đối chiếu <<, >>, >>>, bit dấu, promotion và ví dụ trích byte bằng dịch logic."
+    transition:
+      to: bits-and-unsigned-003
+      description: "Từ hành vi dịch chuyển tiếp sang việc giới hạn số bước dịch ở mỗi độ rộng."
+  - id: bits-and-unsigned-003
+    order: 3
+    title: "Khoảng dịch được rút gọn theo kiểu int hoặc long"
+    description: "Giải thích distance & 31/63, khoảng dịch âm và ảnh hưởng của kiểu toán hạng trái."
+    transition:
+      to: bits-and-unsigned-004
+      description: "Từ kiểu của toán hạng dịch sang cơ chế mở rộng dấu khi nâng byte và short."
+  - id: bits-and-unsigned-004
+    order: 4
+    title: "Mở rộng dấu khi nâng kiểu byte hoặc short"
+    description: "Làm rõ mở rộng dấu của byte/short và zero extension của char cùng tác động lên biểu thức bit."
+    transition:
+      to: bits-and-unsigned-005
+      description: "Sau sign extension, áp dụng mask để đọc tám bit nguồn như số 0 đến 255."
+  - id: bits-and-unsigned-005
+    order: 5
+    title: "Mặt nạ bit và chuyển byte sang giá trị 0 đến 255"
+    description: "Dùng 0xFF để trích byte, nibble và tránh nhầm dữ liệu byte với tín hiệu EOF."
+    transition:
+      to: bits-and-unsigned-006
+      description: "Từ mask thủ công chuyển sang các hàm unsigned chuẩn cho 8, 16 và 32 bit."
+  - id: bits-and-unsigned-006
+    order: 6
+    title: "Byte.toUnsignedInt, Short.toUnsignedInt và Integer.toUnsignedLong"
+    description: "Đối chiếu ba API mở rộng unsigned byte/short/int theo độ rộng và giới hạn miền."
+    transition:
+      to: bits-and-unsigned-007
+      description: "Từ chuyển đổi giá trị mở rộng sang so sánh, chia và lấy dư theo unsigned."
+  - id: bits-and-unsigned-007
+    order: 7
+    title: "compareUnsigned, divideUnsigned và remainderUnsigned"
+    description: "Dùng compareUnsigned/divideUnsigned/remainderUnsigned cho int/long và diễn giải thương dư unsigned."
+    transition:
+      to: bits-and-unsigned-008
+      description: "Khi phép tính đã đúng unsigned, cần parse và xuất văn bản theo định dạng dữ liệu."
+  - id: bits-and-unsigned-008
+    order: 8
+    title: "parseUnsignedInt, parseUnsignedLong và toUnsignedString"
+    description: "Parse/format unsigned 32/64 bit theo cơ số, kiểm tra miền và giữ bit qua round-trip."
+    transition:
+      to: bits-and-unsigned-009
+      description: "Từ việc trao đổi giá trị chuyển sang helper phân tích số bit 1 và vị trí của chúng."
+  - id: bits-and-unsigned-009
+    order: 9
+    title: "bitCount, leading zeros, trailing zeros và one-bit helpers"
+    description: "Đếm bit và zero đầu/cuối, cô lập one-bit cao/thấp và xử lý zero sentinel."
+    transition:
+      to: bits-and-unsigned-010
+      description: "Từ nhận biết vị trí bit chuyển sang phép hoán vị bit và byte có thể đảo ngược."
+  - id: bits-and-unsigned-010
+    order: 10
+    title: "rotateLeft, rotateRight, reverse và reverseBytes"
+    description: "Phân biệt rotate, reverse bit, reverse byte, độ rộng 32/64 và xoay byte 8 bit."
+    transition:
+      to: bits-and-unsigned-011
+      description: "Từ phép biến đổi bit xem xét khác biệt ngữ nghĩa với phép chia số âm."
+  - id: bits-and-unsigned-011
+    order: 11
+    title: "Không đồng nhất dịch phải với chia khi xử lý số âm"
+    description: "Giải thích chênh lệch làm tròn của / và >> với số âm và giới hạn >>>."
+    transition:
+      to: bits-and-unsigned-012
+      description: "Sau khi phân biệt dịch và chia, tích hợp các quy tắc khi ghi/đọc byte của giao thức."
+  - id: bits-and-unsigned-012
+    order: 12
+    title: "Phân biệt giá trị số với thứ tự byte khi trao đổi dữ liệu"
+    description: "Kết nối endianness, signedness, ByteBuffer/DataStream với contract giao thức và partial read."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Các toán tử &, \|, ^ và ~ | Dịch trái <<, dịch phải >> và dịch phải không dấu >>> | Khoảng dịch được rút gọn theo kiểu int hoặc long | Mở rộng dấu khi nâng kiểu byte hoặc short | Mặt nạ bit và chuyển byte sang giá trị 0 đến 255 | Byte.toUnsignedInt, Short.toUnsignedInt và Integer.toUnsignedLong | compareUnsigned, divideUnsigned và remainderUnsigned | parseUnsignedInt, parseUnsignedLong và toUnsignedString | bitCount, leading zeros, trailing zeros và one-bit helpers | rotateLeft, rotateRight, reverse và reverseBytes | Không đồng nhất dịch phải với chia khi xử lý số âm | Phân biệt giá trị số với thứ tự byte khi trao đổi dữ liệu |
+  | Vấn đề cần hiểu | Toán tử bitwise, bảng chân trị và bitmask | Khác biệt ba hướng dịch và bit dấu | Số bước dịch lớn, âm và promotion | Mở rộng dấu từ kiểu nguyên hẹp | Mask byte 0..255 và sentinel EOF | Unsigned conversion cho 8, 16, 32 bit | So sánh, chia và dư không dấu | Chuỗi unsigned, radix và parse lỗi | Số lượng, vị trí, mặt nạ bit | Xoay bit và đảo bit/byte | Dịch phải và phép chia số âm | Giá trị số, endian và serialized bytes |
+  | Giá trị đối với OOP/module | Nền tảng thao tác cờ trạng thái | Định vị và lấy trường bit từ số nguyên | Tránh mask sai do số bước dịch bị rút gọn | Đọc đúng dữ liệu signed trước phép bit | Xử lý byte đầu vào không mất dữ liệu điều khiển | Giải mã đúng ID/field nhiều độ rộng | Đảm bảo số học tuân hợp đồng unsigned | Trao đổi giá trị unsigned qua văn bản | Đọc nhanh tập cờ và bitmap | Chọn phép hoán vị đúng cho định dạng | Tránh sai số học khi tối ưu phép chia | Ghi/đọc field theo hợp đồng dữ liệu |
+  | Tư duy hình thành | Đọc toàn bộ mẫu bit trước khi suy giá trị | Theo vết bit điền, bit mất và độ rộng | Xác thực chỉ số trước khi dịch | Phân biệt giữ giá trị âm với unsigned reinterpretation | Phân biệt mask, validation và EOF | Chọn API từ kiểu nguồn và miền đích | Tách bit kết quả khỏi định dạng signed | Phân biệt giá trị parse hợp lệ với dạng in signed | Phân biệt kết quả là count, index hay mask | Xác định độ rộng và đơn vị bit/byte | Xác minh quy tắc làm tròn theo dấu | Tách cách diễn giải giá trị khỏi thứ tự byte |

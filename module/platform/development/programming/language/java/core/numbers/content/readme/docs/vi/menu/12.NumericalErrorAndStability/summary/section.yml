@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "SAI SỐ VÀ ỔN ĐỊNH — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: numerical-error-and-stability-001
+    order: 1
+    title: "Sai số biểu diễn khác sai số thuật toán"
+    description: "Phân biệt sai số biểu diễn, làm tròn phép toán, sai số xấp xỉ và tính không ổn định; truy ra nơi đầu tiên thông tin bị mất."
+    transition:
+      to: numerical-error-and-stability-002
+      description: "Sau khi nhận diện nguồn lỗi, cần đo độ lệch bằng thước đo có ý nghĩa."
+  - id: numerical-error-and-stability-002
+    order: 2
+    title: "Sai số tuyệt đối, tương đối và tích lũy qua nhiều bước"
+    description: "Xây dựng thước đo tuyệt đối/tương đối, giải thích lan truyền roundoff và đánh giá cận lỗi khi cộng lặp."
+    transition:
+      to: numerical-error-and-stability-003
+      description: "Từ các thước đo sai số, chuyển sang quyết định ngưỡng gần bằng theo thang giá trị."
+  - id: numerical-error-and-stability-003
+    order: 3
+    title: "Giới hạn của hằng epsilon cố định cho mọi bài toán"
+    description: "Phân tích thất bại của epsilon tuyệt đối duy nhất, chọn dung sai theo miền và xử lý các giá trị floating point đặc biệt."
+    transition:
+      to: numerical-error-and-stability-004
+      description: "Khi đã định nghĩa dung sai, xem cách thực hiện phép tính có thể tạo sai lệch trước lúc so sánh."
+  - id: numerical-error-and-stability-004
+    order: 4
+    title: "Sắp xếp thứ tự phép tính để giảm mất thông tin"
+    description: "Tối ưu nhóm phép toán và công thức để tránh nuốt số nhỏ, cancellation và overflow/underflow trung gian."
+    transition:
+      to: numerical-error-and-stability-005
+      description: "Từ kỹ thuật nhóm phép tính, đi sâu vào thuật toán bù sai số của phép cộng dài."
+  - id: numerical-error-and-stability-005
+    order: 5
+    title: "Tổng bù và tư tưởng Kahan summation"
+    description: "Phân tích cơ chế compensation của Kahan và phản ví dụ cancellation dẫn tới Neumaier."
+    transition:
+      to: numerical-error-and-stability-006
+      description: "Từ cải thiện sai số thuật toán, đánh giá độ nhạy vốn có của chính bài toán."
+  - id: numerical-error-and-stability-006
+    order: 6
+    title: "Điều kiện bài toán và trường hợp sai số đầu vào bị khuếch đại"
+    description: "Giải thích condition number, forward/backward error và phân biệt tính nhạy nội tại với công thức kém ổn định."
+    transition:
+      to: numerical-error-and-stability-007
+      description: "Độ nhạy và độ chính xác cũng ảnh hưởng quyết định làm tròn theo hợp đồng dữ liệu."
+  - id: numerical-error-and-stability-007
+    order: 7
+    title: "Không làm tròn sau mọi phép tính nếu hợp đồng không yêu cầu"
+    description: "Chọn thời điểm làm tròn theo hợp đồng, phân biệt scale/precision/mode và tránh làm mất dữ liệu trung gian."
+    transition:
+      to: numerical-error-and-stability-008
+      description: "Sau khi chốt ranh giới làm tròn, phân biệt giá trị số với cách trình bày kết quả."
+  - id: numerical-error-and-stability-008
+    order: 8
+    title: "Định dạng ít chữ số không sửa sai số của giá trị đang lưu"
+    description: "Chỉ rõ formatting là tạo chuỗi, không cập nhật giá trị `double`; format rồi parse có thể thay đổi dữ liệu."
+    transition:
+      to: numerical-error-and-stability-009
+      description: "Từ sự khác nhau giữa giá trị lưu và chuỗi hiển thị, chọn mô hình kiểu số đúng theo yêu cầu."
+  - id: numerical-error-and-stability-009
+    order: 9
+    title: "Chọn double hay BigDecimal theo mô hình dữ liệu"
+    description: "Lựa chọn double/BigDecimal/số nguyên theo chính sách chính xác và kiểm tra scale, API, lưu trữ cùng serialization."
+    transition:
+      to: numerical-error-and-stability-010
+      description: "Cuối cùng dùng dữ liệu biên và oracle độc lập để kiểm chứng mọi lựa chọn kiểu và thuật toán."
+  - id: numerical-error-and-stability-010
+    order: 10
+    title: "Kiểm chứng thuật toán bằng dữ liệu biên và kết quả tham chiếu"
+    description: "Thiết kế oracle độc lập, bộ test biên và thước đo đúng hợp đồng cho số nguyên/decimal/floating point."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Sai số biểu diễn khác sai số thuật toán | Sai số tuyệt đối, tương đối và tích lũy qua nhiều bước | Giới hạn của hằng epsilon cố định cho mọi bài toán | Sắp xếp thứ tự phép tính để giảm mất thông tin | Tổng bù và tư tưởng Kahan summation | Điều kiện bài toán và trường hợp sai số đầu vào bị khuếch đại | Không làm tròn sau mọi phép tính nếu hợp đồng không yêu cầu | Định dạng ít chữ số không sửa sai số của giá trị đang lưu | Chọn double hay BigDecimal theo mô hình dữ liệu | Kiểm chứng thuật toán bằng dữ liệu biên và kết quả tham chiếu |
+  | Vấn đề cần hiểu | Lệch số đến từ dữ liệu, phép toán hay công thức? | Sai lệch bao nhiêu là quan trọng, và sau nhiều bước nó thay đổi ra sao? | Khi nào hai kết quả xấp xỉ được chấp nhận như gần bằng? | Cùng một công thức, vì sao đổi thứ tự lại giữ hoặc làm mất thông tin? | Cộng dồn nhiều số thực bằng cách nào để giảm roundoff mà vẫn biết giới hạn? | Sai số đầu vào nhỏ khuếch đại do bài toán hay do thuật toán? | Làm tròn giá trị nào, ở ranh giới nào, theo chính sách gì? | Vì sao hai số cùng in `0.30` vẫn có thể khác bit và so sánh false? | Mô hình dữ liệu yêu cầu số học xấp xỉ hay decimal/số nguyên chính xác? | Làm sao chứng minh thuật toán đạt yêu cầu ngoài các dữ liệu mẫu dễ? |
+  | Giá trị đối với OOP/module | Đặt nền tảng để tìm đúng nguyên nhân trước khi sửa phép tính. | Tạo thước đo và cơ sở kiểm thử cho tính toán xấp xỉ. | Tránh cả test sai giả lẫn ngưỡng che mất lỗi. | Vận dụng phép biến đổi đại số và API Math đúng nơi. | Có công cụ cải thiện tổng số dài và biết khi nào nó thất bại. | Tránh kỳ vọng vô lý ở bài toán ill-conditioned và chọn phép đo phù hợp. | Bảo toàn quy tắc quyết toán và tránh sai lệch do round quá sớm. | Tránh coi hiển thị đẹp là phép sửa sai số. | Thiết kế kiểu dữ liệu nhất quán từ nhập liệu đến lưu trữ. | Phát hiện lỗi tại giới hạn kiểu, điều kiện số xấu và oracle sai. |
+  | Tư duy hình thành | Chẩn đoán từng tầng nguồn sai số. | Định lượng sai số gắn với đơn vị và giả thiết. | Thiết kế quan hệ so sánh dựa trên hợp đồng. | Tìm phép trung gian gây mất chính xác rồi tổ chức lại. | Theo dõi và kiểm chứng phần sai số bù. | Tách độ nhạy toán học khỏi lỗi triển khai. | Đọc hợp đồng trước khi đặt thao tác round. | Tách cách lưu, cách trình bày và cách trao đổi. | Chọn biểu diễn theo ngữ nghĩa dữ liệu. | Kiểm thử dựa trên hợp đồng, dữ liệu biên và chứng cứ độc lập. |

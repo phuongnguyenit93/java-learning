@@ -1,0 +1,31 @@
+sections:
+  integer-types-001:
+    difficulty: BASIC
+    isImportant: true
+  integer-types-002:
+    difficulty: BASIC
+    isImportant: true
+  integer-types-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  integer-types-004:
+    difficulty: BASIC
+    isImportant: false
+  integer-types-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  integer-types-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  integer-types-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  integer-types-008:
+    difficulty: BASIC
+    isImportant: true
+  integer-types-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  integer-types-010:
+    difficulty: INTERMEDIATE
+    isImportant: true

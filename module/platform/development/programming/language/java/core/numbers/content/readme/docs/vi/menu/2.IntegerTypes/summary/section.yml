@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "KIỂU SỐ NGUYÊN — LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: integer-types-001
+    order: 1
+    title: "byte, short, int và long"
+    description: "Nhận diện bốn kiểu nguyên có dấu, literal, promotion, narrowing và những phép tính dễ tràn. Bài này tạo ngôn ngữ chung trước khi đi sâu vào miền bit."
+    transition:
+      to: integer-types-002
+      description: "Cần nắm các kiểu primitive trước khi tự tính miền biểu diễn."
+  - id: integer-types-002
+    order: 2
+    title: "Kích thước bit và miền giá trị của từng kiểu"
+    description: "Từ 2^n mẫu bit suy ra giới hạn signed, lý giải tính bất đối xứng âm/dương và đối chiếu char không dấu. Các ví dụ ở biên làm rõ phạm vi và kiểu phép toán."
+    transition:
+      to: integer-types-003
+      description: "Sau khi biết tên kiểu, cần suy luận giới hạn thay vì ghi nhớ rời rạc."
+  - id: integer-types-003
+    order: 3
+    title: "Biểu diễn số âm bằng bù hai"
+    description: "Khảo sát bit dấu, đảo bit cộng một, giải mã U-2^n, sign extension và phép dịch. Bài áp dụng trực tiếp vào thao tác octet và dữ liệu nhị phân."
+    transition:
+      to: integer-types-004
+      description: "Muốn hiểu hằng giá trị biên cần tra cứu API, sau khi đã hiểu ý nghĩa bit."
+  - id: integer-types-004
+    order: 4
+    title: "MIN_VALUE, MAX_VALUE, SIZE và BYTES"
+    description: "Dùng các hằng lớp bao để đọc min/max và bit/byte, đồng thời kiểm tra chuyển hẹp và thiết kế cấu trúc dữ liệu nhị phân. Phân biệt độ rộng primitive với kích thước object."
+    transition:
+      to: integer-types-005
+      description: "Sau hằng wrapper, xét riêng kiểu char vì cùng là integral nhưng gắn với văn bản."
+  - id: integer-types-005
+    order: 5
+    title: "char là số nguyên không dấu biểu diễn đơn vị mã UTF-16"
+    description: "Giải thích char như code unit UTF-16 và số nguyên không dấu, cách ghép surrogate pair, duyệt theo code point và giới hạn của String.length. Làm rõ khác biệt giữa mã điểm với ký tự người đọc thấy."
+    transition:
+      to: integer-types-006
+      description: "Sau khi hiểu code unit, cần tách mã ký tự số khỏi giá trị chữ số."
+  - id: integer-types-006
+    order: 6
+    title: "Phân biệt char số với giá trị chữ số được viết dưới dạng ký tự"
+    description: "Đối chiếu '7', 7, \"7\" và việc char lưu mã UTF-16; dùng kiểm tra ASCII, Character.digit và API parse số. Các ví dụ xử lý thêm chữ số Unicode nằm ngoài BMP."
+    transition:
+      to: integer-types-007
+      description: "Từ các biểu thức chuyển kiểu, chuyển sang trạng thái ban đầu của biến nguyên."
+  - id: integer-types-007
+    order: 7
+    title: "Giá trị mặc định của field và yêu cầu gán biến cục bộ"
+    description: "Giải thích default values của field/phần tử mảng và definite assignment của local trên mọi đường đi. Các ví dụ gồm final field, initializer order và wrapper null."
+    transition:
+      to: integer-types-008
+      description: "Sau các loại biến, cần phân biệt thêm boolean khỏi nhóm số nguyên."
+  - id: integer-types-008
+    order: 8
+    title: "Vì sao boolean không phải kiểu số"
+    description: "Tách boolean khỏi numeric/integral types, giải thích lỗi ép kiểu số-logic, các toán tử &&/&, cờ 0/1 và Boolean wrapper. Phân biệt kiểu nguồn Java với biểu diễn JVM."
+    transition:
+      to: integer-types-009
+      description: "Từ hệ kiểu cơ bản chuyển sang quyết định int hay long khi thiết kế dữ liệu thực tế."
+  - id: integer-types-009
+    order: 9
+    title: "Chọn int hay long cho số đếm, chỉ số và kích thước"
+    description: "Chọn int/long từ index, count, size và offset; dựa vào chữ ký API và giới hạn trung gian. Bài áp dụng Math.toIntExact, phép nhân có kiểm tra và trường hợp bộ đếm đa luồng."
+    transition:
+      to: integer-types-010
+      description: "Khi đã có tiêu chí chọn kiểu, cần hiểu giới hạn căn bản so với số nguyên toán học."
+  - id: integer-types-010
+    order: 10
+    title: "Giới hạn của kiểu cố định so với số nguyên toán học"
+    description: "So sánh tập số nguyên toán học với miền hữu hạn của primitive, giải thích modulo, narrowing, chia nguyên và BigInteger. Tổng hợp ba chiến lược: nâng kiểu, phát hiện tràn hoặc dùng độ chính xác tùy ý."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | byte, short, int và long | Kích thước bit và miền giá trị của từng kiểu | Biểu diễn số âm bằng bù hai | MIN_VALUE, MAX_VALUE, SIZE và BYTES | char là số nguyên không dấu biểu diễn đơn vị mã UTF-16 | Phân biệt char số với giá trị chữ số được viết dưới dạng ký tự | Giá trị mặc định của field và yêu cầu gán biến cục bộ | Vì sao boolean không phải kiểu số | Chọn int hay long cho số đếm, chỉ số và kích thước | Giới hạn của kiểu cố định so với số nguyên toán học |
+  | Vấn đề cần hiểu | Bốn kiểu số nguyên khác nhau ở đâu và biểu thức thực sự tính bằng kiểu nào? | Độ rộng n bit quyết định số mẫu và MIN/MAX ra sao? | Một mẫu bit mã hóa số âm, mở rộng dấu và dịch phải thế nào? | Dùng MIN/MAX khác SIZE/BYTES thế nào và các hằng không phản ánh điều gì? | Một char đại diện điều gì và vì sao độ dài String có thể khác số ký tự? | Mã của ký tự chữ số khác giá trị số và quy trình parse thế nào? | Tại sao field đọc được mặc định còn local phải gán trước khi đọc? | Vì sao hai trạng thái true/false không làm boolean trở thành số? | Dùng int hay long theo miền dữ liệu, phép tính trung gian và API thế nào? | Làm sao bảo toàn kết quả toán học khi kiểu primitive hữu hạn? |
+  | Giá trị đối với OOP/module | Nền tảng lựa chọn kiểu và đọc đúng mã Java. | Cơ sở kiểm tra miền dữ liệu và lý giải hành vi biên. | Đọc đúng dữ liệu byte có dấu và không dấu trong module. | Tra cứu chính xác cận API và bề rộng bản ghi dữ liệu. | Cơ sở xử lý văn bản Unicode an toàn trong ứng dụng Java. | Ngăn lỗi chuyển input ký tự hoặc chuỗi thành số. | Tránh lỗi compiler và giả định sai về trạng thái đối tượng. | Điều kiện tường minh, thao tác logic và trao đổi cờ an toàn. | Quyết định thiết kế bộ đếm/chỉ số/tệp không bị mất dữ liệu. | Tổng hợp phương án bảo đảm độ chính xác cho toàn chương. |
+  | Tư duy hình thành | Phân biệt kiểu khai báo, kiểu biểu thức và giá trị sau phép tính. | Suy luận giới hạn từ quy tắc n bit, không phụ thuộc máy chạy. | Luôn xác định độ rộng, signedness và thứ tự cast/mask. | Phân biệt metadata giá trị primitive với bố cục bộ nhớ vật lý. | Tách code unit, code point và grapheme theo yêu cầu dữ liệu. | Xác định biểu diễn đầu vào trước khi tính toán. | Đọc code theo vị trí khai báo, thứ tự khởi tạo và đường đi điều khiển. | Giữ ranh giới giữa mệnh đề logic và đại lượng số. | Tính cận trên và xác định ranh giới chuyển kiểu trước khi triển khai. | Chọn biểu diễn và chính sách tràn theo yêu cầu bài toán. |

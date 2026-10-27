@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "CHUYỂN ĐỔI BIGDECIMAL — MẠCH HỌC JAVA CORE"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: big-decimal-conversions-001
+    order: 1
+    title: "toString và dạng khoa học khi phù hợp"
+    description: "Nắm quy tắc canonical `toString()` và tiêu chí chuyển sang dạng khoa học; bảo toàn `BigDecimal` qua round-trip."
+    transition:
+      to: big-decimal-conversions-002
+      description: "Sau chuỗi chuẩn có thể chứa `E`, học cách xuất chuỗi plain khi đầu ra cấm ký pháp số mũ."
+  - id: big-decimal-conversions-002
+    order: 2
+    title: "toPlainString và bảo toàn cách trình bày mong muốn"
+    description: "Tạo chuỗi không số mũ bằng `toPlainString`, xác định giới hạn bảo toàn scale và cách viết nguyên văn."
+    transition:
+      to: big-decimal-conversions-003
+      description: "Từ định dạng plain chuyển sang engineering notation với số mũ theo bội của 3."
+  - id: big-decimal-conversions-003
+    order: 3
+    title: "toEngineeringString và số mũ theo bội của 3"
+    description: "Học quy tắc số mũ chia hết cho 3 trong `toEngineeringString`, gồm ngoại lệ zero và round-trip khác scale."
+    transition:
+      to: big-decimal-conversions-004
+      description: "Sau các dạng chuỗi, chuyển sang phép đổi `BigDecimal` thành primitive integer có thể mất dữ liệu."
+  - id: big-decimal-conversions-004
+    order: 4
+    title: "intValue, longValue và phần dữ liệu có thể mất"
+    description: "Hiểu vì sao `intValue` và `longValue` âm thầm bỏ phần lẻ/bit cao; chọn conversion exact hoặc rounding."
+    transition:
+      to: big-decimal-conversions-005
+      description: "Sau các lỗi integer conversion, đi sâu vào toàn bộ họ phương thức `*ValueExact` và kiểm tra miền."
+  - id: big-decimal-conversions-005
+    order: 5
+    title: "Các phương thức *ValueExact kiểm tra phần lẻ và giới hạn"
+    description: "Kiểm tra tính nguyên và giới hạn đích bằng họ `*ValueExact`, tách xác thực số học khỏi validation nghiệp vụ."
+    transition:
+      to: big-decimal-conversions-006
+      description: "Từ họ exact nói chung chuyển đến `BigInteger` để giữ số nguyên vượt giới hạn long."
+  - id: big-decimal-conversions-006
+    order: 6
+    title: "toBigInteger khác toBigIntegerExact"
+    description: "So sánh `toBigInteger` và `toBigIntegerExact` theo chính sách cắt phần lẻ, độ lớn không giới hạn 64 bit."
+    transition:
+      to: big-decimal-conversions-007
+      description: "Sau chuyển sang số nguyên exact, xét chuyển ngược sang binary float/double và các sai số của nó."
+  - id: big-decimal-conversions-007
+    order: 7
+    title: "floatValue, doubleValue và khả năng làm tròn hoặc thành vô cực"
+    description: "Phân tích làm tròn nhị phân, Infinity, subnormal và signed zero khi dùng `floatValue`/`doubleValue`."
+    transition:
+      to: big-decimal-conversions-008
+      description: "Từ giới hạn chuyển binary số sang parse/format văn bản theo locale mà không qua double."
+  - id: big-decimal-conversions-008
+    order: 8
+    title: "Parse và format BigDecimal theo locale"
+    description: "Parse và format số theo locale bằng DecimalFormat, xác thực toàn chuỗi và tránh trung gian double."
+    transition:
+      to: big-decimal-conversions-009
+      description: "Khi locale chỉ điều khiển hiển thị, làm rõ thêm scale dữ liệu tính toán và scale biểu diễn."
+  - id: big-decimal-conversions-009
+    order: 9
+    title: "Phân biệt giá trị tính toán với scale trình bày"
+    description: "Phân biệt số học, scale biểu diễn, rounding và chuỗi display; chú ý divide overload và hợp đồng dữ liệu."
+    transition:
+      to: big-decimal-conversions-010
+      description: "Từ scale và presentation tiến tới giao thức trao đổi BigDecimal giữ số chính xác toàn tuyến."
+  - id: big-decimal-conversions-010
+    order: 10
+    title: "Thiết kế dạng trao đổi giữ số mà không đi qua double trung gian"
+    description: "Thiết kế giao thức decimal chính xác từ schema đến client, validation và round-trip trên JSON/DB/JS."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | toString và dạng khoa học khi phù hợp | toPlainString và bảo toàn cách trình bày mong muốn | toEngineeringString và số mũ theo bội của 3 | intValue, longValue và phần dữ liệu có thể mất | Các phương thức *ValueExact kiểm tra phần lẻ và giới hạn | toBigInteger khác toBigIntegerExact | floatValue, doubleValue và khả năng làm tròn hoặc thành vô cực | Parse và format BigDecimal theo locale | Phân biệt giá trị tính toán với scale trình bày | Thiết kế dạng trao đổi giữ số mà không đi qua double trung gian |
+  | Vấn đề cần hiểu | Khi nào `toString` dùng dạng khoa học và vì sao giữ được scale? | `toPlainString` giữ và làm mất thành phần biểu diễn nào? | Engineering notation khác scientific/plain và không bảo toàn scale khi nào? | `intValue`/`longValue` có thể mất dữ liệu theo hai cách nào? | Các phương thức `*ValueExact` kiểm tra điều kiện nào? | Khi nào chuyển BigDecimal sang BigInteger được phép bỏ phần lẻ? | Đổi BigDecimal sang float/double mất chính xác và miền ở đâu? | Vì sao Locale và DecimalFormat phải tách khỏi decimal machine format? | Giá trị số và scale biểu diễn ảnh hưởng phép tính/hiển thị thế nào? | Thiết kế wire format nào giữ nguyên BigDecimal và scale toàn tuyến? |
+  | Giá trị đối với OOP/module | Serialize canonical và dự đoán scientific notation | Xuất decimal text dễ đọc, tránh mất scale âm | Trình bày đại lượng kỹ thuật theo bậc 1000 | Chặn lỗi cắt phần lẻ và overflow 32/64 bit | Chuyển giá trị số nguyên chính xác với lỗi minh bạch | Giữ số nguyên lớn và quy tắc input rõ ràng | Phát hiện rounding, overflow và underflow IEEE 754 | Parse/format an toàn theo vùng miền | Thiết kế precision, rounding và scale nhất quán | Giữ độ chính xác thập phân trong tích hợp hệ thống |
+  | Tư duy hình thành | Hiểu scale trước khi in số | Tách chuỗi hiển thị khỏi dữ liệu gốc | Phân biệt ký pháp, rounding và đơn vị | Kiểm tra tính nguyên và miền độc lập | Đặt tính toàn vẹn dữ liệu lên trước | Phân biệt truncate, floor và exact | Đối chiếu giá trị nhị phân thực sự | Tách cú pháp người dùng khỏi giá trị | Tách giá trị, biểu diễn và giao diện | Kiểm thử toàn tuyến và quy định contract |

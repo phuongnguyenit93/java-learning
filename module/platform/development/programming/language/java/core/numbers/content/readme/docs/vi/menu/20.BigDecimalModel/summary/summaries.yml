@@ -1,0 +1,301 @@
+summaries:
+- id: big-decimal-model-001
+  title: Số thập phân độ chính xác tùy ý và tính bất biến
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Số thập phân độ chính xác tùy ý và tính bất biến**
+
+    Giới thiệu lý do `BigDecimal` tồn tại khi dữ liệu yêu cầu giá trị thập phân chính xác và cơ chế đối tượng bất biến. Người học cần nhận ra phép tính phải giữ kết quả trả về, phân biệt tính bất biến của đối tượng với cập nhật trạng thái đồng thời và biết vì sao ngay cả decimal tùy ý độ chính xác vẫn cần chính sách làm tròn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giá trị decimal và tính bất biến
+
+    1. Vì sao `new BigDecimal("0.1")` cho phép cộng decimal khác `double 0.1 + 0.2`?
+    2. Điều gì xảy ra khi gọi `total.add(amount)` mà bỏ qua kết quả trả về, và tại sao đối tượng nguồn không đổi?
+
+    ### Giới hạn và lựa chọn thực tế
+
+    1. Vì sao `BigDecimal.ONE.divide(new BigDecimal("3"))` vẫn có thể ném ngoại lệ dù BigDecimal có độ chính xác tùy ý?
+    2. Khi nhiều luồng đồng thời thực hiện `balance = balance.add(delta)`, tính bất biến đã bảo vệ được điều gì và điều gì vẫn cần đồng bộ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích lựa chọn kiểu số | Phân tích chính xác một phép cộng decimal và chỉ ra điểm xấp xỉ khi dùng double. |
+    | Sử dụng API bất biến | Sửa đoạn cộng BigDecimal làm mất kết quả và giải thích vì sao tham chiếu phải được gán lại. |
+    | Đề xuất quy tắc xử lý | Chọn phép chia có rounding rõ ràng và xác định nhu cầu đồng bộ khi cập nhật một balance chia sẻ. |
+- id: big-decimal-model-002
+  title: Unscaled value, scale và công thức xác định giá trị
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Unscaled value, scale và công thức xác định giá trị**
+
+    Làm rõ biểu diễn định nghĩa `unscaledValue × 10^(-scale)` và cách một cặp số nguyên/scale xác định giá trị decimal. Nhờ đọc `unscaledValue()`, `scale()` và các ví dụ dạng mũ, người học tránh nhầm vị trí thập phân với độ chính xác, đồng thời hiểu vì sao hai biểu diễn cùng giá trị có thể khác nhau ở equality và serialization.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc của một BigDecimal
+
+    1. Với `unscaledValue=12345` và `scale=-2`, giá trị số được xác định thế nào?
+    2. Vì sao `"123.4500"` và `"123.45"` có cùng giá trị nhưng khác unscaled value và scale?
+
+    ### Hệ quả của biểu diễn
+
+    1. `setScale`, `stripTrailingZeros` và `scaleByPowerOfTen` khác nhau ra sao về giá trị và scale?
+    2. Vì sao `toPlainString()` có thể không bảo toàn scale âm khi parse lại, dù giá trị số không đổi?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải mã biểu diễn | Tính lại giá trị số từ unscaled integer và scale dương, zero hoặc âm. |
+    | Dự đoán thay đổi scale | Đối chiếu biểu diễn trước/sau `setScale`, `stripTrailingZeros` và phép toán BigDecimal. |
+    | Chọn cách truyền dữ liệu | Giải thích lựa chọn dạng chuỗi hoặc cặp unscaled/scale để giữ thông tin biểu diễn qua round-trip. |
+- id: big-decimal-model-003
+  title: Precision khác scale
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Precision khác scale**
+
+    Phân biệt `precision()` đếm chữ số của unscaled value với `scale()` quyết định lũy thừa 10 trong biểu diễn; đặc biệt zero có precision 1. Bài học dùng `MathContext` và `setScale` để chỉ ra hai mục tiêu làm tròn khác nhau, có thể làm thay đổi cả giá trị, precision lẫn scale khi phép làm tròn phát sinh carry.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Precision và scale theo cấu trúc
+
+    1. Tại sao `"0.0012300"` có precision 5 nhưng scale 7, còn `"1E+3"` có precision 1 và scale âm?
+    2. Vì sao giá trị zero có `precision() == 1`, trong khi `MathContext.UNLIMITED.getPrecision() == 0`?
+
+    ### Giới hạn chữ số và làm tròn
+
+    1. `setScale(3)` khác `round(new MathContext(3,...))` ở mục tiêu và kết quả như thế nào?
+    2. Điều gì khiến `999.9` làm tròn về 3 chữ số có nghĩa thành `1.00E+3` với scale âm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đối chiếu thuộc tính | Tính và xác minh precision, scale, unscaled của các chuỗi decimal và exponent. |
+    | Sử dụng rounding đúng mục tiêu | Chọn `setScale` hoặc `MathContext` theo yêu cầu số chữ số lẻ hay chữ số có nghĩa. |
+    | Phân tích carry khi làm tròn | Dự đoán precision và scale sau khi làm tròn 999.9, 0.0012345 và trường hợp zero. |
+- id: big-decimal-model-004
+  title: Scale bằng 0, dương hoặc âm
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Scale bằng 0, dương hoặc âm**
+
+    Khảo sát scale dương, bằng 0 và âm theo cùng công thức giá trị, đồng thời chỉ ra số nguyên không nhất thiết có scale 0. Người học sẽ suy luận đúng việc nhân 10 mũ khi scale âm, giảm scale có thể đòi rounding, và `movePointRight` có thể tạo cùng giá trị nhưng khác biểu diễn với `scaleByPowerOfTen`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ba miền giá trị của scale
+
+    1. Scale -2 làm thay đổi ý nghĩa của unscaled value 12345 thế nào so với scale 2?
+    2. Vì sao `new BigDecimal("100.0")` là giá trị nguyên dù scale bằng 1?
+
+    ### Thao tác thay đổi scale
+
+    1. Khi nào `setScale(-2)` trên một số nguyên có thể thực hiện chính xác và khi nào phải ném `ArithmeticException`?
+    2. Vì sao `movePointRight(3)` và `scaleByPowerOfTen(3)` có thể bằng nhau theo số học nhưng khác `equals`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích dấu scale | Dự đoán unscaled, scale và toString của các số scale âm, dương, zero. |
+    | Kiểm chứng làm tròn hàng trăm | Tính kết quả `setScale(-2, HALF_UP)` ở 12345 và 12350, giải thích khác biệt. |
+    | So sánh API dịch thập phân | Phân biệt thay scale biểu diễn và thực sự nhân/chia 10 mũ n bằng ví dụ. |
+- id: big-decimal-model-005
+  title: Tạo từ String, BigInteger, long và unscaled value
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tạo từ String, BigInteger, long và unscaled value**
+
+    So sánh các constructor/factory BigDecimal theo bản chất nguồn: văn bản decimal có scale, số nguyên BigInteger hoặc long, và cặp unscaled/scale dùng cho đơn vị lưu trữ. Bài học giúp người học tránh nhân/chia nhầm hệ số 10, bảo toàn chữ số từ dữ liệu đầu vào và nhận diện khi constructor có `MathContext` đã làm tròn ngay lúc tạo.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chọn nguồn tạo và giữ scale
+
+    1. Khi có `123400` đơn vị nhỏ nhất và scale 4, vì sao `new BigDecimal(BigInteger)` khác `new BigDecimal(BigInteger,4)`?
+    2. Những trường hợp nào khiến `BigDecimal(String)` bảo toàn giá trị và scale tốt hơn việc parse text qua `double`?
+
+    ### Kiểm chứng constructor và dữ liệu
+
+    1. `BigDecimal.valueOf(12345L,2)` khác `valueOf(12345L)` ra sao về giá trị toán học?
+    2. Vì sao constructor `new BigDecimal("12345", new MathContext(3,...))` có thể thay đổi giá trị lúc khởi tạo?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn đúng overload | Tạo BigDecimal theo nguồn String, BigInteger, long và cặp unscaled/scale, đối chiếu kết quả. |
+    | Xác thực dữ liệu thập phân | Phân biệt chuỗi hỗ trợ, cú pháp locale sai và việc giữ trailing zeros khi nhập. |
+    | Phát hiện conversion sai | Sửa ví dụ lưu cents hoặc micro-units bị lệch vì dùng constructor thiếu scale. |
+- id: big-decimal-model-006
+  title: Constructor nhận double và nhiễu biểu diễn nhị phân
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Constructor nhận double và nhiễu biểu diễn nhị phân**
+
+    Phân tích vì sao `new BigDecimal(0.1)` xuất ra giá trị decimal rất dài: constructor này biểu diễn chính xác binary64 đã nhận, trong khi `BigDecimal(String)` nhận decimal text và `valueOf(double)` đi qua `Double.toString`. Từ những phản ví dụ với phép cộng và số nguyên vượt 2^53, người học biết điểm mất dữ liệu trước conversion và không cố chữa sai số nguồn bằng thay định dạng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đường chuyển đổi binary và decimal
+
+    1. Vì sao `new BigDecimal(0.1).compareTo(new BigDecimal("0.1"))` dương dù hai biểu thức trông cùng literal 0.1?
+    2. Ba tuyến `new BigDecimal(double)`, `valueOf(double)` và `new BigDecimal(String)` khác nhau thế nào ở thông tin đầu vào?
+
+    ### Giới hạn và chính sách conversion
+
+    1. Tại sao `BigDecimal.valueOf(0.1 + 0.2)` không khôi phục kết quả 0.3 decimal?
+    2. Vì sao chuyển `long` lớn qua double hoặc mở rộng `0.1f` sang double trước khi tạo BigDecimal làm mất dữ liệu nguồn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích binary noise | Giải thích scale/precision dài của BigDecimal tạo từ double 0.1 và so sánh với decimal text. |
+    | Dự đoán tuyến dữ liệu | Đối chiếu kết quả của ba cách cộng 0.1 và 0.2 tùy thứ tự chuyển đổi. |
+    | Thiết kế chính sách nhận double | Chọn valueOf, constructor exact binary hoặc từ chối double theo yêu cầu, kiểm tra non-finite. |
+- id: big-decimal-model-007
+  title: valueOf và các hằng ZERO, ONE, TEN
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **valueOf và các hằng ZERO, ONE, TEN**
+
+    Hệ thống hóa `valueOf(long)`, `valueOf(long,scale)`, `valueOf(double)` và ba hằng `ZERO`, `ONE`, `TEN` theo scale và semantics riêng. Người học sẽ chọn overload đúng, dùng hằng an toàn với đối tượng bất biến, và hiểu vì sao zero hoặc one từ double có thể khác hằng về `equals` dù cùng giá trị số.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các overload valueOf và hằng số
+
+    1. `valueOf(12345L,2)` diễn giải hai tham số thế nào, và khác gì `valueOf(12345L)`?
+    2. Vì sao `BigDecimal.valueOf(1.0).equals(BigDecimal.ONE)` false nhưng compareTo bằng 0?
+
+    ### Sử dụng object và giá trị đặc biệt
+
+    1. Vì sao ba hằng ZERO, ONE, TEN đều có scale 0 và không nên so BigDecimal bằng `==`?
+    2. Khi nhận double là NaN/Infinity, `valueOf(double)` phản ứng ra sao và tại sao không thể sửa bằng cách chọn hằng ZERO?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn overload đúng | Viết các ví dụ khởi tạo từ long, unscaled/scale và double, đọc rõ scale của kết quả. |
+    | So sánh số và representation | Kiểm chứng `equals`, `compareTo`, `signum` với zero/one scale khác nhau. |
+    | Dùng hằng bất biến | Tích lũy giá trị từ ZERO bằng cách gán lại và giữ nguyên ba đối tượng hằng. |
+- id: big-decimal-model-008
+  title: Giữ dấu 0 cuối trong biểu diễn có ý nghĩa
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giữ dấu 0 cuối trong biểu diễn có ý nghĩa**
+
+    Phân tích trường hợp hai biểu diễn `1.20` và `1.2` bằng nhau về số nhưng khác scale và ý nghĩa ghi nhận. Bài học chỉ ra khi nào cần giữ trailing zeros trong giá tiền, đo lường, API và lưu trữ, lúc nào chuẩn hóa là phù hợp, và cách `stripTrailingZeros`, `setScale` hoặc serialization thay đổi biểu diễn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa của trailing zeros
+
+    1. Tại sao `"1.20"` và `"1.2"` có thể cần giữ riêng dù compareTo trả 0?
+    2. `stripTrailingZeros()` thay đổi biểu diễn `1000.00` và `0.000` ra sao, và thông tin nào mất đi?
+
+    ### Bảo toàn dữ liệu qua ranh giới
+
+    1. Khi bắt buộc có đúng hai chữ số sau dấu thập phân, kiểm tra scale và kiểm tra cú pháp nguồn khác nhau như thế nào?
+    2. Vì sao parse qua double hoặc xuất JSON/DECIMAL theo một mapping bất kỳ có thể làm mất scale/trailing zeros?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định contract biểu diễn | Phân biệt chính sách giữ văn bản gốc, scale cố định hay chỉ giữ giá trị toán học. |
+    | Kiểm thử chuẩn hóa | So sánh `equals`, `compareTo`, `setScale`, `stripTrailingZeros` trên 1.20 và 1000.00. |
+    | Thiết kế round-trip | Đề xuất schema/serialization giữ scale qua JSON, CSV hoặc database và kiểm chứng dữ liệu sau đọc lại. |
+- id: big-decimal-model-009
+  title: BigDecimal không có NaN hoặc vô cực
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **BigDecimal không có NaN hoặc vô cực**
+
+    So sánh tập giá trị hữu hạn của BigDecimal với NaN, Infinity và signed zero thuộc IEEE 754 `float`/`double`. Bài học giúp kiểm tra nguồn không hữu hạn, phân biệt ngoại lệ khi parse và chia decimal, đồng thời đánh giá overflow/underflow khi chuyển BigDecimal lớn hoặc rất nhỏ ngược về `double`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới miền giá trị
+
+    1. Vì sao `new BigDecimal(Double.NaN)` và `valueOf(Double.POSITIVE_INFINITY)` ném `NumberFormatException`?
+    2. Tại sao `BigDecimal.ONE.divide(BigDecimal.ZERO)` ném ngoại lệ trong khi `1.0 / 0.0` cho Infinity?
+
+    ### Chuyển kiểu và trạng thái dữ liệu
+
+    1. Vì sao `new BigDecimal("1E+400")` hữu hạn nhưng `doubleValue()` có thể thành Infinity, còn `1E-400` thành 0.0?
+    2. Khi một API có thể nhận NaN, Infinity hoặc thiếu dữ liệu, vì sao phải thiết kế validation/trạng thái riêng thay vì mã hóa bằng `BigDecimal.ZERO`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đối chiếu miền số | Dự đoán kết quả/ngoại lệ của divide và constructor/factory với NaN, Infinity, zero. |
+    | Kiểm soát conversion | Kiểm thử doubleValue của decimal cực lớn, cực nhỏ và chỉ ra vì sao isFinite không xác nhận exactness. |
+    | Thiết kế validation | Viết helper kiểm tra Double.isFinite và phân biệt lỗi parse với lỗi phép toán decimal. |
+- id: big-decimal-model-010
+  title: Khi nào dùng BigDecimal thay float hoặc double
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khi nào dùng BigDecimal thay float hoặc double**
+
+    Đưa ra tiêu chí chọn mô hình số dựa trên yêu cầu chính xác decimal, miền giá trị, chính sách làm tròn, chi phí và thư viện liên quan. Người học học cách ưu tiên BigDecimal cho hợp đồng giá/thuế và dữ liệu decimal exact, nhưng giữ float/double cho đo lường, mô phỏng hay tính toán gần đúng với sai số chấp nhận được.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chọn kiểu theo miền bài toán
+
+    1. Trường hợp nào yêu cầu giữ đúng các chữ số thập phân từ nguồn nên dùng BigDecimal thay vì double?
+    2. Vì sao một cảm biến có sai số đo không tự chính xác hơn chỉ bằng cách chuyển mọi giá trị sang BigDecimal?
+
+    ### Thiết kế luồng số và rounding
+
+    1. Khi tính giá và thuế, cần quy định những yếu tố nào ngoài kiểu BigDecimal để kết quả đúng nghiệp vụ?
+    2. Những đánh đổi hiệu năng, thư viện, API và các giá trị đặc biệt nào khiến double hoặc float vẫn là lựa chọn đúng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại yêu cầu kiểu số | Chọn BigDecimal, long, double hoặc float cho hóa đơn, bộ đếm, phép đo và GPU có giải thích. |
+    | Đề xuất pipeline decimal | Thiết kế nhập String/DECIMAL đến phép tính và lưu trữ với rounding mode và scale được chỉ định. |
+    | Kiểm thử quyết định | Dự đoán ca 0.1+0.2, 1/3, số nguyên 2^53+1 và khác biệt equals/compareTo. |

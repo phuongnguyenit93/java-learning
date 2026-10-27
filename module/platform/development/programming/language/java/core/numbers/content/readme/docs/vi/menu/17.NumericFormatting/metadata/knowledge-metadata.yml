@@ -1,0 +1,40 @@
+sections:
+  numeric-formatting-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-formatting-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-formatting-003:
+    difficulty: ADVANCED
+    isImportant: true
+  numeric-formatting-004:
+    difficulty: ADVANCED
+    isImportant: false
+  numeric-formatting-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-formatting-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-formatting-007:
+    difficulty: ADVANCED
+    isImportant: true
+  numeric-formatting-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-formatting-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-formatting-010:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-formatting-011:
+    difficulty: ADVANCED
+    isImportant: true
+  numeric-formatting-012:
+    difficulty: ADVANCED
+    isImportant: true
+  numeric-formatting-013:
+    difficulty: INTERMEDIATE
+    isImportant: true

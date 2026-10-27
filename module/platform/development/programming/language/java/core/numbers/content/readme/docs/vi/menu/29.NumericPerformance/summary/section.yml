@@ -1,0 +1,68 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "HIỆU NĂNG SỐ HỌC — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: numeric-performance-001
+    order: 1
+    title: "Primitive so với wrapper về cấp phát và bố trí dữ liệu"
+    description: "Phân tích sự khác biệt layout, cấp phát, locality, GC giữa primitive và wrapper; tránh suy đoán allocation cố định."
+    transition:
+      to: numeric-performance-002
+      description: "Từ layout của primitive và wrapper, đi vào nơi boxing xảy ra trong collection, stream và vòng lặp."
+  - id: numeric-performance-002
+    order: 2
+    title: "Boxing trong collection, stream và vòng lặp"
+    description: "Xác định boxing/unboxing trong collection, stream và vòng lặp, tối ưu pipeline số và xử lý null/overflow."
+    transition:
+      to: numeric-performance-003
+      description: "Sau khi đánh giá chi phí object, chuyển sang độ phức tạp của số nguyên tùy ý theo độ dài."
+  - id: numeric-performance-003
+    order: 3
+    title: "Chi phí số học BigInteger theo độ dài toán hạng"
+    description: "Đánh giá chi phí BigInteger theo bit/limb, thuật toán nhân/chia, tăng kích thước trung gian và chọn API phù hợp."
+    transition:
+      to: numeric-performance-004
+      description: "Từ số nguyên lớn, tiếp tục khảo sát các chi phí riêng do precision và scale của số decimal."
+  - id: numeric-performance-004
+    order: 4
+    title: "Chi phí BigDecimal theo precision và scale"
+    description: "Phân tích BigDecimal theo precision, scale, unscaled value, chi phí căn chỉnh/làm tròn và định dạng."
+    transition:
+      to: numeric-performance-005
+      description: "Hiểu nguồn chi phí precision/scale để nhận diện và tránh biểu diễn thừa trong pipeline."
+  - id: numeric-performance-005
+    order: 5
+    title: "Tránh tăng precision hoặc scale không cần thiết"
+    description: "Ngăn tăng precision/scale và output thừa, dùng strip/setScale/MathContext có điều kiện theo hợp đồng."
+    transition:
+      to: numeric-performance-006
+      description: "Sau các cách tiết kiệm biểu diễn, đặt ra điều kiện phải giữ nguyên hợp đồng chính xác khi tối ưu."
+  - id: numeric-performance-006
+    order: 6
+    title: "Không thay đổi quy tắc chính xác chỉ để rút ngắn thời gian chạy"
+    description: "Bảo vệ hợp đồng tính chính xác khi tối ưu kiểu, rounding, overflow, thứ tự phép tính và kiểm thử hiệu năng."
+    transition:
+      to: numeric-performance-007
+      description: "Khi đã có correctness gate, thiết kế benchmark không bị JIT loại/gập mất phép tính."
+  - id: numeric-performance-007
+    order: 7
+    title: "Benchmark cần tránh constant folding và dead-code elimination"
+    description: "Nhận diện constant folding/DCE trong microbenchmark, thiết kế JMH với dữ liệu runtime và kết quả quan sát được."
+    transition:
+      to: numeric-performance-008
+      description: "Cuối cùng mở rộng benchmark từ một phép tính sang corpus và biên đại diện workload thực."
+  - id: numeric-performance-008
+    order: 8
+    title: "Đo với miền dữ liệu thực tế và cả tình huống biên"
+    description: "Thiết kế benchmark theo phân bố thực tế và dữ liệu biên, kiểm tra tính đúng rồi diễn giải latency, throughput, GC."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Primitive so với wrapper về cấp phát và bố trí dữ liệu | Boxing trong collection, stream và vòng lặp | Chi phí số học BigInteger theo độ dài toán hạng | Chi phí BigDecimal theo precision và scale | Tránh tăng precision hoặc scale không cần thiết | Không thay đổi quy tắc chính xác chỉ để rút ngắn thời gian chạy | Benchmark cần tránh constant folding và dead-code elimination | Đo với miền dữ liệu thực tế và cả tình huống biên |
+  | Vấn đề cần hiểu | Dữ liệu số chiếm bộ nhớ và được CPU truy cập khác nhau ra sao? | Chuyển đổi wrapper phát sinh ở những đoạn mã nào và chi phí nào đáng đo? | Độ dài của toán hạng làm thay đổi chi phí số học BigInteger thế nào? | Vì sao decimal ít chữ số vẫn có thể gây phép toán hoặc output rất lớn? | Giảm số chữ số lưu trữ thế nào để không làm sai kết quả hoặc scale? | Một thay đổi nhanh hơn có còn tính cùng bài toán và cùng quy tắc không? | Liệu benchmark đang đo phép toán thực hay mã đã bị JIT xóa/gập? | Phép đo hiện tại có đại diện workload thật, cả tình huống lỗi và biên không? |
+  | Giá trị đối với OOP/module | Đưa ra lựa chọn kiểu và cấu trúc dữ liệu có căn cứ hiệu năng. | Giảm conversion ở hot path mà vẫn giữ hợp đồng collection. | Lựa chọn thuật toán tránh dữ liệu trung gian bùng nổ. | Hiểu và kiểm soát nút thắt của phép toán thập phân chính xác. | Giảm tải bộ nhớ và serialize ở ranh giới được phép. | Ngăn lỗi nghiệp vụ phát sinh chỉ vì tối ưu tốc độ. | Thu được kết luận hiệu năng có ý nghĩa trên JVM. | Đưa ra quyết định tối ưu dựa trên corpus và số đo tái lập. |
+  | Tư duy hình thành | Đọc layout và đường truy cập trước khi kết luận chi phí. | Nhận diện ranh giới primitive và object theo dữ liệu đang chạy. | Phân tích kích thước dữ liệu và độ phức tạp trước khi đo. | Xem cả precision, scale và trung gian trước khi tối ưu. | Tối ưu biểu diễn chỉ sau khi xác định hợp đồng chính xác. | Đặt correctness gate trước benchmark và phê duyệt thay đổi semantics. | Xác minh workload còn tồn tại và được đo đúng phạm vi. | Đo cả trường hợp phổ biến và ranh giới, không ngoại suy quá mức. |

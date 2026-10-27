@@ -1,0 +1,331 @@
+summaries:
+- id: numeric-testing-and-diagnostics-001
+  title: Kiểm tra MIN_VALUE, MAX_VALUE, số 0 và lân cận biên
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra MIN_VALUE, MAX_VALUE, số 0 và lân cận biên**
+
+    Xây ma trận ca kiểm thử tại biên kiểu số, phép toán và miền nghiệp vụ. Phân biệt số nguyên sát biên theo đơn vị 1 với số thực sát biên theo lưới biểu diễn IEEE 754.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế dữ liệu biên
+
+    1. Vì sao chỉ thử giá trị giữa miền bỏ sót lỗi ở MIN_VALUE và MAX_VALUE?
+    2. Một API chấp nhận từ 0 đến 100 cần thử những điểm nào quanh cả hai cận?
+
+    ### Biên của Java Numbers
+
+    1. Vì sao Integer.MAX_VALUE + 1 không thể được xem là input int ngoài cận?
+    2. Khi nào sử dụng Math.nextUp/nextDown thay vì cộng trừ 1, và Double.MIN_VALUE nghĩa là gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập ma trận biên | Tạo các ca sát trong, sát ngoài, ngay tại biên và quanh zero. |
+    | Phân biệt kiểu số | Dự đoán overflow MIN/MAX và lân cận double với nextUp/nextDown. |
+    | Chặn dữ liệu đặc biệt | Kiểm thử validator với NaN, Infinity và signed zero. |
+- id: numeric-testing-and-diagnostics-002
+  title: Kiểm tra overflow trước và sau chuyển kiểu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra overflow trước và sau chuyển kiểu**
+
+    Phân biệt mất dữ liệu khi tính bằng kiểu hẹp với mất dữ liệu trong phép ép kiểu. Thực hành nâng kiểu trước phép toán, Math.*Exact và các phép chuyển đổi exact khi hợp đồng yêu cầu giữ nguyên giá trị.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thời điểm phép tính
+
+    1. Vì sao long result = Integer.MAX_VALUE + 1 vẫn có thể chứa số âm?
+    2. Đặt cast long trước hoặc sau 50_000 * 50_000 làm thay đổi kết quả thế nào?
+
+    ### Chuyển kiểu và kiểm tra
+
+    1. Math.addExact và Math.toIntExact phát hiện hai loại lỗi khác nhau ra sao?
+    2. BigDecimal.intValueExact khác intValue ở phạm vi giá trị và phần lẻ thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích kiểu biểu thức | Chỉ ra chỗ overflow trong phép tính trước khi gán. |
+    | Dùng checked arithmetic | Viết ca xác nhận ArithmeticException với Math.addExact. |
+    | Chuyển kiểu chính xác | Dùng toIntExact và intValueExact trước khi trả giá trị nhỏ hơn. |
+- id: numeric-testing-and-diagnostics-003
+  title: Số âm với phép chia, lấy dư và làm tròn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Số âm với phép chia, lấy dư và làm tròn**
+
+    Đối chiếu chia nguyên hướng về zero với floorDiv, remainder với floorMod và cách RoundingMode xử lý số âm. Dùng các giá trị sát zero, điểm giữa và MIN_VALUE để tạo phản ví dụ kiểm thử.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thương và phần dư có dấu
+
+    1. Vì sao -7 / 3 bằng -2 còn Math.floorDiv(-7,3) bằng -3?
+    2. Dấu của a % b và Math.floorMod(a,b) phụ thuộc hai toán hạng thế nào?
+
+    ### Rounding và trường hợp đặc biệt
+
+    1. Math.round(-1.5) khác BigDecimal HALF_UP như thế nào?
+    2. Vì sao MIN_VALUE / -1 cần một ca overflow riêng với phép chia cho zero?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm chứng phép chia âm | Tạo bảng /, %, floorDiv và floorMod với hai dấu. |
+    | Thiết kế modulo vòng | Dùng floorMod với modulus dương và thử index -1. |
+    | Kiểm tra midpoint âm | So Math.round với các RoundingMode tại số âm. |
+- id: numeric-testing-and-diagnostics-004
+  title: NaN, vô cực, signed zero và subnormal
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **NaN, vô cực, signed zero và subnormal**
+
+    Khảo sát những giá trị IEEE 754 đặc biệt ảnh hưởng so sánh, phép chia, wrapper, collection và dữ liệu trao đổi. Phân biệt zero có dấu, NaN, Infinity, subnormal và thời điểm cần kiểm tra isFinite.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hành vi IEEE 754
+
+    1. Vì sao NaN == NaN false nhưng Double.equals của hai NaN true?
+    2. +0.0 và -0.0 khác nhau ra sao giữa primitive ==, Double.equals và phép lấy nghịch đảo?
+
+    ### Validation và dữ liệu
+
+    1. Vì sao Double.MIN_VALUE là số dương subnormal chứ không phải cận âm?
+    2. Vì sao một DoubleStream.average có giá trị vẫn có thể trả NaN, và JSON xử lý non-finite thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại special values | Kiểm tra bằng isNaN, isInfinite, isFinite và raw bits. |
+    | So sánh đúng ngữ nghĩa | Dự đoán primitive ==, Double.compare, equals với zero và NaN. |
+    | Kiểm soát boundary | Viết test underflow và validation cho input/output không hữu hạn. |
+- id: numeric-testing-and-diagnostics-005
+  title: Kiểm tra phép so sánh với sai số phù hợp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra phép so sánh với sai số phù hợp**
+
+    Chọn điều kiện so sánh floating-point phù hợp miền giá trị: absolute tolerance, relative tolerance hoặc kết hợp. Trình bày ngoại lệ gần zero, NaN, Infinity và cách giữ độ chính xác khi đối chiếu BigDecimal.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguyên tắc tolerance
+
+    1. Vì sao 0.1 + 0.2 == 0.3 thường là false?
+    2. Sai số tuyệt đối và tương đối phù hợp khác nhau ra sao khi expected gần zero?
+
+    ### Các chính sách ngoại lệ
+
+    1. Dùng max(absTol, relTol*scale) khác yêu cầu đồng thời thỏa hai ngưỡng như thế nào?
+    2. Vì sao NaN, hai vô cực và signed zero phải được phân loại trước khi so sánh gần đúng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn ngưỡng từ hợp đồng | Giải thích absTol/relTol theo đơn vị và độ lớn. |
+    | Viết phép nearlyEqual | Xác thực tolerance và special values trước khi dùng phép trừ. |
+    | So sánh decimal | Dùng BigDecimal.compareTo hoặc hiệu BigDecimal khi nghiệp vụ cần. |
+- id: numeric-testing-and-diagnostics-006
+  title: Kiểm tra BigDecimal cả giá trị và scale khi hợp đồng yêu cầu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra BigDecimal cả giá trị và scale khi hợp đồng yêu cầu**
+
+    Thiết kế phép kiểm thử BigDecimal đúng hợp đồng giá trị số học, scale, precision và chuỗi biểu diễn. Nhận biết khác biệt equals với compareTo, rủi ro stripTrailingZeros và quy tắc setScale.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giá trị so với biểu diễn
+
+    1. Vì sao BigDecimal 12.0 và 12.00 compareTo bằng 0 nhưng equals false?
+    2. Unscaled value, scale và precision giải thích sự khác biệt nào của 1E+3?
+
+    ### Hợp đồng decimal
+
+    1. Vì sao stripTrailingZeros có thể biến scale của 1000.00 thành -3?
+    2. Khi nào setScale(2,UNNECESSARY) chấp nhận hoặc từ chối một giá trị?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn phép so sánh | Dùng compareTo cho số học, equals khi phải giữ scale. |
+    | Kiểm tra metadata | In precision, scale, unscaledValue của đầu vào và kết quả. |
+    | Kiểm thử chuẩn hóa | Dùng setScale và kiểm tra trường hợp mất chữ số khi scale giảm. |
+- id: numeric-testing-and-diagnostics-007
+  title: Đối chiếu mọi RoundingMode tại trường hợp đúng giữa
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đối chiếu mọi RoundingMode tại trường hợp đúng giữa**
+
+    Xây oracle cho toàn bộ tám RoundingMode ở các điểm đúng giữa theo hai dấu, parity và scale đích. Kiểm tra điều kiện dưới/trên tie, mode UNNECESSARY và khác biệt tạo BigDecimal từ chuỗi với từ double.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy tắc rounding
+
+    1. Vì sao 2.5 là midpoint khi setScale(0) nhưng không phải khi setScale(1)?
+    2. UP, DOWN, CEILING, FLOOR khác nhau thế nào tại -2.5?
+
+    ### Thiết kế ca kiểm thử
+
+    1. Vì sao HALF_EVEN chọn 2 với 2.5 nhưng chọn 4 với 3.5?
+    2. UNNECESSARY phải thành công hay ném lỗi với 2.00 và 2.50?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dựng bảng tám chế độ | Dự đoán đầu ra cho +2.5, -2.5, +3.5, -3.5. |
+    | Thử sát midpoint | Kiểm chứng 2.4999, 2.5000, 2.5001 ở hai dấu. |
+    | Bảo vệ hợp đồng rounding | Kiểm thử đúng ArithmeticException của UNNECESSARY. |
+- id: numeric-testing-and-diagnostics-008
+  title: Kiểm thử round-trip parse, format và cơ số
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm thử round-trip parse, format và cơ số**
+
+    Xác định round-trip cần giữ giá trị, scale, bit hay chuỗi gốc; áp dụng cho int/long nhiều cơ số, unsigned, BigInteger, BigDecimal và double. Kiểm tra tác động format theo Locale và parser chưa tiêu thụ hết văn bản.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Round-trip cho kiểu số
+
+    1. Vì sao toString(n,radix) phải được parse với cùng radix từ 2 đến 36?
+    2. Integer.toHexString(-1) khác Integer.toString(-1,16) ở diễn giải bit thế nào?
+
+    ### Biểu diễn và Locale
+
+    1. Vì sao toPlainString có thể không bảo toàn scale âm của BigDecimal?
+    2. Tại sao DecimalFormat.parse cần kiểm tra ParsePosition và Double.toString không thể giữ NaN payload tùy ý?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm thử radix | Soạn test signed/unsigned cho radix 2, 8, 10, 16, 36. |
+    | Bảo toàn biểu diễn | Kiểm tra scale và raw bits khi serialize/parse. |
+    | Phát hiện input lỗi | Thử tiền tố không hợp lệ, Locale sai và hậu tố chưa được parse. |
+- id: numeric-testing-and-diagnostics-009
+  title: Dùng BigInteger hoặc phép tính tham chiếu để phát hiện tràn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dùng BigInteger hoặc phép tính tham chiếu để phát hiện tràn**
+
+    Dùng BigInteger làm oracle độc lập để phát hiện overflow của int/long và đối chiếu Math.*Exact. Phân biệt yêu cầu mọi bước không tràn với yêu cầu kết quả cuối vừa miền, bổ sung dữ liệu ngẫu nhiên có seed và các trường hợp MIN/MAX.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phép tính oracle
+
+    1. Vì sao BigInteger.valueOf(a*b) có thể đã chứa kết quả sai?
+    2. Math.addExact và BigInteger.longValueExact kiểm tra hai bước khác nhau nào?
+
+    ### Phạm vi và property test
+
+    1. Vì sao Long.MIN_VALUE / -1 phải xử lý riêng trong checked division?
+    2. Khi nào tổng trung gian bị tràn vẫn có thể dẫn tới tổng cuối hợp lệ về toán học?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo oracle đúng | Chuyển từng toán hạng sang BigInteger trước khi tính. |
+    | Kiểm tra phạm vi kết quả | Dùng intValueExact/longValueExact hoặc so sánh cận. |
+    | Thử checked arithmetic | Kết hợp ca MIN/MAX với test seeded có expected từ oracle. |
+- id: numeric-testing-and-diagnostics-010
+  title: Kiểm thử số ngẫu nhiên bằng seed hoặc nguồn được truyền vào
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm thử số ngẫu nhiên bằng seed hoặc nguồn được truyền vào**
+
+    Biến tính ngẫu nhiên thành dữ liệu kiểm thử kiểm soát được bằng seed cố định, thuật toán xác định và tiêm RandomGenerator từ bên ngoài. Dùng scripted fake để ép nhánh và thử bất biến, phân biệt PRNG thông thường với SecureRandom dành cho bảo mật.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tính tái lập
+
+    1. Hai java.util.Random cùng seed cần điều kiện gì để sinh cùng chuỗi?
+    2. Vì sao việc gọi thêm một lần rút hoặc thay đổi lịch chạy đa luồng làm lệch kết quả?
+
+    ### Kiểm thử theo nhánh
+
+    1. Fake trả 24 hoặc 25 giúp thử hai phía của nextInt(100) nhỏ hơn 25 như thế nào?
+    2. Vì sao test giới hạn 1..6 của xúc xắc đáng tin hơn mong một mặt nhất định xuất hiện?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo chuỗi có seed | So sánh hai PRNG với cùng thuật toán và thứ tự gọi. |
+    | Tiêm nguồn số | Thiết kế constructor nhận RandomGenerator hoặc nguồn domain nhỏ. |
+    | Ép nhánh xác định | Dùng fake trả 0 và bound-1, xác minh số lần rút. |
+- id: numeric-testing-and-diagnostics-011
+  title: In mẫu bit, kiểu biểu thức và precision để điều tra kết quả bất ngờ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **In mẫu bit, kiểu biểu thức và precision để điều tra kết quả bất ngờ**
+
+    Truy vết loại toán hạng, kiểu biểu thức compile-time, raw bits float/double và precision/scale BigDecimal để tìm điểm đầu tiên gây lỗi số. Thực hành in hex khi overflow, quan sát signed zero và phân biệt độ chính xác nhị phân với decimal.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểu biểu thức và bit
+
+    1. Vì sao double result = 5 / 2 mang giá trị 2.0 thay vì 2.5?
+    2. Overload kind(int,long,double) cho biết kiểu biểu thức tại thời điểm nào?
+
+    ### Precision và truy vết
+
+    1. Vì sao số 0.1f được nâng sang double không khôi phục thập phân chính xác 0.1?
+    2. BigDecimal 1.2300 có precision và scale bao nhiêu trước/sau stripTrailingZeros?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Theo dõi kiểu | Nhận diện numeric promotion và cast trước hoặc sau phép tính. |
+    | In raw bits | Dump số nguyên tràn, signed zero và mẫu IEEE 754 theo hex. |
+    | Chẩn đoán precision | Kiểm tra precision, scale, unscaledValue và MathContext của BigDecimal. |

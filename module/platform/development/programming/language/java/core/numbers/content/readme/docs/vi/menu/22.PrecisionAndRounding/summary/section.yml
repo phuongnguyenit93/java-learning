@@ -1,0 +1,96 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "PRECISION VÀ LÀM TRÒN — LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: precision-and-rounding-001
+    order: 1
+    title: "MathContext gồm precision và RoundingMode"
+    description: "Thiết lập MathContext để điều khiển số chữ số có nghĩa và RoundingMode của phép tính BigDecimal. Đối chiếu precision với scale, truyền context vào toán tử, và giải thích ngoại lệ chia vô hạn."
+    transition:
+      to: precision-and-rounding-002
+      description: "Từ cấu trúc MathContext chuyển sang các cấu hình precision có sẵn và giới hạn thực tế của chúng."
+  - id: precision-and-rounding-002
+    order: 2
+    title: "UNLIMITED, DECIMAL32, DECIMAL64 và DECIMAL128"
+    description: "Đối chiếu bốn preset UNLIMITED, DECIMAL32/64/128 và chế độ HALF_EVEN; phân biệt phép tính chính xác hữu hạn với chia tuần hoàn. Nêu giới hạn của tên preset so với định dạng IEEE decimal đầy đủ."
+    transition:
+      to: precision-and-rounding-003
+      description: "Giá trị precision bằng 0 ở UNLIMITED cần được phân biệt riêng với scale bằng 0 của BigDecimal."
+  - id: precision-and-rounding-003
+    order: 3
+    title: "Precision bằng 0 không phải scale bằng 0"
+    description: "Phân biệt precision=0 của MathContext (unlimited) với scale=0 của BigDecimal (đến hàng đơn vị). Minh họa bằng giá trị 1234.567, scale âm, phép chia 1/3 và ràng buộc không làm tròn."
+    transition:
+      to: precision-and-rounding-004
+      description: "Sau khi xác định đơn vị làm tròn, đi vào các mode theo khoảng cách từ kết quả đến số 0."
+  - id: precision-and-rounding-004
+    order: 4
+    title: "UP và DOWN: ra xa hoặc về phía 0"
+    description: "Giải thích UP là xa 0, DOWN là về 0, với số âm, phân số nhỏ, chia BigDecimal và làm tròn ở scale/precision. Nêu khác biệt với hướng CEILING/FLOOR và nguy cơ làm tròn từng bước."
+    transition:
+      to: precision-and-rounding-005
+      description: "Hai mode theo khoảng cách tới 0 dẫn sang CEILING/FLOOR dựa trên hướng của trục số."
+  - id: precision-and-rounding-005
+    order: 5
+    title: "CEILING và FLOOR: hướng về dương hoặc âm vô cực"
+    description: "Dạy CEILING hướng +∞ và FLOOR hướng -∞ với double, BigDecimal theo scale và thương nguyên. Khảo sát -0.0, Math.ceilDiv từ Java 18 và các ví dụ phân trang/nhóm chỉ số."
+    transition:
+      to: precision-and-rounding-006
+      description: "Các mode theo hướng được phân biệt; tiếp theo là quy tắc chọn gần nhất tại điểm chính giữa."
+  - id: precision-and-rounding-006
+    order: 6
+    title: "HALF_UP và HALF_DOWN ở vị trí đúng giữa"
+    description: "Hai chế độ chọn giá trị gần nhất; HALF_UP đi xa 0 tại điểm giữa, HALF_DOWN về 0. Minh họa bằng các giá trị sát 2.345, số âm, phép chia và ảnh hưởng thời điểm làm tròn."
+    transition:
+      to: precision-and-rounding-007
+      description: "Từ hai kiểu xử lý tie theo độ lớn, chuyển sang lựa chọn chữ số cuối chẵn của HALF_EVEN."
+  - id: precision-and-rounding-007
+    order: 7
+    title: "HALF_EVEN và lựa chọn chữ số chẵn"
+    description: "Giải thích HALF_EVEN là nearest với ties to even, xét chữ số cuối giữ lại và độ lệch quanh điểm giữa. Áp dụng cho số âm, chuyển nhớ, precision và hạn chế khi làm tròn nhiều khoản."
+    transition:
+      to: precision-and-rounding-008
+      description: "Sau các mode cho phép thay đổi giá trị, xét chế độ UNNECESSARY để yêu cầu tính chính xác tuyệt đối."
+  - id: precision-and-rounding-008
+    order: 8
+    title: "UNNECESSARY để yêu cầu kết quả không cần làm tròn"
+    description: "Dùng UNNECESSARY để yêu cầu không thay đổi giá trị ở scale/precision mục tiêu; nhận biết khi chỉ loại số 0 vẫn hợp lệ. Phân tích divide overload, chia tuần hoàn và validation đầu vào."
+    transition:
+      to: precision-and-rounding-009
+      description: "Sau khi hiểu từng chế độ, so sánh đầy đủ cả tám mode trên số dương, âm, tie và non-tie."
+  - id: precision-and-rounding-009
+    order: 9
+    title: "Đối chiếu các chế độ với cả số dương và số âm"
+    description: "Tổng hợp tám RoundingMode trên dương/âm, tie và non-tie; phân biệt hai hướng theo 0 hay trục số, ba chế độ HALF, và UNNECESSARY. Áp dụng bảng kiểm và chọn mode theo hợp đồng."
+    transition:
+      to: precision-and-rounding-010
+      description: "Sau khi chọn đúng mode, cần chú ý việc áp dụng làm tròn nhiều lần có thể thay đổi kết quả."
+  - id: precision-and-rounding-010
+    order: 10
+    title: "Làm tròn hai lần và khác biệt với làm tròn ở bước cuối"
+    description: "Phân tích double rounding bằng 1.245 và 1.251, ứng dụng cho cộng khoản nhỏ, nhân đơn giá và giới hạn precision nhiều bước. Tách sai khác do thời điểm làm tròn khỏi sai số nhị phân."
+    transition:
+      to: precision-and-rounding-011
+      description: "Từ nguy cơ làm tròn trung gian, phân biệt rõ setScale và round(MathContext) để chọn đúng bước xử lý."
+  - id: precision-and-rounding-011
+    order: 11
+    title: "Phân biệt setScale với round(MathContext)"
+    description: "So sánh setScale cố định số chữ số sau chấm với round(MathContext) giới hạn chữ số có nghĩa, qua số lớn/nhỏ và dạng mũ. Liên hệ cách truyền context vào phép tính, UNNECESSARY và làm tròn nhiều bước."
+    transition:
+      to: precision-and-rounding-012
+      description: "Kết thúc chương bằng so sánh BigDecimal RoundingMode với Math.round trên float/double."
+  - id: precision-and-rounding-012
+    order: 12
+    title: "Không mặc định Math.round tương đương mọi chế độ HALF_UP"
+    description: "Đối chiếu Math.round của float/double với HALF_UP của BigDecimal, nhất là tie âm; mô tả kiểu int/long, NaN/Infinity và sai số 1.005 × 100. Kết luận cách chọn API theo nguồn dữ liệu và hợp đồng."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | MathContext gồm precision và RoundingMode | UNLIMITED, DECIMAL32, DECIMAL64 và DECIMAL128 | Precision bằng 0 không phải scale bằng 0 | UP và DOWN: ra xa hoặc về phía 0 | CEILING và FLOOR: hướng về dương hoặc âm vô cực | HALF_UP và HALF_DOWN ở vị trí đúng giữa | HALF_EVEN và lựa chọn chữ số chẵn | UNNECESSARY để yêu cầu kết quả không cần làm tròn | Đối chiếu các chế độ với cả số dương và số âm | Làm tròn hai lần và khác biệt với làm tròn ở bước cuối | Phân biệt setScale với round(MathContext) | Không mặc định Math.round tương đương mọi chế độ HALF_UP |
+  | Vấn đề cần hiểu | MathContext giới hạn kết quả và chọn rounding mode tại phép toán như thế nào? | Bốn MathContext preset thực sự giới hạn gì và không bảo đảm điều gì? | Precision bằng 0 và scale bằng 0 có ý nghĩa trái nhau thế nào? | UP/DOWN nghĩa gì với số âm và phần bỏ đi khác 0? | CEILING/FLOOR chọn hướng nào trên trục số, kể cả số âm? | Khi nào HALF_UP và HALF_DOWN khác nhau và thế nào là tie thực sự? | Khi nào chữ số chẵn quyết định và khi nào giá trị gần nhất quyết định? | Làm sao buộc BigDecimal báo lỗi nếu một ràng buộc yêu cầu mất chữ số có giá trị? | Tám RoundingMode phản ứng thế nào khi đổi dấu hoặc nằm chính giữa? | Tại sao cùng mode nhưng làm tròn hai lần và một lần có thể khác nhau? | setScale và round(MathContext) khác nhau thế nào về đơn vị và thời điểm áp dụng? | Vì sao Math.round và HALF_UP khác nhau ở điểm giữa âm và trong dữ liệu double? |
+  | Giá trị đối với OOP/module | Kiểm soát chữ số có nghĩa của phép tính BigDecimal theo yêu cầu. | Chọn preset hợp lý, tránh nhầm precision với scale/IEEE decimal format. | Tránh đổi nhầm ngữ nghĩa BigDecimal và thiết kế đúng giới hạn số. | Tránh đọc UP/DOWN thành tăng/giảm giá trị số học. | Giải đúng làm tròn hướng trong phân trang, đơn vị đo và chia có dấu. | Chọn chính sách điểm giữa đúng cho dữ liệu thập phân cả hai dấu. | Giảm thiên lệch tie theo quy tắc xác định, tránh áp dụng sai chế độ. | Bảo vệ bất biến exactness của tiền/dữ liệu định lượng. | Bảng quyết định và bộ test độ chính xác có tính đến số âm. | Thiết kế chuỗi phép toán giảm sai lệch do mất thông tin trung gian. | Chọn đúng API cho tiền, tỷ lệ, đo lường và đầu ra dữ liệu. | Ngăn thay API làm tròn gây sai số tiền và bỏ sót dữ liệu đặc biệt. |
+  | Tư duy hình thành | Tách cấu hình tính toán với biểu diễn/định dạng kết quả. | Đánh giá preset theo ràng buộc thuật toán, không theo tên cấu hình. | Xem thuộc tính biểu diễn và quy tắc MathContext như hai trục độc lập. | Xem trị tuyệt đối khi làm tròn và xác định độ phân giải đích. | Xác định bất đẳng thức của kết quả trước khi chọn API. | Đánh giá toàn bộ phần bị bỏ theo khoảng cách chứ không chỉ chữ số 5. | Kiểm tra độ gần trước, chỉ kiểm tra parity tại điểm hòa. | Xem khả năng biểu diễn chính xác độc lập với chuỗi hiển thị. | Kiểm tra nhiều nhóm tình huống thay vì kết luận từ một giá trị mẫu. | Theo dõi dữ liệu bị loại qua từng bước và ranh giới nghiệp vụ. | Tách độ phân giải thập phân, độ chính xác làm việc và thời điểm làm tròn. | Xem quy tắc tie, biểu diễn đầu vào và kiểu kết quả như ba điều kiện độc lập. |

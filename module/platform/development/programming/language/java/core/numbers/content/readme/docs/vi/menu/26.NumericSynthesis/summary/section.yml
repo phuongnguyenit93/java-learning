@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "TỔNG HỢP SỐ — LỘ TRÌNH HỌC VÀ LIÊN KẾT KIẾN THỨC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: numeric-synthesis-001
+    order: 1
+    title: "int[], long[], double[] và các stream chuyên biệt"
+    description: "Chọn mảng primitive và tạo stream đúng kiểu để xử lý nguồn dữ liệu số; giữ rõ kiểu phần tử, chỉ số và một lần tiêu thụ pipeline."
+    transition:
+      to: numeric-synthesis-002
+      description: "Sau khi biết nguồn mảng và thao tác cơ bản, đi sâu vào các primitive stream để kiểm soát boxing và chuyển đổi kiểu."
+  - id: numeric-synthesis-002
+    order: 2
+    title: "IntStream, LongStream, DoubleStream và giảm boxing"
+    description: "Phân biệt primitive stream với Stream wrapper, chọn ranh giới boxing/unboxing và giữ an toàn số học khi tổng hợp dữ liệu."
+    transition:
+      to: numeric-synthesis-003
+      description: "Khi đã chọn đúng stream và kiểu phần tử, kiểm soát giới hạn tổng các số nguyên."
+  - id: numeric-synthesis-003
+    order: 3
+    title: "sum có thể tràn đối với số nguyên"
+    description: "Kiểm soát tràn trong tổng `int`/`long`, lựa chọn mở rộng, checked arithmetic hoặc `BigInteger` theo miền và hợp đồng lỗi."
+    transition:
+      to: numeric-synthesis-004
+      description: "Sau tổng nguyên, xem trường hợp trung bình không thể tồn tại khi nguồn rỗng."
+  - id: numeric-synthesis-004
+    order: 4
+    title: "average và yêu cầu xử lý tập rỗng"
+    description: "Giải thích OptionalDouble của average và chọn chính sách tập rỗng rõ nghĩa, kể cả collector, group và BigDecimal."
+    transition:
+      to: numeric-synthesis-005
+      description: "Từ trung bình có thể vắng mặt, áp dụng quy tắc Optional cho cực trị và các trường hợp thứ tự đặc biệt."
+  - id: numeric-synthesis-005
+    order: 5
+    title: "min, max và các Optional chuyên biệt"
+    description: "Sử dụng min/max cùng Optional primitive, Comparator và quy tắc NaN/signed zero để báo cáo cực trị hợp lệ."
+    transition:
+      to: numeric-synthesis-006
+      description: "Khi cần nhiều phép đo từ cùng dữ liệu, chuyển sang bộ tích lũy SummaryStatistics."
+  - id: numeric-synthesis-006
+    order: 6
+    title: "SummaryStatistics và thu thập nhiều số đo"
+    description: "Thu nhiều thống kê một lượt và xây dựng collector theo từng loại đo/nhóm với count riêng, `combine` và giới hạn overflow."
+    transition:
+      to: numeric-synthesis-007
+      description: "Sau khi có bộ tích lũy số thực, khảo sát thứ tự cộng gây sai số dù đầu vào giống nhau."
+  - id: numeric-synthesis-007
+    order: 7
+    title: "Thứ tự cộng ảnh hưởng tổng dấu phẩy động"
+    description: "Giải thích sai số cộng floating point phụ thuộc thứ tự, Kahan/Neumaier/pairwise và cách kiểm thử độ ổn định."
+    transition:
+      to: numeric-synthesis-008
+      description: "Sai khác do nhóm cộng dẫn sang contract tính kết hợp của parallel reduce."
+  - id: numeric-synthesis-008
+    order: 8
+    title: "Reduce song song và yêu cầu tính kết hợp"
+    description: "Kiểm chứng associativity, identity, combiner và tính an toàn song song cho reduce số nguyên, double, BigDecimal và state nhiều chỉ số."
+    transition:
+      to: numeric-synthesis-009
+      description: "Quy tắc reduction tác động trực tiếp đến thời điểm làm tròn trong phép tổng BigDecimal."
+  - id: numeric-synthesis-009
+    order: 9
+    title: "Tổng BigDecimal và chính sách MathContext"
+    description: "Cộng BigDecimal chính xác hoặc theo MathContext có giới hạn, xác định precision, scale, rounding mode và thời điểm làm tròn."
+    transition:
+      to: numeric-synthesis-010
+      description: "Cuối chương, đưa chính sách số học vào hợp đồng đơn vị đo và thang scale khi trao đổi dữ liệu."
+  - id: numeric-synthesis-010
+    order: 10
+    title: "Không trộn đơn vị, precision hoặc scale không được thống nhất"
+    description: "Tránh cộng nhầm đại lượng hoặc đồng tiền, quy đổi đơn vị và chuẩn hóa precision/scale theo API và nghiệp vụ."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | int[], long[], double[] và các stream chuyên biệt | IntStream, LongStream, DoubleStream và giảm boxing | sum có thể tràn đối với số nguyên | average và yêu cầu xử lý tập rỗng | min, max và các Optional chuyên biệt | SummaryStatistics và thu thập nhiều số đo | Thứ tự cộng ảnh hưởng tổng dấu phẩy động | Reduce song song và yêu cầu tính kết hợp | Tổng BigDecimal và chính sách MathContext | Không trộn đơn vị, precision hoặc scale không được thống nhất |
+  | Vấn đề cần hiểu | Từ mảng số tạo pipeline nào và khi nào cần chỉ số? | Có thể giảm boxing mà vẫn bảo toàn tính đúng không? | Tổng bị tràn ở bước nào và hệ thống cần báo lỗi khi nào? | Làm sao phân biệt tập rỗng với trung bình thực sự bằng zero? | Không có cực trị phải biểu diễn thế nào và xếp hạng dữ liệu đặc biệt ra sao? | Làm sao thu nhiều số đo một lượt mà vẫn đúng mẫu số? | Vì sao đảo hoặc chia nhóm các số double làm đổi kết quả? | Những điều kiện nào khiến một reduction đúng khi phân hoạch song song? | Khi nào cần làm tròn và tại sao từng bước khác làm tròn cuối? | Làm sao đảm bảo số học đúng cả về đơn vị, precision và scale? |
+  | Giá trị đối với OOP/module | Chọn đúng Arrays.stream và tránh lỗi overflow khi map dữ liệu mảng. | Giữ primitive qua pipeline và chuyển kiểu đúng thời điểm. | Xác định kiểu accumulator và kiểm tra phạm vi kết quả theo hợp đồng. | Bảo toàn trạng thái có/không có dữ liệu trong API thống kê. | Tránh tạo min/max giả từ sentinel và giữ metadata của bản ghi. | Tạo báo cáo count/sum/min/max/mean và bộ đếm invalid riêng. | Đánh giá ổn định số học và chọn thuật toán tổng phù hợp. | Thiết kế identity, accumulator, combiner và trạng thái bất biến. | Bảo toàn giá trị decimal và công bố quy tắc precision/rounding. | Bảo vệ hợp đồng dữ liệu từ đầu vào đến tổng hợp và hiển thị. |
+  | Tư duy hình thành | Bắt đầu từ loại nguồn dữ liệu, kiểu phần tử và điều kiện biên. | Tối ưu theo nguồn và kết quả đo, không đánh đổi correctness. | Phân biệt tổng toán học với kết quả quấn vòng của kiểu lưu. | Định nghĩa chính sách missing trước khi chọn fallback. | Tách giá trị cực trị khỏi trạng thái tồn tại và quy tắc so sánh. | Một chỉ số phải có miền lọc và mẫu số được khai báo. | Không áp dụng tùy tiện tính kết hợp toán học cho floating point. | Chứng minh contract toán học trước khi bật parallel. | Xác định điểm làm tròn theo hợp đồng trước khi tối ưu. | Số học đúng phải giữ cả giá trị, đơn vị và nguồn sai số. |

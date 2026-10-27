@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "LITERAL VÀ CƠ SỐ — LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: numeric-literals-001
+    order: 1
+    title: "Literal số nguyên và kiểu int mặc định"
+    description: "Giới thiệu literal nguyên qua bốn cơ số, quy tắc int mặc định, hậu tố L, giới hạn kiểu và chuyển đổi hằng. Các ví dụ đặt nền cho cách đọc những token số trong mã Java."
+    transition:
+      to: numeric-literals-002
+      description: "Sau khi phân biệt kiểu int/long của literal, cần hiểu rõ trường hợp biên của hậu tố L và overflow."
+  - id: numeric-literals-002
+    order: 2
+    title: "Hậu tố L cho long và thời điểm literal vượt phạm vi"
+    description: "Phân tích hậu tố L từ lexical type đến biên âm MIN_VALUE, cách đọc mẫu bit không thập phân và tràn phép cộng/nhân. Tách lỗi cú pháp literal khỏi overflow của biểu thức."
+    transition:
+      to: numeric-literals-003
+      description: "Sau vấn đề kiểu và độ lớn, mở rộng sang bốn cơ số để đọc các literal không thập phân."
+  - id: numeric-literals-003
+    order: 3
+    title: "Thập phân, nhị phân, bát phân và thập lục phân"
+    description: "Dạy nguyên lý cơ số theo trọng số vị trí, cách viết decimal/binary/octal/hex và đổi số sang chuỗi hoặc parse chuỗi. Giải thích mối liên hệ nhóm bit với hex và octal."
+    transition:
+      to: numeric-literals-004
+      description: "Số 0 đầu ở hệ bát phân có bẫy riêng dễ gây lỗi logic cho dữ liệu có số 0 đệm."
+  - id: numeric-literals-004
+    order: 4
+    title: "Bẫy số 0 ở đầu literal bát phân"
+    description: "Đi sâu vào số 0 dẫn đầu của octal và lỗi âm thầm 010=8, đối chiếu với 08.0, parseInt/decode và định danh có số 0 đệm. Đưa ra cách thiết kế validation và kiểm thử."
+    transition:
+      to: numeric-literals-005
+      description: "Sau bẫy tiền tố, cần nhận diện ký tự phân nhóm chữ số trong literal mà không đổi giá trị."
+  - id: numeric-literals-005
+    order: 5
+    title: "Dấu gạch dưới trong literal và các vị trí không hợp lệ"
+    description: "Đặt underscore đúng giữa chữ số của các cơ số và literal floating point; giải thích ngoại lệ 0_52 và lỗi cạnh tiền tố, mũ, dấu chấm, hậu tố. Tách cú pháp source khỏi parser runtime."
+    transition:
+      to: numeric-literals-006
+      description: "Sau cách nhóm chữ số, chuyển từ integer literal sang decimal floating-point literal."
+  - id: numeric-literals-006
+    order: 6
+    title: "Literal số thực, ký hiệu mũ và hậu tố F, D"
+    description: "Bao quát literal số thực thập phân, exponent e/E, hậu tố F/D và nền tảng IEEE 754. Phân biệt làm tròn binary32/binary64, phép gán float và trường hợp literal ngoài miền."
+    transition:
+      to: numeric-literals-007
+      description: "Cú pháp 0x...p... xuất hiện ở ví dụ sẽ được khai triển riêng để đọc chính xác phần trị nhị phân."
+  - id: numeric-literals-007
+    order: 7
+    title: "Literal dấu phẩy động thập lục phân"
+    description: "Triển khai cú pháp hex floating point bắt buộc p/P, tính phần trị base 16 nhân 2^E, chuẩn hóa và dùng toHexString. Khảo sát precision, normal/subnormal và giá trị IEEE 754."
+    transition:
+      to: numeric-literals-008
+      description: "Các ví dụ có dấu âm dẫn sang việc phân biệt dấu unary với chính token literal."
+  - id: numeric-literals-008
+    order: 8
+    title: "Dấu âm là toán tử chứ không phải một phần của literal"
+    description: "Phân biệt dấu trừ unary ngoài token literal với toán tử trừ binary, thứ tự đánh giá và ngoại lệ literal MIN_VALUE. Phân tích promotion, phép phủ định tràn và zero âm IEEE 754."
+    transition:
+      to: numeric-literals-009
+      description: "Sau token và biểu thức, phân biệt compile-time constant expression với việc parse String lúc chạy."
+  - id: numeric-literals-009
+    order: 9
+    title: "Literal, biểu thức hằng và khác biệt với phân tích String"
+    description: "Đặt numeric literal, compile-time constant expression và runtime String parsing cạnh nhau; làm rõ constant variable, narrowing và switch case. Nêu khác biệt parseInt/decode, radix và lỗi runtime."
+    transition:
+      to: numeric-literals-010
+      description: "Cuối chương dùng mẫu hex có bit dấu bật để vận dụng đồng thời kiểu literal và cách diễn giải bit."
+  - id: numeric-literals-010
+    order: 10
+    title: "Đọc mẫu bit của literal hex có bit dấu được bật"
+    description: "Giải thích bit dấu 31/63 và giải mã mẫu int/long bù hai của literal hex. Phân tích khác biệt khi thêm L, sign extension và diễn giải unsigned qua mask/API."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Literal số nguyên và kiểu int mặc định | Hậu tố L cho long và thời điểm literal vượt phạm vi | Thập phân, nhị phân, bát phân và thập lục phân | Bẫy số 0 ở đầu literal bát phân | Dấu gạch dưới trong literal và các vị trí không hợp lệ | Literal số thực, ký hiệu mũ và hậu tố F, D | Literal dấu phẩy động thập lục phân | Dấu âm là toán tử chứ không phải một phần của literal | Literal, biểu thức hằng và khác biệt với phân tích String | Đọc mẫu bit của literal hex có bit dấu được bật |
+  | Vấn đề cần hiểu | Nhìn một integer literal, xác định radix, kiểu int/long và giá trị thế nào? | L tác động vào literal ở thời điểm nào và vì sao long đích không cứu được phép tính int? | Cùng một giá trị đọc/viết ở bốn hệ cơ số và parse String ra sao? | Số 0 đầu làm đổi giá trị ra sao và xử lý mã có số 0 đệm thế nào? | Underscore được đặt ở đâu và vì sao String parser không nhận chúng? | Cú pháp, exponent, hậu tố và precision của floating-point literal là gì? | 0x...p... biểu diễn số thực nhị phân như thế nào và cần lưu ý rounding gì? | Dấu âm tác động lên biểu thức thế nào và những biên nào gây overflow? | Khi nào trình biên dịch hiểu số và khi nào parser runtime quyết định giá trị? | Tại sao literal hex nhìn dương có thể thành số âm và làm sao đọc unsigned? |
+  | Giá trị đối với OOP/module | Đọc và viết đúng giá trị nguyên ngay từ cú pháp nguồn. | Tránh literal vượt giới hạn và kết quả tràn trước khi widening. | Hiểu radix trong mã, file và giao thức bit. | Tránh lỗi silent octal và mất thông tin mã định danh. | Cải thiện khả năng đọc số mà không gây lỗi cú pháp. | Đọc đúng float/double, phát hiện sai số và giá trị đặc biệt. | Phục vụ kiểm thử precision và ranh giới biểu diễn IEEE 754. | Đọc đúng cú pháp biểu thức và tránh lỗi phủ định MIN_VALUE. | Giúp thiết kế nguồn hằng và xử lý text input không nhầm radix/kiểu. | Đọc chính xác bitmask, giao thức và giá trị hex với int/long. |
+  | Tư duy hình thành | Tách token literal, kiểu biểu thức và kiểu biến nhận. | Xem rõ thời điểm xác định kiểu và thời điểm thực hiện phép toán. | Phân biệt giá trị toán học, ký pháp nguồn và chuỗi hiển thị. | Xác định nguồn dữ liệu là literal, số lượng hay chuỗi định danh. | Kiểm tra dấu phân nhóm nằm giữa chữ số của cùng thành phần. | Tách literal type, phép làm tròn và kết quả biểu thức runtime. | Chuyển đổi bit, significand và binary exponent một cách định lượng. | Xác định toán tử, kiểu toán hạng và lúc đánh giá trước khi gán. | Phân biệt lexical syntax, constant expression và hợp đồng parser. | Xác định độ rộng kiểu, bit dấu và kiểu của phép mask trước khi diễn giải. |

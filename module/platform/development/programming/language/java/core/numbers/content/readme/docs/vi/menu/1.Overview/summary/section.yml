@@ -1,0 +1,68 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "TỔNG QUAN SỐ TRONG JAVA — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: overview-001
+    order: 1
+    title: "Số trong Java là gì và những bài toán cần biểu diễn"
+    description: "Xác định ý nghĩa của dữ liệu số qua tình huống đếm, đo lường, tiền, định danh và thời gian; từ đó đặt đúng câu hỏi trước khi chọn kiểu."
+    transition: 
+      to: overview-002
+      description: "Từ tình huống dữ liệu thực tế cần hiểu ba tầng giá trị, kiểu và biểu diễn để lý giải lựa chọn."
+  - id: overview-002
+    order: 2
+    title: "Phân biệt giá trị toán học, kiểu dữ liệu và cách lưu trữ"
+    description: "Tách giá trị toán học, kiểu dữ liệu, bit lưu và cách hiển thị để giải thích overflow, sai số nhị phân và scale thập phân."
+    transition: 
+      to: overview-003
+      description: "Sau khi phân biệt các tầng biểu diễn, quan sát quy tắc tính cụ thể của ba họ số."
+  - id: overview-003
+    order: 3
+    title: "Số nguyên, số dấu phẩy động và số thập phân chính xác"
+    description: "Thực hiện phép toán trên số nguyên, floating-point và BigDecimal, hiểu quy tắc chia, làm tròn, giá trị đặc biệt và giới hạn tính chính xác."
+    transition: 
+      to: overview-004
+      description: "Từ hành vi mỗi họ số chuyển sang kiểm tra khác biệt giữa miền và độ phân giải."
+  - id: overview-004
+    order: 4
+    title: "Phạm vi giá trị khác độ chính xác như thế nào"
+    description: "Phân biệt miền giá trị với độ phân giải; dùng ULP và mốc chính xác của float/double để kiểm tra khi phép cộng nhỏ bị làm tròn mất."
+    transition: 
+      to: overview-005
+      description: "Sau khi biết giới hạn biểu diễn, tìm hiểu quan hệ primitive, wrapper và các lớp số."
+  - id: overview-005
+    order: 5
+    title: "Bản đồ primitive, wrapper, Number, BigInteger và BigDecimal"
+    description: "Nhận diện primitive, wrapper, Number, BigInteger và BigDecimal, cùng boxing, unboxing và chuyển đổi có thể mất dữ liệu."
+    transition: 
+      to: overview-006
+      description: "Từ bản đồ hệ kiểu chuyển sang quy trình chọn kiểu cho dữ liệu nghiệp vụ."
+  - id: overview-006
+    order: 6
+    title: "Chọn kiểu theo ý nghĩa dữ liệu và yêu cầu tính toán"
+    description: "Chọn kiểu bằng hợp đồng nghiệp vụ gồm miền, đơn vị, độ chính xác, rounding và tính tương thích API, JSON, database."
+    transition: 
+      to: overview-007
+      description: "Sau khi ra quyết định và kiểm thử, tự đánh giá mức sẵn sàng trước khi mở rộng."
+  - id: overview-007
+    order: 7
+    title: "Kiến thức tiên quyết và trình tự học đề xuất"
+    description: "Tự kiểm tra kiến thức Java cần có, chọn thứ tự học phù hợp và dùng ví dụ/kiểm thử biên làm bằng chứng đã sẵn sàng."
+    transition: 
+      to: overview-008
+      description: "Từ lộ trình học chuyển sang xác minh API phù hợp với phiên bản JDK đích."
+  - id: overview-008
+    order: 8
+    title: "Phạm vi Java Core và cách đối chiếu phiên bản JDK"
+    description: "Đối chiếu API Java Core và phiên bản JDK qua Since, --release, class-file version và thử nghiệm trên runtime đích."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Số trong Java là gì và những bài toán cần biểu diễn | Phân biệt giá trị toán học, kiểu dữ liệu và cách lưu trữ | Số nguyên, số dấu phẩy động và số thập phân chính xác | Phạm vi giá trị khác độ chính xác như thế nào | Bản đồ primitive, wrapper, Number, BigInteger và BigDecimal | Chọn kiểu theo ý nghĩa dữ liệu và yêu cầu tính toán | Kiến thức tiên quyết và trình tự học đề xuất | Phạm vi Java Core và cách đối chiếu phiên bản JDK |
+  | Vấn đề cần hiểu | Giá trị có dùng để tính toán không? | Giá trị, kiểu và bit lưu khác nhau ở đâu? | Ba họ số tuân quy tắc tính nào? | Miền biểu diễn khác độ phân giải ra sao? | Các kiểu primitive, wrapper, Number liên hệ thế nào? | Ra quyết định chọn kiểu theo điều gì? | Chuẩn bị và ôn theo thứ tự nào? | Làm sao chứng minh API chạy trên JDK đích? |
+  | Giá trị đối với OOP/module | Đặt đúng ngữ nghĩa miền cho trường dữ liệu | Tránh nhầm thuộc tính kiểu với lưu trữ JVM | Chọn đúng quy tắc số học và làm tròn | Xác định biên và sai số cần kiểm thử | Thiết kế tham số và đối tượng số an toàn | Đặt hợp đồng tính toán, API và lưu trữ | Chuẩn bị nền tảng và điều phối lộ trình | Bảo đảm module tương thích API/runtime |
+  | Tư duy hình thành | Suy nghĩ từ ý nghĩa đại lượng | Tách mức trừu tượng của dữ liệu | Dự đoán hành vi phép toán | Đo được giới hạn biểu diễn | Nhận diện hợp đồng đối tượng và conversion | Quyết định có căn cứ và thử biên | Tự chẩn đoán và học có bằng chứng | Xác minh dựa trên tài liệu phiên bản |

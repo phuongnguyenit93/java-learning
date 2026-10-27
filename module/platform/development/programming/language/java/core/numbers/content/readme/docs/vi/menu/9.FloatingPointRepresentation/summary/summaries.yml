@@ -1,0 +1,355 @@
+summaries:
+- id: floating-point-representation-001
+  title: float theo binary32 và double theo binary64
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **float theo binary32 và double theo binary64**
+
+    Bài mở đầu xác lập sự khác biệt giữa hai định dạng dấu phẩy động mà Java cung cấp: binary32 tiết kiệm dung lượng nhưng có ít bit phần trị và số mũ hơn binary64. Người học dùng miền dữ liệu, yêu cầu sai số và hợp đồng giao tiếp để quyết định lựa chọn `float` hoặc `double`, đồng thời nhận biết khi nào bài toán cần kiểu nguyên hoặc `BigDecimal`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc và ý nghĩa của hai kiểu
+
+    1. binary32 và binary64 khác nhau như thế nào về tổng số bit, phần trị hiệu dụng và miền số mũ?
+    2. Vì sao kiểu có miền độ lớn rất rộng vẫn không thể đại diện chính xác mọi số thực hoặc mọi số nguyên lớn?
+
+    ### Lựa chọn kiểu trong Java
+
+    1. Với dữ liệu cảm biến yêu cầu binary32 và thuật toán tính trung gian bằng binary64, cần cân nhắc vị trí chuyển kiểu như thế nào?
+    2. Khi nào nên ưu tiên `double`, khi nào `float` hợp lý và vì sao tiền tệ cần một biểu diễn khác?
+    3. Làm sao dùng API bit, `Math.ulp` và kiểm tra tính hữu hạn để xác nhận lựa chọn trên dữ liệu mẫu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt định dạng | Lập bảng so sánh 1/8/23 và 1/11/52 bit, cùng 24/53 bit precision normal. |
+    | Đánh giá miền và độ chính xác | Dự đoán tác động của chuyển `double` sang `float` với một số lớn, một số nhỏ và 0.1. |
+    | Chọn kiểu dữ liệu | Giải thích lựa chọn `float`, `double`, kiểu nguyên hoặc `BigDecimal` cho ba hợp đồng dữ liệu khác nhau. |
+    | Tự quan sát hành vi | Chạy chương trình dùng `toHexString`, raw bits và `isFinite` để giải thích output. |
+- id: floating-point-representation-002
+  title: Bit dấu, phần mũ và phần trị
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bit dấu, phần mũ và phần trị**
+
+    Bài học đi từ mẫu bit 32/64 bit sang giá trị số cụ thể, giúp giải mã chính xác số normal, subnormal và các tổ hợp dành cho zero, vô cực, NaN. Việc tách sign/exponent/fraction giải thích trực tiếp `5.75f`, `-6.5d` và sự khác biệt giữa bit layout với byte order khi trao đổi dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giải mã mẫu IEEE 754
+
+    1. Vì sao phần trị normal có 24/53 bit hữu hiệu khi trường fraction chỉ lưu 23/52 bit?
+    2. Cách dùng exponent bias và bit fraction để giải mã mẫu `0x40B80000` thành `5.75f` là gì?
+    3. Khi exponent toàn 0 hoặc toàn 1, tiêu chí phân loại thay đổi như thế nào?
+
+    ### Quan sát và truyền bit
+
+    1. Các phép `>>>` và bitmask trích riêng sign, exponent và fraction của `double` như thế nào?
+    2. Tại sao byte order của gói tin không thể suy ra từ sơ đồ thứ tự trường IEEE 754?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc bố cục bit | Chỉ đúng vị trí trường sign, exponent, fraction của binary32 và binary64. |
+    | Giải mã số normal | Tính số mũ đã trừ bias và giá trị `5.75f` từ mẫu hex đã cho. |
+    | Phân loại mã đặc biệt | Dựa trên E/F nhận diện zero, subnormal, normal, Infinity và NaN. |
+    | Kiểm chứng bằng Java | Dùng `floatToRawIntBits` cùng `>>>`/`&` để tái tạo từng trường và kết quả. |
+- id: floating-point-representation-003
+  title: Precision nhị phân và số chữ số thập phân có thể tin cậy
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Precision nhị phân và số chữ số thập phân có thể tin cậy**
+
+    Bài học phân biệt 24/53 bit precision với số chữ số có nghĩa của dữ liệu và với độ dài chuỗi cần để khôi phục đúng bit. Người học xem tác động của ULP, chuyển kiểu và làm tròn tích lũy, rồi lựa chọn cách lưu chuỗi hoặc chính sách sai số theo yêu cầu ứng dụng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Precision và biểu diễn thập phân
+
+    1. Vì sao `float` thường có khoảng 6–7 chữ số có nghĩa và `double` khoảng 15–16 thay vì số chữ số cố định sau dấu chấm?
+    2. 9 chữ số với `float` và 17 chữ số với `double` phục vụ mục tiêu round-trip nào, khác độ chính xác số học ra sao?
+    3. Tại sao `new BigDecimal(0.1)` và `BigDecimal.valueOf(0.1)` hiển thị hai cách diễn giải khác nhau?
+
+    ### Sai số và khả năng kiểm chứng
+
+    1. Một phép chuyển nguyên lớn sang `float` hoặc `double` có thể mất bit thấp ngay cả khi Java coi đó là widening như thế nào?
+    2. Vì sao sai số tích lũy hoặc cancellation khiến một ngưỡng epsilon cố định không thích hợp cho mọi bài toán?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích precision | Tính ước lượng chữ số từ 24/53 bit và phân biệt significant digits với decimal places. |
+    | Phân biệt round-trip | Chứng minh mục đích khác nhau của 6/15 và 9/17 chữ số qua `toString`/`parseDouble`. |
+    | Phát hiện mất thông tin | Thử một chuyển `long`→`double` và kiểm tra nguồn bằng cách tránh so sánh hỗn hợp đã bị làm tròn. |
+    | Thiết kế sai số | Nêu chính sách sai số tuyệt đối/tương đối có xét miền và loại giá trị đặc biệt. |
+- id: floating-point-representation-004
+  title: Vì sao 0.1 thường không được biểu diễn chính xác
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vì sao 0.1 thường không được biểu diễn chính xác**
+
+    Bài học dùng phân số `1/10` để giải thích nguyên nhân toán học của xấp xỉ nhị phân và kết quả `0.1 + 0.2`. Người học tự suy ra chuỗi bit tuần hoàn, phân biệt literal/giá trị lưu/chuỗi in và chọn `BigDecimal` khởi tạo từ dữ liệu thập phân khi nghiệp vụ cần tính chính xác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguyên nhân biểu diễn
+
+    1. Điều kiện nào trên mẫu số tối giản giúp một phân số có biểu diễn nhị phân hữu hạn?
+    2. Vì sao chuỗi bit nhị phân của `1/10` lặp vô hạn dù ký hiệu thập phân `0.1` rất ngắn?
+    3. Vì sao `println(0.1)` vẫn in `0.1` nhưng `0.1 + 0.2 == 0.3` là `false`?
+
+    ### Ứng dụng tính toán
+
+    1. Làm thế nào phân biệt sai số literal, sai số phép cộng và cách định dạng chuỗi khi phân tích kết quả?
+    2. Tại sao cần tạo `BigDecimal` từ chuỗi trước khi cộng thay vì chuyển tổng `double` sang `BigDecimal` sau đó?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích phân số | Chứng minh `1/10` không có khai triển nhị phân hữu hạn vì mẫu số chứa thừa số 5. |
+    | Giải thích output | Dự đoán `0.1 + 0.2`, phép so sánh với `0.3` và kết quả biểu diễn hex. |
+    | Phân biệt lớp dữ liệu | Đối chiếu literal, giá trị lưu và `Double.toString`/`new BigDecimal(double)`. |
+    | Tính decimal chính xác | Viết ví dụ cộng `new BigDecimal("0.1")` với `new BigDecimal("0.2")`. |
+- id: floating-point-representation-005
+  title: Phạm vi số nguyên được float hoặc double biểu diễn liên tiếp chính xác
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phạm vi số nguyên được float hoặc double biểu diễn liên tiếp chính xác**
+
+    Bài học xác định chính xác ngưỡng `2^24` và `2^53` với hai đầu mút còn biểu diễn được, đồng thời phân biệt một số nguyên riêng lẻ đúng với cả một dải nguyên liên tiếp. Các ví dụ chuyển kiểu `int`/`long`, phép so sánh hỗn hợp và cast bão hòa giúp ngăn lỗi định danh hoặc số đếm bị nhập nhằng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngưỡng và khoảng cách số nguyên
+
+    1. Vì sao `2^24` và `2^53` còn chính xác nhưng số nguyên ngay phía trên chúng không còn phân biệt được?
+    2. Vì sao các số nguyên chẵn như `2^24 + 2` vẫn được `float` biểu diễn dù nằm ngoài miền liên tiếp?
+
+    ### Bẫy chuyển kiểu và kiểm tra
+
+    1. Tại sao `int n == float f` hoặc `long n == double d` có thể trả `true` khi giá trị nguyên gốc đã mất một đơn vị?
+    2. Vì sao ép ngược qua `int`/`long` có thể bão hòa ở biên và tạo kết luận chính xác giả?
+    3. Khi lưu ID hoặc counter lớn nên chọn cách biểu diễn nào và kiểm thử biên ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định ngưỡng | Nêu đúng miền liên tiếp `[-2^24,2^24]` và `[-2^53,2^53]`. |
+    | Dự đoán làm tròn | Tính kết quả ép `2^24+1`, `2^24+2` sang `float` và đối chiếu ULP. |
+    | Đánh giá phép chuyển kiểu | Chỉ ra tình huống widening từ số nguyên làm mất thông tin dù không ném lỗi. |
+    | Kiểm tra nguồn tin cậy | Viết phép kiểm tra nguyên-gốc tránh promotion ở so sánh và bẫy cast bão hòa. |
+- id: floating-point-representation-006
+  title: Normal, subnormal và gradual underflow
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Normal, subnormal và gradual underflow**
+
+    Bài học theo dõi miền normal chuyển sang subnormal và zero có dấu khi kết quả tiến sát 0. Người học giải thích bit 1 ẩn, bước subnormal cố định, làm tròn ở nửa `MIN_VALUE` và đánh đổi độ chính xác tương đối trong thuật toán cần số rất nhỏ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế ranh giới
+
+    1. Vì sao công thức subnormal dùng bit đầu 0 và exponent hiệu dụng `1-bias` thay vì công thức normal?
+    2. Tại sao `Float.MIN_NORMAL / 2` còn biểu diễn được, trong khi `Float.MIN_VALUE / 2` làm tròn thành zero?
+    3. Vì sao bước từ subnormal lớn nhất đến normal nhỏ nhất vẫn đúng một `Float.MIN_VALUE`?
+
+    ### Làm tròn và độ chính xác
+
+    1. Ties-to-even xử lý `Float.MIN_VALUE * 1.5f` và giá trị âm nửa bước như thế nào?
+    2. Gradual underflow giúp giữ thông tin gì và tại sao nó không bảo đảm sai số tương đối tốt sát zero?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải mã subnormal | Áp dụng công thức `F×2^-149` cho `float` và `F×2^-1074` cho `double`. |
+    | Dự đoán biên | Tính raw bits của `MIN_NORMAL/2`, `MIN_VALUE/2` và số subnormal lớn nhất. |
+    | Phân tích độ chính xác | So sánh bước tuyệt đối và độ phân giải tương đối ở MIN_NORMAL với MIN_VALUE. |
+    | Tái hiện dưới Java 17+ | Chạy ví dụ `Math.nextDown`, phép chia đôi và kiểm tra bit zero có dấu. |
+- id: floating-point-representation-007
+  title: MIN_VALUE, MIN_NORMAL và MAX_VALUE
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **MIN_VALUE, MIN_NORMAL và MAX_VALUE**
+
+    Bài học phân biệt ba hằng số của `Float`/`Double`: dương subnormal nhỏ nhất, dương normal nhỏ nhất và dương hữu hạn lớn nhất. Người học kiểm tra underflow, overflow, `Math.nextUp` và tính hữu hạn, tránh suy luận sai từ tên `MIN_VALUE` của kiểu nguyên hoặc dùng nó làm epsilon.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa và giá trị các hằng
+
+    1. Vì sao `Float.MIN_VALUE` là số dương khác 0 nhỏ nhất thay vì số âm hữu hạn thấp nhất?
+    2. Các giá trị `2^-149`, `2^-126` và `(2-2^-23)×2^127` lần lượt mô tả ranh giới float nào?
+
+    ### Biên trong phép tính và validation
+
+    1. Khi chia `Double.MIN_NORMAL` cho 2 hoặc nhân `Double.MAX_VALUE` với 2, kết quả nằm trong nhóm nào?
+    2. Tại sao `Math.nextUp(Double.MAX_VALUE)` là Infinity nhưng `Double.MAX_VALUE` vẫn hữu hạn?
+    3. Vì sao `Double.MIN_VALUE` không thích hợp làm ngưỡng gần bằng chung?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện hằng biên | Lập bảng đúng cả sáu hằng MIN_VALUE/MIN_NORMAL/MAX_VALUE của hai kiểu. |
+    | Quan sát overflow/underflow | Dự đoán phép chia/nhân tại biên và kiểm tra bằng `isFinite`, `nextUp`. |
+    | Kiểm chứng raw bits | Giải thích `0x00000001`, `0x00800000` và `0x7f7fffff` của float. |
+    | Áp dụng chính sách miền | Chọn điều kiện nhận số hữu hạn/normal dương phù hợp mà không lẫn MIN_VALUE với epsilon. |
+- id: floating-point-representation-008
+  title: Số 0 dương, số 0 âm, vô cực và NaN
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Số 0 dương, số 0 âm, vô cực và NaN**
+
+    Bài học giải thích hành vi của signed zero, Infinity và NaN trong phép tính, toán tử so sánh, wrapper và validation. Người học tránh cho NaN qua kiểm tra khoảng, tránh cast vô cực thành số nguyên giả hợp lệ và xây dựng hợp đồng JSON hoặc dữ liệu đầu vào xử lý trường hợp không hữu hạn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa giá trị đặc biệt
+
+    1. Vì sao `+0.0 == -0.0` là `true` nhưng phép chia cho hai mẫu số zero có kết quả khác dấu?
+    2. NaN thay đổi kết quả `==`, `!=` và các phép so sánh thứ tự như thế nào?
+    3. `Double.compare` và `Double.equals` khác `==` ở NaN/signed zero vì mục tiêu nào?
+
+    ### Bảo vệ dữ liệu
+
+    1. Tại sao kiểm tra `!(x < min || x > max)` có thể chấp nhận NaN sai?
+    2. Tại sao trước khi cast sang `int` hoặc đưa vào JSON cần xác định chính sách với Infinity/NaN?
+    3. Nếu hai signed zero cần cùng một khóa, nên chuẩn hóa lúc nào và phải cân nhắc hậu quả gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt so sánh | Dự đoán chính xác bảng kết quả `==`, `Double.compare`, `Double.equals` với ±0 và NaN. |
+    | Viết validation an toàn | Dùng `Double.isFinite` kết hợp miền hợp lệ để chặn NaN/vô cực. |
+    | Giải thích phép cast | Chỉ ra kết quả cast NaN và hai vô cực sang `int`, cùng rủi ro che dữ liệu lỗi. |
+    | Thiết kế hợp đồng dữ liệu | Nêu một mô hình JSON hợp lệ cho giá trị đo hữu hạn hoặc trạng thái không tính được. |
+- id: floating-point-representation-009
+  title: ULP và khoảng cách giữa hai giá trị kề nhau
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ULP và khoảng cách giữa hai giá trị kề nhau**
+
+    Bài học khảo sát chính xác khoảng cách biểu diễn với `Math.ulp`, `nextUp`, `nextDown` và `nextAfter`, kể cả tại ranh giới lũy thừa hai, vùng subnormal và số hữu hạn lớn nhất. Người học phân biệt ULP của định dạng với sai số thuật toán để thiết kế thử nghiệm và điều kiện gần bằng có cơ sở.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lưới số và ranh giới
+
+    1. Vì sao tại `1.0d` khoảng cách lên là `2^-52` nhưng khoảng cách xuống là `2^-53`?
+    2. Công thức bước `2^(e-52)` áp dụng ra sao trong một binade normal của double?
+    3. `Math.ulp(0.0)` và `Math.nextUp(Double.MAX_VALUE)` trả những giá trị đặc biệt nào?
+
+    ### Sai số và so sánh
+
+    1. Tại sao ULP không phải cận sai số cho một thuật toán gồm nhiều phép tính?
+    2. Khi nào so sánh trong một số ULP chưa đủ thay cho ngưỡng tuyệt đối/tương đối và quy tắc nghiệp vụ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính bước biểu diễn | Tính `Math.ulp(1.0)`, `Math.ulp(2.0)` và `Math.ulp(2^53)` từ số mũ. |
+    | Khảo sát hai phía | So sánh `nextUp(1)-1` với `1-nextDown(1)` và giải thích chênh lệch. |
+    | Xử lý các biên | Dự đoán ULP tại zero, MIN_NORMAL, MAX_VALUE, Infinity và NaN. |
+    | Đánh giá độ tin cậy | Phân biệt sai số một phép làm tròn với sai số tích lũy của thuật toán. |
+- id: floating-point-representation-010
+  title: floatToIntBits, doubleToLongBits và các biến thể raw
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **floatToIntBits, doubleToLongBits và các biến thể raw**
+
+    Bài học kiểm tra sự khác biệt giữa chuyển giá trị số học và lấy mẫu bit IEEE 754. Người học so sánh API thường chuẩn hóa NaN với API raw, tách trường bằng bitmask, và quyết định khi nào phải giữ `int`/`long` hoặc byte nguyên bản để bảo toàn payload trong giao thức.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### API bit và NaN
+
+    1. `Float.floatToIntBits(x)` khác cast `(int)x` ở kết quả và ý nghĩa như thế nào?
+    2. Vì sao `floatToIntBits`/`doubleToLongBits` chuẩn hóa NaN trong khi bản raw quan sát bit của NaN hiện có?
+    3. Tại sao raw không bảo đảm mọi signaling NaN giữ nguyên payload qua mọi thao tác hoặc nền tảng?
+
+    ### Ứng dụng với dữ liệu nhị phân
+
+    1. Làm cách nào xuất mẫu bit âm như `-0.0` dưới dạng hex đủ độ rộng?
+    2. Trong giao thức cần bit-exact, tại sao phải kiểm soát byte order và giữ dữ liệu ở `int`/`long` hoặc `byte[]`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt chuyển đổi | Giải thích và chạy ví dụ `floatToIntBits(1f)` so với `(int)1f`. |
+    | Thử NaN payload | So sánh raw bits và canonical bits cho một quiet NaN cụ thể. |
+    | Tách trường IEEE 754 | Dùng `>>>` và mask để đọc sign/exponent/fraction. |
+    | Thiết kế serialization | Mô tả đường truyền bit pattern có byte order và chính sách NaN tường minh. |
+- id: floating-point-representation-011
+  title: Chuyển mẫu bit trở lại giá trị float hoặc double
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chuyển mẫu bit trở lại giá trị float hoặc double**
+
+    Bài học phục hồi `float`/`double` từ `int`/`long` chứa mẫu IEEE 754, đi từ chuỗi hex và mảng byte đến giá trị số. Người học phân biệt reinterpretation với cast, xử lý endian, nhận diện special values và giới hạn round-trip NaN trước khi đưa dữ liệu ngoài vào thuật toán.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giải mã và round-trip
+
+    1. `Float.intBitsToFloat(0x40400000)` vì sao cho `3.0f` trong khi cast `(float)0x40400000` có ý nghĩa khác?
+    2. Tại sao cùng số thực `3.0` có mẫu bit khác nhau trong binary32 và binary64?
+    3. Tại sao round-trip raw cho số hữu hạn và signed zero đáng tin hơn lời hứa bảo toàn mọi signaling NaN?
+
+    ### Chuỗi, byte và validation
+
+    1. Làm cách nào dùng `parseUnsignedInt` hoặc `parseUnsignedLong` để đọc mẫu hex có bit dấu bật?
+    2. Vì sao phải xác định `ByteOrder` trước khi gọi `ByteBuffer.getFloat` hoặc `getDouble`?
+    3. Sau khi phục hồi mẫu bit từ nguồn ngoài, cách kiểm tra NaN/Infinity và miền nghiệp vụ thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phục hồi số từ bit | Dự đoán `intBitsToFloat(0x40400000)` và `longBitsToDouble(0x4008000000000000L)` cùng cho 3.0. |
+    | Phân biệt cast | Giải thích bằng output khác biệt giữa reinterpretation và numeric conversion. |
+    | Parse giao thức | Đọc chuỗi hex full-width và mảng byte theo đúng endian, kiểm tra số byte. |
+    | Xác thực sau giải mã | Viết kiểm tra `isFinite` hoặc kiểm tra E/F trực tiếp trước khi chấp nhận đầu vào. |

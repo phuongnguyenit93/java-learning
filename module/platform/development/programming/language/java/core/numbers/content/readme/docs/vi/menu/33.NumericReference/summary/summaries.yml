@@ -1,0 +1,257 @@
+summaries:
+- id: numeric-reference-001
+  title: Bảng kích thước, miền giá trị và hằng của kiểu số
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bảng kích thước, miền giá trị và hằng của kiểu số**
+
+    Bài tra cứu tập hợp kích thước, miền biểu diễn và hằng chuẩn của các kiểu số Java, phân biệt `char` là UTF-16 code unit và `float`/`double` theo IEEE 754 với các cận của kiểu nguyên. Người học cần đọc đúng ý nghĩa các hằng `MIN_VALUE`, `MIN_NORMAL`, `SIZE`, `BYTES` và xác định khi nào chuyển sang `BigInteger`/`BigDecimal`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Miền giá trị và metadata chuẩn
+
+    1. Vì sao kích thước primitive không phụ thuộc hệ điều hành hoặc JVM 32/64-bit và không thể suy kích thước object từ `Integer.BYTES`?
+    2. Vì sao `Integer.MIN_VALUE` là số âm nhưng `Float.MIN_VALUE` là số dương nhỏ nhất khác 0?
+    3. `char` có miền giá trị nào, và vì sao một `char` không chứa hết mọi Unicode code point?
+
+    ### Đọc giới hạn để chọn kiểu
+
+    1. Khi dùng `Double.MAX_VALUE`, `MIN_NORMAL` và `MIN_EXPONENT`, cần phân biệt miền hữu hạn với precision như thế nào?
+    2. Khi nào `BigInteger`/`BigDecimal` thay primitive và những giới hạn tài nguyên/scale nào vẫn còn?
+    3. Làm sao dùng `Math.abs(Integer.MIN_VALUE)` và `long` sang `double` để minh họa giá trị biên bị mất thông tin?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tra hằng primitive | Lập bảng đúng `SIZE/BYTES`, miền signed/unsigned và `MIN_VALUE/MAX_VALUE` theo kiểu. |
+    | Phân tích floating limits | Giải thích normal/subnormal, dấu zero và giới hạn precision của float/double. |
+    | Chọn giới hạn hợp lý | Dự đoán overflow, chuyển đổi mất bit và quyết định khi nào cần BigInteger/BigDecimal. |
+- id: numeric-reference-002
+  title: Bảng widening, narrowing và numeric promotion
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bảng widening, narrowing và numeric promotion**
+
+    Bài này tra cứu quy tắc chuyển đổi primitive (widening, narrowing) và numeric promotion; giúp giải thích vì sao kiểu toán hạng quyết định kết quả trước khi gán. Các ví dụ về phép nhân tràn, chia nguyên, dịch bit, constant assignment, `+=` và overload làm rõ ngoại lệ dễ nhầm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản đồ chuyển đổi và promotion
+
+    1. Những đường widening nào được Java cho phép mà vẫn có thể mất precision, ví dụ `long` sang `double`?
+    2. Vì sao `byte + short` có kiểu `int`, còn `long + float` có kiểu `float`?
+    3. Vì sao `(int)Double.NaN`, `(byte)130` và ép double sang int cho hành vi khác cách làm tròn số học?
+
+    ### Ngoại lệ trong biểu thức Java
+
+    1. Vì sao `long wrong = 50000 * 50000` có thể nhận giá trị tràn dù biến đích là long?
+    2. Điểm khác giữa `byte b = 127`, `byte b = someInt` và `b += 10` nằm ở quy tắc assignment nào?
+    3. Toán tử dịch `1 << 32`, overload `choose(5)` và unboxing null khác binary promotion của phép cộng thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán kiểu biểu thức | Xác định kiểu kết quả unary/binary promotion và giải thích chia nguyên trước gán. |
+    | Ngăn mất thông tin khi convert | Nêu quy tắc narrowing số nguyên/dấu phẩy động và kiểm tra overflow trước ép kiểu. |
+    | Nhận diện ngoại lệ quy tắc | Chứng minh constant assignment, compound assignment, shift và overload bằng ví dụ Java 17. |
+- id: numeric-reference-003
+  title: Bảng chia, lấy dư và làm tròn cho số âm
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bảng chia, lấy dư và làm tròn cho số âm**
+
+    Bài học so sánh phép chia nguyên hướng về 0 với `Math.floorDiv`/`floorMod` theo âm vô cực, rồi mở rộng sang `Math.floor`/`ceil`/`round`/`rint`, `BigDecimal.RoundingMode` và phép remainder. Đặt số âm ở trung tâm để học viên không suy sai từ ví dụ dương.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chia nguyên và remainder
+
+    1. Vì sao `-7 / 3` bằng -2 và `-7 % 3` bằng -1, trong khi `floorDiv` và `floorMod` cho -3 và 2?
+    2. Dấu số dư của `%` và `floorMod` phụ thuộc số bị chia hay số chia, nhất là khi modulus âm?
+    3. Vì sao `MIN_VALUE/-1` là trường hợp tràn đặc biệt nhưng chia cho 0 ném `ArithmeticException`?
+
+    ### Làm tròn với số âm
+
+    1. `Math.round(-2.5)` và `Math.rint(-3.5)` khác `RoundingMode.HALF_UP/HALF_EVEN` thế nào?
+    2. Vì sao `RoundingMode.DOWN` không đồng nghĩa `FLOOR` khi đầu vào âm?
+    3. `BigDecimal.remainder` khác `BigInteger.mod` thế nào khi muốn modulo không âm với modulus dương?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính quotient/remainder | Tạo bảng `/`, `%`, `floorDiv`, `floorMod` cho cặp dấu khác nhau và kiểm tra identity. |
+    | So sánh rounding mode | Dự đoán kết quả với -2.4, -2.5, -3.5 ở tám RoundingMode và `Math`. |
+    | Chọn API theo ứng dụng | Sửa tính bucket thời gian/index âm và phép modulo cho modulus dương. |
+- id: numeric-reference-004
+  title: Bảng NaN, signed zero, equals và compare
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bảng NaN, signed zero, equals và compare**
+
+    Bài tham chiếu đối chiếu `==` primitive với `Double.equals`, `Double.compare`, NaN payload và signed zero, gồm hệ quả trong HashSet/TreeSet và custom Comparator. Học viên cần chọn equality, thứ tự và chính sách xử lý NaN phù hợp mục đích thay vì coi chúng như một phép so sánh.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### NaN, signed zero và các API so sánh
+
+    1. Vì sao `NaN == NaN` là false nhưng `Double.valueOf(NaN).equals(NaN)` true?
+    2. Vì sao `+0.0 == -0.0` true nhưng wrapper equals false và `Double.compare(-0.0,+0.0)` âm?
+    3. `Double.doubleToRawLongBits` khác `doubleToLongBits` ở payload NaN như thế nào?
+
+    ### Collection, sorting và nghiệp vụ
+
+    1. Vì sao HashSet và TreeSet chứa hai zero khác dấu và nhiều NaN đều có ba phần tử?
+    2. Comparator viết `x < y ? -1 : x > y ? 1 : 0` sẽ hỏng tính chất thứ tự nào khi xuất hiện NaN?
+    3. Vì sao gần bằng theo epsilon không dùng làm `equals` hoặc comparator cho TreeSet?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán NaN/signed zero | Đối chiếu `==`, `equals`, `compare`, isNaN/isFinite với tất cả giá trị đặc biệt. |
+    | Lý giải hành vi collection | Tính cardinality và thứ tự HashSet/TreeSet cho NaN payload/zero khác dấu. |
+    | Thiết kế comparator đúng | Thay comparator sai bằng `Double.compare` hoặc policy có thứ tự bắc cầu. |
+- id: numeric-reference-005
+  title: Bảng chọn primitive, wrapper, BigInteger hoặc BigDecimal
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bảng chọn primitive, wrapper, BigInteger hoặc BigDecimal**
+
+    Bài này là bảng quyết định chọn primitive, wrapper, BigInteger, BigDecimal theo miền giá trị, decimal exact, nullability, generic và chi phí. Người học kiểm tra cả kiểu trung gian trong phép tính và ranh giới JSON/database thay vì chỉ xét kiểu lưu cuối.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chọn mô hình số phù hợp
+
+    1. Trong trường hợp nào `int`, `long`, `BigInteger`, `BigDecimal` hoặc `double` là lựa chọn hợp lý nhất?
+    2. Khi nào nên chọn `Integer`/`Long` thay primitive và vì sao `List<int>` không hợp lệ?
+    3. Vì sao dữ liệu ID có số 0 đầu và không cần toán học nên cân nhắc `String`?
+
+    ### Kiểm soát overflow và tích hợp
+
+    1. Vì sao kiểu `long` ở biến kết quả không ngăn phép nhân hai `int` tràn trước khi gán?
+    2. Khi dùng `BigDecimal` cho tiền, cần chọn nguồn số, scale và rounding như thế nào?
+    3. Làm sao đảm bảo chuyển `BigDecimal` thành minor units `long` không cắt phần lẻ hoặc tràn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lựa chọn theo miền và precision | Biện minh được primitive/wrapper/BigInteger/BigDecimal cho từng yêu cầu thực tế. |
+    | Kiểm tra null và generics | Phân biệt nullable wrapper, primitive bắt buộc và OptionalInt tại API. |
+    | Chốt conversion ở ranh giới | Áp dụng checked arithmetic và các phương thức exact trước khi lưu JSON/database. |
+- id: numeric-reference-006
+  title: Bảng precision, scale, MathContext và RoundingMode
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bảng precision, scale, MathContext và RoundingMode**
+
+    Bài tập trung phân biệt precision, scale, MathContext và RoundingMode của `BigDecimal` qua bảng kết quả và ví dụ. Nó nhấn mạnh quy tắc preferred scale theo phép tính, sự khác nhau giữa fixed-scale và significant digits, ảnh hưởng của thời điểm làm tròn và equality sau khi đổi scale.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình decimal và API rounding
+
+    1. `precision()` và `scale()` của `123.4500`, `0.00120` và `1E+3` được tính ra sao?
+    2. Vì sao `setScale(2, HALF_UP)` khác `round(new MathContext(2, HALF_UP))`?
+    3. Tám RoundingMode cho `-2.5` và `+2.5` những kết quả nào, trong đó `UNNECESSARY` báo lỗi khi nào?
+
+    ### Precision xuyên phép tính
+
+    1. Vì sao scale ưu tiên khi `add` là max, còn khi `multiply` là tổng scale?
+    2. Vì sao `BigDecimal.ONE.divide(new BigDecimal("3"))` có thể ném lỗi dù `MathContext.UNLIMITED`?
+    3. Làm tròn từng dòng trước khi tổng có thể khác làm tròn ở cuối, và cần làm sao để giữ contract rõ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc precision/scale | Tính unscaled, scale, precision và negative scale chính xác. |
+    | Chọn rounding mode | Thiết kế biểu thức `setScale`, `MathContext`, `divide` và dự đoán kết quả midpoint. |
+    | Kiểm chứng ảnh hưởng rounding | So sánh tổng làm tròn từng bước và tổng làm tròn một lần, nêu rủi ro double rounding. |
+- id: numeric-reference-007
+  title: Bảng parse, format và chuyển đổi exact
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bảng parse, format và chuyển đổi exact**
+
+    Bài là bảng tra cứu xuyên suốt quá trình parse chuỗi theo radix/locale, format số, và chuyển kiểu chính xác. Người học phân biệt `parseInt` với `decode`, unsigned semantics, `DecimalFormat`, `BigDecimal.toString`/`toPlainString`, cùng exact conversions và checked arithmetic.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Parse và định dạng đúng hợp đồng
+
+    1. `Integer.parseInt("052")` khác `Integer.decode("052")` ở kết quả và cơ số nào?
+    2. Vì sao `parseUnsignedInt("4294967295")` in qua `int` signed là -1 nhưng `toUnsignedString` giữ được giá trị không dấu?
+    3. Khi parse chuỗi có dấu nhóm theo Locale.US, vì sao cần `setParseBigDecimal(true)` và `ParsePosition`?
+
+    ### Exact conversion và precision
+
+    1. Vì sao `BigDecimal("12.000").intValueExact()` thành công nhưng `BigDecimal("12.9").intValueExact()` lỗi?
+    2. Khi nào phải dùng `Math.toIntExact`, `BigInteger.longValueExact` hoặc `BigDecimal.toBigIntegerExact`?
+    3. `toString`, `toPlainString` và `toEngineeringString` khác nhau về scale khi parse lại như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Parse theo cơ số | Dự đoán parseInt/decode và biểu diễn unsigned có tiền tố/radix. |
+    | Format có locale | Cấu hình DecimalFormat, kiểm tra full parse, giải thích rounding khi hiển thị. |
+    | Áp dụng exact conversion | Thiết kế chuyển long/BigInteger/BigDecimal sang kiểu đích có lỗi khi mất giá trị. |
+- id: numeric-reference-008
+  title: Tra cứu JLS và Javadoc các API số
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tra cứu JLS và Javadoc các API số**
+
+    Bài hướng dẫn đọc JLS để giải thích cú pháp và biểu thức, Javadoc để kiểm chứng chữ ký/overload và ngoại lệ của API số, đồng thời chọn đúng phiên bản Java. Các tình huống chia nguyên, `BigDecimal.equals`, widening và NaN giúp người học trích nguồn chính thức và lập ví dụ tái hiện.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Xác định đúng nguồn và phiên bản
+
+    1. Khi nào phải tra JLS Chương 4/5/15, khi nào tra Javadoc của Math, Double hay BigDecimal?
+    2. Vì sao cần đọc đúng overload, mục Throws, Since và bản Java 17 thay vì trang Javadoc mới nhất?
+    3. Bạn tra điều kiện của `Integer.MAX_VALUE+1` và `Math.addExact` trong hai nguồn nào?
+
+    ### Kiểm chứng một hành vi cụ thể
+
+    1. Với `-7/3` và `Math.floorDiv(-7,3)`, cần lấy những section/method nào để giải thích sự khác nhau?
+    2. Làm sao dùng Javadoc BigDecimal chứng minh `equals` false nhưng `compareTo` là 0 khi scale khác?
+    3. Khi thấy `long` chuyển `double` mất precision hoặc `Integer` null unbox, cần kết hợp tài liệu và ví dụ Java 17 ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Điều hướng tài liệu gốc | Xác định section JLS hoặc method Javadoc phù hợp đúng Java version. |
+    | Đọc hợp đồng đầy đủ | Đối chiếu overload, tham số, Returns, Throws, Since và ghi chú implementation. |
+    | Tái hiện và ghi nguồn | Biên dịch ví dụ tối thiểu `javac --release 17` và ghi kết luận kèm link section/method. |

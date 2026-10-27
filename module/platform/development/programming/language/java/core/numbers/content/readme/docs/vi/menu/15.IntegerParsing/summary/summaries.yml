@@ -1,0 +1,331 @@
+summaries:
+- id: integer-parsing-001
+  title: parseInt, parseLong và các phương thức parse tương ứng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **parseInt, parseLong và các phương thức parse tương ứng**
+
+    Học cách chọn Byte.parseByte, Short.parseShort, Integer.parseInt hoặc Long.parseLong để chuyển String thành đúng primitive có dấu. Phân biệt lỗi ký tự với giá trị vượt miền kiểu đích, đồng thời nhận biết radix mặc định.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và khái niệm
+
+    1. Integer.parseInt("3000000000") khác Long.parseLong("3000000000") như thế nào?
+    2. Khi nào Byte.parseByte phù hợp hơn Integer.parseInt rồi cast sang byte?
+
+    ### Áp dụng và kiểm chứng
+
+    1. Vì sao Integer.parseInt("077") cho 77 nhưng chuỗi " 77 " lại bị từ chối?
+    2. Làm sao tạo ví dụ chạy được cho int min/max và chuỗi vượt int nhưng vừa long?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Năng lực 1 | Chọn được đúng Byte, Short, Integer hoặc Long dựa vào miền của dữ liệu. |
+    | Năng lực 2 | Dự đoán kết quả parse số thập phân, số có dấu và NumberFormatException do overflow. |
+    | Năng lực 3 | Biên dịch và chạy chương trình minh họa parseInt, parseLong cùng ca lỗi. |
+- id: integer-parsing-002
+  title: valueOf(String) khác parse về kiểu kết quả
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **valueOf(String) khác parse về kiểu kết quả**
+
+    Phân biệt int/long do parse trả về với Integer/Long do valueOf(String) trả về. Xác định autoboxing, unboxing, method overload, so sánh wrapper và lỗi null trong đoạn mã.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và khái niệm
+
+    1. Vì sao Integer x = Integer.parseInt("42") vẫn biên dịch được?
+    2. Với overload show(int) và show(Integer), parseInt hoặc valueOf chọn bản nào?
+
+    ### Áp dụng và kiểm chứng
+
+    1. Trong trường hợp nào int n = boxed gây NullPointerException?
+    2. Vì sao so sánh hai biến Integer bằng == không thể thay cho equals?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Năng lực 1 | Chỉ ra kiểu compile-time của parseInt, valueOf(String), parseLong và valueOf(String) trên Long. |
+    | Năng lực 2 | Dự đoán chỗ boxing/unboxing và overload được chọn. |
+    | Năng lực 3 | Viết kiểm tra null trước unboxing và dùng equals cho wrapper cùng kiểu. |
+- id: integer-parsing-003
+  title: Radix, dấu cộng hoặc trừ và phạm vi hợp lệ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Radix, dấu cộng hoặc trừ và phạm vi hợp lệ**
+
+    Đọc chuỗi theo radix 2 đến 36 với dấu ASCII ở đầu; biết phân biệt chữ số hợp lệ, dấu sai vị trí và overflow signed. Radix thay đổi biểu diễn chứ không tăng khả năng chứa của kiểu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và khái niệm
+
+    1. Integer.parseInt("-101",2) biểu diễn giá trị nào và vì sao?
+    2. Vì sao G không hợp lệ ở hệ 16 nhưng có thể hợp lệ ở hệ 17?
+
+    ### Áp dụng và kiểm chứng
+
+    1. Vì sao parseInt("80000000",16) lỗi còn parseInt("-80000000",16) thành công?
+    2. Một trường có thể vượt int nhưng không vượt long thì chọn parser nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Năng lực 1 | Sử dụng overload radix để chuyển đúng số hệ 2, 8, 10, 16. |
+    | Năng lực 2 | Kiểm tra dấu đầu và tập chữ số hợp lệ của một cơ số. |
+    | Năng lực 3 | Xác định giới hạn signed MIN/MAX và ca vượt miền. |
+- id: integer-parsing-004
+  title: parseUnsignedInt và parseUnsignedLong
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **parseUnsignedInt và parseUnsignedLong**
+
+    Hiểu parseUnsignedInt/parseUnsignedLong vẫn trả primitive signed int/long chứa đúng bit pattern 32/64 bit. Dùng toUnsignedString, compareUnsigned, divideUnsigned và remainderUnsigned để diễn giải đúng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và khái niệm
+
+    1. Vì sao parseUnsignedInt("4294967295") thành công nhưng println in -1?
+    2. Long.parseUnsignedLong("18446744073709551615") giữ mẫu bit nào?
+
+    ### Áp dụng và kiểm chứng
+
+    1. Vì sao a > b có thể khác Integer.compareUnsigned(a,b)?
+    2. Khi nào BigInteger phù hợp hơn arithmetic primitive trên mẫu bit unsigned?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Năng lực 1 | Parse, in lại và round-trip các giá trị unsigned max. |
+    | Năng lực 2 | Sử dụng compareUnsigned, divideUnsigned, remainderUnsigned đúng ngữ nghĩa. |
+    | Năng lực 3 | Phân biệt overflow phép toán với lỗi parse vượt giới hạn unsigned. |
+- id: integer-parsing-005
+  title: decode và các tiền tố cơ số
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **decode và các tiền tố cơ số**
+
+    Nắm Integer.decode và Long.decode nhận tiền tố 0x, 0X, #, số 0 đầu kiểu octal; dấu phải nằm trước prefix. Biết API này không nhận 0b và không nên dùng cho mã decimal có leading zero.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và khái niệm
+
+    1. Integer.decode("010") và Integer.parseInt("010") khác nhau ở đâu?
+    2. Vì sao "-0x2A" hợp lệ nhưng "0x-2A" không hợp lệ?
+
+    ### Áp dụng và kiểm chứng
+
+    1. Tại sao Integer.decode("0b1010") ném lỗi?
+    2. Vì sao mã 008 có nguy cơ bị diễn giải sai khi dùng decode?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Năng lực 1 | Nhận đúng decimal, octal, hex prefix và dấu trong decode. |
+    | Năng lực 2 | So sánh kết quả decode với parseInt trên 010 và 08. |
+    | Năng lực 3 | Chọn unsigned parser thay decode khi chuỗi hex biểu thị bit pattern 32 bit. |
+- id: integer-parsing-006
+  title: Vì sao parseInt không xử lý literal 0x hoặc dấu gạch dưới như trình biên dịch
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vì sao parseInt không xử lý literal 0x hoặc dấu gạch dưới như trình biên dịch**
+
+    Phân biệt cú pháp numeric literal do trình biên dịch Java xử lý với cú pháp String parse khi chương trình chạy. Chỉ chuẩn hóa 0x, 0b hoặc underscore sau khi định nghĩa và kiểm tra định dạng đầu vào.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và khái niệm
+
+    1. Vì sao int n = 1_000 đúng nhưng parseInt("1_000") lỗi?
+    2. Vì sao literal 010 cho 8 nhưng parseInt("010") cho 10?
+
+    ### Áp dụng và kiểm chứng
+
+    1. Tại sao replace mọi underscore có thể lỡ chấp nhận _100 và 100_?
+    2. Nếu input có 0b, cần xử lý prefix và radix theo thứ tự nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Năng lực 1 | Phân biệt compile-time numeric literal với parsing String runtime. |
+    | Năng lực 2 | Chỉ ra prefix, underscore và hậu tố L mà parseInt không trực tiếp chấp nhận. |
+    | Năng lực 3 | Thiết kế validate trước normalize, không sửa chuỗi sai tùy tiện. |
+- id: integer-parsing-007
+  title: NumberFormatException do ký tự sai hoặc vượt miền giá trị
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **NumberFormatException do ký tự sai hoặc vượt miền giá trị**
+
+    Phân loại lỗi ký tự, radix và overflow dẫn tới NumberFormatException. Thiết kế cách bắt lỗi tại ranh giới nhập liệu, tách lỗi kỹ thuật với vi phạm giới hạn nghiệp vụ và không thay input sai bằng zero.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và khái niệm
+
+    1. Tại sao "2147483648" ném lỗi dù chỉ gồm chữ số?
+    2. "12x" và "2147483648" cùng exception nhưng khác nguyên nhân nào?
+
+    ### Áp dụng và kiểm chứng
+
+    1. Làm sao phân biệt quantity null, sai định dạng và số âm sai nghiệp vụ?
+    2. Vì sao catch Exception rồi trả 0 làm hỏng trạng thái dữ liệu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Năng lực 1 | Giải thích lỗi chữ số, radix, giới hạn kiểu và miền nghiệp vụ. |
+    | Năng lực 2 | Bắt NumberFormatException hẹp rồi chuyển thành validation error có ngữ cảnh. |
+    | Năng lực 3 | Tạo ca thử sát Integer.MIN_VALUE, MAX_VALUE và input sai. |
+- id: integer-parsing-008
+  title: Phân tích đoạn CharSequence mà không tạo String con khi API hỗ trợ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân tích đoạn CharSequence mà không tạo String con khi API hỗ trợ**
+
+    Sử dụng overload CharSequence, beginIndex, endIndex, radix của Integer và Long để đọc riêng một trường trong record mà không tạo substring tại caller. Bảo đảm đúng index, dấu và đồng bộ khi nguồn mutable.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và khái niệm
+
+    1. endIndex của parseInt(seq,from,to,radix) có bao gồm ký tự ở to không?
+    2. Bỏ qua dấu âm khi chọn from có thể tạo lỗi giá trị gì?
+
+    ### Áp dụng và kiểm chứng
+
+    1. Đoạn rỗng, chỉ số ngoài biên và chữ số sai tương ứng với exception nào?
+    2. Vì sao bỏ substring chưa chứng minh zero allocation hay luôn nhanh hơn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Năng lực 1 | Parse đúng trường signed/unsigned trong StringBuilder qua overload bốn tham số. |
+    | Năng lực 2 | Kiểm tra [begin,end), delimiter, dấu và tính ổn định của nguồn mutable. |
+    | Năng lực 3 | Đánh giá được mục tiêu tránh substring mà không khẳng định hiệu năng khi chưa benchmark. |
+- id: integer-parsing-009
+  title: Integer.getInteger và Long.getLong đọc system property, không phải parse thông thường
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Integer.getInteger và Long.getLong đọc system property, không phải parse thông thường**
+
+    Nhận biết Integer.getInteger và Long.getLong nhận tên system property, tra cứu chuỗi rồi decode, có thể trả null/default. Phân biệt với parseInt, System.getProperty và System.getenv, đặc biệt khi dữ liệu cấu hình sai.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và khái niệm
+
+    1. Integer.getInteger("42") tìm property tên 42 hay parse chuỗi số 42?
+    2. System.getProperty và System.getenv truy cập hai nguồn nào?
+
+    ### Áp dụng và kiểm chứng
+
+    1. Property "010" vì sao thành 8 qua getInteger nhưng thành 10 qua parseInt?
+    2. Khi property sai phải báo lỗi, tại sao overload default chưa đủ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Năng lực 1 | Chọn đúng getInteger, getLong hoặc getProperty rồi parse theo schema. |
+    | Năng lực 2 | Dự đoán null/default, decode octal và nguy cơ unboxing. |
+    | Năng lực 3 | Thiết kế xử lý cấu hình thiếu khác cấu hình sai định dạng. |
+- id: integer-parsing-010
+  title: Kiểm tra toàn bộ đầu vào và chính sách xử lý khoảng trắng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra toàn bộ đầu vào và chính sách xử lý khoảng trắng**
+
+    Quy định STRICT hoặc OUTER-STRIP rõ ràng, hiểu parseInt kiểm tra hết chuỗi được truyền nhưng NumberFormat có thể chấp nhận tiền tố. Xác thực ASCII riêng nếu protocol không cho chữ số Unicode.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và khái niệm
+
+    1. Tại sao parseInt("42tail") lỗi nhưng NumberFormat có thể đọc prefix 42?
+    2. trim và strip khác nhau với EM SPACE hoặc NBSP thế nào?
+
+    ### Áp dụng và kiểm chứng
+
+    1. Nếu parser chấp nhận fullwidth digits thì cần làm gì để tuân thủ ASCII-only?
+    2. Parse được một token trong record đã đủ xác nhận toàn record chưa?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Năng lực 1 | Viết rõ chính sách STRICT, OUTER-STRIP, LOCALE-AWARE trước khi parse. |
+    | Năng lực 2 | Kiểm tra consumed-all bằng matches hoặc ParsePosition khi cần. |
+    | Năng lực 3 | Kiểm tra tập ký tự ASCII và miền giá trị theo hai bước độc lập. |
+- id: integer-parsing-011
+  title: Chọn BigInteger cho chuỗi số vượt giới hạn long
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn BigInteger cho chuỗi số vượt giới hạn long**
+
+    Chuyển chuỗi nguyên vượt miền long thành BigInteger giữ độ chính xác. Phân biệt số lớn với mã String giữ zero đầu, BigDecimal số thập phân, và phép chuyển longValueExact từ BigInteger về primitive.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và khái niệm
+
+    1. Long.parseLong("9223372036854775808") và new BigInteger khác nhau ra sao?
+    2. Khi nào chuỗi "00042" nên giữ là String?
+
+    ### Áp dụng và kiểm chứng
+
+    1. BigInteger.longValue và longValueExact khác nhau ở 2^63 ra sao?
+    2. Tại sao cần giới hạn độ dài chuỗi dù BigInteger không cố định 64 bit?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Năng lực 1 | Chọn BigInteger(String,radix) cho số nguyên lớn chính xác, không đi qua double. |
+    | Năng lực 2 | Dùng BigInteger.add, multiply, compareTo và hiểu tính immutable. |
+    | Năng lực 3 | Chuyển về long an toàn với longValueExact, kiểm tra tài nguyên đầu vào. |

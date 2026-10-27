@@ -1,0 +1,34 @@
+sections:
+  number-and-wrappers-001:
+    difficulty: BASIC
+    isImportant: true
+  number-and-wrappers-002:
+    difficulty: BASIC
+    isImportant: true
+  number-and-wrappers-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  number-and-wrappers-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  number-and-wrappers-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  number-and-wrappers-006:
+    difficulty: BASIC
+    isImportant: true
+  number-and-wrappers-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  number-and-wrappers-008:
+    difficulty: ADVANCED
+    isImportant: true
+  number-and-wrappers-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  number-and-wrappers-010:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  number-and-wrappers-011:
+    difficulty: ADVANCED
+    isImportant: false

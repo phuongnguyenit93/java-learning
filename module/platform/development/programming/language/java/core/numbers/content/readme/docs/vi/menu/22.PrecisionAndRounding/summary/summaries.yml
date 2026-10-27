@@ -1,0 +1,421 @@
+summaries:
+- id: precision-and-rounding-001
+  title: MathContext gồm precision và RoundingMode
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **MathContext gồm precision và RoundingMode**
+
+    Bài học giải thích cách MathContext gắn giới hạn chữ số có nghĩa với RoundingMode khi phép toán BigDecimal tạo kết quả. Người học cần phân biệt precision của context với scale của BigDecimal, biết truyền context vào đúng phép cộng, nhân, chia hoặc round và kiểm soát thời điểm làm tròn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết lập ngữ cảnh tính toán
+
+    1. MathContext(5, HALF_EVEN) giới hạn điều gì và vì sao khác setScale(5, ...)?
+    2. Vì sao new MathContext(6) dùng HALF_UP trong khi DECIMAL32 dùng HALF_EVEN?
+
+    ### Sử dụng BigDecimal có context
+
+    1. Sự khác nhau giữa a.add(b) và a.add(b, mc) là gì khi tổng có nhiều chữ số?
+    2. Vì sao chia 1 cho 3 bằng MathContext.UNLIMITED vẫn phát sinh ArithmeticException?
+
+    ### Đầu vào và thời điểm làm tròn
+
+    1. Khi nào nên giữ phép tính chính xác rồi setScale ở ranh giới nghiệp vụ?
+    2. Vì sao new BigDecimal(0.1) có thể làm mất ý nghĩa tie thập phân dù MathContext được chọn đúng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo context phù hợp | Khai báo MathContext với precision và mode, giải thích kết quả round của 12345.67. |
+    | Phân biệt phép toán có context | So sánh add/divide với và không có MathContext, dự đoán kết quả hoặc ngoại lệ. |
+    | Thiết kế thời điểm làm tròn | Chọn điểm dùng MathContext và setScale trong ví dụ tính thuế/tổng tiền có quy tắc tường minh. |
+- id: precision-and-rounding-002
+  title: UNLIMITED, DECIMAL32, DECIMAL64 và DECIMAL128
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **UNLIMITED, DECIMAL32, DECIMAL64 và DECIMAL128**
+
+    Bài học so sánh bốn cấu hình MathContext có sẵn, từ UNLIMITED không giới hạn precision đến DECIMAL32/64/128 với 7/16/34 chữ số có nghĩa và HALF_EVEN. Người học nhận ra preset không phải định dạng IEEE decimal trọn vẹn, và vì sao UNLIMITED vẫn thất bại ở phép chia thập phân vô hạn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đối chiếu bốn hằng
+
+    1. Precision và roundingMode cụ thể của UNLIMITED, DECIMAL32, DECIMAL64, DECIMAL128 khác nhau thế nào?
+    2. Vì sao DECIMAL32 không tương đương new MathContext(7) ở trường hợp tie?
+
+    ### Chính xác hữu hạn và giới hạn
+
+    1. 1/8 và 1/3 cho hành vi gì với UNLIMITED và DECIMAL64?
+    2. Vì sao dùng DECIMAL128 không biến BigDecimal thành một kiểu IEEE decimal128 hoàn chỉnh?
+
+    ### Lựa chọn theo nghiệp vụ
+
+    1. Vì sao yêu cầu tiền hai chữ số sau dấu chấm không thể được đáp ứng chỉ bằng DECIMAL32?
+    2. Khi nào cần MathContext tùy chỉnh thay vì các preset có sẵn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tra cứu preset | Lập bảng chính xác 0/7/16/34 và chế độ HALF_UP/HALF_EVEN của bốn hằng. |
+    | Kiểm chứng phép chia | Giải thích tại sao 1/3 ném lỗi ở UNLIMITED và được làm tròn dưới DECIMAL32. |
+    | Chọn cấu hình | Chỉ định preset, custom context hoặc setScale với lý do theo số chữ số có nghĩa/scale. |
+- id: precision-and-rounding-003
+  title: Precision bằng 0 không phải scale bằng 0
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Precision bằng 0 không phải scale bằng 0**
+
+    Bài học giải quyết nhầm lẫn hai số 0 trong BigDecimal: precision=0 của MathContext mang nghĩa unlimited, còn setScale(0) buộc biểu diễn ở hàng đơn vị. Qua scale âm, precision của số 0 và các ví dụ chia có/không precision, người học chọn đúng API theo ràng buộc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ba thuộc tính khác nhau
+
+    1. BigDecimal.precision(), BigDecimal.scale() và MathContext.getPrecision() đo những đại lượng nào?
+    2. Vì sao 1000 và 1E+3 có giá trị bằng nhau nhưng precision/scale khác nhau?
+
+    ### Ý nghĩa số 0
+
+    1. Tại sao MathContext(0, DOWN) không biến 1234.567 thành 1235?
+    2. Vì sao setScale(0, HALF_UP) tạo 1235 nhưng round(MathContext.UNLIMITED) giữ nguyên 1234.567?
+
+    ### Phép chia và ràng buộc biểu diễn
+
+    1. Khi nào 1/3 ném ngoại lệ với precision 0 dù 1/8 thành công?
+    2. setScale(0, UNNECESSARY) sẽ làm gì với 7.000 và 7.001?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích precision/scale | Tính các thuộc tính của 123.4500, 0.00, 1000 và 1E+3. |
+    | So sánh hai API | Dự đoán round(MathContext(0)), round(MathContext(3)) và setScale(0) trên cùng dữ liệu. |
+    | Kiểm tra bất biến dữ liệu | Dùng UNNECESSARY để phát hiện không thể hạ scale về 0 mà giữ nguyên giá trị. |
+- id: precision-and-rounding-004
+  title: 'UP và DOWN: ra xa hoặc về phía 0'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **UP và DOWN: ra xa hoặc về phía 0**
+
+    Bài học giới thiệu hai chế độ RoundingMode định hướng theo độ lớn tuyệt đối: UP đi xa 0 khi có chữ số khác 0 bị bỏ, DOWN về 0. Các ví dụ số âm, số nhỏ, phép chia và scale/precision chỉ ra vì sao tên UP không có nghĩa luôn tăng giá trị trên trục số.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hướng làm tròn với dấu âm
+
+    1. Vì sao -1.231 với UP ở scale 2 thành -1.24, còn DOWN thành -1.23?
+    2. Tại sao UP không cần chữ số bị bỏ lớn hơn hoặc bằng 5?
+
+    ### Áp dụng BigDecimal
+
+    1. Đối với 7/3 ở scale 2, hai mode UP và DOWN tạo những giá trị nào?
+    2. MathContext(3, UP) khác setScale(3, UP) thế nào với một số lớn?
+
+    ### Thứ tự phép tính
+
+    1. Vì sao UP từng thành phần trước khi cộng có thể khác UP tổng một lần?
+    2. Khi nào UP/DOWN phù hợp hơn mode chọn kết quả gần nhất?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán kết quả có dấu | Điền bảng UP/DOWN cho 1.231, -1.231, ±0.001 ở scale 2. |
+    | Chọn API làm tròn | Dùng setScale và MathContext với cùng mode nhưng mục đích chữ số khác nhau. |
+    | Phân tích làm tròn nhiều bước | So sánh UP từng khoản và UP tổng cuối bằng ví dụ 1.231+1.231. |
+- id: precision-and-rounding-005
+  title: 'CEILING và FLOOR: hướng về dương hoặc âm vô cực'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CEILING và FLOOR: hướng về dương hoặc âm vô cực**
+
+    Bài học đối chiếu CEILING hướng về +∞ và FLOOR hướng về -∞ qua Math.ceil/floor, BigDecimal.setScale và chia nguyên Math.ceilDiv/floorDiv. Người học áp dụng đúng với số âm, zero có dấu và bài toán phân trang, đồng thời biết rõ ceilDiv yêu cầu Java 18+.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định nghĩa hướng trên trục số
+
+    1. Vì sao ceil(-2.7) bằng -2 còn floor(-2.7) bằng -3?
+    2. Điều gì khác giữa CEILING/FLOOR với UP/DOWN khi giá trị đầu vào âm?
+
+    ### API cho double và BigDecimal
+
+    1. Math.ceil(-0.25) cho giá trị double nào và dấu zero được giữ ra sao?
+    2. BigDecimal.setScale(-1, CEILING) làm tròn -121 về bội số 10 nào?
+
+    ### Thương nguyên và ranh giới phiên bản
+
+    1. Vì sao Math.ceilDiv(31,10) phù hợp với số trang tối thiểu?
+    2. Khi nào cần floorDiv cho chỉ số âm và vì sao ceilDiv là API Java 18+?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích trục số | Tính CEILING/FLOOR của ±2.7 và đối chiếu với cast/Math.round. |
+    | Dùng BigDecimal đúng scale | Làm tròn -12.341 về scale 2 và -121 về hàng chục theo hai mode. |
+    | Thiết kế chia nguyên an toàn | Chọn floorDiv/ceilDiv theo dấu, phân trang và nêu Java-version/zero checks. |
+- id: precision-and-rounding-006
+  title: HALF_UP và HALF_DOWN ở vị trí đúng giữa
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **HALF_UP và HALF_DOWN ở vị trí đúng giữa**
+
+    Bài học phân biệt hai quy tắc chọn kết quả gần nhất chỉ khác nhau tại điểm chính giữa: HALF_UP đi xa 0, HALF_DOWN tiến về 0. Các ví dụ 2.345, -2.345 và 1/8 giúp người học đánh giá đúng tie bằng toàn bộ phần bị bỏ thay vì chỉ nhìn chữ số 5.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Xác định tie thực sự
+
+    1. Vì sao 2.345000 vẫn là điểm giữa ở scale 2 nhưng 2.345001 không phải?
+    2. HALF_UP và HALF_DOWN phản ứng khác nhau ra sao với ±2.345 ở scale 2?
+
+    ### Scale, precision và phép chia
+
+    1. Tại sao 1/8 ở scale 2 cho 0.13 theo HALF_UP và 0.12 theo HALF_DOWN?
+    2. Làm tròn 12.35 về precision 3 khác gì việc yêu cầu scale 3?
+
+    ### Tránh hiểu sai mode
+
+    1. Vì sao HALF_UP không giống RoundingMode.UP hay Math.round với -2.5?
+    2. Tại sao làm tròn từng khoản 1.245 trước khi cộng có thể khác làm tròn tổng cuối?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích điểm giữa | Phân loại 2.34499, 2.34500, 2.34501 về tie và tính đúng hai mode. |
+    | Thực hành mode với BigDecimal | Viết setScale hoặc divide ở scale 2 và kiểm chứng kết quả số âm. |
+    | So sánh chính sách làm tròn | Dùng ví dụ -2.5 giải thích khác biệt HALF_UP, HALF_DOWN, UP và Math.round. |
+- id: precision-and-rounding-007
+  title: HALF_EVEN và lựa chọn chữ số chẵn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **HALF_EVEN và lựa chọn chữ số chẵn**
+
+    Bài học đi sâu vào HALF_EVEN: chọn ứng viên gần nhất và chỉ khi đúng giữa mới lấy ứng viên có chữ số cuối được giữ lại là số chẵn. Qua ví dụ số dương, số âm, trường hợp chuyển nhớ và precision, người học hiểu cách kiểm tra tie trước khi xét chẵn lẻ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tie và chữ số được giữ
+
+    1. Vì sao HALF_EVEN đưa 2.5 về 2 nhưng 3.5 về 4 khi scale 0?
+    2. Vì sao 1.0051 làm tròn scale 2 thành 1.01 dù chữ số cuối 1 là lẻ?
+
+    ### Làm tròn với số âm và chuyển nhớ
+
+    1. Tại sao -1.35 về scale 1 cho -1.4 và 9.95 cho 10.0?
+    2. Giữ bốn chữ số có nghĩa với MathContext khác giữ hai chữ số sau dấu thập phân như thế nào?
+
+    ### Giảm thiên lệch và giới hạn
+
+    1. HALF_EVEN có bảo đảm làm tròn từng khoản rồi cộng bằng làm tròn tổng không?
+    2. Vì sao phải nhập BigDecimal từ chuỗi để kiểm thử tie thập phân chính xác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán HALF_EVEN | Hoàn thành bảng cho 2.5, 3.5, ±1.25, 9.95 với vị trí đích cụ thể. |
+    | Phân biệt tie và non-tie | Giải thích 1.0050/1.0051/1.0049 dựa trên khoảng cách đến các ứng viên. |
+    | Vận dụng precision | Tính round(MathContext(4, HALF_EVEN)) trên 12.345 và đối chiếu setScale. |
+- id: precision-and-rounding-008
+  title: UNNECESSARY để yêu cầu kết quả không cần làm tròn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **UNNECESSARY để yêu cầu kết quả không cần làm tròn**
+
+    Bài học dùng RoundingMode.UNNECESSARY làm điều kiện bắt buộc không mất giá trị khi đổi scale, giới hạn precision hoặc chia BigDecimal. Nó phân biệt việc bỏ số 0 thừa vẫn chính xác với việc bỏ chữ số khác 0 phải ném ArithmeticException.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Exactness và biểu diễn
+
+    1. Vì sao 12.3400.setScale(2, UNNECESSARY) thành công nhưng 12.345 thì ném ArithmeticException?
+    2. UNNECESSARY cho phép thêm số 0 hay thay đổi biểu diễn thập phân ở những tình huống nào?
+
+    ### Precision và divide overload
+
+    1. MathContext(3, UNNECESSARY) xử lý 123.00 và 123.40 khác nhau thế nào?
+    2. Vì sao 10/4 có thể tính chính xác nhưng divide(divisor, UNNECESSARY) ở scale 0 vẫn lỗi?
+
+    ### Quy tắc nhập liệu
+
+    1. Cách nào dùng setScale(2, UNNECESSARY) để chặn tiền có phần lẻ không phù hợp?
+    2. Vì sao UNLIMITED precision cũng không biến 1/3 thành kết quả BigDecimal chính xác hữu hạn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra exact scale | Phân biệt 19.2000, 19.201 khi chuẩn hóa scale 2 bằng UNNECESSARY. |
+    | Soát overload phép chia | Dự đoán exception của 10/4 ở scale 0 và thành công ở scale 1. |
+    | Thiết kế ràng buộc | Sử dụng UNNECESSARY để phát hiện mất giá trị, xử lý ArithmeticException đúng biên nghiệp vụ. |
+- id: precision-and-rounding-009
+  title: Đối chiếu các chế độ với cả số dương và số âm
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đối chiếu các chế độ với cả số dương và số âm**
+
+    Bài học tổng hợp tám giá trị RoundingMode trong cùng bảng số dương/âm và tie/non-tie, giúp phát hiện lỗi khi nhìn mỗi một ví dụ. Từ đó người học chọn chế độ theo hướng trục số, khoảng cách đến 0, tie, hoặc yêu cầu không làm tròn và kiểm thử tính nhất quán.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### So sánh tám chế độ
+
+    1. Vì sao UP(-2.4) khác CEILING(-2.4) và DOWN(-2.4) khác FLOOR(-2.4)?
+    2. Kết quả -3.5 của HALF_UP, HALF_DOWN, HALF_EVEN khác nhau thế nào?
+
+    ### Độ phân giải và số âm
+
+    1. Tại sao setScale(-1, HALF_EVEN) làm tròn 145 và 155 khác nhau?
+    2. Trong bảng ±2.5 và ±2.4, mode UNNECESSARY ném lỗi trong những trường hợp nào?
+
+    ### Kiểm tra chính sách
+
+    1. Vì sao không thể suy ra quy tắc tiền tệ chỉ từ tên gọi tiếng Anh UP/FLOOR?
+    2. Khi nào nên chọn phép kiểm chứng cả dấu âm, non-tie, tie và hai cách biểu diễn BigDecimal?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập bảng đầy đủ | Dự đoán kết quả ±2.4, ±2.5 với cả tám RoundingMode. |
+    | So sánh signed rounding | Giải thích kết quả CEILING/FLOOR/UP/DOWN với -1.231 ở scale 2. |
+    | Lập bộ test | Chọn dữ liệu dương/âm, đúng giữa và sát điểm giữa theo mode nghiệp vụ. |
+- id: precision-and-rounding-010
+  title: Làm tròn hai lần và khác biệt với làm tròn ở bước cuối
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Làm tròn hai lần và khác biệt với làm tròn ở bước cuối**
+
+    Bài học trình bày double rounding như một sai lệch do làm tròn trung gian rồi làm tròn lại ở mức đích. Các phản ví dụ HALF_UP, HALF_EVEN, precision của MathContext và làm tròn đơn giá/tổng tiền cho thấy kết quả phụ thuộc thời điểm làm tròn, ngay cả khi BigDecimal biểu diễn đầu vào thập phân chính xác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế double rounding
+
+    1. Vì sao 1.245 → 1.25 → 1.3 theo HALF_UP nhưng làm tròn trực tiếp scale 1 thành 1.2?
+    2. Với HALF_EVEN, vì sao làm tròn hai lần 1.251 cho 1.2 còn trực tiếp cho 1.3?
+
+    ### Làm tròn từng thành phần
+
+    1. Hai khoản 0.006 làm tròn từng khoản rồi cộng và cộng trước rồi làm tròn khác nhau bao nhiêu?
+    2. Vì sao đơn giá 0.335 nhân 3 cho tổng khác nhau nếu làm tròn đơn giá trước?
+
+    ### Thiết kế tính toán
+
+    1. Tại sao precision 3 rồi precision 2 của 9.949 có thể cho kết quả khác precision 2 trực tiếp?
+    2. Làm cách nào quy định precision trung gian, guard digits và điểm làm tròn theo nghiệp vụ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng hai đường làm tròn | Tính trực tiếp và hai bước cho 1.245 và 1.251 với HALF_UP/HALF_EVEN. |
+    | Định lượng chênh lệch | So sánh tổng hai khoản 0.006 và phép nhân đơn giá 0.335×3. |
+    | Thiết kế pipeline chính xác | Nêu nơi áp dụng MathContext/setScale, dựng test sát ngưỡng tie và giải thích trade-off. |
+- id: precision-and-rounding-011
+  title: Phân biệt setScale với round(MathContext)
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt setScale với round(MathContext)**
+
+    Bài học đối chiếu trực tiếp setScale để ấn định số chữ số sau dấu thập phân và round(MathContext) để giới hạn tổng chữ số có nghĩa. Thông qua giá trị lớn/nhỏ, ký pháp mũ, ràng buộc UNNECESSARY và double rounding, người học thiết kế pipeline precision và scale đúng nhu cầu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai loại ràng buộc
+
+    1. Vì sao setScale(2) và round(MathContext(2)) trên 123.456 trả kết quả khác nhau?
+    2. Scale âm và precision 0 có ý nghĩa gì đối với BigDecimal?
+
+    ### Làm tròn số lớn và nhỏ
+
+    1. Với 0.00123456, scale 4 khác precision 4 ở những chữ số nào?
+    2. Vì sao round(MathContext) có thể in dạng 1.2E+2 còn toPlainString chỉ đổi cách hiển thị?
+
+    ### Quy trình có phép chia
+
+    1. Tại sao phép chia 1/3 cần context/scale ngay trong divide thay vì chia xong mới setScale?
+    2. Điều gì xảy ra khi round(MathContext(3)) rồi setScale(1) trên 1.249 so với setScale(1) trực tiếp?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh kết quả hai API | Tính setScale(2) và round(MathContext(2)) với 123.456 và 0.001234. |
+    | Phân biệt precision/scale | Tính precision/scale của 123.4500, 1E+3 và số được thêm zero. |
+    | Chọn API đúng hợp đồng | Lập trình chia theo chữ số có nghĩa và format tiền theo scale, phát hiện double rounding. |
+- id: precision-and-rounding-012
+  title: Không mặc định Math.round tương đương mọi chế độ HALF_UP
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không mặc định Math.round tương đương mọi chế độ HALF_UP**
+
+    Bài học chứng minh Math.round(float/double) chọn số nguyên gần nhất và khi hòa chọn hướng +∞, khác HALF_UP của BigDecimal chọn xa số 0. Người học còn phải xét đầu vào double gần đúng, kiểu trả về int/long, NaN, Infinity và giới hạn kiểu nguyên trước khi thay thế API.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### So sánh quy tắc tie
+
+    1. Vì sao Math.round(-2.5) thành -2 nhưng BigDecimal(-2.5) với HALF_UP cho -3?
+    2. Tại sao Math.round(2.1) vẫn là 2 dù tại tie lựa chọn về +∞?
+
+    ### Sai số binary floating point
+
+    1. Điều gì xảy ra với Math.round(1.005 * 100) / 100.0 so với BigDecimal("1.005").setScale(2, HALF_UP)?
+    2. Vì sao BigDecimal.valueOf(double) không thể hồi phục dữ liệu đã mất từ phép tính double trước đó?
+
+    ### Giá trị đặc biệt và kiểu trả về
+
+    1. Math.round(Float) và Math.round(Double) trả các kiểu nguyên nào, xử lý NaN và Infinity ra sao?
+    2. Khi nào Math.rint, BigDecimal.setScale và longValueExact thích hợp hơn Math.round?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán Math.round | Tính Math.round cho ±2.5, ±0.5 và phân biệt HALF_UP ở số âm. |
+    | Giải thích decimal vs double | So sánh 1.005*100 trong double và BigDecimal từ String tại scale 2. |
+    | Kiểm tra dữ liệu biên | Xác định hành vi Math.round với NaN/Infinity/quá miền và thiết kế validation thích hợp. |

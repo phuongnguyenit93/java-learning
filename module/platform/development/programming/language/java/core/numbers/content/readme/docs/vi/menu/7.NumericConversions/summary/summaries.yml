@@ -1,0 +1,321 @@
+summaries:
+- id: numeric-conversions-001
+  title: Widening và narrowing giữa các kiểu số
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Widening và narrowing giữa các kiểu số**
+
+    Phân biệt widening và narrowing để chọn cú pháp chuyển kiểu hợp lệ, dự đoán được các trường hợp có nguy cơ mất dữ liệu và xác định kiểu của phép tính trước khi gán. Bài đặt nền cho mọi quy tắc chuyển đổi số trong chương.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy tắc kiểu dữ liệu
+
+    1. Vì sao int sang long là widening còn long sang int thường phải cast?
+    2. Vì sao char không tự chuyển thành short dù cùng rộng 16 bit?
+    3. Chuyển đổi nào tự động nhưng vẫn có thể mất độ chính xác?
+
+    ### Khi áp dụng
+
+    1. Vì sao byte cộng byte tạo ra biểu thức kiểu int?
+    2. Vị trí cast trước hay sau phép nhân có thể làm kết quả khác nhau như thế nào?
+    3. Khi nào nên dùng kiểm tra phạm vi thay cho cast?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện phép chuyển | Lập bảng các cặp chuyển tự động và cần cast giữa bảy kiểu số primitive. |
+    | Dự đoán kết quả | Giải thích giá trị khi ép 260 sang byte, -1 sang char và 12.99 sang int. |
+    | Kiểm soát tính toán | Sửa phép nhân int bị tràn trước khi kết quả được gán sang long. |
+- id: numeric-conversions-002
+  title: Nâng kiểu vẫn có thể mất độ chính xác khi chuyển sang float hoặc double
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Nâng kiểu vẫn có thể mất độ chính xác khi chuyển sang float hoặc double**
+
+    Tìm nguyên nhân mất thông tin âm thầm khi int hoặc long được nâng sang float hoặc double. Bài giúp bảo vệ mã định danh và bộ đếm lớn trước các kết quả so sánh sai lệch do binary numeric promotion.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giới hạn biểu diễn
+
+    1. 24 bit phần trị của float và 53 bit của double chi phối số nguyên chính xác như thế nào?
+    2. Vì sao 2^24 + 1 mất một đơn vị khi vào float còn 2^24 + 2 có thể giữ nguyên?
+    3. Vì sao int sang double luôn chính xác nhưng long sang double thì không?
+
+    ### Kiểm chứng độ chính xác
+
+    1. Tại sao so sánh trực tiếp long với double đã chuyển có thể trả true dù giá trị bị làm tròn?
+    2. Vì sao cast ngược tại Long.MAX_VALUE có thể báo bằng nhau dù double đã mang giá trị 2^63?
+    3. Làm sao dùng biểu diễn số chính xác để từ chối một long không thể chuyển nguyên vẹn sang double?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích biên | Dự đoán kết quả cho 2^24 + 1 và 2^53 + 1 sau khi chuyển sang kiểu thực. |
+    | Phát hiện va chạm | Chứng minh hai long kề nhau có thể so sánh bằng nhau khi đã chuyển thành double. |
+    | Kiểm tra chuyển đổi | Giải thích và sửa phép kiểm tra round-trip sai tại Long.MAX_VALUE. |
+- id: numeric-conversions-003
+  title: Thu hẹp số nguyên và các bit bị loại bỏ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thu hẹp số nguyên và các bit bị loại bỏ**
+
+    Hiểu cơ chế narrowing giữa số nguyên: Java giữ bit thấp, loại bit cao và diễn giải bit dấu của kiểu đích. Bài còn chỉ ra cách đọc octet không dấu và cách từ chối chuyển đổi nếu buộc phải giữ giá trị.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dấu và bit
+
+    1. Tại sao (byte) 130 trả -126 thay vì 127?
+    2. Kết quả khi cast một long xuống int được xác định từ những bit nào?
+    3. Vì sao (char) -1 thành 65535 trong khi (short) 65535 thành -1?
+
+    ### Trường hợp thực tế
+
+    1. Làm sao đọc byte 0xFF thành số unsigned 255?
+    2. Vì sao b += 1 có thể quay vòng khi b là byte?
+    3. Khi nào dùng Math.toIntExact thay vì ép long xuống int?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết nhị phân | Vẽ tám bit thấp và giải thích kết quả cast 130, 255, 256 xuống byte. |
+    | Xử lý unsigned | Dùng Byte.toUnsignedInt hoặc mask để giải mã trường dữ liệu tám bit. |
+    | Kiểm soát miền | Viết kiểm tra để từ chối int nằm ngoài phạm vi byte. |
+- id: numeric-conversions-004
+  title: Chuyển char với byte hoặc short
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chuyển char với byte hoặc short**
+
+    Phân biệt byte, short có dấu với char không dấu và hiểu tại sao phép cast không tự giải mã văn bản. Bài kết nối các quy tắc bit với dữ liệu nhị phân unsigned, đơn vị UTF-16 và chuỗi UTF-8.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chuyển kiểu và dấu
+
+    1. Vì sao không có widening trực tiếp giữa byte hoặc short với char?
+    2. Vì sao byte -1 chuyển trực tiếp sang char cho 65535 nhưng đọc unsigned trước cho 255?
+    3. Điều gì xảy ra khi char có mã 32768 bị ép sang short?
+
+    ### Ý nghĩa của dữ liệu
+
+    1. Vì sao cast từng byte của UTF-8 không tạo lại được chữ é?
+    2. Khi nào nên dùng Byte.toUnsignedInt thay cho phép cast sang char?
+    3. Tại sao một char không chắc tương ứng một Unicode code point hoàn chỉnh?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt signedness | Dự đoán giá trị số khi chuyển qua lại các mốc 127, 255, 32768 và 65535. |
+    | Giải mã đúng | Dùng StandardCharsets.UTF_8 để giải mã chuỗi byte thay vì cast char. |
+    | Bảo vệ dữ liệu | Tách mục tiêu giữ giá trị số, giữ mẫu bit và giữ nội dung văn bản trong một tình huống. |
+- id: numeric-conversions-005
+  title: Ép float hoặc double sang số nguyên cắt về phía 0
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ép float hoặc double sang số nguyên cắt về phía 0**
+
+    Phân biệt cast từ float/double sang số nguyên với floor, ceil và round qua hành vi cắt về 0. Bài luyện đặt cast đúng vị trí trong biểu thức và kiểm tra tính hữu hạn, miền giá trị, phần lẻ theo hợp đồng đầu vào.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phép cắt phần lẻ
+
+    1. Vì sao (int) -7.9 trả -7 còn Math.floor(-7.9) trả -8.0?
+    2. Tại sao ép từng toán hạng trước khi cộng có thể khác ép tổng sau khi cộng?
+    3. Khi ép số thực về byte, short hoặc char, bước trung gian nào được thực hiện?
+
+    ### Kiểm tra trước khi chuyển
+
+    1. Điều kiện nào giúp từ chối một double ngoài miền int trước phép cast?
+    2. Vì sao cần xét cả Double.isFinite và tính nguyên nếu nghiệp vụ không cho phần lẻ?
+    3. Tại sao giá trị float đã bị làm tròn không thể lấy lại chữ số gốc bằng cast sang int?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán truncation | Tính các kết quả cast số dương, số âm và số gần 0 mà không nhầm với floor. |
+    | Kiểm soát thứ tự | Giải thích kết quả khác nhau của cast từng toán hạng so với cast tổng. |
+    | Xác thực đầu vào | Viết hàm nhận double hữu hạn trong miền int và áp dụng chính sách cắt phần lẻ. |
+- id: numeric-conversions-006
+  title: Chuyển NaN, vô cực và số ngoài phạm vi sang kiểu nguyên
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chuyển NaN, vô cực và số ngoài phạm vi sang kiểu nguyên**
+
+    Nhận diện giá trị NaN, ±Infinity và số thực hữu hạn vượt miền khiến cast ra 0 hoặc MIN/MAX mà không báo lỗi. Bài phân tích đầy đủ hai giai đoạn chuyển xuống byte/short/char và cận double chính xác khi kiểm tra miền long.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giá trị đặc biệt
+
+    1. Java xử lý NaN, +Infinity và -Infinity thế nào khi cast sang int hoặc long?
+    2. Vì sao (byte) Double.POSITIVE_INFINITY lại ra -1?
+    3. Tại sao cast double 3_000_000_000.0 sang int khác cast long 3_000_000_000L?
+
+    ### Ngăn dữ liệu xấu
+
+    1. Tại sao một kết quả 0 sau cast chưa chứng minh đầu vào hợp lệ?
+    2. Vì sao so sánh double với Long.MAX_VALUE không loại được chính xác cận 2^63?
+    3. Các phép kiểm tra nào cần có trước khi chấp nhận double như một giá trị long nguyên và hữu hạn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng chuyển đổi | Truy vết NaN, Infinity và 130.9 qua hai bước double sang int rồi sang byte. |
+    | Phân biệt saturation | Giải thích sự khác nhau giữa chặn biên floating-point cast và bỏ bit của integer cast. |
+    | Thiết kế kiểm tra | Viết hàm checkedLong dùng cận trên 0x1.0p63 và Double.isFinite. |
+- id: numeric-conversions-007
+  title: Thu hẹp double sang float và mất độ chính xác
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thu hẹp double sang float và mất độ chính xác**
+
+    Quan sát chính xác tác động của narrowing double sang float lên độ chính xác, phạm vi số mũ và chữ số đã mất. Bài dùng ULP, round-trip với số hữu hạn và ngân sách sai số để quyết định có nên chấp nhận binary32.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biểu diễn floating point
+
+    1. 24 bit và 53 bit phần trị khác nhau thế nào khi chuyển double sang float?
+    2. Khi nào giá trị chuyển thành Infinity, số subnormal hoặc zero có dấu?
+    3. Vì sao hai biến cùng in 0.1 vẫn có thể chứa giá trị nhị phân khác nhau?
+
+    ### Đánh giá mất mát
+
+    1. Math.ulp cho biết điều gì về khoảng cách giữa các số biểu diễn liên tiếp?
+    2. Khi nào so sánh (double)(float)d với d là phép kiểm tra exact hữu ích?
+    3. Làm sao lập ngân sách sai số trước khi lưu tập số liệu double vào float[]?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc kết quả nhị phân | Giải thích 0.1d sau cast float rồi widening lại thành 0.10000000149011612. |
+    | Phát hiện biên | Thử overflow với 1e40 và underflow với 1e-50 để nhận diện Infinity/zero. |
+    | Đánh giá sai số | Đề xuất kiểm tra hữu hạn và sai số theo đơn vị dữ liệu trước khi chấp nhận float. |
+- id: numeric-conversions-008
+  title: Chuyển đổi qua Number.intValue, longValue và doubleValue
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chuyển đổi qua Number.intValue, longValue và doubleValue**
+
+    Sử dụng Number như kiểu tham chiếu chung nhưng vẫn hiểu quy tắc chuyển riêng của Integer, Long, Double, BigInteger và BigDecimal. Bài giúp đọc đúng intValue, longValue, doubleValue, xử lý null và tránh giả định mọi phương thức đều exact.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đa hình và kết quả
+
+    1. Kiểu đối tượng Number thực tế ảnh hưởng kết quả intValue như thế nào?
+    2. Vì sao Long.intValue có thể cắt bit còn Double.intValue có thể chặn biên?
+    3. Tại sao Number.doubleValue có thể làm tròn một long lớn?
+
+    ### Chọn API
+
+    1. BigDecimal.intValue khác intValueExact như thế nào khi có phần lẻ?
+    2. Vì sao gọi phương thức trên Number null gây lỗi?
+    3. Khi dữ liệu cần chính xác decimal, vì sao cần giữ BigDecimal thay vì doubleValue?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích runtime | Lập bảng kết quả intValue, longValue và doubleValue cho các lớp Number chuẩn. |
+    | Phát hiện mất dữ liệu | Giải thích đầu ra cho 3_000_000_000L khi gọi intValue. |
+    | Chọn phương thức | Dùng các API ValueExact trên BigInteger/BigDecimal khi yêu cầu bảo toàn giá trị. |
+- id: numeric-conversions-009
+  title: Phân biệt ép kiểu, làm tròn và kiểm tra chuyển đổi exact
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt ép kiểu, làm tròn và kiểm tra chuyển đổi exact**
+
+    Chọn đúng thao tác cho từng yêu cầu: cast có thể bỏ dữ liệu, rounding chọn giá trị theo quy tắc, còn Exact từ chối mất giá trị. Bài tập trung vào Math.round/rint, BigDecimal RoundingMode và các phương thức ValueExact.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Rounding và chuyển kiểu
+
+    1. Math.round(-2.5) khác BigDecimal HALF_UP(-2.5) thế nào?
+    2. Math.rint có quy tắc xử lý nửa bằng nhau khác Math.round ra sao?
+    3. Vì sao làm tròn một BigDecimal trước khi gọi intValueExact là quyết định nghiệp vụ?
+
+    ### Bảo đảm chính xác
+
+    1. Math.toIntExact kiểm tra điều kiện gì và vì sao không thể thay bằng (int) longValue?
+    2. BigDecimal.intValueExact chấp nhận 12.00 nhưng từ chối 12.01 vì sao?
+    3. Khi chuyển double sang long exact, vì sao cần cận trên nhỏ hơn 2^63?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh API | Lập bảng hành vi và kiểu trả về của cast, round, rint, floor và ceil. |
+    | Chọn chính sách | Áp dụng RoundingMode.HALF_UP và HALF_EVEN cho số dương, âm ở điểm giữa. |
+    | Bảo toàn giá trị | Viết quy trình parse BigDecimal từ chuỗi rồi dùng intValueExact, xử lý lỗi phù hợp. |
+- id: numeric-conversions-010
+  title: Không có phép cast trực tiếp giữa kiểu số và boolean
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không có phép cast trực tiếp giữa kiểu số và boolean**
+
+    Nhận biết ranh giới kiểu primitive của Java: boolean không phải số và không có cast trực tiếp từ hoặc sang kiểu số. Bài rèn viết predicate, mapping mã 0/1 có kiểm tra và sử dụng bitmask hay parser theo hợp đồng dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy tắc ngôn ngữ
+
+    1. Vì sao (boolean) 1 và (int) true đều không biên dịch?
+    2. Tại sao if(count) sai nhưng if(count > 0) hợp lệ?
+    3. Vì sao Boolean và Number không thể ép tham chiếu để tạo phép chuyển 1 thành true?
+
+    ### Ánh xạ và xác thực
+
+    1. code != 0 và code == 1 khác nhau ở input nào?
+    2. Vì sao Boolean.parseBoolean("1") trả false?
+    3. Cần so sánh bitmask thế nào để tạo boolean đúng cho một hay mọi bit được bật?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Sửa lỗi kiểu | Chuyển các biểu thức điều kiện số không hợp lệ thành predicate boolean có ý nghĩa. |
+    | Mã hóa dữ liệu | Viết fromZeroOne từ chối input ngoài 0/1 và toZeroOne sử dụng toán tử ba ngôi. |
+    | Đọc dữ liệu | Phân biệt Boolean.parseBoolean với quy ước mã số và kiểm tra bitmask bằng phép so sánh. |

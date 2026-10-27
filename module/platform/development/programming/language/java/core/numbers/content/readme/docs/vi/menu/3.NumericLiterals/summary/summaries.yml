@@ -1,0 +1,351 @@
+summaries:
+- id: numeric-literals-001
+  title: Literal số nguyên và kiểu int mặc định
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Literal số nguyên và kiểu int mặc định**
+
+    Bài học giúp đọc literal số nguyên trong mã Java qua bốn cơ số và phân biệt kiểu của chính literal với kiểu biến nhận. Đây là nền tảng để dự đoán khi nào giá trị mặc định là int, khi nào hậu tố L chọn long và vì sao cách viết bit có thể mang giá trị âm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ số và kiểu ngay lúc biên dịch
+
+    1. Cùng giá trị 42 được viết bằng các literal thập phân, nhị phân, bát phân, hex như thế nào?
+    2. Vì sao 42 chọn overload int còn 42L chọn overload long dù cùng giá trị số học?
+
+    ### Giới hạn và chuyển kiểu hằng
+
+    1. Vì sao long x = 3_000_000_000 không biên dịch dù đích có kiểu long?
+    2. Trong những điều kiện nào hằng int có thể gán trực tiếp cho byte, short hoặc char?
+
+    ### Giải thích biểu thức và bit
+
+    1. Vì sao 0xFFFF_FFFF là int -1 còn 0xFFFF_FFFFL là long dương?
+    2. Làm thế nào phát hiện phép tính int đã tràn trước khi kết quả được gán cho long?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc literal nguyên | Xác định cơ số, hậu tố, kiểu và giá trị của bốn cách viết số 42. |
+    | Phân loại lỗi biên dịch | Giải thích và sửa literal thập phân quá int hoặc hằng thu hẹp vượt miền byte. |
+    | Dự đoán giá trị biểu thức | So sánh giá trị 0xFFFF_FFFF với dạng L và phân biệt promotion trước/sau phép cộng. |
+- id: numeric-literals-002
+  title: Hậu tố L cho long và thời điểm literal vượt phạm vi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Hậu tố L cho long và thời điểm literal vượt phạm vi**
+
+    Bài học tập trung vào thời điểm Java kiểm tra literal thập phân, ý nghĩa hậu tố L và hai loại lỗi khác nhau: literal quá lớn lúc biên dịch và phép tính int/long tràn sau khi các literal đã hợp lệ. Qua đó người học chọn đúng kiểu trước khi cộng/nhân và nhận biết khi L không đủ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểu literal và biên âm
+
+    1. Vì sao long value = 3_000_000_000 thất bại nhưng 3_000_000_000L hợp lệ?
+    2. Quy tắc đặc biệt nào cho phép -2147483648 và -9223372036854775808L?
+
+    ### Bit pattern và giới hạn
+
+    1. Cùng chữ số FFFFFFFF tại sao thêm L có thể đổi giá trị từ -1 sang 4294967295?
+    2. Vì sao thêm L không giúp một giá trị dương vượt Long.MAX_VALUE trở nên hợp lệ?
+
+    ### Tính toán an toàn
+
+    1. Tại sao gán 100_000 * 100_000 cho long vẫn nhận kết quả đã tràn?
+    2. Khi nào dùng Math.multiplyExact hay BigInteger thay cho việc chỉ thêm hậu tố L?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt lỗi literal và overflow | Chỉ ra dòng lỗi biên dịch, dòng tràn khi tính và dòng tính đúng bằng long. |
+    | Sửa promotion muộn | Đặt hậu tố L/cast tại một toán hạng trước phép nhân và dự đoán kết quả. |
+    | Chọn giải pháp biên | Dùng Math.*Exact hoặc BigInteger khi giới hạn long không đáp ứng yêu cầu. |
+- id: numeric-literals-003
+  title: Thập phân, nhị phân, bát phân và thập lục phân
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thập phân, nhị phân, bát phân và thập lục phân**
+
+    Bài học cung cấp cách chuyển đổi giá trị theo trọng số vị trí của cơ số 2, 8, 10, 16 và nhận ra cú pháp Java tương ứng. Người học biết lựa chọn ký pháp dễ đọc cho bitmask, đọc chuỗi theo radix tường minh và phân biệt cách in theo cơ số với bit pattern.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giá trị theo vị trí
+
+    1. Làm thế nào chứng minh 42, 0b101010, 052 và 0x2A cùng giá trị?
+    2. Vì sao cùng các chữ số 10 có thể đại diện những giá trị khác nhau tùy cơ số?
+
+    ### Ngữ pháp literal
+
+    1. Những chữ số và tiền tố nào hợp lệ cho binary, octal, decimal, hexadecimal trong Java?
+    2. Vì sao 0o12, 0b102 và 08 không phải các literal nguyên Java hợp lệ?
+
+    ### Chuyển đổi và hiển thị
+
+    1. Khi nào dùng Integer.parseInt(text, radix) thay cho Integer.decode(text)?
+    2. Vì sao Formatter %b không in nhị phân và cách nào cho chuỗi nhị phân của int?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đổi cơ số bằng tay | Tính được trọng số từng chữ số của 0x3C, 052 và chuỗi nhị phân tương ứng. |
+    | Kiểm tra mã literal | Nhận diện tiền tố, chữ số không hợp lệ và phần L của một literal Java. |
+    | Parse/format đúng radix | Dùng parseInt với radix, toBinaryString/toHexString và đối chiếu với decode. |
+- id: numeric-literals-004
+  title: Bẫy số 0 ở đầu literal bát phân
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bẫy số 0 ở đầu literal bát phân**
+
+    Bài học đi sâu vào nguyên nhân 010 cho giá trị 8 và 08 bị từ chối khi biên dịch, kể cả tình huống 08.0 hợp lệ theo cú pháp số thực. Người học xác định khi nào số 0 đầu là bẫy literal, khi nào là định dạng mã cần giữ dưới dạng String và parser nào phù hợp với hợp đồng dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phát hiện octal trap
+
+    1. Vì sao 010, 012 và 077 mang giá trị khác số thập phân trông giống chúng?
+    2. 08, 08.0, 010L và 0o10 khác nhau thế nào về tính hợp lệ?
+
+    ### Chuỗi và parse runtime
+
+    1. Với String s = "010", vì sao parseInt(s), parseInt(s,8) và decode(s) cho kết quả khác?
+    2. Khi nào mã khách hàng có số 0 đầu cần lưu bằng String thay vì biến số nguyên?
+
+    ### Kiểm thử và thiết kế biên
+
+    1. Vì sao test chỉ qua các giá trị 01 đến 07 không đủ để loại lỗi octal?
+    2. Làm thế nào kiểm tra số đếm thập phân chuẩn không cho số 0 đệm khi API yêu cầu như vậy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc octal | Đổi 010, 0123, 077 sang thập phân và phân biệt literal hợp lệ với lỗi biên dịch. |
+    | Bảo toàn dữ liệu định danh | Chọn String hoặc số theo ý nghĩa, tạo ví dụ mã 0010 và số lượng 10. |
+    | Thiết kế parser đầu vào | Dùng parseInt radix 10 hoặc validation canonical theo hợp đồng và kiểm thử mốc 08/09. |
+- id: numeric-literals-005
+  title: Dấu gạch dưới trong literal và các vị trí không hợp lệ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dấu gạch dưới trong literal và các vị trí không hợp lệ**
+
+    Bài học dạy quy tắc đặt dấu gạch dưới để đọc numeric literal dễ hơn mà không đổi giá trị/kiểu. Các ví dụ ở octal, phần phân số và số mũ làm rõ vị trí hợp lệ, lỗi compile time và lý do parser String không mặc nhiên chấp nhận dấu phân nhóm của mã nguồn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vị trí phân nhóm hợp lệ
+
+    1. Vì sao 1__000 và 0__52 vẫn hợp lệ, trong khi 0x_FF và 0b_101 không hợp lệ?
+    2. Tại sao dấu gạch dưới không thay đổi giá trị hay kiểu của một integer literal?
+
+    ### Floating point và ranh giới ký hiệu
+
+    1. Đặt dấu gạch dưới ở các phần số nguyên, phần lẻ và exponent như thế nào để vẫn hợp lệ?
+    2. Vì sao 1e+_3 và 0x1.fp_4 không hợp lệ dù có chữ số sau dấu?
+
+    ### Cú pháp nguồn so với String
+
+    1. Vì sao Integer.parseInt("1_000") báo lỗi trong khi int x = 1_000 hợp lệ?
+    2. Nếu API cho phép dữ liệu có gạch dưới, vì sao cần validation trước khi xóa dấu phân nhóm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra underscore | Phân loại và sửa các ví dụ sai bên cạnh 0x, 0b, dấu chấm, phần mũ và hậu tố L/F. |
+    | Chọn cách nhóm dễ đọc | Viết lại literal decimal, binary và hex dài với nhóm chữ số đúng cú pháp. |
+    | Tách source khỏi input | Thiết kế regex giới hạn dấu phân nhóm rồi parse số thập phân đã chuẩn hóa. |
+- id: numeric-literals-006
+  title: Literal số thực, ký hiệu mũ và hậu tố F, D
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Literal số thực, ký hiệu mũ và hậu tố F, D**
+
+    Bài học hệ thống hóa literal float/double dạng thập phân, số mũ e/E và hậu tố F/D, đồng thời chỉ ra sai số do làm tròn binary32/binary64. Nó giúp người học đọc các cú pháp như .75, 1e3F, 0x1.8p1, biết vì sao float x = 1.25 lỗi và phân biệt literal overflow với Infinity tạo bởi phép tính.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ pháp và kiểu floating point
+
+    1. Những dạng 1., .25, 1e3 và 5F xác định kiểu float/double thế nào?
+    2. Vì sao float x = 1.25 không biên dịch dù giá trị 1.25 biểu diễn chính xác được?
+
+    ### Số mũ và precision
+
+    1. Vì sao e biểu diễn lũy thừa 10 còn p đi với lũy thừa 2?
+    2. Điều gì khiến 0.1F mở rộng sang double khác với literal double 0.1?
+
+    ### Biên số thực và giá trị đặc biệt
+
+    1. Vì sao literal 1e400 lỗi biên dịch nhưng 1.0/0.0 có thể cho Infinity?
+    2. Trong trường hợp nào MIN_VALUE, MIN_NORMAL và -0.0 cần phân biệt khi đọc kết quả?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc cú pháp float/double | Phân loại .5, 5F, 1e3, 0x1p1, xác định hậu tố và kiểu chính xác. |
+    | Giải thích làm tròn | Dự đoán so sánh 0.1F == 0.1 và giải thích precision trước widening. |
+    | Phân tích biên | Phân biệt literal overflow/underflow, Infinity/NaN runtime và zero có dấu. |
+- id: numeric-literals-007
+  title: Literal dấu phẩy động thập lục phân
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Literal dấu phẩy động thập lục phân**
+
+    Bài học đi sâu vào biểu diễn số thực bằng phần trị hệ 16 nhân lũy thừa 2, cách đọc p/P và chuyển giữa nhị phân, hex và giá trị thập phân. Qua Double.toHexString, subnormal và các hằng ranh giới, người học kiểm tra được biểu diễn IEEE 754 mà không nhầm với raw bit pattern.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đọc cấu trúc hex float
+
+    1. Làm thế nào tính 0xA.Cp-2 và 0x1.Ap2f từ phần trị hệ 16?
+    2. Vì sao 0x1e3 là literal int, còn 0x1e3p0 là literal double?
+
+    ### Biểu diễn và chuẩn hóa
+
+    1. Vì sao 13.25 có thể viết thành 0xD.4p0 và 0x1.A8p3?
+    2. Double.toHexString(0.1) chứng tỏ điều gì về giá trị nhị phân lưu được và điều gì không?
+
+    ### Giới hạn IEEE 754
+
+    1. Vì sao Double.MIN_VALUE có dạng subnormal và có thể viết là 0x1p-1074?
+    2. Trong trường hợp nào hex floating literal vẫn phải làm tròn dù chữ số phần trị là hệ 16?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải mã hex float | Tính đúng giá trị 0x1.Cp2, 0x1p-4, 0xA.Cp-2 cùng kiểu float/double. |
+    | Chuẩn hóa số nhị phân | Chuyển 13.25 sang hai dạng hex float tương đương và so sánh toHexString. |
+    | Kiểm tra ranh giới precision | Đối chiếu MIN_NORMAL/MIN_VALUE, giá trị double 0.1 và output hex tương ứng. |
+- id: numeric-literals-008
+  title: Dấu âm là toán tử chứ không phải một phần của literal
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dấu âm là toán tử chứ không phải một phần của literal**
+
+    Bài học cho thấy dấu trừ trước số là unary operator, khác dấu âm trong chuỗi hay dấu của số mũ. Nó giải thích ngoại lệ ở Integer.MIN_VALUE, unary promotion của byte/char, overflow khi phủ định MIN_VALUE và khác biệt số 0 âm của floating point.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Token và cú pháp biểu thức
+
+    1. Vì sao -42 gồm một toán tử unary và một literal thay vì một token literal âm?
+    2. Trong 10 - -3 và -(a+b), các dấu trừ tác động lên toán hạng nào?
+
+    ### Biên và numeric promotion
+
+    1. Vì sao -2147483648 hợp lệ nhưng 2147483648 đứng riêng là lỗi?
+    2. Vì sao -byteValue có kiểu int và -Integer.MIN_VALUE vẫn nhận MIN_VALUE?
+
+    ### Phủ định có kiểm tra
+
+    1. Làm thế nào chuyển int MIN sang long trước khi phủ định để tránh overflow?
+    2. Vì sao -0.0 và 0.0 so sánh bằng nhau nhưng cho kết quả chia với dấu khác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích unary/binary minus | Tách token và diễn giải các biểu thức -42, a - -b, -(a+b). |
+    | Dự đoán promotion/overflow | Giải thích -byte, -Integer.MIN_VALUE và phép gán long sau unary negation. |
+    | Phủ định an toàn | Áp dụng Math.negateExact, -(long) Integer.MIN_VALUE hoặc BigInteger.negate đúng trường hợp. |
+- id: numeric-literals-009
+  title: Literal, biểu thức hằng và khác biệt với phân tích String
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Literal, biểu thức hằng và khác biệt với phân tích String**
+
+    Bài học tách ba cơ chế có thể cùng tạo số 42: numeric literal, compile-time constant expression và parser String lúc chạy. Qua final constant variable, chuyển hẹp cho byte, switch case và NumberFormatException, người học nhận ra luật cú pháp, thời điểm phát sinh lỗi và chính sách kiểm tra input.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ba cơ chế giá trị
+
+    1. Vì sao 42, 40+2 và Integer.parseInt("42") có thể bằng nhau nhưng thuộc cơ chế xử lý khác nhau?
+    2. Thế nào là một constant variable và vì sao final int x = Integer.parseInt("5") chưa phải constant variable?
+
+    ### Thu hẹp hằng và switch
+
+    1. Tại sao byte b = 100+20 hợp lệ còn cộng với biến int thông thường lại bị từ chối?
+    2. Vì sao nhãn case code+1 với constant variable hợp lệ còn case Integer.parseInt("11") không hợp lệ?
+
+    ### Parse và kiểm soát lỗi
+
+    1. Vì sao parseInt("010") khác Integer.decode("010") và literal 010?
+    2. Làm thế nào xử lý cú pháp radix, dấu, whitespace và NumberFormatException của dữ liệu ngoài?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại thời điểm xử lý | Phân biệt lỗi nguồn Java lúc biên dịch và NumberFormatException khi parse String. |
+    | Áp dụng constant expression | Chứng minh giá trị hằng int vừa byte, sửa ca không hằng và nhãn switch case. |
+    | Thiết kế parser | Chọn parseInt/decode/parseUnsignedInt theo hợp đồng radix và xử lý số vượt miền. |
+- id: numeric-literals-010
+  title: Đọc mẫu bit của literal hex có bit dấu được bật
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đọc mẫu bit của literal hex có bit dấu được bật**
+
+    Bài học vận dụng literal hex như mẫu bit int 32 bit hoặc long 64 bit và giải mã số âm bù hai theo signedness. Người học giải thích khác biệt 0xFFFF_FFFF với dạng L, sign extension khi gán sang long và cách đổi sang unsigned bằng API hoặc mask phù hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bit dấu và bù hai
+
+    1. Vì sao 0x8000_0000 là int âm nhưng 0x8000_0000L là long dương?
+    2. Cách dùng U-2^w để giải mã 0xF000_0000 theo int có dấu là gì?
+
+    ### Mở rộng dấu và unsigned
+
+    1. Vì sao long x = 0xFFFF_FFFF giữ giá trị -1 chứ không thành 4294967295?
+    2. Khi nào Integer.toUnsignedLong(bits) tương đương bits & 0xFFFF_FFFFL và vì sao mask int chưa đủ?
+
+    ### Hiển thị và phân tích mẫu bit
+
+    1. Integer.toHexString(-1), Long.toUnsignedString(-1L) và println(-1) khác nhau thế nào?
+    2. Làm sao dùng parseUnsignedInt hoặc dịch >>> để quan sát mẫu bit có bit dấu bật?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải mã hex signed | Tính giá trị int của 0x8000_0000, 0xFFFF_FFFF và 0xF000_0000 qua bit dấu. |
+    | Khôi phục unsigned 32 bit | Dùng Integer.toUnsignedLong, mặt nạ long hoặc Integer.parseUnsignedInt để nhận đúng miền không dấu. |
+    | Dự đoán sign extension | Phân biệt long gán từ int literal với long literal có L và chứng minh output hex sau widening. |

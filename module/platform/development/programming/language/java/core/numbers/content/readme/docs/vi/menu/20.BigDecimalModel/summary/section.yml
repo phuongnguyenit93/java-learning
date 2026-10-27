@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "MÔ HÌNH BIGDECIMAL — LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: "big-decimal-model-001"
+    order: 1
+    title: "Số thập phân độ chính xác tùy ý và tính bất biến"
+    description: "Giới thiệu BigDecimal như đối tượng decimal hữu hạn có unscaled/scale và bất biến, cùng giới hạn của phép chia exact và trạng thái cập nhật."
+    transition:
+      to: "big-decimal-model-002"
+      description: "Từ mục đích và immutability của BigDecimal đi vào cách unscaled value và scale tạo thành giá trị số."
+  - id: "big-decimal-model-002"
+    order: 2
+    title: "Unscaled value, scale và công thức xác định giá trị"
+    description: "Đọc công thức unscaled integer nhân 10 mũ âm của scale, các API quan sát biểu diễn và hệ quả khi thay đổi scale."
+    transition:
+      to: "big-decimal-model-003"
+      description: "Sau khi hiểu cặp unscaled/scale, phân biệt scale biểu diễn với precision đo số chữ số có nghĩa."
+  - id: "big-decimal-model-003"
+    order: 3
+    title: "Precision khác scale"
+    description: "Phân biệt số chữ số có nghĩa của BigDecimal với vị trí scale và so sánh setScale với MathContext qua các ca rounding."
+    transition:
+      to: "big-decimal-model-004"
+      description: "Từ định nghĩa precision và scale sang ba dạng dấu của scale và tác động lên phép dịch điểm thập phân."
+  - id: "big-decimal-model-004"
+    order: 4
+    title: "Scale bằng 0, dương hoặc âm"
+    description: "Đi sâu vào scale dương, zero, âm và các thao tác setScale, movePointLeft/Right, scaleByPowerOfTen."
+    transition:
+      to: "big-decimal-model-005"
+      description: "Hiểu scale là cơ sở chọn constructor từ chuỗi, BigInteger, long hoặc cặp unscaled/scale."
+  - id: "big-decimal-model-005"
+    order: 5
+    title: "Tạo từ String, BigInteger, long và unscaled value"
+    description: "Hướng dẫn chọn constructor từ text decimal, số nguyên lớn, long hoặc cặp unscaled/scale và hiểu constructor có MathContext."
+    transition:
+      to: "big-decimal-model-006"
+      description: "Từ cách tạo decimal chính xác đến bẫy riêng khi đối số constructor đã là binary double xấp xỉ."
+  - id: "big-decimal-model-006"
+    order: 6
+    title: "Constructor nhận double và nhiễu biểu diễn nhị phân"
+    description: "Giải thích constructor double giữ chính xác giá trị binary64, sự khác biệt với valueOf và String cùng giới hạn phục hồi dữ liệu."
+    transition:
+      to: "big-decimal-model-007"
+      description: "Sau bẫy constructor double, hệ thống hóa các overload valueOf và hằng decimal sẵn có."
+  - id: "big-decimal-model-007"
+    order: 7
+    title: "valueOf và các hằng ZERO, ONE, TEN"
+    description: "Khái quát valueOf(long), valueOf(long,scale), valueOf(double), hằng ZERO/ONE/TEN và equality của các biểu diễn có scale."
+    transition:
+      to: "big-decimal-model-008"
+      description: "Từ các factory và hằng phổ biến sang việc lưu các số zero cuối khi scale mang thông tin nghiệp vụ."
+  - id: "big-decimal-model-008"
+    order: 8
+    title: "Giữ dấu 0 cuối trong biểu diễn có ý nghĩa"
+    description: "Phân tích ý nghĩa dữ liệu của các số zero cuối, equality theo scale, chính sách chuẩn hóa và truyền tải qua JSON/JDBC/CSV."
+    transition:
+      to: "big-decimal-model-009"
+      description: "Từ giữ representation decimal đến ranh giới tập giá trị: BigDecimal hữu hạn và không chứa NaN/Infinity."
+  - id: "big-decimal-model-009"
+    order: 9
+    title: "BigDecimal không có NaN hoặc vô cực"
+    description: "Nêu ranh giới giá trị hữu hạn của BigDecimal, lỗi chuyển NaN/Infinity, phép chia và mất miền khi chuyển sang double."
+    transition:
+      to: "big-decimal-model-010"
+      description: "Từ ranh giới miền và conversion sang quyết định chọn BigDecimal hay float/double theo nhu cầu hệ thống."
+  - id: "big-decimal-model-010"
+    order: 10
+    title: "Khi nào dùng BigDecimal thay float hoặc double"
+    description: "Tổng hợp các tiêu chí chọn BigDecimal, số nguyên, float hoặc double theo exact decimal, sai số, hiệu năng và API."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Số thập phân độ chính xác tùy ý và tính bất biến | Unscaled value, scale và công thức xác định giá trị | Precision khác scale | Scale bằng 0, dương hoặc âm | Tạo từ String, BigInteger, long và unscaled value | Constructor nhận double và nhiễu biểu diễn nhị phân | valueOf và các hằng ZERO, ONE, TEN | Giữ dấu 0 cuối trong biểu diễn có ý nghĩa | BigDecimal không có NaN hoặc vô cực | Khi nào dùng BigDecimal thay float hoặc double |
+  | Vấn đề cần hiểu | Khi nào BigDecimal cần thiết và vì sao method không sửa object? | Một giá trị decimal được xác định từ hai thành phần nào? | Vì sao cùng một số có precision và scale rất khác nhau? | Scale âm hoạt động thế nào và khi nào cần rounding? | Constructor nào giữ đúng đơn vị, giá trị và scale nguồn? | Vì sao tạo BigDecimal từ 0.1 double sinh chuỗi dài? | Factory hoặc hằng nào tạo đúng giá trị và scale cần dùng? | Khi nào cần giữ số 0 cuối thay vì chuẩn hóa? | Vì sao BigDecimal không giữ NaN/Infinity và ép ngược có thể mất số? | Làm sao chọn kiểu số theo contract chứ không theo thói quen? |
+  | Giá trị đối với OOP/module | Cơ sở chọn mô hình decimal và viết code immutable đúng. | Đọc chính xác cấu trúc và biến đổi biểu diễn BigDecimal. | Ngăn nhầm lẫn yêu cầu rounding và số chữ số đầu ra. | Ngăn nhầm lẫn dấu scale, giá trị nguyên và dịch điểm. | Xây dựng đầu vào decimal đúng ngay từ ranh giới dữ liệu. | Tránh đưa nhiễu nhị phân vào tính toán decimal. | Tránh sai do overload và đồng nhất object với giá trị. | Bảo toàn thông tin biểu diễn qua API và lưu trữ. | Bảo vệ biên chuyển đổi giữa decimal và binary floating-point. | Ra quyết định kiến trúc số liệu phù hợp nghiệp vụ. |
+  | Tư duy hình thành | Tách giá trị decimal, object và trạng thái hệ thống. | Tính giá trị qua công thức thay vì đoán từ chuỗi in. | Đọc cấu trúc số trước khi đặt ngưỡng chữ số. | Phân tích miền scale riêng với dấu giá trị. | Chọn overload theo hợp đồng của nguồn. | Theo dõi toàn tuyến dữ liệu và điểm làm tròn nguồn. | Đọc kiểu đối số, scale và hợp đồng equals. | Tách giá trị toán học khỏi contract lexical/scale. | Tách tập giá trị, ngoại lệ, độ chính xác và trạng thái lỗi. | Đánh giá nhu cầu exactness, rounding, biên và chi phí. |

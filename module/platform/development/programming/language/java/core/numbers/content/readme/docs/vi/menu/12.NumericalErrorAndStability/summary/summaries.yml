@@ -1,0 +1,301 @@
+summaries:
+- id: numerical-error-and-stability-001
+  title: Sai số biểu diễn khác sai số thuật toán
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Sai số biểu diễn khác sai số thuật toán**
+
+    Một kết quả lệch có thể do số đầu vào không biểu diễn được chính xác, do làm tròn ở phép toán hoặc do cách tính. Bài học giúp chẩn đoán đúng nguồn sai số trước khi đổi kiểu dữ liệu hay công thức.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn gốc sai số
+
+    1. Vì sao `0.1 + 0.2` không có cùng mẫu bit với `0.3`, trong khi `0.5 + 0.25` có thể chính xác?
+    2. Phân biệt sai số biểu diễn, roundoff từng phép toán và sai số do xấp xỉ/công thức thuật toán bằng ví dụ nào?
+
+    ### Chẩn đoán và khắc phục
+
+    1. Vì sao `1e16 + 1.0` mất số hạng 1 dù hai toán hạng đều biểu diễn chính xác?
+    2. Khi `sqrt(x*x+1)-x` trả 0 ở `x=1e8`, biến đổi liên hợp và kiểm tra overflow giúp gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại nguồn sai số | Giải thích từng bước hai ví dụ `0.1 + 0.2` và `1e16 + 1.0`, xác định giai đoạn thông tin bị mất. |
+    | Đánh giá công thức | Đối chiếu công thức trực tiếp/liên hợp và `Math.log`/`Math.log1p` trên đầu vào nhỏ, ghi rõ miền áp dụng. |
+    | Chọn hướng xử lý | Phân biệt trường hợp nên đổi mô hình số, cải thiện thuật toán hoặc kiểm soát độ nhạy của đầu vào. |
+- id: numerical-error-and-stability-002
+  title: Sai số tuyệt đối, tương đối và tích lũy qua nhiều bước
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Sai số tuyệt đối, tương đối và tích lũy qua nhiều bước**
+
+    Sai khác chỉ có ý nghĩa khi gắn với thước đo, đơn vị và giá trị tham chiếu. Bài học hướng dẫn đo lỗi tuyệt đối, lỗi tương đối và xem xét sai số cộng dồn trong nhiều bước `double`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thước đo sai số
+
+    1. Sai số tuyệt đối và tương đối khác nhau về đơn vị và ý nghĩa như thế nào khi kết quả thay đổi nhiều bậc độ lớn?
+    2. Vì sao sai số tương đối không xác định tại tham chiếu bằng 0 và cần tiêu chí thay thế nào?
+
+    ### Tích lũy và giới hạn
+
+    1. Vì sao cộng `0.1` mười lần có thể khác `0.1 * 10.0` dù tổng toán học bằng nhau?
+    2. Cận `γ(n-1) Σ|xi|` cần những giả thiết gì, và vì sao không dự đoán lỗi tăng đơn điệu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đo lỗi | Tính và giải thích sai số tuyệt đối, tương đối và phần trăm từ một cặp kết quả/tham chiếu. |
+    | Phân tích dãy cộng | Trace phép cộng lặp, dùng `Math.ulp` để lý giải phần đóng góp bị nuốt và so với Kahan. |
+    | Thiết kế ngưỡng | Nêu lý do chọn absTol/relTol theo thang đo, xử lý trường hợp zero, NaN và Infinity. |
+- id: numerical-error-and-stability-003
+  title: Giới hạn của hằng epsilon cố định cho mọi bài toán
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn của hằng epsilon cố định cho mọi bài toán**
+
+    Hằng `1e-9` không phản ánh mọi thang dữ liệu. Bài học xây dựng phép so sánh gần bằng có chính sách rõ ràng, kiểm tra số đặc biệt và hiểu vì sao sự gần bằng không phải quan hệ tương đương.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngưỡng và thang đo
+
+    1. Vì sao ngưỡng tuyệt đối `1e-9` quá rộng cho `1e-12` với `2e-12` nhưng quá chặt cho cặp quanh `1e12`?
+    2. Machine epsilon, `Math.ulp(x)` và dung sai nghiệp vụ khác nhau như thế nào?
+
+    ### Thiết kế phép so sánh
+
+    1. Khi nào nên kết hợp absTol với relTol, và phải kiểm tra gì đối với NaN, Infinity, signed zero?
+    2. Tại sao phép `|a-b| <= epsilon` không bắc cầu và không thể dùng tùy tiện trong `equals`, `Comparator`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết lập tolerance | Đề xuất absTol/relTol có giải thích cho giá trị gần 0 và giá trị lớn. |
+    | Hiện thực an toàn | Đánh giá hàm so sánh trên finite, NaN, Infinity và trường hợp chênh lệch có thể tràn. |
+    | Bảo vệ hợp đồng | Chứng minh bằng ba giá trị rằng so sánh epsilon không bắc cầu, từ đó tránh dùng làm khóa/thứ tự. |
+- id: numerical-error-and-stability-004
+  title: Sắp xếp thứ tự phép tính để giảm mất thông tin
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Sắp xếp thứ tự phép tính để giảm mất thông tin**
+
+    Dấu ngoặc và phép biến đổi tương đương trên giấy có thể khiến `double` làm tròn ở vị trí khác nhau. Bài học thực hành nhóm tổng, tránh cancellation và xử lý overflow/underflow trung gian bằng API phù hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thứ tự thực hiện
+
+    1. Vì sao `(1e16 + 1) - 1e16` cho 0 còn `(1e16 - 1e16) + 1` cho 1?
+    2. Khi nào việc ghép nhóm các số lớn và nhỏ giúp tổng tốt hơn, và vì sao không có thứ tự luôn tối ưu?
+
+    ### Công thức ổn định
+
+    1. Biến đổi `sqrt(1+x)-1` như thế nào để giữ giá trị rất nhỏ khi `x=1e-16`?
+    2. Khi nào `Math.hypot`, `Math.log1p`, `Math.expm1` hoặc `Math.fma` giải quyết sai số trung gian khác cách tính trực tiếp?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích phép toán | Trace ULP và roundoff ở những thứ tự cộng khác nhau, so với tổng tham chiếu. |
+    | Cải thiện công thức | Dùng liên hợp hoặc hàm Math chuyên dụng với dữ liệu biên đúng miền xác định. |
+    | Kiểm soát trung gian | Đưa ví dụ phép nhân/chia tránh overflow/underflow và đánh giá chi phí thay đổi tính tái lập bit. |
+- id: numerical-error-and-stability-005
+  title: Tổng bù và tư tưởng Kahan summation
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tổng bù và tư tưởng Kahan summation**
+
+    Kahan giữ trạng thái `compensation` để giảm sai số của tổng `double` dài. Bài học yêu cầu hiểu từng dòng cập nhật, so sánh với Neumaier và nhận diện dữ liệu triệt tiêu khiến Kahan chuẩn thất bại.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế cộng bù
+
+    1. Trong bốn phép gán của Kahan, `compensation` có dấu và ý nghĩa gì, tại sao phải tính trước khi cập nhật `sum`?
+    2. Vì sao Kahan giữ được đóng góp của 10.000 số `1.0` vào `1e16` trong ví dụ?
+
+    ### Giới hạn và lựa chọn
+
+    1. Vì sao Kahan vẫn trả 0 với `{1e16,1,-1e16}`, trong khi Neumaier có thể trả 1?
+    2. Cách cộng bù thay đổi hiệu năng, bộ nhớ phụ, tính tái lập và chính sách xử lý NaN/Infinity thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tự triển khai | Viết hàm Kahan O(n) thời gian, O(1) bộ nhớ và giải thích giá trị từng biến qua các bước cộng. |
+    | Đối chiếu thuật toán | Dự đoán rồi so kết quả naive, Kahan và Neumaier trên dãy có triệt tiêu mạnh. |
+    | Đánh giá phạm vi | Chỉ ra điều kiện cần bổ sung thuật toán hoặc đổi sang kiểu chính xác khi yêu cầu kết quả decimal/số nguyên. |
+- id: numerical-error-and-stability-006
+  title: Điều kiện bài toán và trường hợp sai số đầu vào bị khuếch đại
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Điều kiện bài toán và trường hợp sai số đầu vào bị khuếch đại**
+
+    Một bài toán có thể nhạy với dữ liệu ngay cả khi các phép trừ được thực hiện chính xác. Bài học phân biệt độ nhạy của hàm toán học với sự ổn định của thuật toán và dùng số điều kiện để đánh giá khuếch đại sai số.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Điều kiện bài toán
+
+    1. Số điều kiện tương đối `|x f'(x)/f(x)|` được diễn giải dưới giả thiết nào?
+    2. Tại sao hiệu hai số gần nhau hoặc `1/(x-1)` gần điểm cực có thể khuếch đại mạnh sai số tương đối đầu vào?
+
+    ### Thuật toán và kiểm chứng
+
+    1. Vì sao phép trừ của hai số `double` gần nhau có thể chính xác mà đáp án vẫn rất nhạy với nhiễu đầu vào?
+    2. So sánh `sqrt(x+1)-sqrt(x)` với công thức liên hợp và `Math.hypot` giúp phân tách vấn đề conditioning với stability ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đánh giá độ nhạy | Tính hệ số khuếch đại sai số tương đối từ nhiễu `2^-50` của ví dụ `a=1+2^-40`. |
+    | Phân biệt lỗi | Dùng sơ đồ đầu vào lý tưởng → đầu vào nhiễu → đầu ra số để xác định phần condition và phần algorithm. |
+    | Kiểm thử perturbation | Dùng `Math.nextUp`/`nextDown` hoặc nhiễu có kiểm soát để đánh giá tính nhạy và chọn chỉ tiêu sai số. |
+- id: numerical-error-and-stability-007
+  title: Không làm tròn sau mọi phép tính nếu hợp đồng không yêu cầu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không làm tròn sau mọi phép tính nếu hợp đồng không yêu cầu**
+
+    Làm tròn tại mỗi bước có thể đổi tổng đã quyết toán dù scale và mode không đổi. Bài học gắn thao tác `BigDecimal.setScale` với ranh giới hợp đồng và chỉ rõ khi nào từng dòng cần được chốt độc lập.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới làm tròn
+
+    1. Vì sao làm tròn hai khoản `0.015` trước khi cộng được `0.04`, còn cộng rồi làm tròn được `0.03`?
+    2. Điều kiện nào khiến làm tròn từng dòng là nghĩa vụ hợp đồng, thay vì chỉ làm tròn tổng?
+
+    ### API và số học decimal
+
+    1. `setScale(2)`, `MathContext(2)` và `Math.round` khác nhau ở mục đích/chính sách nào?
+    2. Vì sao phép chia `BigDecimal` cho 3 có thể cần rounding, và làm thế nào phân bổ `10.00` thành ba phần mà bảo toàn tổng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định nghĩa chính sách | Viết quy tắc ranh giới làm tròn, scale, mode và phân bổ phần dư cho một tình huống hóa đơn. |
+    | Thực thi BigDecimal | Tính hai phương án đơn giá/thành tiền và dự đoán kết quả trước khi chạy. |
+    | Phân biệt thao tác | Giải thích vì sao `String.format` chỉ đổi chuỗi còn `setScale` tạo giá trị decimal mới. |
+- id: numerical-error-and-stability-008
+  title: Định dạng ít chữ số không sửa sai số của giá trị đang lưu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Định dạng ít chữ số không sửa sai số của giá trị đang lưu**
+
+    In `0.30` không có nghĩa biến `double` đã trở thành số thập phân 0.30 chính xác. Bài học tách giá trị bit, văn bản hiển thị và thao tác format→parse có thể làm mất độ chính xác khi trao đổi dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giá trị và cách hiển thị
+
+    1. Vì sao `String.format("%.2f", 0.1+0.2)` cho `0.30` mà so sánh với literal `0.3` vẫn có thể false?
+    2. `Double.toString`, `new BigDecimal(double)` và `BigDecimal.valueOf(double)` phơi bày những khía cạnh khác nhau nào của giá trị đã lưu?
+
+    ### Định dạng và trao đổi dữ liệu
+
+    1. Điều gì xảy ra nếu parse lại chuỗi `0.30` rồi dùng giá trị mới cho phép tính tiếp?
+    2. Khi xuất log, JSON hoặc giao diện, vì sao phải định nghĩa locale và độ chính xác cần bảo toàn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết giá trị | In raw value, format hai chữ số, parse lại và so mẫu bit/tính bằng để chỉ ra thời điểm biến thực sự đổi. |
+    | Giữ nguồn decimal | Tạo `BigDecimal` từ chuỗi đầu vào và phân biệt với constructor nhận `double` đã làm tròn. |
+    | Thiết kế hiển thị | Lựa chọn chuỗi xuất để con người đọc hoặc để round-trip, giải thích rủi ro mất dữ liệu. |
+- id: numerical-error-and-stability-009
+  title: Chọn double hay BigDecimal theo mô hình dữ liệu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn double hay BigDecimal theo mô hình dữ liệu**
+
+    Chọn kiểu số là quyết định về hợp đồng dữ liệu, không chỉ số chữ số được lưu. Bài học so sánh `double`, `BigDecimal`, số nguyên đơn vị nhỏ nhất và làm rõ tác động của scale, division, equals, JSON và cơ sở dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình và biểu diễn
+
+    1. Với dữ liệu đo từ cảm biến, giá tiền decimal và số lượng nguyên rất lớn, nên chọn `double`, `BigDecimal` hay kiểu nguyên, vì sao?
+    2. Tại sao `new BigDecimal(0.1)` khác `new BigDecimal("0.1")`, và điều gì đã mất nếu chuyển từ `double` sau khi tính?
+
+    ### Hợp đồng API
+
+    1. Vì sao `BigDecimal("2.0").equals(BigDecimal("2.00"))` false nhưng `compareTo` bằng 0?
+    2. Điều gì phải kiểm tra ở phép chia vô hạn, `MathContext`, đơn vị nhỏ nhất, JSON và cột DECIMAL/DOUBLE để bảo toàn dữ liệu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quyết định kiểu | Lập ma trận trường hợp số đo/số tiền/số đếm, chỉ ra yêu cầu chính xác và miền số cho từng kiểu. |
+    | Sử dụng BigDecimal | Tính tiền và giảm giá với `setScale`/`RoundingMode`, dự đoán `equals`/`compareTo` theo scale. |
+    | Rà soát ranh giới | Phát hiện đường đi dữ liệu decimal qua `double`, mapping DB hoặc serialize làm mất ý nghĩa nguồn. |
+- id: numerical-error-and-stability-010
+  title: Kiểm chứng thuật toán bằng dữ liệu biên và kết quả tham chiếu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm chứng thuật toán bằng dữ liệu biên và kết quả tham chiếu**
+
+    Một testcase dễ có thể bỏ sót tràn nguyên, underflow, signed zero và mất chính xác dấu phẩy động. Bài học xây dựng oracle độc lập và bộ dữ liệu biên có chủ đích, kiểm tra cả hành vi ngoại lệ lẫn độ sai khác cho phép.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Oracle và dữ liệu biên
+
+    1. Vì sao `BigInteger.valueOf(a*b)` có thể là oracle sai nếu `a*b` đã tràn kiểu `int`?
+    2. Cần thử những giá trị nào quanh `Integer.MAX_VALUE`, `2^53`, zero, subnormal và Infinity để phát hiện lỗi đặc trưng?
+
+    ### Tiêu chí và tính tái lập
+
+    1. Với hợp đồng decimal chính xác và hợp đồng floating-point xấp xỉ, cách tạo expected và kiểm tra actual khác nhau thế nào?
+    2. Một phép thử ngẫu nhiên có seed và phép thử thuộc tính cần lưu điều kiện tiên quyết gì để tái hiện và tránh assert sai?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây dựng oracle | Tạo tham chiếu BigInteger/BigDecimal trước phép toán có nguy cơ tràn, xác định mô hình đầu vào chính xác. |
+    | Thiết kế bộ test | Lập các testcase boundary, NaN/Infinity, signed zero, cancellation và kết quả dự kiến từng loại. |
+    | Kiểm chứng gần đúng | Áp dụng so sánh absTol/relTol hợp đồng, bổ sung metamorphic test và random seed tái lập. |

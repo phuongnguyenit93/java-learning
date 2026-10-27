@@ -1,0 +1,37 @@
+sections:
+  big-decimal-arithmetic-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  big-decimal-arithmetic-002:
+    difficulty: ADVANCED
+    isImportant: true
+  big-decimal-arithmetic-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  big-decimal-arithmetic-004:
+    difficulty: ADVANCED
+    isImportant: true
+  big-decimal-arithmetic-005:
+    difficulty: ADVANCED
+    isImportant: false
+  big-decimal-arithmetic-006:
+    difficulty: BASIC
+    isImportant: false
+  big-decimal-arithmetic-007:
+    difficulty: BASIC
+    isImportant: true
+  big-decimal-arithmetic-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  big-decimal-arithmetic-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  big-decimal-arithmetic-010:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  big-decimal-arithmetic-011:
+    difficulty: ADVANCED
+    isImportant: true
+  big-decimal-arithmetic-012:
+    difficulty: ADVANCED
+    isImportant: true

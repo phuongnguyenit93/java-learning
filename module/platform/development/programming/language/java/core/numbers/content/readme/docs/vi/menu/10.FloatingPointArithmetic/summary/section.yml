@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "PHÉP TOÁN DẤU PHẨY ĐỘNG — LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: "floating-point-arithmetic-001"
+    order: 1
+    title: "Cộng, trừ, nhân, chia và làm tròn về giá trị biểu diễn được"
+    description: "Mở đầu bằng kiểu `float`/`double`, cách phép toán cơ bản làm tròn về lưới nhị phân biểu diễn được và sự khác nhau giữa làm tròn số học, hiển thị, nghiệp vụ."
+    transition:
+      to: "floating-point-arithmetic-002"
+      description: "Từ mô hình phép toán cơ bản đến quy tắc đặc biệt khi số chia là zero."
+  - id: "floating-point-arithmetic-002"
+    order: 2
+    title: "Chia cho 0: phân biệt kết quả vô cực và NaN"
+    description: "Phân biệt chia nguyên cho zero với chia thực cho ±0; dự đoán vô cực có dấu, NaN và kiểm tra kết quả bằng các API `Double`."
+    transition:
+      to: "floating-point-arithmetic-003"
+      description: "Từ vô cực do chia zero sang hiện tượng overflow và vùng số rất nhỏ cũng tạo kết quả đặc biệt."
+  - id: "floating-point-arithmetic-003"
+    order: 3
+    title: "Overflow, underflow và giá trị subnormal"
+    description: "Khảo sát miền biểu diễn hữu hạn, overflow thành Infinity, gradual underflow và subnormal; dùng giới hạn kiểu để phân tích phép tính trung gian."
+    transition:
+      to: "floating-point-arithmetic-004"
+      description: "Sau khi nắm các giới hạn miền số, đối chiếu hai quy tắc phần dư thường bị nhầm lẫn."
+  - id: "floating-point-arithmetic-004"
+    order: 4
+    title: "Toán tử % khác Math.IEEEremainder"
+    description: "So sánh phần dư theo thương cắt về zero của `%` với phần dư IEEE theo thương gần nhất, hòa chọn chẵn; áp dụng vào modulo và pha."
+    transition:
+      to: "floating-point-arithmetic-005"
+      description: "Sau những trường hợp NaN của phép dư, tìm hiểu quy tắc lan truyền NaN qua các phép tính khác."
+  - id: "floating-point-arithmetic-005"
+    order: 5
+    title: "Lan truyền NaN và các trường hợp đặc biệt"
+    description: "Theo dõi nguồn phát sinh NaN, quy luật lan truyền, so sánh primitive so với wrapper và chính sách nhận hoặc từ chối dữ liệu đặc biệt."
+    transition:
+      to: "floating-point-arithmetic-006"
+      description: "Từ phân biệt NaN và zero ở mức so sánh đến tác động riêng của bit dấu zero trong hàm toán học."
+  - id: "floating-point-arithmetic-006"
+    order: 6
+    title: "Tác động của signed zero tới phép chia và hàm toán học"
+    description: "Đi sâu vào mẫu bit ±0, tác động của dấu với phép chia, các hàm Math, equality, ordering và collection."
+    transition:
+      to: "floating-point-arithmetic-007"
+      description: "Từ các khác biệt từng giá trị đặc biệt sang tác động làm tròn của thứ tự và cách nhóm phép tính."
+  - id: "floating-point-arithmetic-007"
+    order: 7
+    title: "Vì sao phép toán không bảo đảm tính kết hợp của số thực toán học"
+    description: "Giải thích mất tính kết hợp của cộng/nhân dấu phẩy động do làm tròn và miền số, cùng hệ quả với thứ tự reduction và tính tái lập."
+    transition:
+      to: "floating-point-arithmetic-008"
+      description: "Một nguyên nhân trực tiếp của khác biệt tổng là số hạng nhỏ bị hấp thụ ở accumulator lớn."
+  - id: "floating-point-arithmetic-008"
+    order: 8
+    title: "Mất thông tin khi cộng số rất nhỏ vào số rất lớn"
+    description: "Giải thích absorption khi cộng số rất nhỏ vào tổng lớn qua ULP, điểm mất số hạng và thuật toán cộng có bù."
+    transition:
+      to: "floating-point-arithmetic-009"
+      description: "Từ mất thông tin trong phép cộng sang độ nhạy của hiệu hai giá trị gần bằng nhau."
+  - id: "floating-point-arithmetic-009"
+    order: 9
+    title: "Triệt tiêu chữ số khi trừ hai số gần bằng nhau"
+    description: "Phân tích catastrophic cancellation, nguồn sai số toán hạng và công thức ổn định như liên hợp căn, expm1/log1p, nghiệm bậc hai."
+    transition:
+      to: "floating-point-arithmetic-010"
+      description: "Một cách xử lý sai số ở biểu thức tích cộng là hợp nhất hai phép thành một lần làm tròn bằng FMA."
+  - id: "floating-point-arithmetic-010"
+    order: 10
+    title: "Math.fma và sự khác biệt với nhân rồi cộng"
+    description: "Phân biệt phép nhân-cộng fused một lần làm tròn với nhân rồi cộng hai lần, các trường hợp biên và ứng dụng dot product/Horner."
+    transition:
+      to: "floating-point-arithmetic-011"
+      description: "Từ khác biệt ngữ nghĩa của phép FMA chuyển sang quy định strict của toàn bộ phép toán Java từ Java 17."
+  - id: "floating-point-arithmetic-011"
+    order: 11
+    title: "Always-strict từ Java 17 và vai trò lịch sử của strictfp"
+    description: "Giải thích lịch sử `strictfp`, extended exponent và JEP 306 always-strict của Java 17, cùng giới hạn đối với tính tái lập."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Cộng, trừ, nhân, chia và làm tròn về giá trị biểu diễn được | Chia cho 0: phân biệt kết quả vô cực và NaN | Overflow, underflow và giá trị subnormal | Toán tử % khác Math.IEEEremainder | Lan truyền NaN và các trường hợp đặc biệt | Tác động của signed zero tới phép chia và hàm toán học | Vì sao phép toán không bảo đảm tính kết hợp của số thực toán học | Mất thông tin khi cộng số rất nhỏ vào số rất lớn | Triệt tiêu chữ số khi trừ hai số gần bằng nhau | Math.fma và sự khác biệt với nhân rồi cộng | Always-strict từ Java 17 và vai trò lịch sử của strictfp |
+  | Vấn đề cần hiểu | Vì sao kết quả `+`, `-`, `*`, `/` có thể khác số thực chính xác? | Chia cho zero tạo exception, vô cực hay NaN trong từng trường hợp? | Khi giá trị quá lớn hoặc quá gần zero, Java còn biểu diễn được gì? | Hai phép lấy dư khác dấu hoặc khác khoảng kết quả vì sao? | NaN sinh ra, lan qua phép tính và được so sánh thế nào? | Vì sao hai zero bằng theo `==` nhưng khác hành vi? | Vì sao thay ngoặc hoặc thứ tự cộng có thể đổi kết quả? | Khi nào một số hạng khác zero bị nuốt trong tổng? | Tại sao hiệu nhỏ có thể kém tin cậy và sửa công thức thế nào? | Vì sao fused multiply-add có thể khác nhân rồi cộng? | Java 17 strict thay đổi điều gì so với modifier lịch sử? |
+  | Giá trị đối với OOP/module | Nền tảng đọc đúng mọi kết quả số học trong module. | Tránh lỗi xử lý ngoại lệ và kiểm soát dữ liệu đầu ra. | Phát hiện rủi ro tràn số trong phép đo và thuật toán. | Chọn đúng API cho chu kỳ và phép tính phần dư. | Giữ tính đúng của pipeline số liệu và validation. | Bảo toàn dấu tại biên toán học và khi lưu dữ liệu. | Thiết kế phép tổng có kết quả kiểm soát được. | Phát hiện sai số cộng dồn ở thống kê và đo lường. | Cải thiện độ ổn định của công thức tính toán. | Lựa chọn tối ưu số học có căn cứ cho phép nhân-cộng. | Rà soát chính xác mã số học khi nâng phiên bản Java. |
+  | Tư duy hình thành | Theo dõi kiểu toán hạng và bước làm tròn. | Nhận diện kiểu phép chia trước khi chọn cách kiểm tra. | Phân biệt range, precision và tininess. | Suy từ định nghĩa thương và miền kết quả. | Tách giá trị đặc biệt khỏi logic so sánh thông thường. | Phân tách equality số học, bit và hợp đồng API. | Theo dấu cây biểu thức và mỗi bước làm tròn. | So sánh độ lớn số hạng với ULP và dữ liệu nguồn. | Đánh giá nguồn sai số trước khi trừ và biến đổi công thức. | Theo dõi số lần làm tròn và tính tương thích bit. | Phân biệt quy tắc ngôn ngữ với thư viện và thuật toán. |

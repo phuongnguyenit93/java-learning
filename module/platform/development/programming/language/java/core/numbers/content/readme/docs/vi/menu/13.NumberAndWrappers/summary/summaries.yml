@@ -1,0 +1,353 @@
+summaries:
+- id: number-and-wrappers-001
+  title: Number là lớp trừu tượng và hợp đồng chuyển đổi giá trị
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Number là lớp trừu tượng và hợp đồng chuyển đổi giá trị**
+
+    `Number` là lớp trừu tượng cho phép các đối tượng số cung cấp giá trị primitive qua đa hình. Bài làm rõ bốn phương thức abstract, hai phương thức mặc định và giới hạn độ chính xác khi chuyển kiểu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng và đa hình
+
+    1. `Number` là lớp hay interface, và có những phương thức abstract, mặc định nào?
+    2. Vì sao hai đối tượng cùng có kiểu tham chiếu `Number` không tự cộng bằng toán tử `+`?
+    3. Lớp con `Number` được phép thay đổi giá trị theo thời gian hay bắt buộc immutable?
+
+    ### Chuyển đổi có kiểm soát
+
+    1. Vì sao `Long.valueOf(4_294_967_297L).intValue()` bằng 1 mà không ném ngoại lệ?
+    2. Các trường hợp NaN, số decimal có phần lẻ và `BigInteger` rất lớn chuyển sang primitive có rủi ro gì?
+    3. Khi nào cần `intValueExact()` hay `Math.toIntExact` thay vì `Number.intValue()`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích hợp đồng | Liệt kê bốn phương thức abstract và hai phương thức mặc định của `Number`, mô tả dynamic dispatch. |
+    | Phát hiện mất dữ liệu | Dự đoán kết quả conversion ở ranh giới int/long, decimal và binary64. |
+    | Chọn API an toàn | Đưa ra cách kiểm tra miền và chuyển đổi exact cho đầu vào có subtype xác định. |
+- id: number-and-wrappers-002
+  title: Byte, Short, Integer, Long, Float và Double
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Byte, Short, Integer, Long, Float và Double**
+
+    Sáu wrapper `Byte`, `Short`, `Integer`, `Long`, `Float`, `Double` kết nối primitive với object/generic. Bài giới thiệu miền giá trị, boxing, parse, equality và những giá trị đặc biệt của số thực.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Sáu kiểu wrapper
+
+    1. Sáu wrapper số tương ứng những primitive nào và độ rộng của chúng khác nhau ra sao?
+    2. Tại sao `Float.MIN_VALUE` dương còn `Integer.MIN_VALUE` âm?
+    3. Vì sao `List<Integer>` hợp lệ nhưng `List<int>` không hợp lệ trong Java 17?
+
+    ### Parse, boxing và so sánh
+
+    1. `Integer.parseInt` và `Integer.valueOf(String)` khác nhau ở kết quả nào?
+    2. Khi nào `Integer.decode` phù hợp hơn `parseInt(text,radix)` và chuỗi nào bị từ chối?
+    3. NaN, signed zero, unboxing `null` và wrapper cache tác động thế nào đến `equals` và `==`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện wrapper | Ghép đúng sáu primitive với lớp wrapper và nêu miền biểu diễn phù hợp. |
+    | Dùng API parse | Thực hiện parse theo radix, `valueOf`, `decode` và mô tả lỗi đầu vào. |
+    | Dự đoán edge case | Giải thích boxing, null unboxing, narrowing và comparison của số thực. |
+- id: number-and-wrappers-003
+  title: Character không kế thừa Number dù char là kiểu số
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Character không kế thừa Number dù char là kiểu số**
+
+    `char` là integral primitive nhưng `Character` không nằm trong phân cấp `Number`. Bài phân biệt widening/unboxing với kế thừa class, đồng thời làm rõ code unit UTF-16, code point và giá trị chữ số Unicode.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểu primitive và class
+
+    1. Vì sao `Character` không kế thừa `Number` dù `char` là integral type?
+    2. Tại sao `int x = Character.valueOf('A')` hợp lệ còn `Number n = 'A'` không hợp lệ?
+    3. `(int)'A'`, `Character.getNumericValue('A')` và `Character.digit('A',10)` khác nhau thế nào?
+
+    ### Unicode và generic
+
+    1. Tại sao emoji U+1F600 cần hai `char` nhưng chỉ một code point?
+    2. Muốn biểu diễn code unit trong `List<Number>` thì phải chuyển qua primitive và wrapper nào?
+    3. Phép cast một `Object` chứa `Character` sang `Number` có kết quả gì ở runtime?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích quan hệ kiểu | Chứng minh qua hierarchy rằng `Character` trực tiếp kế thừa `Object`. |
+    | Xử lý Unicode | Viết ví dụ phân biệt UTF-16 code unit và Unicode code point ngoài BMP. |
+    | Chuyển giá trị có chủ đích | Chọn `Character`, `Integer`, `Number`, `String` theo mục đích dữ liệu. |
+- id: number-and-wrappers-004
+  title: BigInteger, BigDecimal và các lớp Number khác trong JDK
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **BigInteger, BigDecimal và các lớp Number khác trong JDK**
+
+    `BigInteger`, `BigDecimal` và các lớp atomic/adder đều là đối tượng số nhưng có miền, trạng thái và độ chính xác rất khác nhau. Bài hướng dẫn lựa chọn phép toán exact, scale, rounding và cách đọc bộ đếm đồng thời.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Số nguyên và decimal lớn
+
+    1. Vì sao `BigInteger.add` trả đối tượng mới và `intValueExact` có thể báo lỗi?
+    2. `new BigDecimal(0.1)` khác `new BigDecimal("0.1")` ở giá trị chính xác như thế nào?
+    3. Vì sao `BigDecimal.ONE.divide(new BigDecimal("3"))` cần quy tắc làm tròn?
+
+    ### Equality và trạng thái
+
+    1. `BigDecimal("2.0")` và `BigDecimal("2.00")` khác `equals`/`compareTo` thế nào?
+    2. Tại sao `AtomicInteger` và `LongAdder` mutable dù là `Number`, và `LongAdder.sum()` có giới hạn đồng thời nào?
+    3. Bạn chọn loại số nào cho tiền decimal, số nguyên rất lớn và counter đa luồng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính chính xác | Cài đặt phép cộng/chia BigInteger và BigDecimal với chính sách rounding. |
+    | Phân tích equality | Giải thích khác biệt HashSet/TreeSet với hai BigDecimal có scale khác. |
+    | Chọn kiểu theo mô hình | Đề xuất primitive, BigInteger, BigDecimal hoặc atomic/adder đúng yêu cầu. |
+- id: number-and-wrappers-005
+  title: Wrapper bất biến và ngữ nghĩa value-based
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Wrapper bất biến và ngữ nghĩa value-based**
+
+    Wrapper chuẩn là đối tượng bất biến và value-based, nên ứng dụng phải quan tâm giá trị hơn identity. Bài dùng phép tăng wrapper, cache, HashMap, IdentityHashMap và synchronization để minh họa các hệ quả thiết kế.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Immutable và value-based
+
+    1. Vì sao `Integer before = count; count++;` không thay đổi giá trị của `before`?
+    2. `final Integer` khác tính immutable của một đối tượng wrapper ở đâu?
+    3. Vùng cache `Integer.valueOf` có thể gây nhầm lẫn gì khi so bằng `==`?
+
+    ### So sánh và lock
+
+    1. Vì sao `HashMap<Integer,String>` tra cứu được khóa bằng giá trị dù instance khác nhau?
+    2. Tại sao `IdentityHashMap` và `synchronized(Integer.valueOf(1))` không phù hợp cho khóa số?
+    3. Vì sao `Double.equals` xử lý NaN và hai zero có dấu khác primitive `==`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Theo dõi tham chiếu | Dự đoán boxing/unboxing, gán lại biến và biến `final` mà không nhầm với thay đổi đối tượng. |
+    | Dùng collection đúng | Viết tra cứu số trong HashMap theo `equals`/`hashCode`. |
+    | Tránh identity nguy hiểm | Thay monitor wrapper bằng Object lock riêng, xác định nguy cơ cache. |
+- id: number-and-wrappers-006
+  title: valueOf thay cho constructor wrapper lỗi thời
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **valueOf thay cho constructor wrapper lỗi thời**
+
+    Factory `valueOf` và autoboxing thay constructor wrapper đã deprecated, nhưng không thay parser hay hợp đồng về dữ liệu đầu vào. Bài cho quy trình sửa code cũ, xử lý radix, strict boolean, null và wrapper cache.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Factory và parser
+
+    1. Vì sao `new Integer(42)` được thay bằng `Integer.valueOf(42)` hoặc boxing?
+    2. `Integer.parseInt("42")` khác `Integer.valueOf("42")` thế nào?
+    3. `Integer.valueOf("0xFF",16)` và `Integer.decode("0xFF")` có cùng hành vi không?
+
+    ### Dữ liệu và migration
+
+    1. Tại sao `Boolean.valueOf("yes")` trả false thay vì báo lỗi?
+    2. Khi thay constructor, những tình huống null, `NumberFormatException` và wrapper identity cần kiểm tra gì?
+    3. Tại sao `Double.valueOf(0.1)` không tạo decimal exact?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thay constructor | Chuyển tám wrapper constructor deprecated sang factory tương ứng. |
+    | Chọn API đầu vào | Phân biệt `parseXxx`, `valueOf`, `decode` và boolean parser nghiêm ngặt. |
+    | Rà soát lỗi runtime | Kiểm tra parse sai, ngoài miền, null unboxing và `==` theo reference. |
+- id: number-and-wrappers-007
+  title: MIN_VALUE, MAX_VALUE, TYPE và các hằng theo từng lớp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **MIN_VALUE, MAX_VALUE, TYPE và các hằng theo từng lớp**
+
+    Các hằng `MIN_VALUE`, `MAX_VALUE`, `TYPE`, `SIZE` và `BYTES` có ý nghĩa khác nhau theo loại wrapper. Bài liên hệ miền số với overflow, signed/unsigned, subnormal và reflection trên Java 17.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giới hạn và biểu diễn
+
+    1. Tại sao `Float.MIN_VALUE` dương, còn số âm hữu hạn nhỏ nhất là `-Float.MAX_VALUE`?
+    2. `MIN_NORMAL` khác `MIN_VALUE` ở số thực thế nào?
+    3. `Integer.TYPE` khác `Integer.class` và `Long.BYTES` nói về giá trị hay kích thước object?
+
+    ### Tràn và phiên bản API
+
+    1. Vì sao `long x = Integer.MAX_VALUE + 1` vẫn bị overflow?
+    2. `Math.abs(Integer.MIN_VALUE)` trả gì và cách sửa để nhận giá trị dương chính xác là gì?
+    3. Tại sao `Float.PRECISION` và `Double.PRECISION` không được tham chiếu trong mã Java 17?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tra cứu hằng chính xác | Đối chiếu MIN/MAX, MIN_NORMAL, TYPE và SIZE/BYTES đúng lớp. |
+    | Chống overflow | Dự đoán `MAX_VALUE+1`, `Math.abs(MIN_VALUE)` và dùng `Math.addExact` hoặc widening trước phép toán. |
+    | Dùng metadata kiểu | Giải thích reflection primitive Class và giới hạn char/Unicode. |
+- id: number-and-wrappers-008
+  title: compare, compareTo, equals và hashCode
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **compare, compareTo, equals và hashCode**
+
+    `compare`, `compareTo`, `equals` và `hashCode` thực hiện những hợp đồng khác nhau về thứ tự, equality và khóa collection. Bài đào sâu comparator overflow, NaN, signed zero, BigDecimal scale và mối quan hệ giữa wrapper khác kiểu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Equality, order, hash
+
+    1. `Integer.compare`, `Integer.compareTo`, `Integer.equals` khác nhau ở đầu vào và ý nghĩa kết quả thế nào?
+    2. Điều kiện bắt buộc của `equals` và `hashCode` là gì, và hash collision ảnh hưởng kết luận bằng nhau ra sao?
+    3. Vì sao `Integer a` và `Long b` không thể viết trực tiếp `a == b`, dù có thể so hai giá trị qua `longValue()`?
+
+    ### Comparator và tình huống biên
+
+    1. Tại sao comparator `(a,b)->a-b` có thể sai vì overflow?
+    2. `Double.compare`, `Double.equals` xử lý NaN và hai zero có dấu thế nào?
+    3. Vì sao `HashSet<BigDecimal>` và `TreeSet<BigDecimal>` có thể cho kích thước khác nhau với 2.0 và 2.00?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn đúng phép so sánh | Áp dụng `compare`, `compareTo`, `equals` và `hashCode` theo từng mục đích. |
+    | Viết comparator an toàn | Thay phép trừ bằng static compare và giải thích tính bắc cầu. |
+    | Kiểm tra edge cases | Dự đoán NaN, signed zero, scale và hành vi HashSet/TreeSet. |
+- id: number-and-wrappers-009
+  title: Wrapper khác kiểu không tự bằng nhau qua equals
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Wrapper khác kiểu không tự bằng nhau qua equals**
+
+    Hai wrapper khác class không tự bằng nhau qua `equals`, dù chứa cùng lượng toán học. Bài dùng `Integer`/`Long`/`Double` và `Map<Number,...>` để phân biệt object equality với numeric equality, đồng thời tránh chuyển hết sang double gây mất chính xác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cross-type equality
+
+    1. Vì sao `Integer.valueOf(42).equals(Long.valueOf(42L))` false nhưng `42 == 42L` true?
+    2. Khi nào `==` giữa wrapper khác kiểu không biên dịch và khi nào so với primitive kích hoạt unboxing?
+    3. `Objects.equals` có chuẩn hóa `Integer` thành `Long` không?
+
+    ### Collection và conversion
+
+    1. HashSet<Number> chứa `Integer(42)`, `Long(42)` và `Double(42.0)` sẽ có bao nhiêu phần tử?
+    2. Vì sao hai long liền nhau lớn hơn 2^53 có thể so bằng nhau sau khi ép double?
+    3. Làm sao chọn chuyển sang long, BigInteger hoặc BigDecimal mà không mất dữ liệu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích equality theo type | Giải thích `equals` xuyên kiểu và phép numeric promotion trên primitive. |
+    | Chuẩn hóa khóa | Đề xuất kiểu duy nhất cho map/set ID, giải thích hành vi tra cứu khác wrapper. |
+    | Chọn conversion chính xác | Từ chối so sánh doubleValue khi miền vượt precision và minh họa BigInteger. |
+- id: number-and-wrappers-010
+  title: Number không cung cấp toán tử cộng chung cho mọi lớp con
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Number không cung cấp toán tử cộng chung cho mọi lớp con**
+
+    `Number` cung cấp conversion chứ không định nghĩa phép cộng chung cho mọi subtype. Bài phân biệt `Number + Number` lỗi biên dịch với wrapper unboxing, sau đó thiết kế phép tính bằng BigInteger, BigDecimal hoặc `BinaryOperator<T>` theo chính sách chính xác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Toán tử và generics
+
+    1. Vì sao hai biến `Number` không thể dùng toán tử `+` mặc dù runtime chứa Integer và Double?
+    2. `Integer sum = a + b` gồm những bước unbox/compute/box nào?
+    3. Vì sao `<T extends Number>` không tự bổ sung toán tử cộng cho T?
+
+    ### Chiến lược cộng
+
+    1. Khi nào `doubleValue()` thích hợp cho tổng gần đúng và khi nào gây mất đơn vị số nguyên?
+    2. Bạn truyền `Integer::sum` hoặc `BigDecimal::add` qua `BinaryOperator<T>` như thế nào?
+    3. Vì sao `AtomicInteger.intValue()+1` không cập nhật bộ đếm nguyên tử?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích lỗi phép cộng | Chỉ ra quy tắc kiểu tĩnh và unboxing của `Number` versus wrapper. |
+    | Thiết kế sum rõ chính sách | Viết hàm dùng `BinaryOperator<T>` hoặc `BigInteger/BigDecimal.add`. |
+    | Bảo toàn giá trị | Phát hiện overflow, double rounding và giới hạn snapshot atomic. |
+- id: number-and-wrappers-011
+  title: Giới hạn khi tự xây dựng một lớp con Number
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn khi tự xây dựng một lớp con Number**
+
+    Tự tạo một subtype `Number` đòi hỏi nhiều hơn bốn phương thức abstract: phải định nghĩa conversion, precision, unit, equality và các phép toán có kiểm tra. Ví dụ FixedCents giúp đánh giá quyết định kế thừa `Number` so với composition hoặc record.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế lớp con
+
+    1. Bốn phương thức abstract nào cần override khi tạo subclass Number?
+    2. `FixedCents.longValue()` nên trả xu hay đơn vị tiền chính theo hợp đồng nào?
+    3. Làm sao dùng `toBigDecimal`, `intValueExact` để giữ dữ liệu và phát hiện phần lẻ?
+
+    ### Giới hạn kiến trúc
+
+    1. Vì sao `extends Number` không cấp phép `+` hoặc autounboxing?
+    2. Bạn triển khai `plus`, `equals`, `hashCode`, `compareTo` thế nào cho một lớp bất biến?
+    3. Khi nào Money record chứa BigDecimal và Currency an toàn hơn `extends Number`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Triển khai Number subtype | Tạo lớp FixedCents có bốn conversion method và mô tả giới hạn riêng. |
+    | Giữ invariant | Thực hiện `Math.addExact`, equality/hash và kiểm tra âm, overflow, phần lẻ. |
+    | Quyết định mô hình | Phân tích ưu nhược giữa subclass Number và record composition cho giá trị có unit. |

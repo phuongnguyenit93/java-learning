@@ -1,0 +1,313 @@
+summaries:
+- id: integer-arithmetic-001
+  title: Cộng, trừ, nhân và kiểu của kết quả
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Cộng, trừ, nhân và kiểu của kết quả**
+
+    Các phép cộng, trừ, nhân có thể cho kết quả khác trực giác nếu biểu thức được tính bằng `int` rồi mới gán sang `long`. Bài học giúp xác định kiểu của phép tính, nhận diện tràn số và lựa chọn cách xử lý có kiểm tra trước khi kết quả được dùng trong ứng dụng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểu biểu thức và thăng cấp
+
+    1. Vì sao `byte + byte` cho biểu thức kiểu `int` ngay cả khi tổng nằm trong miền `byte`?
+    2. Khi nào một toán hạng `long` khiến phép nhân được tính bằng `long`, và vì sao kiểu biến nhận kết quả không có tác dụng tương tự?
+
+    ### Overflow và chuyển kiểu
+
+    1. Điều gì xảy ra với `Integer.MAX_VALUE + 1` và vì sao phép cộng thông thường không ném ngoại lệ?
+    2. Hãy so sánh `(long) (a * b)` với `(long) a * b` khi tích toán học vượt `int`?
+    3. Khi nào nên dùng `Math.multiplyExact`, `Math.toIntExact` hoặc `BigInteger`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán kiểu số học | Chú thích đúng kiểu `int` hay `long` của phép `+`, `-`, `*` cho các tổ hợp `byte`, `short`, `char`, `int`, `long`. |
+    | Phân tích giá trị trung gian | Tính kết quả tràn của phép nhân `int` và giải thích vì sao gán vào `long` không sửa được. |
+    | Tổ chức phép tính an toàn | Viết phép toán có cast sớm hoặc `Math.*Exact` theo hợp đồng xử lý overflow. |
+- id: integer-arithmetic-002
+  title: Chia số nguyên và việc cắt phần thập phân về phía 0
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chia số nguyên và việc cắt phần thập phân về phía 0**
+
+    Phép chia `/` giữa hai số nguyên bỏ phần lẻ theo hướng về 0, kể cả khi thương âm. Nắm quy tắc này giúp tránh mất tỷ lệ, đặt nhầm kiểu nhận và chọn sai cách chia trong công thức đếm nhóm hoặc tính trung bình.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy tắc chia nguyên
+
+    1. Vì sao `-7 / 3` bằng `-2` thay vì `-3`?
+    2. `long` làm thay đổi miền giá trị hay quy tắc cắt phần lẻ của phép chia số nguyên?
+
+    ### Ứng dụng và ngoại lệ
+
+    1. Giải thích vì sao `double ratio = 1 / 2;` nhận `0.0`, còn `(double) 1 / 2` nhận `0.5`?
+    2. Khi chia số lượng vật phẩm vào các nhóm hữu hạn, làm sao dùng thương và số dư để xác định số nhóm cần thiết?
+    3. Sự khác nhau giữa `/`, `Math.floorDiv` và ngoại lệ `MIN_VALUE / -1` ảnh hưởng tới số âm ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán thương nguyên | Tính đúng kết quả chia dương và âm, kể cả khi thương toán học có phần phân số. |
+    | Chọn thời điểm chuyển kiểu | Sửa biểu thức chia mất tỷ lệ bằng cách chuyển một toán hạng trước phép `/`. |
+    | Giải bài toán chia nhóm | Viết công thức số nhóm có xử lý số dư và giới hạn miền đầu vào. |
+- id: integer-arithmetic-003
+  title: Toán tử % và dấu của số dư
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Toán tử % và dấu của số dư**
+
+    Phần dư `%` trong Java có thể âm, khiến kiểm tra số lẻ hoặc tính vị trí quay vòng sai nếu mặc định nó là modulo không âm. Bài học giúp suy ra dấu của số dư, kiểm chứng bằng thương và chọn cách chuẩn hóa phù hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất phần dư
+
+    1. Vì sao `-7 % 3` bằng `-1`, trong khi `Math.floorMod(-7, 3)` bằng `2`?
+    2. Khi đảo dấu của số chia, dấu của phần dư `%` có đổi theo không?
+
+    ### Ứng dụng với số âm
+
+    1. Vì sao kiểm tra số lẻ bằng `value % 2 == 1` thất bại với số âm?
+    2. Làm sao viết phép lấy chỉ số trước đó trong buffer vòng mà không nhận index âm?
+    3. Nguy cơ tràn nằm ở đâu trong công thức `(x % m + m) % m`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm chứng phần dư | Lập bảng bốn tổ hợp dấu của số bị chia và số chia với `%`. |
+    | Thiết kế chỉ số vòng | Áp dụng `Math.floorMod` với mẫu dương và xử lý capacity bằng 0. |
+    | Phân biệt API số lớn | Giải thích khác biệt giữa `BigInteger.remainder` và `BigInteger.mod` với số âm. |
+- id: integer-arithmetic-004
+  title: Chia hoặc lấy dư cho 0 với số nguyên
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chia hoặc lấy dư cho 0 với số nguyên**
+
+    Chia hoặc lấy dư số nguyên cho 0 luôn gây `ArithmeticException` khi phép toán thật sự chạy. Bài học giúp kiểm tra mẫu số đúng thời điểm, phân biệt lỗi số nguyên với kết quả `Infinity`/`NaN` của số thực và lựa chọn cơ chế xử lý đầu vào an toàn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Điều kiện phát sinh lỗi
+
+    1. Những biểu thức nào trong `a / 0`, `a % 0` và `0 / 0` gây `ArithmeticException`, và tại sao?
+    2. Trong biểu thức có `&&`, điều kiện nào bảo đảm nhánh chia với mẫu số 0 bị bỏ qua?
+
+    ### Thiết kế xử lý lỗi
+
+    1. Khi nào nên kiểm tra mẫu số trước thay vì bắt ngoại lệ rồi trả một giá trị mặc định?
+    2. Vì sao `10.0 / 0` có thể là `Infinity`, trong khi `10 / 0` phát sinh lỗi?
+    3. Nếu mẫu số lấy từ nguồn có thể thay đổi, cần làm gì để phép kiểm tra và phép chia sử dụng cùng giá trị?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định ngoại lệ | Dự đoán loại lỗi của `/` và `%` với mẫu số 0 ở các kiểu số nguyên. |
+    | Bảo vệ đầu vào | Viết guard cho mẫu số theo ràng buộc nghiệp vụ và kiểm tra ngắn mạch. |
+    | Phân biệt số nguyên với số thực | Giải thích vì sao chia số thực cho 0 có `Infinity`/`NaN` mà phép chia nguyên không có. |
+- id: integer-arithmetic-005
+  title: Phép toán đơn ngôi, tiền tố và hậu tố ++, --
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phép toán đơn ngôi, tiền tố và hậu tố ++, --**
+
+    `++` và `--` cùng thay đổi biến nhưng tiền tố và hậu tố trả về giá trị khác nhau. Kết hợp hiểu biết về toán tử một ngôi, kiểu biến, thứ tự đánh giá và side effect giúp dự đoán các biểu thức Java có trạng thái mà không viết code khó bảo trì.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tiền tố, hậu tố và kiểu
+
+    1. Sau `int old = i++;`, giá trị `old` và `i` khác nhau như thế nào?
+    2. Vì sao `byte` có thể dùng `++` trong khi `byte + 1` là biểu thức `int`?
+    3. Phân biệt tác dụng của `~x` với `!flag` và kiểu của toán tử `-x` khi `x` là `byte`?
+
+    ### Tác dụng phụ và giá trị biên
+
+    1. Vì sao `i = i++` thường giữ lại giá trị cũ dù `i++` đã tăng biến?
+    2. Làm sao lần theo `i++ + ++i` từ trái sang phải, và vì sao không nên duy trì kiểu mã đó?
+    3. Điều gì xảy ra khi `Integer.MAX_VALUE++` trên biến hoặc wrapper số bằng `null`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết biểu thức tăng giảm | Tách riêng giá trị biểu thức và giá trị biến sau mỗi tiền tố/hậu tố. |
+    | Kiểm tra kiểu và toán hạng hợp lệ | Chỉ ra lỗi biên dịch khi áp dụng `++` lên literal, giá trị `final` hoặc biến chưa gán. |
+    | Tái cấu trúc side effect | Viết lại biểu thức tăng giảm lồng nhau thành nhiều câu lệnh dễ kiểm chứng. |
+- id: integer-arithmetic-006
+  title: Độ ưu tiên, tính kết hợp và thứ tự đánh giá toán hạng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Độ ưu tiên, tính kết hợp và thứ tự đánh giá toán hạng**
+
+    Độ ưu tiên, tính kết hợp và thứ tự đánh giá giải quyết những câu hỏi khác nhau trong một biểu thức. Bài học giúp đọc đúng cây phép toán, lần theo lời gọi hàm và điều kiện ngắn mạch, đồng thời tránh viết biểu thức chỉ đúng khi người đọc nhớ các quy tắc phức tạp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc phép toán
+
+    1. Vì sao `a() + b() * c()` gọi `a()` trước dù nhân được nhóm chặt hơn cộng?
+    2. Kết hợp trái của `/` và `-` khác kết hợp phải của phép gán thế nào?
+    3. Vì sao `(flags & mask) != 0` cần dấu ngoặc khi kiểm tra bit?
+
+    ### Thứ tự thực thi
+
+    1. Hãy dự đoán các bước trong `i++ + i++ * 10` theo thứ tự nào?
+    2. Sự khác nhau giữa `&&` và `&` với boolean thể hiện thế nào khi vế phải có phép chia cho 0?
+    3. Vì sao `x += (x = 5)` không tương đương cơ học với việc đọc `x` hai lần?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích cây biểu thức | Viết lại biểu thức theo ngoặc tương ứng với precedence và associativity. |
+    | Truy vết tác dụng phụ | Chỉ ra thứ tự gọi hàm, cập nhật biến và nhánh bị bỏ qua bởi `&&`, `\|\|`. |
+    | Đọc mã an toàn | Phát hiện và sửa biểu thức shift, bitwise hoặc compound assignment dễ gây hiểu nhầm. |
+- id: integer-arithmetic-007
+  title: Dấu ngoặc và tác động tới giá trị trung gian
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dấu ngoặc và tác động tới giá trị trung gian**
+
+    Dấu ngoặc có thể thay đổi kết quả trung gian nhưng không tự thay đổi kiểu hay phục hồi phần dư, overflow đã xảy ra. Bài học giúp phân tích từng nút phép tính, nhận biết trường hợp tổng cuối vừa miền nhưng tích trung gian đã tràn và đặt cast đúng thời điểm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngoặc và kết quả trung gian
+
+    1. Vì sao `20 / 3 / 2` khác `20 / (3 / 2)` và mẫu số bên trong có thể trở thành 0 ra sao?
+    2. Tại sao `(a / b) * b` có thể làm mất phần dư ngay từ phép chia đầu?
+
+    ### Overflow và phép toán checked
+
+    1. Với `n = 50_000`, vì sao `n * (n + 1) / 2` sai dù tổng từ 1 tới n vừa `int`?
+    2. Phân biệt `(long) (a + b)` với `(long) a + b` khi tổng vượt miền `int`?
+    3. Vì sao cộng `int` thuần vẫn có tính kết hợp modulo nhưng `Math.addExact` có thể phát sinh ngoại lệ ở nhóm khác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đánh giá trung gian theo cây phép toán | Ghi kiểu và giá trị tại mỗi phép chia, nhân, cộng có ngoặc. |
+    | Phát hiện tràn trung gian | Sửa phép tính tổng tam giác bằng cast trước phép nhân và kiểm chứng kết quả. |
+    | Giải thích phạm vi ngoặc | Phân biệt thay nhóm phép tính với thay kiểu bằng cast và thay thứ tự side effect. |
+- id: integer-arithmetic-008
+  title: floorDiv, floorMod và khác biệt với /, %
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **floorDiv, floorMod và khác biệt với /, %**
+
+    `Math.floorDiv` và `Math.floorMod` áp dụng quy tắc làm tròn xuống, khác với `/` và `%` cắt thương về 0 khi có số âm. Bài học cho phép chọn đúng API cho bucket thời gian, ô lưới và vị trí vòng, đồng thời tránh giả định sai rằng `floorMod` luôn dương với mẫu âm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai quy ước chia
+
+    1. Vì sao `Math.floorDiv(-7, 3)` bằng `-3` nhưng `-7 / 3` bằng `-2`?
+    2. Dấu của `Math.floorMod(x, y)` phụ thuộc vào toán hạng nào và điều kiện nào bảo đảm phần dư không âm?
+    3. Vì sao các API floor vẫn không tránh được trường hợp `MIN_VALUE / -1`?
+
+    ### Áp dụng vào dữ liệu âm
+
+    1. Vì sao timestamp `-1` chia thành bucket 60 giây phải có index `-1` và offset `59`?
+    2. Làm sao viết hàm `wrapIndex` cho vị trí logic âm và capacity dương?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh bốn phép toán | Tính thương và dư cho bốn tổ hợp dấu bằng `/`, `%`, `floorDiv`, `floorMod`. |
+    | Áp dụng floor vào bucket | Thiết kế index và offset cho thời điểm hoặc tọa độ âm với kích thước nhóm dương. |
+    | Kiểm tra ranh giới API | Chỉ ra lỗi chia 0, mẫu âm và overflow mà floor methods không tự loại bỏ. |
+- id: integer-arithmetic-009
+  title: Trường hợp MIN_VALUE chia cho -1
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Trường hợp MIN_VALUE chia cho -1**
+
+    Khi chia `MIN_VALUE` cho `-1`, thương toán học vượt miền của `int` hoặc `long` nhưng Java lại trả về chính giá trị nhỏ nhất. Bài học giúp nhận diện overflow im lặng, viết guard chính xác và dùng `long` hoặc `BigInteger` khi cần thương nguyên đúng tuyệt đối.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biên số nguyên có dấu
+
+    1. Tại sao `Integer.MIN_VALUE / -1` không ném ngoại lệ nhưng kết quả lại âm?
+    2. `Integer.MIN_VALUE % -1` trả gì và vì sao phần dư 0 không chứng minh thương an toàn?
+
+    ### Thiết kế phép chia có kiểm tra
+
+    1. Những điều kiện tối thiểu nào phải được xét để phép chia `int` không âm thầm tràn?
+    2. Tại sao ép kết quả sang `long` sau khi chia quá muộn, còn mở rộng `int` trước khi chia lại có tác dụng?
+    3. Vì sao trường hợp `Long.MIN_VALUE / -1L` cần `BigInteger` khi phải biểu diễn thương chính xác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích overflow đặc biệt | Dự đoán kết quả phép chia/lấy dư MIN_VALUE cho -1 của `int` và `long`. |
+    | Xây dựng checked division | Viết guard cho mẫu số 0 và cặp MIN_VALUE, -1 trước khi thực hiện phép chia. |
+    | Chọn kiểu biểu diễn chính xác | Tính thương rộng hơn `int` bằng `long`, rộng hơn `long` bằng `BigInteger` và kiểm tra thu hẹp. |
+- id: integer-arithmetic-010
+  title: Nối chuỗi bằng + khác phép cộng như thế nào
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Nối chuỗi bằng + khác phép cộng như thế nào**
+
+    Toán tử `+` là phép cộng số học khi cả hai toán hạng là số và là phép nối khi có `String`. Bài học giúp đọc đúng kiểu kết quả, tránh nhầm chuỗi chữ số với tổng số, xử lý giá trị `null` và chỉ định phép tính trước khi chuyển sang văn bản.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai nghĩa của toán tử cộng
+
+    1. Vì sao `"sum=" + 2 + 3` cho văn bản `sum=23` còn `"sum=" + (2 + 3)` cho `sum=5`?
+    2. Khi nào `'2' + 3` cho kết quả số khác với `"2" + 3`?
+
+    ### Chuyển đổi và hiển thị
+
+    1. Vì sao `"quantity=" + nullWrapper` có thể tạo chuỗi, trong khi `nullWrapper + 1` ném `NullPointerException`?
+    2. Làm sao tránh overflow trước khi đưa tổng lớn vào chuỗi hiển thị?
+    3. Khi nào cần `Integer.parseInt` và khi nào `StringBuilder` hợp lý hơn nối chuỗi trong vòng lặp?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán kiểu và kết quả dấu cộng | Phân biệt `int`/`long` addition với nối `String` trong các biểu thức có ngoặc. |
+    | Tổ chức chuyển đổi dữ liệu | Parse chuỗi số trước khi tính rồi định dạng kết quả sau khi kiểm tra miền. |
+    | Xử lý null và hiệu năng nối chuỗi | Giải thích chuỗi `null` khi nối, lỗi unboxing và lúc nên tích lũy qua `StringBuilder`. |

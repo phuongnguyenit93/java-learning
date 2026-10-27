@@ -1,0 +1,364 @@
+summaries:
+- id: math-and-strict-math-001
+  title: abs, min, max, signum và clamp theo phiên bản JDK
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **abs, min, max, signum và clamp theo phiên bản JDK**
+
+    Giải thích cách chọn trị tuyệt đối, cực trị, dấu và bão hòa theo biên trong Java mà không làm sai hành vi số nguyên hay IEEE 754. Các ví dụ còn đối chiếu JDK 17 với clamp từ JDK 21, giúp người học không vô tình phụ thuộc API mới khi bản chạy đích cũ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phép toán và kiểu
+
+    1. Vì sao Math.abs(Integer.MIN_VALUE) vẫn âm và khi nào Math.absExact phù hợp?
+    2. Math.signum khác Integer.signum và Long.signum ở tham số cùng kiểu trả về thế nào?
+    3. Tại sao Math.min hoặc Math.max với NaN và signed zero cần xét contract riêng?
+
+    ### Biên và tương thích
+
+    1. Vì sao clamp, checked conversion và floorMod đại diện ba hợp đồng nghiệp vụ khác nhau?
+    2. Math.clamp được hỗ trợ từ JDK nào và helper Java 17 cần kiểm tra cận, NaN và zero có dấu ra sao?
+    3. Tại sao cast từ long sang int trước clamp có thể phá hỏng kết quả?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích overflow của abs | Dự đoán abs(MIN_VALUE), dùng absExact hoặc mở rộng toán hạng đúng thời điểm. |
+    | Kiểm tra min/max/signum | Chứng minh bằng mã hành vi với NaN, -0.0 và overload kiểu nguyên hoặc thực. |
+    | Thiết kế clamp | Chọn saturation, validation hay modulo và xử lý cận đảo theo yêu cầu đầu vào. |
+    | Đối chiếu JDK | Biên dịch chương trình Java 17 không dùng clamp 21 và chỉ rõ lúc nào cần helper. |
+- id: math-and-strict-math-002
+  title: pow, sqrt, cbrt và lựa chọn phép tính phù hợp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **pow, sqrt, cbrt và lựa chọn phép tính phù hợp**
+
+    So sánh lũy thừa tổng quát với căn bậc hai và căn bậc ba chuyên dụng, gồm miền số âm, zero có dấu và sai số double. Người học phân biệt thuật toán số thực với phép lũy thừa nguyên chính xác, và sử dụng hypot khi công thức bình phương trung gian kém ổn định.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hành vi toán học
+
+    1. Vì sao Math.cbrt(-8.0) trả -2.0 còn Math.pow(-8.0,1.0/3.0) trả NaN?
+    2. Bảo đảm correctly rounded của sqrt khác giới hạn sai số của cbrt hoặc pow ở điểm nào?
+    3. Số âm khác zero, -0.0, NaN và Infinity tác động ra sao lên căn và mũ?
+
+    ### Chọn thuật toán đúng
+
+    1. Tại sao phép XOR ^ không phải toán tử lũy thừa của Java?
+    2. Khi nào cần Math.multiplyExact hoặc BigInteger.pow thay cho ép Math.pow về long?
+    3. Vì sao Math.hypot thích hợp hơn Math.sqrt(x*x+y*y) ở độ lớn cực đoan?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lựa chọn căn | Chọn đúng sqrt hoặc cbrt cho đầu vào âm, zero và số dương, giải thích kết quả. |
+    | Phân tích precision | Giải thích vì sao 2^53+1 không được giữ nguyên bằng double. |
+    | Lũy thừa nguyên an toàn | Áp dụng powExact có multiplyExact hoặc BigInteger.pow và dự đoán trường hợp vượt miền. |
+    | Kiểm tra ví dụ | Chạy các phép thử NaN, Infinity, signed zero và đối chiếu stdout với contract. |
+- id: math-and-strict-math-003
+  title: exp, log, log10, expm1 và log1p
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **exp, log, log10, expm1 và log1p**
+
+    Phân biệt hàm mũ cơ số e, logarit tự nhiên/cơ số 10 và các biến thể ổn định khi công thức liên quan đến trừ hoặc cộng 1. Qua những giá trị rất nhỏ và lớn, người học giải thích cancellation, overflow, underflow cùng special cases của logarit và hàm mũ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa từng hàm
+
+    1. Math.log và Math.log10 khác nhau ở cơ số và ứng dụng thế nào?
+    2. expm1(x) và log1p(x) lần lượt tính công thức gì, vì sao không thay bằng exp(x)-1 hoặc log(1+x) khi x gần zero?
+    3. Vì sao tính Math.log(Math.exp(800)) không thể khôi phục đầu vào 800?
+
+    ### Miền và giá trị đặc biệt
+
+    1. Với log1p, các input -1, nhỏ hơn -1 và -0.0 cho kết quả nào?
+    2. Math.exp(-Infinity), Math.expm1(-Infinity) và Math.log(-0.0) khác nhau ra sao?
+    3. Khi mô hình nhân nhiều xác suất rất nhỏ, sử dụng miền log có lợi gì và giới hạn nào vẫn còn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích công thức | Chọn đúng exp, log, log10, expm1 hoặc log1p theo đại lượng phải tính. |
+    | Chứng minh cancellation | Thử x=1e-16, so sánh phương pháp trực tiếp và hàm ổn định bằng output. |
+    | Xử lý miền log | Dự đoán -Infinity, NaN và âm zero ở các ranh giới của log/log1p. |
+    | Kiểm soát độ lớn | Nhận diện overflow/underflow và giải thích khi nào giữ dữ liệu trong miền log. |
+- id: math-and-strict-math-004
+  title: sin, cos, tan và chuyển độ sang radian
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **sin, cos, tan và chuyển độ sang radian**
+
+    Giới thiệu quy ước Java nhận radian, cách đổi từ độ sang radian và cách dùng sin, cos, tan cho vector và độ dốc. Người học hiểu vì sao góc đặc biệt sau chuyển đổi có thể xuất hiện sai số, đặc biệt tan gần 90 độ, đồng thời tách quy ước tọa độ khỏi phép tính số.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đơn vị và hình học
+
+    1. Vì sao Math.sin(30.0) không mang nghĩa sin của 30 độ?
+    2. Math.toRadians và Math.toDegrees hỗ trợ công thức chuyển đổi góc nào?
+    3. Từ độ lớn và góc, làm sao suy ra hai thành phần x và y của vector?
+
+    ### Sai số và giới hạn
+
+    1. Vì sao Math.cos(Math.toRadians(90)) không nhất thiết bằng 0.0?
+    2. Math.tan của góc gần 90 độ hữu hạn có ý nghĩa gì và khi nào cần từ chối độ dốc gần tiệm cận?
+    3. Dấu của trục y màn hình ảnh hưởng thế nào tới góc và thành phần vector?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chuyển đổi đơn vị | Tính sin/cos/tan từ input dạng độ sau khi đổi sang radian. |
+    | Dựng vector | Tính thành phần ngang và dọc của vector từ độ dài và góc. |
+    | Kiểm tra ngưỡng | Giải thích sai số ở 90 và 180 độ, xây phép so gần đúng phù hợp. |
+    | Ràng buộc miền | Kiểm tra góc hữu hạn và chính sách xử lý tiệm cận của tan. |
+- id: math-and-strict-math-005
+  title: asin, acos, atan và atan2
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **asin, acos, atan và atan2**
+
+    Hướng dẫn khôi phục góc chính từ sin/cos/tan và xác định hướng vector theo hai tọa độ với atan2. Từ các góc phần tư, nhánh -pi/pi và zero có dấu, người học biết vì sao atan(y/x) đánh mất thông tin, đồng thời xử lý miền của asin/acos và phân biệt radian với độ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Miền và góc chính
+
+    1. Miền input và khoảng góc chính của asin, acos, atan khác nhau thế nào?
+    2. Vì sao asin(sin(150 độ)) không trả lại góc 150 độ?
+    3. Khi nào asin hoặc acos trả NaN và vì sao clamp input sai quá lớn có thể che lỗi?
+
+    ### Vector và giá trị biên
+
+    1. Vì sao atan2 nhận tham số (y,x), và atan(y/x) xác định sai góc của vector (-1,-1)?
+    2. atan2(+0.0,-1.0) và atan2(-0.0,-1.0) trả hai phía nhánh -pi/pi khác nhau thế nào?
+    3. Vì sao atan2(0,0) trả một giá trị IEEE 754 nhưng zero vector không có hướng hình học hợp lệ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đảo hàm lượng giác | Tính principal angle bằng asin/acos/atan và đổi sang độ. |
+    | Tính hướng vector | Dùng atan2(y,x) kiểm tra đúng bốn góc phần tư và trục tọa độ. |
+    | Phân tích giá trị đặc biệt | Dự đoán tác động signed zero, NaN và Infinity lên hàm nghịch đảo. |
+    | Thiết kế kiểm thử góc | Đặt test tại ±pi, zero vector và so khoảng cách góc theo chu kỳ. |
+- id: math-and-strict-math-006
+  title: hypot và việc giảm nguy cơ overflow trung gian
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **hypot và việc giảm nguy cơ overflow trung gian**
+
+    Giải thích tại sao biểu thức sqrt(x*x+y*y) có thể trả Infinity hoặc zero khi độ dài thật vẫn hữu hạn. Bài học sử dụng kỹ thuật đổi thang để hiểu hypot, phân biệt overflow trung gian và overflow kết quả, rồi áp dụng vào tính khoảng cách giữa hai điểm với chuyển kiểu trước phép trừ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế giảm tràn
+
+    1. Vì sao công thức trực tiếp trên (1e200,1e200) trả Infinity nhưng Math.hypot cho số hữu hạn?
+    2. Điều gì xảy ra với các bình phương của 1e-200 và hypot khắc phục underflow trung gian thế nào?
+    3. Phép đưa b/a về khoảng 0..1 giúp giải thích tính ổn định của hypot ra sao?
+
+    ### Giới hạn và ứng dụng
+
+    1. Vì sao hypot(MAX_VALUE,MAX_VALUE) vẫn có thể trả Infinity?
+    2. Tại sao hypot(Infinity,NaN) trả Infinity trong khi hypot(NaN,4) trả NaN?
+    3. Khi lấy hiệu hai tọa độ int ở biên, cần widen trước phép trừ như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện tràn trung gian | Dự đoán kết quả naive và hypot ở hai thang 1e200, 1e-200. |
+    | Phân biệt kết quả tràn thật | Giải thích vì sao MAX_VALUE ở cả hai thành phần vẫn dẫn tới Infinity. |
+    | Tính khoảng cách an toàn | Viết phép tính hypot sau khi chuyển tọa độ nguyên trước hiệu để tránh overflow int. |
+    | Kiểm thử special cases | Chứng minh hành vi với NaN, Infinity và signed zero của hypot. |
+- id: math-and-strict-math-007
+  title: ceil, floor, rint và round
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ceil, floor, rint và round**
+
+    So sánh bốn quy tắc đưa số thực về giá trị nguyên: hướng lên, hướng xuống, nearest-even và nearest-with-ties-to-positive. Bài học còn phân biệt kết quả double với int/long, nhận biết việc round bão hòa với NaN/Infinity và chọn BigDecimal khi hợp đồng yêu cầu làm tròn thập phân chính xác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy tắc và kiểu
+
+    1. ceil(-2.7), floor(-2.7), rint(-2.5) và round(-2.5) khác nhau thế nào?
+    2. Math.rint và Math.round khác cách xử lý trường hợp ở đúng giữa hai số nguyên ra sao?
+    3. Tại sao Math.round(float) và Math.round(double) có kiểu trả về khác nhau?
+
+    ### Đầu vào đặc biệt và decimal
+
+    1. Vì sao Math.round(Double.NaN) trả 0 còn round(Infinity) trả biên kiểu nguyên?
+    2. Math.rint(-0.5) khác Math.round(-0.5) ở giá trị và dấu zero thế nào?
+    3. Vì sao Math.round(x*100)/100 có thể sai chính sách khi xử lý decimal 1.005?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán tie rule | Lập bảng kết quả cho số âm và dương ở các điểm .5. |
+    | Phân biệt kiểu trả về | Chọn ceil/floor/rint hoặc round phù hợp với kiểu đầu ra và kiểm tra phạm vi. |
+    | Phân loại special cases | Kiểm tra NaN, Infinity, signed zero và bão hòa về biên int/long. |
+    | Làm tròn nghiệp vụ | Dùng BigDecimal(String) và RoundingMode cụ thể thay vì phép nhân hệ số double. |
+- id: math-and-strict-math-008
+  title: nextUp, nextDown, nextAfter và ulp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **nextUp, nextDown, nextAfter và ulp**
+
+    Giới thiệu lưới giá trị biểu diễn được của float và double, cách di chuyển đúng một bước theo chiều tăng/giảm hoặc hướng đích và cách đọc kích thước ULP. Người học nhìn bằng biểu diễn hexadecimal để nhận ra khoảng cách hai phía của lũy thừa 2, signed zero, subnormal và giới hạn finite.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lưới biểu diễn
+
+    1. nextUp và nextDown của 1.0 tạo ra hai số nào, và vì sao khoảng cách hai phía không bằng nhau?
+    2. nextAfter(start,direction) di chuyển một bước hay đến thẳng direction?
+    3. Vì sao nextAfter(float,double) trả float và có bước khác overload double?
+
+    ### ULP và giá trị đặc biệt
+
+    1. Math.ulp(1.0) và Math.ulp(0.0) khác nhau như thế nào?
+    2. nextAfter(+0.0,-0.0) trả zero nào và vì sao phép so sánh == không chứng minh đúng dấu?
+    3. Ở MAX_VALUE, Infinity và NaN, các phép nextUp/nextDown/ulp xử lý ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quan sát số liền kề | Dùng nextUp/nextDown và Double.toHexString để tìm số sát 1.0. |
+    | Di chuyển theo hướng | Kiểm tra nextAfter với mục tiêu cao hơn, thấp hơn và bằng start. |
+    | Giải thích ULP | Phân tích độ giãn lưới quanh 1.0, zero và miền subnormal. |
+    | Thiết kế test sát biên | Tạo giá trị ngay dưới/trên giới hạn và xác minh signed zero, Infinity, NaN. |
+- id: math-and-strict-math-009
+  title: copySign, scalb và getExponent
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **copySign, scalb và getExponent**
+
+    Dạy ba công cụ làm việc sát biểu diễn IEEE 754: lấy dấu bit từ một số khác, thay đổi scale theo lũy thừa 2 và đọc số mũ không bias. Thông qua zero âm, underflow subnormal, và sentinel dành cho NaN/Infinity, người học tránh nhầm getExponent với logarit hoặc scalb với pow.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dấu và scale
+
+    1. copySign(magnitude, sign) dùng dấu của -0.0 như thế nào dù -0.0 == +0.0?
+    2. scalb(x,n) khác pow(x,n) ở công thức và nguy cơ phép nhân 2^n trung gian ra sao?
+    3. Vì sao scalb có thể tạo subnormal, Infinity hoặc âm zero?
+
+    ### Exponent và sentinel
+
+    1. Math.getExponent(Double.MIN_VALUE) trả -1023 thay vì -1074 vì quy tắc nào?
+    2. Vì sao getExponent không đủ để phân biệt zero với subnormal, NaN với Infinity?
+    3. Math.copySign và StrictMath.copySign có cam kết khác nhau gì khi đối số sign là NaN?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Điều khiển dấu bit | Dự đoán raw bits khi copySign áp dụng dấu âm zero hoặc vô cực. |
+    | Điều chỉnh thang cơ số 2 | Thử scalb với lũy thừa dương, âm, subnormal và overflow. |
+    | Đọc trường số mũ | Tính và giải thích exponent normal cùng sentinel của zero/subnormal/NaN/Infinity. |
+    | Phân loại đặc biệt | Phối hợp getExponent với isFinite, isNaN và kiểm tra zero trước khi phân tích bit. |
+- id: math-and-strict-math-010
+  title: Phân biệt yêu cầu tái lập của Math và StrictMath
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt yêu cầu tái lập của Math và StrictMath**
+
+    Phân biệt độ chính xác đủ theo sai số, tính tái lập một hàm tới từng bit và khả năng tái lập toàn bộ chương trình. Bài học giải thích fdlibm của một số hàm StrictMath, giới hạn Math theo ULP và ngữ nghĩa always-strict từ Java 17, kèm ví dụ thay đổi thứ tự phép cộng làm thay đổi kết quả.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ba mức tái lập
+
+    1. Tại sao kết quả nằm trong 1 ulp chưa đủ chứng minh hai implementation có cùng mẫu bit?
+    2. Nhóm phương thức nào của StrictMath được ràng buộc với fdlibm và vì sao không suy mọi method đều như vậy?
+    3. JEP 306 always-strict khác hợp đồng StrictMath ở điểm nào?
+
+    ### Thiết kế test kết quả
+
+    1. Vì sao hai biểu thức (x+y)+z và x+(y+z) có thể khác nhau dù cùng Java 17?
+    2. Double.doubleToRawLongBits và doubleToLongBits khác nhau thế nào trong kiểm thử NaN?
+    3. Để tái lập toàn chương trình, phải kiểm soát thêm những gì ngoài việc gọi StrictMath.sin?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại cam kết | Tách numerical accuracy, bitwise function reproducibility và toàn chương trình. |
+    | Chọn lớp API | Giải thích tại sao có thể dùng Math thông thường và StrictMath cho hàm fdlibm cần tái lập. |
+    | So sánh bit | Dùng raw bits/hex khi cần kiểm chứng dấu zero và chuỗi kết quả. |
+    | Kiểm tra thứ tự tính | Chạy hai cách gom nhóm 1e16, -1e16, 1 và giải thích khác biệt. |
+- id: math-and-strict-math-011
+  title: Miền xác định, NaN, vô cực và độ chính xác được Javadoc quy định
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Miền xác định, NaN, vô cực và độ chính xác được Javadoc quy định**
+
+    Hướng dẫn đọc hợp đồng Javadoc theo từng phương thức thay vì chỉ dựa vào công thức toán học: miền đầu vào, special cases NaN/Infinity/signed zero, độ chính xác correctly rounded hoặc theo ULP và semi-monotonic. Người học vận dụng các bảo đảm ấy để viết validation, kiểm thử biên và đánh giá tính tái lập đúng ngữ cảnh.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng Javadoc
+
+    1. Vì sao sqrt(-1), log(0), pow(NaN,0) và hypot(Infinity,NaN) không có chung quy tắc lỗi?
+    2. Special cases cho zero có dấu khác nhau ra sao giữa sqrt, exp, log và min/max?
+    3. Correctly rounded, within 1 ulp, within 2 ulp và semi-monotonic có ý nghĩa khác nhau như thế nào?
+
+    ### Validation và kiểm thử
+
+    1. Khi nào cần kiểm tra đầu vào/đầu ra bằng Double.isFinite và tại sao kiểm tra đó chưa đủ chứng minh precision?
+    2. Bài kiểm thử tại ranh giới miền khác bài kiểm thử sai số số học theo ULP ở điểm nào?
+    3. Vì sao một kết quả Math nằm trong 1 ulp không mặc nhiên trùng từng bit với StrictMath trên mọi JVM?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tra cứu đúng phương thức | Xác định miền, overload, special cases và accuracy clause trên Javadoc theo JDK. |
+    | Thiết kế validation | Viết checkedLog và checkedSqrt theo chính sách hữu hạn, miền và signed zero rõ ràng. |
+    | Kiểm tra IEEE 754 | Dự đoán kết quả NaN/Infinity/zero âm của nhiều hàm Math khác nhau. |
+    | Lập chiến lược QA | Tách assertion special case, miền nghiệp vụ và sai số ULP với oracle thích hợp. |

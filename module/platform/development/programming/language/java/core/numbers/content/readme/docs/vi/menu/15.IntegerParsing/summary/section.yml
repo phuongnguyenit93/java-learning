@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: PHÂN TÍCH SỐ NGUYÊN — MẠCH LIÊN KẾT BÀI HỌC
+roadmapHeading: Mạch liên kết bài học
+roadmap:
+  - id: integer-parsing-001
+    order: 1
+    title: "parseInt, parseLong và các phương thức parse tương ứng"
+    description: "Nắm bộ parser số nguyên signed và kiểu primitive trả về, cùng cú pháp decimal cơ bản."
+    transition:
+      to: integer-parsing-002
+      description: "Đã biết primitive trả về; tiếp theo xem valueOf trả wrapper khác ở đâu."
+  - id: integer-parsing-002
+    order: 2
+    title: "valueOf(String) khác parse về kiểu kết quả"
+    description: "Đối chiếu primitive và wrapper, boxing/unboxing, overload, collection, null và equality."
+    transition:
+      to: integer-parsing-003
+      description: "Từ khác biệt kiểu, chuyển sang cơ số, dấu và phạm vi hợp lệ."
+  - id: integer-parsing-003
+    order: 3
+    title: "Radix, dấu cộng hoặc trừ và phạm vi hợp lệ"
+    description: "Làm rõ cơ số, dấu và miền signed; radix không làm đổi độ rộng của int hoặc long."
+    transition:
+      to: integer-parsing-004
+      description: "Giới hạn signed đặt ra câu hỏi về cách đọc bit pattern unsigned."
+  - id: integer-parsing-004
+    order: 4
+    title: "parseUnsignedInt và parseUnsignedLong"
+    description: "Đọc unsigned 32/64 bit, giữ bit pattern, hiển thị và tính toán theo ngữ nghĩa unsigned."
+    transition:
+      to: integer-parsing-005
+      description: "Khi chuỗi có prefix cơ số, decode là API cần khảo sát tiếp."
+  - id: integer-parsing-005
+    order: 5
+    title: "decode và các tiền tố cơ số"
+    description: "Xác định prefix decimal/oct/hex hợp lệ với decode, dấu trước prefix và bẫy số 0 đầu."
+    transition:
+      to: integer-parsing-006
+      description: "Sự hỗ trợ prefix có giới hạn dẫn tới phân biệt literal compiler và String runtime."
+  - id: integer-parsing-006
+    order: 6
+    title: "Vì sao parseInt không xử lý literal 0x hoặc dấu gạch dưới như trình biên dịch"
+    description: "So sánh numeric literal 0x, 0b, underscore, suffix do compiler hiểu với parser xử lý String runtime."
+    transition:
+      to: integer-parsing-007
+      description: "Các chuỗi sai định dạng hoặc vượt miền cần xử lý NumberFormatException ở biên."
+  - id: integer-parsing-007
+    order: 7
+    title: "NumberFormatException do ký tự sai hoặc vượt miền giá trị"
+    description: "Chẩn đoán ký tự sai hoặc overflow cùng NumberFormatException, xử lý lỗi có ngữ cảnh."
+    transition:
+      to: integer-parsing-008
+      description: "Tiếp theo xem API có thể parse một đoạn CharSequence theo biên chỉ số."
+  - id: integer-parsing-008
+    order: 8
+    title: "Phân tích đoạn CharSequence mà không tạo String con khi API hỗ trợ"
+    description: "Đọc đoạn CharSequence trực tiếp, kiểm soát begin/end exclusive và dữ liệu mutable."
+    transition:
+      to: integer-parsing-009
+      description: "Dữ liệu cấu hình JVM lại đặt ra vấn đề khóa system property khác parse trực tiếp."
+  - id: integer-parsing-009
+    order: 9
+    title: "Integer.getInteger và Long.getLong đọc system property, không phải parse thông thường"
+    description: "Phân biệt system property name với text value, hiểu decode và default/null của getInteger/getLong."
+    transition:
+      to: integer-parsing-010
+      description: "Dữ liệu người dùng cần chính sách kiểm tra hết chuỗi và whitespace."
+  - id: integer-parsing-010
+    order: 10
+    title: "Kiểm tra toàn bộ đầu vào và chính sách xử lý khoảng trắng"
+    description: "Kiểm tra toàn trường, whitespace, Unicode digits và nguy cơ parser locale chỉ đọc tiền tố."
+    transition:
+      to: integer-parsing-011
+      description: "Sau khi định nghĩa input hợp lệ, số vượt long cần kiểu chính xác hơn."
+  - id: integer-parsing-011
+    order: 11
+    title: "Chọn BigInteger cho chuỗi số vượt giới hạn long"
+    description: "Giữ số nguyên chính xác ngoài long, phân biệt dạng unsigned và chuyển kiểu longValueExact."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | parseInt, parseLong và các phương thức parse tương ứng | valueOf(String) khác parse về kiểu kết quả | Radix, dấu cộng hoặc trừ và phạm vi hợp lệ | parseUnsignedInt và parseUnsignedLong | decode và các tiền tố cơ số | Vì sao parseInt không xử lý literal 0x hoặc dấu gạch dưới như trình biên dịch | NumberFormatException do ký tự sai hoặc vượt miền giá trị | Phân tích đoạn CharSequence mà không tạo String con khi API hỗ trợ | Integer.getInteger và Long.getLong đọc system property, không phải parse thông thường | Kiểm tra toàn bộ đầu vào và chính sách xử lý khoảng trắng | Chọn BigInteger cho chuỗi số vượt giới hạn long |
+  | Vấn đề cần hiểu | Chọn bộ parse theo kiểu đích và biên giá trị ra sao? | Cùng giá trị số nhưng kiểu trả về của parse và valueOf khác nhau thế nào? | Chuỗi toàn chữ số hợp lệ vẫn có thể vượt miền kiểu đích vì sao? | Tại sao giá trị không dấu in âm trên kiểu primitive Java? | Khi nào prefix khiến cùng chuỗi có giá trị khác nhau? | Một String giống mã literal Java vì sao vẫn NumberFormatException? | Cùng exception có thể do những loại lỗi dữ liệu nào? | Làm sao parse token số trong record mà tránh String con? | Đối số getInteger là khóa tra cứu hay chuỗi cần chuyển số? | Parser đọc được một số có chắc toàn bộ input đáp ứng schema? | Làm sao tính toán số nguyên vượt 64 bit không mất độ chính xác? |
+  | Giá trị đối với OOP/module | Chuyển chuỗi số thành primitive tại biên dữ liệu của module. | Chọn primitive/wrapper phù hợp API và DTO nullable. | Định nghĩa parser gắn với radix và width của dữ liệu. | Bảo toàn ý nghĩa trường bit hoặc dữ liệu giao thức. | Hạn chế sai lệch do tự suy radix trong cấu hình. | Giữ schema đầu vào độc lập với cú pháp mã nguồn. | Thiết kế xử lý nhập liệu rõ lỗi và tách zero hợp lệ. | Tối ưu bộ đọc record nhiều trường khi cần. | Tránh sai nguồn và định dạng khi đọc cấu hình module. | Xác thực hợp đồng dữ liệu ở ranh giới API. | Chọn kiểu và biên chuyển đổi khi tích hợp API hoặc database giới hạn long. |
+  | Tư duy hình thành | Chọn kiểu trước khi chuyển đổi. | Đọc chữ ký thay vì suy đoán từ stdout. | Phân biệt ngữ pháp với miền giá trị. | Tách bit pattern khỏi cách diễn giải signed/unsigned. | Chọn decoder theo format được công bố. | Phân tách ngữ pháp chương trình với định dạng dữ liệu. | Bảo toàn ý nghĩa thất bại parse. | Kiểm soát token và nguồn trước tối ưu cấp phát. | Xác định nguồn và trạng thái lỗi cấu hình minh bạch. | Chấp nhận có chủ đích từng ký tự được phép. | Bảo vệ tính chính xác và tài nguyên trong cùng thiết kế. |

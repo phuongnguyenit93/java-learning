@@ -1,0 +1,321 @@
+summaries:
+- id: big-decimal-conversions-001
+  title: toString và dạng khoa học khi phù hợp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **toString và dạng khoa học khi phù hợp**
+
+    Bài học giải thích biểu diễn chuẩn của `BigDecimal.toString()`, dựa vào `scale`, `precision` và adjusted exponent. Người học phân biệt trường hợp Java in số thập phân thường hoặc dạng khoa học và hiểu tại sao chuỗi chuẩn có thể khôi phục đúng cả giá trị lẫn scale.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biểu diễn và điều kiện dùng dạng khoa học
+
+    1. `BigDecimal` lưu unscaled value và scale ra sao, và adjusted exponent được tính bằng công thức nào?
+    2. Vì sao `0.000001` in dạng thường nhưng `0.0000001` qua `toString()` thành `1E-7`?
+    3. Vì sao `1000000` và `1E+6` có cùng trị số nhưng `toString()` khác nhau?
+
+    ### Round-trip và tác động lên dữ liệu
+
+    1. `toString`, `toPlainString` và `toEngineeringString` có vai trò khác nhau thế nào?
+    2. Vì sao `new BigDecimal(original.toString()).equals(original)` giữ đúng scale, còn plain string có thể mất scale âm?
+    3. Điều gì xảy ra với cách in khi `stripTrailingZeros()` chuyển scale sang âm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán chuỗi chuẩn | Tính scale, precision, adjusted exponent và dự đoán `toString()` tại ngưỡng -6. |
+    | Chọn biểu diễn đúng hợp đồng | Phân biệt canonical, plain và engineering khi hiển thị hoặc serialize. |
+    | Chứng minh round-trip | Thực hiện `new BigDecimal(value.toString())` và so `equals`/`compareTo` với plain text. |
+- id: big-decimal-conversions-002
+  title: toPlainString và bảo toàn cách trình bày mong muốn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **toPlainString và bảo toàn cách trình bày mong muốn**
+
+    Bài tập trung vào xuất `BigDecimal` thành chuỗi không có ký pháp số mũ bằng `toPlainString()`. Người học phân biệt hiển thị với làm tròn, ký tự đầu vào nguyên văn và round-trip của số có scale âm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Plain text và hiển thị cố định
+
+    1. `toPlainString()` trả gì với `1E+3`, `1.2E-7` và `12.3400`?
+    2. Vì sao `toPlainString()` không tự thêm hai chữ số thập phân hay làm tròn giá trị?
+    3. Muốn hiện `12.35` từ `12.345` theo HALF_UP cần thực hiện thao tác nào trước khi in?
+
+    ### Thông tin biểu diễn có thể mất
+
+    1. Vì sao parse lại chuỗi `1000` của `1E+3` không bảo toàn scale -3?
+    2. Có thể tái tạo nguyên văn chuỗi nhập `00012.300` chỉ từ `BigDecimal` hay không, và cần lưu gì thêm?
+    3. Vì sao `toPlainString()` có nguy cơ tạo payload rất dài với số mũ lớn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xuất decimal text | Viết `toPlainString()` cho số dương, nhỏ, scale âm và trailing zeros. |
+    | Định dạng có chính sách | Tách `setScale`, rounding và NumberFormat khỏi chuyển chuỗi plain. |
+    | Bảo vệ round-trip | Nêu rõ trường hợp cần `toString()` hoặc giữ chuỗi gốc thay cho plain text. |
+- id: big-decimal-conversions-003
+  title: toEngineeringString và số mũ theo bội của 3
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **toEngineeringString và số mũ theo bội của 3**
+
+    Bài học diễn giải `toEngineeringString()` và quy tắc số mũ là bội số 3 khi Java lựa chọn ký pháp `E`. Qua các ví dụ số dương, số rất nhỏ và số không, người học phân biệt engineering notation với làm tròn, thay đổi đơn vị và canonical round-trip.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy tắc ký pháp kỹ thuật
+
+    1. Vì sao `1E+4` được in thành `10E+3`, còn `1E-7` thành `100E-9`?
+    2. `toEngineeringString()` có luôn bắt buộc ký tự `E`, ngay cả với `1000` hay không?
+    3. Số 0 như `0E+7` khác số khác 0 thế nào khi xuất engineering notation?
+
+    ### Scale, parse ngược và đơn vị
+
+    1. Vì sao parse `10E+3` cho giá trị bằng `1E+4` nhưng `equals()` có thể false?
+    2. Vì sao `toEngineeringString` không thay cho `round(MathContext)` hoặc `setScale`?
+    3. Khi muốn xuất `123 nA` từ `0.000000123 A`, ứng dụng còn phải giải quyết phần đơn vị nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết đúng engineering notation | Dự đoán kết quả chuỗi có số mũ dương/âm theo bội 3. |
+    | Kiểm tra round-trip | Phân tích sự khác nhau giữa `compareTo` và `equals` sau parse chuỗi engineering. |
+    | Giới hạn định dạng | Giải thích trường hợp không có `E`, số 0 đặc biệt và tiền tố đơn vị SI. |
+- id: big-decimal-conversions-004
+  title: intValue, longValue và phần dữ liệu có thể mất
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **intValue, longValue và phần dữ liệu có thể mất**
+
+    Bài học phân tích hai kiểu mất mát độc lập khi gọi `intValue()` hoặc `longValue()`: cắt phần lẻ theo hướng về 0 và bỏ bit cao nếu vượt miền. Người học dùng `*ValueExact` hoặc chính sách làm tròn tường minh để chuyển đổi đáng tin cậy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cắt phần lẻ và tràn miền
+
+    1. `intValue()` của `123.999` và `-123.999` trả gì, tại sao không tương đương rounding?
+    2. Tại sao `4294967296` chuyển sang `intValue()` thành 0 nhưng `longValue()` vẫn giữ được?
+    3. Vì sao giá trị dương `9223372036854775808` có thể chuyển thành `Long.MIN_VALUE` mà không có exception?
+
+    ### Chính sách kiểm tra giá trị
+
+    1. Khi nào `1.000` qua `intValueExact()` hợp lệ dù scale > 0?
+    2. Muốn làm tròn `12.75` thành 13 mà vẫn kiểm tra phạm vi int cần những bước gì?
+    3. Khi số nguyên vượt long nhưng phải giữ chính xác, `toBigIntegerExact()` giải quyết vấn đề nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán phép thu hẹp | Tính được kết quả với số có phần lẻ và số lớn tại biên 32/64 bit. |
+    | Phân biệt truncate và round | Chọn `RoundingMode.DOWN`, `HALF_UP` và giải thích khác biệt với `intValue()`. |
+    | Chuyển dữ liệu an toàn | Dùng `intValueExact`/`longValueExact` để phát hiện mất dữ liệu và overflow. |
+- id: big-decimal-conversions-005
+  title: Các phương thức *ValueExact kiểm tra phần lẻ và giới hạn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Các phương thức *ValueExact kiểm tra phần lẻ và giới hạn**
+
+    Bài hệ thống hóa `byteValueExact`, `shortValueExact`, `intValueExact`, `longValueExact` và `toBigIntegerExact` theo hai điều kiện: giá trị nguyên và vừa miền đích. Nó giúp người học phân biệt tính chính xác số học với scale biểu diễn và tự xây validation số lượng không âm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng exact và giới hạn
+
+    1. Vì sao `42.000` được `intValueExact` chấp nhận còn `42.100` bị từ chối?
+    2. `byteValueExact` và `shortValueExact` kiểm tra những miền giới hạn nào?
+    3. Khi nào `toBigIntegerExact` thành công dù `longValueExact` thất bại?
+
+    ### Xác thực nghiệp vụ
+
+    1. Nếu `128` qua `byteValue` trở thành `-128`, vì sao `byteValueExact` phải báo lỗi?
+    2. Trong hàm `parseQuantity`, kiểm tra `intValueExact` khác kiểm tra khoảng giá trị 0–100 ở đâu?
+    3. Có nên làm tròn `12.7` trước khi gọi exact nếu hợp đồng chỉ chấp nhận số nguyên ban đầu hay không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Áp dụng họ Exact | Chọn exact method đúng đích byte, short, int, long hoặc BigInteger. |
+    | Dự đoán exception | Phân biệt lỗi do phần lẻ khác 0 với lỗi vượt phạm vi kiểu số. |
+    | Xây validation riêng | Thiết kế parseQuantity có kiểm tra null, conversion exact và miền nghiệp vụ. |
+- id: big-decimal-conversions-006
+  title: toBigInteger khác toBigIntegerExact
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **toBigInteger khác toBigIntegerExact**
+
+    Bài tập trung vào hai phép chuyển BigDecimal sang BigInteger: `toBigInteger` cố ý cắt phần lẻ về 0, còn `toBigIntegerExact` từ chối phần lẻ khác 0. Người học áp dụng chính sách này cho số lượng lớn và tránh lẫn `DOWN` với `FLOOR` trên số âm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa hai phương thức
+
+    1. `toBigInteger()` trả gì với `12.99`, `-12.99` và `-0.75`, tại sao không phải floor?
+    2. Vì sao `toBigIntegerExact()` chấp nhận `12.00` và `1E+3` nhưng từ chối `1E-3`?
+    3. Khác nhau giữa `toBigIntegerExact()` và `intValueExact()` khi giá trị vượt `Integer.MAX_VALUE` là gì?
+
+    ### Thiết kế quy tắc xử lý
+
+    1. Nếu số lượng `2.8` phải bị từ chối, cần viết hàm kiểm tra `toBigIntegerExact` như thế nào?
+    2. Khi nghiệp vụ yêu cầu làm tròn âm `-12.99` xuống `-13`, phải dùng `DOWN`, `FLOOR` hay `toBigInteger`?
+    3. Vì sao gọi `stripTrailingZeros()` trước khi chuyển sang BigInteger không cần thiết?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chuyển BigInteger đúng chính sách | Dự đoán kết quả cắt về 0 và phát hiện `ArithmeticException` của bản Exact. |
+    | Bảo toàn số nguyên lớn | Chuyển `BigDecimal` vượt miền long thành `BigInteger` không mất giá trị. |
+    | Xác thực đầu vào nguyên | Viết hàm kiểm tra số lượng nguyên không âm và từ chối phần lẻ. |
+- id: big-decimal-conversions-007
+  title: floatValue, doubleValue và khả năng làm tròn hoặc thành vô cực
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **floatValue, doubleValue và khả năng làm tròn hoặc thành vô cực**
+
+    Bài kiểm tra giới hạn của `floatValue` và `doubleValue` khi chuyển decimal sang IEEE 754 binary32/binary64, từ rounding tới overflow/underflow. Người học cần so sánh với `new BigDecimal(binaryValue)` để phân biệt giá trị nhị phân thực sự và cách in ngắn của `Double.toString`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giới hạn binary floating point
+
+    1. Vì sao `new BigDecimal("0.1").doubleValue()` hiển thị 0.1 dù không bảo toàn chính xác giá trị decimal?
+    2. Vì sao số 16777217 mất một đơn vị khi đổi sang float còn double giữ được?
+    3. Những đầu vào nào cho `Infinity`, subnormal hoặc `-0.0` khi `doubleValue`/`floatValue`?
+
+    ### Kiểm tra chuyển đổi
+
+    1. `Double.isFinite` xác minh điều gì và tại sao chưa đủ để phát hiện rounding?
+    2. Vì sao so với `BigDecimal.valueOf(converted)` có thể che mất sai số, nhưng `new BigDecimal(converted)` phát hiện được?
+    3. Hàm `requireExactDouble` phải xử lý nonfinite, underflow và đối chiếu giá trị như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích precision/range | Dự đoán loss ở mốc 2^24/2^53 và kết quả overflow/underflow. |
+    | Kiểm tra tính chính xác | Dùng `isFinite` kết hợp `new BigDecimal(converted)` và `compareTo` đúng mục đích. |
+    | Chọn ranh giới số thực | Nêu điều kiện khi được phép chuyển sang double và khi phải tiếp tục giữ BigDecimal. |
+- id: big-decimal-conversions-008
+  title: Parse và format BigDecimal theo locale
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Parse và format BigDecimal theo locale**
+
+    Bài tách định dạng người dùng theo Locale khỏi văn bản decimal cho máy và dữ liệu BigDecimal. Người học dùng `DecimalFormat.setParseBigDecimal(true)`, `ParsePosition`, quy tắc grouping, currency metadata và quản lý formatter mutable theo luồng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định dạng và parser theo locale
+
+    1. Vì sao `1,234` khác nghĩa giữa Locale.US và Locale.GERMANY?
+    2. Cấu hình `NumberFormat` để hiển thị `1234567.50` theo US/Germany mà không chuyển qua double như thế nào?
+    3. Vì sao `new BigDecimal("1.234,50")` không thể parse số theo Locale.GERMANY?
+
+    ### Kiểm tra input và bất biến
+
+    1. Vì sao phải gọi `setParseBigDecimal(true)` và kiểm tra kiểu Number trước khi cast?
+    2. `ParsePosition` phát hiện phần đuôi ra sao và vì sao chưa bảo đảm grouping hoàn toàn chặt chẽ?
+    3. Vì sao `DecimalFormat` mutable không nên chia sẻ tự do giữa nhiều request đồng thời?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Format BigDecimal theo Locale | Thiết lập grouping, fraction digits, rounding và so sánh kết quả US/Germany. |
+    | Parse không mất độ chính xác | Dùng DecimalFormat parse trực tiếp BigDecimal với ParsePosition và loại suffix thừa. |
+    | Thiết kế giao diện an toàn | Tách currency, locale, machine format và trạng thái formatter theo luồng. |
+- id: big-decimal-conversions-009
+  title: Phân biệt giá trị tính toán với scale trình bày
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt giá trị tính toán với scale trình bày**
+
+    Bài phân biệt giá trị tính toán, scale thuộc mô hình BigDecimal và chuỗi hiển thị. Người học phân tích tác động của `setScale`, `stripTrailingZeros`, `divide` có rounding mặc định theo scale và lựa chọn thời điểm chốt giá trị nghiệp vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Scale và phép tính
+
+    1. Vì sao `12.30 + 0.700` có thể tạo `13.000` dù giá trị là 13?
+    2. Vì sao `BigDecimal("2.0")` và `BigDecimal("2.00")` bằng theo compareTo nhưng không bằng theo equals?
+    3. Hai overload `divide` dùng scale nguồn khác nhau có thể tạo kết quả rounded khác nhau như thế nào?
+
+    ### Giá trị hay hiển thị
+
+    1. `setScale(2)`, `stripTrailingZeros`, `toPlainString` và `DecimalFormat.format` khác nhau ở đối tượng và kết quả nào?
+    2. Vì sao `scaleByPowerOfTen` thay giá trị thật chứ không chỉ thay cách in?
+    3. Khi cần lưu tiền ở đơn vị nhỏ nhất, làm thế nào chốt rounding rồi `longValueExact` mà không cắt ngầm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích scale theo phép toán | Theo dõi scale sau add/multiply/divide và phân biệt MathContext với số chữ số lẻ. |
+    | Tách rounding và format | Chọn `setScale`, formatter hoặc `stripTrailingZeros` theo yêu cầu dữ liệu. |
+    | Thiết kế hợp đồng liên tầng | Giải thích khi nào scale cần lưu metadata và khi nào chỉ là quy tắc trình bày. |
+- id: big-decimal-conversions-010
+  title: Thiết kế dạng trao đổi giữ số mà không đi qua double trung gian
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thiết kế dạng trao đổi giữ số mà không đi qua double trung gian**
+
+    Bài tổng hợp conversion để thiết kế wire format không mất chữ số khi truyền decimal qua JSON, JavaScript, database hay message queue. Người học lựa chọn decimal string, minor units string hoặc unscaled/scale và xác thực canonical form, precision, scale, input length.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Wire format và round-trip
+
+    1. Vì sao JSON number chứa `9007199254740993.01` có thể mất thông tin tại JavaScript JSON.parse?
+    2. Giữa decimal string, JSON number, minor units string và cặp unscaled/scale, phương án nào bảo toàn cả scale?
+    3. Vì sao `toString()` có thể khôi phục `1E+3` với scale -3 còn `toPlainString()` không?
+
+    ### Validation và liên thông
+
+    1. Một decoder chuỗi canonical BigDecimal nên chặn lỗi cú pháp, độ dài, precision, scale và exponent như thế nào?
+    2. Tại sao gửi BigDecimal tới Jackson/JDBC chưa đủ để kết luận toàn pipeline không đổi qua Double?
+    3. Muốn kiểm thử Java → JSON → JavaScript → Java giữ nguyên số và scale cần những dữ liệu biên nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định nghĩa decimal wire schema | Thiết kế schema chuỗi decimal hoặc unscaled/scale có cú pháp và giới hạn rõ ràng. |
+    | Kiểm chứng round-trip | Thử số vượt 2^53, scale âm, trailing zeros và đảm bảo BigDecimal equals sau decode. |
+    | Chặn chuyển đổi gây mất dữ liệu | Xác định và loại bỏ đoạn pipeline sử dụng double/Number hoặc format theo locale làm trung gian. |

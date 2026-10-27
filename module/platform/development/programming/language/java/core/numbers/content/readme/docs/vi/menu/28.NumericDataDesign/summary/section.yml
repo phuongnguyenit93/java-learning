@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "THIẾT KẾ DỮ LIỆU SỐ — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: numeric-data-design-001
+    order: 1
+    title: "Ghi rõ miền giá trị, đơn vị và giới hạn"
+    description: "Xác định miền nghiệp vụ, đơn vị chuẩn, độ phân giải và ranh giới API; dùng value object để ngăn nhập nhằng giữa các đại lượng."
+    transition: 
+      to: numeric-data-design-002
+      description: "Từ miền/đơn vị của mỗi giá trị, xét miền của phép tính trung gian trước khi chốt kiểu lưu."
+  - id: numeric-data-design-002
+    order: 2
+    title: "Chọn kiểu tính toán trung gian riêng với kiểu lưu trữ"
+    description: "Tách kiểu kết quả trung gian khỏi kiểu lưu/DTO để tránh tràn số, mất chữ số và ép hẹp dữ liệu âm thầm."
+    transition: 
+      to: numeric-data-design-003
+      description: "Sau khi chọn kiểu tính toán, thiết kế riêng các value object cho count, measurement và decimal."
+  - id: numeric-data-design-003
+    order: 3
+    title: "Số đếm, đại lượng đo và giá trị thập phân có quy tắc làm tròn"
+    description: "Thiết kế count, measurement và decimal khác nhau về tính rời rạc, đơn vị, độ phân giải và rounding."
+    transition: 
+      to: numeric-data-design-004
+      description: "Từ mô hình đại lượng số, xác định rõ trạng thái missing, null và số không hữu hạn."
+  - id: numeric-data-design-004
+    order: 4
+    title: "Quy ước xử lý null, NaN, vô cực và giá trị thiếu"
+    description: "Phân biệt null, missing, NaN, ±Infinity, invalid và finite; thiết kế trạng thái dữ liệu tường minh cho API và phép tổng hợp."
+    transition: 
+      to: numeric-data-design-005
+      description: "Khi đã biết giá trị hợp lệ, kiểm soát việc mất thông tin do chuyển đổi kiểu số."
+  - id: numeric-data-design-005
+    order: 5
+    title: "Kiểm tra đầu vào trước chuyển đổi có thể mất dữ liệu"
+    description: "Phát hiện chuyển đổi mất dữ liệu trước khi cast: long→int, double→int/float và BigDecimal→kiểu nguyên."
+    transition: 
+      to: numeric-data-design-006
+      description: "Từ checked conversion, mô tả precision, scale và rounding như một phần schema."
+  - id: numeric-data-design-006
+    order: 6
+    title: "Đưa precision, scale và rounding vào hợp đồng"
+    description: "Đưa BigDecimal precision, scale và RoundingMode vào đặc tả API, tính toán, lưu trữ và kiểm thử."
+    transition: 
+      to: numeric-data-design-007
+      description: "Sau khi định nghĩa decimal policy, theo dõi việc mất precision khi dùng double làm trung gian."
+  - id: numeric-data-design-007
+    order: 7
+    title: "Tránh dùng double làm trung gian cho dữ liệu thập phân chính xác"
+    description: "Bảo toàn giá trị decimal từ chuỗi/JSON/DB đến BigDecimal và không dùng double làm bước trung gian."
+    transition: 
+      to: numeric-data-design-008
+      description: "Sau khi giữ decimal nguồn, tách số domain khỏi chuỗi hiển thị và payload trao đổi."
+  - id: numeric-data-design-008
+    order: 8
+    title: "Tách định dạng hiển thị khỏi tính toán và trao đổi"
+    description: "Tách giá trị tính toán, định dạng theo Locale và wire representation theo schema độc lập UI."
+    transition: 
+      to: numeric-data-design-009
+      description: "Từ ranh giới presentation/wire, làm rõ business rounding cần được quyết định trong domain."
+  - id: numeric-data-design-009
+    order: 9
+    title: "Không suy ra quy tắc làm tròn nghiệp vụ chỉ từ kiểu dữ liệu"
+    description: "Không suy ra làm tròn từ Java type: quy tắc kết toán phải chỉ định mode, scale, bước và thời điểm tính theo nghiệp vụ."
+    transition: 
+      to: numeric-data-design-010
+      description: "Khi đã mô hình hóa policy đúng, giới hạn chi phí xử lý số có độ lớn biến thiên."
+  - id: numeric-data-design-010
+    order: 10
+    title: "Giới hạn tài nguyên cho đầu vào BigInteger hoặc BigDecimal rất lớn"
+    description: "Đặt ngân sách tài nguyên cho BigInteger/BigDecimal ở input, exponent, output và phép toán thay vì cho phép số tùy ý lớn."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Ghi rõ miền giá trị, đơn vị và giới hạn | Chọn kiểu tính toán trung gian riêng với kiểu lưu trữ | Số đếm, đại lượng đo và giá trị thập phân có quy tắc làm tròn | Quy ước xử lý null, NaN, vô cực và giá trị thiếu | Kiểm tra đầu vào trước chuyển đổi có thể mất dữ liệu | Đưa precision, scale và rounding vào hợp đồng | Tránh dùng double làm trung gian cho dữ liệu thập phân chính xác | Tách định dạng hiển thị khỏi tính toán và trao đổi | Không suy ra quy tắc làm tròn nghiệp vụ chỉ từ kiểu dữ liệu | Giới hạn tài nguyên cho đầu vào BigInteger hoặc BigDecimal rất lớn |
+  | Vấn đề cần hiểu | Một trường số mang đại lượng, đơn vị và miền nào? | Tại sao kiểu biến nhận không đủ bảo đảm phép tính? | Count, measurement và decimal cần hợp đồng gì khác? | Giá trị thiếu và số đặc biệt có ý nghĩa gì? | Phép chuyển kiểu đã mất dữ liệu ở đâu? | Precision, scale và rounding thuộc hợp đồng nào? | Double ở giữa pipeline làm mất decimal thế nào? | Một giá trị số có những kiểu chuỗi phục vụ ai? | Quy tắc làm tròn được quyết định ở bước nào? | Số có độ dài biến thiên gây chi phí nào? |
+  | Giá trị đối với OOP/module | Đặt invariant domain cho dữ liệu số | Bảo đảm đúng số học trên đường tới lưu trữ | Mô hình hóa các loại đại lượng số | Bảo toàn trạng thái và chính sách validation | Ngăn silent truncation và overflow | Tạo chính sách decimal chính xác xuyên các tầng | Giữ nguyên nguồn decimal exact cho tiền và tỷ lệ | Ngăn giao diện tác động tính toán và protocol | Đặt rounding policy thống nhất trong domain | Giữ tài nguyên ổn định cho dữ liệu số không tin cậy |
+  | Tư duy hình thành | Mô tả nghĩa số trước khi chọn kiểu lưu | Xác định miền lớn nhất của mọi bước trung gian | Theo nghĩa đại lượng thay vì nhìn chỉ dấu phẩy | Phân biệt chưa có dữ liệu với số hợp lệ | Kiểm tra trên giá trị gốc trước khi thu hẹp | Biến tùy chọn số học thành ràng buộc kiểm thử được | Truy vết chính xác từ token nguồn tới kết quả | Mỗi ranh giới có parser/formatter riêng | Đọc luật nghiệp vụ trước khi dùng setScale | Chặn chi phí đầu vào, phép tính và đầu ra |

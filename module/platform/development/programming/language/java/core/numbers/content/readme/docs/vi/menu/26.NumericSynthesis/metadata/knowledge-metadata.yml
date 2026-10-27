@@ -1,0 +1,31 @@
+sections:
+  numeric-synthesis-001:
+    difficulty: BASIC
+    isImportant: true
+  numeric-synthesis-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-synthesis-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-synthesis-004:
+    difficulty: BASIC
+    isImportant: true
+  numeric-synthesis-005:
+    difficulty: BASIC
+    isImportant: true
+  numeric-synthesis-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  numeric-synthesis-007:
+    difficulty: ADVANCED
+    isImportant: true
+  numeric-synthesis-008:
+    difficulty: ADVANCED
+    isImportant: true
+  numeric-synthesis-009:
+    difficulty: ADVANCED
+    isImportant: true
+  numeric-synthesis-010:
+    difficulty: INTERMEDIATE
+    isImportant: true

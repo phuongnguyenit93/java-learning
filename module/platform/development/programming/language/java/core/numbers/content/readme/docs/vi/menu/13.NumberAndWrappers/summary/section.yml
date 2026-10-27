@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "NUMBER VÀ WRAPPER — MẠCH HỌC JAVA CORE"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: number-and-wrappers-001
+    order: 1
+    title: "Number là lớp trừu tượng và hợp đồng chuyển đổi giá trị"
+    description: "`Number` là lớp trừu tượng cho phép các đối tượng số cung cấp giá trị primitive qua đa hình."
+    transition:
+      to: number-and-wrappers-002
+      description: "Từ hợp đồng số chung đến các wrapper primitive cụ thể."
+  - id: number-and-wrappers-002
+    order: 2
+    title: "Byte, Short, Integer, Long, Float và Double"
+    description: "Sáu wrapper `Byte`, `Short`, `Integer`, `Long`, `Float`, `Double` kết nối primitive với object/generic."
+    transition:
+      to: number-and-wrappers-003
+      description: "Sau khi hiểu wrapper số, phân biệt trường hợp `char` và `Character`."
+  - id: number-and-wrappers-003
+    order: 3
+    title: "Character không kế thừa Number dù char là kiểu số"
+    description: "`char` là integral primitive nhưng `Character` không nằm trong phân cấp `Number`."
+    transition:
+      to: number-and-wrappers-004
+      description: "Từ ngoại lệ `Character` quay về các lớp số lớn và bộ đếm thuộc `Number`."
+  - id: number-and-wrappers-004
+    order: 4
+    title: "BigInteger, BigDecimal và các lớp Number khác trong JDK"
+    description: "`BigInteger`, `BigDecimal` và các lớp atomic/adder đều là đối tượng số nhưng có miền, trạng thái và độ chính xác rất khác nhau."
+    transition:
+      to: number-and-wrappers-005
+      description: "Sau các loại số đa dạng, xét tính bất biến và value-based của wrapper chuẩn."
+  - id: number-and-wrappers-005
+    order: 5
+    title: "Wrapper bất biến và ngữ nghĩa value-based"
+    description: "Wrapper chuẩn là đối tượng bất biến và value-based, nên ứng dụng phải quan tâm giá trị hơn identity."
+    transition:
+      to: number-and-wrappers-006
+      description: "Từ tư duy wrapper là giá trị đến factory `valueOf` tránh constructor cũ."
+  - id: number-and-wrappers-006
+    order: 6
+    title: "valueOf thay cho constructor wrapper lỗi thời"
+    description: "Factory `valueOf` và autoboxing thay constructor wrapper đã deprecated, nhưng không thay parser hay hợp đồng về dữ liệu đầu vào."
+    transition:
+      to: number-and-wrappers-007
+      description: "Từ cách tạo wrapper đến kiểm soát miền qua các hằng MIN/MAX và TYPE."
+  - id: number-and-wrappers-007
+    order: 7
+    title: "MIN_VALUE, MAX_VALUE, TYPE và các hằng theo từng lớp"
+    description: "Các hằng `MIN_VALUE`, `MAX_VALUE`, `TYPE`, `SIZE` và `BYTES` có ý nghĩa khác nhau theo loại wrapper."
+    transition:
+      to: number-and-wrappers-008
+      description: "Khi biết kiểu và giới hạn, học các hợp đồng so sánh, thứ tự và băm."
+  - id: number-and-wrappers-008
+    order: 8
+    title: "compare, compareTo, equals và hashCode"
+    description: "`compare`, `compareTo`, `equals` và `hashCode` thực hiện những hợp đồng khác nhau về thứ tự, equality và khóa collection."
+    transition:
+      to: number-and-wrappers-009
+      description: "Từ hợp đồng so sánh tổng quát đến equality khi wrapper khác class."
+  - id: number-and-wrappers-009
+    order: 9
+    title: "Wrapper khác kiểu không tự bằng nhau qua equals"
+    description: "Hai wrapper khác class không tự bằng nhau qua `equals`, dù chứa cùng lượng toán học."
+    transition:
+      to: number-and-wrappers-010
+      description: "Sau equality liên kiểu, xem giới hạn phép cộng đa hình của `Number`."
+  - id: number-and-wrappers-010
+    order: 10
+    title: "Number không cung cấp toán tử cộng chung cho mọi lớp con"
+    description: "`Number` cung cấp conversion chứ không định nghĩa phép cộng chung cho mọi subtype."
+    transition:
+      to: number-and-wrappers-011
+      description: "Từ chính sách phép toán sang trách nhiệm khi thiết kế một subtype `Number` mới."
+  - id: number-and-wrappers-011
+    order: 11
+    title: "Giới hạn khi tự xây dựng một lớp con Number"
+    description: "Tự tạo một subtype `Number` đòi hỏi nhiều hơn bốn phương thức abstract: phải định nghĩa conversion, precision, unit, equality và các phép toán có kiểm tra."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Number là lớp trừu tượng và hợp đồng chuyển đổi giá trị | Byte, Short, Integer, Long, Float và Double | Character không kế thừa Number dù char là kiểu số | BigInteger, BigDecimal và các lớp Number khác trong JDK | Wrapper bất biến và ngữ nghĩa value-based | valueOf thay cho constructor wrapper lỗi thời | MIN_VALUE, MAX_VALUE, TYPE và các hằng theo từng lớp | compare, compareTo, equals và hashCode | Wrapper khác kiểu không tự bằng nhau qua equals | Number không cung cấp toán tử cộng chung cho mọi lớp con | Giới hạn khi tự xây dựng một lớp con Number |
+  | Vấn đề cần hiểu | `Number` cung cấp gì và conversion mất thông tin khi nào? | Wrapper số khác nhau về miền, boxing, parse và equality thế nào? | `char` là integral, nhưng vì sao `Character` không là `Number`? | Chọn BigInteger, BigDecimal hoặc atomic Number khi nào? | Immutable/value-based liên quan identity, cache và lock thế nào? | `valueOf`, parser và boxing thay constructor như thế nào? | Hằng wrapper ảnh hưởng overflow và phản chiếu kiểu thế nào? | Order, equality, identity và hash khác nhau như thế nào? | Vì sao cùng số nhưng wrapper khác class có `equals=false`? | Tại sao `Number` không có toán tử cộng chung? | Subclass Number cần quy định semantics và đơn vị thế nào? |
+  | Giá trị đối với OOP/module | Thiết kế API đa hình với chính sách chuyển kiểu | Dùng object số đúng nơi cần generic và parsing | Tránh lỗi Unicode và assignment/generic sai kiểu | Giữ độ chính xác, scale và semantics đồng thời | Tránh lỗi reference equality, cache và monitor | Hiện đại hóa mã cũ mà giữ đúng equality và parse | Chẩn đoán lỗi phạm vi và nhầm lớp/primitive | Bảo vệ comparator và khóa collection | Chuẩn hóa keys và tránh so sánh sai do double | Thiết kế cộng generic theo độ chính xác | Thiết kế numeric domain class bảo toàn invariant |
+  | Tư duy hình thành | Phân biệt kiểu cha và biểu diễn số | Chọn kiểu số theo miền và semantics | Tách ký tự với giá trị số | Xác định mô hình số trước phép toán | Đối xử wrapper theo giá trị | Tách tạo object khỏi phân tích giá trị | Xét giới hạn biểu diễn trước khi tính | Định nghĩa quan hệ bằng nhau đúng contract | Phân biệt object equality và numeric equivalence | Tách abstraction chuyển đổi khỏi phép cộng | Ưu tiên hợp đồng miền thay cho toán tử ngầm |

@@ -1,0 +1,75 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "PHÂN TÍCH SỐ THỰC — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: floating-point-parsing-001
+    order: 1
+    title: "Float.parseFloat, Double.parseDouble và valueOf"
+    description: "Nhận diện bốn API parse và valueOf theo kiểu trả về, cơ chế boxing/unboxing, độ chính xác float/double và so sánh wrapper."
+    transition: 
+      to: floating-point-parsing-002
+      description: "Từ chữ ký và kiểu trả về, tìm hiểu chính xác những dạng chuỗi mà parser có thể đọc."
+  - id: floating-point-parsing-002
+    order: 2
+    title: "Dạng thập phân, ký hiệu mũ và dạng hex được API hỗ trợ"
+    description: "Giải thích cú pháp decimal, e/E, hexadecimal với p/P, suffix và ranh giới giữa String với literal Java."
+    transition: 
+      to: floating-point-parsing-003
+      description: "Từ ngữ pháp được chấp nhận, xét các giá trị đặc biệt xuất hiện ngay từ đầu vào."
+  - id: floating-point-parsing-003
+    order: 3
+    title: "NaN, Infinity và dấu trong đầu vào"
+    description: "Giải thích token NaN/Infinity, signed zero và dấu; thực hành tách syntax khỏi kiểm tra giá trị đặc biệt."
+    transition: 
+      to: floating-point-parsing-004
+      description: "Từ NaN, Infinity và zero có dấu, mở rộng sang sự làm tròn của các giá trị hữu hạn rất lớn hoặc nhỏ."
+  - id: floating-point-parsing-004
+    order: 4
+    title: "Đầu vào hợp lệ có thể làm tròn, overflow hoặc underflow"
+    description: "Phân tích rounding, overflow, subnormal và underflow; đối chiếu giá trị nguồn với binary32/binary64 đã parse."
+    transition: 
+      to: floating-point-parsing-005
+      description: "Từ giới hạn IEEE 754, phân biệt thêm ranh giới cú pháp do locale quyết định."
+  - id: floating-point-parsing-005
+    order: 5
+    title: "Phân biệt parse số theo cú pháp Java với parse theo locale"
+    description: "Lựa chọn parsing độc lập locale hoặc NumberFormat/DecimalFormat; kiểm tra tiêu thụ hết chuỗi và giữ BigDecimal."
+    transition: 
+      to: floating-point-parsing-006
+      description: "Sau khi xác định định dạng nguồn, học cách giữ trực tiếp giá trị decimal gốc bằng BigDecimal."
+  - id: floating-point-parsing-006
+    order: 6
+    title: "Chuỗi thập phân sang BigDecimal để giữ ý nghĩa thập phân"
+    description: "Giữ nghĩa decimal từ String; học cấu trúc, số học, rounding, equality và serialization của BigDecimal."
+    transition: 
+      to: floating-point-parsing-007
+      description: "Từ cách tạo decimal chính xác bằng String, phân tích hệ quả của constructor nhận double."
+  - id: floating-point-parsing-007
+    order: 7
+    title: "Vì sao new BigDecimal(double) khác new BigDecimal(String)"
+    description: "Đối chiếu constructor double và String bằng 0.1/1.005, giải thích sai khác giá trị, scale và làm tròn."
+    transition: 
+      to: floating-point-parsing-008
+      description: "Sau khi phân biệt hai constructor, xét cụ thể factory valueOf khi nguồn thực sự đã là double."
+  - id: floating-point-parsing-008
+    order: 8
+    title: "BigDecimal.valueOf(double) và giới hạn của giá trị double nguồn"
+    description: "Hiểu chuyển double bằng Double.toString, giới hạn giữ chữ số/scale và ứng dụng overload long chính xác."
+    transition: 
+      to: floating-point-parsing-009
+      description: "Từ các giới hạn chuyển đổi, xây dựng quy trình xác thực giá trị số thực theo miền nghiệp vụ."
+  - id: floating-point-parsing-009
+    order: 9
+    title: "Kiểm tra giá trị hữu hạn và miền dữ liệu sau khi parse"
+    description: "Gắn kiểm tra syntax, tính hữu hạn, min/max và precision vào một luồng xác thực dữ liệu thực tế."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Float.parseFloat, Double.parseDouble và valueOf | Dạng thập phân, ký hiệu mũ và dạng hex được API hỗ trợ | NaN, Infinity và dấu trong đầu vào | Đầu vào hợp lệ có thể làm tròn, overflow hoặc underflow | Phân biệt parse số theo cú pháp Java với parse theo locale | Chuỗi thập phân sang BigDecimal để giữ ý nghĩa thập phân | Vì sao new BigDecimal(double) khác new BigDecimal(String) | BigDecimal.valueOf(double) và giới hạn của giá trị double nguồn | Kiểm tra giá trị hữu hạn và miền dữ liệu sau khi parse |
+  | Vấn đề cần hiểu | Chọn API và kiểu trả về nào? | Chuỗi nào đúng ngữ pháp floating parser? | NaN, Infinity và ±0.0 ảnh hưởng ra sao? | Chuỗi hợp lệ có giữ đúng số không? | Định dạng số phụ thuộc Locale thế nào? | Làm sao giữ giá trị decimal và scale? | Hai constructor BigDecimal lưu gì khác nhau? | valueOf(double) giữ và làm mất thông tin gì? | Làm sao chỉ chấp nhận số hợp lệ nghiệp vụ? |
+  | Giá trị đối với OOP/module | Định vị primitive/wrapper và hệ quả lên lời gọi Java | Xây khả năng đọc và kiểm chứng đầu vào dạng text | Bảo vệ xử lý ngoại lệ số thực và so sánh | Giải thích giới hạn chính xác và miền IEEE 754 | Thiết kế API nhận đầu vào bản địa hóa an toàn | Nền tảng tính toán decimal đúng yêu cầu nghiệp vụ | Ngăn sai số thâm nhập dữ liệu decimal ngay khi khởi tạo | Chọn API chuyển đổi từ nguồn đã là double hoặc long | Hoàn thiện validation có thể kiểm chứng bằng test biên |
+  | Tư duy hình thành | Đọc chữ ký và conversion trước khi so giá trị | Phân tích ký tự, mũ và kiểu đích theo hợp đồng API | Kiểm tra đặc tính giá trị trước khi suy luận miền | Tách cú pháp, hữu hạn và bảo toàn giá trị | Xác định locale và kiểm chứng toàn chuỗi trước khi dùng số | Giữ String gốc và chọn rounding tại bước có chủ đích | Truy ngược kiểu nguồn và bước làm tròn trước constructor | Không kỳ vọng phép chuyển khôi phục lịch sử dữ liệu | Parse xong phải kiểm tra giá trị theo hợp đồng dữ liệu |

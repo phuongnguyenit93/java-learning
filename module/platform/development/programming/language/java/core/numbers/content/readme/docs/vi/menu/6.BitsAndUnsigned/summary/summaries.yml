@@ -1,0 +1,361 @@
+summaries:
+- id: bits-and-unsigned-001
+  title: Các toán tử &, |, ^ và ~
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Các toán tử &, |, ^ và ~**
+
+    Toán tử AND, OR, XOR và NOT giúp đọc, kết hợp và thay đổi cờ được mã hóa thành bit. Bài học đặt bảng chân trị trong bối cảnh độ rộng int/long, promotion và khác biệt giữa bitwise với điều kiện boolean để tránh suy luận sai kết quả.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguyên lý
+
+    1. Từ bảng chân trị, vì sao 12 & 10, 12 | 10 và 12 ^ 10 cho ba kết quả khác nhau?
+    2. Tại sao ~12 cho -13 với int nhưng (~12) & 0xF lại bằng 3?
+
+    ### Thiết kế và lỗi
+
+    1. Khi nào cần |=, &= ~, ^=, (flags & mask) != 0 và (flags & mask) == mask?
+    2. Vì sao & trên boolean khác && về lời gọi vế phải và toán tử bitwise trên byte trả int?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính kết quả theo bit | Giải thích từng dòng của BitwiseBasics dựa trên 32 bit và phép NOT. |
+    | Thao tác cờ | Viết đúng mã bật, tắt, đảo và kiểm tra nhiều bit trong mask. |
+    | Phát hiện lỗi | Chỉ ra nhầm lẫn ^ với lũy thừa, &/&& và độ ưu tiên trong điều kiện. |
+- id: bits-and-unsigned-002
+  title: Dịch trái <<, dịch phải >> và dịch phải không dấu >>>
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dịch trái <<, dịch phải >> và dịch phải không dấu >>>**
+
+    Dịch bit giúp đặt cờ và trích trường nhị phân, nhưng bit điền vào và cách diễn giải dấu quyết định kết quả. Bài học đối chiếu dịch trái, dịch phải số học và dịch phải logic qua số dương, số âm và trích byte.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hành vi toán tử
+
+    1. Ba phép <<, >>, >>> xử lý bit bị đẩy ra và vùng trống như thế nào?
+    2. Vì sao -8 >> 2 là -2 trong khi -8 >>> 2 là 1073741822?
+
+    ### Áp dụng
+
+    1. Tại sao 1 << 40 và 1L << 40 khác kết quả, dù đều gán vào long được?
+    2. Làm sao dùng >>> và & 0xFF để trích các nhóm byte của 0x1234ABCD?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Theo vết phép dịch | Tính kết quả ba toán tử cho int dương và âm với biểu diễn hex. |
+    | Kiểm soát kiểu | Chọn int/long và chuẩn hóa byte âm trước khi dịch logic. |
+    | Tách trường bit | Viết biểu thức shift và mask lấy từng byte từ một int. |
+- id: bits-and-unsigned-003
+  title: Khoảng dịch được rút gọn theo kiểu int hoặc long
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khoảng dịch được rút gọn theo kiểu int hoặc long**
+
+    Các toán tử dịch tự động lấy 5 hoặc 6 bit thấp của số bước dịch, kể cả khi số bước âm. Bài học đi sâu vào vế trái int/long, vế phải long và tác động khi chuyển kiểu sau dịch, giúp tránh tạo nhầm mặt nạ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khoảng dịch hiệu dụng
+
+    1. Java chuyển n=32, 40, 64 và -1 thành khoảng dịch hiệu dụng nào cho int và long?
+    2. Vì sao vế phải 40L trong 1 << 40L không làm phép dịch trở thành 64 bit?
+
+    ### Kiểm soát đầu vào
+
+    1. Long result = 1 << 40 khác 1L << 40 ra sao?
+    2. Khi index nhập từ ngoài, phải kiểm tra gì trước 1L << index để không bật sai bit?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích phép dịch | Tính đầu ra ShiftDistanceDemo từ kiểu vế trái và mặt nạ khoảng dịch. |
+    | Tạo mask đúng | Viết hàm kiểm tra bit có ràng buộc index 0..63. |
+    | Xử lý biên | Giải thích kết quả 1 << -1, 1L << 64 và byte << 32. |
+- id: bits-and-unsigned-004
+  title: Mở rộng dấu khi nâng kiểu byte hoặc short
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Mở rộng dấu khi nâng kiểu byte hoặc short**
+
+    Byte và short là kiểu signed; mở rộng sang int/long sẽ lặp lại bit dấu để giữ nguyên giá trị âm. Bài học phân biệt sign extension với zero extension và phân tích hệ quả ở phép dịch, ép sang char và ghép byte.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế mở rộng dấu
+
+    1. Vì sao (int)(byte)0xFF là -1 nhưng ((byte)0xFF & 0xFF) là 255?
+    2. Kết quả (char)(byte)-1 khác (char)((byte)-1 & 0xFF) thế nào?
+
+    ### Hệ quả trên bit
+
+    1. Tại sao b >>> 1 trên byte âm không tương đương dịch unsigned 8 bit?
+    2. Vì sao phải mask cả byte cao và byte thấp trước khi ghép thành unsigned 16 bit?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Biểu diễn sign extension | Vẽ mẫu hex 8/16/32 bit trước và sau widening của số âm. |
+    | Phân biệt cách mở rộng | Dự đoán giá trị short, char, byte sau cast và promotion. |
+    | Ghép byte | Tạo unsigned 16 bit từ hai byte bằng mask, shift và OR. |
+- id: bits-and-unsigned-005
+  title: Mặt nạ bit và chuyển byte sang giá trị 0 đến 255
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Mặt nạ bit và chuyển byte sang giá trị 0 đến 255**
+
+    Dữ liệu nhị phân có byte 0x80..0xFF nhưng Java byte hiển thị giá trị âm. Bài học dùng mask 0xFF, nibble và đóng gói byte, đồng thời chỉ ra InputStream.read() dùng -1 cho EOF chứ không phải byte dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mặt nạ
+
+    1. AND với 0xFF giữ và xóa các vị trí bit nào của byte đã sign-extend?
+    2. Tại sao value & 0xFF chỉ cắt bit, không kiểm tra input có thuộc miền 0..255?
+
+    ### Dữ liệu và EOF
+
+    1. Vì sao mask InputStream.read() trước khi kiểm tra -1 làm mất tín hiệu EOF?
+    2. Tách hai nibble của 0xAB và ghép 0xFF,0x80 thành 16 bit unsigned như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chuyển byte | So sánh b & 0xFF và Byte.toUnsignedInt trên các biên âm. |
+    | Đọc luồng | Viết nhánh phân biệt EOF của InputStream.read() và byte 0xFF hợp lệ. |
+    | Tách/ghép dữ liệu | Tạo nibble và số 16 bit có kiểm tra miền khi cast ngược. |
+- id: bits-and-unsigned-006
+  title: Byte.toUnsignedInt, Short.toUnsignedInt và Integer.toUnsignedLong
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Byte.toUnsignedInt, Short.toUnsignedInt và Integer.toUnsignedLong**
+
+    Ba phương thức toUnsigned của JDK đọc đúng mẫu 8, 16 và 32 bit dưới một kiểu rộng hơn. Bài học chọn API theo độ rộng nguồn, chứng minh khác biệt giữa sign extension và mask long, và xử lý ID 32 bit trong dữ liệu nhị phân.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### API theo độ rộng
+
+    1. Byte.toUnsignedInt, Short.toUnsignedInt và Integer.toUnsignedLong khác miền đầu vào và kiểu trả về như thế nào?
+    2. Tại sao cast (long) int âm khác Integer.toUnsignedLong(int) dù cùng kiểu đích?
+
+    ### Ghép và giới hạn
+
+    1. Làm thế nào ghép FE DC BA 98 rồi lấy unsigned 32 bit thành long dương?
+    2. Sau phép cộng vượt unsigned 32 bit, cần kiểm tra gì trước khi cast ghi lại vào int?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn API | Lập bảng kết quả unsigned của 8, 16 và 32 bit tại các giá trị biên. |
+    | Giải thích mặt nạ | Phân biệt 0xFFFF_FFFF và 0xFFFF_FFFFL khi mở rộng int âm. |
+    | Giải mã ID | Ghép bốn byte big-endian và đọc raw int bằng Integer.toUnsignedLong. |
+- id: bits-and-unsigned-007
+  title: compareUnsigned, divideUnsigned và remainderUnsigned
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **compareUnsigned, divideUnsigned và remainderUnsigned**
+
+    Cùng mẫu bit int/long có thứ tự và kết quả chia khác nhau theo signed hay unsigned. Bài học thực hành compareUnsigned, divideUnsigned và remainderUnsigned, bao gồm chia cho 0 và thương in ra số âm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy tắc số học
+
+    1. Vì sao Integer.compareUnsigned(-1,1) đảo thứ tự của so sánh -1 < 1?
+    2. Mẫu unsigned 0xFFFFFFFF chia 10 có thương và số dư là bao nhiêu?
+
+    ### Kết quả và biên
+
+    1. Vì sao Integer.divideUnsigned(-1,1) hiển thị -1 dù thương unsigned lớn?
+    2. Long.divideUnsigned khác phép / signed với bit dấu bật ra sao và divisor bằng 0 gây lỗi gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh đúng miền | Sắp xếp int theo Integer.compareUnsigned và diễn giải thứ tự. |
+    | Chia unsigned | Dự đoán quotient/remainder cho int, long có bit dấu bật. |
+    | Đối chiếu số học | Kiểm chứng A = B*Q + R cho unsigned 32 bit bằng long dương. |
+- id: bits-and-unsigned-008
+  title: parseUnsignedInt, parseUnsignedLong và toUnsignedString
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **parseUnsignedInt, parseUnsignedLong và toUnsignedString**
+
+    Trường unsigned được truyền bằng chuỗi cần chuyển đổi mà không mất bit, kể cả giá trị vượt Integer.MAX_VALUE và Long.MAX_VALUE. Bài học tập trung vào parseUnsignedInt/Long, toUnsignedString, radix và lỗi dữ liệu nhập.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Round-trip văn bản
+
+    1. Vì sao Integer.parseUnsignedInt("4294967295") trả -1 nhưng toUnsignedString xuất lại đủ chữ số?
+    2. Cặp API nào xử lý chuỗi 18446744073709551615 mà vẫn giữ đủ 64 bit?
+
+    ### Đầu vào lỗi
+
+    1. Tại sao parseUnsignedInt("0xFF",16) lỗi, trong khi parseUnsignedInt("FF",16) hợp lệ?
+    2. Làm sao phát hiện giá trị vượt miền, dấu trừ và nhu cầu tính vượt 64 bit?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chuyển đổi chuỗi | Parse và xuất lại unsigned int/long ở cơ số 10 và 16. |
+    | Kiểm tra lỗi | Phân biệt NumberFormatException với int âm hợp lệ sau parse. |
+    | Chọn kiểu rộng | Dùng Integer.toUnsignedLong hoặc BigInteger khi miền kết quả yêu cầu. |
+- id: bits-and-unsigned-009
+  title: bitCount, leading zeros, trailing zeros và one-bit helpers
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **bitCount, leading zeros, trailing zeros và one-bit helpers**
+
+    Các helper bitCount, leading/trailing zeros và highest/lowestOneBit phân tích mẫu bit cố định mà không phải tự duyệt từng vị trí. Bài học làm rõ trường hợp 0 cùng sự khác nhau giữa số bit, chỉ số và mặt nạ one-hot.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đếm và cô lập bit
+
+    1. bitCount(40), numberOfLeadingZeros(40) và numberOfTrailingZeros(40) đếm gì?
+    2. highestOneBit(40) và lowestOneBit(40) trả mask hay vị trí bit, và bằng bao nhiêu?
+
+    ### Ứng dụng và số 0
+
+    1. Vì sao numberOfTrailingZeros(0) bằng 32 và dùng làm shift count gây lỗi logic?
+    2. Làm sao duyệt từng bit 1 bằng trailing zeros và mask &= mask - 1?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán helper | Tính năm kết quả cho 0, 40, -1 và Integer.MIN_VALUE. |
+    | Duyệt cờ | Viết vòng lặp in vị trí các bit đang bật, kể cả bit dấu. |
+    | Xử lý zero | Chặn tình huống shift count 32 và phân biệt power-of-two dương. |
+- id: bits-and-unsigned-010
+  title: rotateLeft, rotateRight, reverse và reverseBytes
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **rotateLeft, rotateRight, reverse và reverseBytes**
+
+    Xoay, đảo mọi bit và đảo thứ tự byte là ba kiểu hoán vị khác nhau; chọn sai có thể làm hỏng dữ liệu định dạng nhị phân. Bài học so sánh Integer/Long helpers và tự xây helper xoay đúng tám bit.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phép hoán vị
+
+    1. rotateLeft/rotateRight khác toán tử shift ở việc đưa bit tràn quay lại như thế nào?
+    2. Vì sao reverse(0x12345678) khác reverseBytes(0x12345678)?
+
+    ### Độ rộng và nghịch đảo
+
+    1. Vì sao Integer.rotateLeft(0x81,1) không phải xoay byte 8 bit?
+    2. Những đẳng thức round-trip nào xác nhận rotate/reverse/reverseBytes không làm mất bit?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đối chiếu kết quả hex | Tính rotateLeft/Right, reverse, reverseBytes của 0x12345678. |
+    | Xây phép xoay 8 bit | Dùng mask 0xFF và distance & 7 rồi kiểm chứng xoay ngược. |
+    | Đọc bit order | Chọn reverse hay reverseBytes theo yêu cầu từ giao thức. |
+- id: bits-and-unsigned-011
+  title: Không đồng nhất dịch phải với chia khi xử lý số âm
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không đồng nhất dịch phải với chia khi xử lý số âm**
+
+    Dịch phải số học và chia nguyên có quy tắc làm tròn khác nhau đối với số âm không chia hết. Bài học đối chiếu /, >>, >>> và Math.floorDiv nhằm tránh thay phép chia bằng phép dịch không tương đương.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Làm tròn
+
+    1. Vì sao -7 / 4 cho -1 nhưng -7 >> 2 cho -2?
+    2. Với k trong 0..30, khi nào x / (1 << k) bằng x >> k cho số âm?
+
+    ### Chọn đúng toán tử
+
+    1. Math.floorDiv(-3,2) khác -3 / 2 thế nào?
+    2. Tại sao -3 >>> 1 không phải phép chia signed và shift count lớn ảnh hưởng ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán phép chia/dịch | Giải thích ShiftVsDivision với số âm lẻ và âm chia hết. |
+    | Chọn cách làm tròn | Dùng / cho truncate-toward-zero và Math.floorDiv cho floor. |
+    | Tìm phản ví dụ | Dùng -1 / 2 và -1 >> 1 chứng minh phép thay toán tử sai. |
+- id: bits-and-unsigned-012
+  title: Phân biệt giá trị số với thứ tự byte khi trao đổi dữ liệu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt giá trị số với thứ tự byte khi trao đổi dữ liệu**
+
+    Giá trị, bit pattern, signedness và endian quyết định cách trao đổi dữ liệu nhị phân, nhưng mỗi khái niệm có vai trò riêng. Bài học tích hợp ByteBuffer, DataInputStream, ghép unsigned 32 bit và kiểm thử contract khi partial read hoặc sai endian.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biểu diễn và endian
+
+    1. Cùng 0x12345678 tạo chuỗi byte nào ở big-endian và little-endian?
+    2. Vì sao ByteBuffer.getInt() ra số âm không đủ để kết luận dữ liệu sai byte order?
+
+    ### Thiết kế giao thức
+
+    1. Đọc unsigned 32-bit big-endian từ bốn byte cần mask/cast như thế nào?
+    2. Vì sao TCP read có thể trả thiếu bốn byte và phải kiểm tra length trước cấp phát?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Round-trip endian | Dùng ByteBuffer.order ghi/đọc 0x12345678 ở hai thứ tự. |
+    | Giải mã unsigned | Ghép FE DC BA 98 và nhận 4275878552 qua long. |
+    | Kiểm thử contract | Thiết kế ca sai endian, thiếu byte, unsigned biên và field length vượt mức. |

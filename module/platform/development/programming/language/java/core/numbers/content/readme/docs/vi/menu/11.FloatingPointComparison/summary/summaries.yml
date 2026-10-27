@@ -1,0 +1,331 @@
+summaries:
+- id: floating-point-comparison-001
+  title: Toán tử ==, !=, <, <=, > và >=
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Toán tử ==, !=, <, <=, > và >=**
+
+    Sáu toán tử primitive trên `float`/`double` so sánh giá trị đã biểu diễn, có quy tắc riêng cho NaN, signed zero và nâng kiểu số. Phân biệt phép so sánh số học với tolerance khi kết quả đã làm tròn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa và đặc biệt
+
+    1. Các toán tử `==`, `!=`, `<`, `<=`, `>` và `>=` cho kết quả nào khi gặp NaN hoặc ±0.0?
+    2. Vì sao `!(x < y)` khác `x >= y` khi xuất hiện NaN?
+
+    ### Kiểu và mục tiêu
+
+    1. Vì sao `0.1f == 0.1` thường false dù cùng chữ số thập phân?
+    2. Khi nào `==` phù hợp, khi nào cần `Double.compare` hoặc so sánh có dung sai?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích toán tử | Dự đoán sáu kết quả của các phép so sánh với NaN, vô cực và hai zero. |
+    | Phân tích nâng kiểu | Giải thích hai ví dụ `float` so với `double` và `int` lớn so với `float`. |
+    | Chọn cơ chế | Phân biệt so sánh số học, xếp thứ tự và truy vấn gần bằng. |
+- id: floating-point-comparison-002
+  title: NaN không bằng chính nó trong so sánh primitive
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **NaN không bằng chính nó trong so sánh primitive**
+
+    NaN không bằng chính mình theo primitive `==`, `!=` là true và mọi toán tử thứ tự đều false. Học cách bảo vệ rẽ nhánh và phát hiện NaN bằng predicate rõ nghĩa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất NaN
+
+    1. Vì sao `x == x` sai khi `x` là NaN và `x != x` lại đúng?
+    2. Những phép toán nào có thể sinh NaN, khác với ±Infinity như thế nào?
+
+    ### Kiểm tra miền
+
+    1. Vì sao `x < 0 || x > 100` có thể không từ chối NaN?
+    2. Khi nào dùng `Double.isNaN` thay vì so với `Double.NaN`, và vì sao wrapper `equals` khác primitive?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện đặc biệt | Tạo NaN và giải thích toàn bộ kết quả so sánh với chính nó. |
+    | Sửa ràng buộc | Viết điều kiện từ chối NaN và kiểm tra giá trị trong phạm vi. |
+    | Phân biệt API | Đối chiếu primitive `==`, wrapper `equals` và `Double.compare` trên NaN. |
+- id: floating-point-comparison-003
+  title: Float.isNaN, Double.isNaN, isInfinite và isFinite
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Float.isNaN, Double.isNaN, isInfinite và isFinite**
+
+    Bộ ba `isNaN`/`isInfinite`/`isFinite` phân loại trạng thái floating point nhưng không thay thế giới hạn nghiệp vụ. Áp dụng ở biên parse, sau cast hẹp và sau phép tính có thể tràn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân loại số
+
+    1. Các predicate trả gì với subnormal, ±0, NaN và ±Infinity?
+    2. Vì sao `!isNaN` chưa khẳng định một số hữu hạn hoặc hợp lệ?
+
+    ### Điểm kiểm tra
+
+    1. Làm thế nào parse chuỗi `NaN`, `Infinity`, `1e309` rồi loại giá trị không hữu hạn?
+    2. Vì sao giá trị `double` hữu hạn có thể thành infinity khi cast sang `float` hay nhân số lớn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại mẫu | Lập bảng ba predicate cho các loại đầu vào đã học. |
+    | Bảo vệ parse | Viết hàm nhận chuỗi số và từ chối kết quả không hữu hạn. |
+    | Kiểm tra đầu ra | Đánh giá overflow khi cast và sau phép toán, ngoài tính hữu hạn của input. |
+- id: floating-point-comparison-004
+  title: +0.0 và -0.0 với toán tử ==
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **+0.0 và -0.0 với toán tử ==**
+
+    `+0.0` và `-0.0` bằng nhau theo primitive nhưng có bit dấu khác, dẫn đến dấu Infinity khác khi lấy nghịch đảo. Học chọn equality số học, raw bits và chính sách khóa collection.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giá trị và biểu diễn
+
+    1. Vì sao `+0.0 == -0.0` true nhưng `doubleToRawLongBits` khác nhau?
+    2. Kết quả `1.0 / ±0.0`, `Math.copySign`, `Math.abs` và min/max cho biết điều gì?
+
+    ### Tính nhất quán collection
+
+    1. Vì sao `Double.compare(-0.0,+0.0)` âm và `HashSet<Double>` có thể giữ hai zero?
+    2. Khi nào nên chuẩn hóa zero trước khi dùng làm key, và thông tin nào mất đi?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích bit | In biểu diễn hex của hai zero ở float và double. |
+    | Kiểm tra phép toán | Dự đoán dấu nghịch đảo, underflow và các hàm giữ dấu. |
+    | Thiết kế khóa | Giải thích khi nào gộp/giữ signed zero với Double.equals và comparator. |
+- id: floating-point-comparison-005
+  title: Float.compare, Double.compare và thứ tự toàn phần
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Float.compare, Double.compare và thứ tự toàn phần**
+
+    NaN không được thứ tự hóa bởi `<`/`>` primitive; `Double.compare` và `Float.compare` định nghĩa thứ tự có NaN đứng cuối và zero âm đứng trước zero dương. Học cách dùng thứ tự trong sort và TreeSet.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thứ tự tổng Java
+
+    1. Thứ tự tăng của -Infinity, số hữu hạn, -0.0, +0.0, +Infinity và NaN là gì?
+    2. Vì sao hai NaN raw payload khác nhau vẫn được `Double.compare` xem bằng nhau?
+
+    ### Comparator thực tế
+
+    1. Vì sao comparator chỉ dựa vào `<`/`>` trả 0 sai đối với NaN?
+    2. `TreeSet` giữ bao nhiêu zero khác dấu và NaN nếu dùng natural order?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán sort | Sắp xếp mảng NaN, signed zero, hữu hạn và vô cực bằng Double.compare. |
+    | So sánh NaN | Đối chiếu raw bits, canonical bits và kết quả compare của hai NaN. |
+    | Viết comparator | Sử dụng `Double::compare` và giải thích vì sao epsilon comparator không phù hợp. |
+- id: floating-point-comparison-006
+  title: equals của Float, Double với NaN và signed zero
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **equals của Float, Double với NaN và signed zero**
+
+    Wrapper `Double.equals` và `Float.equals` xem NaN cùng loại bằng nhau, nhưng phân biệt zero có dấu. Bài học tập trung vào canonical bit, hashCode, boxing, null và collection.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Equals theo wrapper
+
+    1. Vì sao equals true cho hai NaN mà false cho hai zero khác dấu?
+    2. `doubleToLongBits` so với `doubleToRawLongBits` khác nhau thế nào với NaN payload?
+
+    ### Object và collection
+
+    1. Vì sao `Float(1.0f).equals(Double(1.0))` không bằng dù giá trị primitive có thể bằng?
+    2. Khi nào `==` trên hai Double so identity, còn unboxing null gây NPE?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm chứng equals | So primitive == với wrapper equals/compare ở NaN, zero, infinity. |
+    | Thử khóa collection | Giải thích HashSet/HashMap chứa hai zero nhưng gộp nhiều NaN. |
+    | Xử lý null | Chọn Objects.equals hoặc API phù hợp với nullable wrapper. |
+- id: floating-point-comparison-007
+  title: So sánh bằng sai số tuyệt đối
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **So sánh bằng sai số tuyệt đối**
+
+    Sai số tuyệt đối `|a-b|` có cùng đơn vị với đại lượng và phù hợp khi hợp đồng đặt ngưỡng sai lệch cố định. Thiết kế closeAbs hữu hạn, validate ngưỡng và kiểm thử tại biên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa absolute tolerance
+
+    1. Vì sao epsilon phải cùng đơn vị với giá trị mét/giây/độ C?
+    2. `Double.MIN_VALUE` có phải một epsilon thực dụng quanh 1.0 không?
+
+    ### Giới hạn helper
+
+    1. Hàm closeAbs nên xử lý NaN, Infinity, signed zero và epsilon âm ra sao?
+    2. Vì sao điều kiện `if(abs(actual-expected)>epsilon) fail` có thể bỏ qua NaN?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đo chênh | Tính chênh lệch tuyệt đối và đánh giá giá trị đúng/ngay ngoài biên epsilon. |
+    | Cài đặt | Viết closeAbs validate ngưỡng hữu hạn, không âm và từ chối input không hữu hạn. |
+    | Phân tích miền | So sự lỏng/chặt của epsilon ở dữ liệu gần zero và rất lớn. |
+- id: floating-point-comparison-008
+  title: So sánh bằng sai số tương đối
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **So sánh bằng sai số tương đối**
+
+    Relative tolerance chia sai lệch cho thang đo thích hợp: reference hoặc max đối xứng. Học cách xử lý zero, NaN, Infinity và overflow khi dữ liệu ở nhiều bậc độ lớn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cách đặt mẫu số
+
+    1. Sai số theo reference khác sai số theo `max(|a|,|b|)` khi đảo hai phía như thế nào?
+    2. Vì sao 0 và 1e-12 có relative error đối xứng bằng 100%?
+
+    ### Thiết kế so sánh
+
+    1. Khi nào cần giới hạn relTol trong `[0,1)` và xử lý số khác dấu?
+    2. Vì sao phép `a-b` của hai số hữu hạn cực lớn trái dấu có thể tràn, gây sai tỷ lệ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập công thức | Chọn reference hay max-scale và giải thích tỷ lệ trên ví dụ cụ thể. |
+    | Xử lý edge case | Lập điều kiện cho zero, NaN, Infinity và số trái dấu lớn. |
+    | Phối hợp ngưỡng | Chỉ ra vì sao gần 0 nên bổ sung absolute tolerance có đơn vị. |
+- id: floating-point-comparison-009
+  title: Kết hợp sai số tuyệt đối và tương đối
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kết hợp sai số tuyệt đối và tương đối**
+
+    Kết hợp `absTol` và `relTol` dạng max giúp kiểm tra độ gần khi dữ liệu vừa rất nhỏ vừa rất lớn. Chính sách NaN, Infinity, ±0 và ngưỡng không hợp lệ phải được công khai và kiểm thử.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai tiêu chí
+
+    1. Vì sao `|a-b|<=max(absTol,relTol*max(|a|,|b|))` hoạt động khác near-zero với large-scale?
+    2. Dạng max khác dạng cộng `absTol + relTol*scale` về phạm vi cho phép thế nào?
+
+    ### API và dữ liệu biên
+
+    1. Vì sao phải kiểm tra NaN, Infinity cùng dấu, signed zero và ngưỡng âm?
+    2. Kiểm thử `0` với `1e-10` và cặp số quanh 1e6 phân biệt tác dụng hai dung sai ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế ngưỡng | Chọn đơn vị absTol và tỷ lệ relTol cho hai miền cụ thể. |
+    | Triển khai | Viết hàm isClose với hợp đồng rõ cho giá trị đặc biệt. |
+    | Kiểm chứng | Dự đoán kết quả kiểm thử ở các biên ngưỡng chặt/lỏng. |
+- id: floating-point-comparison-010
+  title: Khi nào cần giới hạn theo ULP
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khi nào cần giới hạn theo ULP**
+
+    ULP đo độ phân giải của lưới floating point, nhưng `N*Math.ulp` và đếm chính xác N bước biểu diễn là hai tiêu chuẩn khác nhau. Khảo sát ranh giới binade và hàm đếm qua raw bits/BigInteger.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định nghĩa ULP
+
+    1. Vì sao bước từ 1.0 xuống `nextDown` chỉ bằng nửa `Math.ulp(1.0)`?
+    2. Tại sao N lần `Math.ulp(scale)` không tương đương N bước `nextUp`/`nextDown`?
+
+    ### Giới hạn và oracle
+
+    1. Vì sao zero và Double.MIN_VALUE cách một bước nhưng khác 100% tương đối?
+    2. Dùng ordered raw bits và BigInteger đếm bước hữu hạn thế nào mà không bị tràn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Khảo sát ULP | Dùng ulp/nextUp/nextDown đo bước tại zero và lũy thừa 2. |
+    | Đối chiếu định nghĩa | Chứng minh hai bước phía dưới 1.0 có tổng bằng một ulp(1.0). |
+    | Xây dựng phép thử | Chọn N từ hợp đồng, kiểm tra NaN/Infinity và ngưỡng đơn vị bổ sung. |
+- id: floating-point-comparison-011
+  title: Không dùng so sánh gần bằng tùy tiện làm quan hệ equals hoặc thứ tự sắp xếp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không dùng so sánh gần bằng tùy tiện làm quan hệ equals hoặc thứ tự sắp xếp**
+
+    So sánh gần bằng theo epsilon thường không bắc cầu; dùng nó cho equals/hashCode hay Comparator có thể làm collection hỏng hợp đồng. Bài học xây dựng phản ví dụ, rồi chọn Double.compare hoặc khóa bucket/ID bất biến.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bất biến quan hệ
+
+    1. Vì sao `near(0,0.09)` và `near(0.09,0.18)` true nhưng `near(0,0.18)` false khi epsilon 0.1?
+    2. Hash cố định có sửa tính bắc cầu của equality, hoặc comparator-zero consistency không?
+
+    ### Ứng dụng có thứ tự
+
+    1. Vì sao TreeSet dùng comparator epsilon có thể giữ số phần tử khác nhau khi đổi thứ tự chèn?
+    2. Double.compare, khóa ID bất biến và bucket khác nhau về tính duy nhất và biên nhóm thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chứng minh vi phạm | Đưa bộ ba giá trị làm phản ví dụ cho equals/comparator không bắc cầu. |
+    | Rà soát collection | Phân tích TreeSet/HashMap với comparator sai và lựa chọn Double.compare. |
+    | Thiết kế khóa | Đề xuất ID/quantization có chính sách ranh giới; giữ near như truy vấn riêng. |

@@ -1,0 +1,96 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "SAI LẦM SỐ HỌC THƯỜNG GẶP — LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: "common-numeric-mistakes-001"
+    order: 1
+    title: "Gán kết quả int đã tràn sang long rồi mong khôi phục giá trị"
+    description: "Giải thích tràn số xảy ra trong biểu thức int trước khi phép gán long, cùng cách nâng toán hạng trước tính hoặc phát hiện overflow."
+    transition:
+      to: "common-numeric-mistakes-002"
+      description: "Khi đã biết kiểu phép toán quyết định kết quả, xét hiện tượng mất phần lẻ trong phép chia nguyên trước khi gán double."
+  - id: "common-numeric-mistakes-002"
+    order: 2
+    title: "Chia hai int trước khi chuyển sang double"
+    description: "Phân biệt chia nguyên trước khi chuyển sang double với chia dấu phẩy động, cùng cách xử lý số âm, zero và phần trăm."
+    transition:
+      to: "common-numeric-mistakes-003"
+      description: "Từ kiểu toán hạng trong phép chia sang sự khác nhau giữa cận số nguyên và cận dấu phẩy động."
+  - id: "common-numeric-mistakes-003"
+    order: 3
+    title: "Dùng Float.MIN_VALUE hoặc Double.MIN_VALUE như số âm nhỏ nhất"
+    description: "Giải thích ý nghĩa MIN_VALUE dương của float/double, khác cận hữu hạn âm và hệ quả đối với thuật toán min/max."
+    transition:
+      to: "common-numeric-mistakes-004"
+      description: "Sau sai lầm về giá trị của primitive, chuyển sang so sánh wrapper khi identity và giá trị không đồng nghĩa."
+  - id: "common-numeric-mistakes-004"
+    order: 4
+    title: "Dùng == để so sánh hai wrapper"
+    description: "Nêu khác biệt giữa reference identity và giá trị wrapper, integer cache, unboxing khi so primitive và special values của Double."
+    transition:
+      to: "common-numeric-mistakes-005"
+      description: "Khi so wrapper với primitive có thể unbox, tiếp tục nghiên cứu lỗi unbox null trong phép toán và toán tử điều kiện."
+  - id: "common-numeric-mistakes-005"
+    order: 5
+    title: "Unbox null trong phép toán hoặc toán tử điều kiện"
+    description: "Truy vết unboxing null ẩn trong phép toán, so sánh, Boolean, toán tử điều kiện và API collection."
+    transition:
+      to: "common-numeric-mistakes-006"
+      description: "Từ kiểm tra null/wrapper chuyển sang phép so gần bằng floating point, nơi đặt ngưỡng cũng cần hợp đồng rõ."
+  - id: "common-numeric-mistakes-006"
+    order: 6
+    title: "So sánh số thực bằng một epsilon tùy tiện"
+    description: "Phân tích vì sao epsilon tùy tiện sai trên nhiều thang số và cách chọn absolute/relative tolerance, ULP cùng xử lý special values."
+    transition:
+      to: "common-numeric-mistakes-007"
+      description: "Đối với dữ liệu decimal cần chính xác, thay epsilon bằng việc chọn đúng nguồn đầu vào BigDecimal."
+  - id: "common-numeric-mistakes-007"
+    order: 7
+    title: "Tạo BigDecimal từ double khi đầu vào cần chính xác thập phân"
+    description: "Giải thích bẫy tạo BigDecimal từ binary double khi nguồn yêu cầu decimal chính xác và cách giữ nguyên văn bản nguồn."
+    transition:
+      to: "common-numeric-mistakes-008"
+      description: "Sau khi có BigDecimal đúng từ nguồn, kiểm tra việc chia thập phân vô hạn cần chính sách rounding tường minh."
+  - id: "common-numeric-mistakes-008"
+    order: 8
+    title: "Chia BigDecimal không chỉ định chính sách cho kết quả vô hạn tuần hoàn"
+    description: "Khảo sát divide exact và các chính sách rounding của BigDecimal khi thương tuần hoàn hoặc phép chia bất hợp lệ."
+    transition:
+      to: "common-numeric-mistakes-009"
+      description: "Để chọn overload chia đúng, cần phân biệt precision với số chữ số phần thập phân (scale)."
+  - id: "common-numeric-mistakes-009"
+    order: 9
+    title: "Nhầm precision với số chữ số sau dấu thập phân"
+    description: "Phân biệt precision chữ số có nghĩa và scale vị trí decimal; áp dụng MathContext, setScale và ràng buộc DECIMAL(p,s)."
+    transition:
+      to: "common-numeric-mistakes-010"
+      description: "Từ tránh lỗi precision/scale sang một hợp đồng khác dễ sai do phép trừ overflow: Comparator."
+  - id: "common-numeric-mistakes-010"
+    order: 10
+    title: "Dùng phép trừ trong Comparator có thể tràn"
+    description: "Giải thích phép trừ overflow phá hợp đồng Comparator và cách dùng compare/comparing/thenComparing an toàn."
+    transition:
+      to: "common-numeric-mistakes-011"
+      description: "Từ kiểm tra hợp đồng comparator đến sự khác nhau giữa các API Integer thường bị nhầm tên và ngữ nghĩa."
+  - id: "common-numeric-mistakes-011"
+    order: 11
+    title: "Nhầm parseInt, decode và getInteger"
+    description: "Phân biệt parseInt đọc giá trị, decode nhận prefix theo radix và getInteger tra tên JVM system property."
+    transition:
+      to: "common-numeric-mistakes-012"
+      description: "Từ nhập/parse số nguyên đúng cú pháp sang tránh dùng chuỗi hiển thị làm bước làm tròn cho tính toán."
+  - id: "common-numeric-mistakes-012"
+    order: 12
+    title: "Định dạng rồi parse lại để thực hiện làm tròn tính toán"
+    description: "Phân biệt format cho hiển thị, parse từ đầu vào và round cho tính toán; xử lý locale và thời điểm làm tròn."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Gán kết quả int đã tràn sang long rồi mong khôi phục giá trị | Chia hai int trước khi chuyển sang double | Dùng Float.MIN_VALUE hoặc Double.MIN_VALUE như số âm nhỏ nhất | Dùng == để so sánh hai wrapper | Unbox null trong phép toán hoặc toán tử điều kiện | So sánh số thực bằng một epsilon tùy tiện | Tạo BigDecimal từ double khi đầu vào cần chính xác thập phân | Chia BigDecimal không chỉ định chính sách cho kết quả vô hạn tuần hoàn | Nhầm precision với số chữ số sau dấu thập phân | Dùng phép trừ trong Comparator có thể tràn | Nhầm parseInt, decode và getInteger | Định dạng rồi parse lại để thực hiện làm tròn tính toán |
+  | Vấn đề cần hiểu | Làm sao tránh mất kết quả vì widening diễn ra sau overflow? | Vì sao gán thương int vào double không sinh phần lẻ? | Tại sao MIN_VALUE của số thực không phải cận âm? | Khi nào == là identity thay vì so giá trị wrapper? | Unboxing ẩn xảy ra khi nào và vì sao có NPE? | Làm sao xác định gần bằng mà không phá hợp đồng dữ liệu? | Vì sao BigDecimal(double) có chuỗi thập phân nhiễu? | Vì sao divide(BigDecimal) có thể ném ArithmeticException? | Tại sao precision không phải số chữ số sau dấu chấm? | Vì sao comparator tính hiệu có thể cho dấu sai? | Ba phương thức Integer nhận chuỗi có cùng ý nghĩa không? | Vì sao không nên format→parse để thực hiện rounding? |
+  | Giá trị đối với OOP/module | Giữ tính chính xác của cộng, nhân, tích lũy nguyên. | Tính trung bình, tỷ lệ và phân trang đúng semantics. | Tránh sai kết quả min/max và chọn sentinel an toàn. | Sửa equality và xử lý null cho wrapper chính xác. | Loại NPE khi kết hợp wrapper nullable với primitive. | Thiết kế so sánh số thực có cơ sở kỹ thuật. | Giữ đúng decimal từ nhập liệu đến phép tính. | Thực hiện phép chia decimal và phân bổ đúng policy. | Chọn đúng công cụ rounding và thiết kế DECIMAL schema. | Giữ sort, TreeSet và TreeMap hoạt động nhất quán. | Ngăn nhầm số đầu vào với tên property và cơ số. | Giữ độ chính xác tính toán và chính sách hiển thị. |
+  | Tư duy hình thành | Xem kiểu của mỗi nút biểu thức trước khi đánh giá. | Quyết định kiểu phép chia ngay tại toán tử. | Đọc hợp đồng API thay vì suy từ tên hằng. | Đọc kiểu tĩnh của từng toán hạng. | Kiểm tra tính nullable tại mọi vị trí cần primitive. | Định nghĩa sai số được phép từ miền bài toán. | Ngăn mất precision trước khi tạo đối tượng. | Tách tính được chính xác và làm tròn có chủ ý. | Đọc cả giá trị, scale lẫn số chữ số có nghĩa. | So sánh thứ tự thay vì tính chênh lệch số học. | Xác định dữ liệu là giá trị hay khóa cấu hình trước parse. | Tách representation/UI khỏi các phép toán số học. |

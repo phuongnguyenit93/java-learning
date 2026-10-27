@@ -1,0 +1,361 @@
+summaries:
+- id: common-numeric-mistakes-001
+  title: Gán kết quả int đã tràn sang long rồi mong khôi phục giá trị
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Gán kết quả int đã tràn sang long rồi mong khôi phục giá trị**
+
+    Chỉ ra rằng phép cộng hoặc nhân trên hai `int` có thể tràn trước khi được gán sang `long`. Người học cần theo dõi kiểu của từng phép toán, đặt cast/literal `L` đúng vị trí và biết khi nào dùng `Math.*Exact`, `toIntExact`, `BigInteger` hay accumulator `long` để tránh mất giá trị.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểu biểu thức trước khi gán
+
+    1. Vì sao `long total = a + b` vẫn sai khi `a` và `b` là int có tổng vượt miền?
+    2. Tại sao `(long)(a*b)` khác `(long)a*b`, và `a*b*1L` vẫn có thể tràn ở phép đầu?
+
+    ### Chọn phép toán và kiểm tra tràn
+
+    1. Trong những trường hợp nào `Math.addExact` phù hợp hơn nâng toán hạng sang long?
+    2. Vì sao `Math.toIntExact(a+b)` hay `Math.abs(Integer.MIN_VALUE)` có thể không phát hiện lỗi mong muốn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích overflow trước widening | Dự đoán kết quả hai biểu thức cộng/nhân int rồi gán long, chứng minh bằng giá trị biên. |
+    | Sửa đúng thứ tự chuyển kiểu | Thay cast muộn bằng cast sớm và sửa tổng `IntStream.sum()` thành tổng kiểu long. |
+    | Chọn chính sách overflow | Viết trường hợp dùng `Math.*Exact` hoặc `BigInteger` khi miền kết quả không được phép tràn. |
+- id: common-numeric-mistakes-002
+  title: Chia hai int trước khi chuyển sang double
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chia hai int trước khi chuyển sang double**
+
+    Giải thích vì sao `double result = 7 / 2` trả `3.0`: Java chia nguyên rồi mới widening sang double. Bài học phân biệt cast trước/sau toán tử, quy tắc chia âm hướng về 0, `floorDiv` và `floorMod`, chia cho zero và cách tính phần trăm, trung bình hoặc số trang phù hợp mục đích.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phép chia nguyên và vị trí cast
+
+    1. Vì sao `double r = 7 / 2` cho 3.0 nhưng `(double)7 / 2` cho 3.5?
+    2. Biểu thức `7 / 2 * 100.0` khác `7 * 100.0 / 2` như thế nào?
+
+    ### Số âm và ranh giới dữ liệu
+
+    1. Vì sao `-7/2` khác `Math.floorDiv(-7,2)` và phần dư đi kèm thay đổi ra sao?
+    2. Khi tính tỷ lệ hoặc số trang, vì sao chỉ đổi kiểu đích thành double chưa giải quyết hết yêu cầu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán thứ tự phép chia | Giải thích kết quả chia 7/2 và công thức tỷ lệ 3/8 theo kiểu toán hạng. |
+    | Sửa công thức trung bình/tỷ lệ | Đưa cast tới đúng toán hạng, kiểm tra mẫu số zero và overflow trước phép chia. |
+    | Chọn semantics của thương | Lập bảng kết quả với chia nguyên, floorDiv, chia double và công thức làm tròn lên số trang. |
+- id: common-numeric-mistakes-003
+  title: Dùng Float.MIN_VALUE hoặc Double.MIN_VALUE như số âm nhỏ nhất
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dùng Float.MIN_VALUE hoặc Double.MIN_VALUE như số âm nhỏ nhất**
+
+    Làm rõ `Float.MIN_VALUE` và `Double.MIN_VALUE` là số dương subnormal nhỏ nhất khác zero, khác hẳn `Integer.MIN_VALUE`. Bài học dùng ca tìm max trên dữ liệu toàn âm, `MIN_NORMAL`, `MAX_VALUE`, `OptionalDouble`, NaN, Infinity và signed zero để định nghĩa thuật toán tìm cực trị an toàn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các cận của miền floating point
+
+    1. Vì sao `Double.MIN_VALUE` dương và khác `-Double.MAX_VALUE` lẫn `Double.NEGATIVE_INFINITY`?
+    2. `MIN_NORMAL`, subnormal và `Math.nextUp(0.0)` liên hệ thế nào với `MIN_VALUE`?
+
+    ### Xây dựng phép tìm cực trị
+
+    1. Vì sao khởi tạo max bằng `Double.MIN_VALUE` sai trên dãy toàn số âm?
+    2. Khi đầu vào rỗng, có NaN, Infinity hoặc signed zero, cần định nghĩa và kiểm thử kết quả min/max thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt các hằng giới hạn | Xếp đúng `MIN_VALUE`, `MIN_NORMAL`, `MAX_VALUE` và vô cực trên trục số. |
+    | Sửa thuật toán extrema | Tìm max của dữ liệu âm bằng phần tử đầu/`OptionalDouble`, thay sentinel sai. |
+    | Kiểm thử đầu vào đặc biệt | Thiết kế các case rỗng, NaN, Infinity, signed zero và dữ liệu subnormal. |
+- id: common-numeric-mistakes-004
+  title: Dùng == để so sánh hai wrapper
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dùng == để so sánh hai wrapper**
+
+    Phân biệt `==` trên primitive và trên hai wrapper tham chiếu, nhận diện tác động của Integer cache, boxing và unboxing. Bài học hướng dẫn chọn `equals`, `Objects.equals`, `compareTo` và kiểm tra kiểu số khi so `Integer`, `Long`, `Double`; từ đó tránh bug phụ thuộc cache và sai lệch NaN/signed zero.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Reference identity và numeric equality
+
+    1. Vì sao `Integer.valueOf(127) == Integer.valueOf(127)` có thể true mà `==` vẫn không dùng để so giá trị wrapper?
+    2. Tại sao hai wrapper `Integer` và `Long` cùng số học không được coi là bằng nhau bởi `equals`?
+
+    ### Null và wrapper dấu phẩy động
+
+    1. Khi nào `Integer == int` gây unboxing và có thể ném NPE?
+    2. Vì sao `Double.NaN == Double.NaN` false trong khi `Double.equals` coi hai NaN bằng nhau, còn zero có dấu lại khác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại phép so sánh | Dự đoán kết quả `==`, `equals`, `Objects.equals`, `compareTo` với primitive, wrapper và null. |
+    | Loại bỏ phụ thuộc cache | Thay phép `==` so wrapper bằng so giá trị có kiểm tra null phù hợp. |
+    | Kiểm chứng collection/equality | Giải thích kết quả `HashSet` cho wrapper cùng giá trị và case NaN/signed zero. |
+- id: common-numeric-mistakes-005
+  title: Unbox null trong phép toán hoặc toán tử điều kiện
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Unbox null trong phép toán hoặc toán tử điều kiện**
+
+    Phân tích những nơi Java âm thầm unbox `Integer` hoặc `Boolean` null: phép toán số, so sánh, API primitive, stream và toán tử `?:` trộn wrapper với primitive. Người học cần lần theo kiểu của biểu thức trước khi gán và chọn chính sách rõ ràng cho null là mặc định, lỗi dữ liệu hay trạng thái riêng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Unboxing ẩn và kiểu điều kiện
+
+    1. Vì sao `Integer x = flag ? nullable : 7` có thể ném NPE dù biến nhận là Integer?
+    2. Điều kiện `Boolean` null và phép `Integer n + 1` được unbox tại đâu?
+
+    ### Chọn xử lý null theo hợp đồng
+
+    1. Vì sao `n == null` an toàn nhưng `n == 0` có thể ném NPE?
+    2. Vì sao `Map.getOrDefault` hoặc `Optional.orElse(null)` không đảm bảo phép gán sang int an toàn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết unboxing | Phân tích đường đánh giá của ternary, Boolean condition và toán tử số với dữ liệu null. |
+    | Sửa NPE đúng ý nghĩa | Chuyển code về kiểm tra null, giữ Optional hoặc thay mặc định theo hợp đồng. |
+    | Kiểm thử nhánh và collection | Viết ca true/false, null/non-null cho ternary, map và stream mapToInt. |
+- id: common-numeric-mistakes-006
+  title: So sánh số thực bằng một epsilon tùy tiện
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **So sánh số thực bằng một epsilon tùy tiện**
+
+    Giải thích vì sao một epsilon cố định không phù hợp cho mọi phép tính double/float và đơn vị đo. Bài học tách absolute tolerance, relative tolerance, ULP và machine epsilon, khảo sát trường hợp NaN, Infinity, overflow khi trừ và quan hệ gần bằng không có tính bắc cầu nên không thể dùng làm equals/comparator.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Sai số và tiêu chí gần bằng
+
+    1. Ngưỡng tuyệt đối và tương đối có thể cho kết quả trái ngược thế nào khi dữ liệu thay đổi thang độ lớn?
+    2. `Math.ulp(1.0)` khác `Double.MIN_VALUE` và khác sai số nghiệp vụ ở điểm nào?
+
+    ### Tính đúng của API so sánh
+
+    1. Tại sao quan hệ `close(a,b)` theo một epsilon không bắc cầu và không dùng được trong HashMap/TreeSet?
+    2. Khi có NaN, vô cực, signed zero hoặc kết quả trừ overflow, helper so gần bằng cần chính sách gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn tolerance có căn cứ | So sánh các ca gần zero và gần 1e9 bằng ngưỡng tuyệt đối/tương đối gắn đơn vị. |
+    | Đánh giá hạn chế floating | Dùng Math.ulp/nextUp xác định khoảng biểu diễn và phát hiện mất dữ liệu do rounding. |
+    | Bảo vệ hợp đồng comparator | Chứng minh ca không bắc cầu và thiết kế khóa phân bucket hoặc comparator hợp lệ. |
+- id: common-numeric-mistakes-007
+  title: Tạo BigDecimal từ double khi đầu vào cần chính xác thập phân
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tạo BigDecimal từ double khi đầu vào cần chính xác thập phân**
+
+    Phơi bày đường chuyển đổi gây nhiễu khi dùng `new BigDecimal(double)` với nguồn decimal có yêu cầu chính xác. Bài học đối chiếu constructor từ `String`, factory `valueOf(double)` và constructor double, giải thích vì sao conversion sau phép cộng double không thể khôi phục chữ số nguồn, đồng thời kiểm tra scale, rounding và dữ liệu từ JSON/database.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn double và decimal text
+
+    1. Vì sao `new BigDecimal(0.1)` không bằng chính xác `new BigDecimal("0.1")`?
+    2. `BigDecimal.valueOf(0.1 + 0.2)` có phục hồi được decimal 0.3 không, và vì sao?
+
+    ### Thiết kế pipeline giữ thập phân
+
+    1. Khi nguồn từ JSON hay DECIMAL, làm sao tránh parse qua double trước khi tạo BigDecimal?
+    2. Tại sao `setScale(2, UNNECESSARY)` kiểm tra contract khác với tùy tiện làm tròn 0.1 đã bị nhiễu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đối chiếu constructor | In và giải thích BigDecimal(double), String và valueOf với 0.1, 0.2. |
+    | Chặn conversion trễ | Thiết kế pipeline từ chuỗi decimal chính xác đến BigDecimal ngay ở biên nhập. |
+    | Kiểm tra dữ liệu decimal | Dùng `setScale` và dữ liệu round-trip để phát hiện đổi scale/precision không mong muốn. |
+- id: common-numeric-mistakes-008
+  title: Chia BigDecimal không chỉ định chính sách cho kết quả vô hạn tuần hoàn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chia BigDecimal không chỉ định chính sách cho kết quả vô hạn tuần hoàn**
+
+    Cho thấy `BigDecimal.divide(divisor)` chỉ trả exact decimal khi thương có khai triển hữu hạn; `1/3` và những thương tuần hoàn cần quy định scale, precision và rounding mode. Bài học phân biệt các overload divide, `MathContext.UNLIMITED`, `UNNECESSARY`, chia zero và cách phân bổ số dư thay vì bắt lỗi rồi thay bằng zero.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thương hữu hạn và các overload chia
+
+    1. Mẫu số tối giản có các thừa số nguyên tố nào thì kết quả chia decimal kết thúc?
+    2. `divide(divisor, scale, RoundingMode)` khác `divide(divisor, MathContext)` ở số chữ số cần giữ ra sao?
+
+    ### Thiết kế chính sách chia
+
+    1. Vì sao `divide(3).setScale(2, mode)` ném lỗi trước khi setScale chạy?
+    2. Trong phân bổ tiền thành các phần, cần quyết định rounding và xử lý số dư như thế nào để tổng không mất tiền?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt chia exact/rounded | Dự đoán kết quả hoặc ArithmeticException của 1/8, 1/3 và chia zero. |
+    | Chọn overload theo yêu cầu | Viết phép chia theo scale hay precision cùng mode rõ ràng và kiểm tra kết quả. |
+    | Thiết kế phân bổ có số dư | Giải thích chênh lệch khi làm tròn từng phần và đưa ra cách xử lý phần dư. |
+- id: common-numeric-mistakes-009
+  title: Nhầm precision với số chữ số sau dấu thập phân
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Nhầm precision với số chữ số sau dấu thập phân**
+
+    Tách `BigDecimal.precision()` và `MathContext` là số chữ số có nghĩa khỏi scale là vị trí dấu thập phân, giúp tránh chọn sai API làm tròn. Bài học dùng ví dụ carry, trailing zeros, cột `DECIMAL(p,s)` và phép chia để kiểm tra cả giá trị số, scale, precision và định dạng đầu ra.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biểu diễn precision và scale
+
+    1. Vì sao `new BigDecimal("123.4500")` có precision 7 nhưng scale 4?
+    2. `MathContext.UNLIMITED.getPrecision() == 0` khác `BigDecimal.ZERO.precision() == 1` thế nào?
+
+    ### Rounding và hợp đồng database
+
+    1. Vì sao `MathContext(3)` không thay thế `setScale(3)` khi cần ba chữ số sau dấu chấm?
+    2. Làm tròn có carry hoặc lưu `DECIMAL(p,s)` có thể làm thay đổi precision/scale theo cách nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc đúng thuộc tính decimal | Tính precision, scale của ví dụ trailing zeros, zero và dạng số mũ. |
+    | Sửa API làm tròn | Chọn `setScale` hay `round(MathContext)` theo yêu cầu và đối chiếu kết quả. |
+    | Kiểm tra hợp đồng lưu trữ | Viết test giá trị cùng precision/scale phù hợp cột DECIMAL(p,s) khi serialize và lưu. |
+- id: common-numeric-mistakes-010
+  title: Dùng phép trừ trong Comparator có thể tràn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dùng phép trừ trong Comparator có thể tràn**
+
+    Chứng minh comparator `(a,b) -> a-b` trên số nguyên có thể overflow, vi phạm tính phản đối xứng hoặc bắc cầu và làm hỏng sort/TreeSet. Bài học dùng `Integer.compare`, `Long.compare`, `Comparator.comparingInt`, `thenComparing` và `reversed()` để xây thứ tự đúng, cùng kiểm thử giá trị biên và xử lý null theo hợp đồng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Overflow và hợp đồng Comparator
+
+    1. Vì sao hiệu `Integer.MAX_VALUE - (-1)` có thể đổi dấu dù toán hạng đầu lớn hơn?
+    2. Một comparator vi phạm phản đối xứng hoặc bắc cầu có thể ảnh hưởng sort và TreeSet như thế nào?
+
+    ### API sửa và test biên
+
+    1. Vì sao ép hiệu long trở lại int hoặc dùng `Math.subtractExact` không phải cách viết comparator số chung?
+    2. Khi sắp theo nhiều trường và cần đảo chiều, nên dùng `comparingInt`, `thenComparing`, `reversed` thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán overflow comparator | Chọn các cặp MIN/MAX để chỉ ra dấu sai của comparator dùng phép trừ. |
+    | Viết comparator an toàn | Dùng Integer.compare/Comparator.comparingInt và thenComparing thay vì lấy hiệu. |
+    | Kiểm thử hợp đồng sắp thứ tự | Kiểm tra dấu phản đối xứng, thứ tự ba phần tử và hành vi TreeSet tại biên. |
+- id: common-numeric-mistakes-011
+  title: Nhầm parseInt, decode và getInteger
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Nhầm parseInt, decode và getInteger**
+
+    Phân biệt ba API `Integer.parseInt`, `Integer.decode` và `Integer.getInteger`: lần lượt parse chuỗi số theo radix, parse prefix nhị phân/octal/hex được hỗ trợ, hoặc đọc tên system property JVM rồi decode giá trị. Bài học kiểm tra `075`, `08`, `-D...`, fallback, overflow và việc chỉ định rõ định dạng số ở biên cấu hình.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa chuỗi đầu vào
+
+    1. Vì sao `Integer.parseInt("075")` bằng 75 nhưng `Integer.decode("075")` bằng 61?
+    2. Tại sao `Integer.getInteger("123")` không parse trực tiếp số 123 từ tên chuỗi?
+
+    ### Cấu hình và lỗi cú pháp
+
+    1. Vì sao `Integer.decode("08")` lỗi khi parseInt decimal vẫn nhận 8?
+    2. Khi system property sai cú pháp và getInteger có default, cần tránh che lỗi cấu hình bằng những kiểm tra nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt API parsing | Tính kết quả parseInt/decode/getInteger trên decimal, prefix hex và octal có leading zero. |
+    | Xây kiểm thử JVM property | Thiết lập `-D`/System.setProperty và xác minh getInteger trả đúng hoặc null/default. |
+    | Xử lý lỗi đầu vào | Chọn parseInt theo radix, xác thực cú pháp và báo NumberFormatException đúng ngữ cảnh. |
+- id: common-numeric-mistakes-012
+  title: Định dạng rồi parse lại để thực hiện làm tròn tính toán
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Định dạng rồi parse lại để thực hiện làm tròn tính toán**
+
+    Giải thích vì sao pipeline format→parse→tính tiếp làm mất precision, phụ thuộc Locale và có thể tạo sai số nhị phân hoặc thay scale. Bài học phân biệt chức năng `DecimalFormat`/`NumberFormat`, parser và `BigDecimal.setScale`/`MathContext`, đồng thời quyết định thời điểm làm tròn, chế độ làm tròn và khi nào dùng `UNNECESSARY` để từ chối dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Format, parse và tính toán
+
+    1. Vì sao format 1234.567 thành 1,234.57 rồi parse lại không thể phục hồi giá trị ban đầu?
+    2. Locale.US và Locale.GERMANY có thể diễn giải chuỗi chứa dấu phẩy hoặc dấu chấm khác nhau thế nào?
+
+    ### Rounding theo policy
+
+    1. Tại sao `BigDecimal.setScale(2, mode)` khác round theo `MathContext(2)` và khác String.format?
+    2. Khi nào làm tròn từng dòng rồi cộng khác cộng trước rồi làm tròn, và lúc nào cần `UNNECESSARY` để từ chối?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện anti-pattern format→parse | Sửa pipeline tính toán dùng chuỗi hiển thị rồi parse lại, chỉ format ở ranh giới UI. |
+    | Kiểm tra Locale và precision | Đối chiếu cách NumberFormat parse các chuỗi US/DE và nguy cơ parse qua double. |
+    | Thiết kế rounding tường minh | Dùng setScale/MathContext theo yêu cầu, chứng minh khác biệt làm tròn từng khoản và tổng. |

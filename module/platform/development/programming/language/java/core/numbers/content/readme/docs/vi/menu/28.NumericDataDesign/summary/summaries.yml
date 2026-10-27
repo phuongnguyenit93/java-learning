@@ -1,0 +1,301 @@
+summaries:
+- id: numeric-data-design-001
+  title: Ghi rõ miền giá trị, đơn vị và giới hạn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ghi rõ miền giá trị, đơn vị và giới hạn**
+
+    Một kiểu Java chỉ mô tả khả năng biểu diễn, chưa cho biết số đó đo đại lượng gì và miền nghiệp vụ hợp lệ ở đâu. Bài giúp viết hợp đồng cho đơn vị, min/max, độ phân giải và hành vi từ chối ở ranh giới, rồi bảo vệ hợp đồng trong Java record/value object.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Miền và đơn vị
+
+    1. Vì sao kiểu long cho phép số âm nhưng trường quantity có thể chỉ hợp lệ từ 0 đến 10.000?
+    2. Nếu timeout là 5, thông tin đơn vị nào còn thiếu và làm sao thể hiện trong API?
+
+    ### Ràng buộc tại ranh giới
+
+    1. Một giá trị mét có nhiều hơn ba chữ số thập phân sẽ được xử lý thế nào khi lưu milimét không cho rounding?
+    2. Vì sao hợp đồng ở Java phải thống nhất với JSON và database?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết hợp đồng trường | Lập bảng đơn vị, miền, biên đóng/mở, độ phân giải và lỗi đầu vào. |
+    | Mô hình hóa đơn vị | Tạo record với constructor kiểm tra miền và convert đơn vị bằng phương thức exact. |
+    | Kiểm chứng giới hạn | Thiết kế test sát biên, ngoài biên, sai đơn vị và phần dư chuyển đổi. |
+- id: numeric-data-design-002
+  title: Chọn kiểu tính toán trung gian riêng với kiểu lưu trữ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn kiểu tính toán trung gian riêng với kiểu lưu trữ**
+
+    Một giá trị lưu trong int vẫn có thể cần long hoặc BigInteger khi nhân, cộng tổng hay chuyển đơn vị. Bài chỉ rõ thời điểm Java quyết định kiểu biểu thức, cách phát hiện overflow và cách chuyển về kiểu lưu bằng kiểm tra exact.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểu phép toán
+
+    1. Vì sao long total = intA * intB có thể sai khi cả hai int đủ lớn?
+    2. Chuyển kiểu trước phép nhân và chuyển kiểu sau phép nhân khác nhau như thế nào?
+
+    ### Kiểu lưu và kiểm tra
+
+    1. Tại sao IntStream.sum không tự chuyển kết quả sang long?
+    2. Khi chuyển từ BigDecimal trung gian về cents kiểu long, phải kiểm tra những điều kiện gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tránh tràn trung gian | Sửa ví dụ nhân/cộng int bằng widening và checked arithmetic. |
+    | Chọn kiểu đủ rộng | Phân biệt khi dùng long, BigInteger, double hoặc BigDecimal cho phép tính. |
+    | Thu hẹp có kiểm soát | Dùng Math.toIntExact và BigDecimal.longValueExact tại ranh giới lưu. |
+- id: numeric-data-design-003
+  title: Số đếm, đại lượng đo và giá trị thập phân có quy tắc làm tròn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Số đếm, đại lượng đo và giá trị thập phân có quy tắc làm tròn**
+
+    Số đếm, số đo và decimal có độ phân giải cố định tuy cùng được biểu diễn bằng kiểu số Java nhưng phải tuân theo quy tắc khác nhau. Bài dùng value object ItemCount, Length và Money để nối miền giá trị, đơn vị và chính sách làm tròn với mô hình domain.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân loại đại lượng
+
+    1. Khi nào số đếm nên dùng long thay vì double dù có nhu cầu thống kê?
+    2. Đại lượng đo cần chỉ định độ phân giải và sai số khác số đếm ở đâu?
+
+    ### Thiết kế dữ liệu decimal
+
+    1. Vì sao BigDecimal.scale khác precision trong số 12.3400?
+    2. Value object có thể ngăn trộn độ dài với số tiền ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại nhu cầu | Chọn kiểu và miền cho count, length và money với giải thích về sai số. |
+    | Thiết kế value object | Tạo ItemCount, Length, Money có invariant và chuyển đơn vị rõ. |
+    | Áp dụng rounding | Dự đoán kết quả khi lượng tử hóa decimal theo quy tắc của ví dụ. |
+- id: numeric-data-design-004
+  title: Quy ước xử lý null, NaN, vô cực và giá trị thiếu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Quy ước xử lý null, NaN, vô cực và giá trị thiếu**
+
+    Thiếu dữ liệu, sai cú pháp, số không hữu hạn và số 0 là những trạng thái khác nhau. Bài giúp bảo vệ dữ liệu khỏi việc biến null/NaN thành 0, hiểu các phép so sánh IEEE 754 và chọn chính sách tổng hợp, truyền JSON, báo lỗi phù hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Trạng thái số
+
+    1. Vì sao Double.NaN == Double.NaN trả false còn Double.isNaN nhận diện được?
+    2. Sự khác nhau giữa null, missing, invalid, Infinity và zero là gì trong một API đo lường?
+
+    ### Xử lý trong hệ thống
+
+    1. Vì sao chỉ dùng điều kiện x < min || x > max có thể để lọt NaN?
+    2. Thay giá trị thiếu bằng 0 tác động tới mẫu số khi tính trung bình như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại dữ liệu | Xây tập trạng thái MISSING/INVALID/FINITE/NON_FINITE không nhập nhằng. |
+    | Kiểm tra IEEE 754 | Sử dụng isFinite/isNaN và giải thích signed zero, Double.compare. |
+    | Thiết kế API | Đề xuất cách biểu diễn missing và non-finite trong JSON không tự ép thành 0. |
+- id: numeric-data-design-005
+  title: Kiểm tra đầu vào trước chuyển đổi có thể mất dữ liệu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra đầu vào trước chuyển đổi có thể mất dữ liệu**
+
+    Một phép cast có thể chạy thành công nhưng cắt phần lẻ, bão hòa, mất bit hoặc làm tròn mà không thông báo. Bài dạy cách kiểm tra cú pháp, tính hữu hạn, miền và độ chính xác trước khi thu hẹp bằng API exact.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Rủi ro chuyển đổi
+
+    1. Vì sao (int) 2_147_483_648L cho kết quả âm và Math.toIntExact ném lỗi?
+    2. NaN, Infinity và số double có phần lẻ gây rủi ro gì khi ép int?
+
+    ### Bảo toàn giá trị
+
+    1. Khi nào long chuyển sang double mất số nguyên dù kết quả hữu hạn?
+    2. Vì sao BigDecimal.longValueExact khác longValue khi input có 3 chữ số sau dấu thập phân?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra trước cast | Dùng range, isFinite và kiểm tra phần lẻ để quyết định chuyển double→int. |
+    | Dùng exact API | Thay cast nguy hiểm bằng toIntExact/intValueExact/longValueExact. |
+    | Xác định điểm mất dữ liệu | Truy dấu overflow trước gán, rounding và thu hẹp trong pipeline. |
+- id: numeric-data-design-006
+  title: Đưa precision, scale và rounding vào hợp đồng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đưa precision, scale và rounding vào hợp đồng**
+
+    Một trường BigDecimal cần ghi rõ precision, scale, độ phân giải, miền và rounding được phép. Bài phân biệt setScale với MathContext, trường hợp chia vô hạn và chính sách lượng tử hóa tại các ranh giới Java, JSON và DECIMAL(p,s).
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế decimal
+
+    1. precision, scale và unscaledValue của 123.450 biểu thị điều gì?
+    2. setScale(2) khác MathContext(2) ra sao khi xử lý 123.456?
+
+    ### Hợp đồng tính toán
+
+    1. Vì sao BigDecimal.ONE.divide(3) có thể ném ArithmeticException?
+    2. Nếu cùng hệ thống làm tròn trước hay sau khi nhân, cần ghi điều nào trong hợp đồng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đặc tả precision/scale | Định nghĩa validation giới hạn chữ số, đơn vị và phép lượng tử hóa. |
+    | Kiểm thử rounding | Dự đoán HALF_UP/HALF_EVEN/UNNECESSARY ở các biên decimal. |
+    | Bảo vệ schema | Đối chiếu hợp đồng BigDecimal với giới hạn DECIMAL(p,s) và JSON. |
+- id: numeric-data-design-007
+  title: Tránh dùng double làm trung gian cho dữ liệu thập phân chính xác
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tránh dùng double làm trung gian cho dữ liệu thập phân chính xác**
+
+    Khi giá trị nguồn là decimal chính xác, chuyển qua binary64 có thể làm mất chữ số và scale trước khi tính toán. Bài so sánh BigDecimal(String), BigDecimal(double), valueOf(double) và thiết kế pipeline từ input đến domain đến lưu trữ mà không mất ý nghĩa thập phân.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn decimal
+
+    1. Vì sao new BigDecimal(0.1) khác new BigDecimal("0.1")?
+    2. BigDecimal.valueOf(0.1 + 0.2) có thể khôi phục 0.3 toán học không?
+
+    ### Luồng tính toán
+
+    1. Vì sao JSON decimal bị parse sang Double trước sẽ không bảo đảm giữ mọi chữ số gốc?
+    2. Làm sao chuyển trực tiếp giá 19.90 thành đơn vị cents và phát hiện phần cent lẻ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn constructor | So sánh biểu diễn/scale từ chuỗi, double và valueOf. |
+    | Giữ decimal end-to-end | Mô tả pipeline không qua double và kiểm thử decimal dài. |
+    | Chuyển đơn vị exact | Dùng movePointRight + longValueExact khi hợp đồng cho phép. |
+- id: numeric-data-design-008
+  title: Tách định dạng hiển thị khỏi tính toán và trao đổi
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tách định dạng hiển thị khỏi tính toán và trao đổi**
+
+    Một số đúng trong domain có thể được trình bày khác ở US/Đức nhưng dữ liệu trao đổi cần hợp đồng ổn định. Bài tách trách nhiệm tính toán, NumberFormat/DecimalFormat ở giao diện và codec JSON/CSV/API để tránh dùng chuỗi đã làm tròn làm dữ liệu gốc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ba ranh giới
+
+    1. Một BigDecimal 12348.17 có thể thành chuỗi UI US và Đức như thế nào mà giá trị domain không đổi?
+    2. Vì sao chuỗi 12.348,17 không phù hợp làm token JSON number mặc định?
+
+    ### Chính sách parse/format
+
+    1. Tại sao parse theo locale có thể chấp nhận một tiền tố nhưng không phải cả chuỗi?
+    2. Đâu là khác nhau giữa format để hiển thị và setScale để chốt số tiền nghiệp vụ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế ranh giới | Tách domain service, UI formatter và wire serializer trong mô hình. |
+    | Chọn parser | Sử dụng NumberFormat theo Locale cho input người dùng và BigDecimal cho decimal máy. |
+    | Kiểm thử không mất giá trị | So sánh cùng số qua hai Locale và schema API ổn định. |
+- id: numeric-data-design-009
+  title: Không suy ra quy tắc làm tròn nghiệp vụ chỉ từ kiểu dữ liệu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không suy ra quy tắc làm tròn nghiệp vụ chỉ từ kiểu dữ liệu**
+
+    Ngay cả khi dùng BigDecimal, kết quả tài chính có thể khác nhau nếu làm tròn từng dòng hoặc sau khi cộng tổng. Bài minh họa vì sao policy rounding đến từ yêu cầu nghiệp vụ và phải được thể hiện trong service/domain, thay vì suy ra từ kiểu dữ liệu hay định dạng hiển thị.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lựa chọn nghiệp vụ
+
+    1. Vì sao cùng BigDecimal và HALF_UP vẫn có thể ra hai tổng khác nhau nếu thay thời điểm làm tròn?
+    2. DOWN và FLOOR khác nhau ra sao với số âm và vì sao điều này ảnh hưởng hợp đồng?
+
+    ### Thiết kế nhất quán
+
+    1. Vì sao kiểu DECIMAL(18,2) không thể tự quyết định quy tắc thuế hay phân bổ phần dư?
+    2. Cần tập trung rounding ở tầng nào để các API sử dụng cùng policy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích thời điểm | Tính khác biệt giữa rounding trên từng dòng và rounding sau tổng. |
+    | Thiết kế policy | Mô tả scale, mode, bước làm tròn và thời điểm chốt số trong một hợp đồng. |
+    | Kiểm chứng nghiệp vụ | Lập test cho số âm, điểm hòa, phân bổ và tổng sau rounding. |
+- id: numeric-data-design-010
+  title: Giới hạn tài nguyên cho đầu vào BigInteger hoặc BigDecimal rất lớn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn tài nguyên cho đầu vào BigInteger hoặc BigDecimal rất lớn**
+
+    Các kiểu số chính xác độ dài biến thiên vẫn có chi phí bộ nhớ và CPU. Bài hướng dẫn kiểm soát số chữ số, exponent, scale, chiều dài plain output và kích thước phép toán trước khi parse/serialize để ngăn tác vụ quá lớn từ nguồn bên ngoài.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Rủi ro kích thước
+
+    1. Vì sao chuỗi 1E+1000000 có thể ngắn mà toPlainString lại rất dài?
+    2. Giới hạn chỉ số chữ số mantissa đã đủ ngăn exponent hoặc scale cực lớn chưa?
+
+    ### Bảo vệ xử lý
+
+    1. Vì sao phải giới hạn cả request byte và phép toán sau khi parse?
+    2. Có thể ước lượng độ dài plain output từ precision và scale mà không tạo chuỗi như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây validator | Kiểm tra độ dài, ASCII digits, exponent và scale trước/sau parse. |
+    | Đặt giới hạn xuất | Dự đoán kích thước toPlainString và từ chối đầu ra quá ngân sách. |
+    | Bảo vệ phép toán | Giới hạn shiftLeft/modPow hoặc multiplication theo bit length và chi phí. |

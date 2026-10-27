@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "BIỂU DIỄN DẤU PHẨY ĐỘNG — LỘ TRÌNH HỌC VÀ LIÊN KẾT KIẾN THỨC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: floating-point-representation-001
+    order: 1
+    title: "float theo binary32 và double theo binary64"
+    description: "So sánh cách Java biểu diễn số bằng binary32 và binary64, phân biệt kích thước, miền và độ chính xác để chọn kiểu phù hợp với yêu cầu dữ liệu."
+    transition:
+      to: floating-point-representation-002
+      description: "Từ sự khác biệt giữa hai định dạng, đi vào ba trường bit tạo thành mỗi mẫu số."
+  - id: floating-point-representation-002
+    order: 2
+    title: "Bit dấu, phần mũ và phần trị"
+    description: "Phân tích vị trí và ý nghĩa của sign, biased exponent, fraction; giải mã ví dụ bit cụ thể và phân biệt các mã dành cho giá trị đặc biệt."
+    transition:
+      to: floating-point-representation-003
+      description: "Khi hiểu phần trị nhị phân, tiếp tục xác định độ chính xác thực sự và số chữ số thập phân có thể tin cậy."
+  - id: floating-point-representation-003
+    order: 3
+    title: "Precision nhị phân và số chữ số thập phân có thể tin cậy"
+    description: "Làm rõ bit precision, số chữ số có nghĩa, số chữ số round-trip và sai số tích lũy trong phép tính, in/parse và chuyển kiểu."
+    transition:
+      to: floating-point-representation-004
+      description: "Từ giới hạn precision, khảo sát một phân số thập phân cụ thể có khai triển nhị phân vô hạn."
+  - id: floating-point-representation-004
+    order: 4
+    title: "Vì sao 0.1 thường không được biểu diễn chính xác"
+    description: "Giải thích cơ số 2 khiến `1/10` tuần hoàn, nguồn sai số khi dùng `0.1` và lựa chọn `BigDecimal` cho tính toán thập phân chính xác."
+    transition:
+      to: floating-point-representation-005
+      description: "Sự hữu hạn của bit phần trị cũng đặt ra ngưỡng nơi các số nguyên liên tiếp bắt đầu trùng nhau."
+  - id: floating-point-representation-005
+    order: 5
+    title: "Phạm vi số nguyên được float hoặc double biểu diễn liên tiếp chính xác"
+    description: "Xác định biên chính xác của các số nguyên liên tiếp và những lỗi tinh vi của widening, so sánh hỗn hợp, ép ngược tại ranh giới."
+    transition:
+      to: floating-point-representation-006
+      description: "Sau các khoảng trống ở số lớn, chuyển sang cách định dạng mở rộng dải giá trị tiến sát zero."
+  - id: floating-point-representation-006
+    order: 6
+    title: "Normal, subnormal và gradual underflow"
+    description: "Giải thích hidden bit của normal/subnormal, gradual underflow, sai số tương đối và quy tắc làm tròn sát zero."
+    transition:
+      to: floating-point-representation-007
+      description: "Các mốc vừa dùng được Java đặt tên bằng ba hằng số biên cần phân biệt chính xác."
+  - id: floating-point-representation-007
+    order: 7
+    title: "MIN_VALUE, MIN_NORMAL và MAX_VALUE"
+    description: "Đọc đúng ba hằng biên của Float/Double, đối chiếu mẫu bit và dùng chúng khi kiểm tra underflow, overflow, hữu hạn."
+    transition:
+      to: floating-point-representation-008
+      description: "Sau ranh giới số hữu hạn, cần làm rõ các giá trị đặc biệt được mã hóa ngoài miền đó."
+  - id: floating-point-representation-008
+    order: 8
+    title: "Số 0 dương, số 0 âm, vô cực và NaN"
+    description: "Nắm signed zero, Infinity, NaN; phân biệt primitive/wrapper comparison và xác thực dữ liệu hữu hạn trước cast hoặc truyền tải."
+    transition:
+      to: floating-point-representation-009
+      description: "Để định lượng độ thưa giữa các số hữu hạn, tiếp tục khảo sát ULP và các số kề nhau."
+  - id: floating-point-representation-009
+    order: 9
+    title: "ULP và khoảng cách giữa hai giá trị kề nhau"
+    description: "Đo bước biểu diễn theo binade và tại biên bằng Math.ulp/nextUp/nextDown; giới hạn việc suy ra sai số từ ULP."
+    transition:
+      to: floating-point-representation-010
+      description: "Sau khi hiểu lưới biểu diễn, học cách lấy chính xác mã bit để kiểm chứng các trường hợp ranh giới."
+  - id: floating-point-representation-010
+    order: 10
+    title: "floatToIntBits, doubleToLongBits và các biến thể raw"
+    description: "Đọc bit của float/double, phân biệt raw/canonical NaN, numeric cast và các yêu cầu bảo toàn byte khi serialize."
+    transition:
+      to: floating-point-representation-011
+      description: "Sau chiều đọc giá trị thành mẫu bit, hoàn thành phép chuyển ngược từ mẫu nguyên sang số thực."
+  - id: floating-point-representation-011
+    order: 11
+    title: "Chuyển mẫu bit trở lại giá trị float hoặc double"
+    description: "Diễn giải mẫu bit `int`/`long` thành số thực, parse hex unsigned, đọc byte theo endian và xác thực kết quả với NaN/Infinity."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | float theo binary32 và double theo binary64 | Bit dấu, phần mũ và phần trị | Precision nhị phân và số chữ số thập phân có thể tin cậy | Vì sao 0.1 thường không được biểu diễn chính xác | Phạm vi số nguyên được float hoặc double biểu diễn liên tiếp chính xác | Normal, subnormal và gradual underflow | MIN_VALUE, MIN_NORMAL và MAX_VALUE | Số 0 dương, số 0 âm, vô cực và NaN | ULP và khoảng cách giữa hai giá trị kề nhau | floatToIntBits, doubleToLongBits và các biến thể raw | Chuyển mẫu bit trở lại giá trị float hoặc double |
+  | Vấn đề cần hiểu | Hai định dạng khác nhau về độ rộng và độ chính xác ra sao? | Từ một dãy 32/64 bit suy ra giá trị thế nào? | Số chữ số nào đáng tin và chuỗi nào giữ đúng bit? | Vì sao số thập phân ngắn vẫn làm tròn trong binary64? | Khi nào số nguyên liền nhau trở thành cùng một float/double? | Làm sao hệ số tiếp tục biểu diễn khi tiến sát zero? | Ba hằng MIN_VALUE/MIN_NORMAL/MAX_VALUE thực sự đại diện điều gì? | Giá trị đặc biệt tác động phép toán, so sánh và API thế nào? | Khoảng cách hai số biểu diễn liên tiếp thay đổi ra sao? | Đọc bit biểu diễn khác chuyển số sang int/long thế nào? | Từ chuỗi hex hay byte khôi phục giá trị nào? |
+  | Giá trị đối với OOP/module | Chọn kiểu `float`/`double` đúng với hợp đồng và sai số chấp nhận. | Giải mã và kiểm chứng mẫu IEEE 754 thay vì đoán từ chuỗi in. | Tránh suy độ chính xác từ số chữ số `println` hiển thị. | Giải thích đúng kết quả 0.1 + 0.2 và chọn decimal exact khi cần. | Bảo vệ ID, bộ đếm và phép chuyển `long`/`int` khỏi mất bit. | Dự đoán underflow, subnormal và signed zero ở biên. | Phân biệt miền subnormal, normal và overflow bằng hằng chuẩn. | Không để NaN/vô cực/signed zero phá validation hoặc dữ liệu. | Kiểm thử biên và sai số bằng API ULP đúng ngữ nghĩa. | Phân tích bit và kiểm soát NaN payload khi debug/truyền dữ liệu. | Giải mã bit chính xác và kiểm soát đầu vào nhị phân. |
+  | Tư duy hình thành | Quyết định kiểu từ miền và độ chính xác thực tế. | Tách cấu trúc lưu trữ khỏi giá trị và byte order. | Phân biệt precision, round-trip và sai số thuật toán. | Truy nguyên sai số về biểu diễn và phép toán. | Kiểm tra đầu mút cùng bước lưới thay vì chỉ xem MAX_VALUE. | Phân tích độ phân giải tuyệt đối và tương đối gần 0. | Đọc chính xác hợp đồng API thay vì suy tên hằng. | Xác định chính sách giá trị trước khi chọn toán tử và serializer. | Đo mật độ biểu diễn trước khi diễn giải sai số tính toán. | Bảo toàn mẫu bit trước khi đưa dữ liệu qua phép tính. | Tách nhập bit, diễn giải giá trị và validation. |

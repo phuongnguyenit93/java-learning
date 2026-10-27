@@ -1,0 +1,96 @@
+version: 1
+type: LEARNING_ROADMAP
+title: SỐ NGẪU NHIÊN — MẠCH LIÊN KẾT BÀI HỌC
+roadmapHeading: Mạch liên kết bài học
+roadmap:
+  - id: random-numbers-001
+    order: 1
+    title: "Số giả ngẫu nhiên, seed và yêu cầu tái lập"
+    description: "PRNG có trạng thái, seed và tái lập. Seed khởi tạo PRNG xác định, nhưng phát lại phụ thuộc thuật toán và lịch sử gọi. Phân biệt tái lập, chất lượng thống kê và khó đoán."
+    transition:
+      to: random-numbers-002
+      description: "Từ khái niệm seed chuyển sang hành vi cụ thể của java.util.Random."
+  - id: random-numbers-002
+    order: 2
+    title: "Random và chuỗi giá trị theo seed"
+    description: "Random theo seed và setSeed. Random(seed) sinh chuỗi có thể kiểm chứng; setSeed đặt lại trạng thái và cache Gaussian, còn Random cổ điển sử dụng trạng thái 48 bit."
+    transition:
+      to: random-numbers-003
+      description: "Đã hiểu trạng thái riêng, xét Math.random với trạng thái bị ẩn."
+  - id: random-numbers-003
+    order: 3
+    title: "Math.random và giới hạn sử dụng"
+    description: "Math.random và cận số thực. Math.random tạo double [0,1) nhưng không nhận seed và dùng trạng thái chia sẻ. Những biểu thức nhân, ép kiểu hoặc round có thể sai miền hoặc lệch xác suất."
+    transition:
+      to: random-numbers-004
+      description: "Nếu nhiều luồng cần số thường xuyên, xét ThreadLocalRandom."
+  - id: random-numbers-004
+    order: 4
+    title: "ThreadLocalRandom khi nhiều luồng sinh số"
+    description: "ThreadLocalRandom theo luồng. ThreadLocalRandom.current() cung cấp bộ sinh của thread đang thực thi; tránh dùng instance chéo luồng, không có setSeed để replay và không xử lý race của dữ liệu ứng dụng."
+    transition:
+      to: random-numbers-005
+      description: "Để có generator gắn với task, học chia dòng qua SplittableRandom."
+  - id: random-numbers-005
+    order: 5
+    title: "SplittableRandom và chia nguồn ngẫu nhiên"
+    description: "SplittableRandom và chia nguồn. SplittableRandom.split() tạo generator con có trạng thái riêng cho nhánh task. Cần giữ thứ tự split và sở hữu instance nếu muốn replay, và split không bảo đảm các số không trùng."
+    transition:
+      to: random-numbers-006
+      description: "Từ một thuật toán SplittableRandom sang họ RandomGenerator của Java 17."
+  - id: random-numbers-006
+    order: 6
+    title: "RandomGenerator và RandomGeneratorFactory từ Java 17"
+    description: "RandomGenerator và lựa chọn thuật toán. RandomGenerator tách logic sinh số khỏi implementation; RandomGeneratorFactory chọn thuật toán theo tên, seed và metadata splittable/jumpable. Thuật toán mặc định không phải hợp đồng replay dài hạn."
+    transition:
+      to: random-numbers-007
+      description: "Mọi API sinh giá trị cần quy tắc khoảng origin/bound chính xác."
+  - id: random-numbers-007
+    order: 7
+    title: "Các khoảng origin, bound và quy tắc cận trên loại trừ"
+    description: "Khoảng nửa mở và biên. Các overload nextInt/nextLong/nextDouble nhận [origin,bound), loại trừ bound; khoảng rỗng bị từ chối và chuyển khoảng đóng phải tránh overflow cực trị int."
+    transition:
+      to: random-numbers-008
+      description: "Sau khi đúng miền, cần chọn đúng phân phối của giá trị."
+  - id: random-numbers-008
+    order: 8
+    title: "Sinh số nguyên, số thực và phân phối Gaussian"
+    description: "Uniform và Gaussian. nextInt tạo uniform discrete, nextDouble uniform float và nextGaussian phân phối chuẩn không bị chặn; mean và standard deviation khác variance. Clamp và rejection đổi phân phối."
+    transition:
+      to: random-numbers-009
+      description: "Ngay cả số nằm đúng miền vẫn có thể sai lệch vì phép modulo."
+  - id: random-numbers-009
+    order: 9
+    title: "Vì sao dùng phép % tùy tiện có thể tạo thiên lệch"
+    description: "Modulo bias và rejection sampling. Phép x%n có thể lệch nếu miền nguồn không chia đều cho n; rejection sampling chỉ giữ bội số nguyên của n. Math.abs(MIN_VALUE) và floorMod không khắc phục bias."
+    transition:
+      to: random-numbers-010
+      description: "Với giá trị bí mật, còn cần khả năng chống dự đoán của SecureRandom."
+  - id: random-numbers-010
+    order: 10
+    title: "SecureRandom cho yêu cầu không thể dự đoán"
+    description: "SecureRandom cho bí mật. SecureRandom dùng provider mật mã, tạo token byte và OTP qua API bounded. Độ dài, entropy, TTL, hạn chế thử, lưu trữ hash và logging quyết định an toàn của toàn hệ thống."
+    transition:
+      to: random-numbers-011
+      description: "Tổng hợp chọn bộ sinh, seed và các lớp test theo rủi ro."
+  - id: random-numbers-011
+    order: 11
+    title: "Chọn thuật toán, seed và cách kiểm thử mà không nhầm với bảo đảm bảo mật"
+    description: "Chọn RNG và kiểm thử theo mục đích. Bài tổng hợp so sánh seeded PRNG, per-task splitting, thread-local, named RandomGenerator và CSPRNG; phân biệt regression, kiểm tra biên, thống kê và kiểm thử bảo mật."
+    transition:
+      to: random-numbers-012
+      description: "Sau chính sách chọn nguồn là quản lý kích thước stream ngẫu nhiên."
+  - id: random-numbers-012
+    order: 12
+    title: "Stream giá trị ngẫu nhiên và giới hạn kích thước"
+    description: "Stream, lazy và giới hạn kích thước. ints/longs/doubles có các overload streamSize và origin/bound khác nhau. filter/limit, lazy, count optimization và parallel stream ảnh hưởng số mẫu, khả năng kết thúc và bộ nhớ."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Số giả ngẫu nhiên, seed và yêu cầu tái lập | Random và chuỗi giá trị theo seed | Math.random và giới hạn sử dụng | ThreadLocalRandom khi nhiều luồng sinh số | SplittableRandom và chia nguồn ngẫu nhiên | RandomGenerator và RandomGeneratorFactory từ Java 17 | Các khoảng origin, bound và quy tắc cận trên loại trừ | Sinh số nguyên, số thực và phân phối Gaussian | Vì sao dùng phép % tùy tiện có thể tạo thiên lệch | SecureRandom cho yêu cầu không thể dự đoán | Chọn thuật toán, seed và cách kiểm thử mà không nhầm với bảo đảm bảo mật | Stream giá trị ngẫu nhiên và giới hạn kích thước |
+  | Vấn đề cần hiểu | Muốn phát lại chính xác một lần chạy, seed đã đủ chưa? | Một đối tượng Random tiến trạng thái và đặt lại chuỗi ra sao? | Math.random phù hợp tới đâu khi cần kiểm soát kết quả? | Bộ sinh riêng theo thread có làm toàn bộ workflow thread-safe không? | Chia nguồn giúp tách task ra sao và có giới hạn thread safety nào? | Đổi thuật toán bằng factory có những giới hạn nào? | Làm sao tránh off-by-one và tràn khi chuyển khoảng? | Phân phối phù hợp cho mô phỏng được xác định thế nào? | Vì sao kết quả đúng range vẫn sai phân phối? | Bộ sinh an toàn mật mã có đủ bảo vệ token khi lưu và sử dụng không? | Chọn thuật toán và seed theo rủi ro thay vì theo tên quen thuộc thế nào? | Giới hạn số mẫu và tài nguyên khi xử lý dữ liệu random như thế nào? |
+  | Giá trị đối với OOP/module | Tạo môi trường mô phỏng dễ tái hiện lỗi. | Kiểm thử logic tuần tự có dữ liệu giả ngẫu nhiên ổn định. | Tránh randomness ẩn gây test không ổn định. | Thiết kế mô phỏng dùng ExecutorService với trạng thái hợp lý. | Thiết kế chia nhánh mô phỏng không có trạng thái RNG tranh chấp. | Tách cấu hình thuật toán khỏi service sinh dữ liệu. | Bảo đảm field sinh ngẫu nhiên tuân thủ miền nghiệp vụ. | Xây mô phỏng dữ liệu theo mô hình xác suất phù hợp. | Ngăn sai lệch khi chọn random cho nhóm hoặc mã. | Thiết kế nguồn bí mật và kiểm soát truy cập an toàn. | Chuẩn hóa chính sách RNG và kiểm thử cho module. | Thiết kế pipeline batch có điểm dừng và ngân sách dữ liệu. |
+  | Tư duy hình thành | Tách tái lập khỏi bảo mật. | Theo dõi trạng thái cùng lịch gọi. | Đổi sự tiện lợi lấy khả năng kiểm soát một cách có chủ đích. | Tách ownership nguồn khỏi đồng bộ dữ liệu. | Sở hữu bộ sinh rõ ràng trước khi song song hóa. | Xem metadata như mô tả khả năng chứ không phải giấy chứng nhận an toàn. | Xác định cận bằng toán học trước lời gọi. | Không suy ra phân phối từ miền giá trị. | Chứng minh phân phối qua tiền ảnh thay vì xem vài mẫu. | Xem RNG như một mắt xích trong quy trình bảo mật. | Xác minh từng hợp đồng riêng thay vì một test chung. | Phân biệt kích thước nguồn với lượng phần tử đầu ra. |

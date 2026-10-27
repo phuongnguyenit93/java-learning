@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "NÂNG KIỂU BIỂU THỨC — LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: numeric-promotion-001
+    order: 1
+    title: "Unary numeric promotion"
+    description: "Nâng kiểu một toán hạng trong dấu đơn ngôi, phép bù bit, dịch bit và biểu thức chỉ số mảng; phân biệt với `++`/`--`."
+    transition:
+      to: numeric-promotion-002
+      description: "Từ nâng kiểu từng toán hạng, xét kiểu chung của hai toán hạng."
+  - id: numeric-promotion-002
+    order: 2
+    title: "Binary numeric promotion với int, long, float và double"
+    description: "Quy tắc kiểu chung của phép toán số nhị phân và ảnh hưởng của overflow nguyên, precision `float`/`double`."
+    transition:
+      to: numeric-promotion-003
+      description: "Từ quy tắc chung chuyển sang trường hợp điển hình byte cộng byte."
+  - id: numeric-promotion-003
+    order: 3
+    title: "Vì sao byte cộng byte thường cho kết quả int"
+    description: "Vì sao cộng hai byte cho int, khi nào constant narrowing hợp lệ và cách phòng lỗi ở bước chuyển hẹp."
+    transition:
+      to: numeric-promotion-004
+      description: "Sau cộng byte, giải thích ngoại lệ gán hằng vào kiểu nhỏ."
+  - id: numeric-promotion-004
+    order: 4
+    title: "Gán biểu thức hằng trong phạm vi byte, short hoặc char"
+    description: "Constant narrowing trong assignment context; `final` không luôn là constant variable, lời gọi phương thức có luật khác."
+    transition:
+      to: numeric-promotion-005
+      description: "Sau thu hẹp hằng khi gán, phân biệt thu hẹp ngầm của compound assignment."
+  - id: numeric-promotion-005
+    order: 5
+    title: "Compound assignment và phép thu hẹp ngầm định"
+    description: "Gán kết hợp và chuyển hẹp ngầm, toán tử bitwise/shift, cập nhật vế trái một lần."
+    transition:
+      to: numeric-promotion-006
+      description: "Từ gán kết hợp chuyển sang ngữ nghĩa và kiểu riêng của ++/--."
+  - id: numeric-promotion-006
+    order: 6
+    title: "Kiểu của phép tăng giảm khác phép cộng rồi gán"
+    description: "Kiểu biểu thức ++/--, giá trị trước và sau cập nhật, tràn byte/short/char và wrapper."
+    transition:
+      to: numeric-promotion-007
+      description: "Từ phép tăng giảm đặc thù chuyển sang kiểu đặc biệt của toán tử điều kiện."
+  - id: numeric-promotion-007
+    order: 7
+    title: "Toán tử điều kiện ?: và các quy tắc đặc biệt cho số"
+    description: "Quy tắc định kiểu đặc biệt `?:` cho số, hằng int, wrapper, side effect và null."
+    transition:
+      to: numeric-promotion-008
+      description: "Từ toán tử điều kiện có thể unbox chuyển sang chủ đề wrapper nullable."
+  - id: numeric-promotion-008
+    order: 8
+    title: "Unboxing khi biểu thức chứa wrapper"
+    description: "Unboxing trong phép toán, so sánh, `Boolean`, List/Stream; NPE và chính sách null."
+    transition:
+      to: numeric-promotion-009
+      description: "Từ wrapper đi tới lựa chọn overload có xét boxing và widening."
+  - id: numeric-promotion-009
+    order: 9
+    title: "Overload: nâng kiểu primitive, boxing và giới hạn kết hợp"
+    description: "Ba pha overload và giới hạn khi phối hợp widening, boxing/unboxing, varargs."
+    transition:
+      to: numeric-promotion-010
+      description: "Sau overload theo kiểu tĩnh, nghiên cứu var suy luận kiểu từ initializer."
+  - id: numeric-promotion-010
+    order: 10
+    title: "var suy luận kiểu từ initializer, không từ cách dùng về sau"
+    description: "`var` suy luận từ initializer, không từ cách sử dụng sau; lưu ý numeric promotion, generic và null."
+    transition:
+      to: numeric-promotion-011
+      description: "Áp dụng kiến thức kiểu biểu thức để chọn selector switch phù hợp."
+  - id: numeric-promotion-011
+    order: 11
+    title: "Số trong switch và giới hạn theo phiên bản ngôn ngữ"
+    description: "Switch số với nhãn constant, kiểu selector, switch expression, pattern và giới hạn Java 17/21/27."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Unary numeric promotion | Binary numeric promotion với int, long, float và double | Vì sao byte cộng byte thường cho kết quả int | Gán biểu thức hằng trong phạm vi byte, short hoặc char | Compound assignment và phép thu hẹp ngầm định | Kiểu của phép tăng giảm khác phép cộng rồi gán | Toán tử điều kiện ?: và các quy tắc đặc biệt cho số | Unboxing khi biểu thức chứa wrapper | Overload: nâng kiểu primitive, boxing và giới hạn kết hợp | var suy luận kiểu từ initializer, không từ cách dùng về sau | Số trong switch và giới hạn theo phiên bản ngôn ngữ |
+  | Vấn đề cần hiểu | Toán tử một ngôi đổi kiểu như thế nào? | Kiểu chung chọn thế nào và giá trị nào bị mất? | Vì sao byte + byte không trả byte? | Bao giờ hằng int được thu hẹp? | Vì sao += thu hẹp mà vẫn biên dịch? | Vì sao ++ khác cộng rồi gán? | Kiểu ?: được chọn trước khi chạy thế nào? | Unboxing xảy ra khi nào? | Tại sao compiler chọn overload đó? | var dựa vào initializer như thế nào? | Switch số thay đổi theo phiên bản nào? |
+  | Giá trị đối với OOP/module | Hiểu kiểu của unary và shift | Hiểu promotion cho toán tử nhị phân | Bảo vệ phép tính trên số nguyên nhỏ | Gán hằng đúng phạm vi | Tránh mất bit trong phép cập nhật | Theo dõi cập nhật số học | Giữ đúng lựa chọn kiểu số | An toàn với wrapper nullable | Thiết kế và gọi API chính xác | Suy luận kiểu cục bộ đúng | Bảo toàn tương thích và giá trị selector |
+  | Tư duy hình thành | Xem kiểu sau promotion trước khi tính | Kiểm tra từng phép toán con | Tách cộng int khỏi gán byte | Kiểm kiểu, tính hằng, miền | Đọc, tính, chuyển, ghi | Tách kiểu và side effect | Xét kiểu hai nhánh và nhánh chạy | Phân biệt tham chiếu và giá trị | So kiểu tĩnh theo ba pha | Chọn kiểu ngay lúc khai báo | Xét kiểu và miền trước switch |
