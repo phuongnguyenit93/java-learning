@@ -17,9 +17,11 @@ interviewQuestion:
     questions:
       - question: "Câu hỏi gốc?"
         knowledge: ""
+        readmeRelated:
+          anchorList: []
 ~~~
 
-- `knowledge` phải **rỗng**; **không điền `answer`** và không sinh câu hỏi mới. Parse YAML, so sánh tổng số câu hỏi với Phase 1, readback chính xác. Nếu Phase 1 thiếu/không hợp lệ: BLOCKER, không đoán.
+- `knowledge` phải **rỗng**; **không điền `answer`** và không sinh câu hỏi mới. Với **mọi câu hỏi**, `readmeRelated.anchorList` phải là `[]` (danh sách rỗng); không viết `readmeRelated.anchor`/`file` hay `apiRelated`. Phase 2 không quyết định bài Knowledge liên quan. Khi được điền ở STEP sau, danh sách có thể chứa nhiều ID bài Knowledge từ **toàn module**, không giới hạn trong một chương; hiện tại không tự điền, không dùng `null`. Parse YAML, so sánh tổng số câu hỏi với Phase 1, readback chính xác. Nếu Phase 1 thiếu/không hợp lệ: BLOCKER, không đoán.
 
 ## Phạm vi và an toàn bắt buộc
 

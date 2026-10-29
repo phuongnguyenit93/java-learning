@@ -3,7 +3,7 @@
 ## Nhiệm vụ duy nhất
 
 - **READ và WRITE chung đúng vùng `P20:R24` (5 hàng).** Đọc YAML khung do Phase 2 tạo trong vùng này và `A1,B1`. Phase 3 không có vùng riêng theo group, không dùng hàng 27+.
-- Chỉ bổ sung `knowledge` cho **mọi câu hỏi của mọi group** trong YAML Phase 2. Mỗi knowledge phải nêu kiến thức trọng tâm cần vận dụng; không viết `answer`. Giữ nguyên `question`, `groupID`, `groupName` và thứ tự/số lượng.
+- Chỉ bổ sung `knowledge` cho **mọi câu hỏi của mọi group** trong YAML Phase 2. Mỗi knowledge phải nêu kiến thức trọng tâm cần vận dụng; không viết `answer`. Giữ nguyên `question`, `groupID`, `groupName`, **`readmeRelated.anchorList`** và thứ tự/số lượng. Nếu nguồn Phase 2 thiếu khung `readmeRelated: {anchorList: []}`, báo blocker thay vì âm thầm sinh hoặc đoán ID; STEP 7 mới xử lý liên kết.
 - Ghi lại **toàn bộ YAML các group** đã được bổ sung thông tin vào **chính `P20:R24`**, không tạo file/group YAML phụ và không sửa vùng Phase 1.
 
 Ví dụ cấu trúc sau Phase 3:
@@ -15,9 +15,11 @@ interviewQuestion:
     questions:
       - question: "Câu hỏi từ Phase 2?"
         knowledge: "Kiến thức nền cần dùng để trả lời."
+        readmeRelated:
+          anchorList: []
 ~~~
 
-- Mọi `questions[].knowledge` của tất cả group phải không rỗng; không có field `answer` trong YAML nền.
+- Mọi `questions[].knowledge` của tất cả group phải không rỗng; mỗi câu giữ `readmeRelated.anchorList: []`, không có field `answer`, `apiRelated` hoặc `readmeRelated.anchor/file` trong YAML nền. Không tự điền ID hoặc `null` ở Phase 3.
 
 ## An toàn ghi và nghiệm thu
 

@@ -16,6 +16,8 @@ quiz:
     groupName: "Tên nhóm"
     questions:
       - question: "Câu hỏi?"
+        readmeRelated:
+          anchorList: []
         answers:
           - { id: A, answer: "Lựa chọn A", explanation: "" }
           - { id: B, answer: "Lựa chọn B", explanation: "" }
@@ -24,7 +26,7 @@ quiz:
         correctAnswerId: B
 ~~~
 
-- Không viết giải thích trong Phase 2, không tạo Phase 4 cho Quiz. Parse YAML, kiểm đếm câu, kiểm mỗi nhóm đủ 4 ID duy nhất và đáp án đúng tồn tại; exact readback.
+- Mỗi câu Quiz **bắt buộc** có `readmeRelated.anchorList: []` (danh sách rỗng) ngay Phase 2, **không có `apiRelated`, `readmeRelated.anchor` hay `file`**. STEP sau mới chọn một hoặc nhiều Knowledge ID từ **toàn module**; Phase 2 không suy ra ID, không dùng `null`. Không viết giải thích trong Phase 2, không tạo Phase 4 cho Quiz. Parse YAML, kiểm đếm câu, kiểm mỗi nhóm đủ 4 ID duy nhất và đáp án đúng tồn tại; exact readback.
 
 ## Phạm vi và an toàn bắt buộc
 

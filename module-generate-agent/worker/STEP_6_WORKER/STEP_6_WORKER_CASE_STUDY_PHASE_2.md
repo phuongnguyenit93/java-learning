@@ -18,9 +18,11 @@ caseStudy:
       - situation: "Vấn đề thực tế từ Phase 1."
         resolve: ""
         knowledge: ""
+        readmeRelated:
+          anchorList: []
 ~~~
 
-- `resolve` và `knowledge` **bắt buộc rỗng**, **chưa có `code`**; không thêm lý giải, đo lường giả hoặc ví dụ. Parse YAML, so số case với Phase 1, exact readback.
+- `resolve` và `knowledge` **bắt buộc rỗng**, **chưa có `code`**; không thêm lý giải, đo lường giả hoặc ví dụ. **Mỗi case phải có `readmeRelated.anchorList: []`**, không có `readmeRelated.anchor/file` hoặc `apiRelated`. Chỉ tạo khung trống: STEP sau mới chọn một hoặc nhiều ID bài Knowledge trong **toàn module**, không đoán ID và không dùng `null` trong STEP 6. Parse YAML, so số case với Phase 1, exact readback.
 
 ## Phạm vi và an toàn bắt buộc
 

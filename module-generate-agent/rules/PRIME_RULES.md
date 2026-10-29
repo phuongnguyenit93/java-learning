@@ -47,7 +47,7 @@ Chỉ có **hai mode**. Prime áp dụng giới hạn tổng worker `ACTIVE` + `
 }
 ```
 
-- Giá trị **JSON string**. Thứ tự STEP hiện hành: **0 → 1 → 2 → 3 → 4 → 5 → 6 → 10 → 11 → 12 → 13 → 14 → 15 → FINAL**. STEP 6 mới gồm **Interview, Case Study, Quiz và 4 Phase**, worker theo loại và group; STEP 6 Java/Swagger cũ, STEP 7/8/9 đã ngừng. Các trạng thái 6/7/8/9 lịch sử phải xác minh provenance, không tự coi là đã hoàn thành STEP 6 mới. "12A" chỉ đọc để tương thích. Khi chưa có importer/schema phù hợp cho STEP 6 mới, không dùng dữ liệu Sheet để nâng tiến độ.
+- Giá trị **JSON string**. Thứ tự STEP hiện hành: **0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 10 → 11 → 12 → 13 → 14 → 15 → FINAL**. STEP 6 mới gồm **Interview, Case Study, Quiz và 4 Phase**; **STEP 7 mới** chỉ đánh giá/điền `readmeRelated.anchorList` xuyên toàn module cho ba loại trong YAML group STEP 6, khác STEP 7 Swagger lịch sử. STEP 8/9 đã ngừng. Các trạng thái 6/7/8/9 **lịch sử** phải xác minh provenance, không tự coi là đã hoàn thành STEP 6 hoặc STEP 7 mới. "12A" chỉ đọc để tương thích. **Khi chưa có importer/schema module tương thích STEP 6/7 mới, không dùng Sheet enrichment để nâng tiến độ.**
 - **Không đọc hoặc ghi trạng thái tiến độ ở Google Sheets/Excel J2/J3**, dù các tab/template cũ vẫn giữ nhãn `Current STEP`. Google Sheets `I3` vẫn được dùng để xác minh đường dẫn module; không phải nguồn trạng thái. Mọi backfill lịch sử phải có phạm vi và phép đối chiếu riêng được người dùng yêu cầu; không tự reset module về `"0"` hoặc cập nhật hàng loạt.
 - Prime chỉ cập nhật sau completion gate **của chính STEP và module**; worker không có quyền chỉnh trạng thái. Rerun STEP cũ không được ghi lùi; Video tùy chọn sau FINAL luôn giữ `"FINAL"`.
 

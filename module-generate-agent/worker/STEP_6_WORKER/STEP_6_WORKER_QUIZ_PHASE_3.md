@@ -3,7 +3,7 @@
 ## Nhiệm vụ duy nhất
 
 - **READ và WRITE chung đúng vùng `V20:W24` (5 hàng).** Đọc YAML khung do Phase 2 tạo trong vùng này và `A1,B1`. Phase 3 không có vùng riêng theo group, không dùng hàng 27+.
-- Chỉ bổ sung `explanation` cho **cả bốn lựa chọn A/B/C/D của mọi câu hỏi trong mọi group** của YAML Phase 2. Giải thích vì sao từng lựa chọn đúng hoặc sai, tương thích tiêu chí STEP 10. Giữ nguyên nội dung `question`, `answers[].id`, `answers[].answer`, `correctAnswerId`, `groupID`, `groupName` và thứ tự.
+- Chỉ bổ sung `explanation` cho **cả bốn lựa chọn A/B/C/D của mọi câu hỏi trong mọi group** của YAML Phase 2. Giải thích vì sao từng lựa chọn đúng hoặc sai, tương thích tiêu chí chất lượng Quiz. Giữ nguyên nội dung `question`, `answers[].id`, `answers[].answer`, `correctAnswerId`, `groupID`, `groupName`, **`readmeRelated.anchorList`** và thứ tự. Nếu thiếu khung Related từ Phase 2, báo blocker, không tự bổ sung hoặc suy đoán liên kết.
 - Ghi lại **toàn bộ YAML các group** đã được bổ sung thông tin vào **chính `V20:W24`**, không tạo file/group YAML phụ và không sửa vùng Phase 1.
 
 Ví dụ cấu trúc sau Phase 3:
@@ -14,6 +14,8 @@ quiz:
     groupName: "Tên nhóm"
     questions:
       - question: "Câu hỏi từ Phase 2?"
+        readmeRelated:
+          anchorList: []
         answers:
           - { id: A, answer: "A", explanation: "Vì sao A đúng hoặc sai." }
           - { id: B, answer: "B", explanation: "Vì sao B đúng hoặc sai." }
@@ -22,7 +24,7 @@ quiz:
         correctAnswerId: B
 ~~~
 
-- Đủ bốn `explanation` không rỗng cho mỗi câu. Nếu phát hiện `correctAnswerId` của Phase 2 sai/mơ hồ, báo BLOCKER; không âm thầm đổi đáp án đúng. Quiz dừng ở Phase 3.
+- Đủ bốn `explanation` không rỗng cho mỗi câu; `readmeRelated.anchorList` vẫn là `[]`, không có `apiRelated` hoặc `readmeRelated.anchor/file`. Không điền ID Knowledge hay `null` trong STEP 6. Nếu phát hiện `correctAnswerId` của Phase 2 sai/mơ hồ, báo BLOCKER; không âm thầm đổi đáp án đúng. Quiz dừng ở Phase 3.
 
 ## An toàn ghi và nghiệm thu
 

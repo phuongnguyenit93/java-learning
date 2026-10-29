@@ -3,7 +3,7 @@
 ## Nhiệm vụ duy nhất
 
 - **READ và WRITE chung đúng vùng `S20:U24` (5 hàng).** Đọc YAML khung do Phase 2 tạo trong vùng này và `A1,B1`. Phase 3 không có vùng riêng theo group, không dùng hàng 27+.
-- Chỉ bổ sung `resolve` và `knowledge` cho **mọi case của mọi group** trong YAML Phase 2. Resolve nêu cách xử lý thực tế, knowledge nêu nguyên lý cần vận dụng. Không tạo code ở Phase 3. Giữ nguyên `situation`, `groupID`, `groupName` và số lượng/thứ tự.
+- Chỉ bổ sung `resolve` và `knowledge` cho **mọi case của mọi group** trong YAML Phase 2. Resolve nêu cách xử lý thực tế, knowledge nêu nguyên lý cần vận dụng. Không tạo code ở Phase 3. Giữ nguyên `situation`, `groupID`, `groupName`, `readmeRelated.anchorList` và số lượng/thứ tự. Nếu thiếu khung `readmeRelated: {anchorList: []}` từ Phase 2, báo blocker thay vì tự điền hoặc đoán ID.
 - Ghi lại **toàn bộ YAML các group** đã được bổ sung thông tin vào **chính `S20:U24`**, không tạo file/group YAML phụ và không sửa vùng Phase 1.
 
 Ví dụ cấu trúc sau Phase 3:
@@ -16,9 +16,11 @@ caseStudy:
       - situation: "Tình huống từ Phase 2."
         resolve: "Hướng xử lý và lý do."
         knowledge: "Kiến thức cần vận dụng."
+        readmeRelated:
+          anchorList: []
 ~~~
 
-- Mọi `cases[].resolve` và `cases[].knowledge` đều không rỗng; không có field `code` trong YAML nền.
+- Mọi `cases[].resolve` và `cases[].knowledge` đều không rỗng; mỗi case giữ `readmeRelated.anchorList: []`, không có field `code`, `apiRelated` hoặc `readmeRelated.anchor/file` trong YAML nền. Không tự điền ID hoặc `null` ở Phase 3.
 
 ## An toàn ghi và nghiệm thu
 
