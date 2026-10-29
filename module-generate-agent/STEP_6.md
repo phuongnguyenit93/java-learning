@@ -49,4 +49,27 @@ Prime QA lần lượt: Phase 1 đủ nội dung; Phase 2 đủ nhóm và YAML k
 
 **An toàn và tương thích OOP:** OOP đã có Phase 1 trong hàng 25–26, Phase 2/3 trong 20–24 và một số block Phase 4 từ 27. Trước khi chạy tiếp, Prime **đọc dữ liệu thực tế** và chỉ ghi vào block group chưa có dữ liệu; không tự migrate/xóa/ghi đè block cũ. Nếu có vùng chứa nội dung thuộc layout khác hoặc groupID/index sai, báo `STEP6_LAYOUT_MIGRATION_REQUIRED`. Giữ snapshot đã tạo trước thay đổi.
 
-STEP 6 hiện chưa có importer tương thích. Không chạy task Interview/Quiz P:S/T:W legacy, không cập nhật `CURRENT_STEP.VALUE` và không commit/push.
+## 3. Module sync và CURRENT_STEP — một importer chung cho STEP 6/7
+
+**Phân biệt hai mốc:** `SHEET_AUTHORING=PASS` chỉ xác nhận đủ bốn Phase và các dữ liệu trên đúng tab; **không phải** `MODULE_SYNC=PASS` hoặc STEP 6 đã hoàn thành ở cấp module. Prime có thể báo kết quả nghiệm thu Sheet, nhưng **không được ghi `CURRENT_STEP.VALUE = "6"` chỉ dựa trên nội dung Sheet**.
+
+**Importer đã đăng ký:** module-local Gradle task `generateModuleAssessmentsFromSheetByLocation` (`ASSESSMENTS`), dùng **chung cho STEP 6 và STEP 7**. Thuần Groovy/Sheets API/SnakeYAML, không AI/thinking, không gọi importer Interview/Quiz legacy và không sửa Sheet. Đọc YAML chính `P20:R24`/`S20:U24`/`V20:W24`, đọc Phase 4 theo group từ hàng 27; ghép Interview `answer` theo `(groupID, questionIndex)` và Case Study `code` theo `(groupID, caseIndex)`; Quiz giữ nguyên cấu trúc group. Kiểm chính xác `readmeRelated.anchorList` với A-child ID toàn module, cho phép `[]`, không chuyển thành `anchor/file` và không thêm `apiRelated`.
+
+**Destination thuộc đúng module `I3`:** `content/interview/vi/interview.yml`, `content/casestudy/vi/casestudy.yml`, `content/quiz/vi/quiz.yml`. Cả ba folder `vi` là **snapshot do importer sở hữu**: sau validate tất cả input và stage đầy đủ, một transaction **CLEAN toàn bộ nội dung cũ của cả ba folder → FILL ba file mới → exact readback**, rollback khi lỗi; tuyệt đối không xóa `en/`, Knowledge/Metadata/Summary, Video, Swagger, hoặc file module khác. Không import/publish Portal hay learning-platform trong STEP 6/7.
+
+Sau khi toàn bộ worker Phase 1–4 và Sheet QA PASS, Prime chạy tại root `java-learning` với đúng URL/gid/I3/Gradle module path đã đối chiếu:
+
+```powershell
+.\gradlew.bat :<EXACT_MODULE_GRADLE_PATH>:generateModuleAssessmentsFromSheetByLocation -PfileUrl=<VERIFIED_SHEET_URL> -PsheetID=<VERIFIED_GID> -PsheetMode=DRY_RUN
+.\gradlew.bat :<EXACT_MODULE_GRADLE_PATH>:generateModuleAssessmentsFromSheetByLocation -PfileUrl=<VERIFIED_SHEET_URL> -PsheetID=<VERIFIED_GID> -PsheetMode=APPLY
+```
+
+Completion gate của Prime:
+
+1. **Nguồn và ownership:** xác minh URL, tên tab, gid, `I3` và đúng một `<I3>/master.json` như `rules/PRIME_RULES.md §2`; chỉ dùng dữ liệu STEP 6 mới: Interview `P20:R24`, Case Study `S20:U24`, Quiz `V20:W24` và các group answer/code Phase 4 từ hàng 27. Phase 1 hàng 25–26 là nguồn soạn thảo, không tự dùng làm module output. Không đọc nhầm layout legacy P:S/T:W theo chương.
+2. **QA toàn bộ bốn Phase:** ba tài liệu group parse được, groupID/groupName/index nhất quán, item và câu trả lời/giải pháp đầy đủ; Phase 4 có chính xác các block Interview answer và Case Study code cần thiết theo từng group/index, không thiếu/trùng, nội dung phù hợp với câu/case, MAX-FILL/exact readback PASS. Giữ nguyên `readmeRelated.anchorList` theo schema STEP 6, không thêm `apiRelated` hay `readmeRelated.anchor/file` và không lấy Phase 4 làm nguồn thay đổi Phase 2/3.
+3. **Importer/validator thực:** phải parse/validate đủ 3 tài liệu group và toàn bộ Phase 4, chống duplicate/gap/extraneous group/index, unknown Knowledge A-child ID, công thức, non-MAX-FILL và lỗi dữ liệu. Không bỏ sót group hoặc lặng lẽ bỏ trường/câu/case. Bất kỳ `SKIPPED_*`, lỗi task/schema, thiếu output hoặc importer legacy chỉ xử lý theo chương là `BLOCKER: STEP6_MODULE_SYNC`. Không coi snapshot Sheet là module output.
+4. **DRY_RUN → APPLY → exact readback:** Prime chạy task module-local tương thích đã được đăng ký, đúng module `I3`, kiểm status và semantic diff/backup/rollback; chỉ APPLY sau DRY_RUN PASS. Kiểm chứng output được lưu thực sự vào module, đủ cả Interview/Case Study/Quiz và answer/code, giữ đúng dữ liệu ngoài scope. Không có file output hoặc chỉ kiểm tra YAML trên Sheet → **không** tính là đồng bộ thành công.
+5. **Cập nhật trạng thái sau sync:** chỉ khi toàn bộ worker đã release, QA Sheet + module đều PASS/UNCHANGED, cleanup và exact readback xong, **Prime phải cập nhật/readback `CURRENT_STEP.VALUE = "6"`** theo `rules/PRIME_RULES.md §2` nếu trạng thái hiện tại cho phép: snapshot, chống concurrent writer, **không ghi lùi**, không tự chuyển `"8"` lịch sử, chỉ đổi VALUE và exact readback. Nếu giá trị đã đi xa hơn hoặc provenance chưa rõ, bảo toàn và báo đúng trạng thái; nếu ghi bắt buộc thất bại, báo BLOCKER thay vì COMPLETED.
+
+**Không chạy** task Interview/Quiz P:S/T:W legacy; **không commit/push** trong STEP 6. Chỉ có Sheet QA mà chưa chạy importer DRY_RUN → APPLY/readback PASS thì `MODULE_SYNC=NOT_RUN/BLOCKER`, **chưa được cập nhật CURRENT_STEP**. Importer dùng chung này sẽ chạy lại sau STEP 7 để lưu `anchorList` đã hoàn thiện; không gộp nghiệm thu STEP 6 và STEP 7 thành một checkpoint.

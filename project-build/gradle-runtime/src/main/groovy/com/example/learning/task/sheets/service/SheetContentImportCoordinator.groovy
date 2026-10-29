@@ -62,9 +62,9 @@ class SheetContentImportCoordinator {
             boolean apply,
             String part
     ) {
-        if (!(part in ['ALL', 'ROADMAP', 'README', 'VIDEO', 'INTERVIEW', 'QUIZ', 'REFERENCE', 'SUMMARY', 'FILL_LESSON_IDS'])) {
+        if (!(part in ['ALL', 'ROADMAP', 'README', 'VIDEO', 'INTERVIEW', 'QUIZ', 'ASSESSMENTS', 'REFERENCE', 'SUMMARY', 'FILL_LESSON_IDS'])) {
             throw new GradleException(
-                    "Invalid Sheet import part '${part}'. Use ALL, ROADMAP, README, VIDEO, INTERVIEW, QUIZ, REFERENCE, SUMMARY."
+                    "Invalid Sheet import part '${part}'. Use ALL, ROADMAP, README, VIDEO, INTERVIEW, QUIZ, ASSESSMENTS, REFERENCE, SUMMARY."
             )
         }
         File root = rootDirectory.canonicalFile
@@ -99,6 +99,8 @@ class SheetContentImportCoordinator {
                 return interviewImporter.execute(root, context, apply)
             case 'QUIZ':
                 return quizImporter.execute(root, context, apply)
+            case 'ASSESSMENTS':
+                return new ModuleAssessmentSheetImportService().execute(root, context, apply)
             case 'REFERENCE':
                 return referenceImporter.execute(root, context, apply)
             case 'SUMMARY':

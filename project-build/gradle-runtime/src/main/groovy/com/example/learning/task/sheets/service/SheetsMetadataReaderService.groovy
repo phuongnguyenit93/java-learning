@@ -202,7 +202,9 @@ class SheetsMetadataReaderService {
                 client          : spreadsheet.client,
                 tabTitle        : tab.title,
                 sheetId         : tabId,
-                moduleLocation  : tab.moduleLocation
+                moduleLocation  : tab.moduleLocation,
+                rowCount        : tab.rows,
+                columnCount     : tab.columns
         ]
     }
 

@@ -1,0 +1,1833 @@
+quiz:
+- groupID: 1
+  groupName: Nền tảng OOP, class, object và identity
+  questions:
+  - question: OOP giúp quản lý độ phức tạp chủ yếu bằng cách nào?
+    readmeRelated:
+      anchorList:
+      - oop-basic-001
+      - oop-basic-006
+      - class-design-001
+      - class-design-002
+      - modeling-003
+      - design-pitfalls-001
+      - oop-basic-002
+    answers:
+    - id: A
+      answer: Đưa mọi quy tắc vào một hàm main
+      explanation: 'Sai: dồn các quy tắc vào main khiến mã khó phân chia, kiểm thử và thay đổi riêng từng trách nhiệm.'
+    - id: B
+      answer: Phân chia trách nhiệm giữa object có trạng thái và hành vi liên quan
+      explanation: 'Đúng: object gom state với hành vi liên quan, nhờ đó ranh giới trách nhiệm và điểm thay đổi dễ xác định
+        hơn.'
+    - id: C
+      answer: Dùng global variable cho toàn bộ chương trình
+      explanation: 'Sai: global state tạo coupling ngầm; nhiều phần cùng sửa có thể gây lỗi nhất quán và tranh chấp.'
+    - id: D
+      answer: Tạo một class cho mọi dòng code
+      explanation: 'Sai: mỗi dòng một class tạo quá nhiều tầng không có trách nhiệm riêng, làm tăng độ phức tạp.'
+    correctAnswerId: B
+  - question: Phát biểu nào phân biệt class và object chính xác?
+    readmeRelated:
+      anchorList:
+      - oop-basic-002
+      - oop-basic-003
+      - class-002
+      - object-001
+      - modeling-006
+    answers:
+    - id: A
+      answer: Class mô tả kiểu; object là một thể hiện cụ thể
+      explanation: 'Đúng: class mô tả kiểu và hành vi chung; object là một thể hiện cụ thể mang state và identity của nó.'
+    - id: B
+      answer: Object luôn tồn tại trước class
+      explanation: 'Sai: Java cần định nghĩa kiểu class trước khi có thể khởi tạo instance tương ứng, trừ các cơ chế sinh
+        kiểu động đặc thù.'
+    - id: C
+      answer: Class chỉ chứa field còn object chỉ chứa method
+      explanation: 'Sai: cả class có thể khai báo field và method; object giữ trạng thái instance và cung cấp hành vi đã định
+        nghĩa.'
+    - id: D
+      answer: Các object của cùng class luôn cùng identity
+      explanation: 'Sai: mỗi instance có identity riêng; cùng class không đồng nghĩa là cùng object.'
+    correctAnswerId: A
+  - question: Hai object có toàn bộ field giống nhau nhưng được tạo riêng thì điều gì chắc chắn đúng?
+    readmeRelated:
+      anchorList:
+      - object-001
+      - object-004
+      - modeling-006
+      - practice-005
+    answers:
+    - id: A
+      answer: Toán tử == trả true
+      explanation: 'Sai: == so sánh cùng tham chiếu với object, nên hai instance tạo riêng không mặc nhiên == nhau.'
+    - id: B
+      answer: Chúng phải được GC gộp lại
+      explanation: 'Sai: GC không có hợp đồng tự gộp mọi object có field giống nhau; tính danh tính vẫn phải được tôn trọng.'
+    - id: C
+      answer: Chúng có thể khác identity dù giống giá trị
+      explanation: 'Đúng: các instance khác nhau có thể chứa dữ liệu bằng nhau nhưng vẫn mang danh tính tham chiếu riêng.'
+    - id: D
+      answer: Chúng buộc có cùng hashCode nếu không override equals
+      explanation: 'Sai: không override equals không buộc mọi object cùng field phải có hashCode bằng nhau; Object dùng identity-based
+        equality.'
+    correctAnswerId: C
+  - question: Entity khác Value Object nổi bật ở điểm nào?
+    readmeRelated:
+      anchorList:
+      - object-004
+      - class-design-006
+      - modeling-002
+      - practice-005
+    answers:
+    - id: A
+      answer: Entity bắt buộc immutable
+      explanation: 'Sai: entity có identity nhưng có thể đổi thuộc tính hoặc trạng thái theo business rules.'
+    - id: B
+      answer: Value Object luôn phải có ID
+      explanation: 'Sai: value object được xác định bởi giá trị, nên không bắt buộc có mã định danh riêng.'
+    - id: C
+      answer: Entity không có hành vi
+      explanation: 'Sai: entity nên giữ hành vi/invariant của chính mình thay vì chỉ là túi dữ liệu.'
+    - id: D
+      answer: Entity có identity nghiệp vụ, Value Object thường so sánh theo giá trị
+      explanation: 'Đúng: entity phân biệt qua danh tính nghiệp vụ; value object thường bất biến và so sánh theo thuộc tính
+        có ý nghĩa.'
+    correctAnswerId: D
+  - question: Dấu hiệu class có cohesion thấp là gì?
+    readmeRelated:
+      anchorList:
+      - class-design-002
+      - modeling-004
+      - solid-002
+      - design-pitfalls-001
+    answers:
+    - id: A
+      answer: Nhiều method cùng giữ một invariant
+      explanation: 'Sai: các method chung mục đích bảo vệ một invariant thường là dấu hiệu cohesion tốt.'
+    - id: B
+      answer: Các method phục vụ trách nhiệm không liên quan và thay đổi vì nhiều lý do
+      explanation: 'Đúng: nhiều lý do thay đổi không liên quan cho thấy class đang gom sai trách nhiệm, dễ phát sinh God Class.'
+    - id: C
+      answer: Dùng constructor injection
+      explanation: 'Sai: constructor injection chỉ nói cách cung cấp dependency, không tự chứng minh cohesion thấp.'
+    - id: D
+      answer: Có tên method mang ý nghĩa nghiệp vụ
+      explanation: 'Sai: tên method theo ngôn ngữ nghiệp vụ là điều tốt khi phản ánh trách nhiệm thật.'
+    correctAnswerId: B
+- groupID: 2
+  groupName: Vòng đời, khởi tạo và tính bất biến
+  questions:
+  - question: Trong Java, static field khác instance field thế nào?
+    readmeRelated:
+      anchorList:
+      - class-003
+      - design-pitfalls-008
+    answers:
+    - id: A
+      answer: Static field thuộc class tương ứng; instance field thuộc từng object
+      explanation: 'Đúng: static gắn với class trong class loader; instance field thuộc trạng thái từng object được tạo.'
+    - id: B
+      answer: Static field luôn thread-safe
+      explanation: 'Sai: chia sẻ static mutable state giữa nhiều luồng vẫn có race; phải có đồng bộ hoặc thiết kế immutable.'
+    - id: C
+      answer: Static field tạo một bản riêng cho từng object
+      explanation: 'Sai: một static field không có bản sao riêng trên mỗi instance như instance field.'
+    - id: D
+      answer: Instance field bắt buộc là final
+      explanation: 'Sai: instance field có thể mutable; từ khóa final là một lựa chọn thiết kế chứ không bắt buộc.'
+    correctAnswerId: A
+  - question: Static factory method có ưu điểm nào so với constructor?
+    readmeRelated:
+      anchorList:
+      - lifecycle-005
+      - design-patterns-002
+    answers:
+    - id: A
+      answer: Không thể validate tham số
+      explanation: 'Sai: static factory có thể kiểm tra đầu vào trước khi trả object, tương tự constructor.'
+    - id: B
+      answer: Không bao giờ tạo object mới
+      explanation: 'Sai: static factory có thể trả cache hoặc một instance đã tồn tại, nhưng vẫn có thể tạo mới.'
+    - id: C
+      answer: Có tên diễn đạt ý nghĩa và có thể trả subtype phù hợp
+      explanation: 'Đúng: tên như of()/from() làm rõ ý định và kiểu trả về có thể là implementation/subtype phù hợp.'
+    - id: D
+      answer: Chỉ dùng được với abstract class
+      explanation: 'Sai: static factory áp dụng cho class cụ thể và nhiều kiểu khác, không bị giới hạn ở abstract class.'
+    correctAnswerId: C
+  - question: Khi khởi tạo object phải giữ invariant, cách nào phù hợp?
+    readmeRelated:
+      anchorList:
+      - lifecycle-002
+      - encapsulation-002
+      - testing-002
+    answers:
+    - id: A
+      answer: Tạo object sai rồi chờ caller sửa
+      explanation: 'Sai: object xuất hiện trong trạng thái sai có thể bị caller quan sát trước khi setter được gọi.'
+    - id: B
+      answer: Mở setter cho mọi field
+      explanation: 'Sai: comment không có hiệu lực chặn thao tác hoặc đầu vào vi phạm hợp đồng.'
+    - id: C
+      answer: Chỉ ghi invariant vào comment
+      explanation: 'Sai: GC chỉ liên quan reachability/bộ nhớ, không xác thực invariant của object.'
+    - id: D
+      answer: Validate ở constructor/factory trước khi object được sử dụng
+      explanation: 'Đúng: constructor/factory từ chối dữ liệu vi phạm quy tắc trước khi công bố object.'
+    correctAnswerId: D
+  - question: Vì sao gọi method override từ superclass constructor có thể nguy hiểm?
+    readmeRelated:
+      anchorList:
+      - lifecycle-004
+      - lifecycle-009
+      - inheritance-006
+      - testing-002
+    answers:
+    - id: A
+      answer: Java cấm mọi method trong constructor
+      explanation: 'Sai: constructor Java vẫn có thể gọi method; nguy cơ là method có thể override chứ không phải lệnh cấm
+        cú pháp.'
+    - id: B
+      answer: Method subclass có thể chạy trước khi phần khởi tạo subclass hoàn tất
+      explanation: 'Đúng: dynamic dispatch có thể gọi override ở subclass khi field subclass còn giá trị mặc định, dẫn đến
+        hành vi sai.'
+    - id: C
+      answer: Superclass khởi tạo sau subclass
+      explanation: 'Sai: khởi tạo superclass là bước trước phần khởi tạo instance của subclass, theo chuỗi constructor.'
+    - id: D
+      answer: Override luôn được chọn ở compile time
+      explanation: 'Sai: instance override có dynamic dispatch; nó không mặc nhiên được cố định ở compile time.'
+    correctAnswerId: B
+  - question: Tại sao private final List<String> chưa đủ để object bất biến sâu?
+    readmeRelated:
+      anchorList:
+      - class-006
+      - object-005
+      - encapsulation-007
+    answers:
+    - id: A
+      answer: final ngăn gán lại tham chiếu nhưng nội dung list mutable vẫn có thể đổi
+      explanation: 'Đúng: final cố định tham chiếu field; alias khác vẫn có thể mutate nội dung List nếu đó là mutable list.'
+    - id: B
+      answer: final tự động deep copy list
+      explanation: 'Sai: final không deep copy; cần defensive copy phù hợp tại đầu vào/đầu ra.'
+    - id: C
+      answer: Mọi phần tử String sẽ biến thành mutable
+      explanation: 'Sai: String vốn immutable; các phần tử không bị từ khóa final biến thành mutable.'
+    - id: D
+      answer: List tự động đồng bộ đa luồng
+      explanation: 'Sai: List mutable không tự có bảo đảm thread safety chỉ vì field là final.'
+    correctAnswerId: A
+  - question: List.copyOf(list) có giới hạn nào?
+    readmeRelated:
+      anchorList:
+      - object-005
+      - object-006
+      - encapsulation-007
+    answers:
+    - id: A
+      answer: Luôn trả một ArrayList mutable
+      explanation: 'Sai: List.copyOf tạo một list không cho sửa qua API của nó, không phải ArrayList mutable.'
+    - id: B
+      answer: Không dùng được khi list có nhiều phần tử
+      explanation: 'Sai: nó áp dụng cho nhiều loại phần tử, miễn tuân thủ yêu cầu API như không có null.'
+    - id: C
+      answer: Không tự deep copy các phần tử mutable bên trong
+      explanation: 'Đúng: snapshot list chỉ bảo vệ cấu trúc; object mutable bên trong cần copy/bảo vệ riêng để đạt deep immutability.'
+    - id: D
+      answer: Tự cập nhật khi list gốc thay đổi
+      explanation: 'Sai: snapshot không đồng bộ thay đổi cấu trúc từ list nguồn sau khi tạo.'
+    correctAnswerId: C
+  - question: Đóng file và database connection nên dựa vào cơ chế nào?
+    readmeRelated:
+      anchorList:
+      - lifecycle-008
+      - composition-007
+    answers:
+    - id: A
+      answer: Chờ JVM gọi GC đúng lúc
+      explanation: 'Sai: GC không bảo đảm lịch chạy hoặc đóng tài nguyên ngoài heap đúng thời điểm.'
+    - id: B
+      answer: Gọi System.gc sau mỗi phương thức
+      explanation: 'Sai: System.gc chỉ là gợi ý, không thay hợp đồng close hoặc cleanup bắt buộc.'
+    - id: C
+      answer: Chỉ gán reference bằng null
+      explanation: 'Sai: bỏ tham chiếu không giải phóng tức thì file descriptor hoặc connection đang dùng.'
+    - id: D
+      answer: close hoặc try-with-resources theo ownership
+      explanation: 'Đúng: try-with-resources tự gọi close khi thoát scope, kể cả khi thao tác ném exception.'
+    correctAnswerId: D
+- groupID: 3
+  groupName: Encapsulation, invariant và kiểm soát trạng thái
+  questions:
+  - question: Encapsulation thực sự bảo vệ điều gì?
+    readmeRelated:
+      anchorList:
+      - encapsulation-001
+      - encapsulation-002
+      - encapsulation-008
+      - testing-003
+    answers:
+    - id: A
+      answer: Mọi object phải có getter/setter
+      explanation: 'Sai: tự động công khai getter/setter có thể cho caller sửa field làm hỏng invariant.'
+    - id: B
+      answer: Invariant và chi tiết representation thông qua API có kiểm soát
+      explanation: 'Đúng: encapsulation kiểm soát biểu diễn nội bộ và các chuyển trạng thái hợp lệ qua API có ý nghĩa.'
+    - id: C
+      answer: Object không được thay đổi state
+      explanation: 'Sai: encapsulation không đồng nghĩa immutable; object vẫn có thể đổi state theo quy tắc.'
+    - id: D
+      answer: Tất cả field đều phải public
+      explanation: 'Sai: field public làm lộ representation; thường nên giới hạn truy cập thích hợp.'
+    correctAnswerId: B
+  - question: Tại sao public setter cho từng field dễ làm mất invariant liên trường?
+    readmeRelated:
+      anchorList:
+      - encapsulation-002
+      - encapsulation-004
+      - design-pitfalls-002
+      - testing-003
+    answers:
+    - id: A
+      answer: Caller có thể tạo trạng thái không hợp lệ khi thay field riêng rẽ
+      explanation: 'Đúng: hai setter chạy độc lập có thể tạo tổ hợp field không hợp lệ; dùng operation nghiệp vụ cập nhật
+        nhất quán.'
+    - id: B
+      answer: Setter luôn bị Java compiler từ chối
+      explanation: 'Sai: Java hỗ trợ setter bình thường; vấn đề là hợp đồng và bảo vệ state, không phải cú pháp compiler.'
+    - id: C
+      answer: Setter không thể gọi từ controller
+      explanation: 'Sai: setter public có thể được gọi từ controller, chính vì thế dễ làm lộ quyền sửa quá rộng.'
+    - id: D
+      answer: Setter luôn làm object immutable
+      explanation: 'Sai: setter có tác dụng mutate, không làm object trở thành immutable.'
+    correctAnswerId: A
+  - question: Phân biệt invariant và validation đầu vào thế nào?
+    readmeRelated:
+      anchorList:
+      - lifecycle-002
+      - encapsulation-002
+      - encapsulation-005
+      - testing-003
+    answers:
+    - id: A
+      answer: Invariant chỉ kiểm tra ở main
+      explanation: 'Sai: invariant cần được bảo toàn suốt vòng đời, không chỉ tại điểm vào main.'
+    - id: B
+      answer: Validation chỉ dành cho string
+      explanation: 'Sai: validation áp dụng cho nhiều kiểu dữ liệu, không chỉ String.'
+    - id: C
+      answer: Validation kiểm tra dữ liệu nhận vào, còn invariant phải được giữ qua vòng đời object
+      explanation: 'Đúng: input validation kiểm tra dữ liệu biên; invariant ràng buộc trạng thái nội tại ở mọi trạng thái
+        hợp lệ.'
+    - id: D
+      answer: Hai khái niệm luôn đồng nghĩa
+      explanation: 'Sai: validation và invariant liên quan nhưng khác phạm vi và thời điểm áp dụng.'
+    correctAnswerId: C
+  - question: Getter trả trực tiếp ArrayList nội bộ gây rủi ro gì?
+    readmeRelated:
+      anchorList:
+      - object-007
+      - encapsulation-006
+      - refactoring-005
+      - encapsulation-007
+    answers:
+    - id: A
+      answer: Bắt buộc tăng chi phí GC
+      explanation: 'Sai: trả thẳng list không nhất thiết tạo thêm bộ nhớ; vấn đề lớn là alias đến state nội bộ.'
+    - id: B
+      answer: Không thể dùng generic
+      explanation: 'Sai: generic type vẫn tồn tại ở mức source contract, không bị getter tự bỏ đi.'
+    - id: C
+      answer: Mọi phần tử bị biến thành null
+      explanation: 'Sai: getter không tự chuyển các phần tử thành null.'
+    - id: D
+      answer: Caller sửa dữ liệu vượt ngoài API bảo vệ invariant
+      explanation: 'Đúng: reference tới ArrayList nội bộ cho caller quyền thêm/xóa mà không qua validation hoặc method nghiệp
+        vụ.'
+    correctAnswerId: D
+  - question: Cách nào phù hợp để Order tự bảo vệ chuyển trạng thái DRAFT sang PAID?
+    readmeRelated:
+      anchorList:
+      - encapsulation-008
+      - encapsulation-009
+      - modeling-008
+      - testing-003
+      - practice-002
+    answers:
+    - id: A
+      answer: Controller setStatus trực tiếp
+      explanation: 'Sai: controller không nên tự viết rule thay domain, vì các entry point khác có thể bỏ qua.'
+    - id: B
+      answer: Method pay() kiểm tra tiền điều kiện rồi chuyển trạng thái hợp lệ
+      explanation: 'Đúng: pay() gom kiểm tra trạng thái, số tiền và transition, nên khó nhảy đến trạng thái cấm.'
+    - id: C
+      answer: Setter setStatus(String) public
+      explanation: 'Sai: setter trạng thái tùy ý cho phép caller bỏ qua tiền điều kiện/chuyển trạng thái.'
+    - id: D
+      answer: Cho mọi caller dùng reflection
+      explanation: 'Sai: reflection để sửa field vượt qua API và không bảo vệ invariant.'
+    correctAnswerId: B
+  - question: Anemic Domain Model có dấu hiệu gì?
+    readmeRelated:
+      anchorList:
+      - encapsulation-008
+      - class-design-007
+      - design-pitfalls-003
+      - refactoring-004
+    answers:
+    - id: A
+      answer: Object chủ yếu là getter/setter và quy tắc nằm rải ngoài object
+      explanation: 'Đúng: model chỉ có dữ liệu trong khi controller/service giữ hết rule là triệu chứng anemic domain model.'
+    - id: B
+      answer: Object giữ hành vi và invariant rõ
+      explanation: 'Sai: object có hành vi bảo vệ quy tắc là đặc điểm của rich domain model.'
+    - id: C
+      answer: Value Object bất biến
+      explanation: 'Sai: value object bất biến là một thiết kế hợp lệ, không tự biểu thị anemic model.'
+    - id: D
+      answer: Một contract test dùng chung
+      explanation: 'Sai: dùng contract test không khiến domain model trở nên anemic.'
+    correctAnswerId: A
+  - question: Khi key trong HashMap đổi field ảnh hưởng hashCode sau lúc put, chuyện gì có thể xảy ra?
+    readmeRelated:
+      anchorList:
+      - object-004
+      - language-mechanics-006
+      - design-pitfalls-009
+      - testing-001
+    answers:
+    - id: A
+      answer: Map tự di chuyển bucket
+      explanation: 'Sai: HashMap không tự di chuyển entry theo hash mới sau khi key mutable bị đổi.'
+    - id: B
+      answer: Java luôn ném ConcurrentModificationException
+      explanation: 'Sai: ConcurrentModificationException không phải hậu quả bắt buộc của thay field trong key.'
+    - id: C
+      answer: Map.get có thể không tìm thấy key dù object vẫn ở trong map
+      explanation: 'Đúng: bucket lưu từ hash ban đầu có thể khác hash khi tra cứu; get/containsKey có thể thất bại.'
+    - id: D
+      answer: Key buộc được deep copy
+      explanation: 'Sai: HashMap lưu tham chiếu đến key, không tự deep copy key khi put.'
+    correctAnswerId: C
+  - question: Immutable object có đảm bảo toàn bộ quy trình đa luồng nguyên tử không?
+    readmeRelated:
+      anchorList:
+      - object-005
+      - object-007
+      - design-pitfalls-008
+      - testing-003
+    answers:
+    - id: A
+      answer: Có, khi class có final field
+      explanation: 'Sai: final field không làm nhiều bước trên các object khác trở thành một transaction nguyên tử.'
+    - id: B
+      answer: Có, vì reference không thể thay đổi
+      explanation: 'Sai: record chỉ tạo cấu trúc dữ liệu; các thao tác liên object vẫn có thể cần lock/transaction.'
+    - id: C
+      answer: Có, nếu class là record
+      explanation: 'Sai: record có thể chứa thành phần mutable và không đảm bảo toàn bộ workflow thread-safe.'
+    - id: D
+      answer: Không; bất biến giúp chia sẻ an toàn hơn nhưng workflow nhiều bước vẫn cần phối hợp
+      explanation: 'Đúng: immutable state dễ chia sẻ; nhưng thao tác đọc-kiểm tra-ghi qua nhiều object vẫn cần đồng bộ.'
+    correctAnswerId: D
+- groupID: 4
+  groupName: Abstraction, interface và hợp đồng API
+  questions:
+  - question: Abstraction giúp client như thế nào?
+    readmeRelated:
+      anchorList:
+      - abstraction-003
+      - interface-001
+      - interface-003
+      - solid-006
+    answers:
+    - id: A
+      answer: Buộc client biết mọi implementation
+      explanation: 'Sai: buộc client biết từng implementation làm tăng coupling và khó đổi công nghệ.'
+    - id: B
+      answer: Client phụ thuộc contract ổn định thay cho chi tiết implementation
+      explanation: 'Đúng: client phụ thuộc contract ổn định, còn implementation có thể đổi mà ít tác động caller.'
+    - id: C
+      answer: Thay mọi interface bằng instanceof
+      explanation: 'Sai: instanceof lặp trong client cho thấy client phụ thuộc type/implementation cụ thể.'
+    - id: D
+      answer: Loại bỏ nhu cầu kiểm thử
+      explanation: 'Sai: abstraction không loại bỏ kiểm thử hành vi và tính thay thế của contract.'
+    correctAnswerId: B
+  - question: Precondition của method là gì?
+    readmeRelated:
+      anchorList:
+      - abstraction-004
+      - language-mechanics-008
+      - testing-001
+    answers:
+    - id: A
+      answer: Điều kiện cần thỏa trước khi gọi/thực hiện operation
+      explanation: 'Đúng: precondition là điều kiện cần đúng trước operation, ví dụ số tiền chuyển phải dương.'
+    - id: B
+      answer: Kết quả sau khi method trả về
+      explanation: 'Sai: điều kiện của kết quả sau operation là postcondition, không phải precondition.'
+    - id: C
+      answer: Thời điểm GC thu hồi bộ nhớ
+      explanation: 'Sai: lịch GC không phải hợp đồng tiền điều kiện của nghiệp vụ thông thường.'
+    - id: D
+      answer: Giá trị mặc định của static field
+      explanation: 'Sai: static field default không định nghĩa precondition của một method bất kỳ.'
+    correctAnswerId: A
+  - question: Interface thường phù hợp hơn abstract class khi nào?
+    readmeRelated:
+      anchorList:
+      - abstraction-005
+      - interface-005
+      - polymorphism-002
+      - composition-004
+    answers:
+    - id: A
+      answer: Cần dùng chung nhiều instance field
+      explanation: 'Sai: chia sẻ instance state/code giữa các subclass thường là lý do xem xét abstract class.'
+    - id: B
+      answer: Muốn một class kế thừa nhiều implementation class
+      explanation: 'Sai: interface không hỗ trợ đa kế thừa các implementation class; Java chỉ extends một class.'
+    - id: C
+      answer: Cần mô tả một vai trò/hợp đồng mà nhiều class khác nhau cùng thực hiện
+      explanation: 'Đúng: interface biểu diễn vai trò/capability, cho phép các class không chung cha cụ thể cùng thực hiện
+        hợp đồng.'
+    - id: D
+      answer: Cần constructor chung bắt buộc
+      explanation: 'Sai: interface có thể khai báo method công khai trừu tượng/default; không đòi tất cả private.'
+    correctAnswerId: C
+  - question: Dấu hiệu vi phạm Interface Segregation Principle là gì?
+    readmeRelated:
+      anchorList:
+      - interface-006
+      - polymorphism-008
+      - solid-005
+      - design-pitfalls-006
+    answers:
+    - id: A
+      answer: Interface dùng generic
+      explanation: 'Sai: có generic không tự đồng nghĩa interface quá rộng; xét nhu cầu thực của client.'
+    - id: B
+      answer: Interface có default method
+      explanation: 'Sai: default method có thể hữu ích; phải xem có ép client/implementation hỗ trợ điều không liên quan không.'
+    - id: C
+      answer: Interface được dùng ở module khác
+      explanation: 'Sai: interface được dùng xuyên module có thể là ranh giới tốt nếu contract hẹp, rõ.'
+    - id: D
+      answer: Client phụ thuộc nhiều method không cần và implementation phải hỗ trợ thao tác vô nghĩa
+      explanation: 'Đúng: ISP tránh ép client phụ thuộc method không cần hoặc implementation phải từ chối operation.'
+    correctAnswerId: D
+  - question: Hai interface có default method trùng chữ ký, class implements cả hai thì sao?
+    readmeRelated:
+      anchorList:
+      - interface-007
+      - inheritance-008
+      - polymorphism-006
+    answers:
+    - id: A
+      answer: JVM chọn phương thức interface đầu
+      explanation: 'Sai: Java không chọn default method theo thứ tự khai báo interface.'
+    - id: B
+      answer: Class phải override để giải quyết xung đột
+      explanation: 'Đúng: khi hai default method cùng chữ ký gây xung đột, class phải override để giải quyết rõ hành vi.'
+    - id: C
+      answer: Luôn chạy hai method
+      explanation: 'Sai: không có cơ chế tự chạy cả hai default method nối tiếp khi client gọi một method.'
+    - id: D
+      answer: Không thể implement nhiều interface trong Java
+      explanation: 'Sai: Java cho implements nhiều interface; chỉ yêu cầu xử lý xung đột default method.'
+    correctAnswerId: B
+  - question: Leaky abstraction có biểu hiện gì?
+    readmeRelated:
+      anchorList:
+      - abstraction-008
+      - interface-009
+      - class-design-004
+    answers:
+    - id: A
+      answer: Client phải biết SQLException/lazy loading ngoài phạm vi hợp đồng nghiệp vụ
+      explanation: 'Đúng: để SQLException hoặc lazy loading lọt vào API nghiệp vụ buộc client biết cơ chế hạ tầng.'
+    - id: B
+      answer: Client chỉ dùng một interface đơn giản
+      explanation: 'Sai: client chỉ dùng contract nghiệp vụ thường là mục tiêu của abstraction tốt.'
+    - id: C
+      answer: Class không có public field
+      explanation: 'Sai: thiếu public field không nói được contract có làm lộ ngoại lệ/semantics hạ tầng hay không.'
+    - id: D
+      answer: Implementation được thay ở composition root
+      explanation: 'Sai: chọn implementation tại composition root có thể giảm coupling, không mặc nhiên tạo leaky abstraction.'
+    correctAnswerId: A
+- groupID: 5
+  groupName: Inheritance, subtyping và polymorphism
+  questions:
+  - question: Kế thừa implementation có tự chứng minh quan hệ is-a hợp lệ không?
+    readmeRelated:
+      anchorList:
+      - subtyping-001
+      - subtyping-002
+      - solid-004
+      - design-pitfalls-004
+      - testing-005
+    answers:
+    - id: A
+      answer: Có, vì extends là đủ
+      explanation: 'Sai: subclass extends một class chưa chứng minh hành vi thay thế base là hợp lệ.'
+    - id: B
+      answer: Có, vì subclass luôn thay thế được
+      explanation: 'Sai: subtype vẫn có thể vi phạm hợp đồng base dù compiler chấp nhận extends.'
+    - id: C
+      answer: Không; còn phải giữ đúng kỳ vọng hành vi của client theo subtype contract
+      explanation: 'Đúng: is-a là quan hệ ngữ nghĩa/hành vi; cần thỏa LSP thay vì chỉ tận dụng method của superclass.'
+    - id: D
+      answer: Có, nếu superclass dùng protected field
+      explanation: 'Sai: protected field không chứng minh subtype có thể thay thế superclass hợp lệ.'
+    correctAnswerId: C
+  - question: Subclass tăng precondition so với superclass có nguy cơ gì?
+    readmeRelated:
+      anchorList:
+      - abstraction-004
+      - subtyping-007
+      - solid-004
+      - testing-005
+    answers:
+    - id: A
+      answer: Tăng cohesion
+      explanation: 'Sai: precondition mạnh hơn khiến client hợp lệ của base có thể bị từ chối, giảm substitutability.'
+    - id: B
+      answer: Giảm số class
+      explanation: 'Sai: đây không chỉ là tối ưu hiệu năng; điều kiện thành công/thất bại của operation đổi.'
+    - id: C
+      answer: Giúp LSP tốt hơn
+      explanation: 'Sai: LSP yêu cầu subtype không siết đầu vào trái hợp đồng base, nên đây là vi phạm tiềm tàng.'
+    - id: D
+      answer: Vi phạm LSP vì client hợp lệ của base có thể bị từ chối
+      explanation: 'Đúng: thay base bằng subclass không được làm lời gọi vốn hợp lệ trở nên không hợp lệ.'
+    correctAnswerId: D
+  - question: Dấu hiệu subclass phá hợp đồng superclass là gì?
+    readmeRelated:
+      anchorList:
+      - subtyping-007
+      - solid-004
+      - design-pitfalls-004
+      - testing-005
+    answers:
+    - id: A
+      answer: Có constructor riêng
+      explanation: 'Sai: constructor riêng thường hợp lệ và không trực tiếp phá hợp đồng hành vi base.'
+    - id: B
+      answer: Ném UnsupportedOperationException cho operation base cam kết hỗ trợ
+      explanation: 'Đúng: từ chối một operation base cam kết thực hiện làm client dùng base contract thất bại khi nhận subtype.'
+    - id: C
+      answer: Có thêm method mới
+      explanation: 'Sai: thêm method ngoài contract base không tự phá substitutability.'
+    - id: D
+      answer: Dùng covariant return type
+      explanation: 'Sai: covariant return là quy tắc override hợp lệ khi kiểu trả về tương thích.'
+    correctAnswerId: B
+  - question: Runtime polymorphism trong Java thực hiện bằng cơ chế nào?
+    readmeRelated:
+      anchorList:
+      - inheritance-004
+      - subtyping-004
+      - polymorphism-003
+      - polymorphism-004
+    answers:
+    - id: A
+      answer: Dynamic dispatch của instance method override theo object thực tế
+      explanation: 'Đúng: Java phân giải instance override theo class thực tế của receiver lúc chạy.'
+    - id: B
+      answer: Overload luôn theo kiểu runtime tham số
+      explanation: 'Sai: overload resolution dùng kiểu tĩnh và chữ ký tại compile time, không tự chọn theo runtime argument.'
+    - id: C
+      answer: Dynamic dispatch của static field
+      explanation: 'Sai: static field không được dispatch ảo theo object runtime.'
+    - id: D
+      answer: Constructor polymorphic
+      explanation: 'Sai: Java constructor không hoạt động như virtual method override.'
+    correctAnswerId: A
+  - question: Với overload foo(Object) và foo(String), argument khai báo Object nhưng chứa String, method nào được chọn?
+    readmeRelated:
+      anchorList:
+      - subtyping-004
+      - polymorphism-003
+      - polymorphism-005
+      - language-mechanics-004
+    answers:
+    - id: A
+      answer: foo(String) vì object thực tế
+      explanation: 'Sai: dù object thực tế String, biến đối số khai báo Object làm compiler chọn foo(Object).'
+    - id: B
+      answer: Cả hai được gọi
+      explanation: 'Sai: JVM không tự gọi cả hai overload chỉ vì argument là String.'
+    - id: C
+      answer: foo(Object) vì overload resolution dựa trên kiểu tĩnh
+      explanation: 'Đúng: overload được chọn tại compile time theo kiểu tĩnh của biểu thức đối số.'
+    - id: D
+      answer: Lỗi biên dịch
+      explanation: 'Sai: cả hai overload đều hợp lệ; lời gọi vẫn biên dịch, chọn bản nhận Object.'
+    correctAnswerId: C
+  - question: Static method cùng chữ ký ở subclass được xử lý thế nào?
+    readmeRelated:
+      anchorList:
+      - class-003
+      - inheritance-007
+      - polymorphism-006
+    answers:
+    - id: A
+      answer: Runtime override giống instance method
+      explanation: 'Sai: static method thuộc class và không override theo virtual dispatch như instance method.'
+    - id: B
+      answer: Buộc khai báo abstract
+      explanation: 'Sai: Java không cho abstract static method vì abstract cần implementation động còn static gắn class.'
+    - id: C
+      answer: Không thể khai báo static method ở lớp con
+      explanation: 'Sai: subclass có thể khai báo static method cùng chữ ký hợp lệ theo quy tắc hiding.'
+    - id: D
+      answer: Method hiding, không virtual dispatch như override
+      explanation: 'Đúng: method hiding được chọn theo kiểu tham chiếu/class dùng để gọi, không qua virtual override.'
+    correctAnswerId: D
+  - question: Private method superclass có được override theo nghĩa virtual dispatch không?
+    readmeRelated:
+      anchorList:
+      - inheritance-007
+      - polymorphism-006
+      - polymorphism-007
+    answers:
+    - id: A
+      answer: Có, vì mọi method đều virtual
+      explanation: 'Sai: private method không được subclass kế thừa theo cách cho phép override virtual.'
+    - id: B
+      answer: Không; private method không được override theo nghĩa đó
+      explanation: 'Đúng: method cùng tên ở subclass là method khác; không thể override private member của superclass.'
+    - id: C
+      answer: Có, nếu gắn @Override
+      explanation: 'Sai: @Override không biến một private method của superclass thành method được override.'
+    - id: D
+      answer: Có, nếu class con có constructor
+      explanation: 'Sai: constructor subclass không thay đổi quy tắc visibility/override private method.'
+    correctAnswerId: B
+  - question: Covariant return khi override là gì?
+    readmeRelated:
+      anchorList:
+      - inheritance-004
+      - subtyping-007
+      - polymorphism-005
+    answers:
+    - id: A
+      answer: Override có thể trả một subtype tương thích của return type tham chiếu
+      explanation: 'Đúng: override có thể thu hẹp return reference type từ Animal sang Dog nếu Dog là subtype.'
+    - id: B
+      answer: Có thể đổi mọi return type sang int
+      explanation: 'Sai: kiểu primitive như int không được hoán đổi tùy ý theo covariant return.'
+    - id: C
+      answer: Buộc return Object
+      explanation: 'Sai: Java cho phép covariant reference return; không bắt buộc giữ đúng Object.'
+    - id: D
+      answer: Buộc đổi visibility thành private
+      explanation: 'Sai: override không được giảm visibility; covariant return không bắt đổi method sang private.'
+    correctAnswerId: A
+  - question: Vì sao kế thừa chỉ để lấy vài method có thể nguy hiểm?
+    readmeRelated:
+      anchorList:
+      - inheritance-010
+      - subtyping-001
+      - composition-004
+      - design-pitfalls-004
+      - refactoring-007
+    answers:
+    - id: A
+      answer: Không thể biên dịch trên Java 17
+      explanation: 'Sai: cú pháp inheritance hợp lệ trên Java 17, vấn đề chính là quan hệ/ngữ nghĩa.'
+    - id: B
+      answer: Luôn chậm hơn composition
+      explanation: 'Sai: composition không mặc nhiên nhanh hơn inheritance; hiệu năng phải đo nếu quan trọng.'
+    - id: C
+      answer: Tạo coupling với superclass và áp đặt is-a không đúng
+      explanation: 'Đúng: extends ràng buộc subclass vào base implementation và hợp đồng không phù hợp nếu không có is-a thật.'
+    - id: D
+      answer: Buộc chạy đa luồng
+      explanation: 'Sai: inheritance không tự buộc chương trình chạy đa luồng.'
+    correctAnswerId: C
+  - question: Khi nhiều nhánh instanceof lặp lại ở các client cho hành vi theo subtype, hướng phù hợp là gì?
+    readmeRelated:
+      anchorList:
+      - polymorphism-009
+      - design-patterns-008
+      - design-pitfalls-005
+      - refactoring-006
+    answers:
+    - id: A
+      answer: Đưa thêm instanceof vào mọi nơi
+      explanation: 'Sai: thêm instanceof ở các nơi tiếp tục khiến client cần biết từng subtype.'
+    - id: B
+      answer: Chuyển sang reflection cho tất cả
+      explanation: 'Sai: reflection làm lộ chi tiết type và thường phức tạp hơn khi cần hành vi đa hình.'
+    - id: C
+      answer: Bỏ mọi interface
+      explanation: 'Sai: xử lý hết tại controller thường lặp domain logic và tăng coupling.'
+    - id: D
+      answer: Cân nhắc đưa hành vi vào subtype hoặc Strategy/đa hình
+      explanation: 'Đúng: polymorphism/Strategy chuyển quyết định biến thể về nơi chịu trách nhiệm, giảm switch lặp.'
+    correctAnswerId: D
+  - question: Khi nào instanceof có thể chấp nhận được?
+    readmeRelated:
+      anchorList:
+      - subtyping-006
+      - polymorphism-009
+      - design-pitfalls-005
+    answers:
+    - id: A
+      answer: Không bao giờ
+      explanation: 'Sai: instanceof hữu ích có chủ đích ở biên xử lý dữ liệu hoặc hệ kiểu đóng.'
+    - id: B
+      answer: Ở biên dữ liệu hoặc tập kiểu đóng khi xử lý rõ ràng, không lặp rải rác
+      explanation: 'Đúng: với tập type đóng, pattern matching/switch tại biên có thể rõ hơn việc thêm hierarchy không cần
+        thiết.'
+    - id: C
+      answer: Mọi lúc vì tốt hơn polymorphism
+      explanation: 'Sai: không phải mọi nơi đều nên dùng instanceof; lặp lại nhiều nhánh theo type dễ thành code smell.'
+    - id: D
+      answer: Chỉ khi class có field final
+      explanation: 'Sai: final field không quyết định tính hợp lệ của instanceof.'
+    correctAnswerId: B
+- groupID: 6
+  groupName: Composition, delegation và quan hệ object
+  questions:
+  - question: Composition giúp thiết kế linh hoạt hơn inheritance như thế nào?
+    readmeRelated:
+      anchorList:
+      - inheritance-010
+      - composition-001
+      - composition-004
+      - composition-005
+      - refactoring-007
+    answers:
+    - id: A
+      answer: Ghép và thay object cộng tác qua hợp đồng thay vì phụ thuộc implementation superclass
+      explanation: 'Đúng: composition cho phép truyền/thay collaborator qua interface mà không ràng buộc superclass implementation.'
+    - id: B
+      answer: Bắt buộc class có extends
+      explanation: 'Sai: composition dùng has-a/collaboration, không bắt buộc extends.'
+    - id: C
+      answer: Không thể dùng interface
+      explanation: 'Sai: interface thường chính là contract giúp collaborator được thay thế trong composition.'
+    - id: D
+      answer: Tự động deep copy dependency
+      explanation: 'Sai: composition không tự deep copy object được tiêm vào.'
+    correctAnswerId: A
+  - question: Delegation có nghĩa là gì?
+    readmeRelated:
+      anchorList:
+      - oop-basic-004
+      - composition-003
+      - modeling-003
+    answers:
+    - id: A
+      answer: Object luôn phải tự làm mọi việc
+      explanation: 'Sai: object có thể gọi collaborator nếu trách nhiệm thuộc collaborator, không cần tự thực hiện mọi việc.'
+    - id: B
+      answer: Subclass thay thế mọi interface
+      explanation: 'Sai: delegation không phải cơ chế kế thừa constructor.'
+    - id: C
+      answer: Object chuyển công việc thích hợp tới object cộng tác
+      explanation: 'Đúng: delegation chuyển thao tác phù hợp sang object cộng tác, giữ ranh giới trách nhiệm.'
+    - id: D
+      answer: Method bắt buộc là static
+      explanation: 'Sai: delegation không yêu cầu chuyển method sang static.'
+    correctAnswerId: C
+  - question: Trong UML, composition chủ yếu mô tả điều gì?
+    readmeRelated:
+      anchorList:
+      - composition-007
+      - relationships-003
+      - modeling-005
+    answers:
+    - id: A
+      answer: Hai object buộc được GC thu gom cùng lúc
+      explanation: 'Sai: UML composition mô tả ownership logic, không ấn định chính xác thời điểm GC Java chạy.'
+    - id: B
+      answer: Quan hệ subtype
+      explanation: 'Sai: quan hệ subtype trong UML dùng generalization, không phải composition.'
+    - id: C
+      answer: Quan hệ gọi method tạm thời
+      explanation: 'Sai: gọi method tạm thời là dependency hoặc lời gọi, không mặc nhiên là ownership.'
+    - id: D
+      answer: Quan hệ sở hữu mạnh và vòng đời logic của thành phần
+      explanation: 'Đúng: composition biểu đạt whole–part với quyền sở hữu mạnh và quy tắc vòng đời của part theo mô hình.'
+    correctAnswerId: D
+  - question: Quan hệ Parent-Child hai chiều dễ gặp lỗi nào?
+    readmeRelated:
+      anchorList:
+      - relationships-006
+      - modeling-006
+      - testing-010
+    answers:
+    - id: A
+      answer: Không dùng được List
+      explanation: 'Sai: Java hỗ trợ List và quan hệ hai chiều; vấn đề là cập nhật/ownership.'
+    - id: B
+      answer: Hai đầu có thể mất đồng bộ nếu chỉ cập nhật một bên
+      explanation: 'Đúng: nếu chỉ sửa Parent.children hoặc Child.parent thì hai phía có thể mâu thuẫn; cần một nơi đồng bộ
+        cập nhật.'
+    - id: C
+      answer: Java tự quản lý hai đầu
+      explanation: 'Sai: JVM không tự duy trì nhất quán các reference hai chiều nghiệp vụ.'
+    - id: D
+      answer: JVM cấm quan hệ hai chiều
+      explanation: 'Sai: biểu diễn association hai chiều trong class diagram là hợp lệ.'
+    correctAnswerId: B
+  - question: Phụ thuộc vòng giữa module thường gây vấn đề gì?
+    readmeRelated:
+      anchorList:
+      - relationships-007
+      - design-pitfalls-007
+      - solid-006
+    answers:
+    - id: A
+      answer: Khó quản lý chiều phụ thuộc, khởi tạo và kiểm thử độc lập
+      explanation: 'Đúng: cycle làm chiều phụ thuộc khó hiểu, DI khởi tạo/test riêng module khó và thay đổi dễ lan truyền.'
+    - id: B
+      answer: Tất cả object không thể GC
+      explanation: 'Sai: GC có thể thu hồi nhóm object cycle nếu không còn reachable từ root.'
+    - id: C
+      answer: Compiler luôn phát hiện mọi vòng ở runtime
+      explanation: 'Sai: compiler không bắt mọi cycle runtime/DI; nhiều vấn đề phát sinh ở wiring hoặc logic.'
+    - id: D
+      answer: Buộc mỗi module có database riêng
+      explanation: 'Sai: dependency cycle không có yêu cầu phải tạo database riêng.'
+    correctAnswerId: A
+  - question: Chuỗi order.getCustomer().getAddress().getCountry() có rủi ro thiết kế nào?
+    readmeRelated:
+      anchorList:
+      - composition-003
+      - class-design-009
+      - design-pitfalls-007
+    answers:
+    - id: A
+      answer: JVM luôn tạo bốn object mới
+      explanation: 'Sai: chuỗi getter thường chỉ điều hướng tham chiếu sẵn có, không bảo đảm tạo object mới.'
+    - id: B
+      answer: Java không thể biên dịch chuỗi gọi
+      explanation: 'Sai: Java biên dịch được chuỗi gọi nếu từng return type/method phù hợp.'
+    - id: C
+      answer: Client phụ thuộc sâu vào object graph và dễ vỡ khi cấu trúc thay đổi
+      explanation: 'Đúng: caller biết sâu về cấu trúc Customer/Address, dễ bị ảnh hưởng khi model thay đổi.'
+    - id: D
+      answer: Tự bảo đảm tuân thủ Law of Demeter
+      explanation: 'Sai: chuỗi gọi sâu thường là đối tượng cần xem xét theo Law of Demeter, không tự tuân thủ nó.'
+    correctAnswerId: C
+- groupID: 7
+  groupName: SOLID, cohesion, coupling và thiết kế trách nhiệm
+  questions:
+  - question: Dependency Injection khác DIP như thế nào?
+    readmeRelated:
+      anchorList:
+      - composition-006
+      - solid-007
+      - solid-006
+    answers:
+    - id: A
+      answer: DI là nguyên tắc, DIP chỉ là annotation
+      explanation: 'Sai: DI là cách cung cấp collaborator, còn DIP là nguyên tắc phân hướng phụ thuộc của policy và detail.'
+    - id: B
+      answer: DI bắt buộc dùng Spring
+      explanation: 'Sai: DI dùng thủ công qua constructor vẫn được, không bắt buộc Spring.'
+    - id: C
+      answer: DI bảo đảm hệ thống luôn low coupling
+      explanation: 'Sai: container lắp dependency nhưng không sửa được hướng import/interface thiết kế sai.'
+    - id: D
+      answer: DI là kỹ thuật truyền dependency; DIP là nguyên tắc định hướng phụ thuộc
+      explanation: 'Đúng: DI cung cấp dependency; DIP yêu cầu high-level policy phụ thuộc abstraction thích hợp.'
+    correctAnswerId: D
+  - question: SRP cần được hiểu theo tiêu chí nào?
+    readmeRelated:
+      anchorList:
+      - class-design-001
+      - class-design-002
+      - solid-002
+    answers:
+    - id: A
+      answer: Class phải có một method
+      explanation: 'Sai: SRP không có quy định một method cho mỗi class; nhiều method có thể thuộc một trách nhiệm.'
+    - id: B
+      answer: Class có một lý do thay đổi nhất quán theo trách nhiệm
+      explanation: 'Đúng: trách nhiệm được xét theo một nhóm lý do thay đổi nhất quán, thường gắn với một actor/concern.'
+    - id: C
+      answer: Class chỉ có một field
+      explanation: 'Sai: class có thể triển khai nhiều interface hợp lý; số interface không xác định SRP.'
+    - id: D
+      answer: Class chỉ truy cập một table
+      explanation: 'Sai: số bảng DB không phản ánh đầy đủ trách nhiệm hoặc lý do thay đổi.'
+    correctAnswerId: B
+  - question: Open/Closed Principle áp dụng thế nào với nhiều biến thể thật?
+    readmeRelated:
+      anchorList:
+      - polymorphism-009
+      - solid-003
+      - design-patterns-008
+      - refactoring-006
+    answers:
+    - id: A
+      answer: Tạo extension point qua contract/đa hình thay vì sửa cùng core ở nhiều nơi
+      explanation: 'Đúng: extension point ổn định cho biến thể giúp bổ sung implementation mà hạn chế sửa core logic.'
+    - id: B
+      answer: Copy toàn bộ logic cho mỗi biến thể
+      explanation: 'Sai: copy-paste biến thể sang nhiều nơi gây drift khi rule thay đổi.'
+    - id: C
+      answer: Cho mọi field public
+      explanation: 'Sai: public state phá encapsulation, không giúp OCP.'
+    - id: D
+      answer: Luôn tạo abstract class cho từng DTO
+      explanation: 'Sai: tạo abstract class cho mọi DTO khi không có biến thể chỉ tăng indirection.'
+    correctAnswerId: A
+  - question: DIP chủ yếu yêu cầu gì?
+    readmeRelated:
+      anchorList:
+      - interface-003
+      - class-design-004
+      - solid-006
+    answers:
+    - id: A
+      answer: High-level policy import trực tiếp JDBC adapter
+      explanation: 'Sai: high-level policy biết trực tiếp JDBC adapter làm dependency hướng vào chi tiết hạ tầng.'
+    - id: B
+      answer: Mọi class đều phải dùng IoC container
+      explanation: 'Sai: DIP là nguyên tắc code dependency, không bắt buộc framework/container.'
+    - id: C
+      answer: High-level policy phụ thuộc abstraction, detail phụ thuộc hợp đồng phù hợp
+      explanation: 'Đúng: policy cần hợp đồng mà nó sở hữu hoặc sử dụng; adapter hạ tầng triển khai hợp đồng đó.'
+    - id: D
+      answer: Cấm constructor injection
+      explanation: 'Sai: constructor injection là một cách thực hiện DI phù hợp với DIP.'
+    correctAnswerId: C
+  - question: Interface có một implementation có chắc chắn dư thừa không?
+    readmeRelated:
+      anchorList:
+      - abstraction-007
+      - interface-003
+      - polymorphism-002
+      - solid-008
+      - testing-007
+    answers:
+    - id: A
+      answer: Có, mọi trường hợp
+      explanation: 'Sai: một implementation chưa đủ chứng minh interface vô ích; có thể là boundary được sử dụng thật.'
+    - id: B
+      answer: Có, vì SOLID cấm
+      explanation: 'Sai: SOLID không cấm interface chỉ có một implementation.'
+    - id: C
+      answer: Có, nếu dùng Gradle
+      explanation: 'Sai: Gradle là build tool, không quyết định nhu cầu abstraction của code.'
+    - id: D
+      answer: Chưa; phải xét module boundary, khả năng thay thế và contract
+      explanation: 'Đúng: cần xem hợp đồng có ý nghĩa, module boundary và điểm thay thế/test trước khi bỏ.'
+    correctAnswerId: D
+  - question: Khi áp dụng SOLID làm xuất hiện nhiều tầng không có ích, nên cân nhắc gì?
+    readmeRelated:
+      anchorList:
+      - oop-basic-008
+      - abstraction-007
+      - solid-008
+      - design-patterns-013
+      - refactoring-008
+    answers:
+    - id: A
+      answer: Thêm factory cho đủ pattern
+      explanation: 'Sai: factory bổ sung khi không có nhu cầu biến thiên sẽ tăng số lớp không giải quyết vấn đề.'
+    - id: B
+      answer: KISS/YAGNI và thay đổi nghiệp vụ thực tế để quyết định mức abstraction
+      explanation: 'Đúng: KISS/YAGNI đòi hỏi đánh giá chi phí tầng trung gian bằng thay đổi và yêu cầu thực tế.'
+    - id: C
+      answer: Cấm mọi interface
+      explanation: 'Sai: không nên cấm interface; interface hữu ích khi đại diện vai trò hoặc ranh giới thật.'
+    - id: D
+      answer: Bỏ regression test
+      explanation: 'Sai: bỏ regression test khiến việc đơn giản hóa có nguy cơ đổi hành vi mà không phát hiện.'
+    correctAnswerId: B
+  - question: Cohesion và coupling khác nhau ra sao?
+    readmeRelated:
+      anchorList:
+      - class-design-002
+      - class-design-003
+      - modeling-004
+      - solid-002
+    answers:
+    - id: A
+      answer: Cohesion nói về gắn kết trách nhiệm nội bộ, coupling về phụ thuộc giữa đơn vị
+      explanation: 'Đúng: cohesion đánh giá sự thống nhất trách nhiệm trong class; coupling đánh giá class/module phụ thuộc
+        nhau.'
+    - id: B
+      answer: Cohesion là số dòng, coupling là số comment
+      explanation: 'Sai: số dòng/comment không đại diện chính xác hai thuộc tính thiết kế này.'
+    - id: C
+      answer: Hai thuật ngữ luôn đồng nghĩa
+      explanation: 'Sai: cohesion và coupling khác phạm vi đo; một class có thể cohesion cao nhưng coupling cao.'
+    - id: D
+      answer: Coupling chỉ có trong Spring
+      explanation: 'Sai: coupling xuất hiện ở mọi hệ thống module/object, không riêng Spring.'
+    correctAnswerId: A
+  - question: Logic tính phí được copy ở Order, Invoice và Report, nên sửa thế nào?
+    readmeRelated:
+      anchorList:
+      - class-design-001
+      - class-design-007
+      - modeling-003
+      - design-patterns-008
+      - testing-009
+      - refactoring-004
+    answers:
+    - id: A
+      answer: Giữ nhiều công thức để có dự phòng
+      explanation: 'Sai: nhiều bản sao cùng công thức dễ lệch sau một lần sửa rule ở một nơi.'
+    - id: B
+      answer: Chỉ đổi tên biến
+      explanation: 'Sai: đổi tên biến không loại bỏ việc mỗi nơi vẫn có thể tính khác nhau.'
+    - id: C
+      answer: Đưa công thức vào policy chung và kiểm tra hợp đồng cho các nơi sử dụng
+      explanation: 'Đúng: policy chung là single source of truth; contract tests giữ mọi consumer dùng cùng rule.'
+    - id: D
+      answer: Để client tự chọn cách tính
+      explanation: 'Sai: để client tự tính làm logic phân tán và lệch rounding/edge case.'
+    correctAnswerId: C
+  - question: God Class được nhận biết bằng dấu hiệu nào?
+    readmeRelated:
+      anchorList:
+      - class-design-002
+      - solid-002
+      - design-pitfalls-001
+      - refactoring-003
+    answers:
+    - id: A
+      answer: Có một responsibility rõ
+      explanation: 'Sai: một trách nhiệm rõ thường là điểm mạnh cohesion, không phải dấu hiệu God Class.'
+    - id: B
+      answer: Có constructor dài
+      explanation: 'Sai: constructor dài có thể là symptom khác nhưng không đủ kết luận class ôm nhiều concern.'
+    - id: C
+      answer: Có nhiều private field hợp lệ
+      explanation: 'Sai: nhiều private field hợp lệ không tự biến class thành God Class.'
+    - id: D
+      answer: Ôm nhiều mối quan tâm với các lý do thay đổi không liên quan
+      explanation: 'Đúng: các lý do thay đổi không liên quan trong cùng class cho thấy trách nhiệm bị dồn sai chỗ.'
+    correctAnswerId: D
+- groupID: 8
+  groupName: Design Patterns và lựa chọn giải pháp
+  questions:
+  - question: Strategy Pattern giải quyết nhu cầu gì?
+    readmeRelated:
+      anchorList:
+      - polymorphism-001
+      - polymorphism-009
+      - composition-005
+      - design-patterns-008
+      - refactoring-006
+    answers:
+    - id: A
+      answer: Tạo duy nhất một instance
+      explanation: 'Sai: một instance toàn hệ thống là ý tưởng Singleton, không phải Strategy.'
+    - id: B
+      answer: Thay thế thuật toán/chính sách thông qua interface và composition
+      explanation: 'Đúng: Strategy đóng gói các chính sách/thuật toán cùng contract, inject hoặc chọn implementation qua composition.'
+    - id: C
+      answer: Thích ứng hợp đồng SDK ngoài
+      explanation: 'Sai: đổi interface không tương thích là mục tiêu Adapter.'
+    - id: D
+      answer: Lưu history undo
+      explanation: 'Sai: ghi lịch sử lệnh và undo thường thuộc Command Pattern.'
+    correctAnswerId: B
+  - question: Factory Method và Abstract Factory khác nhau ở đâu?
+    readmeRelated:
+      anchorList:
+      - lifecycle-005
+      - design-patterns-002
+    answers:
+    - id: A
+      answer: Factory Method có điểm mở rộng tạo product; Abstract Factory tạo họ product liên quan
+      explanation: 'Đúng: Factory Method mở điểm tạo product qua subclass/hook; Abstract Factory cung cấp một họ product phối
+        hợp.'
+    - id: B
+      answer: Hai pattern hoàn toàn đồng nghĩa
+      explanation: 'Sai: hai pattern có ý định và cấu trúc khác nhau, nhất là product family của Abstract Factory.'
+    - id: C
+      answer: Abstract Factory chỉ trả primitive
+      explanation: 'Sai: Abstract Factory có thể trả object sản phẩm, không bị giới hạn primitive.'
+    - id: D
+      answer: Factory Method cấm subclass
+      explanation: 'Sai: Factory Method theo GoF thường dựa extension của creator, nên không cấm subclass.'
+    correctAnswerId: A
+  - question: Builder hữu ích nhất khi nào?
+    readmeRelated:
+      anchorList:
+      - lifecycle-005
+      - design-patterns-003
+      - testing-002
+    answers:
+    - id: A
+      answer: Object có một trường đơn giản
+      explanation: 'Sai: một trường đơn giản thường đủ rõ với constructor/record, không cần Builder.'
+    - id: B
+      answer: Không muốn validate input
+      explanation: 'Sai: Builder không tự miễn validation; invariant vẫn phải được kiểm tra khi build hoặc trước đó.'
+    - id: C
+      answer: Object có nhiều tham số bắt buộc/tùy chọn và cần dựng hợp lệ theo API dễ đọc
+      explanation: 'Đúng: Builder giúp API nhiều tham số dễ đọc, có thể kiểm tra đủ required và tính hợp lệ trước khi tạo
+        Product.'
+    - id: D
+      answer: Cần thay interface ở runtime
+      explanation: 'Sai: thay collaborator runtime là tình huống Strategy/composition, không phải mục tiêu chính của Builder.'
+    correctAnswerId: C
+  - question: Adapter Pattern dùng làm gì?
+    readmeRelated:
+      anchorList:
+      - abstraction-008
+      - composition-003
+      - design-patterns-005
+    answers:
+    - id: A
+      answer: Bổ sung logging vào cùng interface
+      explanation: 'Sai: thêm logging nhưng giữ cùng interface là điển hình Decorator.'
+    - id: B
+      answer: Đảm bảo singleton thread-safe
+      explanation: 'Sai: thread safety của Singleton cần kiểm soát shared state, không do Adapter.'
+    - id: C
+      answer: Gom nhiều subsystem thành API cấp cao
+      explanation: 'Sai: cung cấp API cấp cao cho subsystem là Facade.'
+    - id: D
+      answer: Chuyển đổi hợp đồng không tương thích giữa client và dependency
+      explanation: 'Đúng: Adapter chuyển API có chữ ký/semantics khác thành contract client mong muốn.'
+    correctAnswerId: D
+  - question: Facade Pattern giải quyết bài toán nào?
+    readmeRelated:
+      anchorList:
+      - composition-003
+      - design-patterns-007
+    answers:
+    - id: A
+      answer: Đảm bảo object chỉ có một instance
+      explanation: 'Sai: chỉ một instance là mục tiêu của Singleton, không phải Facade.'
+    - id: B
+      answer: Đưa ra API đơn giản cấp cao cho subsystem nhiều thành phần
+      explanation: 'Đúng: Facade cung cấp điểm vào gọn cho quy trình subsystem, giảm số component client phải biết.'
+    - id: C
+      answer: Thay đổi equality contract
+      explanation: 'Sai: đổi contract không tương thích là Adapter; Facade thường đơn giản hóa mức sử dụng.'
+    - id: D
+      answer: Tạo record immutable
+      explanation: 'Sai: tạo record bất biến không phải mục đích Facade.'
+    correctAnswerId: B
+  - question: Decorator và Proxy có mục đích khác nhau thế nào?
+    readmeRelated:
+      anchorList:
+      - composition-003
+      - design-patterns-006
+    answers:
+    - id: A
+      answer: Decorator bổ sung hành vi; Proxy đại diện/kiểm soát truy cập hoặc lazy/remote access
+      explanation: 'Đúng: Decorator thêm logging/validation hành vi quanh component; Proxy ưu tiên kiểm soát access/lazy/remote.'
+    - id: B
+      answer: Decorator không bao giờ bọc object
+      explanation: 'Sai: Decorator thường bọc object giữ cùng contract; cấu trúc wrapper là cốt lõi.'
+    - id: C
+      answer: Proxy luôn chuyển interface
+      explanation: 'Sai: Proxy thường giữ interface của real subject để thay thế trong lời gọi client.'
+    - id: D
+      answer: Hai pattern hoàn toàn giống mục đích
+      explanation: 'Sai: cả hai đều wrapper nhưng ý định chính khác nên không đồng nghĩa.'
+    correctAnswerId: A
+  - question: Observer cần xử lý gì để tránh listener leak?
+    readmeRelated:
+      anchorList:
+      - lifecycle-006
+      - design-patterns-010
+      - testing-010
+    answers:
+    - id: A
+      answer: Chỉ dùng static list
+      explanation: 'Sai: static listener list dễ giữ tham chiếu mạnh lâu quá mức, gây memory retention.'
+    - id: B
+      answer: Không cho unsubscribe
+      explanation: 'Sai: cấm đăng ký thì không còn Observer hữu ích; cần quản lý đăng ký có chủ đích.'
+    - id: C
+      answer: Có lifecycle subscription và cơ chế unsubscribe/close
+      explanation: 'Đúng: subscription close/unsubscribe ngắt tham chiếu publisher→listener khi hết vòng đời cần nhận sự kiện.'
+    - id: D
+      answer: Luôn phát callback đồng thời
+      explanation: 'Sai: gọi callback đồng thời không giải quyết vấn đề listener không được giải phóng.'
+    correctAnswerId: C
+  - question: Template Method thường dùng cơ chế nào?
+    readmeRelated:
+      anchorList:
+      - inheritance-003
+      - polymorphism-004
+      - design-patterns-011
+    answers:
+    - id: A
+      answer: Chỉ dùng composition
+      explanation: 'Sai: Template Method theo GoF dùng inheritance/hook, không chỉ composition.'
+    - id: B
+      answer: Chỉ dùng enum
+      explanation: 'Sai: enum không bắt buộc và không định nghĩa template algorithm.'
+    - id: C
+      answer: Không cần inheritance
+      explanation: 'Sai: biến thể trong Template Method dựa vào override của subclass.'
+    - id: D
+      answer: Superclass cố định khung thuật toán, subclass override bước/hook
+      explanation: 'Đúng: base giữ thứ tự thuật toán, subclass chỉ thay bước hoặc hook được thiết kế.'
+    correctAnswerId: D
+  - question: Singleton có mặc nhiên thread-safe không?
+    readmeRelated:
+      anchorList:
+      - design-patterns-004
+      - design-pitfalls-008
+      - testing-003
+    answers:
+    - id: A
+      answer: Có, do private constructor
+      explanation: 'Sai: private constructor giới hạn tạo instance nhưng không đồng bộ các mutation sau đó.'
+    - id: B
+      answer: Không; shared mutable state vẫn cần cơ chế đồng bộ/ownership phù hợp
+      explanation: 'Đúng: một instance shared mutable state vẫn có race; cần atomic/lock/immutable/confinement tùy tình huống.'
+    - id: C
+      answer: Có, vì chỉ một instance
+      explanation: 'Sai: chỉ có một instance khiến nguy cơ chia sẻ state cao hơn, không tự an toàn.'
+    - id: D
+      answer: Có, vì JVM khóa mọi method
+      explanation: 'Sai: JVM không khóa tự động mọi method của Singleton.'
+    correctAnswerId: B
+  - question: Command Pattern hữu ích cho nhu cầu nào?
+    readmeRelated:
+      anchorList:
+      - design-patterns-012
+    answers:
+    - id: A
+      answer: Đóng gói yêu cầu thành object để queue/schedule hoặc undo/redo theo contract
+      explanation: 'Đúng: Command object gói yêu cầu và tham số, giúp tách invoker/receiver, queue hoặc undo theo contract.'
+    - id: B
+      answer: Chỉ tạo object qua factory
+      explanation: 'Sai: tạo object qua factory thuộc nhóm creational pattern khác.'
+    - id: C
+      answer: Đưa mọi field public
+      explanation: 'Sai: public field không phải mục tiêu, còn làm giảm đóng gói.'
+    - id: D
+      answer: Bảo đảm toàn bộ thao tác transactional
+      explanation: 'Sai: Command không tự đảm bảo giao dịch nguyên tử hay rollback của external side effect.'
+    correctAnswerId: A
+- groupID: 9
+  groupName: Domain modeling và ranh giới ứng dụng
+  questions:
+  - question: Domain service phù hợp khi nào?
+    readmeRelated:
+      anchorList:
+      - class-design-006
+      - modeling-003
+      - solid-002
+    answers:
+    - id: A
+      answer: Khi mọi getter cần chuyển thành service
+      explanation: 'Sai: chuyển mọi getter thành service tạo anemic model và nhiều lớp không có trách nhiệm.'
+    - id: B
+      answer: Khi controller trực tiếp làm SQL
+      explanation: 'Sai: controller thực thi SQL là trách nhiệm hạ tầng bị đặt sai chỗ.'
+    - id: C
+      answer: Quy tắc domain không thuộc rõ về riêng một entity/value object
+      explanation: 'Đúng: khi rule liên quan nhiều entity hoặc không thuộc một object riêng, domain service/policy là nơi
+        hợp lý.'
+    - id: D
+      answer: Khi DTO có ít field
+      explanation: 'Sai: số lượng field DTO không quyết định có cần domain service.'
+    correctAnswerId: C
+  - question: Vì sao không nên đặt toàn bộ business rule trong controller?
+    readmeRelated:
+      anchorList:
+      - encapsulation-008
+      - class-design-004
+      - class-design-007
+      - modeling-001
+    answers:
+    - id: A
+      answer: Vì controller không thể gọi domain
+      explanation: 'Sai: controller vẫn có thể gọi entity/domain method bình thường.'
+    - id: B
+      answer: Vì controller không tạo object được
+      explanation: 'Sai: controller có thể tạo object; nguy cơ nằm ở nơi đặt rule.'
+    - id: C
+      answer: Vì Spring cấm
+      explanation: 'Sai: Java/Spring không cấm rule ở controller; đó là vấn đề thiết kế.'
+    - id: D
+      answer: Vì batch/message consumer có thể bỏ qua hoặc nhân bản quy tắc
+      explanation: 'Đúng: API, batch, message consumer cần cùng rule; đặt hết ở controller làm mỗi entry point dễ lệch.'
+    correctAnswerId: D
+  - question: Application service và domain object nên phân nhiệm thế nào?
+    readmeRelated:
+      anchorList:
+      - object-009
+      - class-design-004
+      - class-design-007
+      - modeling-003
+      - testing-010
+    answers:
+    - id: A
+      answer: Domain object dựng HTTP response
+      explanation: 'Sai: render HTTP response là trách nhiệm adapter/controller, không của domain core.'
+    - id: B
+      answer: Application service điều phối use case/repository/transaction, domain bảo vệ hành vi/invariant
+      explanation: 'Đúng: app service điều phối load/save/transaction, còn domain xử lý rule và invariant thuộc mình.'
+    - id: C
+      answer: Application service dùng reflection sửa field
+      explanation: 'Sai: reflection phá đóng gói và bỏ qua hành vi kiểm soát state.'
+    - id: D
+      answer: Domain object mở trực tiếp JDBC cho mọi thao tác
+      explanation: 'Sai: domain không nên buộc mỗi method mở kết nối JDBC, vì sẽ phụ thuộc hạ tầng.'
+    correctAnswerId: B
+  - question: Tách persistence model và domain model nhằm mục đích gì?
+    readmeRelated:
+      anchorList:
+      - abstraction-008
+      - class-design-004
+      - modeling-009
+      - solid-006
+    answers:
+    - id: A
+      answer: Tránh chi tiết DB/ORM chi phối domain bằng mapper/adapter
+      explanation: 'Đúng: mapper/adapter cô lập DB mapping, ORM/lazy-loading khỏi mô hình nghiệp vụ cần test độc lập.'
+    - id: B
+      answer: Bắt buộc tạo hai database
+      explanation: 'Sai: tách model không yêu cầu hai database vật lý.'
+    - id: C
+      answer: Bỏ hết value object
+      explanation: 'Sai: value object vẫn hữu ích để biểu diễn giá trị và invariant.'
+    - id: D
+      answer: Đảm bảo mọi entity là JPA Entity
+      explanation: 'Sai: domain entity không nhất thiết là JPA @Entity; có thể dùng persistence model riêng.'
+    correctAnswerId: A
+  - question: Một DTO phục vụ CRUD đơn giản có luôn là thiết kế xấu không?
+    readmeRelated:
+      anchorList:
+      - oop-basic-008
+      - abstraction-007
+      - class-design-007
+      - design-patterns-013
+    answers:
+    - id: A
+      answer: Có, mọi object phải có behavior
+      explanation: 'Sai: object dữ liệu đơn giản có thể đúng với CRUD ít business rules.'
+    - id: B
+      answer: Có, mọi object phải là aggregate root
+      explanation: 'Sai: DTO không cần là aggregate root vì nó thường chỉ truyền dữ liệu giữa boundary.'
+    - id: C
+      answer: Không; data model đơn giản có thể đúng nếu nghiệp vụ ít quy tắc
+      explanation: 'Đúng: data model đơn giản phù hợp khi hành vi nghiệp vụ ít; rich model cần thiết hơn khi có invariant/state
+        transition phức tạp.'
+    - id: D
+      answer: Có, DTO không thuộc Java
+      explanation: 'Sai: DTO là cấu trúc Java/OOP hợp lệ, chỉ cần tránh nhầm nó với rich domain model.'
+    correctAnswerId: C
+  - question: Để chống lost update khi hai request ghi cùng bản ghi nên cân nhắc gì?
+    readmeRelated:
+      anchorList:
+      - design-pitfalls-008
+      - testing-003
+      - practice-010
+    answers:
+    - id: A
+      answer: Chỉ đổi private field
+      explanation: 'Sai: private field bảo vệ đường sửa trong object, không ngăn hai transaction ghi đè trên DB.'
+    - id: B
+      answer: Chuyển mọi field thành static
+      explanation: 'Sai: static field chia sẻ trạng thái không giải quyết lost update giữa nhiều request/process.'
+    - id: C
+      answer: Chỉ dùng synchronized ở controller một node
+      explanation: 'Sai: synchronized ở một controller node không bảo vệ cạnh tranh qua nhiều node/DB transaction.'
+    - id: D
+      answer: Optimistic locking/version hoặc conditional update trong transaction phù hợp
+      explanation: 'Đúng: version/conditional update phát hiện bản ghi đổi từ lúc đọc và xử lý cạnh tranh theo transaction.'
+    correctAnswerId: D
+- groupID: 10
+  groupName: Testing và test doubles
+  questions:
+  - question: Muốn kiểm thử nhiều implementation một interface theo cùng hợp đồng nên dùng gì?
+    readmeRelated:
+      anchorList:
+      - abstraction-004
+      - interface-008
+      - testing-004
+      - testing-005
+    answers:
+    - id: A
+      answer: Chỉ test implementation đầu
+      explanation: 'Sai: test một implementation không chứng minh các implementation khác cùng thỏa contract.'
+    - id: B
+      answer: Một bộ contract test chung với ca thành công và ca lỗi
+      explanation: 'Đúng: dùng chung contract tests bảo vệ postcondition, lỗi và edge cases của tất cả concrete class.'
+    - id: C
+      answer: Chỉ so số dòng code
+      explanation: 'Sai: số dòng code không đo được ngữ nghĩa hành vi thay thế.'
+    - id: D
+      answer: Chỉ test constructor
+      explanation: 'Sai: test constructor không chứng minh method xử lý đúng toàn bộ hợp đồng.'
+    correctAnswerId: B
+  - question: Stub khác mock trong test theo mục đích nào?
+    readmeRelated:
+      anchorList:
+      - testing-006
+    answers:
+    - id: A
+      answer: Stub cung cấp phản hồi định sẵn, mock thường xác minh kỳ vọng interaction
+      explanation: 'Đúng: stub trả dữ liệu/response có kiểm soát; mock thường xác minh collaborator được gọi theo kỳ vọng.'
+    - id: B
+      answer: Stub chỉ dùng DB
+      explanation: 'Sai: stub có thể thay bất kỳ external collaborator phù hợp, không chỉ database.'
+    - id: C
+      answer: Mock bắt buộc kết nối HTTP
+      explanation: 'Sai: mock có thể chạy hoàn toàn trong memory và không cần HTTP thật.'
+    - id: D
+      answer: Stub không được triển khai interface
+      explanation: 'Sai: stub hoàn toàn có thể triển khai một interface để thay production dependency.'
+    correctAnswerId: A
+  - question: Fake thường là gì trong kiểm thử?
+    readmeRelated:
+      anchorList:
+      - testing-006
+      - testing-007
+    answers:
+    - id: A
+      answer: Một object không có phương thức
+      explanation: 'Sai: fake là implementation đơn giản vẫn thực hiện chức năng, không phải object rỗng vô dụng.'
+    - id: B
+      answer: Một exception giả
+      explanation: 'Sai: fake không phải một loại exception; nó thay dependency trong test.'
+    - id: C
+      answer: Một implementation đơn giản hoạt động, ví dụ repository in-memory
+      explanation: 'Đúng: repository in-memory hoạt động theo contract là fake, thuận tiện cho test không dùng database thật.'
+    - id: D
+      answer: Một công cụ profiler
+      explanation: 'Sai: profiler đo hệ thống, không phải một test double.'
+    correctAnswerId: C
+  - question: Vì sao test hành vi public thường bền hơn test private detail?
+    readmeRelated:
+      anchorList:
+      - testing-001
+      - testing-008
+      - refactoring-009
+    answers:
+    - id: A
+      answer: Private method luôn không test được
+      explanation: 'Sai: private method có thể được kiểm thử gián tiếp qua public behavior; không phải luôn bất khả thi.'
+    - id: B
+      answer: Public test không cần assertion
+      explanation: 'Sai: public behavior test vẫn phải assert kết quả và state/lỗi như người dùng quan sát.'
+    - id: C
+      answer: Private method chỉ chạy ở compile time
+      explanation: 'Sai: JVM không tự bỏ mọi private method ở compile time theo quy tắc này.'
+    - id: D
+      answer: Giữ hợp đồng quan sát được khi internal implementation thay đổi
+      explanation: 'Đúng: test public contract bền hơn khi refactor đổi thuật toán/cách gọi nội bộ mà hành vi không đổi.'
+    correctAnswerId: D
+  - question: Overmocking thường gây hậu quả gì?
+    readmeRelated:
+      anchorList:
+      - testing-008
+      - refactoring-009
+      - testing-010
+    answers:
+    - id: A
+      answer: Tự động bảo vệ mọi transaction
+      explanation: 'Sai: overmocking không tự xác minh toàn bộ constraint và transaction thực tế của database.'
+    - id: B
+      answer: Test quá bám thứ tự/số lần gọi nội bộ, dễ vỡ dù behavior không đổi
+      explanation: 'Đúng: mock verify quá chi tiết cách gọi khiến test fail khi refactor tương đương về hành vi.'
+    - id: C
+      answer: Luôn làm test chạy nhanh hơn
+      explanation: 'Sai: mock thường không tạo transaction DB thật, cần integration test khi trách nhiệm đó quan trọng.'
+    - id: D
+      answer: Ngăn được race condition
+      explanation: 'Sai: mock không ngăn race condition; đồng thời cần kiểm thử và cơ chế riêng.'
+    correctAnswerId: B
+  - question: Trước khi refactor một class cũ chưa có test, nên làm gì?
+    readmeRelated:
+      anchorList:
+      - testing-009
+      - refactoring-009
+      - practice-006
+    answers:
+    - id: A
+      answer: Viết characterization/regression tests để khóa hành vi hiện tại
+      explanation: 'Đúng: characterization tests ghi lại output, error và side effect hiện tại để refactor từng bước không
+        đổi behavior.'
+    - id: B
+      answer: Xóa class cũ ngay
+      explanation: 'Sai: xóa class trước khi có baseline/test dễ phá behavior chưa được mô tả.'
+    - id: C
+      answer: Chỉ đo số dòng code
+      explanation: 'Sai: giảm số dòng không chứng minh contract nghiệp vụ còn đúng.'
+    - id: D
+      answer: Đổi toàn bộ method thành static
+      explanation: 'Sai: đổi thành static thay đổi phụ thuộc/ownership, không thay thế test bảo vệ.'
+    correctAnswerId: A
+- groupID: 11
+  groupName: Code smells, refactoring và tương thích API
+  questions:
+  - question: Feature Envy gợi ý hướng refactor nào?
+    readmeRelated:
+      anchorList:
+      - class-design-009
+      - modeling-003
+      - refactoring-004
+    answers:
+    - id: A
+      answer: Thêm getter cho mọi field
+      explanation: 'Sai: thêm getter làm lộ dữ liệu sâu hơn, có thể tăng Feature Envy thay vì sửa.'
+    - id: B
+      answer: Chuyển thành singleton
+      explanation: 'Sai: Singleton chỉ đổi lifecycle, không đặt lại trách nhiệm về đúng object.'
+    - id: C
+      answer: Cân nhắc Move Method tới object thực sự sở hữu thông tin/trách nhiệm
+      explanation: 'Đúng: nếu một method dùng nhiều dữ liệu của object khác, Move Method/Extract Class giúp đưa hành vi về
+        chủ sở hữu thích hợp.'
+    - id: D
+      answer: Xóa mọi interface
+      explanation: 'Sai: xóa mọi interface không trực tiếp giải quyết behavior đặt sai nơi.'
+    correctAnswerId: C
+  - question: Data Clumps có thể được xử lý thế nào?
+    readmeRelated:
+      anchorList:
+      - class-design-006
+      - modeling-002
+      - refactoring-003
+      - practice-005
+    answers:
+    - id: A
+      answer: Đặt mọi tham số thành String
+      explanation: 'Sai: Map<String,Object> bỏ type safety và không luôn thể hiện quan hệ giữa cụm dữ liệu.'
+    - id: B
+      answer: Copy cụm tham số sang nhiều nơi
+      explanation: 'Sai: tiếp tục copy các tham số làm drift theo thay đổi và sai thứ tự/đơn vị.'
+    - id: C
+      answer: Bỏ validation
+      explanation: 'Sai: bỏ validation khiến cụm dữ liệu có thể không hợp lệ, trái mục tiêu cải thiện thiết kế.'
+    - id: D
+      answer: Nhóm dữ liệu có ý nghĩa thành parameter object/value object khi phù hợp
+      explanation: 'Đúng: parameter/value object gom những trường luôn đi cùng vì một khái niệm, có thể bảo vệ invariant tại
+        một nơi.'
+    correctAnswerId: D
+  - question: Tầng chỉ chuyển tiếp lời gọi có nên bị xóa hết không?
+    readmeRelated:
+      anchorList:
+      - solid-008
+      - design-patterns-013
+      - refactoring-008
+    answers:
+    - id: A
+      answer: Có, kể cả tầng giữ auth
+      explanation: 'Sai: một tầng bảo vệ authorization có trách nhiệm thật; xóa nó có thể làm mất kiểm soát truy cập.'
+    - id: B
+      answer: Chỉ loại tầng dư; giữ boundary thực sự như transaction, mapping, authorization
+      explanation: 'Đúng: chỉ bỏ pass-through không có vai trò; giữ các boundary transaction, mapping, auth hay contract công
+        khai cần thiết.'
+    - id: C
+      answer: Có, nếu dùng Spring
+      explanation: 'Sai: framework Spring không tự chứng minh một facade là thừa hoặc cần thiết.'
+    - id: D
+      answer: Chỉ giữ tầng có nhiều method
+      explanation: 'Sai: số method không đủ đánh giá một tầng có trách nhiệm riêng hay không.'
+    correctAnswerId: B
+  - question: Để đổi public API đang có nhiều caller an toàn, nên làm gì?
+    readmeRelated:
+      anchorList:
+      - abstraction-003
+      - testing-009
+      - refactoring-009
+    answers:
+    - id: A
+      answer: Giữ adapter tương thích/deprecation khi cần, di chuyển caller từng bước và kiểm tra contract
+      explanation: 'Đúng: adapter tương thích, giai đoạn deprecation, test caller giúp thay API mà giảm breaking change.'
+    - id: B
+      answer: Xóa API ngay
+      explanation: 'Sai: xóa API ngay làm consumer biên dịch/chạy thất bại nếu còn dùng chữ ký cũ.'
+    - id: C
+      answer: Đổi mọi return thành Object
+      explanation: 'Sai: trả Object thay đổi contract/type safety và không tự tạo khả năng tương thích.'
+    - id: D
+      answer: Bỏ kiểm thử integration
+      explanation: 'Sai: integration tests giúp phát hiện lỗi ở wiring/framework và client path khi API đổi.'
+    correctAnswerId: A
+- groupID: 12
+  groupName: Shared mutable state, object contracts và review
+  questions:
+  - question: Mutable object chia sẻ giữa nhiều thread có nguy cơ nào?
+    readmeRelated:
+      anchorList:
+      - object-007
+      - design-patterns-004
+      - design-pitfalls-008
+      - testing-003
+    answers:
+    - id: A
+      answer: Mọi operation tự động nguyên tử
+      explanation: 'Sai: object mutable chia sẻ không làm mọi thao tác tự động atomic.'
+    - id: B
+      answer: Mọi field tự có volatile
+      explanation: 'Sai: field không mặc định volatile; thiếu happens-before có thể gây stale read.'
+    - id: C
+      answer: Lost update hoặc stale read khi thiếu synchronization/visibility
+      explanation: 'Đúng: write cạnh tranh có thể mất cập nhật và thiếu visibility; dùng confinement, immutability, lock/atomic
+        khi phù hợp.'
+    - id: D
+      answer: Mọi thread tự deep copy object
+      explanation: 'Sai: nhiều thread có thể cùng tham chiếu một instance, JVM không deep copy cho từng thread.'
+    correctAnswerId: C
+  - question: volatile trong Java có ý nghĩa gì?
+    readmeRelated:
+      anchorList:
+      - design-patterns-004
+      - design-pitfalls-008
+      - testing-003
+    answers:
+    - id: A
+      answer: Làm count++ nguyên tử
+      explanation: 'Sai: volatile không biến count++ thành nguyên tử vì phép này gồm đọc, cộng và ghi riêng.'
+    - id: B
+      answer: Thay thế DB transaction
+      explanation: 'Sai: DB transaction và consistency cần cơ chế ở datastore, không thể thay bằng volatile JVM.'
+    - id: C
+      answer: Biến mọi collection thành thread-safe
+      explanation: 'Sai: volatile trên một field không làm toàn bộ collection hoặc compound operation thread-safe.'
+    - id: D
+      answer: Tăng bảo đảm visibility/ordering nhưng không biến read-modify-write thành atomic
+      explanation: 'Đúng: volatile cung cấp visibility/ordering cho biến liên quan, nhưng không đồng bộ read-modify-write
+        thành một bước.'
+    correctAnswerId: D
+  - question: Khi object đang nằm trong HashSet đổi field dùng bởi equals/hashCode, vấn đề gì có thể xảy ra?
+    readmeRelated:
+      anchorList:
+      - object-004
+      - language-mechanics-006
+      - design-pitfalls-009
+      - testing-001
+    answers:
+    - id: A
+      answer: Set tự rehash ngay
+      explanation: 'Sai: HashSet không tự rehash entry sau khi bạn mutate field ảnh hưởng hashCode của object đã lưu.'
+    - id: B
+      answer: contains có thể không thấy object dù reference vẫn còn trong set
+      explanation: 'Đúng: bucket lựa chọn từ hash cũ có thể khác hash mới, khiến contains tìm không thấy object.'
+    - id: C
+      answer: Java luôn ném ConcurrentModificationException
+      explanation: 'Sai: sửa field của object không bắt buộc gây ConcurrentModificationException của HashSet.'
+    - id: D
+      answer: Object tự thành immutable
+      explanation: 'Sai: tập không làm object đang lưu thành immutable khi add.'
+    correctAnswerId: B
+  - question: equals trong hierarchy inheritance có nguy cơ gì?
+    readmeRelated:
+      anchorList:
+      - object-004
+      - language-mechanics-006
+      - testing-001
+      - testing-005
+    answers:
+    - id: A
+      answer: Vi phạm symmetry/transitivity khi base và subtype so sánh không nhất quán
+      explanation: 'Đúng: base/subclass so sánh theo tiêu chí khác nhau có thể làm a.equals(b) khác b.equals(a) hoặc phá transitivity.'
+    - id: B
+      answer: Chỉ dùng được với String
+      explanation: 'Sai: equals được Object định nghĩa, mọi reference type đều có thể dùng hoặc override hợp đồng.'
+    - id: C
+      answer: Luôn buộc ném UnsupportedOperationException
+      explanation: 'Sai: Java không chỉ cho String dùng equals; String chỉ là một implementation cụ thể.'
+    - id: D
+      answer: Không được override
+      explanation: 'Sai: equals(Object) có thể override nhưng phải giữ phản xạ, đối xứng, bắc cầu và nhất quán.'
+    correctAnswerId: A
+  - question: toString với object graph hai chiều nên chú ý gì?
+    readmeRelated:
+      anchorList:
+      - object-003
+      - relationships-006
+      - language-mechanics-007
+      - testing-001
+    answers:
+    - id: A
+      answer: Luôn in mật khẩu phục vụ debug
+      explanation: 'Sai: mật khẩu/token là dữ liệu nhạy cảm, không nên đưa trực tiếp vào toString/log.'
+    - id: B
+      answer: Bắt buộc gọi equals trước
+      explanation: 'Sai: toString không có yêu cầu gọi equals trước khi dựng chuỗi.'
+    - id: C
+      answer: Tránh recursion vô hạn, lộ dữ liệu nhạy cảm và chi phí render
+      explanation: 'Đúng: hai chiều có thể gọi toString lẫn nhau vô hạn; cần giới hạn field, tránh PII/secrets và output đắt.'
+    - id: D
+      answer: Luôn gọi System.gc
+      explanation: 'Sai: System.gc không liên quan hợp đồng biểu diễn chuỗi và không ngăn recursion.'
+    correctAnswerId: C
+  - question: Escape analysis trong Java được hiểu đúng thế nào?
+    readmeRelated:
+      anchorList:
+      - oop-basic-008
+      - lifecycle-001
+    answers:
+    - id: A
+      answer: Mọi object được tạo trên stack
+      explanation: 'Sai: JVM không đảm bảo mọi object được cấp phát trên stack; cách cấp phát là chi tiết tối ưu runtime.'
+    - id: B
+      answer: Mọi final field loại bỏ allocation
+      explanation: 'Sai: final field không đủ điều kiện cho compiler loại bỏ mọi allocation.'
+    - id: C
+      answer: JIT bắt buộc tối ưu tất cả allocation
+      explanation: 'Sai: JIT có thể không tối ưu trong nhiều trường hợp, tùy escape/analysis/biên dịch và profile.'
+    - id: D
+      answer: JIT có thể tối ưu một số allocation khi đủ điều kiện; không nên giả định luôn xảy ra
+      explanation: 'Đúng: escape analysis có thể hỗ trợ scalar replacement/eliminate allocation khi hợp lệ, nhưng không có
+        bảo đảm tuyệt đối.'
+    correctAnswerId: D
+  - question: Khi lo nhiều object nhỏ làm chậm hệ thống, cách xác minh nào phù hợp?
+    readmeRelated:
+      anchorList:
+      - oop-basic-008
+      - lifecycle-007
+      - refactoring-001
+    answers:
+    - id: A
+      answer: Dùng JFR/profiler/benchmark để đo allocation, GC, latency rồi mới tối ưu
+      explanation: 'Đúng: profiling/JFR và benchmark theo workload giúp biết allocation rate, GC pressure, latency trước tối
+        ưu.'
+    - id: B
+      answer: Chuyển mọi object thành singleton
+      explanation: 'Sai: singleton toàn cục tạo shared state/coupling và có thể làm concurrency khó hơn.'
+    - id: C
+      answer: Xóa tất cả value object
+      explanation: 'Sai: value object nhỏ có thể cải thiện tính rõ ràng; chỉ bỏ khi số liệu chứng minh chi phí đáng kể.'
+    - id: D
+      answer: Cho mọi field là static
+      explanation: 'Sai: static field gây chia sẻ state và không tự giảm allocation đúng chỗ.'
+    correctAnswerId: A
+  - question: Trong code review OOP nên ưu tiên câu hỏi nào?
+    readmeRelated:
+      anchorList:
+      - encapsulation-002
+      - class-design-001
+      - class-design-002
+      - class-design-003
+      - modeling-009
+      - solid-008
+      - testing-001
+      - refactoring-009
+    answers:
+    - id: A
+      answer: Có đủ tất cả GoF pattern chưa
+      explanation: 'Sai: đếm pattern không chứng minh class đúng responsibility hoặc an toàn state.'
+    - id: B
+      answer: Số interface đã nhiều hơn số class chưa
+      explanation: 'Sai: số interface/class lớn có thể là overengineering, không phải chỉ số chất lượng.'
+    - id: C
+      answer: Trách nhiệm, invariant, dependencies, testability và kịch bản thay đổi đã đúng, rõ và vừa đủ chưa
+      explanation: 'Đúng: review cần đối chiếu invariant, trách nhiệm, coupling, testability và thay đổi thật để đánh giá
+        trade-off.'
+    - id: D
+      answer: Method nào cũng một return chưa
+      explanation: 'Sai: số lệnh return trong method không quyết định chất lượng thiết kế OOP.'
+    correctAnswerId: C

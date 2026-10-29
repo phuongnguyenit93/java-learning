@@ -158,6 +158,7 @@ class SheetsTaskPlugin
                 generateModuleVideoFromSheetByLocation  : 'VIDEO',
                 generateModuleInterviewFromSheetByLocation: 'INTERVIEW',
                 generateModuleQuizFromSheetByLocation: 'QUIZ',
+                generateModuleAssessmentsFromSheetByLocation: 'ASSESSMENTS',
                 generateModuleReferenceFromSheetByLocation: 'REFERENCE',
                 generateModuleSummaryFromSheetByLocation: 'SUMMARY',
                 fillModuleLessonIdsFromSheetByLocation: 'FILL_LESSON_IDS'

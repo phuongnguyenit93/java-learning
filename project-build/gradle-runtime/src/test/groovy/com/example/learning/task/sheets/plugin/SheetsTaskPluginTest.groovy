@@ -25,7 +25,8 @@ class SheetsTaskPluginTest {
                 generateModuleRoadmapFromSheetByLocation: 'ROADMAP',
                 generateModuleReadmeFromSheetByLocation : 'README',
                 generateModuleVideoFromSheetByLocation  : 'VIDEO',
-                generateModuleInterviewFromSheetByLocation: 'INTERVIEW'
+                generateModuleInterviewFromSheetByLocation: 'INTERVIEW',
+                generateModuleAssessmentsFromSheetByLocation: 'ASSESSMENTS'
         ]
         expected.each { String taskName, String part ->
             def task = project.tasks.named(
@@ -35,7 +36,7 @@ class SheetsTaskPluginTest {
             assertEquals('DRY_RUN', task.mode.get())
             assertEquals('sheets', task.group)
         }
-        assertEquals(5, expected.size())
+        assertEquals(6, expected.size())
         def fillIntro = project.tasks.named('fillIntroduction', FillIntroductionTask).get()
         assertEquals('DRY_RUN', fillIntro.mode.get())
         assertEquals('sheets', fillIntro.group)

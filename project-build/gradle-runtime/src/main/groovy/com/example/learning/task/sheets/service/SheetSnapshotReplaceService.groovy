@@ -20,6 +20,7 @@ class SheetSnapshotReplaceService {
             ['content', 'readme', 'metadata', 'vi'],
             ['content', 'interview', 'vi'],
             ['content', 'quiz', 'vi'],
+            ['content', 'casestudy', 'vi'],
             ['content', 'video', 'vi'],
             ['content', 'video', 'vi', 'menu']
     ].asImmutable()
