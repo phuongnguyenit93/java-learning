@@ -160,11 +160,6 @@ enum ProjectPluginEnum {
             'com.example.learning.task.sheets.plugin.SheetsTaskPlugin'
     ),
 
-    SWAGGER_TASK_PLUGIN(
-            'com.example.learning.task.swagger.plugin',
-            'com.example.learning.task.swagger.plugin.SwaggerTaskPlugin'
-    ),
-
     YML_TASK_PLUGIN(
             'com.example.learning.task.yml.plugin',
             'com.example.learning.task.yml.plugin.YmlTaskPlugin'

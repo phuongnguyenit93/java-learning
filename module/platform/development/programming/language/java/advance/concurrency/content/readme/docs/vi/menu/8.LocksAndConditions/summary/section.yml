@@ -1,0 +1,96 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "LOCKS & CONDITIONS — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: locks-and-conditions-001
+    order: 1
+    title: "Lock interface so với intrinsic monitor"
+    description: "Thiết lập mô hình về intrinsic monitor và hợp đồng Lock: mutual exclusion, happens-before, reentrancy, quyền sở hữu và các thao tác quản lý khóa."
+    transition:
+      to: locks-and-conditions-002
+      description: "Sau khi phân biệt hai cách đồng bộ, đi sâu vào cách dùng ReentrantLock mà không làm rò rỉ quyền sở hữu."
+  - id: locks-and-conditions-002
+    order: 2
+    title: "ReentrantLock: lock(), unlock() và finally"
+    description: "Thực hành lấy và nhả ReentrantLock đúng quyền sở hữu, bảo vệ critical section kể cả khi return hoặc exception và hiểu hold count."
+    transition:
+      to: locks-and-conditions-003
+      description: "Khi quy tắc nhả khóa đã vững, xét cách tránh chờ vô hạn bằng acquisition có điều kiện và timeout."
+  - id: locks-and-conditions-003
+    order: 3
+    title: "tryLock() và timeout khi tranh chấp khóa"
+    description: "Điều khiển tranh chấp bằng tryLock ngay lập tức hoặc có timeout, phân biệt thất bại lấy lock, interrupt và timeout tổng nghiệp vụ."
+    transition:
+      to: locks-and-conditions-004
+      description: "Sau thời hạn chờ, xét riêng khả năng hủy hợp tác bằng interruption trong lúc thread đang đợi khóa."
+  - id: locks-and-conditions-004
+    order: 4
+    title: "lockInterruptibly() và hỗ trợ hủy khi chờ lock"
+    description: "Làm chủ acquisition có thể ngắt, xử lý InterruptedException và hợp đồng hủy tác vụ khi đang chờ tài nguyên chung."
+    transition:
+      to: locks-and-conditions-005
+      description: "Sau khi hiểu quyền điều khiển thứ tự và hủy, xem fairness ảnh hưởng đến phân phối quyền truy cập cùng throughput."
+  - id: locks-and-conditions-005
+    order: 5
+    title: "Fairness policy: throughput và starvation"
+    description: "Đánh giá đánh đổi giữa fair/nonfair lock, throughput, tail latency, barging và nguy cơ starvation trên workload có tranh chấp."
+    transition:
+      to: locks-and-conditions-006
+      description: "Từ việc điều phối quyền vào critical section, chuyển sang cơ chế chờ điều kiện nghiệp vụ trong chính critical section."
+  - id: locks-and-conditions-006
+    order: 6
+    title: "Condition await(), signal(), signalAll()"
+    description: "Thiết kế phối hợp thread bằng Condition gắn với ReentrantLock, phân biệt predicate với tín hiệu và chọn signal hoặc signalAll."
+    transition:
+      to: locks-and-conditions-007
+      description: "Sau khi biết giao thức await/signal, chứng minh vì sao waiter phải kiểm tra lại predicate trong vòng lặp."
+  - id: locks-and-conditions-007
+    order: 7
+    title: "Vì sao await() luôn cần vòng lặp kiểm tra điều kiện"
+    description: "Giải thích và kiểm chứng bằng interleaving vì sao Condition.await cần vòng while trước spurious wakeup, signalAll và tranh chấp tài nguyên."
+    transition:
+      to: locks-and-conditions-008
+      description: "Khi đã nắm cách chờ điều kiện an toàn, chuyển sang thiết kế tách quyền đọc và ghi cho workload đọc nhiều."
+  - id: locks-and-conditions-008
+    order: 8
+    title: "ReadWriteLock cho read-heavy workload"
+    description: "Giới thiệu read/write locking cho read-heavy workload, yêu cầu bảo vệ snapshot nhất quán và so sánh với cấu trúc concurrent hoặc immutable state."
+    transition:
+      to: locks-and-conditions-009
+      description: "Từ mô hình nhiều reader và một writer, đi sâu vào giới hạn nâng/hạ cấp khóa của ReentrantReadWriteLock."
+  - id: locks-and-conditions-009
+    order: 9
+    title: "ReentrantReadWriteLock: nâng/hạ cấp khóa và giới hạn"
+    description: "Đào sâu giới hạn upgrade, giao thức downgrade, reentrancy, Condition và fairness của ReentrantReadWriteLock."
+    transition:
+      to: locks-and-conditions-010
+      description: "Khi nắm các giới hạn read/write lock, xem một lựa chọn khác là StampedLock với optimistic read có xác thực."
+  - id: locks-and-conditions-010
+    order: 10
+    title: "StampedLock với optimistic read"
+    description: "Thực hành optimistic read, validation, fallback và chuyển đổi stamp trong StampedLock không tái nhập."
+    transition:
+      to: locks-and-conditions-011
+      description: "Từ các API cụ thể, tổng hợp chi phí, rủi ro và tiêu chí chọn cơ chế đồng bộ cho một workload thực."
+  - id: locks-and-conditions-011
+    order: 11
+    title: "Chi phí, độ phức tạp và tiêu chí chọn loại lock"
+    description: "Tổng hợp tiêu chí lựa chọn và đo lường chi phí giữa synchronized, ReentrantLock, ReadWriteLock, StampedLock và các cách tránh lock."
+    transition:
+      to: locks-and-conditions-012
+      description: "Cuối cùng áp dụng tư duy ownership vào hệ nhiều khóa, nơi thứ tự acquisition có thể quyết định có deadlock hay không."
+  - id: locks-and-conditions-012
+    order: 12
+    title: "Lock hierarchy và cách tránh thứ tự khóa vòng"
+    description: "Thiết kế lock hierarchy và thứ tự acquisition toàn cục để loại bỏ deadlock do circular wait trong nghiệp vụ giữ nhiều khóa."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Lock interface so với intrinsic monitor | ReentrantLock: lock(), unlock() và finally | tryLock() và timeout khi tranh chấp khóa | lockInterruptibly() và hỗ trợ hủy khi chờ lock | Fairness policy: throughput và starvation | Condition await(), signal(), signalAll() | Vì sao await() luôn cần vòng lặp kiểm tra điều kiện | ReadWriteLock cho read-heavy workload | ReentrantReadWriteLock: nâng/hạ cấp khóa và giới hạn | StampedLock với optimistic read | Chi phí, độ phức tạp và tiêu chí chọn loại lock | Lock hierarchy và cách tránh thứ tự khóa vòng |
+  | Vấn đề cần hiểu | Monitor và Lock giống hoặc khác nhau thế nào? | Giữ và nhả ReentrantLock sao cho an toàn? | Làm sao không đợi lock vô hạn? | Ngắt một thread đang chờ khóa sao cho an toàn? | Fair lock có đáng đổi throughput để giảm starvation không? | Điều phối thread khi một trạng thái nghiệp vụ chưa thỏa? | Vì sao wakeup không chứng minh điều kiện đúng? | Cho nhiều reader chạy cùng lúc có lợi khi nào? | Nâng/hạ cấp read-write lock an toàn thế nào? | Snapshot lạc quan nhất quán cần validate ra sao? | Cơ chế đồng bộ nào phù hợp với chi phí và invariant? | Làm sao phá vòng chờ giữa nhiều khóa? |
+  | Giá trị đối với OOP/module | Nền tảng chọn cơ chế đồng bộ hóa | Ngăn rò khóa và sai dữ liệu | Quản trị deadline và phản hồi contention | Hỗ trợ cancellation có kiểm soát | Chọn chính sách theo số liệu thực | Xây dựng producer-consumer đúng | Loại bỏ lỗi lost signal và lấy tài nguyên sai | Bảo vệ trạng thái đọc nhiều một cách nhất quán | Tránh deadlock và stale state khi chuyển chế độ khóa | Giảm read contention khi hợp lý | Ra quyết định kiến trúc có dữ liệu đo | Ngăn deadlock có hệ thống |
+  | Tư duy hình thành | Lập luận bằng invariant và ownership | Mỗi acquisition có một đường release bảo đảm | Biến việc chờ thành quyết định có giới hạn | Interrupt là yêu cầu hợp tác với ranh giới an toàn | Cân bằng fairness với chi phí scheduling | State quyết định hành động, signal chỉ đánh thức | Luôn kiểm tra predicate khi nắm đúng khóa | Chọn cấu trúc đồng bộ theo profile đọc/ghi | Quyền đọc và quyền ghi có hợp đồng chuyển đổi riêng | Lạc quan có kiểm chứng rồi mới dùng dữ liệu | Ưu tiên tính đúng, rồi mới tối ưu bằng benchmark | Quy ước một thứ tự toàn cục cho mọi đường thực thi |

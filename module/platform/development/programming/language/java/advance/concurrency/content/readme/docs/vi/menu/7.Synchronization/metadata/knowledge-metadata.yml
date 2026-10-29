@@ -1,0 +1,37 @@
+sections:
+  synchronization-001:
+    difficulty: BASIC
+    isImportant: true
+  synchronization-002:
+    difficulty: BASIC
+    isImportant: true
+  synchronization-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  synchronization-004:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  synchronization-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  synchronization-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  synchronization-007:
+    difficulty: ADVANCED
+    isImportant: true
+  synchronization-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  synchronization-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  synchronization-010:
+    difficulty: ADVANCED
+    isImportant: true
+  synchronization-011:
+    difficulty: ADVANCED
+    isImportant: false
+  synchronization-012:
+    difficulty: ADVANCED
+    isImportant: true

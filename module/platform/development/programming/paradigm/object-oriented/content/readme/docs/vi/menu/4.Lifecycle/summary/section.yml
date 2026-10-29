@@ -6,72 +6,63 @@ roadmap:
 - id: lifecycle-001
   order: 1
   title: Tạo đối tượng và cấp phát tài nguyên
-  description: Phân biệt instance, tham chiếu và tài nguyên ngoài JVM, theo dõi quá trình `new`, rồi chủ động đóng resource
-    thay vì chờ GC.
+  description: Phân biệt instance, tham chiếu và tài nguyên ngoài JVM, theo dõi quá trình `new`, rồi chủ động đóng resource thay vì chờ GC.
   transition:
     to: lifecycle-002
     description: '**Từ tạo instance → xác định thế nào là trạng thái khởi tạo hợp lệ**'
 - id: lifecycle-002
   order: 2
   title: Hàm khởi tạo và thiết lập trạng thái hợp lệ
-  description: Định nghĩa invariant và tổ chức validation, defensive copy, `final` để một constructor hoàn tất luôn tạo trạng
-    thái hợp lệ.
+  description: Định nghĩa invariant và tổ chức validation, defensive copy, `final` để một constructor hoàn tất luôn tạo trạng thái hợp lệ.
   transition:
     to: lifecycle-003
     description: '**Từ bảo vệ invariant → lựa chọn những đường gọi constructor duy trì invariant đó**'
 - id: lifecycle-003
   order: 3
   title: Khởi tạo mặc định, tham số và nhiều cách khởi tạo
-  description: Phân biệt default/no-arg/parameterized constructors, thiết kế overload và nối chuỗi `this(...)`/`super(...)`
-    bảo vệ cùng quy tắc.
+  description: Phân biệt default/no-arg/parameterized constructors, thiết kế overload và nối chuỗi `this(...)`/`super(...)` bảo vệ cùng quy tắc.
   transition:
     to: lifecycle-004
     description: '**Từ chuỗi this/super → truy vết toàn bộ thứ tự khởi tạo trong kế thừa**'
 - id: lifecycle-004
   order: 4
   title: Thứ tự khởi tạo trong quan hệ kế thừa
-  description: Truy vết static initializer, instance initializer và constructor theo chiều lớp cha đến lớp con; phát hiện
-    override chạy quá sớm.
+  description: Truy vết static initializer, instance initializer và constructor theo chiều lớp cha đến lớp con; phát hiện override chạy quá sớm.
   transition:
     to: lifecycle-005
     description: '**Từ cơ chế constructor → mở rộng sang API tạo đối tượng có tên và cấu hình**'
 - id: lifecycle-005
   order: 5
   title: Hàm tạo tĩnh, Factory và Builder
-  description: Lựa chọn constructor, static factory, Factory chọn implementation hoặc Builder để diễn đạt cách tạo object
-    phù hợp API.
+  description: Lựa chọn constructor, static factory, Factory chọn implementation hoặc Builder để diễn đạt cách tạo object phù hợp API.
   transition:
     to: lifecycle-006
     description: '**Từ cách tạo object → xem object còn tồn tại bao lâu và ai đang giữ tham chiếu**'
 - id: lifecycle-006
   order: 6
   title: Thời gian tồn tại, khả năng truy cập và giải phóng bộ nhớ
-  description: Đọc đồ thị GC roots và lifetime theo reachability, phát hiện alias, cache, listener hay ThreadLocal làm đối
-    tượng bị giữ lại.
+  description: Đọc đồ thị GC roots và lifetime theo reachability, phát hiện alias, cache, listener hay ThreadLocal làm đối tượng bị giữ lại.
   transition:
     to: lifecycle-007
     description: '**Từ đồ thị reachability → hiểu GC thực sự thu hồi gì và đo bộ nhớ thế nào**'
 - id: lifecycle-007
   order: 7
   title: Thu gom rác và quản lý bộ nhớ thủ công
-  description: Giải thích trách nhiệm của GC đối với heap và giới hạn với native resource, đo đạc các dạng memory pressure
-    khác nhau.
+  description: Giải thích trách nhiệm của GC đối với heap và giới hạn với native resource, đo đạc các dạng memory pressure khác nhau.
   transition:
     to: lifecycle-008
     description: '**Từ cơ chế quản lý heap → quy định thời điểm hoàn trả tài nguyên ngoài heap**'
 - id: lifecycle-008
   order: 8
   title: Đóng tài nguyên và giới hạn của hàm hủy
-  description: Thiết kế quyền sở hữu và `close()` có thời điểm rõ ràng bằng try-with-resources, kể cả khi có nhiều tài nguyên
-    và lỗi khi đóng.
+  description: Thiết kế quyền sở hữu và `close()` có thời điểm rõ ràng bằng try-with-resources, kể cả khi có nhiều tài nguyên và lỗi khi đóng.
   transition:
     to: lifecycle-009
     description: '**Từ đóng đúng vòng đời sử dụng → bảo đảm không công bố object trước khi sẵn sàng**'
 - id: lifecycle-009
   order: 9
   title: Tránh để đối tượng chưa khởi tạo xong bị sử dụng
-  description: |-
-    Bảo đảm object được khởi tạo hoàn tất trước khi công bố cho callback, thread hay registry; sử dụng safe publication phù hợp.
+  description: Bảo đảm object được khởi tạo hoàn tất trước khi công bố cho callback, thread hay registry; sử dụng safe publication phù hợp.
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

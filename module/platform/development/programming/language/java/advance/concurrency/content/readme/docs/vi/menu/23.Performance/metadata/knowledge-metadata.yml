@@ -1,0 +1,40 @@
+sections:
+  performance-001:
+    difficulty: BASIC
+    isImportant: true
+  performance-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  performance-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  performance-004:
+    difficulty: ADVANCED
+    isImportant: true
+  performance-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  performance-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  performance-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  performance-008:
+    difficulty: ADVANCED
+    isImportant: false
+  performance-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  performance-010:
+    difficulty: ADVANCED
+    isImportant: true
+  performance-011:
+    difficulty: ADVANCED
+    isImportant: true
+  performance-012:
+    difficulty: ADVANCED
+    isImportant: true
+  performance-013:
+    difficulty: INTERMEDIATE
+    isImportant: false

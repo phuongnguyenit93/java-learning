@@ -1,0 +1,481 @@
+summaries:
+- id: concurrent-collections-001
+  title: Vì sao ArrayList và HashMap không an toàn khi truy cập chung?
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vì sao ArrayList và HashMap không an toàn khi truy cập chung?**
+
+    Lý giải data race, visibility và check-then-act trên ArrayList/HashMap dùng chung; từ đó xác định khi nào cần khóa hoặc chọn concurrent collection.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### An toàn cấu trúc
+
+    1. Những trường trạng thái nào khiến ArrayList/HashMap dễ race khi nhiều writer cùng truy cập?
+    2. Vì sao không có ConcurrentModificationException cũng chưa chứng minh collection an toàn?
+
+    ### Kiểm thử và sửa lỗi
+
+    1. Làm sao điều phối interleaving để tái hiện lost update của get-then-put?
+    2. Khi nào đọc đồng thời được chấp nhận sau safe publication và khi nào cần monitor?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích lỗi | Chỉ ra lịch xen kẽ làm sai size hoặc mất cập nhật. |
+    | Thiết kế bảo vệ | Chọn lock và scope thao tác phù hợp invariant. |
+    | Kiểm thử | Dùng latch tạo race xác định, kiểm tra kết quả cuối. |
+- id: concurrent-collections-002
+  title: 'ConcurrentHashMap: putIfAbsent(), compute(), merge()'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ConcurrentHashMap: putIfAbsent(), compute(), merge()**
+
+    Chọn putIfAbsent, compute và merge đúng mục đích cập nhật mapping; hiểu return value, callback và giới hạn nguyên tử theo key.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chọn API
+
+    1. putIfAbsent, compute và merge khác nhau ra sao khi key absent hoặc present?
+    2. Vì sao get rồi put vẫn làm mất lượt tăng dù dùng ConcurrentHashMap?
+
+    ### Callback và lỗi
+
+    1. Khi callback trả null hoặc ném exception, mapping cuối cùng ra sao?
+    2. Vì sao callback chứa I/O dài hay mutate chính map dễ gây lỗi hoặc contention?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Khởi tạo | Dùng putIfAbsent cho case cài nếu vắng. |
+    | Cộng dồn | Viết counter với merge hoặc compute tránh lost update. |
+    | Đọc kết quả | Dự đoán mapping và return value ở nhánh null/exception. |
+- id: concurrent-collections-003
+  title: Atomic compound operations của ConcurrentHashMap
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Atomic compound operations của ConcurrentHashMap**
+
+    Kết hợp conditional remove/replace, computeIfAbsent, LongAdder, phạm vi atomic và bảo đảm multi-key; phân tích lỗi ABA, mutable value, contention.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Atomicity theo mapping
+
+    1. remove(key,value) và replace(key,old,new) chống stale write như thế nào?
+    2. Vì sao một chuỗi method thread-safe vẫn có thể phá invariant?
+
+    ### Invariant và hiệu năng
+
+    1. LongAdder với computeIfAbsent giải quyết contention nào và sum có phải snapshot nguyên tử không?
+    2. Tình huống nào đòi đồng bộ riêng vì invariant trải qua nhiều key?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Conditional updates | Triển khai CAS theo mapping và xử lý thất bại. |
+    | Đánh giá invariant | Chỉ rõ điểm tuyến tính hóa, phạm vi atomicity. |
+    | Phân tích counter | Giải thích LongAdder, hot key và giới hạn snapshot. |
+- id: concurrent-collections-004
+  title: Weakly consistent iteration và snapshot semantics
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Weakly consistent iteration và snapshot semantics**
+
+    Phân biệt fail-fast, weakly consistent, snapshot cấu trúc và point-in-time snapshot để đọc dữ liệu đang được cập nhật.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa iterator
+
+    1. Weakly consistent iterator có thể thấy các cập nhật nào và không hứa điều gì?
+    2. Iterator CopyOnWriteArrayList khác iterator ConcurrentHashMap ra sao?
+
+    ### Snapshot nhất quán
+
+    1. Vì sao new HashMap(concurrentMap) không tự tạo snapshot đồng bộ nhiều key?
+    2. Dùng lock hoặc immutable state cùng AtomicReference để cung cấp snapshot ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt iterator | So sánh fail-fast, weak và snapshot iterator. |
+    | Tạo trạng thái nhất quán | Chọn monitor hoặc immutable snapshot. |
+    | Kiểm chứng | Dựng lịch reader/writer thể hiện kết quả trộn thời điểm. |
+- id: concurrent-collections-005
+  title: 'CopyOnWriteArrayList: ưu và nhược điểm khi ghi nhiều'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CopyOnWriteArrayList: ưu và nhược điểm khi ghi nhiều**
+
+    Hiểu cách CopyOnWriteArrayList sao chép mảng khi ghi, giữ iterator snapshot và phát sinh memory/GC cost với workload write-heavy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Sao chép và snapshot
+
+    1. Vì sao iterator cũ không thấy add/set sau khi được tạo?
+    2. Mỗi lần ghi copy-on-write gây chi phí CPU và bộ nhớ như thế nào?
+
+    ### Workload và API
+
+    1. Khi nào addIfAbsent giải quyết race mà contains rồi add không giải quyết?
+    2. Tại sao list ghi thường xuyên nên cân nhắc giải pháp khác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán iteration | Tính nội dung iterator trước và sau cập nhật. |
+    | Ước lượng chi phí | Nêu hậu quả copy O(n) và giữ old arrays. |
+    | Chọn giải pháp | Đề xuất thay thế theo read/write ratio. |
+- id: concurrent-collections-006
+  title: ConcurrentLinkedQueue và ConcurrentLinkedDeque
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ConcurrentLinkedQueue và ConcurrentLinkedDeque**
+
+    Dùng queue/deque nonblocking để nhiều thread chuyển công việc, hiểu FIFO/LIFO, poll-null, size, weak iteration và protocol hoàn tất producer.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thao tác Queue/Deque
+
+    1. Queue khác Deque ở các thao tác đầu/cuối thế nào?
+    2. poll() trả null khác với consumer đợi item xuất hiện như thế nào?
+
+    ### Ordering và lifecycle
+
+    1. Vì sao peek rồi poll không tự nguyên tử cho cùng một item?
+    2. FIFO của queue có bảo đảm thứ tự completion giữa nhiều consumer không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế pipeline | Chọn offer/poll/peek và đầu/cuối deque. |
+    | Xác minh kết quả | Kiểm tra không mất/trùng item giữa các worker. |
+    | Dừng consumer | Nêu tín hiệu hoàn tất producer và rủi ro unbounded queue. |
+- id: concurrent-collections-007
+  title: ArrayBlockingQueue so với LinkedBlockingQueue
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ArrayBlockingQueue so với LinkedBlockingQueue**
+
+    Đánh giá capacity, memory, locking, fairness và put/take/offer của ArrayBlockingQueue so với LinkedBlockingQueue cho producer-consumer và executor.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc và API
+
+    1. Capacity và locking của ArrayBlockingQueue khác LinkedBlockingQueue như thế nào?
+    2. put/take và offer có timeout phản hồi full/empty ra sao?
+
+    ### Backpressure và executor
+
+    1. Tại sao LinkedBlockingQueue mặc định có rủi ro backlog rất lớn?
+    2. Queue capacity tác động thế nào tới ThreadPoolExecutor tăng threads hoặc reject task?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn queue | So sánh fixed array và linked bounded queue. |
+    | Áp dụng timeout | Thiết kế put hoặc timed offer theo yêu cầu. |
+    | Đọc tài nguyên | Đánh giá tác động memory và queueing tới executor. |
+- id: concurrent-collections-008
+  title: PriorityBlockingQueue, DelayQueue và SynchronousQueue
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **PriorityBlockingQueue, DelayQueue và SynchronousQueue**
+
+    Phân biệt ordering theo priority, delayed availability và direct handoff dung lượng 0, cùng các giới hạn starvation và timeout.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Priority và thời điểm sẵn sàng
+
+    1. PriorityBlockingQueue khác FIFO và có bảo đảm task ưu tiên hoàn tất trước không?
+    2. DelayQueue chỉ trả item khi điều kiện gì xảy ra?
+
+    ### Rendezvous
+
+    1. Vì sao SynchronousQueue có zero capacity mà vẫn chuyển được item?
+    2. Timed offer và interrupt tác động ra sao khi chưa có consumer?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn semantics | Ánh xạ yêu cầu priority/delay/rendezvous sang queue. |
+    | Xác định blocking | Dự đoán put/take/offer khi queue chưa đáp ứng. |
+    | Giảm starvation | Thiết kế tie-breaker và hạn chế trong executor. |
+- id: concurrent-collections-009
+  title: ConcurrentSkipListMap và ConcurrentSkipListSet
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ConcurrentSkipListMap và ConcurrentSkipListSet**
+
+    Thực hành sorted/navigable map và set đồng thời: comparator, lower/floor/ceiling/higher, range view, descending view và weak iteration.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Navigation và comparator
+
+    1. lower, floor, ceiling, higher trả kết quả ra sao với key không tồn tại?
+    2. Comparator quyết định tính duy nhất của sorted set như thế nào?
+
+    ### Range view và consistency
+
+    1. subMap/headMap/tailMap là snapshot hay backed live views?
+    2. Concurrent iteration ảnh hưởng size và kết quả navigable traversal như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết range query | Sử dụng navigation và views theo thứ tự. |
+    | Kiểm tra key | Nhận diện comparator không nhất quán với equals. |
+    | Đánh đổi | Chọn skip list khi cần sorted access thay vì hash map. |
+- id: concurrent-collections-010
+  title: Collections.synchronizedMap/List và yêu cầu khóa khi duyệt
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Collections.synchronizedMap/List và yêu cầu khóa khi duyệt**
+
+    Giải thích wrapper synchronized, monitor của collection và tại sao iterator/compound workflow vẫn cần khóa toàn vùng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Monitor và iteration
+
+    1. Synchronized wrapper bảo vệ một method bằng cơ chế nào?
+    2. Tại sao vòng iterator, stream hoặc spliterator còn yêu cầu external synchronization?
+
+    ### Scope của thao tác
+
+    1. Khi duyệt keySet/subList, phải khóa monitor nào?
+    2. Làm sao copy snapshot dưới lock để giảm thời gian critical section?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Khóa vòng duyệt | Viết synchronized(wrapper) bao toàn iteration. |
+    | Chống compound race | Bảo vệ chuỗi check-then-act cùng monitor. |
+    | Chọn snapshot | Copy dưới khóa và xử lý độc lập sau khi mở khóa. |
+- id: concurrent-collections-011
+  title: Concurrent queue, blocking queue và backpressure
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Concurrent queue, blocking queue và backpressure**
+
+    Thiết kế chiến lược overload với bounded queue, timed offer, rejection, CallerRunsPolicy, Semaphore và shutdown đúng cách.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chính sách quá tải
+
+    1. Thread-safe queue có tự tạo backpressure khi downstream chậm không?
+    2. put, timed offer và reject khác nhau về latency và loss policy?
+
+    ### Pipeline và vận hành
+
+    1. CallerRunsPolicy hoặc Semaphore tạo phản hồi tốc độ producer thế nào?
+    2. Khi shutdown nhiều consumer, làm sao tránh mất công việc và nghẽn vô hạn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn quá tải | So sánh block, timeout, reject, coalesce, durable queue. |
+    | Điều phối shutdown | Định nghĩa tín hiệu dừng và interrupt. |
+    | Theo dõi | Chọn queue depth, tail latency và rejection metrics. |
+- id: concurrent-collections-012
+  title: Chọn collection theo read/write ratio và ordering
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn collection theo read/write ratio và ordering**
+
+    Tổng hợp lựa chọn map/list/set/queue concurrent theo tỷ lệ đọc-ghi, ordering, snapshot, contention, capacity và benchmark thực.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Workload và ordering
+
+    1. FIFO, sorted, priority và insertion order khác nhau ở contract nào?
+    2. Read/write ratio và kích thước cấu trúc ảnh hưởng lựa chọn copy-on-write ra sao?
+
+    ### Đo đạc và quyết định
+
+    1. Khi nào ConcurrentHashMap nên được thay bằng ConcurrentSkipListMap?
+    2. Benchmark nào cần chạy để tránh phán đoán throughput từ tên implementation?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập ma trận | Ghép yêu cầu workload với collection phù hợp. |
+    | Bảo vệ correctness | Xác định ordering, boundedness và iterator semantics. |
+    | Đo hiệu năng | Đề xuất phép đo latency, throughput, memory với JMH. |
+- id: concurrent-collections-013
+  title: 'ConcurrentHashMap: chính sách null, computeIfAbsent() và giới hạn hàm ánh xạ'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ConcurrentHashMap: chính sách null, computeIfAbsent() và giới hạn hàm ánh xạ**
+
+    Hiểu ConcurrentHashMap cấm null key/value; xử lý nhánh absent, callback trả null/exception và hạn chế mapping function blocking hoặc recursive.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Absent và null
+
+    1. Tại sao ConcurrentHashMap không lưu null và get trả null biểu thị gì?
+    2. computeIfAbsent trả null hoặc ném lỗi thì map thay đổi thế nào?
+
+    ### Mapping function
+
+    1. Khi nào callback làm I/O dài gây contention hoặc treo?
+    2. Vì sao mapping function không được recursively sửa chính map?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán mapping | Phân tích present/absent, null return và exception. |
+    | Thiết kế loader | Chọn callback nhanh, tách I/O hoặc dùng FutureTask khi phù hợp. |
+    | Counter concurrency | Giải thích LongAdder và remove/replace value. |
+- id: concurrent-collections-014
+  title: Giá trị mutable trong ConcurrentHashMap vẫn cần hợp đồng thread safety riêng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giá trị mutable trong ConcurrentHashMap vẫn cần hợp đồng thread safety riêng**
+
+    Phân biệt map thread-safe với object value mutable; chọn AtomicInteger, LongAdder, immutable record, value lock và quản lý reference khi replace/remove.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Publication và state
+
+    1. Vì sao ConcurrentHashMap không tự bảo vệ các trường mutable của value?
+    2. get → mutate → put tạo lost update hoặc stale reference ra sao?
+
+    ### Giải pháp và lifecycle
+
+    1. Chọn immutable value + compute, atomic value hay synchronized value theo invariant thế nào?
+    2. Vì sao multi-key invariant và nested mutable graph vẫn cần synchronization bổ sung?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện race | Chứng minh lost update nằm trong value dù map an toàn. |
+    | Chọn đồng bộ | Thiết kế atomic field, lock hoặc immutable replacement. |
+    | Quản lý reference | Phân tích remove/replace và stable value identity. |
+- id: concurrent-collections-015
+  title: CopyOnWriteArraySet và tính chất snapshot của iterator khi có ghi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CopyOnWriteArraySet và tính chất snapshot của iterator khi có ghi**
+
+    Phân tích snapshot iterator, uniqueness theo equals, deep mutability và chi phí copy/retention của CopyOnWriteArraySet.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Snapshot set
+
+    1. Iterator cũ còn thấy phần tử vừa bị remove không?
+    2. Snapshot cấu trúc có deep-copy object elements không?
+
+    ### Equality và workload
+
+    1. Equals của element mutable có thể phá kỳ vọng uniqueness thế nào?
+    2. Khi nào CopyOnWriteArraySet phù hợp hơn ConcurrentHashMap.newKeySet?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán iteration | Giải thích nội dung snapshot cũ và mới. |
+    | Phân tích value | Nhận biết mutable element và old reference retention. |
+    | Lựa chọn | Đánh giá read-mostly listener set và write cost. |
+- id: concurrent-collections-016
+  title: 'TransferQueue và BlockingDeque: chuyển giao trực tiếp và thao tác hai đầu'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **TransferQueue và BlockingDeque: chuyển giao trực tiếp và thao tác hai đầu**
+
+    So sánh TransferQueue direct transfer với BlockingDeque hai đầu; hiểu tryTransfer, timeout, capacity, interruption và khác biệt giữa nhận và xử lý xong.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chuyển giao trực tiếp
+
+    1. transfer, tryTransfer và offer khác nhau ở điều kiện consumer nhận item thế nào?
+    2. Vì sao transfer thành công không chứng minh processing của consumer đã hoàn tất?
+
+    ### Deque và lifecycle
+
+    1. BlockingDeque tổ chức FIFO/LIFO bằng các thao tác đầu/cuối ra sao?
+    2. Timed wait và interruption của LinkedBlockingDeque ảnh hưởng shutdown thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn handoff | So sánh LinkedTransferQueue và SynchronousQueue. |
+    | Thiết kế deque | Ánh xạ putFirst/takeLast hoặc push/pop vào yêu cầu. |
+    | Xác minh lifecycle | Phân biệt delivery, processing, timeout và capacity. |

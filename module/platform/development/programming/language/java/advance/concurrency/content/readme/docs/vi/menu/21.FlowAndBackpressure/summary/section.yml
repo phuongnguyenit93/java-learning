@@ -1,0 +1,103 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "FLOW & BACKPRESSURE — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: flow-and-backpressure-001
+    order: 1
+    title: "Flow API trong java.util.concurrent"
+    description: "Giới thiệu java.util.concurrent.Flow, bốn interface nền tảng và nhu cầu điều tiết tốc độ giữa bên phát với bên nhận."
+    transition:
+      to: flow-and-backpressure-002
+      description: "Từ bức tranh Flow tổng quan, đi sâu trách nhiệm và giao thức của bốn thành phần."
+  - id: flow-and-backpressure-002
+    order: 2
+    title: "Publisher, Subscriber, Subscription, Processor"
+    description: "Giải thích riêng bốn vai trò Flow và cách subscription kết nối các tín hiệu, demand cùng hai chiều của Processor."
+    transition:
+      to: flow-and-backpressure-003
+      description: "Khi các vai trò đã rõ, tập trung vào con số demand được khai báo bằng request(n)."
+  - id: flow-and-backpressure-003
+    order: 3
+    title: "request(n) và demand-driven consumption"
+    description: "Phân tích request(n) như cơ chế cấp tín dụng cho onNext và cách subscriber bổ sung demand theo khả năng xử lý."
+    transition:
+      to: flow-and-backpressure-004
+      description: "Demand điều phối item, còn callback biểu diễn các tín hiệu và kết thúc của subscription."
+  - id: flow-and-backpressure-004
+    order: 4
+    title: "onSubscribe(), onNext(), onError(), onComplete()"
+    description: "Phân rã vòng đời callback onSubscribe/onNext/onError/onComplete và yêu cầu về thứ tự, demand, terminal signal."
+    transition:
+      to: flow-and-backpressure-005
+      description: "Từ contract callback chuyển sang triển khai SubmissionPublisher có executor và bộ đệm riêng."
+  - id: flow-and-backpressure-005
+    order: 5
+    title: "SubmissionPublisher và executor sử dụng"
+    description: "Làm rõ SubmissionPublisher sử dụng Executor để phát callback bất đồng bộ và cách cấu hình pool, buffer, tài nguyên."
+    transition:
+      to: flow-and-backpressure-006
+      description: "Sau executor và buffer, cần tách bạch bản chất backpressure với việc tích trữ dữ liệu."
+  - id: flow-and-backpressure-006
+    order: 6
+    title: "Backpressure khác buffering thế nào?"
+    description: "Đối chiếu cơ chế lưu đệm dữ liệu với tín hiệu backpressure và xem cách Flow kết hợp demand với buffer."
+    transition:
+      to: flow-and-backpressure-007
+      description: "Khi đã phân biệt demand và đệm, xét giới hạn bộ nhớ và chính sách đối với consumer chậm."
+  - id: flow-and-backpressure-007
+    order: 7
+    title: "Giới hạn buffer và chính sách xử lý chậm"
+    description: "Đánh giá buffer theo subscriber, tình huống downstream chậm và chính sách chờ/drop/retry cùng các metric quá tải."
+    transition:
+      to: flow-and-backpressure-008
+      description: "Ngoài giới hạn buffer, pipeline cần một giao thức hủy để ngừng nhận và giải phóng tài nguyên."
+  - id: flow-and-backpressure-008
+    order: 8
+    title: "Hủy subscription và giải phóng tài nguyên"
+    description: "Phân biệt cancel trên subscription với đóng publisher và thiết kế cleanup an toàn khi hủy, lỗi hoặc tín hiệu cạnh tranh."
+    transition:
+      to: flow-and-backpressure-009
+      description: "Từ cancel và cleanup, cần xem thread safety của callback và cách truyền lỗi qua các biên bất đồng bộ."
+  - id: flow-and-backpressure-009
+    order: 9
+    title: "Thread safety trong callback và xử lý lỗi"
+    description: "Phân tích thread safety theo từng subscription, shared state giữa callbacks và mô hình xử lý lỗi/cancel/terminal."
+    transition:
+      to: flow-and-backpressure-010
+      description: "Đặt Flow vào tương quan với cách producer–consumer truyền item bằng BlockingQueue."
+  - id: flow-and-backpressure-010
+    order: 10
+    title: "Flow API của JDK so với blocking queue"
+    description: "So sánh Flow push-with-demand với BlockingQueue blocking put/take để chọn mô hình giao tiếp phù hợp."
+    transition:
+      to: flow-and-backpressure-011
+      description: "Từ so sánh các mô hình, đánh giá điều kiện nên và chưa nên dựng pipeline theo sự kiện."
+  - id: flow-and-backpressure-011
+    order: 11
+    title: "Khi phù hợp để xây pipeline theo sự kiện"
+    description: "Đưa ra tiêu chí chọn event-driven pipeline và các đánh đổi về stage, backpressure, lỗi và tài nguyên."
+    transition:
+      to: flow-and-backpressure-012
+      description: "Với pipeline chọn SubmissionPublisher, đi sâu hai API phát item khi buffer có thể đầy."
+  - id: flow-and-backpressure-012
+    order: 12
+    title: "SubmissionPublisher.submit() so với offer(): xử lý subscriber chậm và buffer đầy"
+    description: "Làm rõ sự khác nhau của submit, offer và timed offer với buffer theo subscriber, drop callback và giá trị trả về."
+    transition:
+      to: flow-and-backpressure-013
+      description: "Sau cách phát khi buffer đầy, kết thúc chương bằng vòng đời terminal của publisher, subscriber và executor."
+  - id: flow-and-backpressure-013
+    order: 13
+    title: "Đóng SubmissionPublisher, tín hiệu kết thúc và vòng đời executor của publisher"
+    description: "Tổng kết close/closeExceptionally, terminal signal và trách nhiệm dọn dẹp executor do ứng dụng sở hữu."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 | Bài 13 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Flow API trong java.util.concurrent | Publisher, Subscriber, Subscription, Processor | request(n) và demand-driven consumption | onSubscribe(), onNext(), onError(), onComplete() | SubmissionPublisher và executor sử dụng | Backpressure khác buffering thế nào? | Giới hạn buffer và chính sách xử lý chậm | Hủy subscription và giải phóng tài nguyên | Thread safety trong callback và xử lý lỗi | Flow API của JDK so với blocking queue | Khi phù hợp để xây pipeline theo sự kiện | SubmissionPublisher.submit() so với offer(): xử lý subscriber chậm và buffer đầy | Đóng SubmissionPublisher, tín hiệu kết thúc và vòng đời executor của publisher |
+  | Vấn đề cần hiểu | Flow API là gì và vì sao cần giao thức demand? | Ai phát, ai nhận và ai giữ quyền yêu cầu/hủy? | Subscriber điều tiết bao nhiêu item được phép giao như thế nào? | Khi nào callback xuất hiện và lúc nào luồng đã thực sự kết thúc? | Callback chạy ở đâu và điều gì xảy ra khi executor thiếu năng lực? | Lưu tạm item có giống điều tiết tốc độ của nguồn không? | Khi một subscriber làm đầy buffer, phải xử lý item tiếp theo thế nào? | Hủy một subscriber thì điều gì dừng và tài nguyên nào vẫn còn? | Callback được tuần tự hóa có tự làm mọi trạng thái an toàn không? | Nên dùng hợp đồng subscription hay một queue producer–consumer? | Khi nào tách xử lý thành pipeline sự kiện thực sự có lợi? | Publisher nên chờ hay drop khi một subscriber không theo kịp? | Khi nào publisher đóng và khi nào downstream thật sự đã hoàn tất? |
+  | Giá trị đối với OOP/module | Nắm contract chuẩn để đọc và xây publisher–subscriber. | Thiết kế hợp đồng thành phần không nhầm hai chiều dữ liệu. | Chủ động giới hạn lượng xử lý đang diễn ra. | Tránh xử lý item sau terminal hay công bố kết quả quá sớm. | Chọn executor và giới hạn buffer có hiểu biết. | Không dùng queue lớn thay thế thiết kế điều tiết tải. | Kiểm soát bộ nhớ, mất dữ liệu và latency khi bão hòa. | Ngăn leak, chờ sai terminal và cleanup trùng. | Giữ invariant callback và không đánh rơi lỗi bất đồng bộ. | Chọn abstraction theo phân phối công việc và lifecycle. | Tránh over-engineering hoặc pipeline không giới hạn tải. | Dự đoán đúng blocking/timeout/drop của SubmissionPublisher. | Tránh mất terminal signal, leak executor và chờ sai thread. |
+  | Tư duy hình thành | Tách quyền nhận item khỏi nơi lưu tạm item. | Mọi liên kết phát–nhận có demand và lifecycle riêng. | Demand là quyền gửi có đếm được, không phải dung lượng heap. | Xem terminal signal là trạng thái giao thức, không phải lời gọi đồng bộ tức thì. | Tính năng bất đồng bộ vẫn phải có ngân sách thread và tài nguyên. | Bộ đệm hấp thụ burst; backpressure quyết định quyền tiếp nhận. | Đặt ngân sách buffer và policy theo hợp đồng nghiệp vụ. | Quản lý vòng đời ở đúng chủ sở hữu và đúng phạm vi subscription. | Hợp đồng tuần tự của subscription không thay thế đồng bộ state bên ngoài. | Phân biệt fan-out event với work-stealing qua queue. | Chọn kiến trúc từ tính chất luồng sự kiện và khả năng quan sát. | Mỗi lần phát item phải có chính sách bão hòa được kiểm chứng. | Đóng nguồn, chờ người nhận, rồi thu hồi tài nguyên theo ownership. |

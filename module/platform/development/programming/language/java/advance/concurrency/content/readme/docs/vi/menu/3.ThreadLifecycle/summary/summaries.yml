@@ -1,0 +1,342 @@
+summaries:
+- id: thread-lifecycle-001
+  title: Các trạng thái NEW, RUNNABLE và TERMINATED
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Các trạng thái NEW, RUNNABLE và TERMINATED**
+
+    Phân biệt các mốc NEW, RUNNABLE, TERMINATED và hiểu start(), run(), join() tác động đến vòng đời Thread như thế nào. Việc quan sát đúng giúp tránh nhầm thread đang được cấp CPU với thread sẵn sàng hoặc đã kết thúc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các mốc vòng đời
+
+    1. Vì sao new Thread(...) vẫn ở NEW khi chưa start()?
+    2. RUNNABLE có đồng nghĩa đang chiếm CPU không, và tại sao?
+    3. Ngoại lệ chưa xử lý đưa Thread đến trạng thái nào?
+
+    ### Thực hành với start và join
+
+    1. Gọi run() trực tiếp khác start() thế nào?
+    2. Dùng latch và join() tạo phép quan sát ba trạng thái ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại state | Dự đoán NEW, RUNNABLE, TERMINATED trong một trace tạo, chạy và kết thúc Thread. |
+    | Diễn giải khởi chạy | Viết ví dụ phân biệt run trực tiếp và start trên worker riêng. |
+    | Đọc kết thúc | Giải thích vì sao TERMINATED chưa bảo đảm tác vụ thành công. |
+- id: thread-lifecycle-002
+  title: Các trạng thái BLOCKED, WAITING, TIMED_WAITING
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Các trạng thái BLOCKED, WAITING, TIMED_WAITING**
+
+    Giải thích BLOCKED do tranh monitor, WAITING do chờ tín hiệu không thời hạn và TIMED_WAITING do chờ có thời hạn. Nhận diện nguyên nhân chờ giúp tránh kết luận mọi thread WAITING là treo.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất các trạng thái chờ
+
+    1. BLOCKED khác WAITING ở điều kiện và tài nguyên đang chờ ra sao?
+    2. Những thao tác nào đưa thread vào TIMED_WAITING?
+    3. notifyAll có trao monitor ngay cho waiter không?
+
+    ### Kiểm tra và chẩn đoán
+
+    1. Vì sao wait cần đúng monitor và vòng while kiểm tra condition?
+    2. Cần đọc stack và lock owner thế nào trước khi kết luận deadlock?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt chờ | Gán đúng state cho synchronized, wait, park và sleep. |
+    | Phân tích đánh thức | Vẽ diễn biến notify, lấy lại monitor rồi kiểm tra điều kiện. |
+    | Chẩn đoán | Dùng stack/owner phân biệt contention và chờ bình thường. |
+- id: thread-lifecycle-003
+  title: Chuyển trạng thái khi vào monitor hoặc chờ lock
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chuyển trạng thái khi vào monitor hoặc chờ lock**
+
+    Phân tích chuyển trạng thái khi đi vào synchronized monitor, khi Object.wait được đánh thức và khi chờ ReentrantLock, Condition hoặc LockSupport. Bài làm rõ vì sao chờ explicit lock không nhất thiết là BLOCKED.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Monitor và explicit lock
+
+    1. Vì sao synchronized contention có thể khiến thread BLOCKED?
+    2. Object.wait giải phóng monitor nào, và tại sao notify xong vẫn phải lấy lại monitor?
+    3. ReentrantLock khác intrinsic monitor ở biểu hiện trạng thái nào?
+
+    ### An toàn chờ tín hiệu
+
+    1. Vì sao Condition.await và Object.wait cần kiểm tra lại predicate?
+    2. Phân biệt deadlock với starvation bằng những dấu vết gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Theo dõi trạng thái | Giải thích chuyển WAITING sang BLOCKED sau notify khi monitor còn bận. |
+    | So sánh khóa | Đối chiếu synchronized, ReentrantLock, Condition và LockSupport. |
+    | Sửa điều kiện chờ | Dùng while và đúng monitor để tránh mất tín hiệu. |
+- id: thread-lifecycle-004
+  title: Chuyển trạng thái bởi sleep(), join(), wait()
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chuyển trạng thái bởi sleep(), join(), wait()**
+
+    So sánh sleep(), join(), wait() theo thread phải chờ, monitor được giữ hay nhả, deadline, interruption và visibility. Bài giúp chọn API đúng sự kiện chờ thay vì dựa vào timing.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng các API
+
+    1. sleep có nhả monitor đang giữ không?
+    2. join khiến caller hay thread đích chờ?
+    3. Object.wait khác sleep ở điều kiện sở hữu và nhả monitor thế nào?
+
+    ### Timeout và kết quả
+
+    1. Timed join trở về có chứng minh worker đã hoàn tất không?
+    2. Happens-before sau join thành công giúp đọc kết quả ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn API | Lựa chọn sleep, join, wait phù hợp một kịch bản cụ thể. |
+    | Phân tích lock | Chứng minh sleep giữ monitor còn wait giải phóng đúng monitor đang đợi. |
+    | Xử lý hạn chờ | Viết timed join và kiểm tra thread vẫn sống hay đã kết thúc. |
+- id: thread-lifecycle-005
+  title: Quan sát trạng thái bằng Thread.getState()
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Quan sát trạng thái bằng Thread.getState()**
+
+    Sử dụng getState() để quan sát cùng isAlive(), stack trace và nguồn chờ thật, không biến snapshot thành điều kiện điều phối. Bài chỉ rõ sự thay đổi nhanh của trạng thái và các kết luận sai thường gặp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giới hạn quan sát
+
+    1. Vì sao getState chỉ phản ánh một thời điểm?
+    2. getState và isAlive có tạo một snapshot nguyên tử không?
+    3. RUNNABLE có chứng minh CPU đang thực thi code không?
+
+    ### Quan sát có kiểm soát
+
+    1. Làm sao phối hợp latch và monitor để quan sát trạng thái chờ?
+    2. Khi thấy BLOCKED hoặc WAITING cần thêm stack/owner nào để chẩn đoán?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quan sát | Dựng phép thử getState với phối hợp đáng tin cậy. |
+    | Giải thích snapshot | Phân biệt trạng thái JVM, tiến trình CPU và tín hiệu hoàn thành. |
+    | Thay polling | Dùng join hoặc Future khi cần chờ kết quả thay vì liên tục đọc getState. |
+- id: thread-lifecycle-006
+  title: Scheduling và sự bất định của thứ tự thực thi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Scheduling và sự bất định của thứ tự thực thi**
+
+    Hiểu scheduling và các interleaving không bảo đảm thứ tự, kể cả khi gọi start theo một thứ tự cụ thể. Bài thực hành diễn đạt quan hệ phụ thuộc bằng latch, join và happens-before thay cho sleep hoặc yield.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lịch chạy bất định
+
+    1. Vì sao thứ tự start không ấn định thứ tự log hai worker?
+    2. RUNNABLE có đồng nghĩa đã được scheduler cấp CPU không?
+    3. Preemption và lock contention tác động lịch chạy thế nào?
+
+    ### Đảm bảo kết quả
+
+    1. Sleep hay yield có sửa race condition không?
+    2. Khi cần A xảy ra trước B, dùng latch và happens-before ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập luận interleaving | Đưa ra nhiều thứ tự hợp lệ của hai thread độc lập. |
+    | Sửa timing dependence | Thay sleep-based synchronization bằng latch hoặc join. |
+    | Bảo vệ invariant | Thiết kế kết quả không phụ thuộc lịch chạy cụ thể. |
+- id: thread-lifecycle-007
+  title: Ảnh hưởng của blocking I/O và chờ điều kiện
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ảnh hưởng của blocking I/O và chờ điều kiện**
+
+    Phân tích blocking I/O, điều kiện chờ và ảnh hưởng của chúng lên Thread.State, worker pool, interruption, timeout và cleanup. Bài cho thấy một số chờ native I/O vẫn có thể hiện RUNNABLE ở cấp JVM.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Điểm chờ và hiệu năng
+
+    1. Vì sao thread bị chặn bởi native I/O vẫn có thể là RUNNABLE?
+    2. Chờ dữ liệu từ pipe khác chờ condition ở nguyên nhân nào?
+    3. Nhiều platform threads blocking ảnh hưởng worker pool thế nào?
+
+    ### Thoát chờ an toàn
+
+    1. Khi nào BlockingQueue.take hoặc Condition.await tốt hơn busy-wait?
+    2. Interrupt có dừng ngay mọi I/O không, cần timeout và cleanup thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích blocking I/O | Dùng state và stack xác định nguyên nhân chờ tài nguyên. |
+    | Chọn primitive | Dùng Condition, wait/notify hoặc BlockingQueue theo điều kiện thực. |
+    | Xử lý hủy | Thiết kế deadline, interruption và resource cleanup. |
+- id: thread-lifecycle-008
+  title: Khởi chạy một lần và lỗi khởi chạy lại thread
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khởi chạy một lần và lỗi khởi chạy lại thread**
+
+    Khẳng định một đối tượng Thread chỉ start được một lần, kể cả sau TERMINATED; gọi lần nữa dẫn tới IllegalThreadStateException. Muốn chạy lại công việc, tạo Thread mới hoặc submit lại task cho executor.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Start một lần
+
+    1. Sau start, join rồi start lại sẽ xảy ra điều gì?
+    2. Gọi run trực tiếp có đưa đối tượng Thread qua một vòng đời mới không?
+    3. Vì sao join không reset trạng thái?
+
+    ### Tái sử dụng công việc
+
+    1. Vì sao tạo Thread mới là cách hợp lệ để lặp lại công việc?
+    2. ExecutorService tái dùng worker khác gì restart Thread instance?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán lỗi | Chỉ ra IllegalThreadStateException trong ví dụ start hai lần. |
+    | Chạy lại task | Viết đoạn thực thi Runnable hai lượt bằng Thread mới hoặc executor. |
+    | Quản lý vòng đời | Phân biệt đối tượng Thread với công việc được chạy. |
+- id: thread-lifecycle-009
+  title: Chờ thread hoàn tất mà không busy waiting
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chờ thread hoàn tất mà không busy waiting**
+
+    Chờ thread và tác vụ hoàn tất mà không spin CPU bằng join, CountDownLatch, Future hoặc awaitTermination. Bài giải thích visibility, timed wait, interruption và các vòng phụ thuộc gây deadlock.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Completion hiệu quả
+
+    1. Vì sao join tốt hơn vòng while đọc isAlive?
+    2. Sau join thành công có thể đọc dữ liệu do worker ghi vì quan hệ nào?
+    3. Timed join có thể trở về trước khi worker kết thúc không?
+
+    ### Nhiều tác vụ và deadlock
+
+    1. Khi nào latch hoặc Future.get phù hợp hơn join từng Thread?
+    2. Tại sao join trong lúc giữ lock có thể gây deadlock?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tránh busy waiting | Thay polling bằng join, Future hay latch phù hợp. |
+    | Chờ có hạn | Kiểm tra kết thúc và timeout đúng contract. |
+    | Sửa deadlock | Phân tích vòng chờ khóa/join và đổi thứ tự hợp lý. |
+- id: thread-lifecycle-010
+  title: Vòng đời tài nguyên gắn với thread
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vòng đời tài nguyên gắn với thread**
+
+    Phân biệt vòng đời Thread, task và resource; áp dụng try-with-resources, ThreadLocal.remove và finally để tránh rò tài nguyên/context khi worker được tái sử dụng. Bài cũng giải thích cancellation và shutdown.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Resource ownership
+
+    1. Vì sao Thread kết thúc không tự đóng mọi stream hay connection?
+    2. ThreadLocal có thể rò dữ liệu sang task kế tiếp trong pool thế nào?
+    3. Khi nào dùng try-with-resources hoặc ThreadLocal.remove?
+
+    ### Hủy và dọn dẹp
+
+    1. Future.cancel và shutdownNow có cưỡng bức mọi I/O dừng ngay không?
+    2. Daemon thread và InheritableThreadLocal có thay thế cleanup đúng owner không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Gán ownership | Xác định task hay executor sở hữu tài nguyên và điểm đóng thích hợp. |
+    | Ngăn rò ThreadLocal | Bọc set/use/remove bằng try/finally trong worker pool. |
+    | Cleanup sau lỗi | Đề xuất try-with-resources và shutdown khi hủy hoặc exception. |
+- id: thread-lifecycle-011
+  title: Phân biệt trạng thái thread và trạng thái nghiệp vụ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt trạng thái thread và trạng thái nghiệp vụ**
+
+    Tách Thread.State do JVM quan sát khỏi trạng thái nghiệp vụ của job như PENDING, RUNNING, SUCCEEDED, FAILED, CANCELLED. Bài hướng dẫn state machine có kiểm soát chuyển trạng thái, đồng bộ và không dựa vào getState để quyết định kết quả.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai mô hình trạng thái
+
+    1. Vì sao Thread WAITING không tương đương job đang PENDING?
+    2. Thread TERMINATED có luôn là job SUCCEEDED không?
+    3. Một pool worker có thể xử lý nhiều job khác nhau ra sao?
+
+    ### State machine đồng bộ
+
+    1. Những chuyển PENDING sang RUNNING và FAILED/CANCELLED phải được ràng buộc thế nào?
+    2. Vì sao trạng thái chia sẻ cần CAS, lock hoặc transaction?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tách hai trục | Giải thích khác biệt lifecycle worker và trạng thái job trên một ví dụ. |
+    | Thiết kế workflow | Vẽ state machine có các transition lỗi, thành công và hủy. |
+    | Bảo vệ cập nhật | Dùng CAS hoặc synchronization ngăn hai worker claim cùng job. |

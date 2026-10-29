@@ -1,0 +1,55 @@
+sections:
+  virtual-threads-001:
+    difficulty: BASIC
+    isImportant: true
+  virtual-threads-002:
+    difficulty: BASIC
+    isImportant: true
+  virtual-threads-003:
+    difficulty: BASIC
+    isImportant: true
+  virtual-threads-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  virtual-threads-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  virtual-threads-006:
+    difficulty: ADVANCED
+    isImportant: true
+  virtual-threads-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  virtual-threads-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  virtual-threads-009:
+    difficulty: ADVANCED
+    isImportant: true
+  virtual-threads-010:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  virtual-threads-011:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  virtual-threads-012:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  virtual-threads-013:
+    difficulty: ADVANCED
+    isImportant: false
+  virtual-threads-014:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  virtual-threads-015:
+    difficulty: ADVANCED
+    isImportant: true
+  virtual-threads-016:
+    difficulty: ADVANCED
+    isImportant: false
+  virtual-threads-017:
+    difficulty: ADVANCED
+    isImportant: false
+  virtual-threads-018:
+    difficulty: ADVANCED
+    isImportant: false

@@ -4,7 +4,7 @@
 
 ## 0. Mục tiêu và quyền hạn
 
-- **STEP 10 = Quiz**; **STEP 9 = Interview YAML**; Video thuộc các optional STEP sau STEP_FINAL.
+- **STEP 10 = Quiz legacy theo hàng Menu Cấp 1**; STEP 6 mới cũng có Quiz nhưng Phase 1 tại V25:W26, Phase 2 và Phase 3 **cùng ghi V20:W24** (Phase 3 thêm explanation vào YAML Phase 2); Quiz không có Phase 4. Chưa có importer riêng cho STEP 6, không gọi task STEP 10 để nhập dữ liệu STEP 6. Video optional sau FINAL.
 - Một worker phụ trách **một Menu Cấp 1**. Đọc toàn bộ Knowledge của chương, tạo một tài liệu Quiz YAML trong **T:W cùng hàng cha**, tối đa 4 ô × 30.000 Unicode code points/ô. Không viết Quiz ở hàng con.
 - Worker chỉ viết `questions[]` với **`question`, `answers`** (chính xác A/B/C/D, mỗi đáp án có `answer` và `explanation`) và **`correctAnswerId`**. Worker **không viết** question `id` `readmeRelated`, `apiRelated` hoặc tự chỉnh module.
 - Prime phải đọc `GENERAL_AGENT_RULES.md`, tất cả `module-generate-agent/rules/`, `module-generate-info.txt`, toàn bộ file này và `worker/STEP_10_WORKER.md`. **Worker chỉ tự đọc toàn bộ `worker/STEP_10_WORKER.md`**, không đọc Prime/rules/source repo. Prime chỉ gửi 4 dòng: URL tab, vùng nguồn chính xác, vùng đích T:W, đường dẫn worker-only.
@@ -34,7 +34,7 @@
 
 ## 3. Normalize Quiz trên chính Google Sheets — Prime, root task
 
-Task **`normalizeQuizQuestionsFromSheet`**; mặc định DRY_RUN; yêu cầu URL spreadsheet và **gid tab** (khác spreadsheet ID). `DRY_RUN` chỉ đọc, `APPLY` cần Sheets editor/ADC như STEP 9.
+Task **`normalizeQuizQuestionsFromSheet`**; mặc định DRY_RUN; yêu cầu URL spreadsheet và **gid tab** (khác spreadsheet ID). `DRY_RUN` chỉ đọc, `APPLY` cần Sheets editor/ADC như các task Sheets có ghi dữ liệu khác.
 
 ```powershell
 .\gradlew.bat normalizeQuizQuestionsFromSheet -PfileUrl="<URL>" -PsheetID=<GID> -PquizMode=DRY_RUN

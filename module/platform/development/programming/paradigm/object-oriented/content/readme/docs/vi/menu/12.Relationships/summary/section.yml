@@ -6,16 +6,14 @@ roadmap:
 - id: relationships-001
   order: 1
   title: Liên kết giữa các đối tượng
-  description: Xác định link giữa các object và cách thay đổi association, đồng thời phân biệt hướng truy cập, bội số với
-    ownership.
+  description: Xác định link giữa các object và cách thay đổi association, đồng thời phân biệt hướng truy cập, bội số với ownership.
   transition:
     to: relationships-002
     description: '**Từ link giữa object → phân biệt liên kết nghiệp vụ với quan hệ sử dụng cộng tác viên**'
 - id: relationships-002
   order: 2
   title: Sự phụ thuộc tạm thời và liên kết lâu dài
-  description: Phân biệt cộng tác viên được dùng trong một thao tác với liên kết được lưu thành trạng thái; chọn tham số,
-    field hoặc injection theo nhu cầu.
+  description: Phân biệt cộng tác viên được dùng trong một thao tác với liên kết được lưu thành trạng thái; chọn tham số, field hoặc injection theo nhu cầu.
   transition:
     to: relationships-003
     description: '**Từ kiểu quan hệ sử dụng → làm rõ nghĩa sở hữu và vòng đời của toàn thể–bộ phận**'
@@ -36,32 +34,28 @@ roadmap:
 - id: relationships-005
   order: 5
   title: Hướng liên kết và khả năng điều hướng
-  description: Chỉ lưu chiều liên kết thực sự cần truy cập; dùng repository khi thích hợp và quản lý chi phí của liên kết
-    hai chiều.
+  description: Chỉ lưu chiều liên kết thực sự cần truy cập; dùng repository khi thích hợp và quản lý chi phí của liên kết hai chiều.
   transition:
     to: relationships-006
     description: '**Từ lựa chọn hướng truy cập → bảo vệ invariant khi phải lưu cả hai hướng**'
 - id: relationships-006
   order: 6
   title: Quan hệ hai chiều và giữ dữ liệu nhất quán
-  description: Duy trì một sự thật nhất quán giữa `Employee.department` và `Department.employees` qua mọi thao tác, cả trong
-    bộ nhớ lẫn JPA.
+  description: Duy trì một sự thật nhất quán giữa `Employee.department` và `Department.employees` qua mọi thao tác, cả trong bộ nhớ lẫn JPA.
   transition:
     to: relationships-007
     description: '**Từ giữ nhất quán từng liên kết → nhận diện coupling và vòng phụ thuộc giữa các thành phần**'
 - id: relationships-007
   order: 7
   title: Vòng phụ thuộc và cách phá vòng
-  description: Phân biệt vòng tham chiếu hợp lệ với chu trình phụ thuộc gây lỗi; chuyển orchestration và dependency sang các
-    ranh giới có trách nhiệm rõ.
+  description: Phân biệt vòng tham chiếu hợp lệ với chu trình phụ thuộc gây lỗi; chuyển orchestration và dependency sang các ranh giới có trách nhiệm rõ.
   transition:
     to: relationships-008
     description: '**Từ cấu trúc quan hệ đã thiết kế → đọc và kiểm tra lại bằng ký hiệu UML**'
 - id: relationships-008
   order: 8
   title: Đọc ký hiệu quan hệ trong sơ đồ lớp
-  description: |-
-    Tổng hợp sáu ký hiệu quan hệ và các nhãn UML để đọc sơ đồ, kiểm tra việc biểu diễn association, ownership, multiplicity và contract trong Java.
+  description: Tổng hợp sáu ký hiệu quan hệ và các nhãn UML để đọc sơ đồ, kiểm tra việc biểu diễn association, ownership, multiplicity và contract trong Java.
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

@@ -1,0 +1,173 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "FORK/JOIN — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: fork-join-001
+    order: 1
+    title: "Fork/Join và divide-and-conquer"
+    description: "Khi cần xử lý một khối dữ liệu lớn, đôi khi ta có thể **chia bài toán lớn thành các bài toán con độc lập**, cho nhiều worker xử lý đồng thời rồi **gộp kết quả**. Đây là tư duy *divide-and-conquer* (chia để trị). Java cung cấp **Fork/Join Framework** trong `java.util.concurrent` đ"
+    transition:
+      to: fork-join-002
+      description: "Từ fork/join và divide-and-conquer chuyển tới forkjoinpool và cơ chế work stealing để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-002
+    order: 2
+    title: "ForkJoinPool và cơ chế work stealing"
+    description: "`ForkJoinPool` là một executor chuyên xử lý những bài toán có thể **chia thành các tác vụ con (fork)** rồi **kết hợp kết quả (join)**. Thay vì chỉ có một hàng đợi công việc tập trung và mỗi thread nhận một task hoàn chỉnh, các worker trong pool có thể tạo thêm tác vụ con khi đang"
+    transition:
+      to: fork-join-003
+      description: "Từ forkjoinpool và cơ chế work stealing chuyển tới recursivetask<v> so với recursiveaction để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-003
+    order: 3
+    title: "RecursiveTask<V> so với RecursiveAction"
+    description: "**Fork/Join Framework** trong `java.util.concurrent` là mô hình thực hiện tác vụ chia để trị: chia bài toán thành những phần đủ độc lập, phân phối công việc lên các worker, rồi chờ và tổng hợp khi cần. **ForkJoinPool** dùng **work stealing** để các worker đang nhàn rỗi có thể lấy"
+    transition:
+      to: fork-join-004
+      description: "Từ recursivetask<v> so với recursiveaction chuyển tới compute(), fork() và join() để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-004
+    order: 4
+    title: "compute(), fork() và join()"
+    description: "Khi một bài toán có thể chia thành các phần độc lập, Java cung cấp **Fork/Join Framework** để tách công việc lớn thành các **subtask** nhỏ, cho nhiều worker xử lý, rồi kết hợp kết quả. Ba lời gọi thường thấy nhất là `compute()`, `fork()` và `join()`. Chúng **không có cùng nghĩa**"
+    transition:
+      to: fork-join-005
+      description: "Từ compute(), fork() và join() chuyển tới chiến lược chia nhỏ và ngưỡng threshold để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-005
+    order: 5
+    title: "Chiến lược chia nhỏ và ngưỡng threshold"
+    description: "Khi tính tổng một mảng lớn, biến đổi ảnh, xử lý một cây hoặc tìm kiếm qua nhiều nhánh, ta có thể phân chia bài toán thành các phần độc lập rồi gộp kết quả. Mô hình **Fork/Join** giúp thực hiện kiểu divide-and-conquer này bằng các worker trong `ForkJoinPool`. Nhưng tạo ra nhiều ta"
+    transition:
+      to: fork-join-006
+      description: "Từ chiến lược chia nhỏ và ngưỡng threshold chuyển tới tránh tạo quá nhiều tác vụ nhỏ để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-006
+    order: 6
+    title: "Tránh tạo quá nhiều tác vụ nhỏ"
+    description: "- Giải thích **Fork/Join** và vì sao chiến lược chia để trị (*divide and conquer*) không có nghĩa “càng chia nhỏ càng nhanh”.\n- Phân biệt **đơn vị dữ liệu**, **đơn vị tính toán**, **ForkJoinTask** và **platform thread**: một task không đồng nghĩa một thread.\n- Hiểu chi phí của **"
+    transition:
+      to: fork-join-007
+      description: "Từ tránh tạo quá nhiều tác vụ nhỏ chuyển tới phân biệt invoke(), execute() và submit() để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-007
+    order: 7
+    title: "Phân biệt invoke(), execute() và submit()"
+    description: "Khi dùng `ForkJoinPool`, ba phương thức **`invoke()`**, **`execute()`** và **`submit()`** đều có thể đưa một tác vụ vào pool, nhưng **khác nhau ở việc thread gọi có chờ hay không, kiểu trả về và cách lấy kết quả/lỗi**. Nếu nhầm chúng, ứng dụng có thể chờ ngoài ý muốn, bỏ qua exce"
+    transition:
+      to: fork-join-008
+      description: "Từ phân biệt invoke(), execute() và submit() chuyển tới forkjoinpool.commonpool() và tác vụ dùng chung để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-008
+    order: 8
+    title: "ForkJoinPool.commonPool() và tác vụ dùng chung"
+    description: "> **Cốt lõi:** `ForkJoinPool.commonPool()` trả về một **Fork/Join executor dùng chung trong cùng JVM**, không tạo pool riêng cho mỗi lời gọi hoặc module. Nhiều tác vụ `ForkJoinTask`, các thao tác bất đồng bộ `CompletableFuture` không chỉ định executor (theo quy tắc mặc định) và n"
+    transition:
+      to: fork-join-009
+      description: "Từ forkjoinpool.commonpool() và tác vụ dùng chung chuyển tới blocking operation trong fork/join và managedblocker để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-009
+    order: 9
+    title: "Blocking operation trong Fork/Join và ManagedBlocker"
+    description: "`ForkJoinPool` được thiết kế chủ yếu cho công việc **chia để trị (divide-and-conquer)**: tách một bài toán lớn thành các `ForkJoinTask` nhỏ, worker thực thi task và có thể **work-stealing** lấy công việc từ hàng đợi của worker khác. Cơ chế này phát huy hiệu quả khi các task chủ y"
+    transition:
+      to: fork-join-010
+      description: "Từ blocking operation trong fork/join và managedblocker chuyển tới task dependency và nguy cơ chờ vòng để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-010
+    order: 10
+    title: "Task dependency và nguy cơ chờ vòng"
+    description: "`ForkJoinPool` là một executor chuyên xử lý nhiều tác vụ có thể phân rã thành các subtasks. Thuật toán điển hình chia vấn đề lớn thành những nhánh độc lập, chạy các nhánh đó khi có workers, rồi ghép kết quả bằng `join()`. Cơ chế **work-stealing** giúp workers tìm thêm việc từ nhữ"
+    transition:
+      to: fork-join-011
+      description: "Từ task dependency và nguy cơ chờ vòng chuyển tới benchmark so với thực thi tuần tự để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-011
+    order: 11
+    title: "Benchmark so với thực thi tuần tự"
+    description: "Fork/Join giúp chia một công việc thành những phần nhỏ để nhiều worker xử lý đồng thời, rồi ghép kết quả. Tuy nhiên, **có thể chia được** không có nghĩa **chạy nhanh hơn**. Khi công việc ngắn, số lượng phần nhỏ quá lớn, memory bandwidth bị nghẽn hoặc máy không có đủ lõi CPU, chi "
+    transition:
+      to: fork-join-012
+      description: "Từ benchmark so với thực thi tuần tự chuyển tới ứng dụng: tổng hợp mảng, cây và tính toán đệ quy để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-012
+    order: 12
+    title: "Ứng dụng: tổng hợp mảng, cây và tính toán đệ quy"
+    description: "- Tính tổng, min/max hoặc thống kê trên một mảng lớn.\n- Tính tổng trọng số, đếm node hoặc tổng hợp thuộc tính của cây.\n- Sắp xếp mảng bằng merge sort, xử lý dữ liệu theo từng vùng.\n- Thực thi một thuật toán đệ quy mà các nhánh có thể tính độc lập."
+    transition:
+      to: fork-join-013
+      description: "Từ ứng dụng: tổng hợp mảng, cây và tính toán đệ quy chuyển tới countedcompleter: mục đích và khác biệt với recursivetask, recursiveaction để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-013
+    order: 13
+    title: "CountedCompleter: mục đích và khác biệt với RecursiveTask, RecursiveAction"
+    description: "**`CountedCompleter<T>`** là một loại `ForkJoinTask<T>` trong `java.util.concurrent`, được thiết kế cho công việc có **quan hệ hoàn tất phụ thuộc nhiều tác vụ con**. Thay vì mỗi parent task phải gọi `join()` để đợi từng child, nó sử dụng **pending count**, liên kết **completer** "
+    transition:
+      to: fork-join-014
+      description: "Từ countedcompleter: mục đích và khác biệt với recursivetask, recursiveaction chuyển tới quan hệ completer, pending count và cây hoàn tất của countedcompleter để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-014
+    order: 14
+    title: "Quan hệ completer, pending count và cây hoàn tất của CountedCompleter"
+    description: "Trong Fork/Join, một phép tính có thể được chia thành nhiều phần việc nhỏ. Với `RecursiveTask` hoặc `RecursiveAction`, cách thường gặp là tạo subtask, `fork()` một phần, rồi `join()` để chờ kết quả. Với những bài toán có nhiều nhánh độc lập, độ dài xử lý mỗi nhánh không đồng đều "
+    transition:
+      to: fork-join-015
+      description: "Từ quan hệ completer, pending count và cây hoàn tất của countedcompleter chuyển tới thiết lập pending count trước khi fork để tránh hoàn tất sớm để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-015
+    order: 15
+    title: "Thiết lập pending count trước khi fork để tránh hoàn tất sớm"
+    description: "> **Phạm vi:** cơ chế **Fork/Join** của Java SE 17+, tập trung vào `java.util.concurrent.CountedCompleter` và thứ tự **đăng ký pending completions trước khi gọi `fork()`**. Bài học giải thích mô hình completion theo cây, cơ chế `tryComplete()`, lỗi root hoàn tất sớm, biến thể đếm"
+    transition:
+      to: fork-join-016
+      description: "Từ thiết lập pending count trước khi fork để tránh hoàn tất sớm chuyển tới trycomplete(), propagatecompletion() và oncompletion(): cơ chế lan truyền hoàn tất để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-016
+    order: 16
+    title: "tryComplete(), propagateCompletion() và onCompletion(): cơ chế lan truyền hoàn tất"
+    description: "Khi dùng `ForkJoinPool` theo mô hình `RecursiveTask`, lập trình viên thường tạo hai task con, gọi `fork()` và chờ `join()`. Tuy nhiên, không phải thuật toán song song nào cũng phù hợp với kiểu **cha đợi từng con**. Một số bài toán là fan-out/fan-in: rất nhiều tác vụ con có độ dài"
+    transition:
+      to: fork-join-017
+      description: "Từ trycomplete(), propagatecompletion() và oncompletion(): cơ chế lan truyền hoàn tất chuyển tới vì sao compute() trả về chưa đồng nghĩa countedcompleter đã hoàn tất để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-017
+    order: 17
+    title: "Vì sao compute() trả về chưa đồng nghĩa CountedCompleter đã hoàn tất"
+    description: "Trong Java Fork/Join, `CountedCompleter<T>` là một loại `ForkJoinTask<T>` hỗ trợ **hoàn tất dựa trên tín hiệu và số lượng phần việc còn cần phối hợp**, thay vì chỉ dựa trên việc một phương thức trả về. Đây là điểm khác biệt cốt lõi khiến người mới dễ nhầm:"
+    transition:
+      to: fork-join-018
+      description: "Từ vì sao compute() trả về chưa đồng nghĩa countedcompleter đã hoàn tất chuyển tới onexceptionalcompletion(): xử lý và lan truyền ngoại lệ của countedcompleter để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-018
+    order: 18
+    title: "onExceptionalCompletion(): xử lý và lan truyền ngoại lệ của CountedCompleter"
+    description: "`CountedCompleter<T>` là một dạng `ForkJoinTask<T>` thuộc `java.util.concurrent`, được thiết kế cho các thuật toán chia việc theo cây và báo hoàn tất bằng **completer chain**. Mỗi task có thể liên kết với một `CountedCompleter` cha, có bộ đếm **pending** để quản lý quá trình hoàn"
+    transition:
+      to: fork-join-019
+      description: "Từ onexceptionalcompletion(): xử lý và lan truyền ngoại lệ của countedcompleter chuyển tới ví dụ tìm kiếm không đều và dừng sớm bằng countedcompleter để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-019
+    order: 19
+    title: "Ví dụ tìm kiếm không đều và dừng sớm bằng CountedCompleter"
+    description: "Khi tìm một giá trị trong **cây có các nhánh dài/ngắn không đều**, một cách đơn giản là dùng đệ quy tuần tự: duyệt từng nhánh cho đến khi tìm thấy. Khi dữ liệu đủ lớn, có thể chia nhiều nhánh cho các worker trong `ForkJoinPool` xử lý song song. Tuy nhiên, nếu đã tìm được kết quả,"
+    transition:
+      to: fork-join-020
+      description: "Từ ví dụ tìm kiếm không đều và dừng sớm bằng countedcompleter chuyển tới forkjoinpool asyncmode: chế độ fifo cho tác vụ kiểu sự kiện không join để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-020
+    order: 20
+    title: "ForkJoinPool asyncMode: chế độ FIFO cho tác vụ kiểu sự kiện không join"
+    description: "- Giải thích **ForkJoinPool.asyncMode**, sự khác biệt giữa **LIFO mặc định** và **FIFO ở deque cục bộ** của ForkJoin worker.\n- Phân biệt tác vụ được **fork từ worker**, tác vụ được **submit từ thread bên ngoài**, cơ chế **work stealing**, và tác vụ dạng **event không join**.\n- Kh"
+    transition:
+      to: fork-join-021
+      description: "Từ forkjoinpool asyncmode: chế độ fifo cho tác vụ kiểu sự kiện không join chuyển tới vòng đời commonpool và pool riêng: shutdown, close và awaittermination để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-021
+    order: 21
+    title: "Vòng đời commonPool và pool riêng: shutdown, close và awaitTermination"
+    description: "`java.util.concurrent.ForkJoinPool` là một `ExecutorService` sử dụng work-stealing: các worker xử lý `ForkJoinTask`, có thể lấy thêm công việc từ queue của nhau và hỗ trợ các thuật toán chia để trị. Ngoài `fork()/join()`, ứng dụng còn có thể `execute()`, `submit()`, `invoke()` cá"
+    transition:
+      to: fork-join-022
+      description: "Từ vòng đời commonpool và pool riêng: shutdown, close và awaittermination chuyển tới forkjointask.cancel() so với adaptinterruptible(callable) trên java 21 để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-022
+    order: 22
+    title: "ForkJoinTask.cancel() so với adaptInterruptible(Callable) trên Java 21"
+    description: "Trong Fork/Join, một tác vụ có thể đã được đưa vào hàng đợi, đang chạy trên worker hoặc đã hoàn thành. Khi caller không còn cần kết quả, phương thức `ForkJoinTask.cancel(boolean mayInterruptIfRunning)` cho phép **chuyển trạng thái của task sang canceled** nếu việc hủy thành công."
+    transition:
+      to: fork-join-023
+      description: "Từ forkjointask.cancel() so với adaptinterruptible(callable) trên java 21 chuyển tới managedblocker.isreleasable(), block() và giới hạn bù luồng khi chặn để xây dựng năng lực Fork/Join kế tiếp."
+  - id: fork-join-023
+    order: 23
+    title: "ManagedBlocker.isReleasable(), block() và giới hạn bù luồng khi chặn"
+    description: "`ForkJoinPool` được tối ưu cho công việc có thể chia nhỏ rồi kết hợp kết quả. Các worker lấy task trong hàng đợi và có thể **work-steal** khi rảnh. Khi một task đang chạy CPU, worker đóng góp tiến độ; khi task đang chờ `BlockingQueue.take()`, `ReentrantLock.lock()`, một tín hiệu "
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 | Bài 13 | Bài 14 | Bài 15 | Bài 16 | Bài 17 | Bài 18 | Bài 19 | Bài 20 | Bài 21 | Bài 22 | Bài 23 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Fork/Join và divide-and-conquer | ForkJoinPool và cơ chế work stealing | RecursiveTask<V> so với RecursiveAction | compute(), fork() và join() | Chiến lược chia nhỏ và ngưỡng threshold | Tránh tạo quá nhiều tác vụ nhỏ | Phân biệt invoke(), execute() và submit() | ForkJoinPool.commonPool() và tác vụ dùng chung | Blocking operation trong Fork/Join và ManagedBlocker | Task dependency và nguy cơ chờ vòng | Benchmark so với thực thi tuần tự | Ứng dụng: tổng hợp mảng, cây và tính toán đệ quy | CountedCompleter: mục đích và khác biệt với RecursiveTask, RecursiveAction | Quan hệ completer, pending count và cây hoàn tất của CountedCompleter | Thiết lập pending count trước khi fork để tránh hoàn tất sớm | tryComplete(), propagateCompletion() và onCompletion(): cơ chế lan truyền hoàn tất | Vì sao compute() trả về chưa đồng nghĩa CountedCompleter đã hoàn tất | onExceptionalCompletion(): xử lý và lan truyền ngoại lệ của CountedCompleter | Ví dụ tìm kiếm không đều và dừng sớm bằng CountedCompleter | ForkJoinPool asyncMode: chế độ FIFO cho tác vụ kiểu sự kiện không join | Vòng đời commonPool và pool riêng: shutdown, close và awaitTermination | ForkJoinTask.cancel() so với adaptInterruptible(Callable) trên Java 21 | ManagedBlocker.isReleasable(), block() và giới hạn bù luồng khi chặn |
+  | Vấn đề cần hiểu | Bài toán chia để trị cần thỏa điều kiện độc lập nào? | Deque của worker và cơ chế work stealing hoạt động thế nào? | RecursiveTask<V> khác RecursiveAction ở contract nào? | compute(), fork() và join() lần lượt làm gì? | Threshold tác động kích cỡ task và cây phân rã thế nào? | Vì sao task cực nhỏ tạo overhead lớn hơn việc tính toán? | invoke(), execute() và submit() khác nhau về blocking ra sao? | commonPool() dùng chung worker giữa những thành phần nào? | Blocking I/O trong ForkJoinPool khác chờ join như thế nào? | Đồ thị task phụ thuộc có cycle khác DAG ra sao? | Điều kiện nào tạo benchmark Fork/Join so với tuần tự công bằng? | Tổng mảng và tổng hợp cây cần chia và gộp như thế nào? | CountedCompleter khác RecursiveTask và RecursiveAction ra sao? | Pending count của CountedCompleter thực sự biểu diễn gì? | Vì sao phải setPendingCount trước khi fork? | tryComplete() làm gì khi pending khác 0 và khi bằng 0? | Vì sao CountedCompleter.compute() return chưa đồng nghĩa isDone? | onExceptionalCompletion nhận Throwable và caller nào? | Work stealing phù hợp cây tìm kiếm nhánh không đều thế nào? | asyncMode thay đổi xu hướng FIFO/LIFO của deque ra sao? | shutdown trên commonPool khác pool riêng ra sao? | ForkJoinTask.cancel(true) có buộc ngắt worker không? | isReleasable() có hợp đồng idempotent và nonblocking gì? |
+  | Giá trị đối với OOP/module | Khi cần xử lý một khối dữ liệu lớn, đôi khi ta có thể **chia bài toán lớn thành các bài toán con độc lập**, cho nhiều worker xử lý đồng thời rồi **gộp kết quả** | `ForkJoinPool` là một executor chuyên xử lý những bài toán có thể **chia thành các tác vụ con (fork)** rồi **kết hợp kết quả (join)**. Thay vì chỉ có một hàng đ | **Fork/Join Framework** trong `java.util.concurrent` là mô hình thực hiện tác vụ chia để trị: chia bài toán thành những phần đủ độc lập, phân phối công việc lên | Khi một bài toán có thể chia thành các phần độc lập, Java cung cấp **Fork/Join Framework** để tách công việc lớn thành các **subtask** nhỏ, cho nhiều worker xử  | Khi tính tổng một mảng lớn, biến đổi ảnh, xử lý một cây hoặc tìm kiếm qua nhiều nhánh, ta có thể phân chia bài toán thành các phần độc lập rồi gộp kết quả. Mô h | - Giải thích **Fork/Join** và vì sao chiến lược chia để trị (*divide and conquer*) không có nghĩa “càng chia nhỏ càng nhanh”. - Phân biệt **đơn vị dữ liệu**, ** | Khi dùng `ForkJoinPool`, ba phương thức **`invoke()`**, **`execute()`** và **`submit()`** đều có thể đưa một tác vụ vào pool, nhưng **khác nhau ở việc thread gọ | > **Cốt lõi:** `ForkJoinPool.commonPool()` trả về một **Fork/Join executor dùng chung trong cùng JVM**, không tạo pool riêng cho mỗi lời gọi hoặc module. Nhiều  | `ForkJoinPool` được thiết kế chủ yếu cho công việc **chia để trị (divide-and-conquer)**: tách một bài toán lớn thành các `ForkJoinTask` nhỏ, worker thực thi tas | `ForkJoinPool` là một executor chuyên xử lý nhiều tác vụ có thể phân rã thành các subtasks. Thuật toán điển hình chia vấn đề lớn thành những nhánh độc lập, chạy | Fork/Join giúp chia một công việc thành những phần nhỏ để nhiều worker xử lý đồng thời, rồi ghép kết quả. Tuy nhiên, **có thể chia được** không có nghĩa **chạy  | - Tính tổng, min/max hoặc thống kê trên một mảng lớn. - Tính tổng trọng số, đếm node hoặc tổng hợp thuộc tính của cây. - Sắp xếp mảng bằng merge sort, xử lý dữ  | **`CountedCompleter<T>`** là một loại `ForkJoinTask<T>` trong `java.util.concurrent`, được thiết kế cho công việc có **quan hệ hoàn tất phụ thuộc nhiều tác vụ c | Trong Fork/Join, một phép tính có thể được chia thành nhiều phần việc nhỏ. Với `RecursiveTask` hoặc `RecursiveAction`, cách thường gặp là tạo subtask, `fork()`  | > **Phạm vi:** cơ chế **Fork/Join** của Java SE 17+, tập trung vào `java.util.concurrent.CountedCompleter` và thứ tự **đăng ký pending completions trước khi gọi | Khi dùng `ForkJoinPool` theo mô hình `RecursiveTask`, lập trình viên thường tạo hai task con, gọi `fork()` và chờ `join()`. Tuy nhiên, không phải thuật toán son | Trong Java Fork/Join, `CountedCompleter<T>` là một loại `ForkJoinTask<T>` hỗ trợ **hoàn tất dựa trên tín hiệu và số lượng phần việc còn cần phối hợp**, thay vì  | `CountedCompleter<T>` là một dạng `ForkJoinTask<T>` thuộc `java.util.concurrent`, được thiết kế cho các thuật toán chia việc theo cây và báo hoàn tất bằng **com | Khi tìm một giá trị trong **cây có các nhánh dài/ngắn không đều**, một cách đơn giản là dùng đệ quy tuần tự: duyệt từng nhánh cho đến khi tìm thấy. Khi dữ liệu  | - Giải thích **ForkJoinPool.asyncMode**, sự khác biệt giữa **LIFO mặc định** và **FIFO ở deque cục bộ** của ForkJoin worker. - Phân biệt tác vụ được **fork từ w | `java.util.concurrent.ForkJoinPool` là một `ExecutorService` sử dụng work-stealing: các worker xử lý `ForkJoinTask`, có thể lấy thêm công việc từ queue của nhau | Trong Fork/Join, một tác vụ có thể đã được đưa vào hàng đợi, đang chạy trên worker hoặc đã hoàn thành. Khi caller không còn cần kết quả, phương thức `ForkJoinTa | `ForkJoinPool` được tối ưu cho công việc có thể chia nhỏ rồi kết hợp kết quả. Các worker lấy task trong hàng đợi và có thể **work-steal** khi rảnh. Khi một task |
+  | Tư duy hình thành | Khi nào nên fork một nhánh và tính trực tiếp nhánh còn lại? | Parallelism khác số task và số thread như thế nào? | Làm sao chia vùng dữ liệu an toàn cho RecursiveAction? | Thứ tự fork-compute-join cần bảo vệ điều kiện gì? | Khi nào threshold theo số phần tử là không phù hợp? | Batching, max depth và fast path nên dùng lúc nào? | Khi nào chọn API tương ứng với nhu cầu kết quả? | Khi nào cần pool riêng thay vì commonPool? | Vì sao compensation không thể được bảo đảm tuyệt đối? | Giữ lock hoặc permit khi join gây vòng gián tiếp như thế nào? | JIT, warmup, GC, CPU và threshold tác động phép đo thế nào? | Vì sao parallel merge sort cần vùng ghi không giao nhau? | Compute trả về có luôn nghĩa là CountedCompleter done không? | Mẫu N child+self khác child-only ra sao? | Hai mẫu đếm tín hiệu tránh off-by-one thế nào? | onCompletion(caller) chạy theo đường tín hiệu nào? | tryComplete, complete(T), quietlyCompleteRoot khác nhau ra sao? | Root thất bại có khiến sibling tasks tự dừng không? | quietlyCompleteRoot có dừng mọi child đang chạy chưa? | Unjoined event task cần theo dõi lỗi và completion thế nào? | awaitTermination khác awaitQuiescence ở điều kiện gì? | Hủy root có tự dừng toàn bộ child không? | Giới hạn spare worker làm compensation thất bại ra sao? |

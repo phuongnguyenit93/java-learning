@@ -1,0 +1,703 @@
+summaries:
+- id: fork-join-001
+  title: Fork/Join và divide-and-conquer
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Fork/Join và divide-and-conquer**
+
+    Khi cần xử lý một khối dữ liệu lớn, đôi khi ta có thể **chia bài toán lớn thành các bài toán con độc lập**, cho nhiều worker xử lý đồng thời rồi **gộp kết quả**. Đây là tư duy *divide-and-conquer* (chia để trị). Java cung cấp **Fork/Join Framework** trong `java.util.concurrent` để hiện thực hóa kiểu tác vụ này, đặc biệt khi khối lượng tính toán chủ yếu sử dụng CPU.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### CPU-bound tốt, blocking I/O cần thận trọng
+
+    1. Bài toán chia để trị cần thỏa điều kiện độc lập nào?
+    2. Base case và combine bảo đảm kết quả đúng thế nào?
+
+    ### Tự kiểm tra kiến thức
+
+    1. Khi nào nên fork một nhánh và tính trực tiếp nhánh còn lại?
+    2. Những trường hợp nào Fork/Join thua thực thi tuần tự?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích bài toán chia để trị cần thỏa điều kiện độc lập nào với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề khi nào nên fork một nhánh và tính trực tiếp nhánh còn lại. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp những trường hợp nào Fork/Join thua thực thi tuần tự bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-002
+  title: ForkJoinPool và cơ chế work stealing
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ForkJoinPool và cơ chế work stealing**
+
+    `ForkJoinPool` là một executor chuyên xử lý những bài toán có thể **chia thành các tác vụ con (fork)** rồi **kết hợp kết quả (join)**. Thay vì chỉ có một hàng đợi công việc tập trung và mỗi thread nhận một task hoàn chỉnh, các worker trong pool có thể tạo thêm tác vụ con khi đang xử lý một bài toán lớn. **Work stealing** giúp worker đã rảnh lấy một phần công việc còn chờ ở worker khác, nhờ vậy những nhánh đệ quy lớn/nhỏ không đều có cơ hội được cân bằng tải tốt hơn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Blocking I/O: điểm yếu phải thiết kế riêng
+
+    1. Deque của worker và cơ chế work stealing hoạt động thế nào?
+    2. Vì sao worker rảnh thường steal ở đầu đối diện?
+
+    ### Câu hỏi tự kiểm tra
+
+    1. Parallelism khác số task và số thread như thế nào?
+    2. Blocking ảnh hưởng việc cân bằng nhánh không đều ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích deque của worker và cơ chế work stealing hoạt động thế nào với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề parallelism khác số task và số thread như thế nào. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp blocking ảnh hưởng việc cân bằng nhánh không đều ra sao bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-003
+  title: RecursiveTask<V> so với RecursiveAction
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **RecursiveTask<V> so với RecursiveAction**
+
+    **Fork/Join Framework** trong `java.util.concurrent` là mô hình thực hiện tác vụ chia để trị: chia bài toán thành những phần đủ độc lập, phân phối công việc lên các worker, rồi chờ và tổng hợp khi cần. **ForkJoinPool** dùng **work stealing** để các worker đang nhàn rỗi có thể lấy việc từ những worker khác, qua đó cân bằng tải của tác vụ có thể chia nhỏ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tổng quan: cùng Fork/Join, khác hợp đồng kết quả
+
+    1. RecursiveTask<V> khác RecursiveAction ở contract nào?
+    2. Khi nào cần kết quả trả về thay vì side effect?
+
+    ### Những lỗi phổ biến
+
+    1. Làm sao chia vùng dữ liệu an toàn cho RecursiveAction?
+    2. Cách xử lý lỗi và join có ảnh hưởng dữ liệu thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích recursiveTask<V> khác RecursiveAction ở contract nào với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề làm sao chia vùng dữ liệu an toàn cho RecursiveAction. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp cách xử lý lỗi và join có ảnh hưởng dữ liệu thế nào bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-004
+  title: compute(), fork() và join()
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **compute(), fork() và join()**
+
+    Khi một bài toán có thể chia thành các phần độc lập, Java cung cấp **Fork/Join Framework** để tách công việc lớn thành các **subtask** nhỏ, cho nhiều worker xử lý, rồi kết hợp kết quả. Ba lời gọi thường thấy nhất là `compute()`, `fork()` và `join()`. Chúng **không có cùng nghĩa**:
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Blocking I/O và `ForkJoinPool`
+
+    1. compute(), fork() và join() lần lượt làm gì?
+    2. Vì sao fork rồi join ngay thường thiếu parallelism hữu ích?
+
+    ### Câu hỏi tự kiểm tra
+
+    1. Thứ tự fork-compute-join cần bảo vệ điều kiện gì?
+    2. Ngoại lệ và dependency cycle ảnh hưởng join ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích compute(), fork() và join() lần lượt làm gì với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề thứ tự fork-compute-join cần bảo vệ điều kiện gì. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp ngoại lệ và dependency cycle ảnh hưởng join ra sao bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-005
+  title: Chiến lược chia nhỏ và ngưỡng threshold
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chiến lược chia nhỏ và ngưỡng threshold**
+
+    Khi tính tổng một mảng lớn, biến đổi ảnh, xử lý một cây hoặc tìm kiếm qua nhiều nhánh, ta có thể phân chia bài toán thành các phần độc lập rồi gộp kết quả. Mô hình **Fork/Join** giúp thực hiện kiểu divide-and-conquer này bằng các worker trong `ForkJoinPool`. Nhưng tạo ra nhiều task không tự động nhanh hơn: mỗi lần chia đều phải trả chi phí tạo object, scheduling, work stealing, fork/join và gộp kết quả.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Checklist khi review một thuật toán Fork/Join
+
+    1. Threshold tác động kích cỡ task và cây phân rã thế nào?
+    2. Cách chọn midpoint và base case không bỏ sót dữ liệu?
+
+    ### Những giới hạn và lỗi thường gặp
+
+    1. Khi nào threshold theo số phần tử là không phù hợp?
+    2. Làm sao tuning cutoff bằng đo đạc có căn cứ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích threshold tác động kích cỡ task và cây phân rã thế nào với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề khi nào threshold theo số phần tử là không phù hợp. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp làm sao tuning cutoff bằng đo đạc có căn cứ bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-006
+  title: Tránh tạo quá nhiều tác vụ nhỏ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tránh tạo quá nhiều tác vụ nhỏ**
+
+    - Giải thích **Fork/Join** và vì sao chiến lược chia để trị (*divide and conquer*) không có nghĩa “càng chia nhỏ càng nhanh”.
+    - Phân biệt **đơn vị dữ liệu**, **đơn vị tính toán**, **ForkJoinTask** và **platform thread**: một task không đồng nghĩa một thread.
+    - Hiểu chi phí của **fork(), join(), quản lý hàng đợi, work stealing, cấp phát đối tượng, hợp nhất kết quả**, và lý do tác vụ quá nhỏ khiến overhead lấn át công việc có ích.
+    - Chọn **sequential cutoff/threshold**, giới hạn độ sâu chia, hoặc **batching/chunking** để số task có ý nghĩa đối với kích cỡ dữ liệu và số worker.
+    - Dùng mẫu **fork một nhánh, compute trực tiếp nhánh còn lại, join nhánh đã fork**; nhận ra khi nào nên xử l
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Blocking I/O trong ForkJoinPool: vấn đề khác granularity
+
+    1. Vì sao task cực nhỏ tạo overhead lớn hơn việc tính toán?
+    2. Task count liên hệ thế nào với worker và parallelism?
+
+    ### Câu hỏi tự kiểm tra
+
+    1. Batching, max depth và fast path nên dùng lúc nào?
+    2. Làm sao kiểm chứng tối ưu task vẫn giữ kết quả đúng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích vì sao task cực nhỏ tạo overhead lớn hơn việc tính toán với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề batching, max depth và fast path nên dùng lúc nào. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp làm sao kiểm chứng tối ưu task vẫn giữ kết quả đúng bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-007
+  title: Phân biệt invoke(), execute() và submit()
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt invoke(), execute() và submit()**
+
+    Khi dùng `ForkJoinPool`, ba phương thức **`invoke()`**, **`execute()`** và **`submit()`** đều có thể đưa một tác vụ vào pool, nhưng **khác nhau ở việc thread gọi có chờ hay không, kiểu trả về và cách lấy kết quả/lỗi**. Nếu nhầm chúng, ứng dụng có thể chờ ngoài ý muốn, bỏ qua exception hoặc không có cơ chế xác nhận task đã hoàn tất.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### So sánh theo hợp đồng API
+
+    1. invoke(), execute() và submit() khác nhau về blocking ra sao?
+    2. Method nào trả handle để đợi hoặc kiểm tra exception?
+
+    ### Câu hỏi tự kiểm tra
+
+    1. Khi nào chọn API tương ứng với nhu cầu kết quả?
+    2. Vì sao submit trước không bảo đảm hoàn tất trước?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích invoke(), execute() và submit() khác nhau về blocking ra sao với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề khi nào chọn API tương ứng với nhu cầu kết quả. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp vì sao submit trước không bảo đảm hoàn tất trước bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-008
+  title: ForkJoinPool.commonPool() và tác vụ dùng chung
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ForkJoinPool.commonPool() và tác vụ dùng chung**
+
+    > **Cốt lõi:** `ForkJoinPool.commonPool()` trả về một **Fork/Join executor dùng chung trong cùng JVM**, không tạo pool riêng cho mỗi lời gọi hoặc module. Nhiều tác vụ `ForkJoinTask`, các thao tác bất đồng bộ `CompletableFuture` không chỉ định executor (theo quy tắc mặc định) và nhiều parallel-stream computations có thể cùng chia sẻ hạ tầng thực thi này. Do đó tác vụ CPU nặng hoặc blocking không kiểm soát ở thành phần A có thể làm thành phần B bị chậm. Cần phân biệt **chia sẻ pool**, **chia sẻ worker**, **chia sẻ dữ liệu** và **cô lập tài nguyên**: đây là những khái niệm khác nhau.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Pool dùng chung + blocking I/O: nguyên nhân latency khó tìm
+
+    1. commonPool() dùng chung worker giữa những thành phần nào?
+    2. Work stealing trong common pool có ngăn can nhiễu tải không?
+
+    ### Câu hỏi tự kiểm tra
+
+    1. Khi nào cần pool riêng thay vì commonPool?
+    2. Vì sao vòng đời commonPool khác dedicated pool?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích commonPool() dùng chung worker giữa những thành phần nào với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề khi nào cần pool riêng thay vì commonPool. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp vì sao vòng đời commonPool khác dedicated pool bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-009
+  title: Blocking operation trong Fork/Join và ManagedBlocker
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Blocking operation trong Fork/Join và ManagedBlocker**
+
+    `ForkJoinPool` được thiết kế chủ yếu cho công việc **chia để trị (divide-and-conquer)**: tách một bài toán lớn thành các `ForkJoinTask` nhỏ, worker thực thi task và có thể **work-stealing** lấy công việc từ hàng đợi của worker khác. Cơ chế này phát huy hiệu quả khi các task chủ yếu **tính toán và có khả năng tiến triển**, thay vì phải chờ một tài nguyên bên ngoài quá lâu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân biệt work-stealing, fork/join waiting và blocking bên ngoài
+
+    1. Blocking I/O trong ForkJoinPool khác chờ join như thế nào?
+    2. ManagedBlocker giao tiếp với pool qua hai method nào?
+
+    ### Kiểm tra và theo dõi khi vận hành
+
+    1. Vì sao compensation không thể được bảo đảm tuyệt đối?
+    2. Cần xử lý timeout, interrupt và liveness thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích blocking I/O trong ForkJoinPool khác chờ join như thế nào với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề vì sao compensation không thể được bảo đảm tuyệt đối. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp cần xử lý timeout, interrupt và liveness thế nào bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-010
+  title: Task dependency và nguy cơ chờ vòng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Task dependency và nguy cơ chờ vòng**
+
+    `ForkJoinPool` là một executor chuyên xử lý nhiều tác vụ có thể phân rã thành các subtasks. Thuật toán điển hình chia vấn đề lớn thành những nhánh độc lập, chạy các nhánh đó khi có workers, rồi ghép kết quả bằng `join()`. Cơ chế **work-stealing** giúp workers tìm thêm việc từ những worker khác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. Đồ thị task phụ thuộc có cycle khác DAG ra sao?
+    2. Vì sao work stealing không thể sửa vòng A chờ B chờ A?
+
+    ### Lỗi phổ biến khi code review
+
+    1. Giữ lock hoặc permit khi join gây vòng gián tiếp như thế nào?
+    2. Làm sao kiểm tra cycle và tránh deadlock?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích đồ thị task phụ thuộc có cycle khác DAG ra sao với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề giữ lock hoặc permit khi join gây vòng gián tiếp như thế nào. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp làm sao kiểm tra cycle và tránh deadlock bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-011
+  title: Benchmark so với thực thi tuần tự
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Benchmark so với thực thi tuần tự**
+
+    Fork/Join giúp chia một công việc thành những phần nhỏ để nhiều worker xử lý đồng thời, rồi ghép kết quả. Tuy nhiên, **có thể chia được** không có nghĩa **chạy nhanh hơn**. Khi công việc ngắn, số lượng phần nhỏ quá lớn, memory bandwidth bị nghẽn hoặc máy không có đủ lõi CPU, chi phí tạo task, scheduling, work stealing và ghép kết quả có thể vượt phần thời gian tiết kiệm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Những sai lầm riêng của thuật toán Fork/Join
+
+    1. Điều kiện nào tạo benchmark Fork/Join so với tuần tự công bằng?
+    2. Chi phí chia và gộp task ảnh hưởng speedup thế nào?
+
+    ### Câu hỏi tự kiểm tra
+
+    1. JIT, warmup, GC, CPU và threshold tác động phép đo thế nào?
+    2. Khi nào cần JMH thay phép đo nanoTime đơn lẻ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích điều kiện nào tạo benchmark Fork/Join so với tuần tự công bằng với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề jIT, warmup, GC, CPU và threshold tác động phép đo thế nào. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp khi nào cần JMH thay phép đo nanoTime đơn lẻ bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-012
+  title: 'Ứng dụng: tổng hợp mảng, cây và tính toán đệ quy'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ứng dụng: tổng hợp mảng, cây và tính toán đệ quy**
+
+    - Tính tổng, min/max hoặc thống kê trên một mảng lớn.
+    - Tính tổng trọng số, đếm node hoặc tổng hợp thuộc tính của cây.
+    - Sắp xếp mảng bằng merge sort, xử lý dữ liệu theo từng vùng.
+    - Thực thi một thuật toán đệ quy mà các nhánh có thể tính độc lập.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế work stealing, không phải “một thread mỗi task”
+
+    1. Tổng mảng và tổng hợp cây cần chia và gộp như thế nào?
+    2. Cây lệch hoặc node dùng chung thay đổi thuật toán ra sao?
+
+    ### Tự kiểm tra kiến thức
+
+    1. Vì sao parallel merge sort cần vùng ghi không giao nhau?
+    2. Naive parallel Fibonacci có nhược điểm gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích tổng mảng và tổng hợp cây cần chia và gộp như thế nào với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề vì sao parallel merge sort cần vùng ghi không giao nhau. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp naive parallel Fibonacci có nhược điểm gì bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-013
+  title: 'CountedCompleter: mục đích và khác biệt với RecursiveTask, RecursiveAction'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CountedCompleter: mục đích và khác biệt với RecursiveTask, RecursiveAction**
+
+    **`CountedCompleter<T>`** là một loại `ForkJoinTask<T>` trong `java.util.concurrent`, được thiết kế cho công việc có **quan hệ hoàn tất phụ thuộc nhiều tác vụ con**. Thay vì mỗi parent task phải gọi `join()` để đợi từng child, nó sử dụng **pending count**, liên kết **completer** (thường trỏ về parent) và các phương thức **`tryComplete()` / `onCompletion()`** để kích hoạt xử lý khi các nhánh liên quan đã báo xong.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Constructor, completer và pending count
+
+    1. CountedCompleter khác RecursiveTask và RecursiveAction ra sao?
+    2. Completer và pending count giải quyết việc phối hợp nào?
+
+    ### Tình huống áp dụng
+
+    1. Compute trả về có luôn nghĩa là CountedCompleter done không?
+    2. Khi nào nên dùng completion callback thay cho join từng child?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích countedCompleter khác RecursiveTask và RecursiveAction ra sao với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề compute trả về có luôn nghĩa là CountedCompleter done không. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp khi nào nên dùng completion callback thay cho join từng child bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-014
+  title: Quan hệ completer, pending count và cây hoàn tất của CountedCompleter
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Quan hệ completer, pending count và cây hoàn tất của CountedCompleter**
+
+    Trong Fork/Join, một phép tính có thể được chia thành nhiều phần việc nhỏ. Với `RecursiveTask` hoặc `RecursiveAction`, cách thường gặp là tạo subtask, `fork()` một phần, rồi `join()` để chờ kết quả. Với những bài toán có nhiều nhánh độc lập, độ dài xử lý mỗi nhánh không đồng đều hoặc cần tổng hợp kết quả khi toàn bộ nhánh hoàn tất, **CountedCompleter** cho phép xây dựng một **cây thông báo hoàn tất** mà các worker không nhất thiết phải block bằng `join()` ở từng nút cha.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Pending count thực sự đếm cái gì?
+
+    1. Pending count của CountedCompleter thực sự biểu diễn gì?
+    2. Vì sao count giảm về 0 chưa nhất thiết hoàn tất root?
+
+    ### Câu hỏi tự kiểm tra
+
+    1. Mẫu N child+self khác child-only ra sao?
+    2. Làm sao chứng minh cây completer không báo thiếu tín hiệu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích pending count của CountedCompleter thực sự biểu diễn gì với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề mẫu N child+self khác child-only ra sao. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp làm sao chứng minh cây completer không báo thiếu tín hiệu bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-015
+  title: Thiết lập pending count trước khi fork để tránh hoàn tất sớm
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thiết lập pending count trước khi fork để tránh hoàn tất sớm**
+
+    > **Phạm vi:** cơ chế **Fork/Join** của Java SE 17+, tập trung vào `java.util.concurrent.CountedCompleter` và thứ tự **đăng ký pending completions trước khi gọi `fork()`**. Bài học giải thích mô hình completion theo cây, cơ chế `tryComplete()`, lỗi root hoàn tất sớm, biến thể đếm “off by one”, bảo đảm dữ liệu và các bài thực hành có thể biên dịch/chạy. Chỉ đề cập **Java concurrency nói chung**, không trộn với cơ chế Fork/Join hay scheduling dành riêng cho Spring.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vấn đề cốt lõi: task con có thể hoàn thành ngay sau fork
+
+    1. Vì sao phải setPendingCount trước khi fork?
+    2. Child hoàn thành sớm sẽ gây race nào nếu đăng ký muộn?
+
+    ### Câu hỏi tự kiểm tra và đáp án
+
+    1. Hai mẫu đếm tín hiệu tránh off-by-one thế nào?
+    2. Kiểm thử completion sớm và pending count sai thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích vì sao phải setPendingCount trước khi fork với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề hai mẫu đếm tín hiệu tránh off-by-one thế nào. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp kiểm thử completion sớm và pending count sai thế nào bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-016
+  title: 'tryComplete(), propagateCompletion() và onCompletion(): cơ chế lan truyền hoàn tất'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **tryComplete(), propagateCompletion() và onCompletion(): cơ chế lan truyền hoàn tất**
+
+    Khi dùng `ForkJoinPool` theo mô hình `RecursiveTask`, lập trình viên thường tạo hai task con, gọi `fork()` và chờ `join()`. Tuy nhiên, không phải thuật toán song song nào cũng phù hợp với kiểu **cha đợi từng con**. Một số bài toán là fan-out/fan-in: rất nhiều tác vụ con có độ dài khác nhau, và khi đủ tín hiệu hoàn tất thì một tác vụ cha cần thực hiện bước tiếp theo **mà không bắt một worker ngồi chờ từng child**.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Pending count: không đơn giản là “số child”
+
+    1. tryComplete() làm gì khi pending khác 0 và khi bằng 0?
+    2. propagateCompletion khác gì so với tryComplete?
+
+    ### Câu hỏi tự kiểm tra
+
+    1. onCompletion(caller) chạy theo đường tín hiệu nào?
+    2. Cách tổng hợp kết quả trong callback bảo đảm visibility ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích tryComplete() làm gì khi pending khác 0 và khi bằng 0 với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề onCompletion(caller) chạy theo đường tín hiệu nào. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp cách tổng hợp kết quả trong callback bảo đảm visibility ra sao bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-017
+  title: Vì sao compute() trả về chưa đồng nghĩa CountedCompleter đã hoàn tất
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vì sao compute() trả về chưa đồng nghĩa CountedCompleter đã hoàn tất**
+
+    Trong Java Fork/Join, `CountedCompleter<T>` là một loại `ForkJoinTask<T>` hỗ trợ **hoàn tất dựa trên tín hiệu và số lượng phần việc còn cần phối hợp**, thay vì chỉ dựa trên việc một phương thức trả về. Đây là điểm khác biệt cốt lõi khiến người mới dễ nhầm:
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khác biệt ngữ nghĩa với `RecursiveTask` và `RecursiveAction`
+
+    1. Vì sao CountedCompleter.compute() return chưa đồng nghĩa isDone?
+    2. Pending đã là 0 mà root còn chờ thì thiếu gì?
+
+    ### Câu hỏi tự kiểm tra
+
+    1. tryComplete, complete(T), quietlyCompleteRoot khác nhau ra sao?
+    2. Làm sao debug root invoke/join đang kẹt?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích vì sao CountedCompleter.compute() return chưa đồng nghĩa isDone với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề tryComplete, complete(T), quietlyCompleteRoot khác nhau ra sao. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp làm sao debug root invoke/join đang kẹt bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-018
+  title: 'onExceptionalCompletion(): xử lý và lan truyền ngoại lệ của CountedCompleter'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **onExceptionalCompletion(): xử lý và lan truyền ngoại lệ của CountedCompleter**
+
+    `CountedCompleter<T>` là một dạng `ForkJoinTask<T>` thuộc `java.util.concurrent`, được thiết kế cho các thuật toán chia việc theo cây và báo hoàn tất bằng **completer chain**. Mỗi task có thể liên kết với một `CountedCompleter` cha, có bộ đếm **pending** để quản lý quá trình hoàn thành bình thường. Khác với cách `RecursiveTask` thường fork rồi join từng nhánh, `CountedCompleter` có thể cho các nhánh gọi `tryComplete()` để tiếp tục tiến trình hoàn tất của cây mà không buộc cha phải join trực tiếp từng con.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chữ ký và hợp đồng chính xác
+
+    1. onExceptionalCompletion nhận Throwable và caller nào?
+    2. Callback trả true hoặc false làm thay đổi propagation ra sao?
+
+    ### Lỗi thường gặp
+
+    1. Root thất bại có khiến sibling tasks tự dừng không?
+    2. Cần phối hợp exception, cancellation và cleanup thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích onExceptionalCompletion nhận Throwable và caller nào với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề root thất bại có khiến sibling tasks tự dừng không. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp cần phối hợp exception, cancellation và cleanup thế nào bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-019
+  title: Ví dụ tìm kiếm không đều và dừng sớm bằng CountedCompleter
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ví dụ tìm kiếm không đều và dừng sớm bằng CountedCompleter**
+
+    Khi tìm một giá trị trong **cây có các nhánh dài/ngắn không đều**, một cách đơn giản là dùng đệ quy tuần tự: duyệt từng nhánh cho đến khi tìm thấy. Khi dữ liệu đủ lớn, có thể chia nhiều nhánh cho các worker trong `ForkJoinPool` xử lý song song. Tuy nhiên, nếu đã tìm được kết quả, việc bắt toàn bộ nhánh còn lại chạy xong rồi mới trả về thường lãng phí.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hiểu chính xác giao thức pending count
+
+    1. Work stealing phù hợp cây tìm kiếm nhánh không đều thế nào?
+    2. AtomicReference bảo đảm công bố winner như thế nào?
+
+    ### Tự kiểm tra kiến thức
+
+    1. quietlyCompleteRoot có dừng mọi child đang chạy chưa?
+    2. Nếu không tìm được match cần hoàn tất cây thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích work stealing phù hợp cây tìm kiếm nhánh không đều thế nào với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề quietlyCompleteRoot có dừng mọi child đang chạy chưa. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp nếu không tìm được match cần hoàn tất cây thế nào bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-020
+  title: 'ForkJoinPool asyncMode: chế độ FIFO cho tác vụ kiểu sự kiện không join'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ForkJoinPool asyncMode: chế độ FIFO cho tác vụ kiểu sự kiện không join**
+
+    - Giải thích **ForkJoinPool.asyncMode**, sự khác biệt giữa **LIFO mặc định** và **FIFO ở deque cục bộ** của ForkJoin worker.
+    - Phân biệt tác vụ được **fork từ worker**, tác vụ được **submit từ thread bên ngoài**, cơ chế **work stealing**, và tác vụ dạng **event không join**.
+    - Khởi tạo ForkJoinPool Java 17+ với asyncMode=true bằng constructor bốn tham số; biết kiểm tra bằng getAsyncMode().
+    - Nhận ra **FIFO local không phải FIFO toàn cục**, không bảo đảm thứ tự bắt đầu hay hoàn thành trong một pool có nhiều worker.
+    - Chọn giữa mô hình chia để trị có join và event-style task không join; tổ chức completion, báo lỗi và shutdown nếu parent không chờ từng child.
+    - Đánh giá chi phí tạo ta
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Work stealing và sự khác biệt giữa start/completion
+
+    1. asyncMode thay đổi xu hướng FIFO/LIFO của deque ra sao?
+    2. Vì sao FIFO local không thành FIFO toàn pool?
+
+    ### Tự kiểm tra
+
+    1. Unjoined event task cần theo dõi lỗi và completion thế nào?
+    2. Khi nào asyncMode có lợi và cần đo ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích asyncMode thay đổi xu hướng FIFO/LIFO của deque ra sao với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề unjoined event task cần theo dõi lỗi và completion thế nào. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp khi nào asyncMode có lợi và cần đo ra sao bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-021
+  title: 'Vòng đời commonPool và pool riêng: shutdown, close và awaitTermination'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vòng đời commonPool và pool riêng: shutdown, close và awaitTermination**
+
+    `java.util.concurrent.ForkJoinPool` là một `ExecutorService` sử dụng work-stealing: các worker xử lý `ForkJoinTask`, có thể lấy thêm công việc từ queue của nhau và hỗ trợ các thuật toán chia để trị. Ngoài `fork()/join()`, ứng dụng còn có thể `execute()`, `submit()`, `invoke()` các tác vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. shutdown trên commonPool khác pool riêng ra sao?
+    2. Quiescent và terminated khác nhau về trạng thái nào?
+
+    ### Khi nào không nên dùng common pool?
+
+    1. awaitTermination khác awaitQuiescence ở điều kiện gì?
+    2. close trên Java 21 cần lưu ý ownership và interrupt thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích shutdown trên commonPool khác pool riêng ra sao với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề awaitTermination khác awaitQuiescence ở điều kiện gì. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp close trên Java 21 cần lưu ý ownership và interrupt thế nào bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-022
+  title: ForkJoinTask.cancel() so với adaptInterruptible(Callable) trên Java 21
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ForkJoinTask.cancel() so với adaptInterruptible(Callable) trên Java 21**
+
+    Trong Fork/Join, một tác vụ có thể đã được đưa vào hàng đợi, đang chạy trên worker hoặc đã hoàn thành. Khi caller không còn cần kết quả, phương thức `ForkJoinTask.cancel(boolean mayInterruptIfRunning)` cho phép **chuyển trạng thái của task sang canceled** nếu việc hủy thành công. Nhưng **canceled không mặc nhiên có nghĩa thread đang chạy đã bị interrupt hoặc thân task đã dừng**.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vấn đề: hủy trạng thái Future khác với dừng tác vụ đang chạy
+
+    1. ForkJoinTask.cancel(true) có buộc ngắt worker không?
+    2. adaptInterruptible(Callable) Java 21 khác adapt như thế nào?
+
+    ### Câu hỏi tự kiểm tra
+
+    1. Hủy root có tự dừng toàn bộ child không?
+    2. Làm sao thiết kế cooperative interruption và cleanup?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích forkJoinTask.cancel(true) có buộc ngắt worker không với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề hủy root có tự dừng toàn bộ child không. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp làm sao thiết kế cooperative interruption và cleanup bằng điều kiện và kết quả quan sát được. |
+- id: fork-join-023
+  title: ManagedBlocker.isReleasable(), block() và giới hạn bù luồng khi chặn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ManagedBlocker.isReleasable(), block() và giới hạn bù luồng khi chặn**
+
+    `ForkJoinPool` được tối ưu cho công việc có thể chia nhỏ rồi kết hợp kết quả. Các worker lấy task trong hàng đợi và có thể **work-steal** khi rảnh. Khi một task đang chạy CPU, worker đóng góp tiến độ; khi task đang chờ `BlockingQueue.take()`, `ReentrantLock.lock()`, một tín hiệu từ thread khác hoặc I/O, worker có thể không làm việc hữu ích trong thời gian đó.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Blocking và giới hạn compensation
+
+    1. isReleasable() có hợp đồng idempotent và nonblocking gì?
+    2. block() trả boolean biểu thị tiến triển như thế nào?
+
+    ### Câu hỏi tự kiểm tra
+
+    1. Giới hạn spare worker làm compensation thất bại ra sao?
+    2. Lock ownership, timeout và interrupt cần kiểm tra thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế và các giả định | Phân tích isReleasable() có hợp đồng idempotent và nonblocking gì với ví dụ từ bài học. |
+    | Thiết kế hướng áp dụng | Xây dựng lập luận hoặc chương trình minh họa cho vấn đề giới hạn spare worker làm compensation thất bại ra sao. |
+    | Kiểm tra giới hạn và lỗi | Đánh giá trường hợp lock ownership, timeout và interrupt cần kiểm tra thế nào bằng điều kiện và kết quả quan sát được. |

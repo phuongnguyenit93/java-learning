@@ -1,0 +1,31 @@
+sections:
+  thread-context-001:
+    difficulty: BASIC
+    isImportant: true
+  thread-context-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-context-003:
+    difficulty: ADVANCED
+    isImportant: true
+  thread-context-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-context-005:
+    difficulty: ADVANCED
+    isImportant: true
+  thread-context-006:
+    difficulty: ADVANCED
+    isImportant: true
+  thread-context-007:
+    difficulty: ADVANCED
+    isImportant: false
+  thread-context-008:
+    difficulty: ADVANCED
+    isImportant: false
+  thread-context-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-context-010:
+    difficulty: ADVANCED
+    isImportant: true

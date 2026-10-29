@@ -1,0 +1,103 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "HIỆU NĂNG JAVA CONCURRENCY — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: performance-001
+    order: 1
+    title: "Latency, throughput, utilization và độ ổn định"
+    description: "Thiết lập bốn đại lượng đánh giá concurrency và cách đo theo cùng ranh giới, nhất là queue wait, percentile, error rate và stability."
+    transition:
+      to: performance-002
+      description: "Khi đã có bộ chỉ số, dùng Amdahl để lượng hóa giới hạn lý tưởng của việc thêm năng lực chạy song song."
+  - id: performance-002
+    order: 2
+    title: "Amdahl's law và giới hạn speedup"
+    description: "Ước tính cận trên speedup từ phần tuần tự và phân biệt cận lý tưởng với overhead khi chạy Java ExecutorService."
+    transition:
+      to: performance-003
+      description: "Từ giới hạn lý thuyết chuyển sang thí nghiệm thay đổi thread count và đo tác động scheduling thực."
+  - id: performance-003
+    order: 3
+    title: "Đo tác động của thread count và context switching"
+    description: "Đo thực nghiệm số worker và context switching, tách overhead scheduling khỏi throughput, CPU saturation và blocking wait."
+    transition:
+      to: performance-004
+      description: "Khi biết thread count liên quan scheduling, phân biệt CPU saturation thực với thời gian chờ I/O."
+  - id: performance-004
+    order: 4
+    title: "CPU saturation so với I/O wait"
+    description: "Chẩn đoán CPU saturation, thread CPU versus wall time và các kiểu I/O wait; dùng JVM+OS metrics để tránh tối ưu sai."
+    transition:
+      to: performance-005
+      description: "Khi tách được CPU/I/O bottleneck, xem sự chậm trễ do lock contention và đánh đổi fairness."
+  - id: performance-005
+    order: 5
+    title: "Lock contention, starvation và fairness trade-off"
+    description: "Đánh giá chi phí tranh chấp lock, starvation và fair/nonfair tradeoff qua latency, throughput và cách giảm chia sẻ trạng thái."
+    transition:
+      to: performance-006
+      description: "Từ tranh chấp trên lock chuyển sang tranh chấp tại hàng đợi executor và cơ chế rejection."
+  - id: performance-006
+    order: 6
+    title: "Queue length, rejection và hiệu ứng quá tải"
+    description: "Phân tích cơ chế nhận task của ThreadPoolExecutor, giới hạn queue và ý nghĩa từng rejection policy khi tải vượt capacity."
+    transition:
+      to: performance-007
+      description: "Khi biết queue tác động latency, dùng Little's Law để liên hệ throughput, số việc đang chờ và thời gian lưu hệ thống."
+  - id: performance-007
+    order: 7
+    title: "Little's Law để liên hệ lượng tác vụ, thời gian chờ và throughput"
+    description: "Áp dụng Little's Law vào bounded executor và phân biệt queue wait, in-flight, throughput trong một cửa sổ ổn định."
+    transition:
+      to: performance-008
+      description: "Sau các hàng đợi phần mềm, xem chi phí phần cứng khi những thread cập nhật dữ liệu khác nhau nhưng gần cùng cache line."
+  - id: performance-008
+    order: 8
+    title: "False sharing và cache-line contention"
+    description: "Giải thích false sharing theo cache-line coherence và giới hạn của benchmark, padding, @Contended trên các JVM/hardware khác nhau."
+    transition:
+      to: performance-009
+      description: "Từ tranh chấp cache-line chuyển sang lựa chọn bộ đếm AtomicLong và LongAdder khi nhiều thread cùng cập nhật một giá trị."
+  - id: performance-009
+    order: 9
+    title: "LongAdder so với AtomicLong dưới contention"
+    description: "So sánh atomic single-value counter với striped adder, giới hạn sum/reset và chọn theo semantic của số liệu."
+    transition:
+      to: performance-010
+      description: "Khi muốn tin kết luận AtomicLong và LongAdder nhanh hơn, cần benchmark JMH đúng workload và nhiều thread."
+  - id: performance-010
+    order: 10
+    title: "Benchmark đáng tin cậy với JMH (công cụ ngoài JDK)"
+    description: "Dùng JMH ngoài JDK để xây dựng benchmark concurrency có fork, warmup, Group, Blackhole và phân tích số liệu lặp lại."
+    transition:
+      to: performance-011
+      description: "Từ công cụ JMH, đi sâu vào lý do cần warm-up JVM/JIT và chống những tối ưu hóa làm phép đo sai."
+  - id: performance-011
+    order: 11
+    title: "Warming up JVM, JIT và tránh microbenchmark sai"
+    description: "Phân tích warmup/JIT và optimizer để phân biệt cold-start, steady-state, loại bỏ phép đo sai do constant folding hoặc dead-code elimination."
+    transition:
+      to: performance-012
+      description: "Sau khi đo đúng khả năng xử lý, thiết kế giới hạn admission và backpressure để bảo vệ hệ thống khi tải vượt capacity."
+  - id: performance-012
+    order: 12
+    title: "Giới hạn tài nguyên và backpressure để bảo vệ hệ thống"
+    description: "Thiết kế giới hạn tài nguyên và backpressure qua bounded executor, Semaphore, Flow demand, deadlines và load shedding."
+    transition:
+      to: performance-013
+      description: "Kết thúc chương bằng một nút contention nhỏ nhưng phổ biến: sinh số ngẫu nhiên trong nhiều thread và giới hạn của ThreadLocalRandom."
+  - id: performance-013
+    order: 13
+    title: "ThreadLocalRandom.current(): tránh tranh chấp, khả năng tái lập và giới hạn bảo mật"
+    description: "Giảm contention khi nhiều worker sinh pseudo-random, phân biệt reproducible seeded tasks và yêu cầu mật mã của SecureRandom."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 | Bài 13 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Latency, throughput, utilization và độ ổn định | Amdahl's law và giới hạn speedup | Đo tác động của thread count và context switching | CPU saturation so với I/O wait | Lock contention, starvation và fairness trade-off | Queue length, rejection và hiệu ứng quá tải | Little's Law để liên hệ lượng tác vụ, thời gian chờ và throughput | False sharing và cache-line contention | LongAdder so với AtomicLong dưới contention | Benchmark đáng tin cậy với JMH (công cụ ngoài JDK) | Warming up JVM, JIT và tránh microbenchmark sai | Giới hạn tài nguyên và backpressure để bảo vệ hệ thống | ThreadLocalRandom.current(): tránh tranh chấp, khả năng tái lập và giới hạn bảo mật |
+  | Vấn đề cần hiểu | Đo nhanh, nhiều, bận và ổn định theo cách nào? | Vì sao thêm worker không thể tạo speedup vô hạn? | Bao nhiêu thread là quá nhiều, đo bằng gì? | Chậm vì thiếu CPU hay vì chờ tài nguyên? | Công bằng có cải thiện throughput hay chỉ tail latency? | Điều gì xảy ra khi task đến nhanh hơn executor xử lý? | Số việc in-flight, throughput và thời gian liên hệ sao? | Vì sao các biến độc lập vẫn có thể chậm do cache? | Khi nào striped adder tốt hơn atomic counter? | Làm sao so benchmark đáng tin trên JVM? | Tại sao cùng code có thời gian chạy khác nhau? | Làm sao bảo vệ tài nguyên khi producer quá nhanh? | Sinh số ngẫu nhiên nhiều thread sao cho nhanh và đúng? |
+  | Giá trị đối với OOP/module | Tạo baseline hiệu năng và cảnh báo quá tải | Không đầu tư sai vào parallelism kém hiệu quả | Chọn worker theo workload và CPU hữu dụng | Tránh tăng thread khi sai bottleneck | Giảm chờ lock và tránh starvation | Ngăn backlog vô hạn và chọn rejection minh bạch | Kiểm tra nhất quán chỉ số và sizing ban đầu | Giảm chi phí coherence ở workload ghi nóng | Đo đếm đúng và giảm CAS contention | Có bằng chứng tái lập trước khi tối ưu | Tránh benchmark sai vì JIT và warmup | Giữ hệ thống ổn định khi quá tải | Tránh seed contention, giữ test tái lập, bảo vệ token |
+  | Tư duy hình thành | Đặt cùng ranh giới đo và cân bằng nhiều metric | Phân biệt giới hạn lý tưởng và kết quả đo thật | Thay một biến và quan sát toàn bộ chi phí | Bằng chứng từ nhiều tầng trước khi kết luận | Đo chi phí tiến triển của từng nhóm worker | Queue chỉ đệm burst, không tạo thêm capacity | Đặt ranh giới hệ thống trước khi dùng công thức | Xem layout và mẫu truy cập, không chỉ tên biến | Chọn theo hợp đồng đọc/ghi của dữ liệu | Thiết kế thí nghiệm và đọc sai số thay vì tin một số | Xem JVM phase là một phần của phép đo | Chỉ nhận khối lượng công việc có thể phục vụ | Tách hiệu năng PRNG, tái lập và an toàn mật mã |

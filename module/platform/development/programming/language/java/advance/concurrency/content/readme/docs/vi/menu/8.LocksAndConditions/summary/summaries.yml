@@ -1,0 +1,375 @@
+summaries:
+- id: locks-and-conditions-001
+  title: Lock interface so với intrinsic monitor
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lock interface so với intrinsic monitor**
+
+    Bài học đặt nền tảng để phân biệt khóa monitor do `synchronized` quản lý với giao diện `Lock` và `ReentrantLock` do lập trình viên quản lý. Việc chọn đúng cơ chế quyết định cách bảo vệ bất biến, quy tắc nhả khóa, chờ tín hiệu, tính tái nhập và memory visibility.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và hợp đồng
+
+    1. Intrinsic monitor gắn với đối tượng nào và `synchronized` tự cấp, nhả khóa tại những điểm nào?
+    2. Giao diện `Lock` khác monitor ra sao về acquisition, release, timeout và interrupt?
+    3. Vì sao cả monitor và explicit lock chỉ bảo vệ được dữ liệu khi mọi code path tuân cùng giao thức?
+
+    ### Lựa chọn và giới hạn
+
+    1. Khi nào `synchronized` đủ dùng, khi nào nhiều `Condition` hoặc timed acquisition tạo giá trị?
+    2. Điều gì xảy ra nếu các worker khóa những object khác nhau dù cùng tên biến hoặc cùng phương thức?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh cơ chế đồng bộ | Đối chiếu monitor với `Lock` qua quyền sở hữu, reentrancy, cách nhả và memory visibility. |
+    | Viết critical section đúng | Thiết kế hai counter có chia sẻ state và giải thích vì sao `synchronized` hoặc `try/finally` bảo đảm kết quả. |
+    | Chọn API phù hợp | Đưa ra lý do dùng monitor, explicit lock hoặc Condition cho một tình huống cụ thể. |
+- id: locks-and-conditions-002
+  title: 'ReentrantLock: lock(), unlock() và finally'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ReentrantLock: lock(), unlock() và finally**
+
+    Bài này thực hành mẫu `lock()` → `try` → `finally` → `unlock()` và số lần unlock tương ứng với mức tái nhập. Người học nhận diện những đường thoát qua return hoặc exception có thể làm rò khóa và khiến các thread khác đứng chờ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quyền sở hữu và vòng đời khóa
+
+    1. Vì sao phải gọi `lock()` trước `try` và `unlock()` trong `finally`?
+    2. Reentrancy và hold count ảnh hưởng thế nào nếu một thread lấy cùng ReentrantLock nhiều lần?
+    3. Lúc nào `unlock()` ném `IllegalMonitorStateException`?
+
+    ### Xử lý lỗi và áp dụng
+
+    1. Nếu code trong critical section ném exception, mẫu nào vẫn bảo đảm giải phóng khóa?
+    2. Vì sao khóa chỉ một phần của thao tác kiểm tra rồi cập nhật có thể phá invariant?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quản lý lock an toàn | Viết class counter đa luồng có `lock/unlock` cân bằng và giải thích đường exception. |
+    | Phân tích reentrancy | Dự đoán hold count, thread owner và hậu quả khi unlock thiếu hoặc thừa. |
+    | Bảo vệ bất biến | Xác định phạm vi critical section cho thao tác kiểm tra rồi cập nhật trạng thái. |
+- id: locks-and-conditions-003
+  title: tryLock() và timeout khi tranh chấp khóa
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **tryLock() và timeout khi tranh chấp khóa**
+
+    Khi không thể chấp nhận đợi khóa vô hạn, `tryLock()` và `tryLock(timeout, unit)` cho phép caller phản hồi việc không lấy được lock. Bài học làm rõ giá trị boolean, deadline, interruption và cleanup khi acquisition thành công.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### API và thời hạn
+
+    1. `tryLock()` không tham số khác `tryLock(timeout, unit)` như thế nào?
+    2. Vì sao `isLocked()` rồi gọi `lock()` có race condition?
+    3. Khi nào timed tryLock ném `InterruptedException`, và khi nào trả `false`?
+
+    ### Thiết kế phương án dự phòng
+
+    1. Vì sao chỉ được `unlock()` sau một lần acquisition thành công?
+    2. Làm thế nào phân bổ một time budget qua nhiều bước tranh chấp lock và chọn fallback có ý nghĩa?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn kiểu acquisition | Phân tích yêu cầu thử ngay, chờ có hạn hoặc đợi vô hạn để chọn đúng overload. |
+    | Cài đặt timeout | Viết hàm thử cập nhật dưới ReentrantLock trả kết quả và luôn release đúng đường. |
+    | Thiết kế fallback | Giải thích khi nên retry, trả lỗi hoặc bỏ tác vụ sau khi không lấy được khóa. |
+- id: locks-and-conditions-004
+  title: lockInterruptibly() và hỗ trợ hủy khi chờ lock
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **lockInterruptibly() và hỗ trợ hủy khi chờ lock**
+
+    `lockInterruptibly()` cho phép thread đang chờ quyền sở hữu ReentrantLock phản ứng với interrupt trước khi vào critical section. Bài học phân tích interrupt flag, `InterruptedException`, `Future.cancel(true)` và ranh giới hủy an toàn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Interrupt khi acquisition
+
+    1. `lockInterruptibly()` phản ứng với interrupt khác `lock()` như thế nào?
+    2. Điều gì xảy ra khi thread bị interrupt trước khi có lock, hoặc sau khi đã vào critical section?
+    3. Vì sao không gọi `unlock()` khi `lockInterruptibly()` đã ném `InterruptedException`?
+
+    ### Chính sách hủy
+
+    1. Khi bắt `InterruptedException`, lúc nào phải khôi phục cờ interrupt hoặc truyền tiếp exception?
+    2. Vì sao `Future.cancel(true)` là yêu cầu hợp tác, và làm sao bảo vệ invariant khi hủy task?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Hủy thread chờ khóa | Tạo tình huống một thread giữ lock, một worker chờ interruptibly và kiểm chứng đường hủy. |
+    | Xử lý interruption | Giải thích interrupt flag, exception và cleanup đối với mỗi thời điểm hủy. |
+    | Đảm bảo dữ liệu nhất quán | Thiết kế điểm hủy ở ranh giới hợp lệ mà không nhả khóa khi chưa sở hữu. |
+- id: locks-and-conditions-005
+  title: 'Fairness policy: throughput và starvation'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Fairness policy: throughput và starvation**
+
+    Chính sách fair và nonfair quyết định cách các waiter cạnh tranh khi khóa được nhả, nhưng không đảm bảo cùng lúc throughput cao và không starvation. Bài học giải thích barging, lock convoy, latency và ngoại lệ `tryLock()` ngay lập tức trên fair lock.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Fairness và scheduling
+
+    1. Fair `ReentrantLock(true)` khác nonfair lock trong cách phục vụ waiter thế nào?
+    2. Vì sao `tryLock()` không tham số có thể chen hàng ngay cả trên fair lock?
+    3. Fairness có xóa bỏ mọi dạng starvation hay deadlock không?
+
+    ### Đo lường và quyết định
+
+    1. Cần đo throughput, tail latency và wait-time như thế nào để chọn chính sách?
+    2. Vì sao fair lock có thể làm giảm tổng throughput dù giảm rủi ro một waiter bị vượt hàng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích chính sách fair | Giải thích cơ chế barging và sự khác biệt giữa fair lock và nonfair lock. |
+    | Thiết kế phép đo | Đề xuất metric throughput, latency, starvation cho benchmark hai cấu hình. |
+    | Nhận diện giới hạn | Phân biệt starvation, deadlock, lock convoy và chỉ ra điều fairness không tự giải quyết. |
+- id: locks-and-conditions-006
+  title: Condition await(), signal(), signalAll()
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Condition await(), signal(), signalAll()**
+
+    `Condition` không tự mang giá trị đúng/sai của trạng thái nghiệp vụ; nó là hàng đợi chờ liên kết với một `Lock`. Bài học xây dựng giao thức predicate, `await`, `signal` và `signalAll` cho producer-consumer có nhiều điều kiện.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lock, predicate và condition queue
+
+    1. Condition có quan hệ thế nào với ReentrantLock sở hữu nó và predicate được bảo vệ?
+    2. `await()` nhả và lấy lại lock ở những thời điểm nào?
+    3. `signal()` và `signalAll()` đánh thức waiter khác nhau ra sao, và tại sao tín hiệu không chuyển quyền sở hữu lock ngay?
+
+    ### Ứng dụng và hủy
+
+    1. Làm thế nào dùng hai Condition `notEmpty` và `notFull` để điều phối bounded buffer?
+    2. Khi nào dùng await có timeout hoặc interrupt thay vì `awaitUninterruptibly()`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết giao thức Condition | Cài đặt producer-consumer với predicate, Condition phù hợp và cập nhật state dưới cùng lock. |
+    | Phân tích tín hiệu | Giải thích vì sao signal không lưu trạng thái và waiter phải lấy lại lock trước khi kiểm tra. |
+    | Xử lý timeout/hủy | Chọn biến thể await và quản lý `InterruptedException` đúng yêu cầu. |
+- id: locks-and-conditions-007
+  title: Vì sao await() luôn cần vòng lặp kiểm tra điều kiện
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vì sao await() luôn cần vòng lặp kiểm tra điều kiện**
+
+    Spurious wakeup, nhiều waiter tranh một tài nguyên và thay đổi predicate trước khi giành lại lock khiến `if` quanh `await()` không an toàn. Bài học dùng ví dụ phản chứng tái hiện được để xây dựng quy tắc kiểm tra `while (!predicate)`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lý do phải kiểm tra lại
+
+    1. Spurious wakeup là gì và vì sao không được đồng nhất wakeup với predicate đúng?
+    2. Hai waiter được `signalAll()` nhưng chỉ có một permit sẽ làm hỏng chương trình dùng `if` như thế nào?
+    3. Tại sao predicate có thể đổi trước khi waiter giành lại lock?
+
+    ### Chứng minh giao thức chờ
+
+    1. Làm thế nào chứng minh `while (!predicate) await()` và thay đổi state dưới cùng lock ngăn lost wakeup?
+    2. Timeout hoặc `awaitUninterruptibly()` có xóa nhu cầu kiểm tra predicate trong vòng lặp không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phản chứng dùng if | Mô phỏng lịch chạy hai waiter, một permit và chỉ ra lỗi do kiểm tra một lần. |
+    | Sửa giao thức Condition | Chuyển if thành while, bảo vệ predicate và đặt signal đúng sau cập nhật state. |
+    | Đánh giá tình huống đánh thức | Phân tích spurious wakeup, timeout và tranh giành lại lock mà không vi phạm invariant. |
+- id: locks-and-conditions-008
+  title: ReadWriteLock cho read-heavy workload
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ReadWriteLock cho read-heavy workload**
+
+    `ReadWriteLock` cho nhiều reader cùng đọc trạng thái bất biến về mặt logic nhưng vẫn bảo vệ writer bằng quyền độc quyền. Bài học tập trung vào điều kiện hiệu quả của workload đọc nhiều, phạm vi khóa và cách đo để quyết định có đáng dùng hơn lock đơn giản hay không.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế read/write
+
+    1. Read lock và write lock cho phép những kết hợp reader/writer nào chạy đồng thời?
+    2. Vì sao method tên `get()` vẫn có thể cần write lock nếu cập nhật cache hoặc metric chia sẻ?
+    3. Như thế nào là một snapshot nhất quán của nhiều trường?
+
+    ### Hiệu năng và đánh đổi
+
+    1. Vì sao read-heavy chưa đủ để khẳng định ReadWriteLock sẽ nhanh hơn ReentrantLock?
+    2. Khi nào immutable snapshot hoặc ConcurrentHashMap phù hợp hơn read/write lock?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại thao tác truy cập | Xác định method nào thực sự chỉ đọc và method nào phải dùng write lock. |
+    | Thiết kế đọc song song | Xây dựng class dữ liệu nhiều reader, writer độc quyền và nhả lock trong finally. |
+    | So sánh hiệu năng | Đề xuất benchmark throughput, contention và tỷ lệ đọc/ghi để đánh giá lợi ích. |
+- id: locks-and-conditions-009
+  title: 'ReentrantReadWriteLock: nâng/hạ cấp khóa và giới hạn'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ReentrantReadWriteLock: nâng/hạ cấp khóa và giới hạn**
+
+    Việc giữ read lock rồi cố lấy write lock có thể làm thread tự chặn; `ReentrantReadWriteLock` không hỗ trợ upgrade trực tiếp. Ngược lại, downgrade từ write sang read phải thực hiện đúng thứ tự để không làm hở snapshot nhất quán.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nâng/hạ cấp khóa
+
+    1. Vì sao một reader không thể nâng trực tiếp từ read lock sang write lock bằng cách lock tiếp?
+    2. Muốn nâng quyền ghi an toàn, vì sao phải nhả read lock và kiểm tra lại predicate sau khi lấy write lock?
+    3. Downgrade từ write sang read lock có thứ tự acquisition/release nào để bảo toàn trạng thái?
+
+    ### Giới hạn thiết kế
+
+    1. Reentrancy có đồng nghĩa với hỗ trợ read-to-write upgrade không?
+    2. Vì sao chỉ write lock hỗ trợ Condition và fairness không ngăn mọi starvation?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện deadlock nâng cấp | Mô phỏng tình huống giữ read lock rồi chờ write lock và giải thích vì sao bị kẹt. |
+    | Triển khai downgrade | Viết chuỗi writeLock → readLock → release writeLock với finally cân bằng. |
+    | Thiết kế lại upgrade | Áp dụng nhả read, lấy write và recheck predicate để tránh dữ liệu stale. |
+- id: locks-and-conditions-010
+  title: StampedLock với optimistic read
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **StampedLock với optimistic read**
+
+    `StampedLock` cho phép lấy snapshot lạc quan trước khi xác thực stamp nhằm giảm chi phí reader trong một số workload ít ghi. Bài này yêu cầu đọc vào biến local, gọi `validate()` và fallback về read lock khi snapshot có nguy cơ không nhất quán.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Optimistic read và stamp
+
+    1. `tryOptimisticRead()` cấp kiểu quyền nào và vì sao chưa bảo đảm mutual exclusion?
+    2. Vì sao phải copy các field vào local rồi validate stamp trước khi sử dụng snapshot?
+    3. Nếu validate thất bại, quy trình fallback an toàn dưới read lock là gì?
+
+    ### Giới hạn và chuyển đổi
+
+    1. Vì sao StampedLock không reentrant và điều này ảnh hưởng thế nào tới helper method?
+    2. Dùng `tryConvertToWriteLock()` khác gì nhả read rồi lấy write lock?
+    3. Khi nào chi phí retry/validate khiến StampedLock kém hiệu quả hơn ReentrantReadWriteLock?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cài đặt optimistic snapshot | Viết phương thức đọc nhiều field với tryOptimisticRead, validate và fallback đúng. |
+    | Quản lý stamp | Ghép stamp với unlock tương ứng, giải thích nguy cơ dùng sai hoặc reentry. |
+    | Quyết định áp dụng | Đánh giá read/write ratio, retry rate và độ phức tạp trước khi chọn StampedLock. |
+- id: locks-and-conditions-011
+  title: Chi phí, độ phức tạp và tiêu chí chọn loại lock
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chi phí, độ phức tạp và tiêu chí chọn loại lock**
+
+    Chọn giữa monitor, ReentrantLock, ReadWriteLock, StampedLock hoặc dữ liệu immutable đòi hỏi so sánh contention, latency, throughput, rủi ro starvation, fairness và độ phức tạp bảo trì. Bài học kết nối yêu cầu nghiệp vụ với phép đo để tránh tối ưu sai.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đánh đổi chi phí
+
+    1. Chi phí lock gồm những yếu tố nào ngoài thời gian gọi acquire/release?
+    2. Tại sao chỉ biết có nhiều reader chưa đủ để chọn read/write lock?
+    3. Fairness, reentrancy và interruptibility đặt ra những đánh đổi gì?
+
+    ### Quyết định theo chứng cứ
+
+    1. Khi nào dùng `synchronized`, khi nào cần ReentrantLock hoặc nhiều Condition?
+    2. Khi nào immutable snapshot, atomic hoặc concurrent collection là lựa chọn đơn giản hơn?
+    3. Bạn sẽ đo metric gì để xác nhận một loại lock tốt hơn trên workload đang xét?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập ma trận lựa chọn lock | Đối chiếu các primitive theo ownership, fairness, timeout, read concurrency và maintenance. |
+    | Thiết kế benchmark | Đề xuất phép đo contention, p95 latency, throughput và allocation cho ứng dụng cụ thể. |
+    | Đánh giá độ phức tạp | Chọn phương án ít rủi ro nhất vẫn bảo vệ invariant, giải thích tradeoff có căn cứ. |
+- id: locks-and-conditions-012
+  title: Lock hierarchy và cách tránh thứ tự khóa vòng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lock hierarchy và cách tránh thứ tự khóa vòng**
+
+    Khi một nghiệp vụ cần giữ nhiều lock cùng lúc, chỉ dùng từng lock đúng cách vẫn có thể deadlock vì thứ tự acquisition tạo vòng chờ. Bài học xây dựng thứ bậc khóa toàn cục, tie-break khi rank trùng và kiểm thử các giao dịch đảo chiều.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đồ thị chờ và hierarchy
+
+    1. Deadlock do circular wait xuất hiện như thế nào khi hai thread lấy khóa theo thứ tự đảo nhau?
+    2. Một thứ tự toàn cục theo rank hoặc ID bất biến loại bỏ vòng chờ bằng lập luận nào?
+    3. Vì sao các rank bằng nhau cần tie-break rõ ràng, và identityHashCode không bảo đảm duy nhất?
+
+    ### Áp dụng và giới hạn
+
+    1. Khi gọi helper hoặc callback trong lúc giữ lock, quy tắc hierarchy phải được duy trì thế nào?
+    2. Làm thế nào kiểm thử hai transfer ngược chiều và phân biệt deadlock với contention hoặc livelock?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích wait-for graph | Vẽ chu trình T1–L2–T2–L1 và xác định điều kiện circular wait. |
+    | Thiết kế lock order | Cài đặt thứ tự khóa ổn định cho nhiều tài khoản, xử lý rank trùng và đảm bảo unlock. |
+    | Kiểm thử ngăn deadlock | Tạo test chạy các chiều đảo ngược và xác minh completion cùng invariant. |

@@ -23,7 +23,7 @@ class ReadmeSheetImportServiceTest {
         assertTrue(module.mkdirs())
         List<Map> groups = [[title:'Chương OOP', filename:'OOPBasic.md', parentRow:20,
                              children:[[title:'Bài một',row:21],[title:'Bài hai',row:22]]]]
-        Map<String, String> docs = ReadmeSheetImportService.buildDocuments(groups,
+        Map<String, String> docs = ReadmeSheetImportService.buildDocuments(withIds(groups),
                 [[], ['Nội dung một\n```md\n## <a id="fake">Example only</a>\n```'],
                  ['Nội dung hai']])
         Map levels = ReadmeSheetImportService.buildSectionDifficulties(groups,
@@ -151,7 +151,7 @@ class ReadmeSheetImportServiceTest {
                 [], ['Ví dụ Java']
         ]
         Map<String, String> docs = ReadmeSheetImportService.buildDocuments(
-                menu.groups as List<Map<String, Object>>, knowledge
+                withIds(menu.groups as List<Map<String, Object>>), knowledge
         )
         assertEquals(['1.OOPBasic/knowledge/OOPBasic.md', '2.Class/knowledge/Class.md'], docs.keySet().toList())
         String oop = docs['1.OOPBasic/knowledge/OOPBasic.md']
@@ -165,7 +165,7 @@ class ReadmeSheetImportServiceTest {
         assertTrue(oop.contains('- [Chưa có bài](#oop-basic-003)'))
         assertTrue(docs['2.Class/knowledge/Class.md'].contains('id="class-001"'))
         assertEquals(docs, ReadmeSheetImportService.buildDocuments(
-                menu.groups as List<Map<String, Object>>, knowledge
+                withIds(menu.groups as List<Map<String, Object>>), knowledge
         ))
 
         assertEquals('http-server', ReadmeSheetImportService.slugFromStem('HTTPServer'))
@@ -183,7 +183,7 @@ class ReadmeSheetImportServiceTest {
         ])
         assertEquals('READY', menu.status)
         Map<String, String> docs = ReadmeSheetImportService.buildDocuments(
-                menu.groups as List<Map<String, Object>>,
+                withIds(menu.groups as List<Map<String, Object>>),
                 [[], ['Nội dung một'], ['Nội dung hai']]
         )
         String result = docs['1.GenericAPI/knowledge/GenericAPI.md']
@@ -204,7 +204,7 @@ class ReadmeSheetImportServiceTest {
         ])
         expectFailure {
             ReadmeSheetImportService.buildDocuments(
-                    menu.groups as List<Map<String, Object>>,
+                    withIds(menu.groups as List<Map<String, Object>>),
                     [[], ['C', '', 'E']]
             )
         }
@@ -221,7 +221,7 @@ class ReadmeSheetImportServiceTest {
             "[SECTION-${col}]-" + ('đ' * (col == 11 ? 19 : 2))
         }
         Map<String, String> result = ReadmeSheetImportService.buildDocuments(
-                menu.groups as List<Map<String, Object>>,
+                withIds(menu.groups as List<Map<String, Object>>),
                 [[], chunks]
         )
         String readme = result['1.Encapsulation/knowledge/Encapsulation.md']
@@ -234,14 +234,14 @@ class ReadmeSheetImportServiceTest {
         broken[10] = ''
         expectFailure {
             ReadmeSheetImportService.buildDocuments(
-                    menu.groups as List<Map<String, Object>>, [[], broken]
+                    withIds(menu.groups as List<Map<String, Object>>), [[], broken]
             )
         }
 
         // C:N is exactly twelve columns; a 13th fragment must not spill into O.
         expectFailure {
             ReadmeSheetImportService.buildDocuments(
-                    menu.groups as List<Map<String, Object>>,
+                    withIds(menu.groups as List<Map<String, Object>>),
                     [[], chunks + ['must-not-overlap-difficulty-O']]
             )
         }
@@ -385,6 +385,17 @@ class ReadmeSheetImportServiceTest {
         service.generate(readme)
         assertEquals(rendered, readme.getText('UTF-8'))
         assertEquals(rendered, service.render(rendered, 'vi'))
+    }
+
+    private static List<Map> withIds(List<Map> groups) {
+        groups.each { Map group ->
+            String stem = (group.filename as String).replaceFirst(/(?i)\.md$/, '')
+            String base = ReadmeSheetImportService.slugFromStem(stem)
+            (group.children as List<Map>).eachWithIndex { Map lesson, int index ->
+                lesson.id = "${base}-${String.format('%03d', index + 1)}"
+            }
+        }
+        return groups
     }
 
     private static void expectFailure(Closure action) {

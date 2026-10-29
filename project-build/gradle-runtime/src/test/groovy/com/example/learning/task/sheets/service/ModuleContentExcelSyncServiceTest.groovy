@@ -62,7 +62,13 @@ class ModuleContentExcelSyncServiceTest {
                         .contains('Language Specification'))
                 assertEquals('Summary', ModuleContentExcelSyncService.text(s, 18, 29))
                 assertEquals('Summary YAML', ModuleContentExcelSyncService.text(s, 19, 29))
-                assertEquals(structured, ModuleContentExcelSyncService.text(s, 20, 29))
+                String authored = ModuleContentExcelSyncService.text(s, 20, 29)
+                assertFalse(authored.contains('order:'))
+                assertFalse(authored.contains('id: basic-001'))
+                assertEquals(['basic-001'],
+                        (new org.yaml.snakeyaml.Yaml().load(
+                                SummarySectionYamlService.materialize(authored,
+                                        [[id:'basic-001',title:'Bài tiếng Việt']])) as Map).roadmap*.id)
                 assertEquals('Lesson EN', ModuleContentExcelSyncService.text(s, 21, 29))
             }
         }
@@ -217,6 +223,8 @@ class ModuleContentExcelSyncServiceTest {
             def sheet = book.getSheetAt(0)
             cell(sheet, 22, 1, 'Chương thứ hai')
             cell(sheet, 22, 2, 'More.md')
+            cell(sheet, 22, 3, 'more')
+            cell(sheet, 23, 1, 'more-001')
             cell(sheet, 23, 2, 'Bài thứ hai')
             baseline.withOutputStream { book.write(it) }
         }
@@ -300,37 +308,6 @@ questions:
         }
     }
 
-    @Test
-    void exportsOnePracticeFileIntoParentAdAgAndPreservesOriginalYaml() {
-        Map f = fixture()
-        File module = f.module as File
-        File base = f.source as File
-        new XSSFWorkbook(new ByteArrayInputStream(base.bytes)).withCloseable { book ->
-            def sheet = book.getSheetAt(0)
-            cell(sheet, 18, 30, 'Real-world Practice')
-            (30..33).each { int col -> cell(sheet, 19, col, 'Practice YAML') }
-            base.withOutputStream { book.write(it) }
-        }
-        String vi = PracticeSheetImportServiceTest.SCENARIO
-        String en = vi.replace('Phân tích hotfix','Hotfix analysis')
-                .replace('Một bản production cần vá lỗi.', 'Production needs a hotfix.')
-        write(module, 'content/readme/docs/vi/menu/1.Basic/practice/scenarios.yml', vi)
-        write(module, 'content/readme/docs/en/menu/1.Basic/practice/scenarios.yml', en)
-        byte[] viExcel = base.bytes
-        Map report = new ModuleContentExcelSyncService().execute(
-                f.root as File, module, 'PRACTICE', true)
-        assertEquals('EXPORTED', report.status)
-        assertArrayEquals(viExcel, base.bytes)
-        (f.target as File).withInputStream { stream ->
-            new XSSFWorkbook(stream).withCloseable { book ->
-                def s = book.getSheetAt(0)
-                assertEquals(en, (30..33).collect {
-                    ModuleContentExcelSyncService.text(s, 20, it)
-                }.join(''))
-                assertEquals('', ModuleContentExcelSyncService.text(s, 20, 31))
-            }
-        }
-    }
 
     private Map fixture() {
         File root = tmp.newFolder('repo')
@@ -347,6 +324,8 @@ questions:
             cell(sheet, 19, 2, 'Menu Cấp 2')
             cell(sheet, 20, 1, 'Chương tiếng Việt')
             cell(sheet, 20, 2, 'Basic.md')
+            cell(sheet, 20, 3, 'basic')
+            cell(sheet, 21, 1, 'basic-001')
             cell(sheet, 21, 2, 'Bài tiếng Việt')
             cell(sheet, 3, 6, 'Roadmap VI')
             cell(sheet, 3, 7, 'Purpose VI')

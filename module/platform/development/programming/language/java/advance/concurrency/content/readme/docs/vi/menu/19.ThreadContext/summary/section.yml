@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "NGỮ CẢNH LUỒNG — LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: thread-context-001
+    order: 1
+    title: "ThreadLocal: set(), get(), remove()"
+    description: "Xác định ThreadLocal theo identity của thread và ba thao tác set/get/remove, minh họa việc dọn binding."
+    transition:
+      to: thread-context-002
+      description: "Từ thao tác get/set/remove chuyển sang cách khởi tạo giá trị mặc định theo thread một cách lười."
+  - id: thread-context-002
+    order: 2
+    title: "Khởi tạo giá trị với ThreadLocal.withInitial()"
+    description: "Đi sâu vào ThreadLocal.withInitial, lazy supplier per-thread, null binding và việc khởi tạo object mutable an toàn."
+    transition:
+      to: thread-context-003
+      description: "Sau khi hiểu initializer theo thread, cần phân biệt việc kế thừa giá trị khi tạo child thread."
+  - id: thread-context-003
+    order: 3
+    title: "InheritableThreadLocal và các giới hạn kế thừa"
+    description: "Phân tích inheritance khi tạo thread, childValue, shallow reference và giới hạn trong executor/virtual thread."
+    transition:
+      to: thread-context-004
+      description: "Kế thừa tại lúc tạo thread không giải quyết vòng đời khi worker pool được tái sử dụng."
+  - id: thread-context-004
+    order: 4
+    title: "Rò rỉ context khi tái sử dụng thread pool"
+    description: "Tái hiện lỗi stale context trên pooled worker, phân biệt rò ngữ cảnh và giữ bộ nhớ, kiểm chứng cleanup."
+    transition:
+      to: thread-context-005
+      description: "Biết cách cleanup worker là cơ sở để truyền context có chủ đích qua Runnable/Callable."
+  - id: thread-context-005
+    order: 5
+    title: "Truyền context qua Runnable, Callable và executor"
+    description: "Dạy cơ chế capture–bind–restore trên Runnable/Callable và giới hạn decorator Executor khi truyền context qua asynchronous boundary."
+    transition:
+      to: thread-context-006
+      description: "Sau khi biết capture/bind/restore qua executor, phải thiết kế lifetime của request và các task con."
+  - id: thread-context-006
+    order: 6
+    title: "Context theo request và ranh giới vòng đời task"
+    description: "Đặt context vào vòng đời logic request/task, nested scopes, virtual threads, deadline, cancellation và child-task management."
+    transition:
+      to: thread-context-007
+      description: "Khi vòng đời task đã rõ, đánh giá hệ quả của ThreadLocal với rất nhiều virtual threads."
+  - id: thread-context-007
+    order: 7
+    title: "ThreadLocal khi chạy hàng nghìn virtual threads"
+    description: "Tập trung chi phí per-virtual-thread của ThreadLocal, cache duplication và lựa chọn propagation theo JDK."
+    transition:
+      to: thread-context-008
+      description: "Chi phí context per-thread dẫn tới việc cân nhắc binding chỉ đọc theo scope trên JDK mới."
+  - id: thread-context-008
+    order: 8
+    title: "Scoped Values (preview ở Java 21) để chia sẻ context bất biến"
+    description: "Giới thiệu ScopedValue dynamic binding ở JDK21 preview, scope restoration và khác biệt theo JDK25."
+    transition:
+      to: thread-context-009
+      description: "ScopedValue mở rộng lựa chọn, nhưng tham số tường minh vẫn là nền tảng khi dòng dữ liệu đơn giản."
+  - id: thread-context-009
+    order: 9
+    title: "Ưu tiên tham số tường minh khi luồng dữ liệu đơn giản"
+    description: "Ưu tiên explicit parameters, immutable record và closure khi ít dữ liệu phải truyền qua task."
+    transition:
+      to: thread-context-010
+      description: "Đã chọn cách truyền context, cuối cùng phải tách metadata an toàn khỏi state nghiệp vụ mutable."
+  - id: thread-context-010
+    order: 10
+    title: "Không lưu state nghiệp vụ mutable vào context chung"
+    description: "Ngăn đưa domain state mutable vào context chung, phân biệt per-request immutable metadata với shared business state."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | ThreadLocal: set(), get(), remove() | Khởi tạo giá trị với ThreadLocal.withInitial() | InheritableThreadLocal và các giới hạn kế thừa | Rò rỉ context khi tái sử dụng thread pool | Truyền context qua Runnable, Callable và executor | Context theo request và ranh giới vòng đời task | ThreadLocal khi chạy hàng nghìn virtual threads | Scoped Values (preview ở Java 21) để chia sẻ context bất biến | Ưu tiên tham số tường minh khi luồng dữ liệu đơn giản | Không lưu state nghiệp vụ mutable vào context chung |
+  | Vấn đề cần hiểu | ThreadLocal lưu gì ở mỗi thread và dọn khi nào? | Khởi tạo một giá trị ThreadLocal riêng, lười và đúng vòng đời thế nào? | Context được kế thừa lúc nào và giới hạn ở đâu? | Vì sao worker tái sử dụng có thể làm lộ context cũ? | Truyền context đúng khi Runnable/Callable chạy trên thread khác thế nào? | Context sống từ đâu tới đâu trong một request nhiều task? | ThreadLocal có còn phù hợp với hàng nghìn virtual threads? | ScopedValue giảm nhu cầu context mutable với scope ngắn ra sao? | Khi nào tham số tường minh tốt hơn ambient context? | Vì sao context chung không phải kho mutable domain state? |
+  | Giá trị đối với OOP/module | Đọc đúng ngữ cảnh trên một thread và tránh stale binding | Sử dụng initializer đúng mà không chia sẻ nhầm state | Ngăn dựa sai vào cơ chế kế thừa khi có pool | Ngăn lẫn dữ liệu giữa những task trên cùng worker | Propagation có chủ đích mà không lộ dữ liệu qua task | Tránh context tồn tại ngoài tác vụ hoặc kết thúc sai thời điểm | Tránh tăng heap/allocation không cần thiết | Diễn đạt ngữ cảnh bất biến có vòng đời ràng buộc | Giảm hidden dependencies và tăng khả năng test | Ngăn lẫn state và race giữa các yêu cầu |
+  | Tư duy hình thành | Nhận diện vòng đời dữ liệu theo thread | Phân biệt per-thread initialization với per-request initialization | Phân biệt quan hệ parent–child với task scheduling | Bắt đầu và kết thúc context theo từng task | Ràng buộc context với execution boundary, không đoán worker | Thiết kế lifetime theo công việc, không theo worker | Đo footprint theo số virtual threads đang sống | Quản lý binding theo scope và phiên bản JDK | Dữ liệu đi theo lời gọi rõ ràng | Phân chia ownership và immutability của dữ liệu |

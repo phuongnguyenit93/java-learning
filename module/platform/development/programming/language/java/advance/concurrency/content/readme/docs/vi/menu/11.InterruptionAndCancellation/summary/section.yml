@@ -1,0 +1,103 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "INTERRUPTION VÀ CANCELLATION — LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: interruption-and-cancellation-001
+    order: 1
+    title: "Interrupt là tín hiệu hợp tác, không phải dừng cưỡng bức"
+    description: "Giải thích interrupt là tín hiệu hợp tác và phân biệt yêu cầu với kết thúc worker."
+    transition:
+      to: interruption-and-cancellation-002
+      description: "Từ mô hình interrupt hợp tác đến các API thao tác trực tiếp với cờ."
+  - id: interruption-and-cancellation-002
+    order: 2
+    title: "interrupt(), isInterrupted() và Thread.interrupted()"
+    description: "Phân biệt interrupt(), isInterrupted() và Thread.interrupted() trên cờ và thread hiện tại."
+    transition:
+      to: interruption-and-cancellation-003
+      description: "Từ trạng thái cờ đến cách blocking API báo interruption qua ngoại lệ."
+  - id: interruption-and-cancellation-003
+    order: 3
+    title: "InterruptedException và cách xử lý hợp lệ"
+    description: "Chọn propagate, restore hoặc xử lý trọn InterruptedException tùy boundary."
+    transition:
+      to: interruption-and-cancellation-004
+      description: "Từ chính sách xử lý tổng quát đến boundary không thể truyền checked exception."
+  - id: interruption-and-cancellation-004
+    order: 4
+    title: "Khôi phục interrupt flag khi không thể truyền ngoại lệ"
+    description: "Thực hành restore flag tại Runnable/callback không thể khai báo checked exception."
+    transition:
+      to: interruption-and-cancellation-005
+      description: "Từ cách giữ tín hiệu ở method boundary đến khả năng phản hồi của từng điểm chờ."
+  - id: interruption-and-cancellation-005
+    order: 5
+    title: "Điểm chặn hỗ trợ và không hỗ trợ interrupt"
+    description: "Phân loại blocking points interruptible và non-interruptible, bao gồm lock, monitor và I/O."
+    transition:
+      to: interruption-and-cancellation-006
+      description: "Từ điểm chờ interruptible đến cancellation flag do ứng dụng kiểm soát."
+  - id: interruption-and-cancellation-006
+    order: 6
+    title: "Thiết kế cancellation flag, volatile và cleanup"
+    description: "Thiết kế cancellation flag volatile/AtomicBoolean, wake-up và cleanup idempotent."
+    transition:
+      to: interruption-and-cancellation-007
+      description: "Từ worker tự quản lý hủy đến trạng thái hủy do Future cung cấp."
+  - id: interruption-and-cancellation-007
+    order: 7
+    title: "Future.cancel(true) và các giới hạn thực tế"
+    description: "Làm rõ cancel(true)/cancel(false) không bảo đảm worker đã dừng."
+    transition:
+      to: interruption-and-cancellation-008
+      description: "Từ Future cancellation đến sự khác biệt với timeout và deadline."
+  - id: interruption-and-cancellation-008
+    order: 8
+    title: "Timeout khác cancellation thế nào?"
+    description: "Phân biệt deadline/timed wait với cancellation và race liên quan tác dụng phụ."
+    transition:
+      to: interruption-and-cancellation-009
+      description: "Từ giới hạn thời gian một task đến việc đóng toàn bộ executor."
+  - id: interruption-and-cancellation-009
+    order: 9
+    title: "shutdown(), shutdownNow() và awaitTermination()"
+    description: "So sánh shutdown, shutdownNow và awaitTermination trong vòng đời executor."
+    transition:
+      to: interruption-and-cancellation-010
+      description: "Từ yêu cầu dừng executor đến việc bảo đảm cleanup cho tài nguyên mỗi task."
+  - id: interruption-and-cancellation-010
+    order: 10
+    title: "Đảm bảo finally đóng tài nguyên khi dừng tác vụ"
+    description: "Bảo đảm finally/try-with-resources giải phóng tài nguyên sau khi worker thực sự thoát."
+    transition:
+      to: interruption-and-cancellation-011
+      description: "Từ tài nguyên của một task đến lan truyền yêu cầu hủy qua nhiều tầng."
+  - id: interruption-and-cancellation-011
+    order: 11
+    title: "Phân tầng tín hiệu hủy trong chuỗi xử lý"
+    description: "Thiết kế cancellation propagation qua parent/child task, token và coordinator."
+    transition:
+      to: interruption-and-cancellation-012
+      description: "Từ kiến trúc lan truyền tín hiệu đến code review các nơi làm mất interrupt."
+  - id: interruption-and-cancellation-012
+    order: 12
+    title: "Không nuốt InterruptedException hoặc làm mất tín hiệu hủy"
+    description: "Phát hiện swallow InterruptedException và sửa các đường retry/cleanup sai."
+    transition:
+      to: interruption-and-cancellation-013
+      description: "Từ anti-pattern nuốt interrupt đến lý do không dùng dừng cưỡng bức."
+  - id: interruption-and-cancellation-013
+    order: 13
+    title: "Vì sao tránh Thread.stop(), suspend() và resume(): rủi ro khóa và tính nhất quán"
+    description: "Phân tích API stop/suspend/resume lịch sử và chọn cooperative stop/pause an toàn."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 | Bài 13 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Interrupt là tín hiệu hợp tác, không phải dừng cưỡng bức | interrupt(), isInterrupted() và Thread.interrupted() | InterruptedException và cách xử lý hợp lệ | Khôi phục interrupt flag khi không thể truyền ngoại lệ | Điểm chặn hỗ trợ và không hỗ trợ interrupt | Thiết kế cancellation flag, volatile và cleanup | Future.cancel(true) và các giới hạn thực tế | Timeout khác cancellation thế nào? | shutdown(), shutdownNow() và awaitTermination() | Đảm bảo finally đóng tài nguyên khi dừng tác vụ | Phân tầng tín hiệu hủy trong chuỗi xử lý | Không nuốt InterruptedException hoặc làm mất tín hiệu hủy | Vì sao tránh Thread.stop(), suspend() và resume(): rủi ro khóa và tính nhất quán |
+  | Vấn đề cần hiểu | Interrupt có buộc thread dừng ngay không? | Gửi, đọc và xóa cờ interrupt khác nhau thế nào? | Phản ứng hợp lệ khi blocking call ném InterruptedException là gì? | Giữ tín hiệu hủy thế nào khi method không khai báo checked exception? | Điểm chờ nào phản hồi interrupt, điểm nào tiếp tục chặn? | Phát tín hiệu hủy ứng dụng và dọn tài nguyên an toàn ra sao? | Cancel Future có đồng nghĩa dừng worker thực tế không? | Hết thời gian chờ khác yêu cầu dừng như thế nào? | Đóng executor thế nào để không thất lạc công việc? | Làm sao chứng minh resource đã được giải phóng sau khi dừng? | Làm sao truyền hủy từ request đến child tasks? | Vì sao worker bỏ qua hủy dù đã nhận InterruptedException? | Vì sao dừng cưỡng bức làm hỏng trạng thái chia sẻ? |
+  | Giá trị đối với OOP/module | Thiết lập hợp đồng dừng tác vụ an toàn. | Không vô tình làm mất yêu cầu hủy. | Giữ hợp đồng hủy và cleanup. | Tránh mất cancellation ở ranh giới API. | Chọn primitive có khả năng dừng phù hợp. | Xây worker cooperative không rò resource. | Tránh nhầm trạng thái kết quả với trạng thái tài nguyên. | Ngăn retry và side effect không kiểm soát. | Điều phối kết thúc worker pool có hạn. | Ngăn resource leak và che mất lỗi gốc. | Tránh orphan tasks và partial work khó xử lý. | Giữ tín hiệu hủy qua code review. | Bảo vệ lock và invariant. |
+  | Tư duy hình thành | Tách ý định hủy, phản hồi và kết thúc. | Suy luận trạng thái theo từng thao tác và thread. | Quyết định theo chữ ký và trách nhiệm method. | Phối hợp restore, exit và cleanup. | Dựa vào hợp đồng API thay vì chỉ thread state. | Tách yêu cầu, đánh thức và kết thúc. | Tách request cancel khỏi task termination. | Theo dõi deadline và race tường minh. | Phân biệt lệnh đóng, chờ và xử lý pending. | Theo dõi cleanup thật thay vì Future state. | Phân tầng trách nhiệm và truyền tín hiệu. | Đánh giá catch block như cancellation contract. | Thiết kế pause/stop qua safe point và predicate. |

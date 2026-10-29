@@ -1,0 +1,391 @@
+summaries:
+- id: interruption-and-cancellation-001
+  title: Interrupt là tín hiệu hợp tác, không phải dừng cưỡng bức
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Interrupt là tín hiệu hợp tác, không phải dừng cưỡng bức**
+
+    Interrupt chỉ yêu cầu worker hợp tác dừng; đây không phải lệnh kill thread. Bài giải thích vòng CPU-bound, sleep, Future và cleanup để tách signal, acknowledgement và termination.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình tín hiệu
+
+    1. Vì sao gửi interrupt không khẳng định thread đã dừng?
+    2. Vòng CPU-bound không kiểm tra cờ sẽ phản ứng ra sao?
+
+    ### Từ yêu cầu đến kết thúc
+
+    1. Vì sao sleep có thể ném InterruptedException nhưng chờ monitor vẫn không bị phá?
+    2. Làm sao chứng minh worker đã hoàn thành cleanup sau yêu cầu hủy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện semantics | Vẽ timeline request interrupt, flag và worker exit. |
+    | Thiết kế hợp tác | Viết vòng CPU-bound có isInterrupted và lối thoát rõ. |
+    | Kiểm chứng kết thúc | Phân biệt Future canceled với worker/resource terminated. |
+- id: interruption-and-cancellation-002
+  title: interrupt(), isInterrupted() và Thread.interrupted()
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **interrupt(), isInterrupted() và Thread.interrupted()**
+
+    Ba API tác động khác nhau lên cờ interrupt. Bài mô tả lệnh gửi, thao tác đọc không xóa và thao tác đọc-xóa của thread hiện tại, qua các ví dụ có trạng thái quan sát được.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ba API và cờ trạng thái
+
+    1. Thread.interrupt tác động tới đối tượng thread nào?
+    2. isInterrupted khác Thread.interrupted về đối tượng và side effect nào?
+
+    ### Thứ tự và hiệu ứng phụ
+
+    1. Điều gì xảy ra khi interrupt đến trước sleep?
+    2. Vì sao Thread.interrupted trong vòng lặp có thể tiêu thụ tín hiệu hủy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán cờ | Theo dõi flag qua các lời gọi interrupt/isInterrupted/interrupted. |
+    | Lựa chọn API | Thay thao tác test-and-clear sai bằng phép kiểm tra phù hợp. |
+    | Kiểm thử hai thread | Giải thích kết quả Java 17 của test-and-clear có đồng bộ xác định. |
+- id: interruption-and-cancellation-003
+  title: InterruptedException và cách xử lý hợp lệ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **InterruptedException và cách xử lý hợp lệ**
+
+    InterruptedException là tín hiệu điều khiển luồng ở điểm chờ có khả năng ngắt. Bài giúp lựa chọn propagate, restore rồi thoát hoặc xử lý trọn theo hợp đồng, đồng thời bảo vệ finally và tài nguyên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa checked exception
+
+    1. Vì sao sleep hoặc BlockingQueue có thể xóa interrupt status khi ném exception?
+    2. Khi nào nên truyền InterruptedException lên caller?
+
+    ### Chính sách tại boundary
+
+    1. Nếu method không thể throws, tại sao cần restore và thường phải thoát?
+    2. Trong awaitTermination hoặc cleanup, cần giữ tín hiệu hủy ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại xử lý | Lựa chọn propagate, restore hoặc consume theo trách nhiệm tầng. |
+    | Giữ tài nguyên | Sửa catch/finally bảo đảm giải phóng khi chờ bị ngắt. |
+    | Chạy ví dụ | Dự đoán nhánh exceptional khi sleep, queue và shutdown. |
+- id: interruption-and-cancellation-004
+  title: Khôi phục interrupt flag khi không thể truyền ngoại lệ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khôi phục interrupt flag khi không thể truyền ngoại lệ**
+
+    Các chữ ký Runnable, callback và Consumer không cho phép thêm checked exception. Bài tập trung vào khôi phục cờ và kết thúc có chủ đích, thứ tự cleanup với restore và trường hợp không nên re-interrupt máy móc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới không thể throws
+
+    1. Runnable.run nên làm gì khi bắt InterruptedException?
+    2. Vì sao restore flag nhưng tiếp tục loop có thể sai?
+
+    ### Thứ tự cleanup và restore
+
+    1. Nếu cleanup cũng cần gọi blocking API, restore nên xảy ra khi nào?
+    2. Trong trường hợp nào tầng hiện tại xử lý trọn tín hiệu mà không cần restore?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cài catch phù hợp | Viết catch-restore-exit ở callback không có checked throws. |
+    | Dự đoán trạng thái | Giải thích giá trị interrupt flag qua test-and-clear và restore. |
+    | Thiết kế cleanup | Sắp xếp cleanup và tín hiệu lại cho đúng hợp đồng. |
+- id: interruption-and-cancellation-005
+  title: Điểm chặn hỗ trợ và không hỗ trợ interrupt
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Điểm chặn hỗ trợ và không hỗ trợ interrupt**
+
+    Không phải mọi blocking point đáp ứng interrupt giống nhau. Bài phân tích sleep, wait, join, synchronized monitor acquisition, lockInterruptibly, LockSupport.park và các I/O có hợp đồng riêng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân loại điểm chờ
+
+    1. Vì sao synchronized chờ monitor khác lockInterruptibly?
+    2. LockSupport.park khác Thread.sleep về exception và flag thế nào?
+
+    ### Chẩn đoán và chọn API
+
+    1. Interrupt đã set nhưng thread vẫn BLOCKED có thể vì nguyên nhân gì?
+    2. Vì sao không thể suy mọi InputStream hoặc channel đều được ngắt giống sleep?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập bảng API | Phân loại từng blocking point theo phản ứng interrupt. |
+    | Chọn thiết kế | Đề xuất điểm chờ interruptible có thời hạn cho tác vụ cần hủy. |
+    | Đọc trạng thái | Giải thích stack và flag khi worker không thoát. |
+- id: interruption-and-cancellation-006
+  title: Thiết kế cancellation flag, volatile và cleanup
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thiết kế cancellation flag, volatile và cleanup**
+
+    Ứng dụng có thể quản lý cancellation bằng volatile hoặc AtomicBoolean, phối hợp interrupt để đánh thức worker. Bài giải thích visibility, idempotency, trạng thái requested/stopping/terminated và cleanup bằng finally.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cờ và memory visibility
+
+    1. Vì sao volatile flag phù hợp CPU polling nhưng không tự đánh thức queue.take?
+    2. AtomicBoolean giúp chống cancel nhiều lần theo cơ chế nào?
+
+    ### Vòng đời hủy cùng cleanup
+
+    1. Vì sao requested chưa có nghĩa terminated?
+    2. Làm sao kiểm tra cuối cùng rằng tài nguyên đã đóng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế flag | Cài volatile/AtomicBoolean đúng semantics visibility. |
+    | Đánh thức task | Phối hợp interrupt với flag khi worker blocking. |
+    | Kiểm chứng vòng đời | Thử repeated cancel, cleanup và trạng thái hoàn tất. |
+- id: interruption-and-cancellation-007
+  title: Future.cancel(true) và các giới hạn thực tế
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Future.cancel(true) và các giới hạn thực tế**
+
+    Future.cancel(true) thay đổi kết quả quan sát được nhưng không bảo đảm worker thoát hoặc cleanup đã hoàn thành. Bài so sánh cancel(false), task chưa chạy, task không hợp tác, FutureTask và CompletableFuture.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng Future.cancel
+
+    1. cancel(true) trả true có bảo đảm worker đã dừng không?
+    2. cancel(false) và cancel(true khác nhau ở hành vi yêu cầu ngắt ra sao?
+
+    ### Biến thể và kiểm chứng
+
+    1. CompletableFuture.cancel(true) có interrupt task chạy nền như FutureTask không?
+    2. Làm sao dùng latch để phân biệt Future canceled và cleanup completed?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc Future status | Giải thích isDone/isCancelled/CancellationException và worker state. |
+    | Thử cancel variants | So sánh task queued, hợp tác và bỏ qua interrupt. |
+    | Đánh giá giới hạn | Đề xuất deadline hoặc token bổ sung khi cần kiểm soát công việc thật. |
+- id: interruption-and-cancellation-008
+  title: Timeout khác cancellation thế nào?
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Timeout khác cancellation thế nào?**
+
+    Timeout của caller, deadline toàn request và cancellation là các sự kiện khác nhau. Bài so sánh Future.get(timeout), CompletableFuture.orTimeout/completeOnTimeout, timeout queue/lock, race và side effect còn chạy sau khi caller bỏ đợi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Timeout và API
+
+    1. Future.get(timeout) ném TimeoutException có hủy task không?
+    2. orTimeout và completeOnTimeout khác timed get thế nào?
+
+    ### Deadline, retry và race
+
+    1. Vì sao reset timeout ở từng bước có thể vượt ngân sách end-to-end?
+    2. Retry sau timeout khi task cũ còn chạy có thể gây side effect gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ timeline | Phân biệt completion, timeout, cancel và thứ tự cạnh tranh. |
+    | Thiết kế deadline | Tính ngân sách thời gian còn lại qua các stage. |
+    | Chọn API | Đối chiếu timed get, tryLock, queue.poll và orTimeout. |
+- id: interruption-and-cancellation-009
+  title: shutdown(), shutdownNow() và awaitTermination()
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **shutdown(), shutdownNow() và awaitTermination()**
+
+    Ba API quản lý vòng đời ExecutorService khác nhau về nhận việc mới, xử lý task đang chạy, queued task và chờ kết thúc. Bài triển khai shutdown hai giai đoạn với deadline cùng chính sách khi thread điều phối bị interrupt.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Trạng thái ExecutorService
+
+    1. shutdown khác shutdownNow về task đang chạy và queued work thế nào?
+    2. awaitTermination có tự gọi shutdown không?
+
+    ### Đóng pool hai giai đoạn
+
+    1. Danh sách pending do shutdownNow trả về phải xử lý ra sao?
+    2. Khi coordinator nhận InterruptedException lúc chờ termination nên làm gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích lifecycle | Dự đoán isShutdown, isTerminated và submit rejection. |
+    | Viết shutdown policy | Kết hợp graceful wait và shutdownNow fallback. |
+    | Quản lý pending tasks | Giải thích cách giữ dữ liệu công việc chưa bắt đầu. |
+- id: interruption-and-cancellation-010
+  title: Đảm bảo finally đóng tài nguyên khi dừng tác vụ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đảm bảo finally đóng tài nguyên khi dừng tác vụ**
+
+    Giải phóng lock, permit, AutoCloseable và tài nguyên I/O phải dựa trên quyền sở hữu và đường thoát thật. Bài trình bày finally, try-with-resources, suppressed exception và bằng chứng cleanup sau Future cancellation.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ownership và finally
+
+    1. Vì sao Future canceled chưa chứng minh finally đã chạy?
+    2. Release lock/permit ở đâu để tránh release thừa khi acquire thất bại?
+
+    ### Kiểm chứng cleanup
+
+    1. Suppressed exception xuất hiện thế nào khi close cũng lỗi?
+    2. Làm sao dùng latch xác nhận resource đóng thật sau cancellation?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tổ chức ownership | Đặt finally đúng nơi sở hữu resource/permit. |
+    | Giải thích ngoại lệ | Phân biệt lỗi gốc với suppressed trong try-with-resources. |
+    | Kiểm thử cleanup | Đo tín hiệu dọn dẹp sau worker exit có điều khiển. |
+- id: interruption-and-cancellation-011
+  title: Phân tầng tín hiệu hủy trong chuỗi xử lý
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân tầng tín hiệu hủy trong chuỗi xử lý**
+
+    Hủy request cha không tự truyền đến mọi Future con và remote operation. Bài xây coordinator, cancellation token cha–con, deadline xuyên tầng và ownership của task/resource, đồng thời xét race khi đã có side effect hoặc commit.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lan truyền qua cây task
+
+    1. Vì sao cancel parent không tự hủy child đã được submit?
+    2. Cancellation token phải được chuyển tới các tầng và checkpoint nào?
+
+    ### Coordinator và nhất quán
+
+    1. Coordinator thu thập child completion/cleanup và deadline thế nào?
+    2. Vì sao kiểm tra cancel trước commit không tự tạo thao tác atomic?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô hình hóa ownership | Vẽ cây caller, parent Future, child, thread và resource. |
+    | Thiết kế propagation | Định nghĩa cách truyền token/deadline và hủy từng child. |
+    | Phân tích partial work | Nhận diện safe point và giới hạn rollback side effect. |
+- id: interruption-and-cancellation-012
+  title: Không nuốt InterruptedException hoặc làm mất tín hiệu hủy
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không nuốt InterruptedException hoặc làm mất tín hiệu hủy**
+
+    Một catch rỗng, retry sai hoặc utility trả default có thể phá hợp đồng cancellation. Bài luyện review code, phát hiện clear flag vô ý, xử lý theo propagate/restore/handled và kiểm chứng worker exit bằng đồng bộ xác định.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Anti-pattern trong catch
+
+    1. Catch InterruptedException rỗng làm mất signal vì sao?
+    2. Catch Exception rộng cùng retry có thể giữ worker chạy mãi thế nào?
+
+    ### Review và kiểm thử
+
+    1. Restore flag rồi tiếp tục công việc có đủ để hủy không?
+    2. Làm sao kiểm tra termination thay vì chỉ Future.isCancelled?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện lỗi | Chỉ ra swallow, retry nóng và clear flag vô ý trong code. |
+    | Sửa policy | Chọn propagate hoặc restore+exit theo boundary. |
+    | Kiểm chứng | Dùng latch xác nhận cancellation được quan sát và cleanup. |
+- id: interruption-and-cancellation-013
+  title: 'Vì sao tránh Thread.stop(), suspend() và resume(): rủi ro khóa và tính nhất quán'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vì sao tránh Thread.stop(), suspend() và resume(): rủi ro khóa và tính nhất quán**
+
+    Các API dừng/tạm dừng cưỡng bức lịch sử nguy hiểm cho lock và invariant. Bài phân tích rủi ro stop/suspend/resume, rồi thiết kế cooperative cancellation, pause/resume bằng Condition và predicate cùng safe point ở ranh giới nghiệp vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Rủi ro của API cũ
+
+    1. Thread.stop lịch sử có thể làm hỏng invariant như thế nào?
+    2. Vì sao suspend khi giữ lock có thể gây deadlock?
+
+    ### Thay thế an toàn
+
+    1. Condition với predicate trong while ngăn lost notification ra sao?
+    2. Tại sao điểm dừng hợp tác cần đặt ở safe boundary?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích rủi ro | Phân tích broken invariant/deadlock của stop/suspend/resume. |
+    | Thiết kế pause/resume | Xây protocol Condition + predicate có lock. |
+    | Bảo vệ trạng thái | Chọn safe cancel point và kiểm thử deadlock. |

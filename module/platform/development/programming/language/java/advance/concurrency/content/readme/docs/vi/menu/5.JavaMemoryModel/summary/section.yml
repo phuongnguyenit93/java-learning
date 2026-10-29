@@ -1,0 +1,103 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "JAVA MEMORY MODEL — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: Mạch liên kết bài học
+roadmap:
+  - id: java-memory-model-001
+    order: 1
+    title: "Atomicity, visibility và ordering trong Java"
+    description: "Ba bảo đảm atomicity, visibility và ordering quyết định tính đúng đắn của dữ liệu được nhiều thread truy cập. Bài xây nền tảng để nhận ra khi nào một phép tăng có thể mất cập nhật, khi nào thread khác không nhìn thấy kết quả và vì sao mã nguồn không đủ chứng minh thứ tự liên luồng."
+    transition: 
+      to: java-memory-model-002
+      description: "Từ ba thuộc tính bộ nhớ đến quan hệ happens-before làm căn cứ chứng minh tính đúng đắn."
+  - id: java-memory-model-002
+    order: 2
+    title: "Happens-before và vai trò trong tính đúng đắn"
+    description: "Happens-before là công cụ lập luận về visibility và thứ tự mà Java Memory Model cam kết. Bài đi từ các cạnh đồng bộ có thật đến việc chứng minh công bố dữ liệu, tránh ngộ nhận rằng thời gian thực, `sleep` hay `volatile` có thể thay thế atomicity."
+    transition: 
+      to: java-memory-model-003
+      description: "Để chứng minh cụ thể từng cạnh, cần phân biệt program order với các quan hệ liên luồng của JMM."
+  - id: java-memory-model-003
+    order: 3
+    title: "Program order và các quan hệ happens-before"
+    description: "Bài phân rã cách hình thành happens-before: program order trong một thread, synchronizes-with giữa thread và tính bắc cầu. Người học thực hành xác định hướng cạnh từ monitor, volatile, start, join và các API đồng bộ; đây là kỹ năng cần khi đọc sơ đồ và tự chứng minh ví dụ concurrent."
+    transition: 
+      to: java-memory-model-004
+      description: "Một cạnh quan trọng nhất trong code Java truyền thống là unlock trước lần lock tiếp theo trên cùng monitor."
+  - id: java-memory-model-004
+    order: 4
+    title: "Quy tắc lock/unlock của monitor"
+    description: "`synchronized` vừa ngăn hai thread cùng thực thi critical section trên cùng monitor, vừa tạo quy tắc visibility khi unlock rồi thread khác lock monitor đó. Bài đi sâu vào ownership, reentrancy, phạm vi khóa, `wait/notify` và các lỗi dùng sai lock identity."
+    transition: 
+      to: java-memory-model-005
+      description: "Từ đồng bộ có mutual exclusion chuyển sang cơ chế volatile chỉ công bố bộ nhớ mà không giữ mutex."
+  - id: java-memory-model-005
+    order: 5
+    title: "Quy tắc write/read của volatile"
+    description: "Bài giải thích quy tắc volatile write/read trên cùng biến, vai trò của thứ tự đồng bộ trong công bố dữ liệu và sự khác nhau giữa visibility với atomicity. Các ví dụ publication một lần, volatile reference và trường hợp ghi cờ sai thứ tự giúp người học thiết kế giao thức chính xác."
+    transition: 
+      to: java-memory-model-006
+      description: "Ngoài volatile, vòng đời Thread cung cấp quan hệ đồng bộ rất rõ qua start và join."
+  - id: java-memory-model-006
+    order: 6
+    title: "Thread.start(), Thread.join() và quan hệ đồng bộ"
+    description: "`Thread.start()` và `Thread.join()` là hai mốc vòng đời có bảo đảm happens-before: truyền input trước lúc khởi chạy và thu nhận các ghi sau khi worker kết thúc. Bài hướng dẫn phân biệt chờ hoàn tất thật với timeout hoặc interruption, đồng thời tránh suy luận sai rằng `join` tự sửa race giữa workers."
+    transition: 
+      to: java-memory-model-007
+      description: "Từ công bố kết quả giữa thread đến công bố một object đã được khởi tạo đầy đủ."
+  - id: java-memory-model-007
+    order: 7
+    title: "Safe publication và nguy cơ đọc đối tượng khởi tạo dở"
+    description: "Object được tạo xong trong một thread vẫn có thể bị đọc sai nếu reference được công bố không an toàn, đặc biệt khi `this` thoát khỏi constructor. Bài so sánh volatile snapshot, monitor, BlockingQueue, class initialization và các chiến lược ownership nhằm bảo đảm reader thấy trạng thái nhất quán."
+    transition: 
+      to: java-memory-model-008
+      description: "Để hiểu điều kiện khởi tạo đúng sâu hơn, cần xem bảo đảm đặc biệt của trường final."
+  - id: java-memory-model-008
+    order: 8
+    title: "Trường final và bảo đảm khởi tạo đúng"
+    description: "JMM có quy tắc riêng dành cho `final` fields của object properly constructed, gắn với freeze action ở cuối constructor. Bài phân biệt final reference với deep immutability, giới hạn khi `this` escape, và khi nào vẫn phải dùng safe publication để bảo vệ các field mutable khác."
+    transition: 
+      to: java-memory-model-009
+      description: "Khi thiếu đồng bộ, data race cho thấy các bảo đảm khởi tạo và visibility có thể bị vi phạm."
+  - id: java-memory-model-009
+    order: 9
+    title: "Data race và hành vi quan sát khó dự đoán"
+    description: "Data race xảy ra khi các truy cập xung đột tới một biến không được sắp thứ tự bằng happens-before. Bài nhận diện các biểu hiện mất cập nhật, đọc cờ cũ và quan sát thứ tự lạ; hướng dẫn tái hiện race có kiểm soát và sửa bằng đồng bộ/atomic đúng invariant."
+    transition: 
+      to: java-memory-model-010
+      description: "Data race dẫn tới nhu cầu hiểu vì sao compiler và CPU có thể sắp xếp quan sát khác trực giác."
+  - id: java-memory-model-010
+    order: 10
+    title: "Reordering của compiler, CPU và bộ nhớ"
+    description: "Reordering giúp giải thích sự khác biệt giữa thứ tự trong source và những quan sát hợp lệ của chương trình nhiều thread. Bài dùng litmus test, store buffer, quy tắc as-if-serial và JMM để tránh suy luận sai từ một CPU hay giả định flush cache."
+    transition: 
+      to: java-memory-model-011
+      description: "Sau khi hiểu ordering, kiểm tra giới hạn nguyên tử của volatile trong các thao tác ghép."
+  - id: java-memory-model-011
+    order: 11
+    title: "Giới hạn của volatile với compound actions"
+    description: "Bài tập trung vào nhầm lẫn phổ biến: volatile có bảo đảm visibility/ordering nhưng không làm `counter++`, check-then-act hoặc cập nhật nhiều trường thành một transaction. Các ví dụ AtomicInteger, CAS, lock và immutable aggregate giúp lựa chọn primitive theo đúng phạm vi tính nguyên tử."
+    transition: 
+      to: java-memory-model-012
+      description: "Một trường hợp ứng dụng đặc biệt của volatile và monitor là lazy initialization bằng double-checked locking."
+  - id: java-memory-model-012
+    order: 12
+    title: "Double-checked locking và điều kiện dùng volatile"
+    description: "Double-checked locking (DCL) giải quyết lazy initialization khi nhiều thread có thể cùng gọi getter. Bài chứng minh cần cả field `volatile`, monitor chung và lần kiểm tra null thứ hai; phân tích constructor, publication, cùng các lựa chọn đơn giản hơn như holder, enum hoặc static final."
+    transition: 
+      to: java-memory-model-013
+      description: "Cuối chương tổng hợp tiêu chí chọn visibility, atomic operation và mutual exclusion theo từng invariant."
+  - id: java-memory-model-013
+    order: 13
+    title: "Phân biệt tính hiển thị và loại trừ tương hỗ"
+    description: "Bài tổng hợp sự khác nhau giữa việc một thread quan sát đúng các ghi (visibility) và việc ngăn nhiều thread chen ngang critical section (mutual exclusion). Người học dùng các tình huống `volatile`, `synchronized`, atomic classes, Lock và concurrent collection để chọn cơ chế bảo vệ đúng phạm vi state."
+    transition:  null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 | Bài 13 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Atomicity, visibility và ordering trong Java | Happens-before và vai trò trong tính đúng đắn | Program order và các quan hệ happens-before | Quy tắc lock/unlock của monitor | Quy tắc write/read của volatile | Thread.start(), Thread.join() và quan hệ đồng bộ | Safe publication và nguy cơ đọc đối tượng khởi tạo dở | Trường final và bảo đảm khởi tạo đúng | Data race và hành vi quan sát khó dự đoán | Reordering của compiler, CPU và bộ nhớ | Giới hạn của volatile với compound actions | Double-checked locking và điều kiện dùng volatile | Phân biệt tính hiển thị và loại trừ tương hỗ |
+  | Vấn đề cần hiểu | Nhận diện atomicity, visibility, ordering | Có cạnh bảo đảm visibility giữa các thread không? | Từ thứ tự nội luồng suy ra liên luồng thế nào? | Sở hữu monitor bảo vệ state và công bố ghi ra sao? | Công bố payload bằng cờ/reference có đúng không? | Truyền input và quan sát output qua vòng đời ra sao? | Công bố reference có lộ state khởi tạo dở không? | Constructor/freeze bảo đảm điều gì và giới hạn ở đâu? | Khi nào access xung đột không được đồng bộ? | Vì sao hành vi quan sát khác source order? | Visibility có đủ để sửa read-modify-write không? | Khởi tạo lazy tránh tạo trùng và publish đúng thế nào? | Nhìn thấy ghi có khác ngăn thread chen ngang không? |
+  | Giá trị đối với OOP/module | Nền tảng chọn cơ chế đồng bộ | Cơ sở chứng minh publication an toàn | Ngôn ngữ phân tích hành vi JMM | Bảo vệ invariant qua cùng một khóa | Bảo đảm visibility không cần mutex | Hợp đồng HB ở điểm khởi chạy/kết thúc | Ngăn đọc object không nhất quán | Nền tảng object khởi tạo đúng | Chẩn đoán lỗi JMM trong code | Cơ sở đọc triệu chứng khó tái hiện | Ngăn lost update/transaction giả | Mẫu safe publication dưới cạnh tranh | Checklist chọn primitive đúng invariant |
+  | Tư duy hình thành | Tách yêu cầu đúng đắn thành từng thuộc tính | Lập luận từ quan hệ đồng bộ thay vì cảm tính | Dựng đồ thị và kiểm tra từng cạnh | Kiểm chứng ownership, acquire và release | Phân biệt publication với transaction | Tách lifetime synchronization khỏi atomicity | Tách construction, publication và mutation | Phân biệt final reference và bất biến sâu | Tìm cặp xung đột và kiểm tra HB | Phân tích giới hạn tối ưu theo JMM | Chọn CAS, atomic operation hoặc mutex | Đối chiếu volatile+lock với holder/enum | Ra quyết định bằng tính chất được bảo đảm |

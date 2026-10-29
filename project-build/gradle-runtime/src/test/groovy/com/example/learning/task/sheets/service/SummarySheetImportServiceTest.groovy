@@ -13,9 +13,10 @@ class SummarySheetImportServiceTest {
 
     private static final List<Map> GROUPS = [
             [filename:'OOPBasic.md', parentRow:20,
-             children:[[row:21,title:'Là gì?'],[row:22,title:'Class & Object']]],
+             children:[[row:21,title:'Là gì?',id:'oop-basic-001'],
+                       [row:22,title:'Class & Object',id:'oop-basic-002']]],
             [filename:'Encapsulation.md', parentRow:23,
-             children:[[row:24,title:'Encapsulation']]]
+             children:[[row:24,title:'Encapsulation',id:'encapsulation-001']]]
     ]
 
     private static List<List<Object>> ac(Map<Integer, String> values) {
@@ -29,10 +30,9 @@ class SummarySheetImportServiceTest {
 
     private static String section(String title, List<String> ids) {
         List<Map> steps = ids.withIndex().collect { String id, int index ->
-            [id: id, order: index + 1, title: 'Lesson ' + (index + 1),
-             description: 'Describe ' + id,
+            [description: 'Describe ' + id,
              transition: index + 1 < ids.size()
-                     ? [to: ids[index + 1], description: '**Next lesson**'] : null]
+                     ? [description: '**Next lesson**'] : null]
         }
         String header = '| Tiêu chí | ' + (1..ids.size()).collect { 'Bài ' + it }.join(' | ') + ' |'
         String separator = '| --- | ' + ids.collect { '---' }.join(' | ') + ' |'
@@ -53,7 +53,7 @@ class SummarySheetImportServiceTest {
                 23:section('Encapsulation', ['encapsulation-001']), 24:'## Definition\n'
         ]))
         assertEquals(['section.yml','summaries.yml'] as Set, all['1.OOPBasic'].keySet())
-        assertEquals(originalYaml, all['1.OOPBasic']['section.yml'])
+        assertNotEquals(originalYaml, all['1.OOPBasic']['section.yml'])
         Map chapterYaml = new Yaml().load(all['1.OOPBasic']['section.yml']) as Map
         assertEquals('LEARNING_ROADMAP', chapterYaml.type)
         assertEquals(['oop-basic-001', 'oop-basic-002'], chapterYaml.roadmap*.id)
@@ -126,12 +126,15 @@ class SummarySheetImportServiceTest {
         }
         try {
             SummarySheetImportService.prepare(GROUPS, ac([
-                    20:section('OOP summary',['wrong-001','wrong-002']),
+                    20:new Yaml().dump((new Yaml().load(
+                            section('OOP summary',['wrong-001','wrong-002'])) as Map).with {
+                        it.roadmap[0].id = 'wrong-001'; it
+                    }),
                     21:'one',22:'two',23:section('Encapsulation',['encapsulation-001']),24:'one'
             ]))
             fail('Incorrect Knowledge IDs were accepted.')
         } catch (GradleException expected) {
-            assertTrue(expected.message.contains('Invalid roadmap lesson'))
+            assertTrue(expected.message.contains('Invalid authored roadmap lesson'))
         }
     }
 
@@ -142,7 +145,9 @@ class SummarySheetImportServiceTest {
                 '\n\n**Mối liên hệ:** Tổng kết không thuộc bài cuối.',
                 '\n\n[↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)'
         ]) {
-            Map value = new Yaml().load(section('OOP', ids)) as Map
+            Map value = new Yaml().load(SummarySectionYamlService.materialize(
+                    section('OOP', ids), [[id:'oop-basic-001',title:'First'],
+                                          [id:'oop-basic-002',title:'Second']])) as Map
             value.roadmap[1].description += extra
             try {
                 SummarySectionYamlService.read(new Yaml().dump(value), ids)
@@ -156,7 +161,9 @@ class SummarySheetImportServiceTest {
     @Test
     void acceptsEscapedGfmPipeInsideComparisonCellAndRejectsExtraColumn() {
         List<String> ids = ['bits-001', 'bits-002']
-        Map chapter = new Yaml().load(section('Bits', ids)) as Map
+        Map chapter = new Yaml().load(SummarySectionYamlService.materialize(
+                section('Bits', ids), [[id:'bits-001',title:'First'],
+                                       [id:'bits-002',title:'Second']])) as Map
         String original = '| Kỹ năng | Nội dung | Nội dung |'
         String escaped = '| Kỹ năng | A ' + ((char) 92) + '| B | Nội dung |'
         chapter.comparisonMarkdown = chapter.comparisonMarkdown.replace(original, escaped)

@@ -1,0 +1,40 @@
+sections:
+  thread-api-001:
+    difficulty: BASIC
+    isImportant: true
+  thread-api-002:
+    difficulty: BASIC
+    isImportant: true
+  thread-api-003:
+    difficulty: BASIC
+    isImportant: true
+  thread-api-004:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  thread-api-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-api-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-api-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-api-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-api-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-api-010:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-api-011:
+    difficulty: BASIC
+    isImportant: true
+  thread-api-012:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-api-013:
+    difficulty: ADVANCED
+    isImportant: false

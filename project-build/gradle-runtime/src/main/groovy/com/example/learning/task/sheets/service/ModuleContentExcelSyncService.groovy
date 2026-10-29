@@ -29,7 +29,7 @@ import java.util.regex.Pattern
 class ModuleContentExcelSyncService {
     static final Set<String> PARTS = [
             'INTRODUCTION', 'README', 'ROADMAP', 'QUIZ', 'INTERVIEW', 'VIDEO',
-            'REFERENCE', 'SUMMARY', 'PRACTICE', 'ALL'
+            'REFERENCE', 'SUMMARY', 'ALL'
     ] as Set
     private static final Pattern SECTION = Pattern.compile(
             '(?m)^##\\s+<a\\s+id="([^"]+)">([^\\r\\n]*?)</a>\\s*$')
@@ -89,7 +89,7 @@ class ModuleContentExcelSyncService {
                 List<Map> groups = menu(sheet)
                 report.chapters = groups.size()
                 String[] selected = requested == 'ALL'
-                        ? ['INTRODUCTION','README','ROADMAP','INTERVIEW','QUIZ','REFERENCE','SUMMARY','PRACTICE']
+                        ? ['INTRODUCTION','README','ROADMAP','INTERVIEW','QUIZ','REFERENCE','SUMMARY']
                         : [requested]
                 selected.each { String name ->
                     switch (name) {
@@ -116,9 +116,6 @@ class ModuleContentExcelSyncService {
                             break
                         case 'SUMMARY':
                             summary(module, sheet, groups, report)
-                            break
-                        case 'PRACTICE':
-                            practice(module, sheet, groups, report)
                             break
                     }
                 }
@@ -151,19 +148,23 @@ class ModuleContentExcelSyncService {
                 // Other fields can be populated beyond the last menu row.
                 if (title || second) throw new GradleException('Menu A/B has a gap at row ' + i)
             }
-            if (title) {
+            boolean childWithId = title && MenuLessonIdService.isLessonId(title) &&
+                    ! (second ==~ /(?i)[a-z][a-z0-9]*\.md/) && !groups.isEmpty()
+            if (title && !childWithId) {
                 if (!second || !(second ==~ /(?i)[a-z][a-z0-9]*\.md/)) {
                     throw new GradleException('Bad chapter filename at B' + i)
                 }
                 String stem = second.substring(0, second.length() - 3)
                 groups.add([row: i, title: title, filename: second,
+                            baseId: text(sheet, i, 3),
                             source: groups.size() + 1 + '.' + stem + '/' + second,
                             knowledgeSource: groups.size() + 1 + '.' + stem +
                                     '/knowledge/' + second,
                             children: []])
             } else {
                 if (groups.isEmpty()) throw new GradleException('Orphan lesson B' + i)
-                groups.last().children.add([row: i, title: second])
+                groups.last().children.add([row: i, title: second,
+                                            id: childWithId ? title : null])
             }
         }
         if (!groups) throw new GradleException('No Menu Cấp 1 in baseline workbook.')
@@ -238,17 +239,16 @@ class ModuleContentExcelSyncService {
                     (doc.summaries as List).size() != (group.children as List).size()) {
                 throw new GradleException('EN Summary lesson count mismatch: ' + chapter)
             }
-            String stem = group.filename.toString().replaceFirst(/(?i)\.md$/, '')
-            String slug = ReadmeSheetImportService.slugFromStem(stem)
-            List<String> ids = (0..<(group.children as List).size()).collect { int i ->
-                slug + '-' + String.format('%03d', i + 1)
+            List<String> ids = (group.children as List<Map>).collect { Map child ->
+                child.id as String
             }
             String chapterYaml = section.getText('UTF-8')
             SummarySectionYamlService.read(chapterYaml, ids)
-            set(sheet, group.row as int, 29, chapterYaml, report)
+            set(sheet, group.row as int, 29,
+                    SummarySectionYamlService.toAuthored(chapterYaml, ids), report)
             (group.children as List<Map>).eachWithIndex { Map child, int i ->
                 Map item = (doc.summaries as List)[i] as Map
-                String id = slug + '-' + String.format('%03d', i + 1)
+                String id = ids[i]
                 if (item.id != id || !(item.title instanceof String) ||
                         !(item.summary instanceof String) || !item.summary.trim()) {
                     throw new GradleException('Invalid EN Summary lesson ' + id)
@@ -279,10 +279,13 @@ class ModuleContentExcelSyncService {
                         group.knowledgeSource + ': ' + sections.size() + '/' + lessons.size())
             }
             set(sheet, group.row as int, 1, parsed.title as String, report)
-            String stem = (group.filename as String).replaceFirst(/(?i)\.md$/, '')
-            String slug = ReadmeSheetImportService.slugFromStem(stem)
             sections.eachWithIndex { Map section, int i ->
-                String expected = slug + '-' + String.format('%03d', i + 1)
+                String expected = lessons[i].id as String
+                if (!MenuLessonIdService.isLessonId(expected) ||
+                        !expected.startsWith(group.baseId.toString() + '-')) {
+                    throw new GradleException('Missing/invalid baseline lesson ID at A' +
+                            lessons[i].row)
+                }
                 if (section.id != expected) {
                     throw new GradleException('EN README anchor mismatch: expected ' +
                             expected + ', found ' + section.id + ' (' + group.knowledgeSource + ')')
@@ -478,75 +481,6 @@ class ModuleContentExcelSyncService {
             fragments(sheet, group.row as int, 24, 4, file.getText('UTF-8'), report)
             report.items++
         }
-    }
-
-    /** STEP 15: one unchanged-root scenarios.yml per chapter, projected to AD:AG. */
-    private static void practice(File module, XSSFSheet sheet, List<Map> groups, Map report) {
-        File enMenu = new File(module, 'content/readme/docs/en/menu')
-        File viMenu = new File(module, 'content/readme/docs/vi/menu')
-        boolean any = groups.any { Map group ->
-            String chapter = group.source.toString().replaceFirst('/[^/]+$', '')
-            new File(viMenu, chapter + '/practice/scenarios.yml').isFile() ||
-                    new File(enMenu, chapter + '/practice/scenarios.yml').isFile()
-        }
-        if (!any) return
-        if (text(sheet, 18, 30) != 'Real-world Practice' ||
-                (30..33).any { text(sheet, 19, it) != 'Practice YAML' }) {
-            throw new GradleException('STEP 15 requires Practice schema AD18:AG19 in VI Excel.')
-        }
-        groups.each { Map group ->
-            String chapter = group.source.toString().replaceFirst('/[^/]+$', '')
-            File vi = new File(viMenu, chapter + '/practice/scenarios.yml')
-            File en = new File(enMenu, chapter + '/practice/scenarios.yml')
-            if (vi.isFile() != en.isFile()) {
-                throw new GradleException('Missing VI/EN Practice translation pair: ' + chapter)
-            }
-            if (!en.isFile()) {
-                (30..33).each { int col -> set(sheet, group.row as int, col, '', report) }
-                return
-            }
-            Map enYaml = parseYaml(en)
-            Map viYaml = parseYaml(vi)
-            ContractSchemaValidateUtils.validateData('practiceSheet', viYaml)
-            ContractSchemaValidateUtils.validateData('practiceSheet', enYaml)
-            ModuleTranslationValidationService.compare('PRACTICE', vi.bytes, en.bytes)
-            List<String> ids = (enYaml.scenarios as List).collect { it.id.toString() }
-            if (ids.toSet().size() != ids.size()) {
-                throw new GradleException('Duplicate Practice IDs in ' + en)
-            }
-            List<String> parts = splitPractice(en.getText('UTF-8'))
-            parts.eachWithIndex { String part, int i ->
-                set(sheet, group.row as int, 30 + i, part, report)
-            }
-            report.items += ids.size()
-        }
-    }
-
-    /** Preserve text byte-for-byte after concatenation, splitting at line boundaries. */
-    static List<String> splitPractice(String yaml) {
-        if (!yaml) throw new GradleException('Cannot export empty Practice YAML.')
-        List<String> fragments = []
-        String rest = yaml
-        while (rest) {
-            int codepoints = rest.codePointCount(0, rest.length())
-            if (codepoints <= CHUNK_SIZE && rest.length() <= 32767) {
-                fragments.add(rest)
-                break
-            }
-            int limit = Math.min(rest.offsetByCodePoints(0, CHUNK_SIZE), 32767)
-            int breakAt = rest.lastIndexOf('\n', limit - 1)
-            if (breakAt < 0) throw new GradleException('Practice YAML line exceeds 30000 characters.')
-            int cut = breakAt + 1
-            fragments.add(rest.substring(0, cut))
-            rest = rest.substring(cut)
-            if (fragments.size() >= 4) throw new GradleException('Practice YAML exceeds AD:AG capacity.')
-        }
-        while (fragments.size() < 4) fragments.add('')
-        if (fragments.join('') != yaml ||
-                fragments.any { it.codePointCount(0,it.length()) > CHUNK_SIZE || it.length() > 32767 }) {
-            throw new GradleException('Practice YAML fragment roundtrip/capacity failed.')
-        }
-        return fragments
     }
 
     private static Map parseYaml(File file) {

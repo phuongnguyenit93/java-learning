@@ -1,0 +1,371 @@
+summaries:
+- id: concurrency-design-001
+  title: Chia nhỏ task theo mức độ độc lập
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chia nhỏ task theo mức độ độc lập**
+
+    Bài học hướng dẫn biến yêu cầu thành đồ thị phụ thuộc, phân rã task theo dữ liệu hoặc chức năng và lựa chọn độ hạt hợp lý. Việc trả kết quả riêng rồi fan-in sau khi tác vụ hoàn tất tránh shared mutable accumulator và giúp xác minh tính đúng trước khi tối ưu tốc độ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Độc lập và phân rã
+
+    1. Dựa vào dữ liệu và thứ tự nào để xác định hai task có thể chạy đồng thời?
+    2. Khi nào nên phân rã theo dữ liệu, khi nào theo chức năng?
+
+    ### Lập lịch và kiểm chứng
+
+    1. Một đồ thị DAG giúp phân biệt tác vụ có tiền đề với tác vụ chạy độc lập ra sao?
+    2. Vì sao task quá nhỏ có thể khiến chi phí scheduling vượt lợi ích song song?
+    3. Làm thế nào so sánh kết quả tuần tự với phiên bản chạy bằng ExecutorService hoặc CompletableFuture?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ đồ thị phụ thuộc | Biểu diễn bước phải chờ và bước có thể chạy đồng thời trên một DAG. |
+    | Chọn độ hạt task | Đề xuất cách chia input và giải thích overhead, workload, CPU/I/O limits. |
+    | Tổng hợp kết quả an toàn | Chuyển phép cộng dồn chia sẻ sang Future và kiểm tra đầu ra với phiên bản tuần tự. |
+- id: concurrency-design-002
+  title: Producer–consumer và queue có giới hạn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Producer–consumer và queue có giới hạn**
+
+    Mô hình producer–consumer dùng BlockingQueue tách nhịp tạo và xử lý công việc. Bài học nhấn mạnh queue capacity, backpressure, chính sách chờ hoặc từ chối, shutdown và poison pill khi nhiều producer/consumer vận hành đồng thời.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bảo đảm của queue
+
+    1. Bounded BlockingQueue bảo vệ điều gì khi producer chạy nhanh hơn consumer?
+    2. put, offer và offer có timeout khác nhau thế nào khi queue đầy?
+
+    ### Vòng đời và quá tải
+
+    1. Tại sao cần đúng số tín hiệu dừng cho consumer dùng poison pill?
+    2. Khi nào nên chọn ArrayBlockingQueue thay cho LinkedBlockingQueue mặc định?
+    3. Cần kiểm tra những điều gì khi một consumer lỗi giữa quá trình xử lý?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế hàng đợi bounded | Chọn capacity và chính sách offer/put theo ngân sách chờ. |
+    | Xử lý shutdown | Phân tích trình tự producer kết thúc rồi gửi tín hiệu dừng để không mất task. |
+    | Dựng test quá tải | Tạo queue đầy và chứng minh phản hồi/rejection thay vì làm rơi công việc lặng lẽ. |
+- id: concurrency-design-003
+  title: Work queue, worker pool và task dispatch
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Work queue, worker pool và task dispatch**
+
+    Bài học thiết kế cơ chế dispatch khi nhiều worker xử lý queue, từ vòng lặp take đến ExecutorService, ThreadPoolExecutor, Future và CompletionService. Nó làm rõ thứ tự nhận khác thứ tự hoàn tất và quy tắc core pool, queue, maximum pool, rejection.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dispatch
+
+    1. Một work queue phối hợp với nhiều worker và lifecycle như thế nào?
+    2. Vì sao ThreadPoolExecutor thường thử xếp hàng sau corePoolSize trước khi tạo worker đến maximumPoolSize?
+
+    ### Kết quả, quá tải và shutdown
+
+    1. Tại sao FIFO dispatch không bảo đảm FIFO completion khi nhiều worker?
+    2. CallerRunsPolicy khác AbortPolicy ra sao ở tình huống pool bão hòa?
+    3. Khi nào CompletionService phù hợp hơn việc Future.get lần lượt theo input?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình worker pool | Giải thích tác động của core, max, queue capacity và rejection handler. |
+    | Chọn API nhận kết quả | So sánh completion-order và input-order để xử lý Future. |
+    | Phân tích lifecycle | Chỉ ra task chờ, task chạy và tác động của shutdown/shutdownNow. |
+- id: concurrency-design-004
+  title: Fan-out / fan-in và tổng hợp kết quả
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Fan-out / fan-in và tổng hợp kết quả**
+
+    Bài học tách bước fan-out của các nhánh độc lập khỏi bước fan-in theo input order, completion order hoặc business key. Nó sử dụng Future, CompletionService và CompletableFuture để xử lý thành công một phần, lỗi, deadline và hủy các nhánh.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phối hợp nhánh
+
+    1. Fan-out khác fan-in ở trách nhiệm dữ liệu, scheduling và tổng hợp thế nào?
+    2. Vì sao gọi Future.get ngay sau mỗi submit có thể biến luồng thành tuần tự?
+
+    ### Lỗi và thứ tự
+
+    1. allOf có trả sẵn danh sách kết quả và tất cả nguyên nhân lỗi không?
+    2. Khi nào nên dùng CompletionService thay vì ghép theo thứ tự input?
+    3. Làm sao giữ một deadline chung và giới hạn số nhánh in-flight?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây pipeline fan-out/fan-in | Tổ chức các nhánh độc lập và ghép đầu ra bằng CompletableFuture. |
+    | Phân biệt kết quả một phần | Biểu diễn Outcome cho cả nhánh thành công lẫn thất bại. |
+    | Kiểm tra thứ tự và deadline | Giải thích input/completion/business order và giới hạn tổng thời gian. |
+- id: concurrency-design-005
+  title: Message passing để giảm shared mutable state
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Message passing để giảm shared mutable state**
+
+    Bài học mô hình hóa message, sender, bounded mailbox và một owner cập nhật state, thay việc nhiều thread trực tiếp sửa dữ liệu chung. Nó hướng dẫn request–reply qua CompletableFuture, backpressure và quyền sở hữu message khi bàn giao.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế mailbox
+
+    1. Những thành phần và hợp đồng nào cần có trong một hệ thống message passing?
+    2. Vì sao BlockingQueue an toàn vẫn không giúp nếu sender tiếp tục sửa mutable message đã gửi?
+
+    ### Đảm bảo kết quả
+
+    1. Dùng CompletableFuture trong message để trả kết quả hoặc lỗi theo yêu cầu như thế nào?
+    2. Một owner bị chậm gây backlog và backpressure ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế single-owner mailbox | Mô tả command, queue và owner duy nhất cập nhật counter. |
+    | Phân tích alias | Chỉ ra cách mutable message phá isolation dù queue thread-safe. |
+    | Kiểm soát quá tải | Đề xuất queue bounded và đường shutdown/reply/error có thể kiểm chứng. |
+- id: concurrency-design-006
+  title: Ownership và tránh chia sẻ state không cần thiết
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ownership và tránh chia sẻ state không cần thiết**
+
+    Bài học phân định task-local data, immutable shared snapshot và single-writer ownership. Người học lần theo alias, chọn hình thức chuyển giao qua BlockingQueue, đảm bảo happens-before và tránh việc sender sửa dữ liệu sau khi chuyển quyền.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Sở hữu trạng thái
+
+    1. Task confinement khác single-owner state và immutable shared state như thế nào?
+    2. Vì sao biến local không đồng nghĩa object được nó trỏ đến không bị chia sẻ?
+
+    ### Chuyển giao và vòng đời
+
+    1. Các bước nào bảo đảm sender không còn sửa object sau khi giao cho consumer?
+    2. Owner của Future, executor và queue quyết định shutdown/cancel ra sao?
+    3. Vì sao ownership vẫn cần bảo đảm happens-before tại ranh giới chuyển giao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập bản đồ ownership | Chỉ ra chủ sở hữu và alias của state trong từng giai đoạn pipeline. |
+    | Loại bỏ shared accumulator | Chuyển phép cộng kết quả từ field chung sang task-local result. |
+    | Kiểm tra giao thức bàn giao | Phân tích queue handoff, publication và shutdown dưới lỗi. |
+- id: concurrency-design-007
+  title: 'Bulkhead: giới hạn tải theo loại tài nguyên'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bulkhead: giới hạn tải theo loại tài nguyên**
+
+    Bài học ứng dụng bulkhead để cô lập dependency chậm bằng pool/queue riêng hoặc Semaphore theo nguồn tài nguyên. Nó cho thấy vì sao chia nhóm công việc không tự cô lập các tài nguyên nền vẫn dùng chung, và cách kiểm thử saturation từng nhóm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế cách ly
+
+    1. Bulkhead giới hạn tác động dây chuyền từ một dependency đang chậm như thế nào?
+    2. Khi nào dùng dedicated ThreadPoolExecutor, khi nào dùng Semaphore?
+
+    ### Lỗi và tài nguyên
+
+    1. Tại sao pool riêng vẫn có thể cùng chịu áp lực CPU, heap hoặc connection pool?
+    2. Làm thế nào xác minh nhóm khỏe vẫn hoàn tất khi nhóm chậm đầy worker và queue?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại tài nguyên | Chỉ ra tài nguyên tranh chấp và chọn ranh giới bulkhead. |
+    | Dựng tình huống cô lập | Làm nghẽn một executor trong test và xác minh executor còn lại hoàn tất. |
+    | Đặt policy quá tải | Chọn giới hạn wait, reject, timeout và cách trả permit đúng vòng đời. |
+- id: concurrency-design-008
+  title: Rate limiting và giới hạn in-flight requests
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Rate limiting và giới hạn in-flight requests**
+
+    Bài học phân biệt yêu cầu trên giây với số yêu cầu chưa hoàn tất tại một thời điểm, thực hành token bucket và Semaphore. Nó giải thích release permit sau khi Future thật sự hoàn thành, backpressure, deadline và cách dùng Little's Law như phép ước lượng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đơn vị đo
+
+    1. Rate limiting và in-flight limit khác nhau về thời gian và tài nguyên như thế nào?
+    2. Token bucket cho phép burst trong phạm vi nào so với fixed window?
+
+    ### Triển khai
+
+    1. Vì sao trả Semaphore permit ngay sau khi tạo CompletableFuture là sai?
+    2. Khi queue đầy và budget chờ hết, chính sách từ chối nào giữ hệ thống ổn định?
+    3. Little's Law hỗ trợ ước lượng concurrency nhưng không thay cho đo tải thực tế như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích quota | Tính và diễn giải rate, burst, in-flight và queue length với đơn vị rõ ràng. |
+    | Thiết kế limiter | Áp token bucket cho tốc độ và Semaphore cho concurrency. |
+    | Kiểm thử permit | Tạo future chưa hoàn thành để chứng minh giới hạn in-flight không bị vượt. |
+- id: concurrency-design-009
+  title: Đảm bảo idempotency khi task có thể được chạy lại
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đảm bảo idempotency khi task có thể được chạy lại**
+
+    Bài học xử lý cùng một ý định nghiệp vụ xuất hiện nhiều lần do retry, replay hoặc nhiều worker cạnh tranh. Nó phân biệt dedup trong JVM với receipt bền vững qua restart, unique constraint, transaction, lease/fencing và side effect ngoài database.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định danh và tính đúng
+
+    1. Idempotency key cần gắn với ý định nghiệp vụ hay từng lần thử, và vì sao?
+    2. Vì sao check rồi insert receipt không an toàn nếu thiếu unique constraint hoặc transaction?
+
+    ### Tác vụ lặp và side effect
+
+    1. Trong một JVM, FutureTask kết hợp ConcurrentHashMap giúp nhiều caller cùng key ra sao?
+    2. Khi worker chết sau khi side effect đã xảy ra nhưng trước khi phản hồi, hệ thống phải dựa vào bằng chứng nào?
+    3. Khi side effect vượt ngoài database, outbox hoặc downstream idempotency key giải quyết giới hạn gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định khóa idempotency | Phân biệt business key và attempt ID trong retry. |
+    | Thiết kế nhận việc một lần | Mô tả atomic claim bằng unique constraint/receipt theo transaction. |
+    | Rà soát failure windows | Xử lý tình huống timeout, retry, crash và side effect chưa rõ kết quả. |
+- id: concurrency-design-010
+  title: Timeout budget qua nhiều bước xử lý
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Timeout budget qua nhiều bước xử lý**
+
+    Bài học giới thiệu deadline chung thay cho việc cấp lại timeout đủ dài ở mỗi bước tuần tự hoặc retry. Người học dùng System.nanoTime và đồng hồ giả để tính remaining, hủy Future có trách nhiệm và chuyển duration qua ranh giới JVM.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Deadline
+
+    1. Timeout của một thao tác khác budget toàn tác vụ và deadline thế nào?
+    2. Vì sao phải dùng System.nanoTime để đo elapsed duration nội JVM?
+
+    ### Truyền budget
+
+    1. Khi một bước đã tiêu 300 ms trong budget 500 ms, thời gian chờ tiếp theo được tính ra sao?
+    2. Vì sao Future.get(timeout) không tự hủy task đang chạy?
+    3. Tại sao không truyền giá trị nanoTime tuyệt đối giữa hai JVM?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây Deadline | Dùng monotonic clock và fake clock để tính remaining. |
+    | Áp budget liên bước | Chuyển một budget qua queue, lock, Future và retry mà không reset. |
+    | Kiểm chứng hủy | Phân biệt timeout của waiter với trạng thái thực của worker. |
+- id: concurrency-design-011
+  title: Tránh giữ lock xuyên qua call không kiểm soát
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tránh giữ lock xuyên qua call không kiểm soát**
+
+    Bài học chỉ ra rủi ro khi giữ lock trong callback, listener, I/O hoặc Executor có thể chạy inline. Nó hướng dẫn snapshot/claim dưới lock, nhả khóa trước side effect rồi kiểm tra state/version khi quay lại.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Rủi ro lock
+
+    1. Vì sao listener hoặc Future callback dưới lock có thể gây deadlock hoặc kéo dài lock contention?
+    2. Những call nào nhìn vô hại nhưng có thể chạy code do caller kiểm soát?
+
+    ### Giao thức nhiều pha
+
+    1. Làm sao snapshot listener list dưới lock và gọi listener sau khi nhả khóa?
+    2. Vì sao chỉ nhả lock trước khi gọi payment chưa đủ ngăn thanh toán trùng?
+    3. Khi nào cần trạng thái trung gian, operation ID hoặc version để commit đúng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Audit vùng khóa | Đánh dấu mọi call có khả năng block hoặc chạy code bên ngoài. |
+    | Refactor callback | Tạo snapshot dưới khóa và dispatch callback sau khi nhả. |
+    | Thiết kế claim/commit | Mô tả pha chuẩn bị, side effect và xác nhận kết quả có version. |
+- id: concurrency-design-012
+  title: Phân biệt concurrency control và business transaction
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt concurrency control và business transaction**
+
+    Bài học phân biệt đồng bộ luồng/khóa trong một JVM với business invariant, database isolation, atomic commit và các tác dụng ngoài transaction. Người học phối hợp optimistic/pessimistic lock, unique constraint, retry và idempotency đúng ranh giới hệ thống.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phạm vi đảm bảo
+
+    1. synchronized trong một JVM bảo vệ điều gì và không thể tự làm rollback thay đổi database nào?
+    2. Java Memory Model khác database transaction isolation trong phạm vi quan sát như thế nào?
+
+    ### Đúng đắn nghiệp vụ
+
+    1. Khi hai instance đồng thời đặt cùng một ghế, cơ chế nào bảo vệ invariant ở nguồn dữ liệu có thẩm quyền?
+    2. Khi thanh toán đã chấp nhận nhưng phản hồi mất, retry cần phối hợp transaction và idempotency ra sao?
+    3. Khi nào chọn pessimistic locking, optimistic version check hoặc conditional update?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định nguồn sự thật | Chỉ ra invariant ở heap, database và dịch vụ khác nhau. |
+    | Chọn concurrency control | So sánh JVM lock, optimistic version và DB constraints theo phạm vi. |
+    | Thiết kế transaction boundary | Mô tả commit/rollback và failure window với side effect ngoài DB. |

@@ -1,0 +1,96 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "THIẾT KẾ ĐỒNG THỜI — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: concurrency-design-001
+    order: 1
+    title: "Chia nhỏ task theo mức độ độc lập"
+    description: "Phân rã một công việc theo dữ liệu và đồ thị phụ thuộc, lựa chọn độ hạt và tập hợp kết quả không cần shared mutable accumulator."
+    transition:
+      to: concurrency-design-002
+      description: "Sau khi tách task, cần vùng đệm có giới hạn để producer và consumer chạy ở tốc độ khác nhau."
+  - id: concurrency-design-002
+    order: 2
+    title: "Producer–consumer và queue có giới hạn"
+    description: "Xây producer–consumer bằng bounded queue, hiểu backpressure, chính sách khi đầy và giao thức dừng đúng."
+    transition:
+      to: concurrency-design-003
+      description: "Từ queue chuyển sang cách nhiều worker lấy việc, dispatch qua ExecutorService và xử lý rejection."
+  - id: concurrency-design-003
+    order: 3
+    title: "Work queue, worker pool và task dispatch"
+    description: "Thiết kế work queue và executor dispatch, điều chỉnh pool và phản ứng khi queue đầy, thu kết quả và quản lý shutdown."
+    transition:
+      to: concurrency-design-004
+      description: "Khi nhiều nhánh công việc đã được dispatch, cần tổng hợp kết quả theo chiến lược fan-in."
+  - id: concurrency-design-004
+    order: 4
+    title: "Fan-out / fan-in và tổng hợp kết quả"
+    description: "Tổ chức các nhánh song song và tổng hợp kết quả bằng Future, CompletionService, CompletableFuture cùng chính sách lỗi và deadline."
+    transition:
+      to: concurrency-design-005
+      description: "Để giảm race khi các nhánh liên hệ nhau, có thể thay chia sẻ trạng thái bằng message passing."
+  - id: concurrency-design-005
+    order: 5
+    title: "Message passing để giảm shared mutable state"
+    description: "Chuyển việc cập nhật state sang một owner nhận immutable messages qua mailbox, có backpressure và request–reply rõ ràng."
+    transition:
+      to: concurrency-design-006
+      description: "Message passing phụ thuộc quy tắc ownership, vì thế cần xác định rõ ai sở hữu state trước và sau bàn giao."
+  - id: concurrency-design-006
+    order: 6
+    title: "Ownership và tránh chia sẻ state không cần thiết"
+    description: "Xác định owner của mutable state, dùng task confinement, immutable data hoặc single-writer handoff để tránh chia sẻ không cần thiết."
+    transition:
+      to: concurrency-design-007
+      description: "Ngay cả khi chia owner rõ, một nhóm công việc chậm vẫn có thể chiếm hết tài nguyên chung; cần bulkhead."
+  - id: concurrency-design-007
+    order: 7
+    title: "Bulkhead: giới hạn tải theo loại tài nguyên"
+    description: "Cô lập tải theo resource bằng dedicated pool/queue hoặc semaphore và kiểm thử khi một nhóm bão hòa."
+    transition:
+      to: concurrency-design-008
+      description: "Kế tiếp phân biệt quota theo tốc độ với số request đang xử lý cùng lúc."
+  - id: concurrency-design-008
+    order: 8
+    title: "Rate limiting và giới hạn in-flight requests"
+    description: "Phân biệt rate và in-flight concurrency, dùng token bucket kết hợp semaphore để bảo vệ tài nguyên và latency budget."
+    transition:
+      to: concurrency-design-009
+      description: "Khi task bị timeout hoặc retry, phải bảo vệ tác dụng nghiệp vụ bằng idempotency."
+  - id: concurrency-design-009
+    order: 9
+    title: "Đảm bảo idempotency khi task có thể được chạy lại"
+    description: "Bảo vệ tác dụng nghiệp vụ khi task retry hoặc replay qua idempotency key, receipt bền vững, transaction và quy tắc side effect."
+    transition:
+      to: concurrency-design-010
+      description: "Retry và nhánh xử lý nhiều bước còn phải sử dụng một timeout budget chung."
+  - id: concurrency-design-010
+    order: 10
+    title: "Timeout budget qua nhiều bước xử lý"
+    description: "Áp một deadline monotonic qua các bước xử lý, retry và fan-out, với chính sách timeout, cancellation và chuyển budget rõ."
+    transition:
+      to: concurrency-design-011
+      description: "Để tuân thủ deadline và tránh deadlock, không được giữ lock qua các lời gọi không kiểm soát."
+  - id: concurrency-design-011
+    order: 11
+    title: "Tránh giữ lock xuyên qua call không kiểm soát"
+    description: "Tránh chạy callback, I/O hoặc executor không kiểm soát khi giữ lock bằng snapshot và giao thức nhiều pha."
+    transition:
+      to: concurrency-design-012
+      description: "Cuối chương tách bảo đảm đồng bộ trong JVM khỏi cam kết nghiệp vụ xuyên hệ thống."
+  - id: concurrency-design-012
+    order: 12
+    title: "Phân biệt concurrency control và business transaction"
+    description: "Phân biệt thread synchronization với nghiệp vụ transaction, phối hợp DB isolation, optimistic/pessimistic control và idempotency qua hệ thống."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Chia nhỏ task theo mức độ độc lập | Producer–consumer và queue có giới hạn | Work queue, worker pool và task dispatch | Fan-out / fan-in và tổng hợp kết quả | Message passing để giảm shared mutable state | Ownership và tránh chia sẻ state không cần thiết | Bulkhead: giới hạn tải theo loại tài nguyên | Rate limiting và giới hạn in-flight requests | Đảm bảo idempotency khi task có thể được chạy lại | Timeout budget qua nhiều bước xử lý | Tránh giữ lock xuyên qua call không kiểm soát | Phân biệt concurrency control và business transaction |
+  | Vấn đề cần hiểu | Công việc nào thực sự độc lập và nên tách ở độ hạt nào? | Làm sao tách tốc độ producer và consumer mà không tích backlog vô hạn? | Task được phân phát tới worker, hoàn tất và bị từ chối theo cơ chế nào? | Gom các kết quả đồng thời như thế nào mà vẫn đúng thứ tự và chính sách lỗi? | Làm sao giao việc mà không để nhiều thread cùng sửa một state? | Ai có quyền sửa state qua từng giai đoạn thực thi? | Làm sao ngăn một dependency chậm chiếm mọi worker hoặc permit? | Giới hạn bao nhiêu request mỗi giây khác giới hạn bao nhiêu request đồng thời ở đâu? | Làm sao retry mà không nhân đôi hiệu ứng nghiệp vụ? | Làm sao giữ tổng thời gian xử lý trong một ngân sách khi có nhiều bước? | Vì sao một lời gọi bên ngoài trong critical section có thể làm treo toàn hệ thống? | Đồng bộ trong JVM khác cam kết thành công của giao dịch nghiệp vụ thế nào? |
+  | Giá trị đối với OOP/module | Chia task an toàn, tránh overhead và phụ thuộc bị che khuất. | Kiểm soát bộ nhớ, độ trễ và shutdown của luồng công việc. | Vận hành worker pool có kiểm soát và tránh queue tăng vô hạn. | Thiết kế fan-in có xử lý partial failure và giới hạn tài nguyên. | Tập trung thay đổi trạng thái và giảm race do chia sẻ reference. | Giảm cơ chế khóa và rõ trách nhiệm về dữ liệu. | Hạn chế cascading failure giữa các nhóm công việc. | Ngăn burst và saturation bằng đúng loại quota. | Định danh yêu cầu và xử lý atomic claim qua nhiều worker/process. | Ngăn timeout cộng dồn và công việc quá hạn kéo dài. | Giảm deadlock/contended lock và bảo vệ invariant trong side effect. | Giữ invariant nghiệp vụ đúng khi có nhiều instance và side effect bên ngoài. |
+  | Tư duy hình thành | Phân tích DAG và ranh giới dữ liệu trước khi chọn thread. | Coi queue capacity và chính sách khi đầy là hợp đồng. | Phân biệt thứ tự dispatch, thứ tự completion và tài nguyên thực. | Tách rạch ròi sự độc lập của các nhánh và điều kiện công bố kết quả. | Xây protocol giao tiếp bằng message và quyền cập nhật. | Làm rõ quyền sở hữu trước khi chọn synchronization. | Cô lập theo tài nguyên thực, không chỉ tên task. | Theo dõi đơn vị đo cùng thời điểm acquire/release. | Phân tích từng failure window và phạm vi bảo đảm. | Tính lại thời gian còn lại trước mỗi điểm chờ. | Giữ lock cho bước ngắn, quản lý giao dịch dài bằng trạng thái. | Chọn cơ chế tại nguồn dữ liệu có thẩm quyền. |

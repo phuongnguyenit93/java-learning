@@ -4,10 +4,11 @@ import org.gradle.api.GradleException
 import org.yaml.snakeyaml.LoaderOptions
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.SafeConstructor
+import org.yaml.snakeyaml.DumperOptions
 
 /** Validate authored chapter YAML before the Sheet snapshot is written as-is. */
 class SummarySectionYamlService {
-    static Map read(String source, List<String> ids) {
+    private static Map parse(String source) {
         LoaderOptions options = new LoaderOptions()
         options.allowDuplicateKeys = false
         Object value
@@ -17,8 +18,74 @@ class SummarySectionYamlService {
             throw new GradleException('Invalid section.yml YAML: ' + error.message, error)
         }
         if (!(value instanceof Map)) throw new GradleException('section.yml must be a map.')
-        validate(value as Map, ids)
         return value as Map
+    }
+
+    private static String dump(Map value) {
+        DumperOptions options = new DumperOptions()
+        options.defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
+        options.prettyFlow = true
+        options.width = 120
+        options.splitLines = false
+        return new Yaml(options).dump(value)
+    }
+
+    /**
+     * Sheet AC parent contains only AI-authored fields. A/B children provide
+     * the stable IDs and titles. Index is used for matching, never as an ID.
+     */
+    static String materialize(String authored, List<Map> lessons) {
+        Map source = parse(authored)
+        List<String> ids = lessons.collect { it.id as String }
+        if (source.keySet() != (['version','type','title','roadmapHeading','roadmap','comparisonMarkdown'] as Set) ||
+                !(source.roadmap instanceof List) || source.roadmap.size() != lessons.size()) {
+            throw new GradleException('Invalid authored section.yml root or lesson count.')
+        }
+        List<Map> steps = []
+        (source.roadmap as List).eachWithIndex { Object entry, int i ->
+            if (!(entry instanceof Map) ||
+                    (entry as Map).keySet() != (['description','transition'] as Set)) {
+                throw new GradleException('Invalid authored roadmap lesson at index ' + i)
+            }
+            Map item = entry as Map
+            if (i == lessons.size() - 1) {
+                if (item.transition != null) {
+                    throw new GradleException('Last authored roadmap step must have null transition.')
+                }
+            } else if (!(item.transition instanceof Map) ||
+                    (item.transition as Map).keySet() != (['description'] as Set) ||
+                    !(item.transition.description instanceof String) ||
+                    !item.transition.description.trim()) {
+                throw new GradleException('Invalid authored transition at index ' + i)
+            }
+            steps.add([
+                    id: ids[i], order: i + 1, title: lessons[i].title,
+                    description: item.description,
+                    transition: item.transition == null ? null :
+                            [to: ids[i + 1], description: item.transition.description]
+            ])
+        }
+        Map full = new LinkedHashMap(source)
+        full.roadmap = steps
+        validate(full, ids)
+        return dump(full)
+    }
+
+    /** STEP 15 projects module EN section.yml back to the content-only AC contract. */
+    static String toAuthored(String fullYaml, List<String> ids) {
+        Map full = read(fullYaml, ids)
+        Map authored = new LinkedHashMap(full)
+        authored.roadmap = (full.roadmap as List<Map>).collect { Map item ->
+            [description: item.description, transition: item.transition == null ? null :
+                    [description: item.transition.description]]
+        }
+        return dump(authored)
+    }
+
+    static Map read(String source, List<String> ids) {
+        Map value = parse(source)
+        validate(value, ids)
+        return value
     }
 
     static void validate(Map value, List<String> ids) {

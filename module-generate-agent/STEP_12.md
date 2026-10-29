@@ -2,11 +2,10 @@
 
 
 
-> **STEP 8 extension:** Khi Sheet có Practice, snapshot phải giữ đủ **33 cột A:AG**, bao gồm AD18/AD19:AG19 và toàn bộ YAML AD:AG hàng cha. `AD:AG` là **một YAML `scenarios[]` của mỗi chapter chia thành fragment**, không được xuất riêng từng scenario. AC vẫn chứa Summary theo quy tắc cũ. Excel giữ giới hạn 32.767 UTF-16 units/ô.
 
 ## 0. Mục tiêu và phạm vi
 
-STEP 12 là bước **lưu snapshot Excel offline của đúng một tab module tiếng Việt**, sau khi những nội dung và liên kết bắt buộc thuộc STEP 1–11 đã được xử lý/QA (**STEP 9 là Interview, STEP 10 là Quiz; Video là optional sau STEP_FINAL**). **Không dịch sang EN trong bước này** (bản dịch/chuyển ngữ thuộc STEP 14). Các ô Video X:AA còn trống hoàn toàn hợp lệ; Video được tạo riêng sau STEP_FINAL khi người dùng yêu cầu.
+STEP 12 lưu snapshot Excel offline đúng tab VI sau QA. STEP 6 mới: Phase 1 hai hàng P25:R26/S25:U26/V25:W26; **Phase 2+3 dùng chung năm hàng P20:R24/S20:U24/V20:W24**; Phase 4 Interview/Case Study ba hàng/group từ 27. Không xóa/ghi đè block đã có, không dùng importer legacy vì contract mới chưa hỗ trợ. STEP 10 Quiz legacy riêng; Video optional sau FINAL. STEP 12 không dịch EN.
 
 - **Prime tự thực hiện toàn bộ, KHÔNG giao worker**; không cần `STEP_12_WORKER.md`, không spawn hoặc đánh thức worker để export.
 - **Dùng task đã có**: `:<EXACT_MODULE_GRADLE_PATH>:exportModuleSheetToExcel`. Không viết exporter mới, không tự dùng Google Sheets download cả workbook, không dùng `generateModuleContentFromSheetByFiles`, các importer khác hay task import ngược Excel lên Sheet.
@@ -51,7 +50,7 @@ Chạy ở **root `java-learning`**, thay đủ **ba placeholder** (`<EXACT_MODU
 Prime phải **tự mở và kiểm tra file offline**, không chỉ tin exit code hoặc dòng `EXPORTED`:
 
 1. Đường dẫn **chính xác** `<I3>/content/sheet/vi/module.xlsx`, file `.xlsx` hợp lệ, không phải file rỗng; mở được bằng Apache POI/openpyxl hoặc trình đọc XLSX phù hợp. **Đúng 1 worksheet**, tên trùng tab/gid đã xác minh. Không có worksheet khác trong workbook.
-2. Đối chiếu tổng ô được xuất với log `cells`, hàng/cột có dữ liệu thực, các mốc `A1`, `B1`, `I3`, `A17:B17`, `A19:B19`, Menu Cấp 1/Cấp 2, `C:N` Knowledge, `O` Difficulty, `P:S` Interview, `T:W` Quiz, `X:AA` Video, `AB` isImportant, `AC` Summary và **`AD:AG` Practice**, nếu nguồn có. Với Practice: kiểm tra đúng header, 33 cột, ghép AD→AG không separator, YAML COMPLETE và exact readback. Vùng trống hợp lệ không phải lý do tự sinh dữ liệu. So sánh snapshot với nguồn Sheet bằng giá trị effective; **không yêu cầu Excel chứa tiến độ master.json**.
+2. Đối chiếu tổng ô được xuất với log `cells`, hàng/cột có dữ liệu thực, các mốc `A1`, `B1`, `I3`, `A17:B17`, `A19:B19`, Menu Cấp 1/Cấp 2, `C:N` Knowledge, `O` Difficulty, `P:S` Interview, `T:W` Quiz, `X:AA` Video, `AB` isImportant, `AC` Summary, nếu nguồn có. Vùng trống hợp lệ không phải lý do tự sinh dữ liệu. So sánh snapshot với nguồn Sheet bằng giá trị effective; **không yêu cầu Excel chứa tiến độ master.json**.
 3. Kiểm tra **newline/Unicode**, rich text cơ bản/format quan trọng, freeze panes, merged cells, note, row height, column width và dropdown cơ bản; báo rõ `unsupported-dropdowns` từ task. Nếu dropdown quan trọng (đặc biệt Difficulty `O` hoặc isImportant `AB`) bị mất/không tương thích, `BLOCKER: XLSX VALIDATION LOSS` hoặc giải trình và nhận xác nhận rõ trước khi coi là bản sao đạt yêu cầu. Không mặc định mọi định dạng Google-only đều có thể tái hiện trong Excel.
 4. **Formula:** task lưu **giá trị đã tính (effective/cached)**, không giữ công thức live. So sánh theo giá trị hiển thị/effective, không đòi formula gốc còn tồn tại. Nếu công thức lỗi/chưa resolve, text dài hơn **32.767 ký tự mỗi ô**, lỗi đọc Sheets hoặc giới hạn Excel thì task phải FAIL; **không cắt bớt/truncated**, không tự thay công thức.
 5. Sau APPLY, đọc lại Google Sheet hoặc snapshot nguồn đã xác thực: **không thay đổi bất kỳ nội dung/tiến độ Sheet nào**, không chạm Template hoặc module khác. Xác minh `.xlsx` vẫn bị Git ignore. Nếu bất kỳ QA fail: giữ bằng chứng/hash, **không ghi `CURRENT_STEP.VALUE`**.

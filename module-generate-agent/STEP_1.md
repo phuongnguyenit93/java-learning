@@ -70,7 +70,7 @@ Ví dụ đã đối chiếu với cây module thực tế:
 
 ## Dropdown isImportant kế thừa từ Template
 
-Template mới có **33 cột (`A:AG`)**: `AB18 = Importance`, `AB19 = isImportant`, `AB20:AB700` phải có Data Validation `ONE_OF_LIST` với hai lựa chọn `TRUE`, `FALSE` (`strict=true`, `showCustomUi=true`). **AC18=Summary**, **AC19=Summary YAML**; cặp nhãn cũ `Learning Objectives`/`Learning Objectives YAML` chỉ được chấp nhận nguyên cặp trên tab đã tồn tại. **AD18=Real-world Practice**, **AD19:AG19=Practice YAML** (bốn ô header giống nhau). STEP 8 ghi **một YAML `scenarios[]` nguyên vẹn trên AD:AG của mỗi hàng cha**, không ghi hàng con; importer code thuần sinh một file `practice/scenarios.yml` cho mỗi chương. STEP 5 ghi **AC cha = nguyên YAML `section.yml`** (roadmap có cấu trúc + `comparisonMarkdown` bảng GFM), **AC con = Summary Markdown** theo barem 0/1/2/3. Chỉ hàng Menu Cấp 2 được STEP 5 ghi AB và AC từng bài; AC hàng cha cũng do STEP 5 sở hữu. AB trống có default `false` khi import. Bước clone/preflight/readback STEP 1 phải bảo đảm AB:AG còn đúng header/format, không chèn lệch cột A:AC; tab cũ 29 cột chỉ migrate có kiểm soát, không ghi đè dữ liệu.
+**Bố cục authoring còn hoạt động đến AC (29 cột)**: `AB18=Importance`, `AB19=isImportant` với validation TRUE/FALSE; `AC18=Summary`, `AC19=Summary YAML` (chấp nhận nguyên cặp legacy Learning Objectives). Không tạo nội dung Practice AD:AG; các cột AD:AG đang có ở Sheet cũ được giữ nguyên để tránh mất dữ liệu, không phải yêu cầu pipeline.
 
 ## Dropdown Difficulty bắt buộc kế thừa từ Template
 
@@ -88,7 +88,7 @@ Quy tắc tích hợp vào quy trình STEP 1 ở trên:
 
 ## Nguyên tắc an toàn
 
-**Bố cục Template mới (33 cột):** sau Knowledge `C:N` và Difficulty `O`, giữ thứ tự **Interview P:S → Quiz T:W → Video X:AA → isImportant AB → Summary AC → Practice AD:AG**. Interview có `P18 = Interview`, `P19:S19 = Interview YAML` (parser còn chấp nhận `Interview JSON` legacy). STEP 1 khi clone giữ nguyên các nhóm cột, header/dữ liệu/format và CLIP 700 hàng đến cột **AG**; không tự migration khi Template khác chưa khớp và phải báo `INTERVIEW_SCHEMA/QUIZ_SCHEMA/VIDEO_SCHEMA/SUMMARY_SCHEMA/PRACTICE_SCHEMA=NOT_CONFIGURED` nếu thiếu.
+**Bố cục Template hiện hành:** A:AC gồm Interview P:S, Quiz T:W, Video X:AA, isImportant AB, Summary AC. AD:AG nếu tồn tại là vùng legacy được bảo toàn, không có producer/importer Practice. STEP 1 clone giữ nguyên header/format và không sửa dữ liệu legacy. Interview P:S vẫn dùng YAML; Quiz T:W và Video X:AA giữ contract tương ứng.
 
 **Quiz và Video:** `T18 = Quiz`, `T19:W19 = Quiz YAML`; `X18 = Video`, `X19:AA19 = Video Script`. **Không điền Quiz vào T20:W700 hoặc Video vào X20:AA700 khi clone**; STEP 10 worker sinh Quiz YAML vào hàng cha khi được giao; Video do STEP_OPTIONAL_VIDEO worker tạo sau STEP_FINAL. Ba spreadsheet `Module Content`, `Module Content 2`, `Module Content 3` đều đã được sắp xếp theo thứ tự này, không thay các vùng A:O.
 

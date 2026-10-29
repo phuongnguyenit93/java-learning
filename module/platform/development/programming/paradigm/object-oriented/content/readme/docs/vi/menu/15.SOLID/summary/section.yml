@@ -6,64 +6,56 @@ roadmap:
 - id: solid-001
   order: 1
   title: Mục đích và phạm vi áp dụng SOLID
-  description: Đặt SOLID vào mục tiêu giảm tác động thay đổi và kiểm thử qua SolidScopeDemo; phân biệt năm nguyên tắc với
-    các vấn đề như transaction, security không được giải quyết tự động.
+  description: Đặt SOLID vào mục tiêu giảm tác động thay đổi và kiểm thử qua SolidScopeDemo; phân biệt năm nguyên tắc với các vấn đề như transaction, security không được giải quyết tự động.
   transition:
     to: solid-002
     description: '**Từ mục tiêu SOLID → đào sâu cách xác định một nhóm trách nhiệm và lý do thay đổi**'
 - id: solid-002
   order: 2
   title: 'Trách nhiệm đơn: một nhóm lý do thay đổi'
-  description: SRP nhóm các quy tắc vòng đời và tổng tiền trong Invoice, trong khi formatter, repository và sender nhận các
-    nhóm lý do thay đổi riêng; InvoiceWorkflow điều phối use case.
+  description: SRP nhóm các quy tắc vòng đời và tổng tiền trong Invoice, trong khi formatter, repository và sender nhận các nhóm lý do thay đổi riêng; InvoiceWorkflow điều phối use case.
   transition:
     to: solid-003
     description: '**Từ trách nhiệm đã rõ → đặt điểm mở rộng cho biến thể mà không liên tục sửa lõi**'
 - id: solid-003
   order: 3
   title: 'Đóng-mở: mở rộng hành vi với thay đổi có kiểm soát'
-  description: 'OCP đặt trục thay đổi ở ShippingPolicy: thêm Standard, Express, SameDay và decorator phụ phí mà ShippingService
-    giữ lời gọi feeFor, với registration ở composition root.'
+  description: 'OCP đặt trục thay đổi ở ShippingPolicy: thêm Standard, Express, SameDay và decorator phụ phí mà ShippingService giữ lời gọi feeFor, với registration ở composition root.'
   transition:
     to: solid-004
     description: '**Từ mở rộng nhiều implementation → bảo đảm mỗi loại giữ đúng hợp đồng**'
 - id: solid-004
   order: 4
   title: 'Thay thế Liskov: bảo toàn hợp đồng của kiểu cha'
-  description: LSP yêu cầu mọi DiscountPolicy giữ precondition, postcondition, invariant và lỗi; BadVipDiscount và BadFixedDiscount
-    là hai vi phạm khác nhau dù implements hợp lệ.
+  description: LSP yêu cầu mọi DiscountPolicy giữ precondition, postcondition, invariant và lỗi; BadVipDiscount và BadFixedDiscount là hai vi phạm khác nhau dù implements hợp lệ.
   transition:
     to: solid-005
     description: '**Từ hợp đồng thay thế → thu hẹp nghĩa vụ theo nhu cầu riêng của từng client**'
 - id: solid-005
   order: 5
   title: 'Phân tách giao diện: hợp đồng phù hợp từng bên sử dụng'
-  description: ISP tách DocumentReader, DocumentWriter, DocumentDeleter đúng client; kho chỉ đọc không cần giả vờ hỗ trợ ghi/xóa,
-    còn một implementation có thể thực hiện nhiều vai trò.
+  description: ISP tách DocumentReader, DocumentWriter, DocumentDeleter đúng client; kho chỉ đọc không cần giả vờ hỗ trợ ghi/xóa, còn một implementation có thể thực hiện nhiều vai trò.
   transition:
     to: solid-006
     description: '**Từ client chỉ cần hợp đồng phù hợp → điều chỉnh hướng phụ thuộc giữa nghiệp vụ và hạ tầng**'
 - id: solid-006
   order: 6
   title: 'Đảo ngược phụ thuộc: phụ thuộc vào sự trừu tượng'
-  description: DIP giữ CustomerSpendingService phụ thuộc PurchaseReader, còn in-memory/JDBC adapter triển khai port; dịch
-    vụ giữ quy tắc tổng mua hàng độc lập chi tiết SQL.
+  description: DIP giữ CustomerSpendingService phụ thuộc PurchaseReader, còn in-memory/JDBC adapter triển khai port; dịch vụ giữ quy tắc tổng mua hàng độc lập chi tiết SQL.
   transition:
     to: solid-007
     description: '**Từ đảo hướng phụ thuộc → phân biệt nguyên lý kiến trúc với kỹ thuật lắp ghép object**'
 - id: solid-007
   order: 7
   title: Phân biệt đảo ngược phụ thuộc và tiêm phụ thuộc
-  description: So sánh DIP (hướng source dependency), DI (cấp dependency) và IoC (quyền điều khiển rộng hơn) bằng PaymentGateway,
-    CheckoutService và composition root/Spring.
+  description: So sánh DIP (hướng source dependency), DI (cấp dependency) và IoC (quyền điều khiển rộng hơn) bằng PaymentGateway, CheckoutService và composition root/Spring.
   transition:
     to: solid-008
     description: '**Từ hiểu năm nguyên tắc và DI → cân nhắc chi phí abstraction trong tình huống thực tế**'
 - id: solid-008
   order: 8
   title: Cân bằng các nguyên tắc với độ phức tạp thực tế
-  description: |-
-    Đánh giá KISS/YAGNI/DRY và change surface: từ SimpleCheckout một rule đến DeliveryFeePolicy khi Standard/Express thay đổi riêng, giữ kiểm thử và tránh overengineering.
+  description: 'Đánh giá KISS/YAGNI/DRY và change surface: từ SimpleCheckout một rule đến DeliveryFeePolicy khi Standard/Express thay đổi riêng, giữ kiểm thử và tránh overengineering.'
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

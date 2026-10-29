@@ -6,8 +6,7 @@ roadmap:
 - id: design-patterns-001
   order: 1
   title: 'Mẫu thiết kế: vấn đề, bối cảnh và đánh đổi'
-  description: Mô tả pattern qua vấn đề, bối cảnh, ràng buộc và đánh đổi; so sánh switch/Strategy trên checkout trước khi
-    chọn abstraction.
+  description: Mô tả pattern qua vấn đề, bối cảnh, ràng buộc và đánh đổi; so sánh switch/Strategy trên checkout trước khi chọn abstraction.
   transition:
     to: design-patterns-002
     description: '**Từ cách cân nhắc vấn đề và trade-off → chọn kỹ thuật tạo đối tượng theo quan hệ biến thiên thực.**'
@@ -21,16 +20,14 @@ roadmap:
 - id: design-patterns-003
   order: 3
   title: Builder và việc tạo đối tượng phức tạp
-  description: Tổ chức các bước tạo Order nhiều trường bằng fluent Builder, kiểm tra bất biến tại build() và chụp snapshot
-    dữ liệu.
+  description: Tổ chức các bước tạo Order nhiều trường bằng fluent Builder, kiểm tra bất biến tại build() và chụp snapshot dữ liệu.
   transition:
     to: design-patterns-004
     description: '**Từ chất lượng khởi tạo object → đánh giá vòng đời của instance dùng chung và rủi ro mutable state.**'
 - id: design-patterns-004
   order: 4
   title: Singleton và rủi ro trạng thái dùng chung
-  description: Quản lý một instance theo phạm vi xác định, phân biệt initialization với thread safety, scope Spring và dependency
-    injection.
+  description: Quản lý một instance theo phạm vi xác định, phân biệt initialization với thread safety, scope Spring và dependency injection.
   transition:
     to: design-patterns-005
     description: '**Từ quyền sở hữu và vòng đời object → chuyển sang ranh giới tích hợp SDK với contract khác.**'
@@ -44,8 +41,7 @@ roadmap:
 - id: design-patterns-006
   order: 6
   title: Decorator và bổ sung hành vi
-  description: Bổ sung prefix, giới hạn độ dài, metric cho MessageChannel qua wrapper giữ cùng interface, lưu ý thứ tự và
-    lỗi.
+  description: Bổ sung prefix, giới hạn độ dài, metric cho MessageChannel qua wrapper giữ cùng interface, lưu ý thứ tự và lỗi.
   transition:
     to: design-patterns-007
     description: '**Từ chuỗi wrapper quanh một component → đơn giản hóa nhiều subsystem bằng một điểm vào cấp cao.**'
@@ -90,13 +86,11 @@ roadmap:
   description: Biến yêu cầu AddTask/CompleteTask thành object với Receiver, Invoker và undo/redo có lịch sử.
   transition:
     to: design-patterns-013
-    description: '**Từ nhiều cách tổ chức linh hoạt → đánh giá lại chi phí pattern, giữ thiết kế đơn giản khi biến thể không
-      thực sự cần.**'
+    description: '**Từ nhiều cách tổ chức linh hoạt → đánh giá lại chi phí pattern, giữ thiết kế đơn giản khi biến thể không thực sự cần.**'
 - id: design-patterns-013
   order: 13
   title: Khi mẫu thiết kế làm hệ thống phức tạp hơn cần thiết
-  description: |-
-    So sánh lợi ích mở rộng với chi phí abstraction, tránh God Factory/Facade và refactor dựa trên hành vi.
+  description: So sánh lợi ích mở rộng với chi phí abstraction, tránh God Factory/Facade và refactor dựa trên hành vi.
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

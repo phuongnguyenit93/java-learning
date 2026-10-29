@@ -1,0 +1,145 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "FUTURE & SCHEDULING — MẠCH HỌC KẾT QUẢ BẤT ĐỒNG BỘ VÀ LẬP LỊCH"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: future-and-scheduling-001
+    order: 1
+    title: "Future: get(), isDone(), isCancelled()"
+    description: "Giới thiệu Future như hợp đồng quan sát kết quả task; phân biệt get(), isDone(), isCancelled() và outcome."
+    transition:
+      to: future-and-scheduling-002
+      description: "Từ hợp đồng trạng thái Future sang giới hạn thời gian caller được chờ kết quả."
+  - id: future-and-scheduling-002
+    order: 2
+    title: "get(timeout) và tránh chờ vô hạn"
+    description: "Giới hạn thao tác đợi Future, phân biệt timeout chờ với thời gian chạy và dùng overall deadline qua nhiều Future."
+    transition:
+      to: future-and-scheduling-003
+      description: "Sau khi timeout, cần quyết định cách yêu cầu hủy và theo dõi task thực sự dừng."
+  - id: future-and-scheduling-003
+    order: 3
+    title: "Cancellation và trạng thái của Future"
+    description: "Phân tích trạng thái hủy, cancel(false/true), interrupt và ranh giới giữa Future completed với task body đã ngừng."
+    transition:
+      to: future-and-scheduling-004
+      description: "Muốn tổ chức tác vụ đúng, cần phân biệt đầu vào Runnable và Callable có kết quả."
+  - id: future-and-scheduling-004
+    order: 4
+    title: "Callable<T> so với Runnable khi cần trả kết quả"
+    description: "So sánh Callable<T> với Runnable, execute/submit và ý nghĩa kết quả hoặc ngoại lệ trong Future."
+    transition:
+      to: future-and-scheduling-005
+      description: "Task có thể trả giá trị hoặc thất bại, nên bước tiếp theo là truy nguyên lỗi bất đồng bộ."
+  - id: future-and-scheduling-005
+    order: 5
+    title: "ExecutionException và truy nguyên lỗi task"
+    description: "Giải thích cơ chế exception wrapping của Future.get và cách truy root cause, giữ stack trace, phân loại failure."
+    transition:
+      to: future-and-scheduling-006
+      description: "Sau khi nắm exception mỗi Future, chuyển sang thu thập kết quả của cả một nhóm Callable."
+  - id: future-and-scheduling-006
+    order: 6
+    title: "invokeAll() cho nhóm kết quả"
+    description: "Thu thập đủ Future của nhóm Callable bằng invokeAll, phân biệt thứ tự đầu vào, lỗi từng task và thời hạn chung."
+    transition:
+      to: future-and-scheduling-007
+      description: "Nếu chỉ cần một thành công thay vì toàn bộ batch, đổi chiến lược sang invokeAny."
+  - id: future-and-scheduling-007
+    order: 7
+    title: "invokeAny() cho kết quả thành công đầu tiên"
+    description: "Chọn một kết quả thành công từ nhiều Callable bằng invokeAny; phân biệt failure nhanh, null success và loser cancellation."
+    transition:
+      to: future-and-scheduling-008
+      description: "Khi cần xử lý mọi completion sớm nhất, không nhất thiết duyệt Future theo thứ tự submit."
+  - id: future-and-scheduling-008
+    order: 8
+    title: "ExecutorCompletionService nhận kết quả theo thứ tự hoàn tất"
+    description: "Dùng ExecutorCompletionService để nhận Future theo thứ tự hoàn tất, tránh head-of-line blocking và thiết kế collector."
+    transition:
+      to: future-and-scheduling-009
+      description: "Từ thu thập completion chuyển sang hẹn thời điểm chạy task bằng scheduler."
+  - id: future-and-scheduling-009
+    order: 9
+    title: "ScheduledExecutorService cho công việc trì hoãn"
+    description: "Lập lịch trì hoãn một lần bằng ScheduledExecutorService, dùng ScheduledFuture, cancel và hiểu chính sách shutdown."
+    transition:
+      to: future-and-scheduling-010
+      description: "Một task delayed mở đường cho việc lập lịch nhiều lần với fixed rate/fixed delay."
+  - id: future-and-scheduling-010
+    order: 10
+    title: "scheduleAtFixedRate() và scheduleWithFixedDelay()"
+    description: "Đối chiếu scheduleAtFixedRate và scheduleWithFixedDelay theo timeline, xử lý trễ, non-overlap, exception và cancellation."
+    transition:
+      to: future-and-scheduling-011
+      description: "Biết lịch định kỳ sẽ chạy ra sao, cần hiểu exception có thể dừng toàn chuỗi lần chạy."
+  - id: future-and-scheduling-011
+    order: 11
+    title: "Exception trong tác vụ lặp và tác động tới lần chạy sau"
+    description: "Phân tích exception làm suppressed các lần periodic tiếp theo, cách quan sát qua Future và chiến lược phục hồi."
+    transition:
+      to: future-and-scheduling-012
+      description: "Để lifecycle có kiểm soát, nối error policy với stop/shutdown của scheduler."
+  - id: future-and-scheduling-012
+    order: 12
+    title: "Thiết kế stop/shutdown cho lịch chạy định kỳ"
+    description: "Thiết kế stop/shutdown an toàn cho periodic scheduler, quản lý ScheduledFuture, executor ownership và graceful termination."
+    transition:
+      to: future-and-scheduling-013
+      description: "Sau quản lý executor, xem FutureTask như cách tự đóng gói runnable và trạng thái kết quả."
+  - id: future-and-scheduling-013
+    order: 13
+    title: "FutureTask: một tác vụ Runnable có thể được theo dõi bằng Future"
+    description: "Khám phá FutureTask như RunnableFuture one-shot, constructor, execute, cancel và hook done()."
+    transition:
+      to: future-and-scheduling-014
+      description: "Từ FutureTask truyền thống sang các API quan sát Future không chờ của Java 21."
+  - id: future-and-scheduling-014
+    order: 14
+    title: "Future.State, resultNow() và exceptionNow() từ Java 21"
+    description: "Sử dụng API Future Java 21 để phân loại trạng thái và đọc ngay result/exception hợp lệ mà không chờ."
+    transition:
+      to: future-and-scheduling-015
+      description: "Sau đọc outcome không chờ, trở lại điều phối timeout cho nhóm task và partial result."
+  - id: future-and-scheduling-015
+    order: 15
+    title: "invokeAll() và invokeAny() có thời hạn: xử lý tác vụ chưa hoàn tất"
+    description: "Đi sâu timed invokeAll/invokeAny, partial result, cancelled task và overall deadline cho nhóm Callable."
+    transition:
+      to: future-and-scheduling-016
+      description: "Khi nhóm task hết thời hạn, phải quản lý cả thời điểm executor thực sự terminated."
+  - id: future-and-scheduling-016
+    order: 16
+    title: "ExecutorService.close() và try-with-resources từ Java 21: điều kiện chờ kết thúc"
+    description: "Giải thích ExecutorService.close và try-with-resources Java 21, khác shutdown/awaitTermination và nguy cơ blocking."
+    transition:
+      to: future-and-scheduling-017
+      description: "Từ executor lifecycle đến chính sách giữ scheduled tasks đã cancel trong queue."
+  - id: future-and-scheduling-017
+    order: 17
+    title: "ScheduledThreadPoolExecutor.setRemoveOnCancelPolicy() và tác vụ bị hủy trong hàng đợi"
+    description: "Phân tích queue retention sau cancellation trong ScheduledThreadPoolExecutor, setRemoveOnCancelPolicy và purge."
+    transition:
+      to: future-and-scheduling-018
+      description: "Queue đã được quản lý nhưng tác vụ periodic chạy lâu vẫn cần phân tích non-overlap."
+  - id: future-and-scheduling-018
+    order: 18
+    title: "Tác vụ định kỳ chạy lâu: fixed rate, fixed delay và việc không chạy chồng chính nó"
+    description: "Đào sâu periodic task chạy lâu: no-self-overlap, sự khác biệt lịch chậm, happens-before và cạnh tranh giữa schedules."
+    transition:
+      to: future-and-scheduling-019
+      description: "Cuối chương, ghép mọi cơ chế chờ và lập lịch vào một ngân sách thời gian nhất quán."
+  - id: future-and-scheduling-019
+    order: 19
+    title: "TimeUnit: chuyển đơn vị, độ chính xác và ngân sách thời gian qua nhiều bước"
+    description: "Sử dụng TimeUnit đúng độ chính xác, đo elapsed bằng nanoTime và duy trì timeout budget qua nhiều lời chờ."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 | Bài 13 | Bài 14 | Bài 15 | Bài 16 | Bài 17 | Bài 18 | Bài 19 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Future: get(), isDone(), isCancelled() | get(timeout) và tránh chờ vô hạn | Cancellation và trạng thái của Future | Callable<T> so với Runnable khi cần trả kết quả | ExecutionException và truy nguyên lỗi task | invokeAll() cho nhóm kết quả | invokeAny() cho kết quả thành công đầu tiên | ExecutorCompletionService nhận kết quả theo thứ tự hoàn tất | ScheduledExecutorService cho công việc trì hoãn | scheduleAtFixedRate() và scheduleWithFixedDelay() | Exception trong tác vụ lặp và tác động tới lần chạy sau | Thiết kế stop/shutdown cho lịch chạy định kỳ | FutureTask: một tác vụ Runnable có thể được theo dõi bằng Future | Future.State, resultNow() và exceptionNow() từ Java 21 | invokeAll() và invokeAny() có thời hạn: xử lý tác vụ chưa hoàn tất | ExecutorService.close() và try-with-resources từ Java 21: điều kiện chờ kết thúc | ScheduledThreadPoolExecutor.setRemoveOnCancelPolicy() và tác vụ bị hủy trong hàng đợi | Tác vụ định kỳ chạy lâu: fixed rate, fixed delay và việc không chạy chồng chính nó | TimeUnit: chuyển đơn vị, độ chính xác và ngân sách thời gian qua nhiều bước |
+  | Vấn đề cần hiểu | Future đã kết thúc có đồng nghĩa thành công? | Làm sao tránh caller bị chờ vô hạn? | Future bị hủy đã chắc chắn ngừng chạy chưa? | Task không có return và task trả kết quả khác nhau ra sao? | Lỗi thực của task đang nằm ở đâu? | Làm sao đợi cả nhóm và xử lý từng kết cục? | Một kết quả thành công là đủ thì đợi thế nào? | Tại sao duyệt Future theo thứ tự nộp gây chờ dây chuyền? | Hẹn thực thi sau một delay có chính xác đến giờ không? | Chạy định kỳ theo mốc hay theo thời gian nghỉ? | Vì sao lịch định kỳ âm thầm ngừng sau một lần lỗi? | Dừng lịch mà không phá executor hoặc bỏ quên worker? | Làm sao một Runnable tự mang Future để theo dõi? | Làm sao đọc trạng thái/kết quả Future ngay lập tức? | Khi hết hạn toàn nhóm, còn giữ được gì? | Đóng scope có chắc dừng executor ngay không? | Tại sao task đã hủy vẫn giữ chỗ trong delayed queue? | Task chạy chậm có tự chạy chồng các lượt không? | Làm sao tránh lỗi đơn vị và reset timeout? |
+  | Giá trị đối với OOP/module | Đặt nền tảng cho xử lý task bất đồng bộ | Bảo vệ latency và budget của workflow | Ngăn hủy sai và rò rỉ tác vụ | Chọn đúng hợp đồng gửi việc | Chẩn đoán và xử lý lỗi bất đồng bộ | Điều phối batch nhiều Callable | Tối ưu luồng tranh kết quả | Cải thiện thu thập kết quả đồng thời | Nền tảng xây scheduler trong JDK | Chọn chính sách tần suất phù hợp | Bảo vệ độ tin cậy periodic jobs | Đảm bảo vòng đời và giải phóng tài nguyên | Hiểu implementation và tùy biến task | Mở rộng quan sát bất đồng bộ trên JDK 21 | Kiểm soát deadline và dữ liệu nhóm task | Kiểm soát termination và tài nguyên | Hạn chế memory retention của scheduler | Thiết kế periodic workload an toàn | Giữ giới hạn thời gian tổng thể |
+  | Tư duy hình thành | Tách trạng thái hoàn tất khỏi kết cục | Phân biệt deadline với việc hủy task | Tách yêu cầu hủy khỏi xác nhận kết thúc | Thiết kế kiểu kết quả ngay tại nguồn | Không đánh đồng lỗi nghiệp vụ với lỗi chờ | Phân biệt kết quả của từng phần với toàn nhóm | Định nghĩa thành công trước khi chọn winner | Tách thứ tự submit, hoàn tất và hiển thị | Tách hạn đến giờ với lúc worker có tài nguyên | Lập lịch dựa trên duration của invocation | Xem lỗi một lượt như quyết định lifecycle | Tách dừng schedule khỏi kết thúc task/executor | Nhìn execution và result như hai mặt một đối tượng | Tách polling outcome khỏi blocking get | Quản trị partial outcome sau timeout | Nhận diện close như thao tác chờ có điều kiện | Tách trạng thái Future khỏi cấu trúc queue/GC | Phân biệt một schedule với hệ công việc rộng hơn | Tư duy về remaining budget thay vì timeout cố định |

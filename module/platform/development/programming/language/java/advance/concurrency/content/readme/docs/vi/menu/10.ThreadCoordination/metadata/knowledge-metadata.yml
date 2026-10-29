@@ -1,0 +1,37 @@
+sections:
+  thread-coordination-001:
+    difficulty: BASIC
+    isImportant: true
+  thread-coordination-002:
+    difficulty: BASIC
+    isImportant: true
+  thread-coordination-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-coordination-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-coordination-005:
+    difficulty: BASIC
+    isImportant: true
+  thread-coordination-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-coordination-007:
+    difficulty: ADVANCED
+    isImportant: true
+  thread-coordination-008:
+    difficulty: ADVANCED
+    isImportant: false
+  thread-coordination-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-coordination-010:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-coordination-011:
+    difficulty: BASIC
+    isImportant: true
+  thread-coordination-012:
+    difficulty: INTERMEDIATE
+    isImportant: true

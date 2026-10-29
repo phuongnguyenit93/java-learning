@@ -1,0 +1,420 @@
+summaries:
+- id: flow-and-backpressure-001
+  title: Flow API trong java.util.concurrent
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Flow API trong java.util.concurrent**
+
+    Bài học định vị Flow API trong Java SE và bài toán producer phát dữ liệu nhanh hơn consumer. Người học xác định bốn interface chuẩn, hiểu nhu cầu demand-driven và tự chạy ví dụ subscriber yêu cầu từng item để phân biệt giao thức phát/nhận với hàng đợi và Stream.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khái niệm và hợp đồng Flow
+
+    1. Flow API xuất hiện để giải quyết vấn đề tốc độ producer và consumer không cân bằng như thế nào?
+    2. Bốn interface Publisher, Subscriber, Subscription và Processor giữ những trách nhiệm khác nhau nào?
+    3. Vì sao demand thông qua request(n) không đồng nghĩa với bộ nhớ buffer không giới hạn?
+
+    ### Thực hành và giới hạn
+
+    1. Làm thế nào viết subscriber xin từng item và quan sát thứ tự tín hiệu cơ bản?
+    2. Flow khác Stream và BlockingQueue ở cách biểu diễn nguồn dữ liệu, consumer và việc điều tiết tốc độ ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện vai trò Flow | Chỉ ra Publisher, Subscriber, Subscription và Processor trên một sơ đồ xử lý sự kiện. |
+    | Đọc demand protocol | Giải thích tại sao subscriber chưa request thì publisher đúng chuẩn không được gửi onNext vượt demand. |
+    | Chạy ví dụ tối thiểu | Viết hoặc kiểm chứng một chương trình đăng ký subscriber và request từng item. |
+    | Giới hạn áp dụng | Phân biệt Flow contract với executor, buffer và việc lưu trữ bền vững. |
+- id: flow-and-backpressure-002
+  title: Publisher, Subscriber, Subscription, Processor
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Publisher, Subscriber, Subscription, Processor**
+
+    Bài tập trung vào hợp đồng của Publisher, Subscriber, Subscription và Processor cùng trình tự đăng ký, phát item và kết thúc. Một ví dụ pipeline cho thấy Processor vừa là bên nhận upstream vừa là bên phát downstream, nên phải phối hợp hai phía demand thay vì chỉ chuyển dữ liệu tùy ý.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vai trò và trạng thái subscription
+
+    1. Publisher, Subscriber, Subscription, Processor giao tiếp với nhau bằng những phương thức nào?
+    2. Vì sao mỗi cặp publisher–subscriber cần trạng thái subscription và số demand riêng?
+    3. Tại sao Processor phải quan tâm đồng thời demand từ downstream và việc xin upstream?
+
+    ### Luồng tín hiệu và thiết kế
+
+    1. onSubscribe phải xuất hiện trước những tín hiệu nào, và hai loại tín hiệu terminal khác nhau ra sao?
+    2. Nếu subscriber quên request hoặc Processor chuyển tiếp không giới hạn, pipeline có thể bị nghẽn hoặc sai contract thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ contract end-to-end | Vẽ chuỗi subscribe, onSubscribe, request, onNext và terminal giữa các vai trò. |
+    | Thiết kế subscription | Mô tả cách giữ demand và cancel độc lập cho mỗi subscriber. |
+    | Phân tích Processor | Giải thích chiều upstream/downstream của một phép biến đổi dữ liệu và trách nhiệm không phát vượt demand. |
+- id: flow-and-backpressure-003
+  title: request(n) và demand-driven consumption
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **request(n) và demand-driven consumption**
+
+    Trọng tâm bài này là request(n): subscriber cấp tín dụng nhận item, demand cộng dồn có giới hạn ngữ nghĩa và publisher chỉ được gửi onNext theo quyền còn lại. Ví dụ từng item và theo lô giúp lựa chọn chiến lược replenishment mà không biến request(Long.MAX_VALUE) thành một giải pháp giả cho mọi overload.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa của request
+
+    1. request(n) thay đổi số item có thể được giao tới subscriber như thế nào?
+    2. Vì sao request(0) hoặc số âm vi phạm giao thức, còn số dương liên tiếp biểu thị demand cộng dồn?
+    3. Demand chưa sử dụng khác số phần tử đang nằm trong buffer ở điểm nào?
+
+    ### Chiến lược tiêu thụ
+
+    1. Vì sao request(1) sau khi xử lý xong thường giữ số item đang xử lý nhỏ hơn request(Long.MAX_VALUE)?
+    2. Khi dùng batch/window demand, phải theo dõi số item đang xử lý và cấp tín dụng bổ sung ra sao?
+    3. Nếu publisher tạo dữ liệu ở nguồn nhanh hơn downstream, demand một mình có xóa nhu cầu bounded buffer không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lần theo credit | Lập bảng request và onNext để tính số item được phép giao. |
+    | Chọn window demand | Đề xuất request(1), request theo lô hoặc tín dụng không giới hạn theo tốc độ xử lý. |
+    | Tái hiện thiếu demand | Giải thích quan sát không có onNext khi subscriber chưa cấp quyền nhận. |
+    | Nhận diện sai protocol | Dự đoán hậu quả của request không dương và phát vượt số yêu cầu. |
+- id: flow-and-backpressure-004
+  title: onSubscribe(), onNext(), onError(), onComplete()
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **onSubscribe(), onNext(), onError(), onComplete()**
+
+    Bài học lần theo trình tự onSubscribe, onNext, onError và onComplete từ lúc đăng ký đến khi terminal. Người học phân biệt hoàn tất thường với lỗi, biết thời điểm an toàn để request thêm hoặc hủy và không nhầm việc close publisher với callback đã được giao xong.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Trình tự và giao thức callback
+
+    1. onSubscribe xuất hiện vào giai đoạn nào và subscriber lưu Subscription để điều khiển luồng ra sao?
+    2. onNext được gọi trong điều kiện demand nào và tại sao không tiếp tục gửi onNext sau terminal?
+    3. onError và onComplete khác nhau ở ý nghĩa kết thúc và dữ liệu truyền kèm thế nào?
+
+    ### Tình huống thực thi
+
+    1. Nếu xử lý onNext thất bại, subscriber cần báo lỗi/giải phóng tài nguyên theo đường nào?
+    2. Tại sao việc publisher gọi close không chứng minh onComplete đã chạy ở consumer trước khi main kết thúc?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết callback | Sắp xếp tín hiệu từ đăng ký đến terminal trên timeline và chỉ ra chuỗi bất hợp lệ. |
+    | Xử lý kết thúc | Viết subscriber phân nhánh onError và onComplete với đồng bộ khi kiểm tra kết quả. |
+    | Điều phối demand | Giải thích thời điểm request thêm sau onNext hoặc cancel khi không cần dữ liệu nữa. |
+- id: flow-and-backpressure-005
+  title: SubmissionPublisher và executor sử dụng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **SubmissionPublisher và executor sử dụng**
+
+    SubmissionPublisher hiện thực Flow.Publisher bằng cách giao tín hiệu bất đồng bộ qua Executor và bộ đệm cho mỗi subscriber. Bài phân biệt executor mặc định với pool do ứng dụng cung cấp, phân tích khả năng starvation/deadlock và giới hạn tài nguyên; ví dụ Java 21 virtual thread được ghi rõ điều kiện phiên bản.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Executor và cách giao tín hiệu
+
+    1. Executor ảnh hưởng thế nào đến thread thực thi onNext so với thread gọi submit?
+    2. SubmissionPublisher giữ buffer theo subscriber ra sao và vì sao một subscriber chậm có thể ảnh hưởng producer?
+    3. Khi nào common pool, fixed pool hoặc virtual-thread executor là lựa chọn phù hợp?
+
+    ### Giới hạn và lifecycle
+
+    1. Tại sao block trong callback hoặc dùng lại cùng pool có thể dẫn tới starvation/deadlock?
+    2. Sự khác nhau giữa đóng publisher và đóng executor do ứng dụng tự tạo là gì?
+    3. Vì sao code sử dụng newVirtualThreadPerTaskExecutor cần Java 21+ thay vì khẳng định Java 17 chạy được?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình publisher | Giải thích constructor với Executor và maxBufferCapacity trong một ví dụ SubmissionPublisher. |
+    | Đánh giá tài nguyên | Phân tích thread pool, callback blocking và tác động của subscriber chậm. |
+    | Chọn runtime | Phân biệt ví dụ Java 17 với API virtual thread yêu cầu Java 21+. |
+    | Quản lý vòng đời | Lập thứ tự close publisher, chờ subscriber và shutdown executor theo ownership. |
+- id: flow-and-backpressure-006
+  title: Backpressure khác buffering thế nào?
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Backpressure khác buffering thế nào?**
+
+    Bài phân biệt buffering (lưu tạm item) với backpressure (điều tiết khả năng gửi/nhận). Người học so sánh queue hữu hạn, demand trên Flow và SubmissionPublisher dùng đồng thời hai cơ chế, qua đó tránh nhầm queue lớn với một hệ thống đã có backpressure đúng nghĩa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai cơ chế khác nhau
+
+    1. Buffer giữ dữ liệu chưa xử lý còn backpressure điều chỉnh nhịp sản xuất/giao dữ liệu như thế nào?
+    2. Vì sao một queue không giới hạn có thể che overload tạm thời nhưng tạo backlog tăng mãi?
+    3. Flow.request(n) và giới hạn buffer trong SubmissionPublisher có quan hệ nhưng không đồng nhất ở điểm nào?
+
+    ### Chọn chính sách khi nhanh/chậm lệch nhau
+
+    1. Bounded BlockingQueue tạo áp lực ngược lên producer bằng put trong điều kiện nào?
+    2. Khi consumer chậm kéo dài, nên quyết định chờ, drop, coalesce hay từ chối theo tiêu chí nghiệp vụ nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh cơ chế | Chỉ rõ một giá trị là số item trong queue và một giá trị là demand còn lại. |
+    | Chẩn đoán overload | Giải thích vì sao buffer tăng mà throughput không đổi. |
+    | Lựa chọn phương án | Nêu trường hợp nên dùng queue bounded, request(n) và drop policy khác nhau. |
+- id: flow-and-backpressure-007
+  title: Giới hạn buffer và chính sách xử lý chậm
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn buffer và chính sách xử lý chậm**
+
+    Bài chuyển lý thuyết buffer thành quyết định vận hành: maxBufferCapacity theo từng subscriber, trường hợp đầy, thời gian chờ của producer, drop policy và theo dõi latency/heap. Thí nghiệm Java 17 cố ý làm đầy buffer để quan sát offer/onDrop và các bất biến khi không thể phát tiếp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Buffer hữu hạn và consumer chậm
+
+    1. maxBufferCapacity của SubmissionPublisher giới hạn theo subscriber hay toàn pipeline và vì sao cần hiểu đúng?
+    2. Vì sao request và buffer đều cần thiết nhưng không tự bảo đảm không bao giờ xảy ra quá tải?
+    3. Khi buffer đầy, producer chịu latency hoặc downstream chịu mất item theo chính sách nào?
+
+    ### Chọn chính sách và đo lường
+
+    1. Cách dùng offer cùng onDrop để phân biệt việc từ chối và retry có giới hạn ra sao?
+    2. Trong bài toán dữ liệu không được mất, vì sao drop không thể chỉ được coi là tối ưu hiệu năng?
+    3. Những metric nào giúp phát hiện subscriber chậm, backlog và nguy cơ tăng memory?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích saturation | Mô phỏng trạng thái đang onNext cộng buffer đã đầy để giải thích item kế tiếp bị chặn/bỏ. |
+    | Thiết kế overload policy | So sánh block, timeout, drop, coalesce, tách subscriber dựa trên yêu cầu mất dữ liệu. |
+    | Chạy thí nghiệm | Đọc đầu ra demo Java 17 offer/onDrop và giải thích các giá trị trả về. |
+    | Theo dõi giới hạn | Chọn metric queue lag, drop, timeout, throughput và tài nguyên cho nhiều subscriber. |
+- id: flow-and-backpressure-008
+  title: Hủy subscription và giải phóng tài nguyên
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Hủy subscription và giải phóng tài nguyên**
+
+    Hủy subscription dừng nhu cầu nhận dữ liệu của một subscriber nhưng không đồng nghĩa đóng toàn bộ publisher hoặc executor. Bài xây vòng đời từ đăng ký đến cancel, phân biệt hủy thường với onComplete/onError và thiết kế cleanup đúng một lần trong những trường hợp race/cancel đồng thời.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa cancel
+
+    1. Subscription.cancel tác động lên một liên kết subscriber như thế nào?
+    2. Vì sao cancel không đồng nghĩa publisher.close hoặc chắc chắn nhận onComplete?
+    3. Khi các tín hiệu đã lên lịch trước cancel, subscriber cần giữ invariant cleanup như thế nào?
+
+    ### Giải phóng tài nguyên
+
+    1. Làm cách nào dùng cờ trạng thái hoặc tài nguyên idempotent để cleanup đúng một lần khi hủy và lỗi cạnh tranh?
+    2. Cần chờ hoặc timeout ra sao khi một subscriber chủ động ngừng giữa pipeline?
+    3. Trong thí nghiệm subscriber tự hủy sau ba item, nên kiểm tra kết quả theo những điều kiện nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết cancel | Mô tả timeline request, onNext, cancel và các callback có thể cạnh tranh. |
+    | Thiết kế cleanup | Viết đường giải phóng resource idempotent tách khỏi tín hiệu terminal. |
+    | Kiểm chứng cancellation | Tạo phép kiểm tra subscriber dừng nhận và không làm treo thread đợi terminal. |
+- id: flow-and-backpressure-009
+  title: Thread safety trong callback và xử lý lỗi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thread safety trong callback và xử lý lỗi**
+
+    Bài làm rõ Flow tuần tự hóa tín hiệu trong cùng một subscription nhưng không biến mọi trạng thái mà callback truy cập thành thread-safe. Người học kiểm tra shared state giữa subscriber, lỗi trong onNext, đường onError/onComplete và cách tránh test đọc kết quả trước khi callback hoàn tất.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới thread safety
+
+    1. Flow bảo đảm điều gì về tính tuần tự của onNext theo một subscription và không bảo đảm điều gì giữa nhiều subscription?
+    2. Vì sao chia sẻ một mutable object giữa callback và main/worker khác vẫn cần atomic, lock hoặc safe publication?
+    3. Nếu một Subscriber object nhận nhiều subscription, mô hình bảo vệ state phải thay đổi thế nào?
+
+    ### Lỗi và đồng bộ kết quả
+
+    1. Lỗi trong onNext khác lỗi upstream chuyển thành onError ra sao?
+    2. Vì sao không nên dựa vào việc ném exception khỏi callback để chắc chắn onError sẽ được gọi?
+    3. Làm sao dùng latch/future và timeout để xác minh terminal và không đánh giá kết quả quá sớm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích truy cập state | Chỉ ra các biến được nhiều callback/main thread sử dụng và cơ chế đồng bộ cần thiết. |
+    | Phân biệt đường lỗi | Diễn giải ba lớp lỗi: lỗi upstream, lỗi callback downstream và lỗi tài nguyên/executor. |
+    | Thiết kế subscriber an toàn | Đưa ra cách bảo vệ invariant và giữ terminal/cleanup idempotent. |
+    | Kiểm thử callback | Chờ tín hiệu kết thúc và kiểm tra kết quả qua cơ chế đồng bộ có timeout. |
+- id: flow-and-backpressure-010
+  title: Flow API của JDK so với blocking queue
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Flow API của JDK so với blocking queue**
+
+    Bài so sánh trực tiếp Flow với BlockingQueue: Flow là giao thức push có demand và tín hiệu terminal trên từng subscriber, còn BlockingQueue là cấu trúc giữ phần tử cho consumer chủ động take/poll. Người học chọn cơ chế phù hợp với worker queue hay event subscription và giải thích chính sách hủy, lỗi, buffer của từng cách.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất hai mô hình
+
+    1. BlockingQueue.put/take tạo áp lực ngược khác request(n)/onNext của Flow ở đâu?
+    2. Tại sao nhiều consumer lấy từ một queue không giống một publisher phát tới nhiều subscriber?
+    3. Flow có bắt buộc giao callback bất đồng bộ trong mọi implementation hay không?
+
+    ### Quyết định thiết kế
+
+    1. Khi công việc phải do một worker bất kỳ xử lý, cơ chế nào thường đơn giản hơn?
+    2. Khi mỗi subscriber cần demand và terminal riêng, Flow có lợi gì?
+    3. Vì sao nối BlockingQueue vào Flow vẫn cần chú ý ownership, cancellation và tài nguyên đang block?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh contract | Lập bảng push-with-demand với queue pull, terminal và multi-subscriber delivery. |
+    | Chọn API | Giải thích lựa chọn cho work queue hoặc phát sự kiện tới nhiều subscriber. |
+    | Phân tích sự cố | Nêu khác biệt khi nghẽn, hủy, interrupt và cleanup của hai thiết kế. |
+- id: flow-and-backpressure-011
+  title: Khi phù hợp để xây pipeline theo sự kiện
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khi phù hợp để xây pipeline theo sự kiện**
+
+    Bài đưa ra tiêu chí chọn pipeline event-driven: nguồn sự kiện liên tục, stage tách biệt, nhu cầu demand, lỗi/ordering và mức công suất downstream. Người học đối chiếu với batch hoặc lời gọi đồng bộ đơn giản, không mặc định rằng mọi pipeline đều cần Flow hay tạo nhiều executor hơn là tốt.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Động cơ kiến trúc
+
+    1. Dấu hiệu nào cho thấy workload thích hợp với pipeline xử lý sự kiện có nhiều giai đoạn?
+    2. Event, command và batch khác nhau thế nào đối với yêu cầu giao hàng và khả năng reorder?
+    3. Vì sao backpressure, capacity và failure policy phải được quyết định từ khi thiết kế stage?
+
+    ### Chọn Flow và kiểm tra chi phí
+
+    1. Trong trường hợp nào một hàm gọi đồng bộ hoặc BlockingQueue bounded đơn giản hơn Flow?
+    2. Vì sao việc chia nhiều stage bất đồng bộ có thể thêm latency, overhead và việc quản lý vòng đời?
+    3. Cần đo gì trước khi kết luận pipeline event-driven mang lại throughput/latency tốt hơn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đánh giá use case | Nêu tiêu chí nên/chưa nên chọn event pipeline với workload cụ thể. |
+    | Vẽ kiến trúc hữu hạn | Xác định từng stage, demand, buffer limit, cancellation và luồng lỗi. |
+    | Đề xuất phép đo | Chọn throughput, queue depth, tail latency và tài nguyên để so sánh thiết kế. |
+- id: flow-and-backpressure-012
+  title: 'SubmissionPublisher.submit() so với offer(): xử lý subscriber chậm và buffer đầy'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **SubmissionPublisher.submit() so với offer(): xử lý subscriber chậm và buffer đầy**
+
+    Bài đối chiếu chính xác SubmissionPublisher.submit với các overload offer: chờ vô hạn theo policy submit, thử gửi không chờ, thử gửi có timeout và onDrop xử lý từng subscriber chậm. Người học đọc đúng return value âm/dương, hiểu retry không bảo đảm thành công vô hạn và thực hành buffer đầy một cách xác định.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa của ba phương thức
+
+    1. submit khác offer không timeout và offer có timeout ở khả năng block producer như thế nào?
+    2. Vì sao trạng thái buffer đầy được xét theo subscriber chứ không đơn giản theo tổng lượng item?
+    3. Return value của submit/offer nên được diễn giải như thế nào, đặc biệt kết quả âm?
+
+    ### Chính sách drop/retry và an toàn
+
+    1. Khi onDrop trả true, điều gì được thử lại và tại sao không phải cam kết gửi tới thành công?
+    2. Làm sao tạo thí nghiệm consumer chậm để quan sát buffer saturation mà không dựa vào sleep ngẫu nhiên?
+    3. Trong nghiệp vụ không cho phép mất item, cần cân nhắc backpressure hay durable handoff ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh overload | Lập bảng blocking, timeout và callback drop giữa submit, offer và timed offer. |
+    | Đọc kết quả API | Giải thích return value và số subscriber bị drop thay vì coi số âm là thời gian chờ. |
+    | Chạy demo saturation | Theo dõi item đang xử lý, item buffered và trạng thái offer khi đầy. |
+    | Chọn policy | Biện luận khi nào chờ producer, drop có kiểm soát hoặc chuyển sang cơ chế bền vững. |
+- id: flow-and-backpressure-013
+  title: Đóng SubmissionPublisher, tín hiệu kết thúc và vòng đời executor của publisher
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đóng SubmissionPublisher, tín hiệu kết thúc và vòng đời executor của publisher**
+
+    Bài cuối phân biệt ba vòng đời thường bị gộp: publisher, từng subscription và Executor do ứng dụng cung cấp. Người học thực hiện close hoặc closeExceptionally, chờ callback terminal, nhận biết subscriber đăng ký sau close và shutdown executor đúng thứ tự để tránh mất tín hiệu hoặc deadlock.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các kiểu kết thúc
+
+    1. close báo hoàn tất bình thường khác closeExceptionally báo lỗi thế nào?
+    2. Vì sao gọi close không đồng nghĩa subscriber đã chạy xong onComplete hay onError?
+    3. Subscriber đăng ký sau khi publisher đã đóng cần được xử lý theo trạng thái gì?
+
+    ### Ownership executor và shutdown
+
+    1. Ai phải chịu trách nhiệm đóng ExecutorService được truyền vào SubmissionPublisher?
+    2. Tại sao shutdown executor trước khi các callback cuối cùng được giao có thể làm mất khả năng hoàn tất?
+    3. Cần dùng Future, CountDownLatch hoặc timeout theo trình tự nào để chờ đúng mà không tự deadlock?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt lifecycle | Vẽ timeline đóng publisher, terminal của subscriber và shutdown executor. |
+    | Thiết kế đường lỗi | Chọn close hoặc closeExceptionally và xác minh onComplete/onError tương ứng. |
+    | Quản lý executor | Xác định ownership pool và thứ tự shutdown an toàn. |
+    | Kiểm chứng termination | Dùng latch/future có timeout để phân biệt đã gọi close với downstream đã kết thúc. |

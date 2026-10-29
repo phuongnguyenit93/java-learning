@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "PARALLEL STREAMS — TỪ ĐÚNG ĐẮN ĐẾN HIỆU NĂNG"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: parallel-streams-001
+    order: 1
+    title: "Stream.parallel() và parallelStream()"
+    description: "Giới thiệu parallel mode, cách tạo pipeline song song, tính lazy và các điều kiện về state, reduction, ordering và chi phí thực thi."
+    transition:
+      to: parallel-streams-002
+      description: "Từ khởi tạo parallel pipeline chuyển sang tìm hiểu cơ chế Spliterator chia phần tử cho các worker."
+  - id: parallel-streams-002
+    order: 2
+    title: "Spliterator và khả năng chia nguồn dữ liệu"
+    description: "Giải thích cách Spliterator chia nguồn, estimateSize và characteristics quyết định khả năng phân phối công việc của parallel stream."
+    transition:
+      to: parallel-streams-003
+      description: "Từ cách chia nguồn chuyển sang cách các task được thực thi và phân phối trên ForkJoin common pool."
+  - id: parallel-streams-003
+    order: 3
+    title: "ForkJoin common pool phía sau parallel streams"
+    description: "Theo dõi việc chia subtasks, work-stealing và common pool, đồng thời nhận diện chi phí và rủi ro khi tài nguyên này được dùng chung."
+    transition:
+      to: parallel-streams-004
+      description: "Sau scheduling và work-stealing, kiểm chứng phép reduce vẫn đúng khi nhiều nhánh được gộp lại."
+  - id: parallel-streams-004
+    order: 4
+    title: "Associativity của phép reduce và tính đúng đắn"
+    description: "Đặt luật associativity và identity làm cơ sở correctness của reduce, phân biệt quy tắc đại số với giới hạn số thực và mutable state."
+    transition:
+      to: parallel-streams-005
+      description: "Từ các luật reduction mở rộng sang yêu cầu stateless và non-interfering của toàn pipeline."
+  - id: parallel-streams-005
+    order: 5
+    title: "Stateless lambda và tránh shared mutable state"
+    description: "Chỉ ra non-interference, statelessness và data race của side effect, thay shared mutable state bằng các phép biến đổi và collector an toàn."
+    transition:
+      to: parallel-streams-006
+      description: "Sau tính an toàn của lambda, xét thêm hợp đồng encounter order và terminal operation."
+  - id: parallel-streams-006
+    order: 6
+    title: "Ordering: forEachOrdered(), findFirst(), unordered()"
+    description: "Giải thích encounter order và sự khác nhau của forEach/forEachOrdered, findFirst/findAny, unordered cùng đánh đổi ordering."
+    transition:
+      to: parallel-streams-007
+      description: "Từ yêu cầu thứ tự đi tới cách Collector quản lý accumulation, concurrent characteristic và order."
+  - id: parallel-streams-007
+    order: 7
+    title: "Collector concurrent so với collector tuần tự"
+    description: "Phân tích collector contract và các characteristics, so sánh groupingBy với groupingByConcurrent và rủi ro shared accumulator."
+    transition:
+      to: parallel-streams-008
+      description: "Khi đã hiểu Collector, soi sâu identity và combiner để tránh những lỗi chỉ lộ ra khi parallel."
+  - id: parallel-streams-008
+    order: 8
+    title: "Combiner, identity và lỗi reduction khi chạy song song"
+    description: "Kiểm tra chính xác identity, accumulator, combiner và compatibility để sửa các reduction chỉ sai khi chia việc song song."
+    transition:
+      to: parallel-streams-009
+      description: "Từ correctness của reduction chuyển sang hiệu năng thực tế khi callback có blocking I/O."
+  - id: parallel-streams-009
+    order: 9
+    title: "Vì sao blocking I/O có thể làm nghẽn parallel stream?"
+    description: "Chỉ ra blocking I/O chiếm worker trong common pool, gây giảm thông lượng và lựa chọn executor, async I/O hoặc virtual threads phù hợp."
+    transition:
+      to: parallel-streams-010
+      description: "Sau khi phân biệt CPU-bound và blocking I/O, đo điểm hòa vốn bằng benchmark có kiểm soát."
+  - id: parallel-streams-010
+    order: 10
+    title: "Dùng benchmark để xác định ngưỡng có lợi"
+    description: "Dùng JMH và phép đo lặp có kiểm soát để xác định điểm hòa vốn giữa parallel và sequential, thay vì tin một lần chạy."
+    transition:
+      to: parallel-streams-011
+      description: "Từ quyết định có nên song song tiến tới kiểm soát số cấp song song khi pipeline lồng nhau."
+  - id: parallel-streams-011
+    order: 11
+    title: "Tránh nested parallel streams thiếu kiểm soát"
+    description: "Nhận diện nested parallelism, tranh pool và overhead của tác vụ nhỏ; so sánh outer-only, inner-only, flatten và executor riêng."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Stream.parallel() và parallelStream() | Spliterator và khả năng chia nguồn dữ liệu | ForkJoin common pool phía sau parallel streams | Associativity của phép reduce và tính đúng đắn | Stateless lambda và tránh shared mutable state | Ordering: forEachOrdered(), findFirst(), unordered() | Collector concurrent so với collector tuần tự | Combiner, identity và lỗi reduction khi chạy song song | Vì sao blocking I/O có thể làm nghẽn parallel stream? | Dùng benchmark để xác định ngưỡng có lợi | Tránh nested parallel streams thiếu kiểm soát |
+  | Vấn đề cần hiểu | Đổi từ stream tuần tự sang song song mà vẫn bảo toàn nghĩa của pipeline | Không phải nguồn dữ liệu nào cũng phân vùng cân bằng và rẻ | Parallel stream không tự có pool dành riêng và có thể tranh chấp tài nguyên | Phân nhóm reduction song song có thể làm đổi kết quả | Lambda song song truy cập trạng thái chia sẻ khiến kết quả phụ thuộc lịch chạy | Thứ tự gặp phần tử khác thứ tự chạy và thứ tự quan sát kết quả | Collector concurrent và parallel mode độc lập, khai báo sai có thể làm hỏng reduction | Cách tách nhánh làm lộ identity và combiner không đúng contract | Dùng parallel stream để chờ I/O có thể làm nghẽn worker chung | Overhead của song song có thể lớn hơn công việc thực | Tăng tầng song song không tự tăng capacity và có thể gây tranh chấp |
+  | Giá trị đối với OOP/module | Nắm cơ chế đầu vào và yêu cầu đúng đắn trước khi tối ưu | Đánh giá hoặc thiết kế cách chia nguồn dữ liệu | Hiểu nơi công việc chạy để chẩn đoán nghẽn | Bảo toàn ý nghĩa phép tính qua các cách chia và gộp | Viết pipeline an toàn và dễ kiểm chứng | Giữ hoặc bỏ ordering dựa vào hợp đồng dữ liệu | Thiết kế quá trình collect đúng contract và có khả năng mở rộng | Chẩn đoán và sửa lỗi reduction theo luật đại số | Tránh starvation và bố trí concurrency theo loại workload | Ra quyết định tối ưu bằng số liệu và ngưỡng áp dụng | Giữ số cấp parallelism rõ ràng và đo được |
+  | Tư duy hình thành | Tách chế độ execution khỏi cam kết về tốc độ | Xem hiệu quả chia nguồn trước khi tăng số worker | Xem pool và scheduler là tài nguyên hữu hạn | Chứng minh luật gộp trước khi tối ưu | Làm sạch side effect trước khi nghĩ tới parallel speedup | Tách nghĩa kết quả khỏi scheduling | Dựa vào đặc tính accumulator thay vì suy theo tên collector | Kiểm chứng từng luật bằng phản ví dụ | Đo thời gian block và quy mô tài nguyên trước khi chọn API | Chỉ tuyên bố nhanh hơn sau benchmark tương đương | Chọn một ranh giới scheduling chính |

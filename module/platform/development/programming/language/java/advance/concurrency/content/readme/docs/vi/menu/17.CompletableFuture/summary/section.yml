@@ -1,0 +1,201 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "COMPLETABLEFUTURE — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: completable-future-001
+    order: 1
+    title: "CompletionStage và CompletableFuture khác Future truyền thống"
+    description: "Future giúp đợi và hủy kết quả; CompletionStage cho phép mô tả đồ thị phụ thuộc; CompletableFuture triển khai cả hai và có quyền hoàn tất thủ công. Bài nền tảng phân biệt hợp đồng API với việc lập lịch và chạy tác vụ."
+    transition:
+      to: completable-future-002
+      description: "Từ hợp đồng kết quả và stage, chuyển sang ba cách tạo stage ban đầu đúng với dữ liệu có sẵn hoặc tác vụ cần chạy."
+  - id: completable-future-002
+    order: 2
+    title: "completedFuture(), supplyAsync(), runAsync()"
+    description: "completedFuture trả giá trị đã có; supplyAsync chạy Supplier có kết quả; runAsync chạy Runnable và hoàn tất kiểu Void. Bài dạy chọn factory theo kiểu đầu ra, executor, exception và vòng đời."
+    transition:
+      to: completable-future-003
+      description: "Sau khi tạo stage, cần biết cách nối hành động tiêu thụ hoặc biến đổi result."
+  - id: completable-future-003
+    order: 3
+    title: "thenApply(), thenAccept(), thenRun()"
+    description: "thenApply chuyển đổi kết quả T sang U; thenAccept tiêu thụ giá trị, còn thenRun chỉ nhận tín hiệu hoàn tất bình thường. Bài nhấn mạnh kiểu kết quả Void, side effect, exception và callback placement."
+    transition:
+      to: completable-future-004
+      description: "Khi đã chọn loại callback, phải hiểu ranh giới executor và scheduling của biến thể Async."
+  - id: completable-future-004
+    order: 4
+    title: "thenApplyAsync() và ý nghĩa của executor"
+    description: "thenApplyAsync tạo ranh giới lên lịch callback; overload truyền Executor kiểm soát pool, queue và rejection. Bài phân tích sự khác nhau với thenApply, callback trên source đã completed và direct executor."
+    transition:
+      to: completable-future-005
+      description: "Từ nơi chạy callback, xét cách nối task sau phụ thuộc dữ liệu task trước mà không block worker."
+  - id: completable-future-005
+    order: 5
+    title: "thenCompose() để nối các tác vụ bất đồng bộ"
+    description: "thenCompose làm phẳng một stage được trả từ mapper phụ thuộc dữ liệu đầu vào. Bài dạy diễn đạt chuỗi A rồi B, tránh nested future, lỗi upstream/inner stage và join blocking trong cùng pool."
+    transition:
+      to: completable-future-006
+      description: "Khi đã biểu diễn bước phụ thuộc, so sánh với bài toán hai nguồn độc lập cần ghép kết quả."
+  - id: completable-future-006
+    order: 6
+    title: "thenCombine() khi cần phối hợp hai kết quả"
+    description: "thenCombine chờ hai nguồn độc lập thành công rồi chạy BiFunction để tạo một kết quả chung. Bài phân biệt với thenCompose, allOf, timeout và lỗi của từng nhánh."
+    transition:
+      to: completable-future-007
+      description: "Từ hai nhánh độc lập mở rộng sang một tập N task và các chiến lược đợi tất cả hoặc outcome đầu tiên."
+  - id: completable-future-007
+    order: 7
+    title: "allOf(), anyOf() với nhiều tác vụ song song"
+    description: "allOf là barrier chờ mọi future, anyOf lấy outcome hoàn tất đầu tiên kể cả lỗi. Bài xử lý kiểu Void/Object, thu kết quả theo thứ tự, các trường hợp input rỗng và cancellation của aggregate."
+    transition:
+      to: completable-future-008
+      description: "Khi hiểu all/any, phân tích phép cạnh tranh hai stage có callback xử lý kết quả thắng cuộc."
+  - id: completable-future-008
+    order: 8
+    title: "applyToEither() và acceptEither() khi cạnh tranh kết quả"
+    description: "applyToEither biến đổi kết quả của một nhánh thắng, acceptEither dùng nó cho action trả Void. Bài phân biệt race normal/exceptional, hedged request, winner không bảo đảm first-success và side effect của loser."
+    transition:
+      to: completable-future-009
+      description: "Cuộc đua có thể lỗi nên tiếp theo cần chọn recovery hoặc observer đúng semantics."
+  - id: completable-future-009
+    order: 9
+    title: "handle(), exceptionally(), whenComplete()"
+    description: "handle nhìn cả success và failure; exceptionally phục hồi lỗi; whenComplete quan sát outcome và thường giữ nguyên nó. Bài tập trung vào semantics callback, lỗi khi observer ném và thứ tự recovery."
+    transition:
+      to: completable-future-010
+      description: "Từ xử lý lỗi trong graph, chuyển tới cách caller chờ và nhìn wrapper exception bằng get/join."
+  - id: completable-future-010
+    order: 10
+    title: "Khác biệt get() và join() khi xử lý lỗi"
+    description: "get và join có thể block nhưng khác checked/unchecked exception và interruption; get có overload timeout, join thường bọc lỗi bằng CompletionException. Bài dạy unwrap cause và phân biệt timeout, cancel."
+    transition:
+      to: completable-future-011
+      description: "Sau điểm chờ, phân biệt deadline của kết quả, completion bằng timeout và fallback."
+  - id: completable-future-011
+    order: 11
+    title: "orTimeout(), completeOnTimeout() và fallback"
+    description: "orTimeout hoàn tất future bằng TimeoutException còn completeOnTimeout ghi giá trị fallback; cả hai thay đổi chính future nhận method. Bài phân tích race với producer, shared future và underlying task vẫn chạy."
+    transition:
+      to: completable-future-012
+      description: "Từ timeout như một exceptional outcome, mở rộng cách lỗi lan xuyên nhiều stage và nhánh."
+  - id: completable-future-012
+    order: 12
+    title: "Propagate lỗi trong chuỗi CompletableFuture"
+    description: "Exception lan qua normal dependent stages cho tới khi có recovery; lỗi source, mapper và inner stage có thể khác nhau. Bài phân tích nhánh lỗi, allOf, anyOf, cancellation và debug cause đúng chỗ."
+    transition:
+      to: completable-future-013
+      description: "Sau error graph, xem chính sách executor khi callback tốn tài nguyên hoặc bị từ chối."
+  - id: completable-future-013
+    order: 13
+    title: "Chọn custom executor để quản lý tải và tránh tắc nghẽn"
+    description: "Custom executor quyết định CPU/I/O worker, bounded queue và rejection khi chạy CompletableFuture callback. Bài tập trung vào lifecycle, backpressure và pool-starvation khi dependent task join cùng executor."
+    transition:
+      to: completable-future-014
+      description: "Executor hữu hạn chưa đủ nếu producer tạo hàng nghìn future; cần thêm admission control."
+  - id: completable-future-014
+    order: 14
+    title: "Giới hạn concurrency khi tạo hàng loạt future"
+    description: "Bulk fan-out tạo nhiều futures có thể vượt giới hạn in-flight và downstream; batch window, semaphore trước submit và bounded executor giải quyết các phần khác nhau. Bài đặc biệt xét permit leak khi cancel trước run và khi future xong nhưng worker chưa dừng."
+    transition:
+      to: completable-future-015
+      description: "Khi đã giới hạn in-flight, cần quản lý slot an toàn trước hủy/timeout và worker chưa dừng."
+  - id: completable-future-015
+    order: 15
+    title: "Cancellation, interrupt và giới hạn của CompletableFuture"
+    description: "CompletableFuture.cancel thường tạo exceptional completion chứ không đảm bảo interrupt supplier của supplyAsync. Bài đối chiếu FutureTask, get timeout, cooperative cancellation và cleanup side effect."
+    transition:
+      to: completable-future-016
+      description: "Từ giới hạn cancellation, xây một fan-out/fan-in I/O có hoàn tất và cleanup rõ ràng."
+  - id: completable-future-016
+    order: 16
+    title: "Fan-out / fan-in thực hành với nhiều tác vụ I/O"
+    description: "Fan-out/fan-in thực hành nhiều I/O bằng HTTP loopback, allOf/thenCombine/thenCompose và partial-result strategy. Bài phân biệt transport failure, status, end-to-end deadline, backpressure và việc cancel aggregate."
+    transition:
+      to: completable-future-017
+      description: "Khi phối hợp nhiều nguồn, cần hiểu race quyết định kết quả của một CompletableFuture pending."
+  - id: completable-future-017
+    order: 17
+    title: "CompletableFuture chưa hoàn tất: complete(), completeExceptionally() và cuộc đua hoàn tất"
+    description: "Promise pending có thể được nhiều producer cạnh tranh complete normal, exceptional, cancel hoặc timeout. Bài tập trung vào atomic first completion wins, boolean của complete và tránh check-then-act trên isDone."
+    transition:
+      to: completable-future-018
+      description: "Từ promise pending, đối chiếu các factory trả sẵn normal hoặc exceptional stage."
+  - id: completable-future-018
+    order: 18
+    title: "completedStage(), failedFuture(), failedStage(): kết quả đã có và kết quả lỗi"
+    description: "completedStage và failedStage trả CompletionStage đã có outcome; failedFuture trả CompletableFuture exceptional. Bài phân tích quyền completion, kiểu trả về, null success so với Throwable và đường cache hit không cần task."
+    transition:
+      to: completable-future-019
+      description: "Với stage đã có hoặc pending, tiếp tục kiểm tra cách đọc tức thì mà không block."
+  - id: completable-future-019
+    order: 19
+    title: "getNow(): đọc kết quả không chặn và phân biệt null với chưa hoàn tất"
+    description: "getNow trả result ngay khi đã complete hoặc fallback khi pending, không bao giờ đợi. Bài đào sâu completed-null, sentinel collision, exception/cancel và race của isDone cùng getNow."
+    transition:
+      to: completable-future-020
+      description: "Từ quan sát lỗi/pending, phát triển recovery bằng một nguồn bất đồng bộ khác."
+  - id: completable-future-020
+    order: 20
+    title: "exceptionallyCompose(): phục hồi bằng một CompletionStage bất đồng bộ"
+    description: "exceptionallyCompose phục hồi lỗi bằng một stage bất đồng bộ khác, còn exceptionally phục hồi bằng giá trị. Bài dạy fallback async, khác thenCompose, lỗi fallback và giới hạn retry/timeout."
+    transition:
+      to: completable-future-021
+      description: "Khi expose stage phục hồi ra ngoài, cần giới hạn quyền caller tự hoàn tất future."
+  - id: completable-future-021
+    order: 21
+    title: "minimalCompletionStage() và copy(): giới hạn quyền hoàn tất future của bên nhận"
+    description: "minimalCompletionStage và copy hạn chế quyền thay đổi source CompletableFuture ở API public; copy vẫn là future riêng có thể bị client complete. Bài xem toCompletableFuture, hủy bản sao và mutable payload."
+    transition:
+      to: completable-future-022
+      description: "Sau bảo vệ quyền completion, học scheduling trì hoãn qua Executor được quản lý."
+  - id: completable-future-022
+    order: 22
+    title: "delayedExecutor(): lên lịch khởi chạy mà không chặn luồng chờ"
+    description: "delayedExecutor dời thời điểm dispatch task sang Executor, không tạo một lời chờ sleep ở caller. Bài phân biệt delay với deadline, default/base executor, ScheduledExecutorService và policy retry."
+    transition:
+      to: completable-future-023
+      description: "Delayed callback chỉ có ý nghĩa khi hiểu chính xác thread nào có thể chạy callback non-Async."
+  - id: completable-future-023
+    order: 23
+    title: "Callback không có hậu tố Async có thể chạy trên luồng hoàn tất hoặc luồng gọi"
+    description: "Callback không hậu tố Async có thể chạy bởi completer hoặc caller đăng ký sau completion; không có thread-affinity cố định. Bài dùng test trước/sau completion để lý giải latency, ThreadLocal và callback blocking."
+    transition:
+      to: completable-future-024
+      description: "Từ chính sách callback thread, quay về các combinator chạy action sau khi hai nguồn thành công."
+  - id: completable-future-024
+    order: 24
+    title: "thenAcceptBoth() và runAfterBoth(): phối hợp hai nhánh không cần giá trị trả về"
+    description: "thenAcceptBoth nhận hai giá trị để chạy action, runAfterBoth chỉ đợi cả hai thành công rồi chạy Runnable; cả hai tạo dependent Void stage. Bài so sánh cả hai với thenCombine và lỗi source/callback."
+    transition:
+      to: completable-future-025
+      description: "Sau phối hợp hai nhánh, áp dụng CompletionStage lên HttpClient.sendAsync và status/body thật."
+  - id: completable-future-025
+    order: 25
+    title: "HttpClient.sendAsync(): ghép phản hồi HTTP, lỗi mạng và CompletableFuture"
+    description: "HttpClient.sendAsync trả CompletableFuture của HttpResponse; HTTP status 4xx/5xx thường là normal response, lỗi transport là exceptional completion. Bài thực hành loopback, BodyHandler, status mapping, timeout, retry và composition."
+    transition:
+      to: completable-future-026
+      description: "Từ HTTP response và failure, tách request deadline khỏi timeout/cancellation ở tầng future."
+  - id: completable-future-026
+    order: 26
+    title: "Thời hạn HTTP request so với timeout và cancellation của CompletableFuture"
+    description: "HTTP request timeout, timeout khi get, orTimeout và cancel tác động ở các tầng khác nhau. Bài thiết kế deadline end-to-end, exception HttpTimeoutException/TimeoutException và cleanup transport best effort."
+    transition:
+      to: completable-future-027
+      description: "Cuối cùng chuyển mô hình xử lý lỗi/hoàn tất sang adapter NIO CompletionHandler."
+  - id: completable-future-027
+    order: 27
+    title: "NIO CompletionHandler: chuyển callback completed()/failed() sang CompletionStage"
+    description: "NIO.2 CompletionHandler completed/failed được adapter thành CompletableFuture normal/exceptional rồi công bố CompletionStage. Bài tập trung vào partial read/write, EOF, callback race và closing channel khi cancel không tự lan."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 | Bài 13 | Bài 14 | Bài 15 | Bài 16 | Bài 17 | Bài 18 | Bài 19 | Bài 20 | Bài 21 | Bài 22 | Bài 23 | Bài 24 | Bài 25 | Bài 26 | Bài 27 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | CompletionStage và CompletableFuture khác Future truyền thống | completedFuture(), supplyAsync(), runAsync() | thenApply(), thenAccept(), thenRun() | thenApplyAsync() và ý nghĩa của executor | thenCompose() để nối các tác vụ bất đồng bộ | thenCombine() khi cần phối hợp hai kết quả | allOf(), anyOf() với nhiều tác vụ song song | applyToEither() và acceptEither() khi cạnh tranh kết quả | handle(), exceptionally(), whenComplete() | Khác biệt get() và join() khi xử lý lỗi | orTimeout(), completeOnTimeout() và fallback | Propagate lỗi trong chuỗi CompletableFuture | Chọn custom executor để quản lý tải và tránh tắc nghẽn | Giới hạn concurrency khi tạo hàng loạt future | Cancellation, interrupt và giới hạn của CompletableFuture | Fan-out / fan-in thực hành với nhiều tác vụ I/O | CompletableFuture chưa hoàn tất: complete(), completeExceptionally() và cuộc đua hoàn tất | completedStage(), failedFuture(), failedStage(): kết quả đã có và kết quả lỗi | getNow(): đọc kết quả không chặn và phân biệt null với chưa hoàn tất | exceptionallyCompose(): phục hồi bằng một CompletionStage bất đồng bộ | minimalCompletionStage() và copy(): giới hạn quyền hoàn tất future của bên nhận | delayedExecutor(): lên lịch khởi chạy mà không chặn luồng chờ | Callback không có hậu tố Async có thể chạy trên luồng hoàn tất hoặc luồng gọi | thenAcceptBoth() và runAfterBoth(): phối hợp hai nhánh không cần giá trị trả về | HttpClient.sendAsync(): ghép phản hồi HTTP, lỗi mạng và CompletableFuture | Thời hạn HTTP request so với timeout và cancellation của CompletableFuture | NIO CompletionHandler: chuyển callback completed()/failed() sang CompletionStage |
+  | Vấn đề cần hiểu | Vì sao Future truyền thống thường cần get và CompletionStage có thể chain callback? | completedFuture có chạy một task trên thread khác không? | Ba phương thức nhận tham số callback gì và trả về loại stage nào? | thenApply và thenApplyAsync khác nhau ở bảo đảm scheduling nào? | thenApply trả nested stage khác thenCompose trả flattened stage ra sao? | Khi nào A/B độc lập đủ điều kiện dùng thenCombine? | Vì sao allOf không tự trả một List các kết quả đầu vào? | applyToEither và acceptEither khác nhau về callback và return type gì? | handle, exceptionally và whenComplete chạy ở những trạng thái nào? | Cùng một lỗi task thì get và join ném wrapper gì? | orTimeout và completeOnTimeout tác động future nào? | Mapper sau source exceptional có chạy không? | Vì sao blocking I/O trong commonPool có thể ảnh hưởng workload khác? | Batch window khác semaphore trước submit về mức concurrency thế nào? | cancel(true) của CompletableFuture và FutureTask khác nhau thế nào? | Lúc nào dùng all-required thay vì partial success cho ba nguồn I/O? | complete và completeExceptionally trả boolean thể hiện điều gì? | completedStage khác completedFuture về kiểu API ra sao? | Vì sao getNow(null) không tách pending khỏi completed-null? | exceptionallyCompose khác exceptionally ở return type như thế nào? | Chỉ trả interface CompletionStage có đủ ngăn client sửa source không? | delayedExecutor tạo task thực thi hay chỉ trả Executor trì hoãn? | Đăng ký thenApply trước complete thì thread nào thường chạy callback? | thenAcceptBoth nhận input nào mà runAfterBoth không nhận? | Vì sao HTTP 404 không nhất thiết là exceptional CompletableFuture? | HttpRequest.timeout bảo vệ thời gian nào ở tầng HTTP? | completed và failed nên hoàn tất Future bằng phương thức nào? |
+  | Giá trị đối với OOP/module | Phân biệt hợp đồng kết quả với graph phụ thuộc | Khởi tạo stage phù hợp dữ liệu và kiểu tác vụ | Chọn callback theo return type và side effect | Điều khiển scheduling và policy executor | Diễn đạt dependency không chặn worker | Phối hợp hai kết quả độc lập an toàn | Thu kết quả N task theo completion semantics | Giải quyết cạnh tranh hai nguồn có lỗi | Phân biệt observer và handler phục hồi | Chọn API chờ với exception/interrupt đúng | Thiết kế timeout và giá trị dự phòng | Bảo toàn lỗi qua các dependent stages | Quản lý pool, queue và rejection | Giới hạn in-flight, queue và downstream | Điều khiển cancellation hợp tác và cleanup | Thiết kế fan-out/fan-in I/O có deadline | Kiểm soát completion race của promise | Trả stage đã có result hoặc failure | Đọc result không chặn và phân biệt null | Phục hồi lỗi bằng một stage async khác | Giới hạn quyền hoàn tất của API consumer | Lên lịch trì hoãn mà không block caller | Hiểu luồng chạy callback non-Async | Chạy Void actions sau hai nguồn thành công | Phân biệt HTTP status và lỗi transport | Quản lý timeout HTTP, Future và cancellation | Chuyển callback NIO có partial I/O thành stage |
+  | Tư duy hình thành | Vẽ graph phụ thuộc | Dự đoán trạng thái | Dự đoán chain | Chọn tài nguyên | Theo dõi lỗi | Phân tích lỗi | Chọn semantics | Phân tích cuộc đua | Bảo toàn nguyên nhân | Unwrap nguyên nhân | Thiết kế fallback | Đặt recovery boundary | Phân luồng workload | Quản lý permit | Thiết kế dừng hợp tác | Thu outcome rõ kiểu | Kiểm chứng race | Phân tích lỗi | Tránh collision | Theo dõi lỗi lồng | Kiểm chứng isolation | Giải thích timeline | Tách callback nặng | Phân tích barrier | Phân biệt failure | Phân loại lỗi | Xử lý partial I/O |

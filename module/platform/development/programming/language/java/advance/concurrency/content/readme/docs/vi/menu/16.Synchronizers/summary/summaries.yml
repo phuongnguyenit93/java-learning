@@ -1,0 +1,361 @@
+summaries:
+- id: synchronizers-001
+  title: CountDownLatch chờ một mốc hoàn tất
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CountDownLatch chờ một mốc hoàn tất**
+
+    Làm chủ cơ chế đếm ngược một lần để nhiều thread có thể chờ một tập sự kiện hoàn tất mà không suy đoán thời gian thực thi. Bài cho thấy vì sao số đếm ban đầu, vị trí countDown, await có timeout và kênh báo lỗi riêng quyết định tính đúng đắn của phối hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế một mốc hoàn tất
+
+    1. Vì sao CountDownLatch mở vĩnh viễn khi count về 0 và không thể reset cho vòng làm việc kế tiếp?
+    2. Khác biệt giữa thread phát tín hiệu countDown và thread chỉ chờ await được thể hiện ra sao?
+
+    ### Tín hiệu, lỗi và thực thi
+
+    1. Nếu một worker ném exception trước khi countDown, coordinator có thể treo theo những đường nào và bạn sẽ xử lý ra sao?
+    2. Cách dùng hai latch để điều phối điểm bắt đầu và điểm hoàn tất khác gì với chờ Thread.sleep?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế latch cho N công việc | Chọn count khởi tạo, checkpoint countDown và thời điểm await phù hợp với hợp đồng hoàn tất. |
+    | Phòng chờ vô hạn | Giải thích và áp dụng timeout, finally và Future để vừa kết thúc chờ vừa thu nhận lỗi worker. |
+    | Kiểm tra visibility | Chỉ ra hành động nào được công bố qua countDown/await theo happens-before. |
+- id: synchronizers-002
+  title: CyclicBarrier phối hợp các vòng làm việc
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CyclicBarrier phối hợp các vòng làm việc**
+
+    Tổ chức một nhóm worker có số bên tham gia cố định để cùng kết thúc pha hiện tại trước khi sang pha sau. Bài tập trung vào generation tái sử dụng, arrival index, action trước khi mở cổng và hậu quả khi một party đến trễ hoặc thất bại.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Điểm hẹn nhiều vòng
+
+    1. Vì sao CyclicBarrier tái sử dụng được sau mỗi generation thành công, trong khi CountDownLatch không làm được?
+    2. Arrival index trả về từ await được sử dụng thế nào mà không giả định thứ tự scheduling?
+
+    ### Phối hợp tính toán
+
+    1. Cách thiết kế ba worker qua nhiều vòng để dữ liệu pha tiếp theo không bị đọc quá sớm là gì?
+    2. Khi một party bị timeout hoặc interrupt, vì sao cả generation có thể bị broken và coordinator cần làm gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập trình vòng có barrier | Thiết kế đủ parties và worker, xác định checkpoint await, kiểm tra đồng bộ qua nhiều lượt. |
+    | Điều phối kết quả theo pha | Chọn barrier action hoặc một party làm leader, giải thích điều kiện an toàn của trạng thái chia sẻ. |
+    | Chẩn đoán vòng bị vỡ | Phân biệt timeout, interruption, broken state và cách phục hồi có kiểm soát. |
+- id: synchronizers-003
+  title: Phaser cho số lượng participant linh hoạt
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phaser cho số lượng participant linh hoạt**
+
+    Điều phối các giai đoạn tính toán mà số participant có thể tăng, giảm trong runtime. Bài phân biệt registered/arrived/unarrived, register, arriveAndDeregister, chờ phase, termination và các race khi participant đến hoặc rời một pha.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đăng ký và tiến pha
+
+    1. Các bộ đếm registered, arrived và unarrived liên hệ với điều kiện phase advance như thế nào?
+    2. Vì sao register muộn hoặc arrive hai lần có thể làm sai mô hình nghĩa vụ của participant?
+
+    ### Liveness và phục hồi
+
+    1. Khi task bị từ chối hoặc thất bại trước khi arrive, ai chịu trách nhiệm deregister và điều phối abort?
+    2. Khác biệt về timeout/interrupt giữa Phaser và CyclicBarrier tác động thế nào đến chính sách recovery?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế phase động | Chọn và đặt register, arrive, arriveAndAwaitAdvance, arriveAndDeregister đúng vòng đời. |
+    | Phân tích participant biến động | Mô phỏng thay đổi số party giữa các pha và dự đoán thời điểm advance. |
+    | Xử lý lỗi phối hợp | Thiết kế timeout, termination và deregistration rõ ràng khi task không hoàn thành. |
+- id: synchronizers-004
+  title: Semaphore giới hạn truy cập tài nguyên hữu hạn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Semaphore giới hạn truy cập tài nguyên hữu hạn**
+
+    Dùng số permit để giới hạn mức đồng thời của tài nguyên khan hiếm như kết nối hoặc thao tác I/O. Bài xây nền tảng về acquire/release, fairness, timed acquire và mối quan hệ giữa semaphore với bounded queue và lock.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Permit và giới hạn song song
+
+    1. Permit trong Semaphore đại diện cho điều gì và khi không còn permit thì các cách acquire khác nhau phản ứng ra sao?
+    2. Tại sao Semaphore(1) không đồng nghĩa hoàn toàn với ReentrantLock có ownership?
+
+    ### Đánh đổi và an toàn
+
+    1. Trong trường hợp nào timed tryAcquire tốt hơn acquire không thời hạn và phải xử lý giá trị false ra sao?
+    2. Fairness, backpressure và kích thước pool ảnh hưởng tới tốc độ phục vụ và khả năng starvation như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đặt giới hạn tài nguyên | Lập sơ đồ acquire trước vùng giới hạn và release sau khi sử dụng xong. |
+    | Chọn acquire phù hợp | So sánh acquire, tryAcquire, timeout và interrupt theo yêu cầu nghiệp vụ. |
+    | Phân tích tải | Phân biệt hạn chế in-flight bằng semaphore với hàng đợi/backpressure. |
+- id: synchronizers-005
+  title: Exchanger<T> trao đổi dữ liệu giữa hai luồng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Exchanger<T> trao đổi dữ liệu giữa hai luồng**
+
+    Hiểu giao thức hai chiều mà hai thread cùng đến điểm rendezvous, trao đổi giá trị và chỉ tiếp tục sau khi ghép cặp. Bài chỉ rõ trao đổi reference, visibility, timeout, interruption và khác biệt với queue dùng cho producer–consumer.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giao thức rendezvous hai phía
+
+    1. Khi hai bên gọi exchange với các payload khác nhau, mỗi thread nhận giá trị nào và quan hệ happens-before được thiết lập ra sao?
+    2. Vì sao Exchanger không phải queue chứa nhiều item và không bảo đảm FIFO cho nhiều partner?
+
+    ### Thiết kế chuyển giao dữ liệu
+
+    1. Khi partner vắng mặt hoặc một phía bị interrupt, giao thức trao đổi và cleanup cần thay đổi thế nào?
+    2. Khi nào nên dùng Exchanger để đổi buffer đầy/trống thay cho BlockingQueue hoặc SynchronousQueue?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng hai phía trao đổi | Diễn giải đầu vào, thời điểm gặp nhau và giá trị trả về cho cả hai thread. |
+    | Thiết kế vòng giao dữ liệu | Xây dựng giao thức đổi buffer với timeout và ownership reference rõ ràng. |
+    | So sánh primitive | Lựa chọn Exchanger, SynchronousQueue hoặc queue có buffer theo hướng dữ liệu. |
+- id: synchronizers-006
+  title: Các thao tác timeout và interruption
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Các thao tác timeout và interruption**
+
+    Đọc đúng ngữ nghĩa timeout và interrupt của các synchronizer thay vì coi mọi lần chờ thất bại là như nhau. Bài so sánh boolean false, TimeoutException, InterruptedException, broken barrier và phaser không tự phá trạng thái khi waiter timeout.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân loại kết thúc chờ
+
+    1. Vì sao CountDownLatch.await(timeout) và Semaphore.tryAcquire(timeout) trả boolean, còn Exchanger/CyclicBarrier có thể ném TimeoutException?
+    2. Phaser timeout/interrupt khác CyclicBarrier ở tác động lên các participant còn lại như thế nào?
+
+    ### Chính sách hủy và deadline
+
+    1. Cần tính deadline tổng từ System.nanoTime thế nào nếu một operation phải qua nhiều bước chờ?
+    2. Khi nhận InterruptedException, bạn sẽ khôi phục tín hiệu và dọn nghĩa vụ arrive/countDown/release theo hợp đồng gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại API chờ | Dự đoán return/exception và ảnh hưởng trạng thái cho từng synchronizer. |
+    | Thiết kế timeout tổng | Tính thời gian chờ còn lại và tránh cấp lại nguyên budget cho từng bước. |
+    | Phối hợp cancellation | Đặt recovery/cleanup đúng khi worker bị interrupt hoặc timed out. |
+- id: synchronizers-007
+  title: Barrier action, trạng thái broken và reset
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Barrier action, trạng thái broken và reset**
+
+    Đào sâu semantics của CyclicBarrier khi chạy barrierAction, vỡ generation và reset. Bài giúp thiết kế chính sách all-or-none: một lỗi ở checkpoint làm các waiter khác nhận lỗi, còn reset chỉ khởi tạo generation mới khi coordinator đã xử lý trạng thái công việc cũ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Action tại ranh giới phase
+
+    1. Barrier action chạy trên thread nào, ở thời điểm nào so với lúc giải phóng các parties và có thể quan sát dữ liệu nào?
+    2. Nếu action ném exception, trạng thái barrier và exception mà những waiter còn lại nhận được là gì?
+
+    ### Broken state và recovery
+
+    1. Timeout hay interruption của một waiter khiến generation bị broken theo cơ chế nào?
+    2. Tại sao gọi reset tự động trong catch của mọi worker có thể đưa các vòng làm việc lệch trạng thái?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế barrier action | Xác định phần tổng hợp dữ liệu an toàn cần chạy đúng một lần trước khi mở phase. |
+    | Phân tích lỗi cả generation | Mô phỏng timeout/interrupt/action failure và kiểm tra isBroken/reset. |
+    | Xây chiến lược phục hồi | Quyết định khi nào dừng, dọn, tái tạo hoặc reset barrier cùng toàn nhóm. |
+- id: synchronizers-008
+  title: Đếm permit và phòng tránh permit leak
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đếm permit và phòng tránh permit leak**
+
+    Biến nguyên tắc acquire/release thành giao thức bảo toàn permit trên mọi đường thành công, return sớm, exception, interrupt và timeout. Bài nhấn mạnh Semaphore không sở hữu thread, nên double release/over-release có thể âm thầm phá trần concurrency.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bất biến số permit
+
+    1. Permit leak, double release và over-release khác nhau như thế nào, và vì sao Semaphore không tự phát hiện mọi lỗi quyền sở hữu?
+    2. Khi acquire nhiều permit, bạn chứng minh số đã release bằng số lấy thành công như thế nào?
+
+    ### Cleanup dưới lỗi
+
+    1. Vì sao finally phải bao phần sử dụng sau một lần acquire thành công, không được release khi tryAcquire trả false?
+    2. Lease AutoCloseable giúp giảm quên release bằng cách nào và giới hạn của wrapper là gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm toán luồng permit | Liệt kê mọi đường chạy và ghép mỗi acquire thành công với đúng một release. |
+    | Thiết kế cleanup | Viết try/finally hoặc lease bảo đảm không leak và không over-release. |
+    | Kiểm thử bất biến | Tạo test timeout/interrupt/exception kiểm tra giới hạn permit vẫn đúng. |
+- id: synchronizers-009
+  title: Latch dùng một lần so với barrier tái sử dụng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Latch dùng một lần so với barrier tái sử dụng**
+
+    Rèn kỹ năng chọn synchronizer theo loại phối hợp: tín hiệu hoàn tất một chiều hay nhiều party gặp nhau ở mỗi vòng. Bài so sánh vòng đời, người phát tín hiệu, timeout, interruption và happens-before bằng các ví dụ đối chiếu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### So sánh hợp đồng
+
+    1. Vì sao CountDownLatch không reset còn CyclicBarrier tái sử dụng sau mỗi generation thành công?
+    2. Bên đếm countDown có phải chính là bên chờ await không, và điểm khác với party của barrier là gì?
+
+    ### Chọn thiết kế và xử lý lỗi
+
+    1. Một khâu khởi tạo chạy đúng một lần nên dùng latch hay barrier, và vì sao?
+    2. Nếu một party vắng mặt hoặc một tác vụ không countDown, timeout/interruption dẫn tới những trạng thái khác nhau nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn primitive từ yêu cầu | Phân loại các ca one-shot và nhiều rounds rồi giải thích lựa chọn latch/barrier. |
+    | Vẽ vòng đời | Mô phỏng count còn lại và generation kế tiếp với đầu vào cụ thể. |
+    | Phân tích failure | So sánh latch còn count dương với broken barrier khi có timeout. |
+- id: synchronizers-010
+  title: Sử dụng synchronizer trong test concurrency
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Sử dụng synchronizer trong test concurrency**
+
+    Xây bài test đa luồng có checkpoint điều khiển được thay vì phụ thuộc scheduler và Thread.sleep. Bài cho thấy cách dùng ready/start/done latch, barrier/phaser để ép interleaving, semaphore để kiểm tra trần concurrency và Future để truyền lỗi từ worker.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dựng interleaving có kiểm soát
+
+    1. Cách đặt ready, start và done latch giúp kiểm tra tính đúng đắn mà không dựa vào thời gian ngủ ra sao?
+    2. Vì sao start hai thread không bảo đảm race được tái hiện, trong khi barrier tại checkpoint đọc/ghi có ích?
+
+    ### Quan sát, dọn dẹp và độ tin cậy
+
+    1. Làm sao kiểm tra worker exception và tránh test treo bằng Future.get(timeout) cùng shutdown executor?
+    2. Deterministic test, stress test và kiểm chứng Java Memory Model bổ sung cho nhau thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế test theo sự kiện | Tạo các điểm ready/start/done và assertion xác nhận đúng thứ tự đồng bộ. |
+    | Tái hiện race | Dùng barrier để điều khiển interleaving và quan sát lost update. |
+    | Đảm bảo liveness của test | Đặt timeout, thu lỗi qua Future và cleanup cả khi assertion thất bại. |
+- id: synchronizers-011
+  title: Khi nên dùng BlockingQueue thay vì tự phối hợp luồng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khi nên dùng BlockingQueue thay vì tự phối hợp luồng**
+
+    Ra quyết định khi producer–consumer cần chuyển cả dữ liệu và quyền tiêu thụ, thay vì tự quản lý wait/notify, queue capacity, wakeup và shutdown. Bài hướng dẫn chọn put/take, offer/poll, implementation queue, backpressure và poison-pill protocol.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Truyền dữ liệu và điều kiện chờ
+
+    1. BlockingQueue bảo đảm handoff và visibility thế nào so với một queue tự bảo vệ bằng monitor?
+    2. Các lựa chọn add/offer/put và remove/poll/take phản ánh chính sách khi queue đầy hoặc rỗng ra sao?
+
+    ### Giới hạn tải và vòng đời
+
+    1. Khi nào nên dùng ArrayBlockingQueue, SynchronousQueue hoặc loại queue khác, xét capacity và ordering?
+    2. Vì sao BlockingQueue không có close chung và poison-pill cần được gửi theo số consumer thực sự đang chạy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế producer–consumer | Chọn queue và phương thức enqueue/dequeue đúng theo capacity, timeout và error policy. |
+    | Giải thích backpressure | Mô phỏng queue bounded khi producer nhanh hơn consumer và lựa chọn từ chối/chờ. |
+    | Thiết kế shutdown | Xác định giao thức dừng, xử lý item đang xử lý và lỗi consumer. |
+- id: synchronizers-012
+  title: Tránh deadlock do thiếu arrive(), countDown() hoặc release()
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tránh deadlock do thiếu arrive(), countDown() hoặc release()**
+
+    Xem lỗi liveness như nghĩa vụ tín hiệu hoặc tài nguyên bị bỏ dở trên nhiều synchronizer. Bài phân biệt deadlock thật, chờ vô hạn do thiếu participant, permit leak, starvation và broken barrier; đồng thời thiết kế cleanup, timeout và ownership có thể kiểm chứng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chẩn đoán nguyên nhân chờ
+
+    1. Vì sao một latch thiếu countDown hoặc phaser thiếu arrive có thể gây chờ vô hạn mà chưa chắc cấu thành deadlock theo wait-for graph?
+    2. Sự khác nhau giữa broken barrier, starvation và permit leak được nhận diện qua thread state và counter thế nào?
+
+    ### Thiết kế recovery an toàn
+
+    1. Cần xử lý nghĩa vụ countDown/arrive/deregister/release ra sao nếu task bị hủy hoặc bị từ chối trước khi chạy?
+    2. Tại sao timeout chỉ phát hiện treo mà không tự hoàn tất nghĩa vụ còn thiếu hoặc rollback side effect?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích liveness | Vẽ wait-for graph hoặc sổ nghĩa vụ để phân loại deadlock, missing signal, starvation, leak. |
+    | Kiểm toán cleanup | Kiểm tra nhánh return/throw/timeout/cancel và bảo toàn số tín hiệu/permit. |
+    | Thiết kế kịch bản lỗi | Tạo bài test có timeout, kiểm tra recovery/abort và chứng minh không còn waiter bị kẹt. |

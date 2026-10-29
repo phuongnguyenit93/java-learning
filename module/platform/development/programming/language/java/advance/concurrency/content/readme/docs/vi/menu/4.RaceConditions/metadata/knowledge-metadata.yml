@@ -1,0 +1,34 @@
+sections:
+  race-conditions-001:
+    difficulty: BASIC
+    isImportant: true
+  race-conditions-002:
+    difficulty: BASIC
+    isImportant: true
+  race-conditions-003:
+    difficulty: BASIC
+    isImportant: true
+  race-conditions-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  race-conditions-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  race-conditions-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  race-conditions-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  race-conditions-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  race-conditions-009:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  race-conditions-010:
+    difficulty: ADVANCED
+    isImportant: true
+  race-conditions-011:
+    difficulty: ADVANCED
+    isImportant: true

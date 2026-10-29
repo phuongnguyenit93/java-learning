@@ -1,0 +1,331 @@
+summaries:
+- id: thread-safety-001
+  title: Thế nào là một class thread-safe?
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thế nào là một class thread-safe?**
+
+    Định nghĩa class thread-safe bằng invariant, atomicity, visibility và những điều public API thực sự bảo đảm khi các lời gọi xen kẽ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất
+
+    1. Vì sao không ném exception vẫn chưa đủ chứng minh một class thread-safe?
+    2. Nhận diện shared mutable state và invariant của một class bằng cách nào?
+
+    ### Cơ chế và kiểm chứng
+
+    1. Vì sao volatile count không bảo đảm count++ nguyên tử?
+    2. Cách kiểm chứng quota không vượt giới hạn khi nhiều thread cạnh tranh là gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát biểu invariant | Xác định state và ràng buộc của class giới hạn suất. |
+    | Phân tích race | Mô tả lịch xen kẽ tạo lost update trong ví dụ volatile. |
+    | Đánh giá contract | Giải thích vì sao từng method an toàn vẫn chưa làm workflow của caller nguyên tử. |
+- id: thread-safety-002
+  title: Stateless objects và tránh trạng thái chia sẻ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Stateless objects và tránh trạng thái chia sẻ**
+
+    Loại trạng thái per-call khỏi field và đưa dữ liệu qua parameter, local, return value hoặc Future để giảm race; đồng thời phát hiện static/shared collaborator ẩn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Trạng thái
+
+    1. Stateless khác với immutable và stateful thread-safe ở điểm nào?
+    2. Vì sao một biến local vẫn có thể trỏ đến object mutable được chia sẻ?
+
+    ### Refactor
+
+    1. Làm thế nào chuyển lastResult hoặc StringBuilder field thành giá trị riêng mỗi lời gọi?
+    2. Khi không thể loại bỏ state, cách xác định owner và đồng bộ ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại state | Chỉ ra shared state qua field, static, input và dependency. |
+    | Refactor | Chuyển service dùng field của từng request thành phương thức input–output. |
+    | Nêu giới hạn | Giải thích ThreadLocal và external state không biến mọi thao tác thành stateless. |
+- id: thread-safety-003
+  title: Immutability và immutable object graph
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Immutability và immutable object graph**
+
+    Phân biệt final field, unmodifiable view và dữ liệu immutable sâu; hiểu aliasing, shallow copy và cập nhật atomically một immutable snapshot.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đồ thị đối tượng
+
+    1. Vì sao final reference không làm phần tử trong collection trở nên immutable?
+    2. Unmodifiable view khác immutable graph trong tình huống nguồn còn bị sửa ra sao?
+
+    ### Thiết kế
+
+    1. Làm thế nào phòng vệ các tầng mutable trong record và collection lồng nhau?
+    2. Vì sao nhiều writer cập nhật snapshot cần CAS hoặc khóa?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Audit alias | Xác định node mutable còn được tham chiếu từ ngoài. |
+    | Thiết kế immutable graph | Chỉnh record và các collection lồng nhau để chặn mutation bên ngoài. |
+    | Công bố trạng thái | Giải thích cập nhật snapshot qua AtomicReference. |
+- id: thread-safety-004
+  title: Thread confinement và ownership rõ ràng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thread confinement và ownership rõ ràng**
+
+    Giới hạn quyền sửa theo thread hoặc task, chuyển quyền sở hữu qua queue và tránh alias tồn tại sau chuyển giao; hiểu giới hạn ThreadLocal trên worker pool.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quyền sở hữu
+
+    1. Thread confinement, task confinement và single-owner state khác nhau như thế nào?
+    2. Vì sao một writer không đủ nếu các reader không có happens-before?
+
+    ### Chuyển giao
+
+    1. Làm sao đưa object qua BlockingQueue mà sender không tiếp tục mutate?
+    2. Vì sao ThreadLocal trên pool cần kiểm soát cleanup và remove?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ vòng đời owner | Chỉ ra các thread có quyền sửa dữ liệu ở từng giai đoạn. |
+    | Phân tích alias | Tìm truy cập sai sau khi object đã được bàn giao. |
+    | Kiểm thử ownership | Dựng test xác nhận task không cùng sửa một mutable object. |
+- id: thread-safety-005
+  title: Encapsulation của trạng thái cần đồng bộ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Encapsulation của trạng thái cần đồng bộ**
+
+    Bảo vệ mọi đường đọc ghi của invariant qua một cơ chế đồng bộ thống nhất; tránh getter làm lộ collection mutable hoặc callback chạy dưới lock không kiểm soát.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bất biến và khóa
+
+    1. Vì sao một getter trả mutable reference có thể phá toàn bộ synchronization policy?
+    2. Làm thế nào chọn phạm vi khóa theo invariant nhiều trường?
+
+    ### API
+
+    1. Vì sao check-then-act cần được đóng gói thành một operation nguyên tử?
+    2. Khi nào cần snapshot hoặc defensive copy thay vì unmodifiable view?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tìm state leak | Chỉ ra accessor cho phép caller sửa dữ liệu ngoài khóa. |
+    | Thiết kế API | Tạo method giữ trọn check–then–act dưới cùng lock. |
+    | Trả dữ liệu an toàn | Đề xuất snapshot không bộc lộ representation nội bộ. |
+- id: thread-safety-006
+  title: Safe publication qua final, volatile và khóa
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Safe publication qua final, volatile và khóa**
+
+    Suy luận Java Memory Model theo happens-before và phân biệt final-field freeze, volatile publication, monitor handoff, constructor escape và double-checked locking.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Happens-before
+
+    1. Vì sao reference khác null không tự chứng minh object được công bố an toàn?
+    2. Final field freeze bảo đảm gì nếu constructor hoàn tất đúng cách?
+
+    ### Công bố
+
+    1. Vì sao double-checked locking đòi volatile reference?
+    2. So sánh volatile snapshot replacement với hai writer cùng read-modify-write như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ happens-before | Chỉ ra cạnh visibility khi publish qua volatile hoặc monitor. |
+    | Phân tích lỗi constructor | Dự đoán field chưa khởi tạo khi this thoát sớm. |
+    | Chọn cơ chế | Giải thích lúc nào dùng final, volatile và khóa. |
+- id: thread-safety-007
+  title: Defensive copy và snapshot bất biến
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Defensive copy và snapshot bất biến**
+
+    Thực hành copy ở biên input và output cho list, array, Date và record; phân biệt view, shallow/deep copy, snapshot tại một thời điểm nhất quán.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Copy và alias
+
+    1. Vì sao unmodifiableList vẫn thay đổi theo nguồn còn giữ alias?
+    2. Sao chép đầu vào nhưng trả nguyên array nội bộ ở getter dẫn đến rủi ro gì?
+
+    ### Snapshot
+
+    1. Vì sao List.copyOf không deep-copy mutable elements?
+    2. Làm sao lấy snapshot nhất quán khi writer đang sửa nguồn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đánh giá alias | Chỉ ra đường sửa ngược vào trạng thái qua getter hoặc constructor. |
+    | Sửa defensive copy | Thêm copy hai chiều cho mutable collections và arrays. |
+    | Tạo snapshot | Sao chép trạng thái dưới lock hoặc atomic reference phù hợp. |
+- id: thread-safety-008
+  title: Giữ nhất quán invariant khi nhiều trường liên quan
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giữ nhất quán invariant khi nhiều trường liên quan**
+
+    Giữ quan hệ giữa nhiều field với khóa chung hoặc immutable state/CAS; phân tích linearization point, exception, overflow và kiểm thử reader cạnh tranh writer.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Invariant
+
+    1. Vì sao hai volatile field vẫn có thể đưa ra trạng thái tổng sai?
+    2. Reader và writer phải dùng chung giao thức nào để bảo vệ invariant?
+
+    ### Cập nhật
+
+    1. So sánh một lock với hai AtomicInteger riêng khi cần transaction nhiều trường?
+    2. Một AtomicReference trỏ immutable state tạo linearization point thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát biểu invariant | Xác định điều kiện liên hệ available, reserved và total. |
+    | Chọn cơ chế | Viết cập nhật cả nhóm bằng synchronized hoặc CAS snapshot. |
+    | Kiểm chứng | Dựng phép đo trong lúc nhiều writer chạy để phát hiện snapshot sai. |
+- id: thread-safety-009
+  title: Thread-safe collection và compound action chưa atomic
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thread-safe collection và compound action chưa atomic**
+
+    Phân biệt an toàn của từng method với một workflow gồm nhiều lời gọi; dùng ConcurrentHashMap.compute/merge, khóa ngoài synchronizedList và hiểu iterator consistency.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Compound action
+
+    1. Vì sao synchronizedMap vẫn lost update với get rồi put?
+    2. containsKey rồi put khác computeIfAbsent về atomicity thế nào?
+
+    ### Iteration
+
+    1. Duyệt synchronizedList lúc có writer cần khóa như thế nào?
+    2. Iterator snapshot của CopyOnWriteArrayList khác weakly consistent iterator ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dựng race | Mô phỏng check–then–act thất bại dù collection thread-safe. |
+    | Sửa với atomic API | Áp dụng compute, merge hoặc khóa bao toàn thao tác. |
+    | Đánh giá iteration | Giải thích tính nhất quán của iterator và snapshot theo collection. |
+- id: thread-safety-010
+  title: Document thread-safety contract cho public API
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Document thread-safety contract cho public API**
+
+    Viết Javadoc chính xác về atomicity, visibility, ordering, snapshot, callback, iterator, blocking, interruption, close và trách nhiệm caller.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phạm vi contract
+
+    1. Một public API phải công bố những giới hạn atomicity và visibility nào?
+    2. Vì sao các method đồng bộ không tự bảo đảm workflow đa lời gọi?
+
+    ### Hành vi và vòng đời
+
+    1. Cách ghi contract cho iterator, callback và external synchronization là gì?
+    2. Cần nói gì về cancel, timeout, close và exception khi gọi đồng thời?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Soạn Javadoc | Viết contract của một class concurrent kèm giới hạn operation. |
+    | Đối chiếu implementation | Chỉ ra câu hứa vượt quá hành vi thật của API. |
+    | Thiết kế test | Dựng tình huống gọi đồng thời để kiểm chứng contract. |
+- id: thread-safety-011
+  title: Nhận diện mutable collaborator làm phá vỡ thread safety
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Nhận diện mutable collaborator làm phá vỡ thread safety**
+
+    Audit object graph để tìm mutable dependency, alias và callback vượt lock; sửa các trường hợp wrapper synchronized nhưng state vẫn bị sửa ngoài owner.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Collaborator
+
+    1. Một class synchronized toàn bộ method vẫn có thể hỏng invariant qua alias nào?
+    2. Lần theo input, setter, getter và callback để tìm mutable collaborator như thế nào?
+
+    ### Khắc phục
+
+    1. Vì sao unmodifiable view hoặc volatile reference chưa bảo vệ phần tử mutable?
+    2. Làm cách nào thử sửa state qua đường bypass và xác minh đã sửa?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Audit graph | Liệt kê mutable collaborator và mọi đường thoát reference. |
+    | Đóng quyền truy cập | Chuyển alias nguy hiểm sang defensive copy hoặc ownership protocol. |
+    | Kiểm thử bypass | Chủ động mutate collaborator từ bên ngoài và assert invariant. |

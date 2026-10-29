@@ -1,0 +1,552 @@
+summaries:
+- id: future-and-scheduling-001
+  title: 'Future: get(), isDone(), isCancelled()'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Future: get(), isDone(), isCancelled()**
+
+    Bài mở đầu hình thành hợp đồng Future từ lúc nộp task tới khi có kết quả. Người học cần phân biệt trạng thái đã hoàn tất, thất bại và bị hủy trước khi tổ chức nhiều công việc bất đồng bộ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quan sát trạng thái
+
+    1. Vì sao isDone() bằng true vẫn chưa chứng minh task thành công?
+    2. get() và isCancelled() phân biệt những kết cục nào của Future?
+
+    ### Lấy kết quả an toàn
+
+    1. Khi nào nên dùng get(timeout) thay vì gọi get() không giới hạn?
+    2. Vì sao lỗi task chỉ xuất hiện ở caller khi lấy kết quả qua Future?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc trạng thái Future | Giải thích kết quả isDone/isCancelled và get ở các trường hợp success, failure, cancellation. |
+    | Xử lý kết quả | Viết đường get có timeout và xử lý các nhánh ngoại lệ riêng biệt. |
+- id: future-and-scheduling-002
+  title: get(timeout) và tránh chờ vô hạn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **get(timeout) và tránh chờ vô hạn**
+
+    Tác vụ chạy trên executor có thể chậm hoặc kẹt; người gọi cần giới hạn thời gian chờ mà không nhầm đó là hủy công việc. Bài này hướng dẫn timeout, deadline và cách ra quyết định khi chưa có kết quả.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giới hạn chờ
+
+    1. Future.get(timeout) giới hạn thời gian chờ của ai và điều gì vẫn có thể tiếp tục sau TimeoutException?
+    2. Vì sao nhiều lần gọi get(timeout) liên tiếp có thể vượt deadline chung?
+
+    ### Xử lý quá hạn
+
+    1. Trường hợp nào nên cancel task sau timeout và trường hợp nào nên giữ task chạy nền?
+    2. Vì sao interruption của caller khác timeout của worker?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế timeout | Tính thời gian còn lại từ một deadline trước mỗi Future.get. |
+    | Phân loại quá hạn | Chọn fallback, retry hoặc cancel và giải thích hệ quả với task đang chạy. |
+- id: future-and-scheduling-003
+  title: Cancellation và trạng thái của Future
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Cancellation và trạng thái của Future**
+
+    Hủy một Future thay đổi trạng thái quan sát được nhưng không bảo đảm code worker đã dừng. Bài đi sâu cancel(false), cancel(true), interrupt hợp tác và những tình huống task còn trong queue hoặc đang chạy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng cancellation
+
+    1. cancel(false) và cancel(true) khác nhau như thế nào khi task đã bắt đầu?
+    2. Vì sao isDone và isCancelled có thể true trong khi thân task vẫn còn thực thi?
+
+    ### Vòng đời và tài nguyên
+
+    1. Làm sao kiểm chứng task đã thật sự kết thúc thay vì chỉ quan sát Future?
+    2. Cancel của ScheduledFuture và CompletableFuture có cùng cam kết interrupt worker không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Điều khiển hủy | Diễn giải chính xác kết quả cancel và trạng thái Future trong queued/running/done. |
+    | Hủy hợp tác | Thiết kế worker phản ứng interrupt và dọn tài nguyên khi hủy. |
+- id: future-and-scheduling-004
+  title: Callable<T> so với Runnable khi cần trả kết quả
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Callable<T> so với Runnable khi cần trả kết quả**
+
+    Runnable và Callable là hai cách biểu diễn công việc trên executor với hợp đồng kết quả và checked exception khác nhau. Người học cần chọn cách submit phù hợp trước khi sử dụng Future và nhóm Callable.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng tác vụ
+
+    1. Runnable.run và Callable.call khác nhau về kiểu trả về và checked exception thế nào?
+    2. execute(Runnable) khác submit(Runnable) và submit(Callable) ở Future trả về ra sao?
+
+    ### Chọn API
+
+    1. Khi nào submit(Runnable, result) hợp lý hơn Callable<T>?
+    2. Vì sao có thể bỏ sót lỗi của task khi submit rồi không giữ Future?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn dạng công việc | Chuyển yêu cầu trả kết quả hoặc chỉ có side effect thành Callable/Runnable phù hợp. |
+    | Nhận kết quả | Viết executor.submit đúng overload và nhận lỗi qua Future.get. |
+- id: future-and-scheduling-005
+  title: ExecutionException và truy nguyên lỗi task
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ExecutionException và truy nguyên lỗi task**
+
+    Lỗi ném trong một task không truyền trực tiếp về thread gửi việc. Bài dạy cách dùng ExecutionException.getCause(), giữ stack trace, phân biệt cause chain và quyết định xử lý lỗi có ngữ cảnh.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Truy nguyên exception
+
+    1. Vì sao Callable lỗi nhưng caller chỉ nhìn thấy ExecutionException khi get?
+    2. Làm thế nào lần theo cause và suppressed exception mà vẫn giữ stack trace?
+
+    ### Phân loại và phản ứng
+
+    1. TimeoutException, InterruptedException, CancellationException khác ExecutionException ở đâu?
+    2. Vì sao chỉ log getMessage rồi bỏ cause có thể làm mất khả năng chẩn đoán?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy lỗi task | Lấy cause, đọc chuỗi nguyên nhân và trình bày stack trace đầy đủ. |
+    | Thiết kế error handling | Phân biệt failure, timeout, interrupt, cancellation và chọn phản ứng không che giấu lỗi. |
+- id: future-and-scheduling-006
+  title: invokeAll() cho nhóm kết quả
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **invokeAll() cho nhóm kết quả**
+
+    Khi cần mọi kết quả của một nhóm Callable, invokeAll cung cấp danh sách Future theo thứ tự đầu vào. Bài tập trung vào việc thu thập từng kết quả, xử lý task thất bại riêng và ranh giới của overload timeout.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kết quả nhóm
+
+    1. Vì sao danh sách Future của invokeAll theo thứ tự submit dù task hoàn tất không theo thứ tự đó?
+    2. Một Callable lỗi có khiến invokeAll lập tức dừng mọi task khác không?
+
+    ### Thời hạn nhóm
+
+    1. invokeAll có timeout xử lý các task chưa hoàn tất như thế nào?
+    2. Vì sao cancellation của nhóm không bảo đảm rollback side effect?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Gom kết quả batch | Gọi invokeAll, duyệt Future đúng thứ tự và phân loại kết quả/lỗi. |
+    | Kiểm soát thời hạn | Dùng timed invokeAll, phát hiện task canceled và bảo toàn kết quả từng phần khi phù hợp. |
+- id: future-and-scheduling-007
+  title: invokeAny() cho kết quả thành công đầu tiên
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **invokeAny() cho kết quả thành công đầu tiên**
+
+    Nhiều tác vụ có thể đua nhau trả cùng một loại kết quả; nếu chỉ cần một kết quả thành công, đợi tất cả sẽ lãng phí. invokeAny cho phép lấy một thành công và xử lý các nhánh thất bại hoặc bị hủy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng winner
+
+    1. invokeAny chọn một completion bất kỳ hay một kết quả hoàn tất thành công?
+    2. Nếu task nhanh nhất ném exception nhưng task khác thành công thì chuyện gì xảy ra?
+
+    ### Task còn lại
+
+    1. Điều gì xảy ra với những task chưa hoàn tất khi invokeAny trả về hoặc ném lỗi?
+    2. Vì sao giá trị null được coi là thành công ở mức API nhưng vẫn cần kiểm tra nghiệp vụ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn kết quả hữu ích | Dùng invokeAny và phân biệt thành công đầu tiên với failure đầu tiên. |
+    | Dọn task thua | Giải thích cancellation, timeout và side effect của các task còn lại. |
+- id: future-and-scheduling-008
+  title: ExecutorCompletionService nhận kết quả theo thứ tự hoàn tất
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ExecutorCompletionService nhận kết quả theo thứ tự hoàn tất**
+
+    Đọc Future theo thứ tự nộp có thể gây head-of-line blocking dù một task sau đã xong. CompletionService cung cấp hàng đợi kết quả theo thứ tự hoàn tất, giúp tối ưu collector và phân tích first-success.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thứ tự hoàn tất
+
+    1. Vì sao lấy kết quả qua Future theo thứ tự submit có thể chặn kết quả nhanh hơn?
+    2. take(), poll() và poll(timeout) khác nhau về hành vi chờ ra sao?
+
+    ### Thiết kế collector
+
+    1. Khi nào cần đếm số Future đã submit để biết tất cả kết quả đã nhận?
+    2. Làm sao nhận thành công đầu tiên mà không nhầm một task lỗi sớm với winner?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Collector completion-order | Tổ chức ExecutorCompletionService và duyệt completion queue đúng số tác vụ. |
+    | Kiểm soát backlog | Dùng timed poll/cancel, kiểm soát số task in-flight và bảo toàn metadata đầu vào. |
+- id: future-and-scheduling-009
+  title: ScheduledExecutorService cho công việc trì hoãn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ScheduledExecutorService cho công việc trì hoãn**
+
+    ScheduledExecutorService mở rộng executor để hẹn một công việc chạy sau độ trễ. Bài cung cấp nền về schedule, ScheduledFuture, queue delay, hủy và shutdown trước khi đi sâu vào lịch định kỳ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hẹn một lần
+
+    1. schedule(Runnable) và schedule(Callable) cho kết quả qua ScheduledFuture ra sao?
+    2. Vì sao delay đã hết vẫn chưa chắc worker bắt đầu tác vụ đúng giờ?
+
+    ### Vòng đời scheduler
+
+    1. getDelay có nói được thời gian task đã chạy hay không?
+    2. Shutdown mặc định khác nhau thế nào với delayed one-shot và periodic schedules?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Hẹn tác vụ | Lập lịch một lần bằng ScheduledExecutorService và quan sát kết quả/hủy. |
+    | Đọc lifecycle | Giải thích queued, due, running, done và các chính sách shutdown quan trọng. |
+- id: future-and-scheduling-010
+  title: scheduleAtFixedRate() và scheduleWithFixedDelay()
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **scheduleAtFixedRate() và scheduleWithFixedDelay()**
+
+    Fixed rate và fixed delay đặt mốc của lần chạy kế tiếp theo hai quy tắc khác nhau. Bài giúp chọn lịch phù hợp khi thời gian thực thi biến động và tránh ngộ nhận rằng một periodic task sẽ tự chạy chồng lên chính nó.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lịch fixed rate/fixed delay
+
+    1. Mốc chạy tiếp theo được tính từ lúc nào trong mỗi phương thức?
+    2. Nếu một lượt chạy lâu hơn period, lịch fixed rate và fixed delay sẽ tiến triển ra sao?
+
+    ### Giới hạn hợp đồng
+
+    1. Vì sao một periodic schedule không overlap với chính nó dù thread pool có nhiều worker?
+    2. Ngoại lệ của một iteration ảnh hưởng như thế nào tới những lượt tiếp theo?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn kiểu lịch | Mô tả timeline và chọn fixed rate/fixed delay theo yêu cầu. |
+    | Phân tích tải chậm | Dự đoán trễ lịch, non-overlap và chính sách hủy/exception. |
+- id: future-and-scheduling-011
+  title: Exception trong tác vụ lặp và tác động tới lần chạy sau
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Exception trong tác vụ lặp và tác động tới lần chạy sau**
+
+    Một exception thoát khỏi periodic Runnable có thể ngăn các lượt sau mà không kết thúc cả executor. Bài dạy chẩn đoán failure qua ScheduledFuture, lựa chọn khi nào catch để tiếp tục và khi nào dừng để bảo vệ dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kết thúc bất thường
+
+    1. Khi một iteration của fixed-rate/fixed-delay ném exception, các lần sau có tiếp tục không?
+    2. Vì sao ScheduledFuture.get khác với việc lấy kết quả của từng lượt định kỳ?
+
+    ### Quan sát và phục hồi
+
+    1. Vì sao afterExecute(Throwable) có thể nhận null dù scheduled task đã thất bại?
+    2. Khi nào nên bắt lỗi để tiếp tục iteration kế tiếp và khi nào để lỗi dừng lịch?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chẩn đoán periodic failure | Quan sát ScheduledFuture và truy cause khi một lịch dừng bất thường. |
+    | Chọn chính sách lỗi | Thiết kế nhánh catch/log/retry hoặc fail-stop có căn cứ và không nuốt interrupt. |
+- id: future-and-scheduling-012
+  title: Thiết kế stop/shutdown cho lịch chạy định kỳ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thiết kế stop/shutdown cho lịch chạy định kỳ**
+
+    Dừng một lịch và đóng executor là hai thao tác có quyền sở hữu và mức can thiệp khác nhau. Bài hướng dẫn graceful stop, chờ termination có hạn, chính sách shutdown của scheduler và worker phản hồi interrupt.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quyền sở hữu và stop
+
+    1. cancel(false) khác shutdown() ở phạm vi và tác động tới lượt đang chạy thế nào?
+    2. Vì sao một thành phần không được shutdown executor dùng chung tùy tiện?
+
+    ### Graceful shutdown
+
+    1. Quy trình cancel lịch, shutdown, awaitTermination rồi escalate shutdownNow nên thực hiện thế nào?
+    2. Nếu task không hợp tác interrupt, hệ thống cần giới hạn chờ và ghi nhận điều gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế lifecycle | Lập một trình tự stop idempotent cho periodic scheduler thuộc quyền sở hữu. |
+    | Xử lý quá hạn shutdown | Kiểm soát deadline, interrupt, cleanup và trạng thái termination. |
+- id: future-and-scheduling-013
+  title: 'FutureTask: một tác vụ Runnable có thể được theo dõi bằng Future'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **FutureTask: một tác vụ Runnable có thể được theo dõi bằng Future**
+
+    FutureTask nối hai hợp đồng Runnable và Future vào một đối tượng one-shot. Bài làm rõ khi nào cần FutureTask thủ công, cách chạy/hủy, hook done và khác biệt với việc submit trực tiếp lên executor.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### RunnableFuture
+
+    1. FutureTask gói Runnable+result và Callable khác nhau thế nào?
+    2. Vì sao gọi run() nhiều lần không thực thi lại một FutureTask đã xong?
+
+    ### Dùng và theo dõi task
+
+    1. Khi nào execute(FutureTask) thích hợp hơn submit(Callable)?
+    2. Hook done() chạy khi nào và không nên làm công việc blocking dài vì sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo RunnableFuture | Khởi tạo FutureTask từ Callable/Runnable và nhận result qua get. |
+    | Phân tích lifecycle | Chứng minh tính one-shot, cancellation và hook done qua phép thử. |
+- id: future-and-scheduling-014
+  title: Future.State, resultNow() và exceptionNow() từ Java 21
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Future.State, resultNow() và exceptionNow() từ Java 21**
+
+    Java 21 bổ sung state(), resultNow() và exceptionNow() để quan sát Future không chờ. Bài giải thích các trạng thái RUNNING/SUCCESS/FAILED/CANCELLED và giới hạn của thao tác lấy kết quả tức thời.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Outcome trong Java 21
+
+    1. Bốn giá trị Future.State biểu diễn những tình huống nào?
+    2. resultNow() và exceptionNow() khi gọi sai trạng thái có hành vi gì?
+
+    ### Quan sát không chờ
+
+    1. Vì sao state() không tương đương isDone() && !isCancelled()?
+    2. Điều gì cần kiểm soát khi trạng thái đổi giữa hai lần đọc trong chương trình đồng thời?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc Future.State | Ánh xạ RUNNING/SUCCESS/FAILED/CANCELLED sang quyền gọi phương thức Now. |
+    | Thiết kế snapshot | Viết collector không chờ để tách result, error, cancellation đúng cách trên Java 21+. |
+- id: future-and-scheduling-015
+  title: 'invokeAll() và invokeAny() có thời hạn: xử lý tác vụ chưa hoàn tất'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **invokeAll() và invokeAny() có thời hạn: xử lý tác vụ chưa hoàn tất**
+
+    Overload có timeout của invokeAll và invokeAny bảo vệ ngân sách chờ của cả nhóm, nhưng xử lý task chưa hoàn tất khác nhau. Bài đào sâu partial results, cancellation và deadline tổng khi tích hợp nhiều dependency.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Timed bulk APIs
+
+    1. Khi timed invokeAll hết hạn, danh sách Future và task chưa hoàn tất được xử lý thế nào?
+    2. Timed invokeAny thất bại vì deadline và thất bại vì tất cả task lỗi khác nhau ra sao?
+
+    ### Kết quả từng phần
+
+    1. Làm sao giữ kết quả hoàn tất trước hạn mà không nhầm canceled task là success?
+    2. Vì sao timeout group không tự ngăn tác dụng phụ của worker hay bảo đảm deadline của cả workflow?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại timed results | Xử lý partial success/failure/cancellation từ invokeAll có timeout. |
+    | Thiết kế budget nhóm | Chọn timed invokeAll/invokeAny và giữ overall deadline qua các nhóm phụ thuộc. |
+- id: future-and-scheduling-016
+  title: 'ExecutorService.close() và try-with-resources từ Java 21: điều kiện chờ kết thúc'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ExecutorService.close() và try-with-resources từ Java 21: điều kiện chờ kết thúc**
+
+    ExecutorService.close() từ Java 21 giúp đóng scope bằng try-with-resources nhưng có thể chờ cho tới khi executor thật sự terminated. Bài giải thích trạng thái shutdown, interrupt trong close và cách tránh chờ vô hạn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng close()
+
+    1. ExecutorService.close() đảm bảo điều gì về shutdown và termination?
+    2. Vì sao close có thể block dù các Future đã completed hoặc bị cancel?
+
+    ### Ngắt và vòng đời
+
+    1. Khi thread gọi close bị interrupt, cơ chế dừng task và interrupt status được xử lý thế nào?
+    2. Khi nào nên chọn shutdown+awaitTermination có timeout thay cho try-with-resources close()?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quản lý executor bằng scope | Sử dụng try-with-resources trên Java 21 và thu lỗi Future đúng cách. |
+    | Đánh giá termination | Phân tích trường hợp interrupt, task không hợp tác và nguy cơ deadlock khi close. |
+- id: future-and-scheduling-017
+  title: ScheduledThreadPoolExecutor.setRemoveOnCancelPolicy() và tác vụ bị hủy trong hàng đợi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ScheduledThreadPoolExecutor.setRemoveOnCancelPolicy() và tác vụ bị hủy trong hàng đợi**
+
+    ScheduledThreadPoolExecutor có thể giữ task bị cancel trong delayed queue cho tới hạn dự kiến. Bài cung cấp kiến thức về remove-on-cancel, purge, memory retention và hệ quả quan sát queue.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cancellation và queue
+
+    1. Vì sao scheduled task đã canceled vẫn có thể nằm trong queue khi policy mặc định tắt?
+    2. setRemoveOnCancelPolicy(true) thay đổi điều gì đối với task chưa thực thi?
+
+    ### Vận hành và chẩn đoán
+
+    1. purge() khác việc bật policy trước khi schedule ra sao?
+    2. Vì sao queue.size giảm không chứng minh tất cả reference hay memory đã được giải phóng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình retention | Bật remove-on-cancel đúng thời điểm và phân biệt queue removal với task termination. |
+    | Đánh giá queue | Quan sát queue/purge và giải thích giới hạn của thống kê pending task. |
+- id: future-and-scheduling-018
+  title: 'Tác vụ định kỳ chạy lâu: fixed rate, fixed delay và việc không chạy chồng chính nó'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tác vụ định kỳ chạy lâu: fixed rate, fixed delay và việc không chạy chồng chính nó**
+
+    Khi một periodic invocation kéo dài hơn period/delay, scheduler không tự nhân bản lần chạy của cùng lịch. Bài dạy non-overlap, happens-before, backlog, overlap giữa các lịch khác nhau và giới hạn của tác vụ con bất đồng bộ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lịch chậm và non-overlap
+
+    1. Tại sao fixed-rate task quá hạn không chạy song song với chính nó dù pool có nhiều worker?
+    2. Fixed rate và fixed delay tạo khoảng chờ kế tiếp ra sao khi invocation chạy lâu?
+
+    ### Giới hạn bảo đảm
+
+    1. Vì sao các schedule khác nhau vẫn có thể overlap và tranh tài nguyên?
+    2. Một invocation submit tác vụ con bất đồng bộ thì quy tắc non-overlap của parent còn bảo vệ điều gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích timeline chậm | Dự đoán độ trễ và thứ tự các invocation ở fixed-rate/fixed-delay khi overload. |
+    | Giữ an toàn state | Chỉ rõ phạm vi happens-before/non-overlap và thiết kế chống overlap nghiệp vụ khi cần. |
+- id: future-and-scheduling-019
+  title: 'TimeUnit: chuyển đơn vị, độ chính xác và ngân sách thời gian qua nhiều bước'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **TimeUnit: chuyển đơn vị, độ chính xác và ngân sách thời gian qua nhiều bước**
+
+    TimeUnit giúp quy đổi đơn vị thời gian trong các API chờ, nhưng phép đổi có thể cắt phần dư hoặc bão hòa long. Bài nối TimeUnit với System.nanoTime và một ngân sách chung xuyên nhiều Future, latch và lock.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đơn vị và precision
+
+    1. TimeUnit.convert có thể làm tròn/cắt phần dư và bão hòa trong tình huống nào?
+    2. Tại sao chuyển timeout còn dương sang milliseconds bằng 0 có thể nguy hiểm cho API chờ?
+
+    ### Budget qua nhiều bước
+
+    1. Vì sao nên dùng System.nanoTime đo elapsed time thay cho currentTimeMillis?
+    2. Thiết kế một deadline chung cho get, latch và lock để tổng thời gian không bị cấp lại thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chuyển đơn vị | Giải thích truncation, saturation và chọn đơn vị chính xác phù hợp API. |
+    | Giữ timeout budget | Tính remaining theo đồng hồ monotonic và truyền hạn mức qua các bước chờ. |

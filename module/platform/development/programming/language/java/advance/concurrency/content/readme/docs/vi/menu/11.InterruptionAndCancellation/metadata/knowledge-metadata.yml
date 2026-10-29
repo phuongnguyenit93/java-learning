@@ -1,0 +1,40 @@
+sections:
+  interruption-and-cancellation-001:
+    difficulty: BASIC
+    isImportant: true
+  interruption-and-cancellation-002:
+    difficulty: BASIC
+    isImportant: true
+  interruption-and-cancellation-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  interruption-and-cancellation-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  interruption-and-cancellation-005:
+    difficulty: ADVANCED
+    isImportant: true
+  interruption-and-cancellation-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  interruption-and-cancellation-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  interruption-and-cancellation-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  interruption-and-cancellation-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  interruption-and-cancellation-010:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  interruption-and-cancellation-011:
+    difficulty: ADVANCED
+    isImportant: true
+  interruption-and-cancellation-012:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  interruption-and-cancellation-013:
+    difficulty: ADVANCED
+    isImportant: true

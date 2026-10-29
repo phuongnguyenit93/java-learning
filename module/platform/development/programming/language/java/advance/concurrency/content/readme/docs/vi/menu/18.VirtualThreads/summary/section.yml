@@ -1,0 +1,138 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "VIRTUAL THREADS — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: Mạch liên kết bài học
+roadmap:
+  - id: virtual-threads-001
+    order: 1
+    title: "Virtual thread trong Java 21 và mục tiêu thiết kế"
+    description: "Virtual threads từ Java 21 đáp ứng nhiều tác vụ chờ I/O mà không giữ riêng OS thread trong suốt vòng đời. Bài giới thiệu carrier, API khởi chạy, thread-per-task và giới hạn tài nguyên thực."
+    transition:
+      to: virtual-threads-002
+      description: "Chuyển từ mục đích thiết kế sang đối chiếu cơ chế với platform threads."
+  - id: virtual-threads-002
+    order: 2
+    title: "Khác biệt virtual thread với platform thread"
+    description: "Platform threads thường gắn với OS threads còn virtual threads do JVM mount lên carrier khi cần thực thi. Bài so sánh bộ nhớ, scheduling, blocking I/O, CPU-bound workload và lựa chọn đúng môi trường."
+    transition:
+      to: virtual-threads-003
+      description: "Sau khi so sánh, thực hành các API Thread.ofVirtual và startVirtualThread."
+  - id: virtual-threads-003
+    order: 3
+    title: "Tạo luồng bằng Thread.ofVirtual() và startVirtualThread()"
+    description: "Thread.ofVirtual() và Thread.startVirtualThread() hỗ trợ tạo virtual thread qua builder hoặc khởi chạy ngay. Bài làm rõ ThreadFactory, đặt tên, start/join, interrupt và xử lý lỗi Runnable."
+    transition:
+      to: virtual-threads-004
+      description: "Nhiều tasks có thể được quản lý thuận tiện qua virtual-thread-per-task executor."
+  - id: virtual-threads-004
+    order: 4
+    title: "newVirtualThreadPerTaskExecutor()"
+    description: "Executors.newVirtualThreadPerTaskExecutor() tạo một virtual thread mới cho từng task. Bài thực hành Callable/Future, result aggregation, close executor, timeout và giới hạn downstream bằng Semaphore."
+    transition:
+      to: virtual-threads-005
+      description: "Tiếp theo áp dụng executor vào I/O blocking thread-per-request."
+  - id: virtual-threads-005
+    order: 5
+    title: "Thread-per-request cho I/O blocking"
+    description: "Thread-per-request cho phép xử lý mỗi yêu cầu I/O blocking trong một virtual thread mà vẫn giữ code tuần tự. Bài minh họa TCP server/client, socket ownership, timeout, lỗi và đo hiệu năng."
+    transition:
+      to: virtual-threads-006
+      description: "Cần hiểu carrier và JVM scheduler để giải thích khi nào request nhường OS thread."
+  - id: virtual-threads-006
+    order: 6
+    title: "Carrier threads và scheduling của JVM"
+    description: "JVM mount virtual threads lên platform carrier threads, park/unmount khi chờ hợp lệ và remount khi có thể chạy tiếp. Bài phân tích scheduler parallelism, pinning và quan sát blocked/runnable tasks."
+    transition:
+      to: virtual-threads-007
+      description: "JVM đã tái sử dụng carrier; từ đây giải thích vì sao không pool virtual threads."
+  - id: virtual-threads-007
+    order: 7
+    title: "Vì sao không pool virtual threads?"
+    description: "Không nên pool virtual threads như các platform workers: vòng đời phù hợp là một task một virtual thread. Bài nêu anti-pattern fixed virtual pool, per-task executor, semaphore, admission control và backpressure."
+    transition:
+      to: virtual-threads-008
+      description: "Đi sâu vào Semaphore và connection pool với tài nguyên hữu hạn."
+  - id: virtual-threads-008
+    order: 8
+    title: "Giới hạn tài nguyên ngoài bằng Semaphore/pool kết nối"
+    description: "Semaphore giới hạn số task đang dùng một tài nguyên, còn connection pool giới hạn các kết nối vật lý có sẵn. Bài thực hành timeout, interruption, release trong finally, sizing và đo backlog."
+    transition:
+      to: virtual-threads-009
+      description: "Còn một bottleneck khác: virtual thread bị pin carrier trên Java 21."
+  - id: virtual-threads-009
+    order: 9
+    title: "Pinning với monitor/native code ở Java 21"
+    description: "Trên JDK 21–23, virtual threads blocking khi giữ monitor hoặc đi qua native frame có thể pin carrier. Bài phân biệt pinning với waiting bình thường, dùng JFR/trace và sửa điểm blocking đúng nguyên nhân."
+    transition:
+      to: virtual-threads-010
+      description: "Cùng với pinning, ThreadLocal per-task là một vấn đề bộ nhớ cần cân nhắc."
+  - id: virtual-threads-010
+    order: 10
+    title: "ThreadLocal và chi phí dữ liệu theo từng virtual thread"
+    description: "Mỗi virtual thread có ThreadLocal riêng; tạo task liên tục có thể làm cache per-thread phải khởi tạo lại nhiều lần. Bài xem chi phí heap/GC, cleanup, InheritableThreadLocal và context propagation."
+    transition:
+      to: virtual-threads-011
+      description: "Virtual threads cũng không làm các công việc thuần CPU tự chạy nhanh hơn."
+  - id: virtual-threads-011
+    order: 11
+    title: "CPU-bound workload không tự nhanh hơn nhờ virtual threads"
+    description: "Virtual threads tăng scalability cho I/O waiting, nhưng CPU-bound workload vẫn bị giới hạn bởi số core và phần code tuần tự. Bài thực hành benchmark, work partitioning và chọn executor theo workload."
+    transition:
+      to: virtual-threads-012
+      description: "Thread dump và JFR cung cấp dữ liệu thực để tìm lý do chương trình chậm."
+  - id: virtual-threads-012
+    order: 12
+    title: "Chẩn đoán bằng thread dump và Java Flight Recorder"
+    description: "Thread dump có virtual threads và Java Flight Recorder giúp quan sát waiting, pinning, contention, CPU saturation và lỗi submit. Bài thực hành jcmd, lấy recording và diễn giải event theo JDK."
+    transition:
+      to: virtual-threads-013
+      description: "Từ quan sát các tasks, xem cách Structured Concurrency nhóm task theo scope."
+  - id: virtual-threads-013
+    order: 13
+    title: "Structured Concurrency (preview ở Java 21): vai trò và giới hạn"
+    description: "Structured Concurrency trong Java 21 là preview API quản lý nhiều subtasks dưới một scope, với fork/join/close và chính sách failure/success. Bài chỉ rõ cờ preview và giới hạn cancellation giữa các bản JDK."
+    transition:
+      to: virtual-threads-014
+      description: "Quay lại cơ chế tạo Thread thủ công để hiểu factory và trạng thái NEW."
+  - id: virtual-threads-014
+    order: 14
+    title: "Thread.ofVirtual().unstarted(), ThreadFactory và vòng đời khởi chạy"
+    description: "Thread.ofVirtual().unstarted() tạo Thread ở trạng thái NEW; ThreadFactory tạo đối tượng thread nhưng không tự start. Bài so sánh builder, factory, executor, join, interrupt và ngoại lệ Runnable."
+    transition:
+      to: virtual-threads-015
+      description: "Từ API lifecycle chuyển sang so sánh synchronized pinning qua các bản JDK."
+  - id: virtual-threads-015
+    order: 15
+    title: "JDK 21 so với JDK 24+: synchronized thông thường không còn gây pinning kiểu cũ"
+    description: "JDK24 với JEP491 thay đổi monitor synchronization để virtual threads có thể nhường carrier trong blocking monitor paths, khác JDK21–23. Bài giải thích synchronized, Object.wait và các trường hợp pinning còn lại."
+    transition:
+      to: virtual-threads-016
+      description: "Native/foreign frames là ranh giới riêng vẫn có thể chặn carrier."
+  - id: virtual-threads-016
+    order: 16
+    title: "Native method và foreign function: các trường hợp pinning còn phải đánh giá"
+    description: "JNI và Foreign Function & Memory API có thể giữ carrier khi thực thi lời gọi native blocking; JEP491 không xóa toàn bộ rủi ro này. Bài hướng dẫn audit, demo FFM trên Linux/JDK25+ và offload bounded platform executor."
+    transition:
+      to: virtual-threads-017
+      description: "Để đo pinning cần hiểu ngưỡng và ý nghĩa của các event JFR."
+  - id: virtual-threads-017
+    order: 17
+    title: "JFR VirtualThreadPinned, VirtualThreadSubmitFailed và ngưỡng ghi sự kiện"
+    description: "JFR phân biệt VirtualThreadPinned với VirtualThreadSubmitFailed; threshold mặc định có thể không ghi pinning ngắn. Bài hướng dẫn JFC, Recording API, schema, duration và stack trace theo JDK."
+    transition:
+      to: virtual-threads-018
+      description: "Bài cuối đối chiếu giới hạn ThreadMXBean với jcmd dump hỗ trợ virtual threads."
+  - id: virtual-threads-018
+    order: 18
+    title: "Giới hạn ThreadMXBean và cách dùng jcmd Thread.dump_to_file cho virtual threads"
+    description: "ThreadMXBean chủ yếu phản ánh platform threads nên không thể dùng một số đếm đó cho tất cả virtual threads. Bài thực hành jcmd Thread.dump_to_file, JSON/text, so với Thread.print và kết hợp JFR/metrics."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 | Bài 13 | Bài 14 | Bài 15 | Bài 16 | Bài 17 | Bài 18 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Virtual thread trong Java 21 và mục tiêu thiết kế | Khác biệt virtual thread với platform thread | Tạo luồng bằng Thread.ofVirtual() và startVirtualThread() | newVirtualThreadPerTaskExecutor() | Thread-per-request cho I/O blocking | Carrier threads và scheduling của JVM | Vì sao không pool virtual threads? | Giới hạn tài nguyên ngoài bằng Semaphore/pool kết nối | Pinning với monitor/native code ở Java 21 | ThreadLocal và chi phí dữ liệu theo từng virtual thread | CPU-bound workload không tự nhanh hơn nhờ virtual threads | Chẩn đoán bằng thread dump và Java Flight Recorder | Structured Concurrency (preview ở Java 21): vai trò và giới hạn | Thread.ofVirtual().unstarted(), ThreadFactory và vòng đời khởi chạy | JDK 21 so với JDK 24+: synchronized thông thường không còn gây pinning kiểu cũ | Native method và foreign function: các trường hợp pinning còn phải đánh giá | JFR VirtualThreadPinned, VirtualThreadSubmitFailed và ngưỡng ghi sự kiện | Giới hạn ThreadMXBean và cách dùng jcmd Thread.dump_to_file cho virtual threads |
+  | Vấn đề cần hiểu | Lợi ích của virtual threads | Platform so với virtual | API khởi tạo Thread | Executor một thread/task | Thread-per-request I/O | Carrier và scheduling | Không pool virtual threads | Semaphore và connection pool | Pinning monitor/native JDK21 | ThreadLocal trên virtual threads | CPU-bound không tăng tốc | Quan sát virtual threads | Structured Concurrency preview | ThreadFactory và lifecycle | JEP491 bỏ monitor pinning cũ | Native/foreign pinning | JFR events nâng cao | ThreadMXBean và jcmd |
+  | Giá trị đối với OOP/module | Tối ưu tác vụ I/O đang chờ | Chọn thread theo workload | Tạo và khởi chạy đúng | Thu kết quả và quản lý tác vụ | Một task cho mỗi request | JVM phân lịch virtual thread ra sao | Giữ thread-per-task không bị nghẽn giả | Bảo vệ downstream có capacity hữu hạn | Ngăn carrier starvation | Tránh cấp phát và giữ resource sai | Chọn parallelism theo core | Dựa vào stack/JFR để chẩn đoán | Quản trị vòng đời subtasks | Kiểm soát thời điểm start | Đánh giá pinning theo version | Đánh giá thư viện native đúng cách | Đọc pinning và submit failure | Đếm và quan sát đúng loại thread |
+  | Tư duy hình thành | Nền tảng mô hình thread per task | Tư duy tách waiting khỏi CPU | Phân biệt factory và execution | Tách task count khỏi resource limit | Tối ưu waiting có kiểm soát | Phân biệt task với carrier | Tách scheduling và capacity | Tính đúng đắn khi quản lý permit | Đo trước khi thay lock | Lựa chọn ownership theo task | Đo đúng thay vì dựa tên thread | Không suy từ một snapshot | Cân nhắc thay đổi API theo JDK | Phân biệt factory với executor | Không thay lock thiếu căn cứ | Chọn offload có capacity | Tránh nhầm không có event là an toàn | Kết hợp nguồn bằng chứng |

@@ -1,0 +1,391 @@
+summaries:
+- id: java-memory-model-001
+  title: Atomicity, visibility và ordering trong Java
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Atomicity, visibility và ordering trong Java**
+
+    Ba bảo đảm atomicity, visibility và ordering quyết định tính đúng đắn của dữ liệu được nhiều thread truy cập. Bài xây nền tảng để nhận ra khi nào một phép tăng có thể mất cập nhật, khi nào thread khác không nhìn thấy kết quả và vì sao mã nguồn không đủ chứng minh thứ tự liên luồng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ba thuộc tính của JMM
+
+    1. Vì sao `count++` trên một biến `volatile` vẫn có thể mất cập nhật dù các thread nhìn thấy thay đổi?
+    2. Atomicity, visibility và ordering khác nhau ở câu hỏi kiểm chứng và công cụ Java nào?
+
+    ### Quan hệ đồng bộ và lựa chọn công cụ
+
+    1. Một cờ `volatile ready` công bố payload được nhờ chuỗi happens-before nào?
+    2. Khi bảo vệ invariant hai field, vì sao hai biến atomic riêng chưa đủ và nên dùng giải pháp gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại lỗi đa luồng | Chỉ ra lỗi lost update, visibility hoặc ordering trong một đoạn code và nêu bằng chứng. |
+    | Phân tích giao thức công bố | Vẽ chuỗi program order và đồng bộ cần có để reader thấy dữ liệu đã khởi tạo. |
+    | Lựa chọn primitive | Đề xuất `volatile`, atomic operation hoặc lock theo invariant và lý giải giới hạn từng lựa chọn. |
+- id: java-memory-model-002
+  title: Happens-before và vai trò trong tính đúng đắn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Happens-before và vai trò trong tính đúng đắn**
+
+    Happens-before là công cụ lập luận về visibility và thứ tự mà Java Memory Model cam kết. Bài đi từ các cạnh đồng bộ có thật đến việc chứng minh công bố dữ liệu, tránh ngộ nhận rằng thời gian thực, `sleep` hay `volatile` có thể thay thế atomicity.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định nghĩa và suy luận
+
+    1. Happens-before khác thứ tự thời gian và synchronizes-with ở những điểm nào?
+    2. Làm thế nào ghép program order, volatile write/read hoặc unlock/lock thành đường chứng minh reader thấy payload?
+
+    ### Đúng đắn trong code
+
+    1. Vì sao `Thread.join()` giúp main quan sát kết quả nhưng không sửa race khi hai worker tăng chung counter?
+    2. Làm thế nào nhận ra một object được publish an toàn hay vẫn có khả năng đọc trạng thái chưa được khởi tạo?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dựng HB graph | Liệt kê những cạnh đồng bộ trong ví dụ hai thread và kiểm tra tính bắc cầu. |
+    | Kiểm tra publication | Phân tích thứ tự ghi dữ liệu và công bố tín hiệu, chỉ ra đường đọc thiếu cạnh HB. |
+    | Phân biệt safety và liveness | Giải thích vì sao có happens-before không đồng nghĩa tác vụ sẽ hoàn thành đúng hạn. |
+- id: java-memory-model-003
+  title: Program order và các quan hệ happens-before
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Program order và các quan hệ happens-before**
+
+    Bài phân rã cách hình thành happens-before: program order trong một thread, synchronizes-with giữa thread và tính bắc cầu. Người học thực hành xác định hướng cạnh từ monitor, volatile, start, join và các API đồng bộ; đây là kỹ năng cần khi đọc sơ đồ và tự chứng minh ví dụ concurrent.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Program order và đồ thị
+
+    1. Tại sao thứ tự câu lệnh trong một thread không tự tạo quan hệ visibility với thread thứ hai?
+    2. Nếu A happens-before B và B happens-before C, điều gì được bảo đảm cho C và vì sao không thể suy ngược từ C về A?
+
+    ### Cạnh liên luồng và phản ví dụ
+
+    1. Những hành động monitor, volatile, `start()`, `join()` và interrupt nào tạo cạnh synchronizes-with?
+    2. Cần vẽ những node/cạnh nào để phát hiện một phép đọc chưa được bảo vệ khỏi data race?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ quan hệ bộ nhớ | Tạo HB graph có program order, synchronizes-with và cạnh bắc cầu đúng hướng. |
+    | Phân tích trường hợp thiếu cạnh | Xác định cặp read/write xung đột chưa được sắp thứ tự HB. |
+    | Sửa chương trình | Chèn primitive thích hợp để tạo cạnh đồng bộ còn thiếu và giải thích kết quả. |
+- id: java-memory-model-004
+  title: Quy tắc lock/unlock của monitor
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Quy tắc lock/unlock của monitor**
+
+    `synchronized` vừa ngăn hai thread cùng thực thi critical section trên cùng monitor, vừa tạo quy tắc visibility khi unlock rồi thread khác lock monitor đó. Bài đi sâu vào ownership, reentrancy, phạm vi khóa, `wait/notify` và các lỗi dùng sai lock identity.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Monitor và đồng bộ bộ nhớ
+
+    1. Vì sao hai `synchronized` block dùng hai object khóa khác nhau không bảo vệ cùng một invariant?
+    2. Khi thread nhả monitor rồi thread khác lấy cùng monitor, những ghi nào được chuyển thành bảo đảm happens-before?
+
+    ### Ownership và điều phối
+
+    1. `wait()` khác `sleep()` ở việc nhả monitor như thế nào và vì sao chờ condition phải nằm trong vòng lặp?
+    2. Những thao tác return, exception hoặc reentrant acquisition ảnh hưởng tới việc giữ/nhả monitor ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm toán critical section | Xác định đúng monitor và tất cả đường đọc/ghi cùng một state. |
+    | Phân tích HB qua lock | Chỉ ra thứ tự unlock/lock và dự đoán visibility sau khi thread lấy khóa. |
+    | Sửa giao thức chờ | Viết hoặc chỉnh đoạn `wait/notify` dùng vòng lặp điều kiện và giới hạn việc giữ khóa. |
+- id: java-memory-model-005
+  title: Quy tắc write/read của volatile
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Quy tắc write/read của volatile**
+
+    Bài giải thích quy tắc volatile write/read trên cùng biến, vai trò của thứ tự đồng bộ trong công bố dữ liệu và sự khác nhau giữa visibility với atomicity. Các ví dụ publication một lần, volatile reference và trường hợp ghi cờ sai thứ tự giúp người học thiết kế giao thức chính xác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Volatile và publication
+
+    1. Viết payload rồi ghi `volatile ready=true` tạo đường happens-before tới reader ra sao?
+    2. Vì sao đảo thứ tự thành ghi ready trước payload làm mất bảo đảm mong muốn?
+
+    ### Giới hạn API
+
+    1. Tại sao `volatile array` không khiến từng phần tử array trở thành volatile?
+    2. Vì sao `volatile count++`, check-then-act hoặc nhiều volatile fields không hình thành transaction nguyên tử?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chứng minh message passing | Vẽ thứ tự write/read và chỉ rõ trường thường nào được publish qua volatile. |
+    | Chẩn đoán dùng volatile sai | Phát hiện cờ sai thứ tự, cập nhật sau publication và read-modify-write không atomic. |
+    | Thiết kế immutable snapshot | Sử dụng volatile reference đúng cách và tránh đọc nhiều phiên bản trong một thao tác. |
+- id: java-memory-model-006
+  title: Thread.start(), Thread.join() và quan hệ đồng bộ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thread.start(), Thread.join() và quan hệ đồng bộ**
+
+    `Thread.start()` và `Thread.join()` là hai mốc vòng đời có bảo đảm happens-before: truyền input trước lúc khởi chạy và thu nhận các ghi sau khi worker kết thúc. Bài hướng dẫn phân biệt chờ hoàn tất thật với timeout hoặc interruption, đồng thời tránh suy luận sai rằng `join` tự sửa race giữa workers.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Truyền dữ liệu theo vòng đời
+
+    1. Hành động nào của main trước `start()` được bảo đảm nhìn thấy trong worker?
+    2. Sau `join()` thành công, main có thể quan sát những thay đổi nào và vì sao quan hệ này có hướng?
+
+    ### Timeout và ngoại lệ
+
+    1. Vì sao `join(timeout)` trả về chưa đủ kết luận thread đã kết thúc?
+    2. Khi `join()` bị interrupt hoặc worker ném lỗi, caller cần xử lý vòng đời và kết quả như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế handoff | Viết ví dụ truyền input trước start và đọc output sau join an toàn. |
+    | Xử lý chờ hoàn tất | Kiểm tra `isAlive()` sau timed join và xử lý interruption có chủ đích. |
+    | Phân tích giới hạn | Chỉ ra vì sao join không giải quyết mất cập nhật khi hai worker tranh cùng state. |
+- id: java-memory-model-007
+  title: Safe publication và nguy cơ đọc đối tượng khởi tạo dở
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Safe publication và nguy cơ đọc đối tượng khởi tạo dở**
+
+    Object được tạo xong trong một thread vẫn có thể bị đọc sai nếu reference được công bố không an toàn, đặc biệt khi `this` thoát khỏi constructor. Bài so sánh volatile snapshot, monitor, BlockingQueue, class initialization và các chiến lược ownership nhằm bảo đảm reader thấy trạng thái nhất quán.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguy cơ khởi tạo dở
+
+    1. Khác biệt giữa `this` escape trong constructor và unsafe publication sau constructor là gì?
+    2. Vì sao object được xây dựng xong ở thread A chưa đủ để B nhìn thấy mọi field đúng theo JMM?
+
+    ### Cơ chế publication
+
+    1. Volatile reference, synchronized handoff và BlockingQueue tạo đường visibility bằng cách nào?
+    2. Lúc nào immutable snapshot/holder idiom phù hợp hơn chia sẻ object mutable đang cập nhật?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tìm lỗi publication | Phân tích luồng tạo/công bố/reference và chỉ ra điểm reader có thể thấy state khởi tạo dở. |
+    | Thiết kế handoff an toàn | Áp dụng volatile snapshot hoặc monitor/queue để bảo đảm trạng thái đã được publish. |
+    | Đánh giá lifecycle | Ngăn `this` escape và bảo vệ dữ liệu mutable sau khi object đã được công bố. |
+- id: java-memory-model-008
+  title: Trường final và bảo đảm khởi tạo đúng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Trường final và bảo đảm khởi tạo đúng**
+
+    JMM có quy tắc riêng dành cho `final` fields của object properly constructed, gắn với freeze action ở cuối constructor. Bài phân biệt final reference với deep immutability, giới hạn khi `this` escape, và khi nào vẫn phải dùng safe publication để bảo vệ các field mutable khác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Freeze và construction
+
+    1. Điều kiện properly constructed và freeze action mang ý nghĩa gì với final field?
+    2. Vì sao làm lộ `this` trước khi constructor hoàn tất phá vỡ lập luận về bảo đảm khởi tạo final?
+
+    ### Ranh giới bất biến
+
+    1. Tại sao `final List` không đồng nghĩa danh sách bên trong bất biến hoặc thread-safe?
+    2. Khi object có final và nonfinal fields, đường publication nào cần bổ sung để reader thấy cả trạng thái đúng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đánh giá constructor | Xác định các đường early escape, khởi tạo field final và hậu quả đọc nửa chừng. |
+    | Thiết kế object bất biến | Làm rõ deep immutability, defensive copy và sự khác biệt giữa final reference với referent. |
+    | Chứng minh giới hạn | Phân biệt bảo đảm final field với safe publication/mutual exclusion cho state mutable. |
+- id: java-memory-model-009
+  title: Data race và hành vi quan sát khó dự đoán
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Data race và hành vi quan sát khó dự đoán**
+
+    Data race xảy ra khi các truy cập xung đột tới một biến không được sắp thứ tự bằng happens-before. Bài nhận diện các biểu hiện mất cập nhật, đọc cờ cũ và quan sát thứ tự lạ; hướng dẫn tái hiện race có kiểm soát và sửa bằng đồng bộ/atomic đúng invariant.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện race
+
+    1. Hai truy cập xung đột nào cấu thành data race theo JMM và vì sao test một lần thành công chưa chứng minh an toàn?
+    2. Lost update, visibility và store-buffering khác nhau ở dấu hiệu quan sát thế nào?
+
+    ### Chẩn đoán và sửa lỗi
+
+    1. Vì sao một latch để kiểm thử có thể vô tình che mất bug visibility nhưng hữu ích để ép lost update?
+    2. Khi nào cần AtomicInteger, `synchronized` hoặc safe publication để khắc phục race?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích conflicting accesses | Chỉ ra cặp read/write thiếu happens-before và dự đoán kết quả hợp lệ. |
+    | Tạo test tái hiện | Xây interleaving có kiểm soát để lộ lost update rồi xác minh nhánh atomic đạt invariant. |
+    | Phân loại hệ quả | Phân biệt data race Java với kết luận không đúng về undefined behavior kiểu C/C++. |
+- id: java-memory-model-010
+  title: Reordering của compiler, CPU và bộ nhớ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Reordering của compiler, CPU và bộ nhớ**
+
+    Reordering giúp giải thích sự khác biệt giữa thứ tự trong source và những quan sát hợp lệ của chương trình nhiều thread. Bài dùng litmus test, store buffer, quy tắc as-if-serial và JMM để tránh suy luận sai từ một CPU hay giả định flush cache.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và mô hình bộ nhớ
+
+    1. Compiler/JIT có thể thay đổi thứ tự thực thi trong giới hạn as-if-serial và JMM như thế nào?
+    2. Store buffer và cache giúp trực giác về litmus test nhưng tại sao không thay thế được quy tắc JMM?
+
+    ### Litmus test và sửa giao thức
+
+    1. Vì sao hai thread có thể cùng quan sát giá trị 0 trong phép thử store-buffering thiếu đồng bộ?
+    2. Bổ sung volatile, monitor hoặc quan hệ HB thay đổi tập kết quả hợp lệ như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc litmus test | Liệt kê kết quả có thể/không thể có khi biến thường được thay bằng volatile. |
+    | Giải thích tối ưu | Phân biệt ordering ở source, hardware, và observable actions theo JMM. |
+    | Thiết kế message passing | Chỉ ra sửa đổi đồng bộ cần thiết để reader quan sát payload hợp lệ. |
+- id: java-memory-model-011
+  title: Giới hạn của volatile với compound actions
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn của volatile với compound actions**
+
+    Bài tập trung vào nhầm lẫn phổ biến: volatile có bảo đảm visibility/ordering nhưng không làm `counter++`, check-then-act hoặc cập nhật nhiều trường thành một transaction. Các ví dụ AtomicInteger, CAS, lock và immutable aggregate giúp lựa chọn primitive theo đúng phạm vi tính nguyên tử.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Compound actions
+
+    1. Hai thread cùng tăng `volatile int` có thể mất cập nhật bằng interleaving nào?
+    2. Vì sao check-then-act trên cờ volatile không bảo đảm chỉ một thread claim việc?
+
+    ### Lựa chọn phương án
+
+    1. Dùng `AtomicInteger.incrementAndGet()` khác cặp `get()` rồi `set()` ở điểm nào?
+    2. Vì sao hai AtomicInteger riêng không giữ invariant nhiều field và có thể sửa bằng gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tái hiện lost update | Viết test có barrier cho phép tăng volatile lỗi và assert nhánh AtomicInteger đúng. |
+    | Sửa thao tác ghép | Chuyển check/update thành CAS hoặc critical section theo invariant. |
+    | Đánh giá snapshot | Chỉ ra khi nào một immutable aggregate qua AtomicReference bảo toàn nhiều field cùng lúc. |
+- id: java-memory-model-012
+  title: Double-checked locking và điều kiện dùng volatile
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Double-checked locking và điều kiện dùng volatile**
+
+    Double-checked locking (DCL) giải quyết lazy initialization khi nhiều thread có thể cùng gọi getter. Bài chứng minh cần cả field `volatile`, monitor chung và lần kiểm tra null thứ hai; phân tích constructor, publication, cùng các lựa chọn đơn giản hơn như holder, enum hoặc static final.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc DCL
+
+    1. Vì sao cần kiểm tra null hai lần, một lần ngoài lock và một lần sau khi đã lấy lock?
+    2. Nếu instance không volatile hoặc constructor làm lộ this, các rủi ro safe publication nào còn tồn tại?
+
+    ### Đánh đổi thiết kế
+
+    1. Khi nào initialization-on-demand holder hoặc enum dễ đúng hơn DCL?
+    2. Vì sao DCL bảo vệ khởi tạo reference nhưng không tự bảo vệ state mutable sau constructor?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết DCL đúng | Tạo lazy singleton Java 17+ với volatile reference, synchronized và double-check. |
+    | Phân tích race khởi tạo | Giải thích đường interleaving tạo trùng khi thiếu kiểm tra null lần hai. |
+    | Chọn giải pháp đơn giản | Đề xuất holder/static final/enum hoặc synchronized getter theo yêu cầu vòng đời. |
+- id: java-memory-model-013
+  title: Phân biệt tính hiển thị và loại trừ tương hỗ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt tính hiển thị và loại trừ tương hỗ**
+
+    Bài tổng hợp sự khác nhau giữa việc một thread quan sát đúng các ghi (visibility) và việc ngăn nhiều thread chen ngang critical section (mutual exclusion). Người học dùng các tình huống `volatile`, `synchronized`, atomic classes, Lock và concurrent collection để chọn cơ chế bảo vệ đúng phạm vi state.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân biệt hai yêu cầu
+
+    1. Vì sao `volatile` có thể cho reader thấy cờ dừng nhưng không ngăn lost update?
+    2. `synchronized` vừa mutual exclusion vừa tạo happens-before qua unlock/lock như thế nào?
+
+    ### Chọn công cụ và phát hiện bẫy
+
+    1. Nếu một invariant trải trên hai field, vì sao cần cùng lock hoặc immutable aggregate thay cho hai atomic updates riêng?
+    2. Khi một ConcurrentHashMap an toàn, chuỗi `containsKey` rồi `put` có chắc atomic không và cần phương thức nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích yêu cầu đồng bộ | Tách nhu cầu visibility, mutual exclusion và atomicity của một ví dụ. |
+    | So sánh primitive | Chọn volatile, monitor, Lock, AtomicInteger hoặc immutable snapshot và chỉ rõ giới hạn. |
+    | Review lỗi cạnh tranh | Tìm stale read, check-then-act, lost update và các đường truy cập không dùng cùng khóa. |

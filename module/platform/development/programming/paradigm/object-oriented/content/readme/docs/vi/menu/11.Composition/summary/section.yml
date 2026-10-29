@@ -6,8 +6,7 @@ roadmap:
 - id: composition-001
   order: 1
   title: Ghép đối tượng để xây dựng hành vi
-  description: Thiết kế một hành vi lớn bằng việc lắp ghép formatter, transport và đối tượng điều phối; quan sát delegation
-    và kiểm thử ranh giới.
+  description: Thiết kế một hành vi lớn bằng việc lắp ghép formatter, transport và đối tượng điều phối; quan sát delegation và kiểm thử ranh giới.
   transition:
     to: composition-002
     description: '**Từ xây dựng hành vi bằng thành phần → chọn đúng loại quan hệ và mức sở hữu của các thành phần.**'
@@ -17,38 +16,32 @@ roadmap:
   description: Nhận diện is-a, has-a và các mức sở hữu của liên kết giữa Car, Vehicle, PowerSource hoặc Order và OrderLine.
   transition:
     to: composition-003
-    description: '**Từ quan hệ has-a/is-a → xem chính xác công việc được chuyển qua từng ranh giới và ai chịu trách nhiệm
-      lỗi.**'
+    description: '**Từ quan hệ has-a/is-a → xem chính xác công việc được chuyển qua từng ranh giới và ai chịu trách nhiệm lỗi.**'
 - id: composition-003
   order: 3
   title: Ủy quyền công việc cho đối tượng khác
-  description: Lần theo hợp đồng và đường gọi TicketRouter → TicketClassifier → AssignmentPort, giữ đúng trách nhiệm kết quả
-    và lỗi.
+  description: Lần theo hợp đồng và đường gọi TicketRouter → TicketClassifier → AssignmentPort, giữ đúng trách nhiệm kết quả và lỗi.
   transition:
     to: composition-004
     description: '**Từ đường gọi delegation → so sánh chiều tái sử dụng qua subclass với sự lắp ghép nhiều collaborator.**'
 - id: composition-004
   order: 4
   title: Tái sử dụng bằng kết hợp và bằng kế thừa
-  description: So sánh khung kế thừa AbstractReport với ReportPublisher ghép Formatter/Destination để lựa chọn theo những
-    chiều thay đổi độc lập.
+  description: So sánh khung kế thừa AbstractReport với ReportPublisher ghép Formatter/Destination để lựa chọn theo những chiều thay đổi độc lập.
   transition:
     to: composition-005
-    description: '**Từ lựa chọn tái sử dụng → nghiên cứu trường hợp cần thay collaborator ngay trong thời gian service hoạt
-      động.**'
+    description: '**Từ lựa chọn tái sử dụng → nghiên cứu trường hợp cần thay collaborator ngay trong thời gian service hoạt động.**'
 - id: composition-005
   order: 5
   title: Thay đổi đối tượng cộng tác khi chạy
-  description: Thực hành đổi DiscountPolicy trong runtime và đánh giá nhất quán per-call, visibility đa luồng, vòng đời cộng
-    tác viên.
+  description: Thực hành đổi DiscountPolicy trong runtime và đánh giá nhất quán per-call, visibility đa luồng, vòng đời cộng tác viên.
   transition:
     to: composition-006
     description: '**Từ khả năng thay collaborator → thiết kế cách cung cấp dependency và phạm vi dùng trong Java.**'
 - id: composition-006
   order: 6
   title: Tiêm phụ thuộc qua hàm khởi tạo hoặc phương thức
-  description: Cấp dependency qua constructor hoặc tham số phương thức để tránh hard-code implementation và thuận tiện tiêm
-    fake kiểm thử.
+  description: Cấp dependency qua constructor hoặc tham số phương thức để tránh hard-code implementation và thuận tiện tiêm fake kiểm thử.
   transition:
     to: composition-007
     description: '**Từ cách tiêm dependency → làm rõ ai thực sự sở hữu trạng thái/tài nguyên và ai chịu trách nhiệm dọn dẹp.**'
@@ -62,8 +55,7 @@ roadmap:
 - id: composition-008
   order: 8
   title: Chuyển thiết kế kế thừa sang kết hợp
-  description: |-
-    Chuyển OrderService từ kế thừa OrderStore sang sử dụng OrderRepository, kiểm kê caller và giữ hợp đồng qua test.
+  description: Chuyển OrderService từ kế thừa OrderStore sang sử dụng OrderRepository, kiểm kê caller và giữ hợp đồng qua test.
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

@@ -1,0 +1,31 @@
+sections:
+  overview-001:
+    difficulty: BASIC
+    isImportant: true
+  overview-002:
+    difficulty: BASIC
+    isImportant: true
+  overview-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  overview-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  overview-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  overview-006:
+    difficulty: ADVANCED
+    isImportant: true
+  overview-007:
+    difficulty: ADVANCED
+    isImportant: true
+  overview-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  overview-009:
+    difficulty: ADVANCED
+    isImportant: false
+  overview-010:
+    difficulty: INTERMEDIATE
+    isImportant: true

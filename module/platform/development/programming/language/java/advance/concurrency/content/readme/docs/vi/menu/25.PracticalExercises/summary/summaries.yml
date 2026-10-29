@@ -1,0 +1,361 @@
+summaries:
+- id: practical-exercises-001
+  title: Xây counter bị race và lần lượt sửa bằng lock, atomic
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Xây counter bị race và lần lượt sửa bằng lock, atomic**
+
+    Tạo bộ đếm chung có lost update rồi sửa bằng ReentrantLock và AtomicInteger; thực hành tái hiện race có kiểm soát và kiểm tra bất biến sau nhiều worker.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. value++ trên shared int tạo lost update với lịch đọc–sửa–ghi như thế nào?
+    2. Vì sao kết quả đúng trong một lần stress chưa chứng minh thread safety?
+
+    ### Áp dụng, kiểm chứng và giới hạn
+
+    1. Lock phải bảo vệ phạm vi đọc–sửa–ghi nào và vì sao unlock cần finally?
+    2. AtomicInteger và lock khác nhau khi invariant phụ thuộc một hay nhiều field?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Dựng lịch hai worker cùng đọc trước khi ghi và xác nhận kết quả sai. |
+    | Vận dụng API | Triển khai LockCounter và AtomicCounter với đúng một state được chia sẻ. |
+    | Kiểm thử và đánh giá | Chạy Future.get có timeout và assert toàn bộ increment hoàn tất. |
+- id: practical-exercises-002
+  title: Xây bounded producer–consumer bằng BlockingQueue
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Xây bounded producer–consumer bằng BlockingQueue**
+
+    Thiết kế pipeline hai producer, hai consumer với ArrayBlockingQueue hữu hạn, poison pill và đếm ID; quan sát backpressure và xử lý shutdown có trật tự.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. Queue capacity 3 khiến producer bị chặn khi đầy như thế nào?
+    2. FIFO dequeue có bảo đảm các consumer hoàn tất đúng thứ tự không?
+
+    ### Áp dụng, kiểm chứng và giới hạn
+
+    1. Vì sao cần chờ hết producer trước khi gửi poison pill?
+    2. Cách đo số accepted, processed và ID duy nhất giúp phát hiện mất việc thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Viết hai producer và hai consumer dùng chung một bounded BlockingQueue. |
+    | Vận dụng API | Tạo tình huống queue đầy và kiểm tra hành vi put hoặc timed offer. |
+    | Kiểm thử và đánh giá | Gửi đủ STOP rồi chờ Future, xác minh 12 work ID đã xử lý. |
+- id: practical-exercises-003
+  title: Xây executor có bounded queue và rejection policy
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Xây executor có bounded queue và rejection policy**
+
+    Cấu hình ThreadPoolExecutor với số worker, queue hữu hạn và rejection policy; tạo overload xác định và phân tích CallerRuns/Abort/Discard khi shutdown.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. Core pool, work queue và maximum pool được sử dụng theo thứ tự nào?
+    2. Khi pool và queue đầy, AbortPolicy và CallerRunsPolicy khác nhau thế nào?
+
+    ### Áp dụng, kiểm chứng và giới hạn
+
+    1. Vì sao discard task gửi bằng submit có thể khiến Future không kết thúc?
+    2. Tạo một bài test bão hòa xác định với latch và rejection count bằng cách nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Cấu hình core/max/ArrayBlockingQueue theo tải dự kiến. |
+    | Vận dụng API | Giữ worker và queue bằng latch để ép rejection đúng ngưỡng. |
+    | Kiểm thử và đánh giá | Đối chiếu overload, latency và chính sách cleanup giữa handlers. |
+- id: practical-exercises-004
+  title: Chạy nhiều Callable, lấy kết quả theo thứ tự hoàn tất
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chạy nhiều Callable, lấy kết quả theo thứ tự hoàn tất**
+
+    Submit nhiều Callable rồi đọc Future từ ExecutorCompletionService theo thứ tự hoàn tất, xử lý task lỗi/hủy, timeout và giới hạn số in-flight.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. Duyệt List<Future> theo submit order gây head-of-line blocking như thế nào?
+    2. CompletionService.take/poll trả kết quả theo điều kiện hoàn tất nào?
+
+    ### Áp dụng, kiểm chứng và giới hạn
+
+    1. Số task submit thành công khác số task nhận completion ra sao khi có rejection?
+    2. Cách quản lý deadline tổng và cửa sổ in-flight cho nhiều task thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Dùng latch cho ba Callable hoàn tất B,C,A dù submit A,B,C. |
+    | Vận dụng API | Phân loại success, exception, cancellation cho mọi completion đã nhận. |
+    | Kiểm thử và đánh giá | Dùng poll(timeout) và in-flight window để tránh chờ hoặc backlog vô hạn. |
+- id: practical-exercises-005
+  title: Tính tổng mảng bằng Fork/Join và so benchmark
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tính tổng mảng bằng Fork/Join và so benchmark**
+
+    Chia tính tổng mảng bằng RecursiveTask<Long>, ForkJoinPool và work-stealing; so kết quả tuần tự/song song và benchmark nhiều threshold, kích thước mảng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. Chia [from,to) thành hai đoạn nào để không đếm trùng hay bỏ phần tử?
+    2. Vì sao phải dùng long cho tổng và threshold dương để đệ quy dừng?
+
+    ### Áp dụng, kiểm chứng và giới hạn
+
+    1. Overhead fork/join tác động thế nào khi threshold quá nhỏ?
+    2. Cần warmup và đo nhiều lần thế nào để so speedup đúng hơn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Triển khai RecursiveTask với hai nhánh, fork một nhánh rồi join. |
+    | Vận dụng API | Đối chiếu kết quả tuần tự và song song trên mảng rỗng, lẻ, lớn. |
+    | Kiểm thử và đánh giá | Thiết kế thí nghiệm JMH/warmup với N, threshold và worker count. |
+- id: practical-exercises-006
+  title: Gọi nhiều I/O giả lập bằng CompletableFuture với timeout
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Gọi nhiều I/O giả lập bằng CompletableFuture với timeout**
+
+    Chạy ba lời gọi I/O giả lập bằng CompletableFuture với executor riêng; phân biệt allOf/thenCombine, timeout, fallback, overall deadline và I/O nền chưa bị hủy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. Vì sao phải khởi chạy các supplier trước khi chờ join hoặc get?
+    2. allOf và thenCombine ghép các kết quả theo hợp đồng khác nhau thế nào?
+
+    ### Áp dụng, kiểm chứng và giới hạn
+
+    1. completeOnTimeout và orTimeout tác động tới future ra sao?
+    2. Tại sao Future timeout/cancel chưa chứng minh supplier I/O đã dừng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Ghép ba kết quả async và xử lý đúng nguồn bắt buộc/tùy chọn. |
+    | Vận dụng API | Thiết kế per-task timeout, fallback và overall deadline. |
+    | Kiểm thử và đánh giá | Kiểm thử timeout/failure và shutdown executor không rò worker. |
+- id: practical-exercises-007
+  title: So sánh platform threads và virtual threads cho tác vụ I/O
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **So sánh platform threads và virtual threads cho tác vụ I/O**
+
+    Thử workload HTTP I/O giống nhau trên platform pool và virtual thread executor JDK 21+; đo throughput/latency và xác định bottleneck, pinning, semaphore.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. Virtual thread khác platform thread thế nào trong lúc chờ I/O?
+    2. Vì sao virtual thread không tạo thêm socket, DB connection hoặc quota API?
+
+    ### Áp dụng, kiểm chứng và giới hạn
+
+    1. Để so ba cấu hình cần giữ workload và điều kiện đo nào giống nhau?
+    2. Khi latency tăng dù nhiều virtual threads, cần đo downstream/pinning thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Chạy bộ request giống nhau với platform và virtual threads trong JDK 21+. |
+    | Vận dụng API | Ghi batch latency, throughput, status và p95 từ nhiều lần thử. |
+    | Kiểm thử và đánh giá | Giải thích resource saturation và dùng semaphore hạn chế in-flight. |
+- id: practical-exercises-008
+  title: Triển khai Semaphore giới hạn tài nguyên đồng thời
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Triển khai Semaphore giới hạn tài nguyên đồng thời**
+
+    Cài Semaphore shared giới hạn ba tác vụ sử dụng resource và kiểm thử peak concurrency; trả permit đúng một lần, xử lý timeout, exception, interrupt.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. Semaphore(3) được chia sẻ giới hạn số tác vụ chiếm tài nguyên bằng cơ chế nào?
+    2. availablePermits có thay cho acquire để quyết định quyền truy cập không?
+
+    ### Áp dụng, kiểm chứng và giới hạn
+
+    1. Nếu tryAcquire thất bại hoặc bị interrupt, việc release sẽ gây hậu quả gì?
+    2. Dùng active/peak counter thế nào để chứng minh không vượt limit?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Dùng một Semaphore chung và tryAcquire(timeout) trước khi vào resource. |
+    | Vận dụng API | Đảm bảo release đúng một lần trong finally ở nhánh đã lấy permit. |
+    | Kiểm thử và đánh giá | Chạy nhiều worker, assert peak<=3 và availablePermits phục hồi. |
+- id: practical-exercises-009
+  title: Viết test tái hiện deadlock rồi sửa lock ordering
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Viết test tái hiện deadlock rồi sửa lock ordering**
+
+    Tái hiện deadlock hai lock với CountDownLatch/ThreadMXBean và sửa bằng global lock ordering; chạy regression kiểm tra tiến độ và invariant chuyển tiền.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. Hai chiều A→B và B→A tạo circular wait theo lịch nào?
+    2. CountDownLatch giúp test tái hiện deadlock xác định ra sao?
+
+    ### Áp dụng, kiểm chứng và giới hạn
+
+    1. Một thứ tự lock theo ID toàn cục loại bỏ vòng chờ như thế nào?
+    2. Ngoài hết deadlock, tại sao test phải kiểm số dư và exception?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Điều phối deadlock có cấu trúc và phát hiện bằng ThreadMXBean. |
+    | Vận dụng API | Sắp thứ tự lock như nhau cho mọi hướng chuyển tài khoản. |
+    | Kiểm thử và đánh giá | Kiểm tra hoàn tất trong timeout và giữ invariant số dư. |
+- id: practical-exercises-010
+  title: Đọc thread dump và tìm vị trí chặn luồng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đọc thread dump và tìm vị trí chặn luồng**
+
+    Thu thread dump đúng JVM và phân tích Thread.State, stack frame, monitor owner hoặc synchronizer; phân biệt BLOCKED, WAITING, contention và deadlock.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. BLOCKED trên monitor khác WAITING trên latch hoặc park như thế nào?
+    2. Từ stack và monitor ID làm sao tìm thread giữ khóa?
+
+    ### Áp dụng, kiểm chứng và giới hạn
+
+    1. Vì sao một WAITING hoặc BLOCKED trong một dump chưa đủ kết luận deadlock?
+    2. Dùng ThreadMXBean và nhiều dump để chẩn đoán bottleneck nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Xác định PID và chụp dump bằng công cụ JDK phù hợp. |
+    | Vận dụng API | Truy theo state, stack, lock owner và nguồn signal. |
+    | Kiểm thử và đánh giá | Phân biệt contention hợp lệ, deadlock và starvation bằng bằng chứng. |
+- id: practical-exercises-011
+  title: Thiết kế shutdown có hủy, timeout và đóng tài nguyên
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thiết kế shutdown có hủy, timeout và đóng tài nguyên**
+
+    Xây giao thức shutdown: chặn nhận việc, graceful wait, request cancel, forced wait và close resource sau termination; trả trạng thái khi task không chịu dừng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. Vì sao phải chặn nhận task mới trước khi đóng executor?
+    2. shutdownNow/cancel(true) có đảm bảo task ngừng ngay hoặc rollback không?
+
+    ### Áp dụng, kiểm chứng và giới hạn
+
+    1. Nếu awaitTermination trả false, đóng resource có nguy cơ gì?
+    2. Cách phân biệt grace timeout, force timeout và trạng thái NOT_TERMINATED trong báo cáo?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Thiết kế state machine RUNNING→QUIESCING→CANCELLING→TERMINATED. |
+    | Vận dụng API | Đóng admission, await grace, cancel và đợi force có hạn. |
+    | Kiểm thử và đánh giá | Kiểm thử worker không hợp tác và tránh close resource khi còn dùng. |
+- id: practical-exercises-012
+  title: 'Tổng kết checklist: thread safety, cancellation, observability'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tổng kết checklist: thread safety, cancellation, observability**
+
+    Kết hợp thread safety, cancellation và observability thành checklist; đánh giá invariant, ownership, interruption, metrics, log, thread dump và test failure path.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cơ chế
+
+    1. Những dấu hiệu nào chứng minh shared state được publish và bảo vệ đúng?
+    2. Volatile, atomic và lock có phạm vi bảo đảm khác nhau thế nào?
+
+    ### Áp dụng, kiểm chứng và giới hạn
+
+    1. Future.cancel(true) khác gì bằng chứng worker đã cleanup?
+    2. Để phân biệt queue wait, contention và downstream latency cần metric/dump nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Review ownership, lock/atomic và invariant của một pipeline. |
+    | Vận dụng API | Đề xuất timeout, interrupt propagation và cleanup verification. |
+    | Kiểm thử và đánh giá | Thiết kế log, metrics và thread dump phục vụ chẩn đoán lỗi. |

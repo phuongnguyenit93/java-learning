@@ -1,0 +1,444 @@
+summaries:
+- id: atomic-and-cas-001
+  title: AtomicInteger, AtomicLong và AtomicBoolean
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **AtomicInteger, AtomicLong và AtomicBoolean**
+
+    Bài đặt nền tảng cho việc cập nhật số đếm, số thứ tự và cờ trạng thái bằng AtomicInteger, AtomicLong, AtomicBoolean mà không làm mất lượt cập nhật.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Atomic primitive
+
+    1. Vì sao counter++ có thể mất cập nhật trong nhiều thread?
+    2. AtomicInteger, AtomicLong, AtomicBoolean có các API read–modify–write khác nhau ra sao?
+    3. getAndSet và compareAndSet khác nhau về điều kiện và kết quả trả về thế nào?
+
+    ### Giới hạn của cờ và counter
+
+    1. Vì sao một AtomicBoolean stop flag không tự đánh thức thread đang bị chặn?
+    2. Khi nào nhiều biến atomic vẫn không bảo vệ được invariant nhiều trường?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cập nhật counter | Viết ví dụ nhiều thread tăng AtomicInteger và đối chiếu tổng chính xác. |
+    | Chuyển trạng thái | Dùng compareAndSet để chỉ một worker claim quyền thay đổi cờ. |
+    | Giới hạn bảo đảm | Phân tích check-then-act, overflow và việc phối hợp interrupt. |
+- id: atomic-and-cas-002
+  title: AtomicReference và cập nhật object state
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **AtomicReference và cập nhật object state**
+
+    Bài chuyển từ primitive sang AtomicReference để thay một immutable object snapshot, giữ nhiều trường trong cùng phiên bản trạng thái.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Reference và snapshot
+
+    1. AtomicReference bảo vệ reference hay toàn bộ mutable object?
+    2. Tại sao compareAndSet với reference dùng identity thay vì equals?
+    3. Làm sao giữ available và reserved nhất quán khi nhiều writer cùng cập nhật?
+
+    ### Retry và giới hạn
+
+    1. Vì sao get rồi set vẫn có thể lost update?
+    2. Hàm updateAndGet phải tránh side effect nào khi CAS retry?
+    3. Vì sao cập nhật reference không tự commit tài nguyên ngoài JVM?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Immutable state | Tạo record nhiều trường có invariant để publish qua AtomicReference. |
+    | CAS reference | Mô phỏng hai writer cạnh tranh một snapshot và retry an toàn. |
+    | Nhận diện giới hạn | Giải thích mutable alias, ABA và side effects bên ngoài. |
+- id: atomic-and-cas-003
+  title: compareAndSet() và nguyên tắc CAS
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **compareAndSet() và nguyên tắc CAS**
+
+    Bài giải thích compareAndSet là cập nhật có điều kiện, trả boolean và có một điểm commit tuyến tính hóa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế CAS
+
+    1. CAS quyết định true/false trên expected và current thế nào?
+    2. Hai thread có cùng expected có thể cùng thắng trên một state không?
+    3. Điểm linearization của CAS thành công là gì?
+
+    ### CAS trong thực hành
+
+    1. Khi thất bại vì contention, vì sao phải đọc lại expected?
+    2. Vì sao CAS AtomicReference không sử dụng equals và có thể bị ABA?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích lịch thread | Vẽ interleaving hai compareAndSet và dự đoán trạng thái. |
+    | Dùng CAS | Viết chuyển trạng thái có điều kiện và kiểm tra kết quả boolean. |
+    | Đánh giá bảo đảm | Giải thích linearization và giới hạn khi có nhiều state độc lập. |
+- id: atomic-and-cas-004
+  title: CAS loop, retry và contention
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CAS loop, retry và contention**
+
+    Bài đi sâu vòng CAS retry, contention, starvation, backoff và nghĩa vụ kiểm tra lại invariant trong mỗi lượt thử.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Retry dưới contention
+
+    1. Vì sao CAS loop phải đọc lại và kiểm tra lại tồn kho sau thất bại?
+    2. Lock-free khác wait-free ở bảo đảm tiến triển nào?
+    3. Backoff hoặc Thread.onSpinWait có thể tác động throughput ra sao?
+
+    ### Các cạnh nguy hiểm
+
+    1. Side effect trong vòng CAS có thể chạy lặp thế nào?
+    2. Làm sao giới hạn retry theo deadline hay cancellation?
+    3. ABA và integer overflow có thể làm cập nhật sai ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | CAS loop có điều kiện | Xây vòng cập nhật tồn kho không âm với precondition được tính lại. |
+    | Tái hiện contention | Dùng latch buộc CAS thất bại và kiểm tra retry. |
+    | Lập luận liveness | So sánh spin, backoff và nguy cơ starvation dưới tải. |
+- id: atomic-and-cas-005
+  title: getAndUpdate(), updateAndGet() và accumulator
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **getAndUpdate(), updateAndGet() và accumulator**
+
+    Bài dùng các phương thức getAndUpdate, updateAndGet và accumulateAndGet để diễn đạt cập nhật nguyên tử dựa trên hàm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa API
+
+    1. getAndUpdate trả giá trị nào khác updateAndGet?
+    2. getAndAccumulate và accumulateAndGet truyền current và x theo thứ tự nào?
+    3. Khi nào cập nhật AtomicReference bằng UnaryOperator phù hợp?
+
+    ### Accumulator và callback
+
+    1. Vì sao update function phải thuần và có thể được đánh giá lại?
+    2. LongAccumulator khác atomic.accumulateAndGet ở mục tiêu sử dụng nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Unary update | Minh họa giá trị trước/sau của getAndUpdate và updateAndGet. |
+    | Binary accumulation | Viết accumulateAndGet với hàm kết hợp và input đúng thứ tự. |
+    | Đánh giá API | Phân biệt functional atomic với LongAdder hoặc LongAccumulator. |
+- id: atomic-and-cas-006
+  title: Atomic compound reference qua immutable state
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Atomic compound reference qua immutable state**
+
+    Bài xây một compound immutable state để commit nhiều trường liên quan qua đúng một AtomicReference.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Invariant nhiều trường
+
+    1. Vì sao hai AtomicInteger không tự bảo đảm available + reserved = total?
+    2. Một record chứa mutable alias còn thật sự immutable không?
+    3. Điểm commit của CAS trên AtomicReference<State> nằm ở đâu?
+
+    ### Thiết kế cập nhật
+
+    1. Làm sao transfer giữa hai số dư trong cùng snapshot?
+    2. Nếu CAS thất bại thì snapshot mới phải được tạo lại thế nào?
+    3. Khi nào dùng lock sẽ đơn giản hơn copy-on-write?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo state bất biến | Thiết kế object chứa mọi field trong cùng invariant. |
+    | CAS compound | Thử cập nhật nhiều field bằng một CAS reference và xác minh reader. |
+    | Biên giới atomicity | Giải thích nested mutable state và giao dịch với tài nguyên khác. |
+- id: atomic-and-cas-007
+  title: AtomicIntegerFieldUpdater và điều kiện áp dụng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **AtomicIntegerFieldUpdater và điều kiện áp dụng**
+
+    Bài chỉ rõ điều kiện field, access và performance để dùng AtomicIntegerFieldUpdater trên một volatile int instance field.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Điều kiện updater
+
+    1. Vì sao field phải là volatile int thuộc instance?
+    2. Trường static, Integer hoặc private không đủ quyền truy cập gây vấn đề gì?
+    3. Một updater hoạt động trên nhiều instance như thế nào?
+
+    ### Giao thức và chi phí
+
+    1. Vì sao ghi trực tiếp volatile field có thể gây lost update khi trộn updater?
+    2. Lúc nào giảm allocation so với AtomicInteger đáng để đo?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Khai báo hợp lệ | Viết volatile int field và tạo updater đúng class/field. |
+    | Kiểm tra race | Tái hiện lỗi trộn setter trực tiếp với updater rồi sửa. |
+    | Lựa chọn | So sánh AtomicIntegerFieldUpdater, AtomicInteger và VarHandle. |
+- id: atomic-and-cas-008
+  title: ABA problem và AtomicStampedReference
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ABA problem và AtomicStampedReference**
+
+    Bài nêu vấn đề ABA và cách AtomicStampedReference theo dõi cặp reference/version qua các lần thay đổi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hiện tượng ABA
+
+    1. Vì sao A → B → A có thể khiến CAS expected A thành công sai?
+    2. Trường hợp lock-free stack nào cần phát hiện lịch sử thay đổi?
+    3. ABA khác lỗi data race kiểu truy cập không đồng bộ ra sao?
+
+    ### Version stamp
+
+    1. AtomicStampedReference CAS kiểm tra reference và stamp thế nào?
+    2. Vì sao đọc reference với stamp qua get(holder) quan trọng?
+    3. Stamp overflow hoặc tái dùng còn rủi ro gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng ABA | Điều phối CAS thường và stamped CAS để so kết quả. |
+    | Thiết kế stamp | Viết CAS loop tăng version trong mọi mutation liên quan. |
+    | Giới hạn | Phân tích khi nào version có thể bị trùng hoặc bỏ qua. |
+- id: atomic-and-cas-009
+  title: LongAdder và LongAccumulator khi cập nhật cạnh tranh
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **LongAdder và LongAccumulator khi cập nhật cạnh tranh**
+
+    Bài đánh đổi consistency đọc tức thời với throughput khi nhiều thread dùng LongAdder và LongAccumulator.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tích lũy dưới contention
+
+    1. LongAdder làm giảm contention so với một AtomicLong ra sao?
+    2. Vì sao sum() không phải snapshot nguyên tử khi writer đang chạy?
+    3. LongAccumulator cần identity và binary function phù hợp thế nào?
+
+    ### Reset và lựa chọn
+
+    1. sumThenReset khi có writer đồng thời có rủi ro nào?
+    2. Tại sao LongAdder không phù hợp làm quota hoặc ID cấp phát?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Metric counter | Dùng LongAdder nhiều worker và xác minh tổng sau khi join. |
+    | Phép tổng hợp | Dùng LongAccumulator tìm cực đại với identity đúng. |
+    | Chọn giải pháp | Giải thích khi nào ưu tiên AtomicLong thay accumulator. |
+- id: atomic-and-cas-010
+  title: 'VarHandle: truy cập atomic và access mode'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **VarHandle: truy cập atomic và access mode**
+
+    Bài đi sâu VarHandle với plain, opaque, acquire/release, volatile và các access mode atomic.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Memory access mode
+
+    1. Plain, opaque, acquire/release và volatile khác nhau ở ordering nào?
+    2. VarHandle trỏ tới field hoặc array element bằng tọa độ gì?
+    3. setRelease/getAcquire cung cấp publication theo giao thức nào?
+
+    ### CAS cấp thấp
+
+    1. compareAndExchange khác compareAndSet ở giá trị trả về gì?
+    2. Vì sao một access mode volatile không biến mọi đường khác thành volatile?
+    3. Type signature và unsupported access mode cần kiểm tra ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định vị biến | Tạo handle với findVarHandle hoặc arrayElementVarHandle. |
+    | Giao thức ordering | Phân tích tình huống publication bằng release/acquire. |
+    | Atomic access | Thực hiện CAS/getAndAdd trên handle phù hợp kiểu. |
+- id: atomic-and-cas-011
+  title: Atomic không thay thế giao dịch nhiều đối tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Atomic không thay thế giao dịch nhiều đối tượng**
+
+    Bài chứng minh hai biến atomic riêng không tạo giao dịch nhiều đối tượng và so sánh lock chung với snapshot.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Transaction boundary
+
+    1. Vì sao trừ A rồi cộng B qua hai AtomicLong vẫn lộ tổng sai?
+    2. AtomicReference<State> giúp gì khi toàn bộ invariant trong một snapshot?
+    3. Exception sau nửa giao dịch có thể làm state sai thế nào?
+
+    ### Phương án và giới hạn
+
+    1. Khóa chung hoặc thứ tự khóa toàn cục áp dụng khi nào?
+    2. Vì sao lock hoặc CAS trong JVM không bảo đảm durability sau crash?
+    3. Rollback thủ công có thể thất bại khi các writer khác xen kẽ thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tái hiện trạng thái dở dang | Điều phối hai atomic cập nhật và quan sát invariant bị hở. |
+    | Tạo boundary | Thiết kế critical section hoặc immutable snapshot chung. |
+    | Phân tích failure | Phân biệt atomic update với crash consistency và rollback. |
+- id: atomic-and-cas-012
+  title: Chọn atomic, lock hay thread confinement
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn atomic, lock hay thread confinement**
+
+    Bài tổng hợp cách chọn atomic, lock hoặc thread confinement theo ranh giới chia sẻ, invariant và mức tranh chấp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quyết định kiến trúc
+
+    1. Khi nào một AtomicInteger là đủ thay cho lock?
+    2. Nhiều field chung invariant thì chọn CAS snapshot hay critical section?
+    3. Thread confinement loại bỏ chia sẻ bằng owner nào?
+
+    ### Thực hành review
+
+    1. ThreadLocal trong pool có thật là per-request không?
+    2. Đọc có lock nhưng ghi không lock sai ở đâu?
+    3. Khi nào cần benchmark thay vì kết luận atomic nhanh hơn lock?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định ownership | Phân loại shared state và trách nhiệm reader/writer. |
+    | Chọn cơ chế | Giải thích lựa chọn atomic, lock, confinement theo tính đúng. |
+    | Review | Phát hiện check-then-act, lock sai phạm vi và mutable alias. |
+- id: atomic-and-cas-013
+  title: 'AtomicIntegerArray, AtomicLongArray và AtomicReferenceArray: cập nhật từng phần tử'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **AtomicIntegerArray, AtomicLongArray và AtomicReferenceArray: cập nhật từng phần tử**
+
+    Bài sử dụng các atomic array để cập nhật từng slot mà không suy ra mọi phần tử tạo một transaction.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Atomic per-slot
+
+    1. AtomicIntegerArray, AtomicLongArray, AtomicReferenceArray khác nhau thế nào?
+    2. CAS một index đảm bảo gì và không bảo vệ index khác ở đâu?
+    3. AtomicReferenceArray so reference bằng identity thế nào?
+
+    ### Giới hạn triển khai
+
+    1. Tạo atomic array từ mảng gốc ảnh hưởng dữ liệu/ownership ra sao?
+    2. Vì sao nhiều worker cùng index vẫn contention?
+    3. Khi nào invariant nhiều slot đòi lock hoặc snapshot?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Counter theo index | Viết workers tăng các bucket và kiểm tra từng slot. |
+    | Reference array | Cập nhật immutable snapshot trên một index bằng CAS. |
+    | Review invariant | Chỉ ra race khi cập nhật nhiều index liên quan. |
+- id: atomic-and-cas-014
+  title: Hàm updateAndGet, accumulateAndGet và nguy cơ tác dụng phụ khi CAS phải thử lại
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Hàm updateAndGet, accumulateAndGet và nguy cơ tác dụng phụ khi CAS phải thử lại**
+
+    Bài đi sâu một lần gọi updateAndGet hoặc accumulateAndGet có thể đánh giá callback nhiều lần do CAS retry.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Attempt và commit
+
+    1. Vì sao callback có thể chạy hai lần nhưng chỉ commit một lần?
+    2. Phân biệt callback evaluation, CAS attempt và commit bằng một interleaving nào?
+    3. accumulateAndGet đưa current với x vào hàm theo thứ tự gì?
+
+    ### Side effect
+
+    1. Vì sao không gửi event hoặc ghi I/O bên trong update lambda?
+    2. Phát side effect sau CAS thành công vẫn gặp giới hạn crash/retry nào?
+    3. Khi nào cần transaction hoặc lock để ghép state transition với tác dụng ngoài?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tái hiện retry | Điều phối CAS conflict và đếm lượt gọi callback. |
+    | Hàm thuần | Đổi updater thành phép biến đổi dựa trên immutable input. |
+    | Thiết kế side effect | Tách attempt metric, commit metric và event sau commit. |

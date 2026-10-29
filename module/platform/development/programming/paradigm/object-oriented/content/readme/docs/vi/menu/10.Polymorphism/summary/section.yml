@@ -6,16 +6,14 @@ roadmap:
 - id: polymorphism-001
   order: 1
   title: Đa hình và nhiều cách thực hiện cùng một thao tác
-  description: Nhận diện một lời gọi ShippingPolicy.quote(Parcel) nhưng Economy, Standard, Express có công thức và thời gian
-    báo giá riêng.
+  description: Nhận diện một lời gọi ShippingPolicy.quote(Parcel) nhưng Economy, Standard, Express có công thức và thời gian báo giá riêng.
   transition:
     to: polymorphism-002
     description: '**Từ hiện tượng một lời gọi nhiều hành vi → xác định quan hệ subtype cho phép gọi chung**'
 - id: polymorphism-002
   order: 2
   title: Đa hình kiểu con qua giao diện hoặc lớp cha
-  description: So sánh implements interface với extends superclass; upcast và final Report.preview gọi hook content của lớp
-    con.
+  description: So sánh implements interface với extends superclass; upcast và final Report.preview gọi hook content của lớp con.
   transition:
     to: polymorphism-003
     description: '**Từ subtype → tìm hiểu cách compiler và runtime quyết định phương thức**'
@@ -50,8 +48,7 @@ roadmap:
 - id: polymorphism-007
   order: 7
   title: Phạm vi đa hình của phương thức và thuộc tính
-  description: Phân loại field/static/private/final/getter/abstract/default, chọn API qua method thay vì public field trùng
-    tên.
+  description: Phân loại field/static/private/final/getter/abstract/default, chọn API qua method thay vì public field trùng tên.
   transition:
     to: polymorphism-008
     description: '**Từ ranh giới member của Java → mở góc nhìn trừu tượng hóa theo khả năng**'
@@ -65,16 +62,14 @@ roadmap:
 - id: polymorphism-009
   order: 9
   title: Đa hình thay cho điều kiện kiểm tra từng loại
-  description: Đưa thuật toán vào ShippingPolicy, giữ factory/switch chọn implementation ở ranh giới; kiểm thử bảo toàn hành
-    vi.
+  description: Đưa thuật toán vào ShippingPolicy, giữ factory/switch chọn implementation ở ranh giới; kiểm thử bảo toàn hành vi.
   transition:
     to: polymorphism-010
     description: '**Từ refactor strategy → vận dụng cho nhiều phương thức thanh toán và trạng thái**'
 - id: polymorphism-010
   order: 10
   title: Ví dụ nhiều phương thức thanh toán
-  description: |-
-    CheckoutService dùng một PaymentMethod.pay cho thẻ, ví, chuyển khoản; phân biệt PAID/DECLINED/PENDING và kiểm thử với fake.
+  description: CheckoutService dùng một PaymentMethod.pay cho thẻ, ví, chuyển khoản; phân biệt PAID/DECLINED/PENDING và kiểm thử với fake.
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

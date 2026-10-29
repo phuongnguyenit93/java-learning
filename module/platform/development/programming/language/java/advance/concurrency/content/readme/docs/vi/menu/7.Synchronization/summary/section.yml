@@ -1,0 +1,96 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "SYNCHRONIZATION — LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: synchronization-001
+    order: 1
+    title: "Intrinsic lock và monitor của mọi object"
+    description: "Giới thiệu intrinsic monitor theo object identity, mutual exclusion, thời điểm nhả monitor và tác động Java Memory Model."
+    transition:
+      to: synchronization-002
+      description: "Sau khi biết monitor gắn với object nào, cần so sánh các cú pháp synchronized để chọn phạm vi bảo vệ."
+  - id: synchronization-002
+    order: 2
+    title: "synchronized method so với synchronized block"
+    description: "So sánh khóa cả method với block có monitor và phạm vi chọn lọc; thực hành nhận diện lost update dù getter/setter riêng lẻ đã synchronized."
+    transition:
+      to: synchronization-003
+      description: "Phân biệt method và block dẫn đến câu hỏi khóa theo receiver hay toàn class khi dữ liệu được chia sẻ."
+  - id: synchronization-003
+    order: 3
+    title: "Khóa theo instance và theo class"
+    description: "Phân biệt monitor của receiver, Class object và các ranh giới class loader, từ đó chọn khóa khớp phạm vi dữ liệu."
+    transition:
+      to: synchronization-004
+      description: "Khi xác định được identity của lock, tiếp theo cần hiểu một owner có thể vào lại chính lock đó."
+  - id: synchronization-004
+    order: 4
+    title: "Reentrant synchronization là gì?"
+    description: "Giải thích reentrant monitor và ReentrantLock, hold count, giới hạn tránh self-deadlock và tác động của callback tái nhập."
+    transition:
+      to: synchronization-005
+      description: "Reentrancy cho biết ai có quyền giữ lock; bài sau giải thích tác dụng của lock với atomicity và visibility."
+  - id: synchronization-005
+    order: 5
+    title: "Mutual exclusion và memory visibility của monitor"
+    description: "Khảo sát mutual exclusion, happens-before qua monitor và ranh giới giữa visibility, atomicity và snapshot nhất quán."
+    transition:
+      to: synchronization-006
+      description: "Bảo đảm JMM là nền tảng để thu hẹp critical section mà vẫn giữ nguyên tính đúng đắn."
+  - id: synchronization-006
+    order: 6
+    title: "Thiết kế critical section đủ nhỏ và dễ kiểm chứng"
+    description: "Dạy thiết kế critical section dựa trên invariant và mô hình prepare–commit để giảm thời gian giữ monitor mà vẫn đúng."
+    transition:
+      to: synchronization-007
+      description: "Một critical section có thể cần nhiều lock; bài kế tiếp giải quyết nguy cơ vòng chờ khi khóa lồng nhau."
+  - id: synchronization-007
+    order: 7
+    title: "Lock ordering để ngăn deadlock"
+    description: "Trình bày wait-for graph, thứ tự khóa ổn định và cách thiết kế giao dịch nhiều lock chống deadlock."
+    transition:
+      to: synchronization-008
+      description: "Thứ tự khóa đúng vẫn chưa đủ nếu chọn monitor công khai hoặc bị chia sẻ ngoài ý muốn."
+  - id: synchronization-008
+    order: 8
+    title: "Tránh khóa trên String literal hay public object"
+    description: "Giải thích vì sao String literal, public hoặc mutable lock reference gây tranh chấp ngoài ý muốn, và cách đóng gói monitor an toàn."
+    transition:
+      to: synchronization-009
+      description: "Sau khi chọn monitor an toàn, học cách dùng wait/notify để đợi trạng thái thay vì busy-wait."
+  - id: synchronization-009
+    order: 9
+    title: "Đợi monitor bằng wait() và đánh thức bằng notify()/notifyAll()"
+    description: "Đi sâu vào wait set, notify/notifyAll, predicate trong while, spurious wakeup và ví dụ phối hợp producer–consumer."
+    transition:
+      to: synchronization-010
+      description: "Một lời notify không tự làm predicate đúng; cần giữ invariant trước khi nhả khóa và sau khi thức dậy."
+  - id: synchronization-010
+    order: 10
+    title: "Giữ invariant khi chờ và sau khi thức dậy"
+    description: "Áp dụng monitor condition để giữ invariant trước và sau khi đợi, kể cả timeout, interrupt và các predicate cạnh tranh."
+    transition:
+      to: synchronization-011
+      description: "Khi các giao thức chờ đã đúng, cần quan sát contention và thời gian giữ monitor trong vận hành."
+  - id: synchronization-011
+    order: 11
+    title: "Contended monitor và rủi ro giữ khóa quá lâu"
+    description: "Chẩn đoán contended monitor, nguồn gốc critical section dài, công cụ quan sát và cách tối ưu có kiểm chứng."
+    transition:
+      to: synchronization-012
+      description: "Từ ảnh hưởng của monitor contention, đi sâu vào callback và I/O có thể khiến thời gian giữ khóa khó dự đoán."
+  - id: synchronization-012
+    order: 12
+    title: "Vấn đề khi gọi callback hoặc blocking I/O trong synchronized"
+    description: "Tập trung rủi ro gọi code không kiểm soát và blocking I/O khi giữ monitor, cùng mẫu snapshot, version check và commit an toàn."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Intrinsic lock và monitor của mọi object | synchronized method so với synchronized block | Khóa theo instance và theo class | Reentrant synchronization là gì? | Mutual exclusion và memory visibility của monitor | Thiết kế critical section đủ nhỏ và dễ kiểm chứng | Lock ordering để ngăn deadlock | Tránh khóa trên String literal hay public object | Đợi monitor bằng wait() và đánh thức bằng notify()/notifyAll() | Giữ invariant khi chờ và sau khi thức dậy | Contended monitor và rủi ro giữ khóa quá lâu | Vấn đề khi gọi callback hoặc blocking I/O trong synchronized |
+  | Vấn đề cần hiểu | Monitor thuộc đối tượng nào và khóa bảo vệ điều gì? | Chọn synchronized method hay block và giới hạn scope thế nào? | Khóa instance và class bảo vệ các state nào? | Một thread vào lại khóa mình giữ có an toàn trong mọi trường hợp? | Synchronized ngăn race và bảo đảm visibility đến đâu? | Làm sao thu hẹp critical section mà không phá invariant? | Phòng deadlock khi một thao tác cần nhiều monitor? | Những object nào không nên dùng làm monitor? | Đợi và đánh thức thread theo điều kiện mà không mất tín hiệu? | Làm sao giữ invariant xuyên qua wait/await và thức dậy? | Khi nào monitor contention thực sự thành bottleneck? | Làm sao gọi callback hoặc I/O mà không giữ lock quá lâu? |
+  | Giá trị đối với OOP/module | Nền tảng thiết kế đồng bộ đúng trên object | Thiết kế API đồng bộ rõ ràng, tránh khóa quá rộng | Tránh race khi đồng bộ dữ liệu instance và static | Tránh tự khóa và sai lệch số lần unlock | Dữ liệu chia sẻ nhất quán theo Java Memory Model | Cân bằng throughput và correctness của dữ liệu chia sẻ | Bảo vệ invariant nhiều tài nguyên không tạo vòng chờ | Giảm tương tác khóa ngoài ý muốn và giữ encapsulation | Xây protocol điều phối bằng monitor đúng đắn | Đảm bảo tính hợp lệ của state khi có chờ điều kiện | Nâng hiệu năng mà không đánh đổi correctness | Giảm convoy/deadlock và bảo vệ giao thức sự kiện |
+  | Tư duy hình thành | Nhìn khóa theo identity và trạng thái bảo vệ | Bảo vệ thao tác logic nguyên tử, không chỉ từng method | Đồng bộ theo phạm vi sở hữu trạng thái | Tách khả năng reentry khỏi tính đúng đắn invariant | Chứng minh đúng đắn bằng happens-before và invariant | Thu gọn khóa theo bằng chứng về phụ thuộc trạng thái | Loại circular wait bằng thứ tự toàn cục | Quản lý identity và quyền sở hữu monitor | Tín hiệu không thay thế điều kiện trạng thái | Đánh thức chỉ kích hoạt kiểm tra lại predicate | Đo trước khi thay chiến lược đồng bộ | Tách internal state commit khỏi external call-out |

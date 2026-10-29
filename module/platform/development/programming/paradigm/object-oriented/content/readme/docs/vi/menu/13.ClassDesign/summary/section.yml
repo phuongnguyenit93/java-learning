@@ -6,56 +6,49 @@ roadmap:
 - id: class-design-001
   order: 1
   title: Xác định trách nhiệm của từng lớp
-  description: Biết cách phân vai theo SRP, Information Expert và use case mượn sách; xác định nơi giữ LoanPolicy, Loan, LoanService,
-    repository, rồi kiểm tra cộng tác bằng CRC Card.
+  description: Biết cách phân vai theo SRP, Information Expert và use case mượn sách; xác định nơi giữ LoanPolicy, Loan, LoanService, repository, rồi kiểm tra cộng tác bằng CRC Card.
   transition:
     to: class-design-002
     description: '**Từ xác định owner của từng quy tắc → đánh giá xem hành vi trong cùng class có gắn kết**'
 - id: class-design-002
   order: 2
   title: Tính gắn kết bên trong lớp
-  description: Dùng cohesion, nhóm field/method và lý do thay đổi để phân tích lớp; tách Cart, repository, sender và checkout
-    coordinator khi các trách nhiệm thực sự độc lập.
+  description: Dùng cohesion, nhóm field/method và lý do thay đổi để phân tích lớp; tách Cart, repository, sender và checkout coordinator khi các trách nhiệm thực sự độc lập.
   transition:
     to: class-design-003
     description: '**Từ trách nhiệm nội bộ → kiểm tra mức phụ thuộc giữa các lớp cộng tác**'
 - id: class-design-003
   order: 3
   title: Mức phụ thuộc giữa các lớp
-  description: Đánh giá phụ thuộc mã nguồn/runtime/change; dùng PaymentGateway, ReceiptSender và DI ở biên biến động, đồng
-    thời xét lỗi thanh toán và gửi biên nhận.
+  description: Đánh giá phụ thuộc mã nguồn/runtime/change; dùng PaymentGateway, ReceiptSender và DI ở biên biến động, đồng thời xét lỗi thanh toán và gửi biên nhận.
   transition:
     to: class-design-004
     description: '**Từ coupling giữa cộng tác viên → đặt đúng biên giữa miền và hạ tầng**'
 - id: class-design-004
   order: 4
   title: Tách dữ liệu, nghiệp vụ và tương tác bên ngoài
-  description: Phân chia DTO, OrderLine/Order, pricing, use case, repository/gateway; giữ invariant trong miền và xử lý side
-    effect tại adapter.
+  description: Phân chia DTO, OrderLine/Order, pricing, use case, repository/gateway; giữ invariant trong miền và xử lý side effect tại adapter.
   transition:
     to: class-design-005
     description: '**Từ tách domain và I/O → biểu đạt ranh giới bằng tên class và API dễ hiểu**'
 - id: class-design-005
   order: 5
   title: Đặt tên lớp, thuộc tính và phương thức
-  description: Dùng naming convention Java, tên mang đơn vị và method thể hiện query/command; xét khả năng tương thích khi
-    rename framework/public API.
+  description: Dùng naming convention Java, tên mang đơn vị và method thể hiện query/command; xét khả năng tương thích khi rename framework/public API.
   transition:
     to: class-design-006
     description: '**Từ tên API nói đúng trách nhiệm → phân loại đối tượng theo danh tính, giá trị và hành vi phối hợp**'
 - id: class-design-006
   order: 6
   title: Đối tượng thực thể, đối tượng giá trị và dịch vụ
-  description: Nhận diện Account theo UUID, Money theo giá trị và TransferService theo phối hợp hai tài khoản, phân biệt miền
-    với annotation JPA/Spring.
+  description: Nhận diện Account theo UUID, Money theo giá trị và TransferService theo phối hợp hai tài khoản, phân biệt miền với annotation JPA/Spring.
   transition:
     to: class-design-007
     description: '**Từ ba vai trò entity/value/service → quyết định hành vi nào ở gần dữ liệu cần bảo vệ**'
 - id: class-design-007
   order: 7
   title: Mô hình giàu hành vi và mô hình chỉ chứa dữ liệu
-  description: So sánh Order có addItem/confirm với OrderData chứa setter; chọn DTO/projection khi không có state transition
-    phức tạp.
+  description: So sánh Order có addItem/confirm với OrderData chứa setter; chọn DTO/projection khi không có state transition phức tạp.
   transition:
     to: class-design-008
     description: '**Từ lựa chọn mô hình và nơi giữ invariant → thiết kế rõ ý định đọc và thao tác thay đổi trạng thái**'
@@ -69,8 +62,7 @@ roadmap:
 - id: class-design-009
   order: 9
   title: Giới hạn việc truy cập sâu vào chuỗi đối tượng
-  description: |-
-    Áp dụng Law of Demeter và Tell, don't ask; Loan yêu cầu tính phí qua cộng tác viên gần thay vì service tự đi qua Member/Plan.
+  description: Áp dụng Law of Demeter và Tell, don't ask; Loan yêu cầu tính phí qua cộng tác viên gần thay vì service tự đi qua Member/Plan.
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

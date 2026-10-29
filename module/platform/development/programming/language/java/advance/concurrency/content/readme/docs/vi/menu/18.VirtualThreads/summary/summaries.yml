@@ -1,0 +1,523 @@
+summaries:
+- id: virtual-threads-001
+  title: Virtual thread trong Java 21 và mục tiêu thiết kế
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Virtual thread trong Java 21 và mục tiêu thiết kế**
+
+    Virtual threads từ Java 21 đáp ứng nhiều tác vụ chờ I/O mà không giữ riêng OS thread trong suốt vòng đời. Bài giới thiệu carrier, API khởi chạy, thread-per-task và giới hạn tài nguyên thực.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bài toán I/O và carrier
+
+    1. Vì sao pool OS threads có thể nghẽn khi nhiều tác vụ cùng chờ I/O?
+    2. Virtual thread unmount khỏi carrier ở những điểm chờ phù hợp như thế nào?
+
+    ### API và giới hạn
+
+    1. Tạo virtual thread trên Java 21 bằng các API nào?
+    2. Vì sao phải giới hạn kết nối và request dù virtual threads nhẹ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Vẽ mount/unmount của tác vụ I/O và nêu giới hạn CPU. |
+    | Tạo virtual thread | Chạy ví dụ start/join trên JDK 21 và giải thích kết quả. |
+- id: virtual-threads-002
+  title: Khác biệt virtual thread với platform thread
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khác biệt virtual thread với platform thread**
+
+    Platform threads thường gắn với OS threads còn virtual threads do JVM mount lên carrier khi cần thực thi. Bài so sánh bộ nhớ, scheduling, blocking I/O, CPU-bound workload và lựa chọn đúng môi trường.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khác biệt mô hình
+
+    1. Platform thread và virtual thread khác nhau ở mức OS/carrier ra sao?
+    2. Khi một platform pool chờ I/O, tại sao hàng đợi task tăng?
+
+    ### So sánh theo workload
+
+    1. Virtual threads có tự tăng CPU parallelism không?
+    2. Số liệu nào giúp quyết định fixed platform pool hay virtual executor?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh tài nguyên | Lập bảng platform/virtual về OS thread, I/O waiting và lifecycle. |
+    | Đánh giá ứng dụng | Giải thích lựa chọn executor khi có tác vụ CPU hay blocking I/O. |
+- id: virtual-threads-003
+  title: Tạo luồng bằng Thread.ofVirtual() và startVirtualThread()
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tạo luồng bằng Thread.ofVirtual() và startVirtualThread()**
+
+    Thread.ofVirtual() và Thread.startVirtualThread() hỗ trợ tạo virtual thread qua builder hoặc khởi chạy ngay. Bài làm rõ ThreadFactory, đặt tên, start/join, interrupt và xử lý lỗi Runnable.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Builder và lifecycle
+
+    1. startVirtualThread khác ofVirtual().unstarted ở thời điểm khởi chạy nào?
+    2. Làm sao đặt tên và xác minh isVirtual() của thread?
+
+    ### Exception và cancellation
+
+    1. Tạo Thread chưa start rồi join sẽ có vấn đề gì?
+    2. Khi interrupt một virtual thread blocking, task cần xử lý thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thực hành Thread API | Tạo, đặt tên, start và join virtual threads bằng JDK 21. |
+    | Quản lý lỗi | Dự đoán Runnable thất bại, interrupt và trạng thái kết thúc. |
+- id: virtual-threads-004
+  title: newVirtualThreadPerTaskExecutor()
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **newVirtualThreadPerTaskExecutor()**
+
+    Executors.newVirtualThreadPerTaskExecutor() tạo một virtual thread mới cho từng task. Bài thực hành Callable/Future, result aggregation, close executor, timeout và giới hạn downstream bằng Semaphore.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Executor và kết quả
+
+    1. newVirtualThreadPerTaskExecutor có tái sử dụng worker thread như fixed pool không?
+    2. Future.get giúp thu lỗi và kết quả ra sao?
+
+    ### Lifecycle và resource limits
+
+    1. ExecutorService.close có thay thế timeout/cancel của task không?
+    2. Semaphore bảo vệ dịch vụ phụ thuộc như thế nào khi submit nhiều virtual tasks?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xử lý Future | Triển khai các Callable, get kết quả và bắt ExecutionException. |
+    | Bảo vệ tài nguyên | Đặt timeout, đóng executor và release permit trong finally. |
+- id: virtual-threads-005
+  title: Thread-per-request cho I/O blocking
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thread-per-request cho I/O blocking**
+
+    Thread-per-request cho phép xử lý mỗi yêu cầu I/O blocking trong một virtual thread mà vẫn giữ code tuần tự. Bài minh họa TCP server/client, socket ownership, timeout, lỗi và đo hiệu năng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Luồng xử lý request
+
+    1. Platform pool phải xếp hàng ra sao khi các request đều đang block?
+    2. Virtual threads đang chờ socket giải phóng carrier thế nào?
+
+    ### Đúng đắn và tài nguyên
+
+    1. Socket, executor và kết nối phải được đóng tại ranh giới nào?
+    2. Thread per request có loại bỏ giới hạn file descriptor và service capacity không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây ví dụ TCP | Chạy server/client chặn I/O với virtual threads và nhận kết quả. |
+    | Quản trị lifecycle | Theo dõi timeout, interruption và đóng socket đầy đủ. |
+- id: virtual-threads-006
+  title: Carrier threads và scheduling của JVM
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Carrier threads và scheduling của JVM**
+
+    JVM mount virtual threads lên platform carrier threads, park/unmount khi chờ hợp lệ và remount khi có thể chạy tiếp. Bài phân tích scheduler parallelism, pinning và quan sát blocked/runnable tasks.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế scheduling
+
+    1. Virtual thread khác carrier ở trách nhiệm và vòng đời như thế nào?
+    2. Park/unmount/remount xảy ra khi I/O hoặc sleep được hỗ trợ thế nào?
+
+    ### Chẩn đoán pinning
+
+    1. Số carrier và số virtual threads phản ánh CPU parallelism khác nhau ra sao?
+    2. Dấu hiệu nào phân biệt waiting bình thường với carrier bị pinned?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích luồng JVM | Vẽ lifecycle mount–unmount–reschedule qua một ví dụ blocking. |
+    | Quan sát scheduling | Đọc thread dump/JFR và phân biệt waiting với pinning. |
+- id: virtual-threads-007
+  title: Vì sao không pool virtual threads?
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vì sao không pool virtual threads?**
+
+    Không nên pool virtual threads như các platform workers: vòng đời phù hợp là một task một virtual thread. Bài nêu anti-pattern fixed virtual pool, per-task executor, semaphore, admission control và backpressure.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vì sao không pool
+
+    1. Vì sao tái sử dụng platform worker giúp giảm chi phí nhưng pool virtual worker thường không cần?
+    2. JVM tái sử dụng carrier threads như thế nào?
+
+    ### Giới hạn đúng chỗ
+
+    1. Semaphore giới hạn số I/O in-flight khác giới hạn số tasks pending ra sao?
+    2. Làm cách nào chống backlog vô hạn khi quá nhiều request đến?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện anti-pattern | Chỉ ra fixed virtual worker queue làm giảm concurrency. |
+    | Thiết kế limiter | Dùng virtual per task kèm Semaphore hoặc bounded admission. |
+- id: virtual-threads-008
+  title: Giới hạn tài nguyên ngoài bằng Semaphore/pool kết nối
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn tài nguyên ngoài bằng Semaphore/pool kết nối**
+
+    Semaphore giới hạn số task đang dùng một tài nguyên, còn connection pool giới hạn các kết nối vật lý có sẵn. Bài thực hành timeout, interruption, release trong finally, sizing và đo backlog.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giới hạn in-flight
+
+    1. Semaphore và connection pool giới hạn những thứ khác nhau nào?
+    2. Tại sao chỉ release permit đã acquire thành công?
+
+    ### Timeout và bảo toàn permit
+
+    1. Virtual threads đợi permit có thể tích tụ memory/queue thế nào?
+    2. Lựa chọn thời hạn chờ và số permit dựa vào capacity thật như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết resource limiter | Dùng acquire/release an toàn và xử lý interrupted waiting. |
+    | Đo tải thực | Đề xuất metrics in-flight, waiting, failed để chọn pool size. |
+- id: virtual-threads-009
+  title: Pinning với monitor/native code ở Java 21
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Pinning với monitor/native code ở Java 21**
+
+    Trên JDK 21–23, virtual threads blocking khi giữ monitor hoặc đi qua native frame có thể pin carrier. Bài phân biệt pinning với waiting bình thường, dùng JFR/trace và sửa điểm blocking đúng nguyên nhân.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Pinning và JDK version
+
+    1. Pinning khác virtual thread unmounted khi blocking ở đâu?
+    2. JDK21 có những dạng synchronized/native pinning nào?
+
+    ### Chẩn đoán và sửa lỗi
+
+    1. JFR event duration và call stack giúp xác định điểm nghẽn như thế nào?
+    2. Khi nào cần rút ngắn vùng synchronized hay chuyển sang ReentrantLock?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích carrier pinning | Nhận diện đoạn block giữ carrier và hệ quả throughput. |
+    | Chứng minh bằng công cụ | Thu JFR/stack và nêu sửa đổi đúng điểm nghẽn. |
+- id: virtual-threads-010
+  title: ThreadLocal và chi phí dữ liệu theo từng virtual thread
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ThreadLocal và chi phí dữ liệu theo từng virtual thread**
+
+    Mỗi virtual thread có ThreadLocal riêng; tạo task liên tục có thể làm cache per-thread phải khởi tạo lại nhiều lần. Bài xem chi phí heap/GC, cleanup, InheritableThreadLocal và context propagation.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cache theo thread
+
+    1. Cache ThreadLocal khác nhau thế nào giữa fixed worker pool và virtual per task?
+    2. Vì sao nhiều cache/thread gây chi phí memory dù virtual threads nhẹ?
+
+    ### Cleanup và context
+
+    1. ThreadLocal.remove cần được dùng ở ranh giới nào?
+    2. Khi nào dùng truyền tham số/ScopedValue thay cho ThreadLocal?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích chi phí bộ nhớ | So sánh số lần khởi tạo cache giữa hai mô hình. |
+    | Thiết kế context an toàn | Chọn cleanup và phương thức truyền dữ liệu theo JDK. |
+- id: virtual-threads-011
+  title: CPU-bound workload không tự nhanh hơn nhờ virtual threads
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CPU-bound workload không tự nhanh hơn nhờ virtual threads**
+
+    Virtual threads tăng scalability cho I/O waiting, nhưng CPU-bound workload vẫn bị giới hạn bởi số core và phần code tuần tự. Bài thực hành benchmark, work partitioning và chọn executor theo workload.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### CPU parallelism
+
+    1. Vì sao tạo thêm virtual threads không làm tăng số lõi CPU?
+    2. Runnable tasks vượt core count gây contention ra sao?
+
+    ### Benchmark chính xác
+
+    1. Benchmark một lần có đủ để tuyên bố virtual threads nhanh hơn cho CPU không?
+    2. Chọn số CPU workers theo giới hạn thực tế bằng cách nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chẩn đoán workload | Phân loại CPU-bound so với blocking I/O trong ví dụ. |
+    | Đánh giá benchmark | Chạy cùng kết quả, warmup và so throughput đa lượt. |
+- id: virtual-threads-012
+  title: Chẩn đoán bằng thread dump và Java Flight Recorder
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chẩn đoán bằng thread dump và Java Flight Recorder**
+
+    Thread dump có virtual threads và Java Flight Recorder giúp quan sát waiting, pinning, contention, CPU saturation và lỗi submit. Bài thực hành jcmd, lấy recording và diễn giải event theo JDK.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thread dump
+
+    1. Vì sao dump kiểu platform thread có thể bỏ sót virtual threads?
+    2. Đọc stack virtual thread đang parked cần nhìn những thông tin nào?
+
+    ### JFR và bằng chứng
+
+    1. VirtualThreadPinned và VirtualThreadSubmitFailed khác nhau ra sao?
+    2. Không có event pinning có đủ chứng minh không có vấn đề không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thu dữ liệu JVM | Tạo dump virtual threads và recording đúng PID. |
+    | Điều tra nguyên nhân | Đối chiếu JFR, stack, timing và metrics cùng workload. |
+- id: virtual-threads-013
+  title: 'Structured Concurrency (preview ở Java 21): vai trò và giới hạn'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Structured Concurrency (preview ở Java 21): vai trò và giới hạn**
+
+    Structured Concurrency trong Java 21 là preview API quản lý nhiều subtasks dưới một scope, với fork/join/close và chính sách failure/success. Bài chỉ rõ cờ preview và giới hạn cancellation giữa các bản JDK.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Scope và chính sách
+
+    1. StructuredTaskScope gắn vòng đời subtasks với chủ sở hữu thế nào?
+    2. ShutdownOnFailure và ShutdownOnSuccess phục vụ hai yêu cầu kết quả nào?
+
+    ### Preview và cancellation
+
+    1. JDK21 cần cờ nào để compile/run preview API?
+    2. Scope shutdown có bảo đảm hủy I/O và side effect tức thời không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Triển khai scope | Viết ví dụ fork/join và xử lý kết quả Java21 preview. |
+    | Kiểm tra vòng đời | Dự đoán failure, timeout, close và ảnh hưởng interrupt. |
+- id: virtual-threads-014
+  title: Thread.ofVirtual().unstarted(), ThreadFactory và vòng đời khởi chạy
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thread.ofVirtual().unstarted(), ThreadFactory và vòng đời khởi chạy**
+
+    Thread.ofVirtual().unstarted() tạo Thread ở trạng thái NEW; ThreadFactory tạo đối tượng thread nhưng không tự start. Bài so sánh builder, factory, executor, join, interrupt và ngoại lệ Runnable.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Factory và unstarted
+
+    1. unstarted khác start ở trạng thái thread nào?
+    2. ThreadFactory.newThread tự khởi chạy thread không?
+
+    ### Lifecycle và exception
+
+    1. join timeout và interrupt ảnh hưởng vòng đời thế nào?
+    2. Khi nào truyền ThreadFactory vào executor thay cho start thủ công?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo thread có chủ đích | Chạy ví dụ NEW→RUNNABLE→TERMINATED và chờ hoàn tất. |
+    | Chọn factory và executor | Đặt tên Thread và giải thích nơi thu ngoại lệ. |
+- id: virtual-threads-015
+  title: 'JDK 21 so với JDK 24+: synchronized thông thường không còn gây pinning kiểu cũ'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **JDK 21 so với JDK 24+: synchronized thông thường không còn gây pinning kiểu cũ**
+
+    JDK24 với JEP491 thay đổi monitor synchronization để virtual threads có thể nhường carrier trong blocking monitor paths, khác JDK21–23. Bài giải thích synchronized, Object.wait và các trường hợp pinning còn lại.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### JDK21 so với JDK24
+
+    1. JDK21 pin carrier khi virtual thread block trong synchronized như thế nào?
+    2. JEP491 tại JDK24 thay đổi chờ monitor nhưng giữ mutual exclusion ra sao?
+
+    ### Giới hạn sau JEP491
+
+    1. Vì sao monitor contention vẫn còn sau thay đổi?
+    2. JDK24+ vẫn cần quan sát native/foreign pinning như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh hành vi monitor | Dự đoán việc giải phóng carrier ở hai phiên bản JDK. |
+    | Đánh giá vận hành | Dùng JFR để quyết định giữ synchronized hoặc refactor. |
+- id: virtual-threads-016
+  title: 'Native method và foreign function: các trường hợp pinning còn phải đánh giá'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Native method và foreign function: các trường hợp pinning còn phải đánh giá**
+
+    JNI và Foreign Function & Memory API có thể giữ carrier khi thực thi lời gọi native blocking; JEP491 không xóa toàn bộ rủi ro này. Bài hướng dẫn audit, demo FFM trên Linux/JDK25+ và offload bounded platform executor.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### JNI/FFM boundary
+
+    1. Vì sao native/FFM downcall blocking có thể giữ carrier?
+    2. Native call rất ngắn có phải bottleneck cần sửa không?
+
+    ### Giảm carrier blocking
+
+    1. JEP491 có loại bỏ pinning do JNI và foreign frame không?
+    2. Khi nào nên chọn async native API hoặc offload bounded platform threads?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Audit native dependency | Chỉ ra điểm blocking native và giới hạn ABI/version của demo. |
+    | Đề xuất offload | Chọn bounded executor, timeout và metrics theo thực tế. |
+- id: virtual-threads-017
+  title: JFR VirtualThreadPinned, VirtualThreadSubmitFailed và ngưỡng ghi sự kiện
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **JFR VirtualThreadPinned, VirtualThreadSubmitFailed và ngưỡng ghi sự kiện**
+
+    JFR phân biệt VirtualThreadPinned với VirtualThreadSubmitFailed; threshold mặc định có thể không ghi pinning ngắn. Bài hướng dẫn JFC, Recording API, schema, duration và stack trace theo JDK.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Event semantics
+
+    1. VirtualThreadPinned và VirtualThreadSubmitFailed khác nhau ở ý nghĩa gì?
+    2. Threshold 20ms có thể bỏ qua những sự kiện nào?
+
+    ### Threshold và điều tra
+
+    1. Làm sao bật/tùy chỉnh event bằng JFR settings/JFC?
+    2. Vắng event có đồng nghĩa chương trình hoàn toàn không pinning không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình JFR | Điều chỉnh threshold và đọc sự kiện có stack. |
+    | Chẩn đoán theo event | Giải thích duration, pinning và submit failures dựa dữ liệu. |
+- id: virtual-threads-018
+  title: Giới hạn ThreadMXBean và cách dùng jcmd Thread.dump_to_file cho virtual threads
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn ThreadMXBean và cách dùng jcmd Thread.dump_to_file cho virtual threads**
+
+    ThreadMXBean chủ yếu phản ánh platform threads nên không thể dùng một số đếm đó cho tất cả virtual threads. Bài thực hành jcmd Thread.dump_to_file, JSON/text, so với Thread.print và kết hợp JFR/metrics.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giới hạn ThreadMXBean
+
+    1. Vì sao ThreadMXBean.getThreadCount không biểu diễn tổng virtual threads?
+    2. Thread.dump_to_file khác Thread.print hoặc jstack ở điểm nào?
+
+    ### jcmd và dữ liệu bổ sung
+
+    1. Làm sao chạy jcmd đúng PID, format và quyền truy cập?
+    2. Vì sao một snapshot dump chưa chứng minh starvation hay throughput?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thu dump có virtual threads | Tạo JSON/text dump và kiểm tra stack đang chờ. |
+    | Phân tích công cụ | Kết hợp dump, JFR và metrics để đưa ra chẩn đoán. |

@@ -13,8 +13,7 @@ roadmap:
 - id: modeling-002
   order: 2
   title: Nhận diện đối tượng từ yêu cầu
-  description: Từ mô tả thư viện nhận diện entity, value object, policy và service; tách đối tượng theo danh tính, trách nhiệm,
-    vòng đời.
+  description: Từ mô tả thư viện nhận diện entity, value object, policy và service; tách đối tượng theo danh tính, trách nhiệm, vòng đời.
   transition:
     to: modeling-003
     description: '**Từ danh sách đối tượng ứng viên → xác định chủ sở hữu của mỗi invariant và những người cộng tác**'
@@ -63,8 +62,7 @@ roadmap:
 - id: modeling-009
   order: 9
   title: Đối chiếu mô hình với mã và tình huống thực tế
-  description: |-
-    Đối chiếu yêu cầu, mô hình, Java, test và dữ liệu chạy; bảo đảm business rule tiếp tục đúng khi đổi mã hoặc môi trường.
+  description: Đối chiếu yêu cầu, mô hình, Java, test và dữ liệu chạy; bảo đảm business rule tiếp tục đúng khi đổi mã hoặc môi trường.
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

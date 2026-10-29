@@ -1,0 +1,407 @@
+summaries:
+- id: testing-and-diagnostics-001
+  title: Test tính đúng đắn khi nhiều tác vụ cùng truy cập state
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Test tính đúng đắn khi nhiều tác vụ cùng truy cập state**
+
+    Bài mở đầu xây dựng oracle cho tính đúng đắn của concurrent state, phân biệt safety với liveness và đo atomicity, visibility, ordering. Những ví dụ lost update và bất biến nhiều trường cho thấy vì sao chạy nhiều thread mà không nêu expected outcome không phải một phép kiểm thử.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cách hoạt động
+
+    1. Safety và liveness khác nhau ra sao khi nhiều worker cập nhật cùng state?
+    2. Vì sao kết quả cuối của một counter không đủ chứng minh bất biến nhiều trường luôn được giữ?
+
+    ### Ứng dụng và kiểm chứng
+
+    1. Bạn dùng CountDownLatch và Future.get để dàn dựng rồi kiểm tra một lịch mất cập nhật như thế nào?
+    2. Làm sao viết oracle chấp nhận các lịch hợp lệ mà vẫn bác bỏ kết quả vi phạm linearizability?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết lập oracle | Định nghĩa invariant, kết quả hợp lệ và điều kiện hoàn tất trước khi tạo thử nghiệm đồng thời |
+    | Kiểm tra shared state | Tái hiện lịch tranh chấp và giải thích sự khác biệt giữa atomicity, visibility và ordering |
+- id: testing-and-diagnostics-002
+  title: Tái hiện race condition với latch/barrier
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tái hiện race condition với latch/barrier**
+
+    Bài tập tập trung vào CountDownLatch và CyclicBarrier để cưỡng bức hai worker đọc cùng trạng thái trước khi ghi, rồi so sánh counter thường với giải pháp nguyên tử. Người học phân biệt race, data race, check-then-act và bảo đảm test không treo khi lỗi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cách hoạt động
+
+    1. CountDownLatch khác CyclicBarrier ở cấu trúc cổng chờ và tái sử dụng như thế nào?
+    2. Vì sao chỉ cho hai task xuất phát cùng lúc chưa chắc tạo được lost update?
+
+    ### Ứng dụng và kiểm chứng
+
+    1. Bạn bố trí read phase và write phase ra sao để tái hiện race, rồi kiểm chứng với AtomicInteger?
+    2. Một test latch/barrier cần timeout, đủ worker và cleanup nào để không deadlock CI?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Điều phối interleaving | Dùng latch/barrier để tạo lịch đọc–ghi có thể tái lập và bắt lost update |
+    | Xác minh bản sửa | Đổi cơ chế nguyên tử và chứng minh lịch cũ không còn vi phạm invariant |
+- id: testing-and-diagnostics-003
+  title: Không dùng Thread.sleep() thay cho điều kiện đồng bộ trong test
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không dùng Thread.sleep() thay cho điều kiện đồng bộ trong test**
+
+    Bài này chuyển các test dựa trên Thread.sleep sang chờ sự kiện bằng latch, Future, barrier hoặc BlockingQueue. Người học xác nhận worker tới đúng checkpoint, phân biệt việc đã xảy ra với việc chưa được phép xảy ra, và loại bỏ phụ thuộc tốc độ máy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cách hoạt động
+
+    1. Thread.sleep sau executor.submit có chứng minh worker đã bắt đầu hoặc đã kết thúc không?
+    2. Khi nào nên chọn CountDownLatch, Future.get, CyclicBarrier hoặc BlockingQueue thay vì sleep?
+
+    ### Ứng dụng và kiểm chứng
+
+    1. Bạn viết test worker chờ gate mà vẫn xác minh state chưa bị cập nhật như thế nào?
+    2. Làm sao dùng deadline và cleanup để test không treo khi tín hiệu mong đợi không tới?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thay sleep bằng đồng bộ | Chọn primitive chờ phù hợp với điều kiện đã bắt đầu, hoàn tất hoặc có dữ liệu |
+    | Loại bỏ flaky timing | Thiết kế checkpoint và timeout để test ổn định dưới tải CI khác nhau |
+- id: testing-and-diagnostics-004
+  title: Test timeout, interruption và cancellation
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Test timeout, interruption và cancellation**
+
+    Bài này tách ba tín hiệu dễ bị nhầm: timeout ở nơi chờ, interruption ở thread và cancellation ở Future. Các tình huống Java 17 kiểm tra task queued, running, interruptible và không hợp tác với interrupt mà không đồng nhất hủy với rollback.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cách hoạt động
+
+    1. Future.get(timeout) có tự hủy task hoặc gửi interrupt không?
+    2. Thread.interrupted và isInterrupted khác nhau ở tác động lên interrupt flag thế nào?
+
+    ### Ứng dụng và kiểm chứng
+
+    1. Bạn tạo test chứng minh cancel(true) khiến task chờ interruptible phản hồi ra sao?
+    2. Khi cancellation xảy ra sát completion, những trạng thái nào phải được chấp nhận và kiểm tra?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại tín hiệu | Giải thích caller timeout, Future.isCancelled và trạng thái worker một cách độc lập |
+    | Kiểm thử cancellation | Dùng latch và chờ có hạn để xác nhận interruption, cleanup và đường hoàn tất cạnh tranh |
+- id: testing-and-diagnostics-005
+  title: Test shutdown khi task đang chờ hoặc đang chạy
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Test shutdown khi task đang chờ hoặc đang chạy**
+
+    Bài này tạo bài test shutdown với một worker đang block và task khác trong queue. Người học phân biệt isShutdown với isTerminated, kiểm tra graceful/forced shutdown và tránh kết luận sai rằng interrupt tức thì dừng task.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cách hoạt động
+
+    1. shutdown khác shutdownNow ở cách đối xử với task đang chạy và task đã xếp hàng thế nào?
+    2. Vì sao isShutdown() không chứng minh pool đã terminated?
+
+    ### Ứng dụng và kiểm chứng
+
+    1. Bạn bố trí single-thread executor và latch để kiểm thử task queued khi gọi shutdownNow ra sao?
+    2. Nếu task phớt lờ interrupt, test phải báo force-timeout và giữ cleanup an toàn thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm thử lifecycle | Tái hiện trạng thái running/queued trước shutdown rồi xác minh từng nhánh completion |
+    | Đánh giá escalation | Phân biệt requested shutdown, cancelled Future và actual termination trong assertion |
+- id: testing-and-diagnostics-006
+  title: Kiểm tra invariant và lỗi mất dữ liệu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra invariant và lỗi mất dữ liệu**
+
+    Bài này phát triển kiểm thử invariant từ counter mất cập nhật sang pipeline producer–consumer có ID riêng, tập dữ liệu accepted/processed và trạng thái nhiều trường. Người học tính expected outcome rõ ràng kể cả khi task thất bại, retry hoặc cancel.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cách hoạt động
+
+    1. Vì sao tổng số output đúng vẫn có thể che việc một ID bị mất và một ID khác bị xử lý trùng?
+    2. Một invariant trên hai biến cần được quan sát dưới hình thức snapshot như thế nào để tránh hiểu lầm?
+
+    ### Ứng dụng và kiểm chứng
+
+    1. Bạn dùng tập ID nguồn và đầu ra để xác minh không mất hoặc trùng bản ghi trong producer–consumer ra sao?
+    2. Những đường exception, retry và cancellation nào phải được đưa vào oracle của data-loss test?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định nghĩa invariant dữ liệu | Thiết lập điều kiện conservation, uniqueness và consistency từ input accepted |
+    | Xây test pipeline | Dùng ID, bộ đếm và điểm hoàn tất để chỉ ra missing/duplicate và phân tích kết quả bất thường |
+- id: testing-and-diagnostics-007
+  title: Kiểm tra contention/stress với jcstress (công cụ ngoài JDK)
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra contention/stress với jcstress (công cụ ngoài JDK)**
+
+    Bài chuyên sâu giới thiệu jcstress là công cụ ngoài JDK, cách tạo dự án harness và mô tả actor/arbiter cùng outcome ACCEPTABLE, ACCEPTABLE_INTERESTING, FORBIDDEN. Ví dụ lost update và publication giúp người học đọc báo cáo mà không suy diễn kết quả chưa xuất hiện là bất khả thi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cách hoạt động
+
+    1. @Actor, @Arbiter và @Outcome tham gia cấu trúc một jcstress test thế nào?
+    2. Vì sao không thấy FORBIDDEN trong một lần chạy không chứng minh mọi execution đều an toàn?
+
+    ### Ứng dụng và kiểm chứng
+
+    1. Bạn khai báo outcome cho hai actor cùng increment một biến thường so với AtomicInteger ra sao?
+    2. Khi đọc kết quả visibility, làm sao phân biệt hành vi được JMM cho phép với lỗi của test harness?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế jcstress scenario | Xác định state, actor, arbiter và outcome gắn với invariant thực |
+    | Diễn giải stress evidence | Phân loại outcome và chỉ ra giới hạn mẫu chạy/JDK/hardware |
+- id: testing-and-diagnostics-008
+  title: Thread dump và nhận diện RUNNABLE/BLOCKED/WAITING
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thread dump và nhận diện RUNNABLE/BLOCKED/WAITING**
+
+    Bài này dạy cách đọc ảnh chụp thread dump: các Thread.State, call stack, monitor và wait owner. Người học tránh nhầm RUNNABLE với CPU busy hay WAITING với deadlock, và đối chiếu nhiều snapshot cùng số liệu CPU/JFR.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cách hoạt động
+
+    1. Java RUNNABLE có luôn tiêu thụ CPU thực tế không và WAITING có luôn là deadlock không?
+    2. Làm sao dùng stack frame, monitor owner và wait condition để phân biệt BLOCKED với WAITING?
+
+    ### Ứng dụng và kiểm chứng
+
+    1. Khi thấy nhiều executor worker đang WAITING, bạn kiểm tra queue và tiến độ theo thời gian như thế nào?
+    2. Bạn giải thích kết quả của ba thread dumps liên tiếp để nhận diện contention hoặc starvation ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc thread state | Chỉ ra frame chờ, loại lock và owner từ một thread dump mẫu |
+    | Lập giả thuyết sự cố | Phối hợp nhiều snapshot và CPU/throughput để phân loại trạng thái bình thường hay tắc nghẽn |
+- id: testing-and-diagnostics-009
+  title: jcmd Thread.print, jstack và ThreadMXBean
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **jcmd Thread.print, jstack và ThreadMXBean**
+
+    Bài thực hành hướng dẫn xác định PID, lấy dump với jcmd Thread.print và jstack rồi đọc ThreadInfo qua ThreadMXBean. Người học so sánh tác vụ CLI và API trong tiến trình, chẩn đoán deadlock/contention và lưu ý về quyền, phiên bản JDK.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cách hoạt động
+
+    1. jcmd Thread.print và jstack -l cung cấp những loại thông tin nào, giới hạn phụ thuộc JDK nào?
+    2. ThreadMXBean và ThreadInfo bổ sung bằng chứng lock owner hoặc CPU time bằng cách nào?
+
+    ### Ứng dụng và kiểm chứng
+
+    1. Bạn sẽ thu nhiều snapshot cho đúng PID ra sao để theo dõi ứng dụng bị treo?
+    2. Khi đối chiếu stack dump với ThreadMXBean, bạn cần lưu ý điều gì về virtual threads và quyền truy cập JVM?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thu thập thread evidence | Lập trình tự xác định PID, chạy jcmd/jstack và lưu snapshot có timestamp |
+    | Phân tích bằng ThreadMXBean | Truy xuất trạng thái và lock owner, rồi so sánh với thread dump ngoài tiến trình |
+- id: testing-and-diagnostics-010
+  title: Phân tích deadlock với ThreadMXBean
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân tích deadlock với ThreadMXBean**
+
+    Bài này chuyên sâu vào findMonitorDeadlockedThreads/findDeadlockedThreads và ThreadInfo để phát hiện chu trình lock. Ví dụ hai monitor với CountDownLatch dẫn đến deadlock có kiểm soát, rồi phân tích khác biệt synchronized và ownable synchronizer.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cách hoạt động
+
+    1. findMonitorDeadlockedThreads khác findDeadlockedThreads ở phạm vi monitor và ownable synchronizer như thế nào?
+    2. Vì sao nhiều BLOCKED không đủ kết luận có deadlock nếu vẫn có thread giữ lock đang tiến triển?
+
+    ### Ứng dụng và kiểm chứng
+
+    1. Bạn dựng đồ thị thread→lock→owner từ ThreadInfo để xác nhận chu trình chờ ra sao?
+    2. Nếu áp dụng lock ordering thống nhất, test hồi quy cần kiểm chứng liveness thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện deadlock | Dùng ThreadMXBean định vị ID, lock owner và chu trình hai thread |
+    | Sửa trật tự lock | Đề xuất lock ordering, mô phỏng trước/sau và kiểm tra tiến triển |
+- id: testing-and-diagnostics-011
+  title: Java Flight Recorder cho thread park, lock và allocation
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Java Flight Recorder cho thread park, lock và allocation**
+
+    Bài chuyên sâu sử dụng Java Flight Recorder để xem thread park, monitor enter, monitor wait và allocation events. Người học tạo recording Java 17, thu file .jfr cho JVM đang chạy và phân tích threshold, sampling, stack trace cùng overhead.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cách hoạt động
+
+    1. jdk.ThreadPark, jdk.JavaMonitorEnter và jdk.JavaMonitorWait mô tả những nguyên nhân chờ khác nhau nào?
+    2. Threshold và sampling ảnh hưởng thế nào đến việc một sự kiện xuất hiện trong recording?
+
+    ### Ứng dụng và kiểm chứng
+
+    1. Bạn tạo một recording có thời gian giới hạn và đối chiếu event với stack trace/call path ra sao?
+    2. Nếu có nhiều ThreadPark dài, dữ liệu nào cần kiểm tra thêm trước khi kết luận deadlock?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn JFR event | Liên hệ biểu hiện park, monitor enter, wait và allocation với đúng loại sự kiện |
+    | Phân tích recording | Đối chiếu timestamp, duration, stack và threshold để phát biểu giả thuyết có kiểm chứng |
+- id: testing-and-diagnostics-012
+  title: Đọc stack trace khi future và async stage lỗi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đọc stack trace khi future và async stage lỗi**
+
+    Bài này phân tích đường đi của exception qua Future.get, CompletableFuture.join/get, CompletionException và ExecutionException. Người học dùng stack trace Caused by, stage breadcrumbs và tập hợp kết quả nhiều Future để tránh nuốt lỗi hoặc nhầm timeout/cancel với task failure.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cách hoạt động
+
+    1. ExecutionException và CompletionException xuất hiện ở ranh giới quan sát Future khác nhau thế nào?
+    2. Khi nhìn nhiều Caused by, bạn truy về throw site của stage lỗi ra sao?
+
+    ### Ứng dụng và kiểm chứng
+
+    1. Bạn thêm stage name và correlation ID để xác định lỗi trong pipeline bất đồng bộ như thế nào?
+    2. Vì sao exceptionally chỉ để log có thể vô tình biến failure thành success và kiểm thử điều đó ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc causal chain | Tách wrapper exception, root cause và observer frame khi gặp get/join |
+    | Chẩn đoán async pipeline | Bổ sung breadcrumb stage, kiểm tra nhiều Future và giữ nguyên tín hiệu lỗi |
+- id: testing-and-diagnostics-013
+  title: Log có thread name, task ID và correlation ID
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Log có thread name, task ID và correlation ID**
+
+    Bài này phân biệt thread name, task ID và correlation ID, đưa context qua ranh giới ExecutorService bằng ThreadLocal snapshot/restore và cảnh báo về async appender. Người học tổ chức structured log, kiểm tra worker reuse và tránh log injection/cross-tenant leak.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cách hoạt động
+
+    1. Thread name, logical task ID và correlation ID trả lời ba câu hỏi khác nhau nào?
+    2. Vì sao ThreadLocal không tự truyền context khi task đổi executor worker?
+
+    ### Ứng dụng và kiểm chứng
+
+    1. Bạn viết wrapper capture/restore context với try/finally để task kế tiếp không nhận ID cũ ra sao?
+    2. Khi log async, phải chụp metadata lúc nào và kiểm thử lỗi thiếu correlation ID thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế log context | Quy định task/correlation/attempt IDs và trường structured log an toàn |
+    | Kiểm thử propagation | Chứng minh ba task trên một worker không bị lẫn ThreadLocal qua boundary và lỗi |
+- id: testing-and-diagnostics-014
+  title: Xác định nguyên nhân trước khi tinh chỉnh pool/lock
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Xác định nguyên nhân trước khi tinh chỉnh pool/lock**
+
+    Bài tổng kết hướng dẫn khoanh vùng bottleneck bằng queue wait, execution time, CPU, lock contention, thread dump, JFR và downstream telemetry. Người học thực hiện baseline → giả thuyết → thay đổi tối thiểu → đo lại và tránh tuning mù khiến hệ thống chậm hơn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và cách hoạt động
+
+    1. Queue dài có đủ chứng minh corePoolSize quá nhỏ không, cần bổ sung số đo nào?
+    2. Làm sao phân biệt CPU saturation, thread starvation, lock contention và downstream latency từ thread dump/JFR/metrics?
+
+    ### Ứng dụng và kiểm chứng
+
+    1. Bạn xây một thí nghiệm kiểm chứng giả thuyết tăng pool size có làm throughput cải thiện không ra sao?
+    2. Với tất cả worker chờ cùng monitor, tại sao tăng thread có thể làm tắc nghẽn nặng hơn và bạn sẽ sửa gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tìm bottleneck | Liên kết latency breakdown, queue, worker và lock evidence để chọn nguyên nhân có khả năng nhất |
+    | Kiểm chứng quyết định tuning | Lập baseline, test có đối chứng, ngưỡng rollback và tiêu chí đạt hiệu năng |

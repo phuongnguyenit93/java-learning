@@ -6,80 +6,63 @@ roadmap:
 - id: encapsulation-001
   order: 1
   title: Ẩn thông tin và ranh giới của đối tượng
-  description: Bài này giúp phân định dữ liệu và quyết định triển khai mà đối tượng cần giữ riêng với những hành vi thực sự
-    nên công khai. Qua ShoppingCart, người học thấy vì sao field private, API có ý nghĩa và snapshot an toàn phải đi cùng
-    nhau để caller không sửa giỏ hàng ngoài quy tắc.
+  description: Bài này giúp phân định dữ liệu và quyết định triển khai mà đối tượng cần giữ riêng với những hành vi thực sự nên công khai. Qua ShoppingCart, người học thấy vì sao field private, API có ý nghĩa và snapshot an toàn phải đi cùng nhau để caller không sửa giỏ hàng ngoài quy tắc.
   transition:
     to: encapsulation-002
     description: '**Từ ranh giới API → xác định những trạng thái bên trong phải được bảo vệ**'
 - id: encapsulation-002
   order: 2
   title: Điều kiện bất biến của đối tượng
-  description: Bài này định nghĩa invariant là điều kiện của một trạng thái đối tượng hợp lệ và hướng dẫn chứng minh nó đúng
-    sau khởi tạo, mỗi thao tác thành công và cả khi bị từ chối. Ví dụ StockItem kiểm soát onHand, reserved, available thông
-    qua reserve, release, ship và restock.
+  description: Bài này định nghĩa invariant là điều kiện của một trạng thái đối tượng hợp lệ và hướng dẫn chứng minh nó đúng sau khởi tạo, mỗi thao tác thành công và cả khi bị từ chối. Ví dụ StockItem kiểm soát onHand, reserved, available thông qua reserve, release, ship và restock.
   transition:
     to: encapsulation-003
     description: '**Từ quy tắc trạng thái → cơ chế ngôn ngữ giới hạn ai được truy cập và thay đổi**'
 - id: encapsulation-003
   order: 3
   title: Kiểm soát truy cập và thay đổi trạng thái
-  description: Bài này biến nguyên tắc đóng gói thành lựa chọn mức truy cập Java và các phương thức cập nhật có kiểm tra.
-    Với Wallet, người học thực hành bảo vệ số dư, lịch sử giao dịch, nhánh thiếu tiền và hiểu giới hạn giữa quyền truy cập
-    ở mức ngôn ngữ với phân quyền người dùng.
+  description: Bài này biến nguyên tắc đóng gói thành lựa chọn mức truy cập Java và các phương thức cập nhật có kiểm tra. Với Wallet, người học thực hành bảo vệ số dư, lịch sử giao dịch, nhánh thiếu tiền và hiểu giới hạn giữa quyền truy cập ở mức ngôn ngữ với phân quyền người dùng.
   transition:
     to: encapsulation-004
     description: '**Từ phạm vi truy cập → lựa chọn getter, setter và tên phương thức biểu đạt ý định**'
 - id: encapsulation-004
   order: 4
   title: Getter, setter và phương thức thể hiện ý định
-  description: Bài này giúp quyết định khi nào nên dùng getter, setter có validation, command theo nghiệp vụ hoặc value object
-    bất biến. Qua BankAccount, Profile, Booking và Money, người học xác định quyền quan sát, quyền sửa độc lập, cập nhật nhiều
-    field cùng lúc và ranh giới giữa DTO với domain model.
+  description: Bài này giúp quyết định khi nào nên dùng getter, setter có validation, command theo nghiệp vụ hoặc value object bất biến. Qua BankAccount, Profile, Booking và Money, người học xác định quyền quan sát, quyền sửa độc lập, cập nhật nhiều field cùng lúc và ranh giới giữa DTO với domain model.
   transition:
     to: encapsulation-005
     description: '**Từ thiết kế API → xác thực mọi giá trị và yêu cầu đi qua API đó**'
 - id: encapsulation-005
   order: 5
   title: Kiểm tra đầu vào tại ranh giới đối tượng
-  description: Bài này chỉ ra nơi dữ liệu đi vào trạng thái do object sở hữu và trách nhiệm kiểm tra ở constructor, factory,
-    mutator và hành vi nghiệp vụ. Các ví dụ CourseEnrollment, Reservation, Scores và CourseCode minh họa chuẩn hóa rồi validate,
-    kiểm tra quan hệ nhiều field, copy dữ liệu mutable và phân tầng validation.
+  description: Bài này chỉ ra nơi dữ liệu đi vào trạng thái do object sở hữu và trách nhiệm kiểm tra ở constructor, factory, mutator và hành vi nghiệp vụ. Các ví dụ CourseEnrollment, Reservation, Scores và CourseCode minh họa chuẩn hóa rồi validate, kiểm tra quan hệ nhiều field, copy dữ liệu mutable và phân tầng validation.
   transition:
     to: encapsulation-006
     description: '**Từ kiểm tra đầu vào → ngăn tham chiếu mutable âm thầm vượt qua điểm kiểm tra**'
 - id: encapsulation-006
   order: 6
   title: Ngăn lộ dữ liệu nội bộ có thể thay đổi
-  description: 'Bài này tập trung vào hai đường rò rỉ mutable reference: đối tượng giữ chính dữ liệu mà caller truyền vào
-    và getter trả dữ liệu nội bộ ra ngoài. Với EnrollmentBook và Attachment, người học thử sửa list và mảng từ cả hai phía,
-    rồi dùng bản sao hoặc snapshot phù hợp để giữ quyền cập nhật trong lớp.'
+  description: 'Bài này tập trung vào hai đường rò rỉ mutable reference: đối tượng giữ chính dữ liệu mà caller truyền vào và getter trả dữ liệu nội bộ ra ngoài. Với EnrollmentBook và Attachment, người học thử sửa list và mảng từ cả hai phía, rồi dùng bản sao hoặc snapshot phù hợp để giữ quyền cập nhật trong lớp.'
   transition:
     to: encapsulation-007
     description: '**Từ phát hiện rò rỉ → chọn mức sao chép và biểu diễn bất biến đúng phạm vi**'
 - id: encapsulation-007
   order: 7
   title: Sao chép phòng vệ và biểu diễn bất biến
-  description: Bài này đào sâu cách lựa chọn giữa defensive copy tại ranh giới và biểu diễn immutable. Với SafeReminder, Instant
-    và EventSnapshot, người học sao chép Date cả khi nhận/trả, chuyển phần tử AttendeeDraft thành giá trị bất biến và hiểu
-    vì sao một list chỉ đọc chưa đủ nếu phần tử vẫn mutable.
+  description: Bài này đào sâu cách lựa chọn giữa defensive copy tại ranh giới và biểu diễn immutable. Với SafeReminder, Instant và EventSnapshot, người học sao chép Date cả khi nhận/trả, chuyển phần tử AttendeeDraft thành giá trị bất biến và hiểu vì sao một list chỉ đọc chưa đủ nếu phần tử vẫn mutable.
   transition:
     to: encapsulation-008
     description: '**Từ dữ liệu được bảo vệ → đặt các quy tắc chuyển trạng thái vào hành vi đối tượng**'
 - id: encapsulation-008
   order: 8
   title: Đóng gói hành vi thay vì chỉ bao bọc dữ liệu
-  description: Bài này chuyển tư duy từ lớp chỉ chứa field và setter sang đối tượng chịu trách nhiệm cho hành động hợp lệ.
-    EncapsulatedOrderDemo minh họa Order tự kiểm tra addLine, confirm, cancel, suy ra tổng tiền từ OrderLine và bảo vệ danh
-    sách, đồng thời phân biệt trách nhiệm của entity với application service.
+  description: Bài này chuyển tư duy từ lớp chỉ chứa field và setter sang đối tượng chịu trách nhiệm cho hành động hợp lệ. EncapsulatedOrderDemo minh họa Order tự kiểm tra addLine, confirm, cancel, suy ra tổng tiền từ OrderLine và bảo vệ danh sách, đồng thời phân biệt trách nhiệm của entity với application service.
   transition:
     to: encapsulation-009
     description: '**Từ nguyên tắc đóng gói hành vi → kiểm chứng trên hai bài toán Account và Order**'
 - id: encapsulation-009
   order: 9
   title: Ví dụ bảo vệ số dư và trạng thái đơn hàng
-  description: |-
-    Bài này kết hợp các kỹ thuật đóng gói vào hai trường hợp thực hành: Account không cho số dư âm và Order chỉ chuyển trạng thái theo quy trình CREATED, PAID, SHIPPED hoặc CANCELLED. Người học kiểm tra nhánh thành công, thất bại, overflow, snapshot danh sách và giới hạn của synchronized trong bộ nhớ.
+  description: 'Bài này kết hợp các kỹ thuật đóng gói vào hai trường hợp thực hành: Account không cho số dư âm và Order chỉ chuyển trạng thái theo quy trình CREATED, PAID, SHIPPED hoặc CANCELLED. Người học kiểm tra nhánh thành công, thất bại, overflow, snapshot danh sách và giới hạn của synchronized trong bộ nhớ.'
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

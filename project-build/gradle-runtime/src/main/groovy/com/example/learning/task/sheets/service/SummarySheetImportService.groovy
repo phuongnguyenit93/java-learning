@@ -40,6 +40,13 @@ class SummarySheetImportService {
         if (!(parsed.status in ['READY', 'SKIPPED_EMPTY_MENU'])) {
             return base + [status: parsed.status, missingRows: parsed.missingRows ?: []]
         }
+        if (parsed.status == 'READY') {
+            int last = parsed.lastRow as int
+            List<List<Object>> parentBases = (sheets.spreadsheets().values()
+                    .get(spreadsheet, quotedTab + "!C20:C${last}")
+                    .setValueRenderOption('FORMULA').execute().values ?: []) as List<List<Object>>
+            MenuLessonIdService.validate(parsed.groups as List<Map>, parentBases)
+        }
         List<List<Object>> acRows = (sheets.spreadsheets().values()
                 .get(spreadsheet, quotedTab + '!AC18:AC')
                 .setValueRenderOption('FORMULA').execute().values ?: []) as List<List<Object>>
@@ -99,19 +106,18 @@ class SummarySheetImportService {
             String chapter = "${idx + 1}.${stem}"
             String section = body(rows, group.parentRow as int)
             List<Map> lessons = []
-            (group.children as List<Map>).eachWithIndex { Map lesson, int ordinal ->
+            (group.children as List<Map>).each { Map lesson ->
                 String summary = body(rows, lesson.row as int)
-                lessons.add([id: ReadmeSheetImportService.slugFromStem(stem) + '-' +
-                        String.format('%03d', ordinal + 1),
+                lessons.add([id: lesson.id,
                         title: lesson.title as String, summary: summary])
             }
             if (!section && lessons.every { !it.summary }) return
             if (!section || lessons.any { !it.summary }) {
                 throw new GradleException('Incomplete Summary AC for chapter ' + chapter)
             }
-            SummarySectionYamlService.read(section, lessons*.id as List<String>)
+            String materialized = SummarySectionYamlService.materialize(section, lessons)
             prepared[chapter] = [
-                    'section.yml': section,
+                    'section.yml': materialized,
                     'summaries.yml': writer.dump([summaries: lessons])
             ]
         }

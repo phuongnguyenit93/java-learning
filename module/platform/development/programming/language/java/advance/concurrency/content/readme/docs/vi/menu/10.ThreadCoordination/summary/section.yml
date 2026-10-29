@@ -1,0 +1,96 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "PHỐI HỢP LUỒNG — MẠCH HỌC MONITOR VÀ MESSAGE PASSING"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: thread-coordination-001
+    order: 1
+    title: "wait(), notify(), notifyAll() hoạt động trong monitor"
+    description: "Nắm cơ chế monitor và cách wait/notify điều phối thread bằng predicate dưới khóa."
+    transition:
+      to: thread-coordination-002
+      description: "Tiếp tục từ thao tác wait tới kiểm tra điều kiện sau mỗi wakeup."
+  - id: thread-coordination-002
+    order: 2
+    title: "Điều kiện chờ: while thay vì if"
+    description: "Áp dụng while thay vì if cho condition waiting dưới monitor hoặc lock."
+    transition:
+      to: thread-coordination-003
+      description: "Từ while đi sâu vào spurious wakeup và invariant."
+  - id: thread-coordination-003
+    order: 3
+    title: "Spurious wakeup và kiểm tra lại invariant"
+    description: "Nhận diện spurious wakeup và giữ invariant sau mọi lần thức dậy."
+    transition:
+      to: thread-coordination-004
+      description: "Từ invariant sang producer–consumer có sức chứa hữu hạn."
+  - id: thread-coordination-004
+    order: 4
+    title: "Producer–consumer với hàng đợi giới hạn"
+    description: "Áp dụng bounded queue trong producer–consumer và phân tích backpressure/lifecycle."
+    transition:
+      to: thread-coordination-005
+      description: "Từ kiến trúc producer–consumer đến semantics API BlockingQueue."
+  - id: thread-coordination-005
+    order: 5
+    title: "BlockingQueue: put(), take(), offer(), poll()"
+    description: "Nắm ngữ nghĩa put/take/offer/poll và giới hạn BlockingQueue."
+    transition:
+      to: thread-coordination-006
+      description: "Từ API BlockingQueue đến timeout trên nhiều loại tài nguyên."
+  - id: thread-coordination-006
+    order: 6
+    title: "Timeout khi chờ dữ liệu hoặc tài nguyên"
+    description: "Dùng timed waiting, deadline và cleanup trên các blocking primitive."
+    transition:
+      to: thread-coordination-007
+      description: "Từ bounded waiting sang nhiều condition trong cùng một lock."
+  - id: thread-coordination-007
+    order: 7
+    title: "Lock + Condition cho nhiều điều kiện chờ"
+    description: "Thiết kế ReentrantLock kết hợp nhiều Condition cho các predicate khác nhau."
+    transition:
+      to: thread-coordination-008
+      description: "Từ Condition đến LockSupport và permit cấp thấp."
+  - id: thread-coordination-008
+    order: 8
+    title: "LockSupport.park()/unpark() và permit"
+    description: "Khảo sát park/unpark cấp thấp và điều kiện dùng an toàn."
+    transition:
+      to: thread-coordination-009
+      description: "Từ permit có thể được lưu tới notification có thể bị mất."
+  - id: thread-coordination-009
+    order: 9
+    title: "Missed signal và lost notification: nguyên nhân"
+    description: "Sửa missed signal qua state được đồng bộ và chọn primitive phù hợp."
+    transition:
+      to: thread-coordination-010
+      description: "Từ tín hiệu sang STOP message và graceful shutdown."
+  - id: thread-coordination-010
+    order: 10
+    title: "Poison pill và kết thúc consumer có trật tự"
+    description: "Điều phối shutdown producer–consumer bằng poison pill và kiểm chứng kết quả."
+    transition:
+      to: thread-coordination-011
+      description: "Từ dừng chờ đúng cách sang tránh busy waiting."
+  - id: thread-coordination-011
+    order: 11
+    title: "Tránh busy waiting bằng blocking primitives"
+    description: "Tránh busy waiting bằng chờ có sự kiện và kiểm soát tiến độ."
+    transition:
+      to: thread-coordination-012
+      description: "Từ primitive chờ sang lựa chọn shared state hoặc message passing."
+  - id: thread-coordination-012
+    order: 12
+    title: "So sánh phối hợp bằng shared state và message passing"
+    description: "Đánh giá shared state và message passing theo ownership, invariant và lifecycle."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | wait(), notify(), notifyAll() hoạt động trong monitor | Điều kiện chờ: while thay vì if | Spurious wakeup và kiểm tra lại invariant | Producer–consumer với hàng đợi giới hạn | BlockingQueue: put(), take(), offer(), poll() | Timeout khi chờ dữ liệu hoặc tài nguyên | Lock + Condition cho nhiều điều kiện chờ | LockSupport.park()/unpark() và permit | Missed signal và lost notification: nguyên nhân | Poison pill và kết thúc consumer có trật tự | Tránh busy waiting bằng blocking primitives | So sánh phối hợp bằng shared state và message passing |
+  | Vấn đề cần hiểu | Không nhầm monitor, predicate và signal. | Thread thức nhưng điều kiện đã đổi. | Wakup không đồng nghĩa predicate đã đúng. | Tốc độ sản xuất và tiêu thụ không cân bằng. | Nhầm thao tác chờ với thử ngay. | Chờ vô hạn hoặc mất ngân sách tổng. | Một wait set chung đánh thức sai nhóm. | Nhầm permit với queue công việc. | Sự kiện xảy ra nhưng waiter vẫn kẹt. | Consumer đứng chờ hoặc dừng trước việc còn lại. | Polling liên tục không tạo đồng bộ đúng. | Không rõ ai được sửa state và nhận kết quả. |
+  | Giá trị đối với OOP/module | Nền tảng để đọc và sửa giao thức chờ Java. | Tránh vượt qua điều kiện sai sau thức. | An toàn correctness dưới nhiều lịch chạy. | Bảo vệ backlog, tiến độ và quản lý nguồn lực. | Chọn hành vi khi queue đầy/rỗng đúng contract. | Bảo đảm bounded waiting và báo lỗi đúng. | Kiểm soát wait queues và tránh kẹt tiến trình. | Hiểu synchronizer nâng cao mà không lạm dụng primitive. | Ngăn mất signal và chọn bộ nhớ trạng thái đúng. | Kết thúc có trật tự và không bỏ việc nhận. | Giảm CPU lãng phí và rõ hợp đồng chờ. | Lựa chọn kiến trúc có căn cứ và tiêu chí kiểm chứng. |
+  | Tư duy hình thành | Tách quyền giữ khóa khỏi điều kiện tiến trình. | Mỗi lần thức phải xác nhận lại predicate. | Kiểm tra trạng thái thật thay vì lý do thức. | Đánh giá sức chứa và hoàn tất cùng correctness. | Xuất phát từ kết quả trả về và chính sách chờ. | Phân biệt chờ với hủy công việc thực. | Một lock bảo vệ state; Condition gắn từng predicate. | Tách wakeup khỏi trạng thái nghiệp vụ. | Lưu sự thật; signal chỉ nhắc kiểm tra. | Phân biệt nhận, xử lý, hoàn tất thực sự. | Chọn primitive từ ý nghĩa sự kiện cần đợi. | Bắt đầu từ ownership và bất biến. |

@@ -158,20 +158,20 @@ class InterviewSheetNormalizeService {
         RoadmapSheetImportService.resolveDestination(root.canonicalFile, location)
         File module = new File(root.canonicalFile, location).canonicalFile
         if (!module.isDirectory() || !new File(module, 'gradle.properties').isFile()) {
-            throw new GradleException('STEP 9 Summary staging requires a real Gradle module: ' + location)
+            throw new GradleException('Legacy Interview Summary staging requires a real Gradle module: ' + location)
         }
         File stageRoot = new File(module, 'build/step9/summary')
         File candidate = new File(stageRoot, chapter + '/summary.yml')
         Path modulePath = module.canonicalFile.toPath()
         Path selected = candidate.toPath().toAbsolutePath().normalize()
         if (!selected.startsWith(modulePath) || chapter.contains('..')) {
-            throw new GradleException('Unsafe STEP 9 Summary staging path: ' + candidate)
+            throw new GradleException('Unsafe legacy Interview Summary staging path: ' + candidate)
         }
         Path cursor = modulePath
         for (Path segment : modulePath.relativize(selected)) {
             cursor = cursor.resolve(segment)
             if (Files.isSymbolicLink(cursor)) {
-                throw new GradleException('Linked STEP 9 Summary staging path: ' + cursor)
+                throw new GradleException('Linked legacy Interview Summary staging path: ' + cursor)
             }
         }
         return candidate

@@ -26,7 +26,7 @@ class ModuleTranslationValidationService {
         String target = decode(en)
         if (type in ['README', 'INTRODUCTION']) {
             markdown(source, target)
-        } else if (type ==~ /QUIZ|INTERVIEW|SUMMARY_QUESTIONS|PRACTICE|ROADMAP|VIDEO|SUMMARY_SECTION|SUMMARY_LESSONS|SWAGGER_.+/) {
+        } else if (type ==~ /QUIZ|INTERVIEW|SUMMARY_QUESTIONS|ROADMAP|VIDEO|SUMMARY_SECTION|SUMMARY_LESSONS|SWAGGER_.+/) {
             yaml(type, source, target)
         } else {
             throw new GradleException('Unknown translation type: ' + type)
@@ -169,8 +169,6 @@ class ModuleTranslationValidationService {
                 return path ==~ /questions\[\d+\]\.(question|answer)/
             case 'SUMMARY_QUESTIONS':
                 return path ==~ /questions\[\d+\]\.(question|answer)/
-            case 'PRACTICE':
-                return path ==~ /scenarios\[\d+\]\.(title|context|problem|analysis\.(possibleCauses|application|tradeoffs)|exercise\.(requirements|deliverables|acceptanceCriteria|hints)\[\d+\]|exercise\.referenceSolution)/
             case 'ROADMAP':
                 return path ==~ /roadmap\[\d+\]\.(title|purpose|objectives\[\d+\]|relatedModules\[\d+\]\.(label|note))/
             case 'VIDEO':

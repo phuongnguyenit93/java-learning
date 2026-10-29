@@ -6,24 +6,21 @@ roadmap:
 - id: design-pitfalls-001
   order: 1
   title: Lớp ôm quá nhiều trách nhiệm
-  description: Nhận diện God Class qua lý do thay đổi, cohesion/coupling; tách use case điều phối khỏi tính giá, lưu trữ và
-    thông báo theo trách nhiệm.
+  description: Nhận diện God Class qua lý do thay đổi, cohesion/coupling; tách use case điều phối khỏi tính giá, lưu trữ và thông báo theo trách nhiệm.
   transition:
     to: design-pitfalls-002
     description: '**Từ trách nhiệm của lớp → trách nhiệm bảo vệ dữ liệu và các quy tắc bất biến bên trong lớp.**'
 - id: design-pitfalls-002
   order: 2
   title: Trạng thái công khai và mất điều kiện bất biến
-  description: Bảo vệ invariant qua API nghiệp vụ, chặn alias mutable và kiểm thử atomic updates, kể cả khi nhiều thread truy
-    cập.
+  description: Bảo vệ invariant qua API nghiệp vụ, chặn alias mutable và kiểm thử atomic updates, kể cả khi nhiều thread truy cập.
   transition:
     to: design-pitfalls-003
     description: '**Từ encapsulation bảo vệ trạng thái → API nghiệp vụ thay thế lối sửa từng field qua setter.**'
 - id: design-pitfalls-003
   order: 3
   title: Getter, setter tràn lan nhưng thiếu hành vi
-  description: Chuyển từ getter/setter mở sang hành vi confirm/ship/cancel giữ vòng đời Order, phân biệt với DTO và transaction
-    script hợp lý.
+  description: Chuyển từ getter/setter mở sang hành vi confirm/ship/cancel giữ vòng đời Order, phân biệt với DTO và transaction script hợp lý.
   transition:
     to: design-pitfalls-004
     description: '**Góc nhìn bổ sung: từ API domain quá mở → quan hệ kế thừa làm lộ API không thuộc trách nhiệm.**'
@@ -37,16 +34,14 @@ roadmap:
 - id: design-pitfalls-005
   order: 5
   title: Lạm dụng ép kiểu và kiểm tra kiểu
-  description: Thay branching lặp theo instanceof/cast bằng đa hình ShippingPolicy; dành kiểm tra type cho boundary/capability
-    phù hợp.
+  description: Thay branching lặp theo instanceof/cast bằng đa hình ShippingPolicy; dành kiểm tra type cho boundary/capability phù hợp.
   transition:
     to: design-pitfalls-006
     description: '**Từ dùng đa hình đúng → thiết kế interface đủ hẹp để các implementation thực hiện trọn lời hứa.**'
 - id: design-pitfalls-006
   order: 6
   title: Giao diện quá lớn hoặc quá nhiều lớp trừu tượng
-  description: Áp dụng ISP theo nhu cầu DocumentReader/Writer, loại method không hỗ trợ và rút những tầng forwarding không
-    mang giá trị.
+  description: Áp dụng ISP theo nhu cầu DocumentReader/Writer, loại method không hỗ trợ và rút những tầng forwarding không mang giá trị.
   transition:
     to: design-pitfalls-007
     description: '**Từ ranh giới interface → ranh giới hướng phụ thuộc và cách trao đổi dữ liệu giữa đối tượng.**'
@@ -67,16 +62,14 @@ roadmap:
 - id: design-pitfalls-009
   order: 9
   title: Đối tượng có thể thay đổi làm sai phép so sánh hoặc mã băm
-  description: Giữ equals/hashCode/comparator ổn định cho key/Set element; tách CustomerId khỏi hồ sơ mutable và kiểm tra
-    record/ORM.
+  description: Giữ equals/hashCode/comparator ổn định cho key/Set element; tách CustomerId khỏi hồ sơ mutable và kiểm tra record/ORM.
   transition:
     to: design-pitfalls-010
     description: '**Góc nhìn tổng hợp: từ các lỗi cụ thể → cân nhắc lúc nào nên dùng pattern hoặc trừu tượng hóa.**'
 - id: design-pitfalls-010
   order: 10
   title: Lạm dụng mẫu thiết kế và trừu tượng hóa quá sớm
-  description: |-
-    Nhìn bằng chứng biến thiên trước khi đưa Strategy/Factory vào thiết kế; dùng regression tests để tiến hóa từ chính sách đơn.
+  description: Nhìn bằng chứng biến thiên trước khi đưa Strategy/Factory vào thiết kế; dùng regression tests để tiến hóa từ chính sách đơn.
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

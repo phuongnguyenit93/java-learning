@@ -1,0 +1,349 @@
+summaries:
+- id: thread-coordination-001
+  title: wait(), notify(), notifyAll() hoạt động trong monitor
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **wait(), notify(), notifyAll() hoạt động trong monitor**
+
+    Phân biệt monitor ownership, wait set và condition predicate; áp dụng wait/notify/notifyAll dưới synchronized và hiểu notification không trao ngay monitor.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế monitor
+
+    1. Tại sao wait() đòi sở hữu monitor của receiver?
+    2. Sau notifyAll(), waiter còn phải làm gì trước khi đọc state?
+
+    ### Thiết kế protocol
+
+    1. Predicate khác notification ở đâu?
+    2. Khi nhiều waiter chung monitor, tại sao notifyAll() thường dễ đúng hơn notify()?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích monitor | Mô tả chính xác chuỗi unlock–wait–notify–reacquire. |
+    | Thiết kế guarded block | Viết synchronized + while + wait/notifyAll để signal sớm hoặc muộn đều đúng. |
+- id: thread-coordination-002
+  title: 'Điều kiện chờ: while thay vì if'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Điều kiện chờ: while thay vì if**
+
+    Lý giải vì sao if không đủ khi chờ một điều kiện; dùng while kiểm tra predicate dưới đúng khóa sau spurious wakeup hoặc cạnh tranh giữa waiter.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vấn đề if
+
+    1. Vì sao consumer thức dậy mà queue vẫn rỗng?
+    2. Một notification hợp lệ có đủ chứng minh predicate đúng không?
+
+    ### Sửa lỗi chờ
+
+    1. Vì sao check ở ngoài monitor rồi wait có thể mất signal?
+    2. Khi có timeout hoặc closed flag, while cần kiểm tra gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích interleaving | Mô phỏng hai waiter tranh một item và chỉ ra nhánh if sai. |
+    | Sửa guarded wait | Dùng while và cùng monitor để bảo toàn điều kiện trước xử lý. |
+- id: thread-coordination-003
+  title: Spurious wakeup và kiểm tra lại invariant
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Spurious wakeup và kiểm tra lại invariant**
+
+    Phân biệt spurious wakeup với signal không phù hợp; kiểm tra invariant sau wait/await, timeout và interrupt mà không giả định wakeup là thành công.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn wakeup
+
+    1. Spurious wakeup khác notification cho predicate khác thế nào?
+    2. Vì sao await() được signal vẫn phải kiểm tra lại?
+
+    ### Bảo vệ invariant
+
+    1. Timeout ảnh hưởng đến predicate và deadline ra sao?
+    2. Có thể kiểm thử wakeup sai điều kiện mà không trông chờ tình cờ không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt wakeup | Giải thích trace do spurious, signal, timeout và cạnh tranh. |
+    | Giữ invariant | Tạo while predicate dưới lock và kiểm thử không vượt state sai. |
+- id: thread-coordination-004
+  title: Producer–consumer với hàng đợi giới hạn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Producer–consumer với hàng đợi giới hạn**
+
+    Thiết kế producer–consumer với bounded queue, backpressure, nhiều worker và chính sách shutdown; giải thích queue capacity khác throughput.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Capacity và tải
+
+    1. Khi producer nhanh hơn consumer, backlog và backpressure diễn biến thế nào?
+    2. Vì sao capacity không đồng nghĩa throughput?
+
+    ### Lifecycle
+
+    1. Nếu producer và consumer dùng pool quá nhỏ, có thể kẹt ra sao?
+    2. FIFO dequeue và kết quả xử lý hoàn tất khác nhau thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế bounded queue | Chọn capacity và API blocking phù hợp các trạng thái đầy/rỗng. |
+    | Kiểm chứng pipeline | Viết test cho backpressure, nhiều worker và shutdown không mất việc. |
+- id: thread-coordination-005
+  title: 'BlockingQueue: put(), take(), offer(), poll()'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **BlockingQueue: put(), take(), offer(), poll()**
+
+    Hiểu hợp đồng put, take, offer, poll cùng overload timed và cách chọn hành vi chặn hoặc thử ngay, xử lý interrupt và queue không có close phổ quát.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bốn thao tác
+
+    1. put() và offer() khác nhau khi queue đầy thế nào?
+    2. take(), poll() và poll(timeout) khác nhau khi queue rỗng ra sao?
+
+    ### Hợp đồng queue
+
+    1. Vì sao BlockingQueue không nhận null?
+    2. Queue thread-safe có chứng minh item đã xử lý nghiệp vụ thành công không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn API | Chọn thao tác phù hợp cho yêu cầu blocking, thử ngay và chờ có hạn. |
+    | Kiểm tra giới hạn | Giải thích visibility, close và khác biệt dequeue so với xử lý xong. |
+- id: thread-coordination-006
+  title: Timeout khi chờ dữ liệu hoặc tài nguyên
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Timeout khi chờ dữ liệu hoặc tài nguyên**
+
+    Thiết kế thời gian chờ hữu hạn qua queue, lock, semaphore, condition, latch và future; phân biệt timeout, deadline tổng, interruption và cancellation.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Deadline và timeout
+
+    1. Vì sao timeout riêng ở từng bước có thể vượt deadline tổng?
+    2. Tại sao Future.get(timeout) không tự hủy task?
+
+    ### Xử lý API
+
+    1. tryLock(timeout) và tryAcquire(timeout) báo thất bại ra sao?
+    2. Khi awaitNanos hoặc poll(timeout) hết hạn, cần kiểm tra điều gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính deadline | Viết vòng chờ dùng System.nanoTime và thời gian còn lại. |
+    | Cleanup đúng | Xử lý timeout, interrupt và release theo từng loại tài nguyên. |
+- id: thread-coordination-007
+  title: Lock + Condition cho nhiều điều kiện chờ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lock + Condition cho nhiều điều kiện chờ**
+
+    Tổ chức nhiều nhóm waiter bằng một ReentrantLock và các Condition riêng, giữ predicate với while, signal đúng nhóm và đánh thức khi close.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Condition queues
+
+    1. Một lock nhưng nhiều Condition có ích gì cho notEmpty/notFull?
+    2. signal() có lưu permit cho waiter tương lai không?
+
+    ### An toàn shutdown
+
+    1. Vì sao await phải ở trong while dưới lock?
+    2. Khi close, những condition nào phải signalAll để waiter thoát?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cài Condition | Viết bounded buffer với hai predicate và hai condition. |
+    | Đánh giá lifecycle | Kiểm tra correctness khi interrupt, timeout và shutdown nhiều waiter. |
+- id: thread-coordination-008
+  title: LockSupport.park()/unpark() và permit
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **LockSupport.park()/unpark() và permit**
+
+    Giải thích LockSupport park/unpark, permit một-bit không tích lũy, interrupt và spurious return; cần predicate và memory visibility riêng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình permit
+
+    1. Vì sao unpark hai lần không tạo hai permit?
+    2. unpark trước park thay đổi lời gọi park sau thế nào?
+
+    ### An toàn cấp thấp
+
+    1. park có tự nhả monitor đang giữ không?
+    2. Vì sao phải kiểm tra volatile/atomic predicate sau park?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng park | Dự đoán permit sau chuỗi park/unpark và interrupt. |
+    | Review synchronizer | Chỉ ra rủi ro visibility, deadlock và spurious return. |
+- id: thread-coordination-009
+  title: 'Missed signal và lost notification: nguyên nhân'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Missed signal và lost notification: nguyên nhân**
+
+    Chẩn đoán lost notification do notify trước wait hoặc check–wait thiếu atomicity; sửa bằng guarded predicate và so sánh latch/semaphore/queue/Future.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguyên nhân missed signal
+
+    1. Vì sao notify trước waiter không giữ tín hiệu cho lần wait sau?
+    2. Khoảng hở giữa check và wait ngoài monitor có hậu quả gì?
+
+    ### Cách sửa
+
+    1. Guarded block xử lý signal sớm hay muộn ra sao?
+    2. Latch, semaphore và BlockingQueue lưu thứ gì khác notification?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tái hiện lỗi | Mô phỏng notify sớm và check–wait race dẫn đến chờ mãi. |
+    | Sửa protocol | Cập nhật state rồi notifyAll dưới monitor, kiểm tra while. |
+- id: thread-coordination-010
+  title: Poison pill và kết thúc consumer có trật tự
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Poison pill và kết thúc consumer có trật tự**
+
+    Thiết kế poison pill để consumer kết thúc có trật tự; điều phối stop admission, hoàn tất producer, gửi đủ STOP và chờ consumer.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Poison pill
+
+    1. Vì sao STOP cần nằm sau mọi job đã được nhận?
+    2. Có hai consumer thì vì sao thường cần hai STOP?
+
+    ### Shutdown an toàn
+
+    1. Nếu producer còn chạy khi gửi STOP, lỗi nào xảy ra?
+    2. Khi queue đầy hoặc consumer lỗi, coordinator phải xử lý thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo STOP message | Chọn sentinel không xung đột dữ liệu và tính đủ số STOP. |
+    | Kiểm tra hoàn tất | Mô tả đóng nhận việc → đợi producer → STOP → đợi consumer. |
+- id: thread-coordination-011
+  title: Tránh busy waiting bằng blocking primitives
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tránh busy waiting bằng blocking primitives**
+
+    Thay busy loop và sleep polling bằng primitive blocking phù hợp sự kiện: latch, queue, semaphore, future, condition; đánh giá CPU, timeout và deadlock.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Polling và blocking
+
+    1. Vòng spin kiểm tra ready gây tốn CPU và lỗi visibility thế nào?
+    2. Sleep polling khác CountDownLatch.await ra sao?
+
+    ### Chọn công cụ
+
+    1. Khi đợi dữ liệu, permit hoặc kết quả task nên dùng API nào?
+    2. Vì sao block khi giữ lock hoặc thiếu worker vẫn có thể deadlock?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại kỹ thuật | Chỉ ra CPU, visibility và scheduling của ba kiểu chờ. |
+    | Sửa busy wait | Chọn primitive blocking và thêm interrupt/timeout cleanup. |
+- id: thread-coordination-012
+  title: So sánh phối hợp bằng shared state và message passing
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **So sánh phối hợp bằng shared state và message passing**
+
+    So sánh shared state được bảo vệ bằng synchronized/atomics với message passing qua queue và một owner; cân nhắc consistency, ordering, backpressure, reply và lifecycle.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ownership và consistency
+
+    1. Counter dùng synchronized khác owner nhận message ở cơ chế nào?
+    2. Payload mutable tiếp tục bị sửa sau khi enqueue có tạo race không?
+
+    ### Tradeoff thiết kế
+
+    1. Khi nào cần shared state, message passing hoặc giải pháp lai?
+    2. FIFO enqueue và thứ tự xử lý hoàn tất khác nhau thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh kiến trúc | Đối chiếu invariant, ownership và synchronization của hai mô hình. |
+    | Đưa ra quyết định | Chọn mô hình cho một kịch bản và giải thích backpressure/shutdown. |

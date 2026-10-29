@@ -7,7 +7,6 @@ import org.gradle.api.GradleException
 final class ContractSchemaLoaderUtils {
     static final Map<String, String> NAMES = [
             quiz: 'quiz', interview: 'interview', summaryQuestions: 'summary-questions', roadmap: 'roadmap',
-            practiceDraft: 'practice-draft', practiceSheet: 'practice-sheet', practiceScenario: 'practice-scenario',
             reference: 'reference', videoAuthoring: 'video-authoring',
             videoScript: 'video-script', videoIndex: 'video-index',
             apiDocs: 'api-docs', knowledge: 'knowledge',

@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "TỔNG QUAN JAVA CONCURRENCY — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: overview-001
+    order: 1
+    title: "Concurrency, parallelism và asynchronous execution khác nhau thế nào?"
+    description: "Thiết lập ba trục độc lập: nhiều tác vụ cùng tiến triển, thực thi thật sự song song và caller nhận kết quả bất đồng bộ."
+    transition:
+      to: overview-002
+      description: "Sau khi phân biệt ba trục thực thi, cần xác định process, loại thread và đơn vị task thực sự chạy trên JVM."
+  - id: overview-002
+    order: 2
+    title: "Process, platform thread, virtual thread và task"
+    description: "Phân tách ranh giới process, luồng OS, virtual thread Java 21 và task, cùng hệ quả về tài nguyên và vòng đời."
+    transition:
+      to: overview-003
+      description: "Biết task được gán lên thread nào dẫn tới bước tiếp theo: chọn executor theo thời gian tính CPU hay thời gian chờ I/O."
+  - id: overview-003
+    order: 3
+    title: "CPU-bound và I/O-bound: chọn cách thực thi"
+    description: "Chọn chiến lược chạy task theo tỷ lệ CPU/I/O, tách pha hỗn hợp và giới hạn downstream, thread, queue cùng deadline."
+    transition:
+      to: overview-004
+      description: "Sau khi có chiến lược thực thi, cần xác định thế nào là cải thiện thật qua latency, throughput, responsiveness và utilization."
+  - id: overview-004
+    order: 4
+    title: "Latency, throughput, responsiveness và utilization"
+    description: "Định nghĩa ranh giới đo, p95/p99, throughput, responsiveness, utilization và dùng Little's law để phân tích queue."
+    transition:
+      to: overview-005
+      description: "Khi đã có chỉ số, cần đặt concurrency vào use case ứng dụng và đánh giá cả lợi ích lẫn các rủi ro nghiệp vụ."
+  - id: overview-005
+    order: 5
+    title: "Concurrency trong ứng dụng Java: use case và rủi ro"
+    description: "Liên hệ API concurrent với ứng dụng thực: request độc lập, nền, pipeline, scheduling, cùng rủi ro đúng đắn và tài nguyên."
+    transition:
+      to: overview-006
+      description: "Từ bức tranh rủi ro ứng dụng, đi vào nguồn lỗi chính: trạng thái mutable được chia sẻ và cách các task phối hợp."
+  - id: overview-006
+    order: 6
+    title: "Shared mutable state, coordination và thread confinement"
+    description: "Bảo vệ invariant và visibility của shared mutable state, tách mutual exclusion khỏi coordination và ưu tiên confinement."
+    transition:
+      to: overview-007
+      description: "Sau cơ chế bảo vệ state, cần phát biểu các tính chất tổng quát safety, liveness và mức bảo đảm progress."
+  - id: overview-007
+    order: 7
+    title: "Safety, liveness, progress và starvation"
+    description: "Tách correctness invariant khỏi khả năng tiến triển; giải thích lock-free, wait-free, fairness và starvation."
+    transition:
+      to: overview-008
+      description: "Từ hai thuộc tính safety/liveness, chuyển sang nhận diện thực địa race condition, deadlock và livelock."
+  - id: overview-008
+    order: 8
+    title: "Race condition, deadlock, livelock: nhận diện ở mức tổng quan"
+    description: "Nhận diện race, deadlock, livelock bằng interleaving, thread dump, wait graph và tín hiệu retry/thông lượng."
+    transition:
+      to: overview-009
+      description: "Khi đã phân biệt lỗi correctness/progress, tiếp tục tìm nguyên nhân giảm tốc do context switch, contention và scheduling."
+  - id: overview-009
+    order: 9
+    title: "Concurrency overhead: context switch, contention, scheduling"
+    description: "Phân biệt context switch, contention và scheduling; hướng dẫn quan sát qua benchmark, JFR và số liệu JVM/OS."
+    transition:
+      to: overview-010
+      description: "Sau khi thấy chi phí điều phối thực tế, quay về quyết định cuối: khi nào lời giải tuần tự tốt hơn."
+  - id: overview-010
+    order: 10
+    title: "Khi nào nên dùng tuần tự thay vì đa luồng"
+    description: "Khép lại chương bằng tiêu chí chọn baseline tuần tự, kiểm tra phụ thuộc và chỉ dùng đa luồng khi lợi ích được đo."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Concurrency, parallelism và asynchronous execution khác nhau thế nào? | Process, platform thread, virtual thread và task | CPU-bound và I/O-bound: chọn cách thực thi | Latency, throughput, responsiveness và utilization | Concurrency trong ứng dụng Java: use case và rủi ro | Shared mutable state, coordination và thread confinement | Safety, liveness, progress và starvation | Race condition, deadlock, livelock: nhận diện ở mức tổng quan | Concurrency overhead: context switch, contention, scheduling | Khi nào nên dùng tuần tự thay vì đa luồng |
+  | Vấn đề cần hiểu | Concurrency, parallelism và async khác nhau ở hành vi nào? | Công việc là task, thread hay process, và virtual thread khác gì? | Tác vụ tính CPU hay chờ I/O, nên điều phối bằng cơ chế nào? | Đo hiệu năng concurrent bằng chỉ số gì và nhận diện quá tải thế nào? | Ở ứng dụng Java, concurrency có ích khi nào và phát sinh rủi ro gì? | Ai sở hữu dữ liệu, bảo vệ invariant và phối hợp tiến độ bằng gì? | Một thuật toán cho kết quả đúng có chắc mọi task sẽ hoàn thành không? | Khi thấy kết quả sai hoặc tác vụ treo, cần phân biệt ba lỗi nào? | Vì sao thêm concurrency có thể chậm hơn và phải đo overhead ở đâu? | Trong điều kiện nào đa luồng tạo thêm chi phí hơn giá trị? |
+  | Giá trị đối với OOP/module | Đặt đúng thuật ngữ và chọn API Java theo mục tiêu | Hiểu đúng đơn vị thực thi và phạm vi chia sẻ heap | Chọn executor và mức đồng thời dựa trên đặc tính tải | Đánh giá kết quả Java concurrency bằng số liệu có ranh giới rõ | Đưa lựa chọn kỹ thuật vào các use case có yêu cầu nghiệp vụ | Tránh data race và chọn đúng synchronization/coordination primitives | Đánh giá cả safety lẫn liveness cho API concurrent | Chẩn đoán concurrency có chứng cứ trước khi chọn biện pháp sửa | Định vị bottleneck do tranh chấp và lập lịch | Ra quyết định tuần tự hay concurrent dựa trên tính đúng và phép đo |
+  | Tư duy hình thành | Mô tả chính xác tiến độ, CPU và thời điểm chờ | Phân biệt công việc logic với tài nguyên chạy nó | Đo các pha rồi điều tiết ở đúng tài nguyên giới hạn | Đo cả hàng đợi, độ trễ đuôi và tài nguyên, tránh một metric đơn độc | Đánh giá lợi ích cùng tính đúng, độ bền vững và khả năng hủy | Giảm chia sẻ mutable state rồi mới chọn khóa, queue hay atomic | Chứng minh invariant riêng và tiến triển riêng | Quan sát bất biến, vòng chờ và tiến độ theo thời gian | Đo và đối chiếu tầng JVM–OS trước khi tối ưu | Bắt đầu bằng lời giải đơn giản rồi tăng concurrency có mục đích |

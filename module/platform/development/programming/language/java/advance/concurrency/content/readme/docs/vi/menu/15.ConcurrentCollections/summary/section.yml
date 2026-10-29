@@ -1,0 +1,124 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "CONCURRENT COLLECTIONS — MẠCH HỌC CẤU TRÚC ĐỒNG THỜI"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: concurrent-collections-001
+    order: 1
+    title: "Vì sao ArrayList và HashMap không an toàn khi truy cập chung?"
+    description: "Chẩn đoán lỗi cấu trúc và check-then-act trên ArrayList/HashMap; thiết lập nền tảng atomicity, visibility, ordering."
+    transition:
+      to: concurrent-collections-002
+      description: "Từ get-then-put dễ mất cập nhật, chuyển sang API atomic theo key."
+  - id: concurrent-collections-002
+    order: 2
+    title: "ConcurrentHashMap: putIfAbsent(), compute(), merge()"
+    description: "Thực hành khởi tạo, cập nhật và cộng dồn với putIfAbsent, compute, merge theo contract atomic của từng mapping."
+    transition:
+      to: concurrent-collections-003
+      description: "Mở rộng ba API cơ bản sang các compound operations có điều kiện và invariant phức tạp."
+  - id: concurrent-collections-003
+    order: 3
+    title: "Atomic compound operations của ConcurrentHashMap"
+    description: "Phân tích remove/replace có điều kiện, computeIfAbsent, LongAdder, contention và ranh giới atomicity khi nhiều key cùng thay đổi."
+    transition:
+      to: concurrent-collections-004
+      description: "Atomic update không đồng nghĩa iterator cung cấp ảnh chụp nhất quán."
+  - id: concurrent-collections-004
+    order: 4
+    title: "Weakly consistent iteration và snapshot semantics"
+    description: "Đối chiếu iterator fail-fast, weakly consistent và copy-on-write snapshot; thiết kế snapshot nhất quán khi cần."
+    transition:
+      to: concurrent-collections-005
+      description: "Snapshot iterator dẫn đến đánh đổi copy-on-write khi ghi nhiều."
+  - id: concurrent-collections-005
+    order: 5
+    title: "CopyOnWriteArrayList: ưu và nhược điểm khi ghi nhiều"
+    description: "Tìm hiểu copy-on-write, snapshot iterator và trade-off của CopyOnWriteArrayList khi tỷ lệ ghi tăng."
+    transition:
+      to: concurrent-collections-006
+      description: "Chuyển từ list snapshot sang queue/deque phục vụ nhiều producer/consumer."
+  - id: concurrent-collections-006
+    order: 6
+    title: "ConcurrentLinkedQueue và ConcurrentLinkedDeque"
+    description: "Thực hành ConcurrentLinkedQueue/Deque với offer/poll/peek, FIFO/LIFO, weak iteration và unbounded backlog."
+    transition:
+      to: concurrent-collections-007
+      description: "Khi cần chờ có kiểm soát, so sánh hai implementation BlockingQueue."
+  - id: concurrent-collections-007
+    order: 7
+    title: "ArrayBlockingQueue so với LinkedBlockingQueue"
+    description: "So sánh bounded array queue, linked blocking queue, fairness, capacity và cách chờ của producer/consumer."
+    transition:
+      to: concurrent-collections-008
+      description: "Sau FIFO bounded, phân biệt priority, delay và direct rendezvous."
+  - id: concurrent-collections-008
+    order: 8
+    title: "PriorityBlockingQueue, DelayQueue và SynchronousQueue"
+    description: "Khám phá priority queue, delayed queue và zero-capacity handoff cùng tác động tới scheduling."
+    transition:
+      to: concurrent-collections-009
+      description: "Từ priority của queue sang sorted map/set và range query theo comparator."
+  - id: concurrent-collections-009
+    order: 9
+    title: "ConcurrentSkipListMap và ConcurrentSkipListSet"
+    description: "Sử dụng ConcurrentSkipListMap/Set cho sorted keys, neighbor lookup, range views và weakly consistent traversal."
+    transition:
+      to: concurrent-collections-010
+      description: "Bên cạnh cấu trúc concurrent, synchronized wrapper vẫn cần monitor đúng khi duyệt."
+  - id: concurrent-collections-010
+    order: 10
+    title: "Collections.synchronizedMap/List và yêu cầu khóa khi duyệt"
+    description: "Dạy monitor của Collections.synchronizedMap/List, locking khi iterator và các phép check-then-act."
+    transition:
+      to: concurrent-collections-011
+      description: "Từ bảo vệ collection chuyển sang backpressure cho cả pipeline."
+  - id: concurrent-collections-011
+    order: 11
+    title: "Concurrent queue, blocking queue và backpressure"
+    description: "Tổng hợp bounded queue, timeout, rejection, Semaphore và graceful shutdown để điều tiết producer-consumer."
+    transition:
+      to: concurrent-collections-012
+      description: "Tổng hợp tiêu chí workload, read/write ratio và ordering để chọn collection."
+  - id: concurrent-collections-012
+    order: 12
+    title: "Chọn collection theo read/write ratio và ordering"
+    description: "Ra quyết định đa tiêu chí giữa các concurrent collections dựa trên read/write ratio, ordering và đo benchmark."
+    transition:
+      to: concurrent-collections-013
+      description: "Áp dụng quyết định đó vào null policy và computeIfAbsent trên ConcurrentHashMap."
+  - id: concurrent-collections-013
+    order: 13
+    title: "ConcurrentHashMap: chính sách null, computeIfAbsent() và giới hạn hàm ánh xạ"
+    description: "Khảo sát null policy, computeIfAbsent và quy tắc mapping function ngắn, không đệ quy hay I/O dài."
+    transition:
+      to: concurrent-collections-014
+      description: "Một value được publish an toàn vẫn có thể chứa trạng thái mutable cần bảo vệ."
+  - id: concurrent-collections-014
+    order: 14
+    title: "Giá trị mutable trong ConcurrentHashMap vẫn cần hợp đồng thread safety riêng"
+    description: "Bảo vệ mutable object được lưu trong ConcurrentHashMap bằng atomic values, immutable updates hoặc lock riêng."
+    transition:
+      to: concurrent-collections-015
+      description: "Xem snapshot iterator của concurrent Set copy-on-write như một lựa chọn dữ liệu khác."
+  - id: concurrent-collections-015
+    order: 15
+    title: "CopyOnWriteArraySet và tính chất snapshot của iterator khi có ghi"
+    description: "Tìm hiểu CopyOnWriteArraySet, iterator snapshot, equality và giới hạn khi ghi nhiều."
+    transition:
+      to: concurrent-collections-016
+      description: "Hoàn thiện mô hình giao việc với TransferQueue và BlockingDeque."
+  - id: concurrent-collections-016
+    order: 16
+    title: "TransferQueue và BlockingDeque: chuyển giao trực tiếp và thao tác hai đầu"
+    description: "Thực hành direct transfer và deque hai đầu với timeout, bounded waiting và lifecycle."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 | Bài 13 | Bài 14 | Bài 15 | Bài 16 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Vì sao ArrayList và HashMap không an toàn khi truy cập chung? | ConcurrentHashMap: putIfAbsent(), compute(), merge() | Atomic compound operations của ConcurrentHashMap | Weakly consistent iteration và snapshot semantics | CopyOnWriteArrayList: ưu và nhược điểm khi ghi nhiều | ConcurrentLinkedQueue và ConcurrentLinkedDeque | ArrayBlockingQueue so với LinkedBlockingQueue | PriorityBlockingQueue, DelayQueue và SynchronousQueue | ConcurrentSkipListMap và ConcurrentSkipListSet | Collections.synchronizedMap/List và yêu cầu khóa khi duyệt | Concurrent queue, blocking queue và backpressure | Chọn collection theo read/write ratio và ordering | ConcurrentHashMap: chính sách null, computeIfAbsent() và giới hạn hàm ánh xạ | Giá trị mutable trong ConcurrentHashMap vẫn cần hợp đồng thread safety riêng | CopyOnWriteArraySet và tính chất snapshot của iterator khi có ghi | TransferQueue và BlockingDeque: chuyển giao trực tiếp và thao tác hai đầu |
+  | Vấn đề cần hiểu | Vì sao một collection thường hỏng khi chia sẻ giữa nhiều writer? | API nào thay get-then-put một cách nguyên tử? | Compound method có bảo vệ đúng bất biến ứng dụng không? | Một lượt duyệt có phản ánh duy nhất một thời điểm? | Vì sao copy-on-write không thích hợp cho ghi nhiều? | Handoff queue nonblocking an toàn hoạt động ra sao? | Chọn bounded BlockingQueue nào và vì sao? | Handoff theo ưu tiên, deadline và rendezvous khác nhau ở đâu? | Lưu dữ liệu concurrent có thứ tự key thế nào? | Vì sao wrapper an toàn từng method mà iteration vẫn lỗi? | Producer nhanh hơn consumer thì giữ hệ thống ổn định ra sao? | Lựa chọn collection nào là hợp lý theo workload? | Các nhánh absent/null và callback gây lỗi nào? | Map an toàn mà value vẫn race vì sao? | Set concurrent đọc nhiều có snapshot ổn định không? | Khi nào phải chờ consumer nhận và khi nào cần hai đầu queue? |
+  | Giá trị đối với OOP/module | Xác định trạng thái nào cần đồng bộ. | Tránh lost update ở counter/registry. | Xây cập nhật chính xác dưới contention. | Tránh kết luận sai trong báo cáo hoặc audit. | Giảm cấp phát/GC trong workload phù hợp. | Xây consumer loop có protocol kết thúc. | Bảo vệ capacity và latency dưới tải. | Không nhầm thứ tự item với thời điểm chạy xong. | Xây truy vấn phạm vi với concurrent sorted structures. | Ngăn CME/race bằng critical section đúng scope. | Hạn chế backlog và bảo vệ downstream. | Tránh tối ưu sai và vi phạm ordering contract. | Thiết kế lazy cache/registry ổn định. | Giữ invariant sâu trong object graph. | Duyệt listener an toàn mà ít khóa. | Thiết kế protocol handoff chính xác. |
+  | Tư duy hình thành | Phân biệt thread safety của một lệnh với toàn workflow. | Chọn remapping theo trạng thái và callback semantics. | Đặt invariant trước rồi chọn ranh giới nguyên tử. | Định nghĩa yêu cầu quan sát trước khi chọn iterator. | Đổi chi phí ghi lấy lượt đọc rẻ. | Tách thứ tự dequeue khỏi thời điểm xử lý xong. | Dung lượng queue là quyết định vận hành. | Ordering và capacity là các chiều độc lập. | Comparator là hợp đồng ordering và equality thực tế. | Cùng một khóa phải bảo vệ cả invariant. | Thread safety chưa đồng nghĩa flow control. | Chọn theo invariant và dữ liệu đo, không theo tên API. | Atomic insertion không bảo vệ mọi side effect bên ngoài. | Thread safety phải theo dữ liệu thực, không theo container. | Copy ổn định đổi lấy chi phí ghi và stale view. | Đừng đánh đồng queue delivery với business completion. |

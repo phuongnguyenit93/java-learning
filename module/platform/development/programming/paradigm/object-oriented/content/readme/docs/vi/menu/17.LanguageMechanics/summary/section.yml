@@ -6,40 +6,35 @@ roadmap:
 - id: language-mechanics-001
   order: 1
   title: Kiểu tổng quát và lớp có tham số kiểu
-  description: Xây lớp/phương thức tổng quát (`Box`, `Pair`, `Repository`) và hiểu cách type argument, inference, raw type
-    và erasure quyết định mức an toàn kiểu.
+  description: Xây lớp/phương thức tổng quát (`Box`, `Pair`, `Repository`) và hiểu cách type argument, inference, raw type và erasure quyết định mức an toàn kiểu.
   transition:
     to: language-mechanics-002
     description: '**Từ biết generic type → thêm upper bound khi thuật toán cần khả năng cụ thể từ T**'
 - id: language-mechanics-002
   order: 2
   title: Ràng buộc tham số kiểu
-  description: Giới hạn type parameter bằng class/interface bounds, `Comparable<? super T>` và intersection; chọn điều kiện
-    mà thuật toán thật sự cần.
+  description: Giới hạn type parameter bằng class/interface bounds, `Comparable<? super T>` và intersection; chọn điều kiện mà thuật toán thật sự cần.
   transition:
     to: language-mechanics-003
     description: '**Từ giới hạn năng lực T → kiểm tra subtype, wildcard và dữ liệu có thể đọc hoặc ghi qua generic API**'
 - id: language-mechanics-003
   order: 3
   title: Quan hệ kiểu của các cấu trúc tổng quát
-  description: Đọc quan hệ subtype giữa parameterized types; chọn `?`, `? extends`, `? super` và helper capture theo vai trò
-    producer/consumer.
+  description: Đọc quan hệ subtype giữa parameterized types; chọn `?`, `? extends`, `? super` và helper capture theo vai trò producer/consumer.
   transition:
     to: language-mechanics-004
     description: '**Từ quan hệ kiểu trong API → phân biệt lúc compiler kiểm tra và khi JVM dispatch hay cast**'
 - id: language-mechanics-004
   order: 4
   title: Kiểu tĩnh, kiểu động và kiểm tra kiểu
-  description: Phân biệt kiểu tĩnh với runtime class, overload với override; dùng `instanceof`/validation khi dữ liệu đến
-    từ boundary không chắc kiểu.
+  description: Phân biệt kiểu tĩnh với runtime class, overload với override; dùng `instanceof`/validation khi dữ liệu đến từ boundary không chắc kiểu.
   transition:
     to: language-mechanics-005
     description: '**Từ kiểu và lời gọi hợp lệ → đánh giá biểu thức, field, accessor và quy ước Java tác động lên trạng thái**'
 - id: language-mechanics-005
   order: 5
   title: Toán tử, thuộc tính và quy ước của ngôn ngữ
-  description: Vận dụng toán tử, numeric promotion, short-circuit và JavaBeans/record conventions để tránh sai số và bảo vệ
-    field.
+  description: Vận dụng toán tử, numeric promotion, short-circuit và JavaBeans/record conventions để tránh sai số và bảo vệ field.
   transition:
     to: language-mechanics-006
     description: '**Từ so sánh biểu thức bằng `==`/`equals` → xây hợp đồng equality/hash đầy đủ để dùng object làm key**'
@@ -53,25 +48,21 @@ roadmap:
 - id: language-mechanics-007
   order: 7
   title: Biểu diễn chuỗi và thông tin chẩn đoán của đối tượng
-  description: Thiết kế `toString` và logging gọn, không lộ secret hoặc tạo side effect, với DTO/structured log riêng khi
-    cần.
+  description: Thiết kế `toString` và logging gọn, không lộ secret hoặc tạo side effect, với DTO/structured log riêng khi cần.
   transition:
     to: language-mechanics-008
     description: '**Từ chuỗi chẩn đoán và exception message → xác định hợp đồng lỗi có cấu trúc và trạng thái sau thất bại**'
 - id: language-mechanics-008
   order: 8
   title: Ngoại lệ, trạng thái lỗi và hợp đồng phương thức
-  description: Quy định tiền/hậu điều kiện, cách trả Result/Optional hoặc ném exception và trạng thái sau lỗi, cùng nguyên
-    tắc atomicity.
+  description: Quy định tiền/hậu điều kiện, cách trả Result/Optional hoặc ném exception và trạng thái sau lỗi, cùng nguyên tắc atomicity.
   transition:
     to: language-mechanics-009
-    description: '**Từ các cơ chế ngôn ngữ Java → phân biệt phần thiết kế OOP phải giữ với cú pháp/runtime có thể thay đổi
-      khi port**'
+    description: '**Từ các cơ chế ngôn ngữ Java → phân biệt phần thiết kế OOP phải giữ với cú pháp/runtime có thể thay đổi khi port**'
 - id: language-mechanics-009
   order: 9
   title: Khác biệt ngôn ngữ khi hiện thực cùng một thiết kế OOP
-  description: |-
-    Đối chiếu cùng thiết kế ShippingPolicy trên năm ngôn ngữ và xác nhận parity bằng ràng buộc input, đơn vị tiền và test biên.
+  description: Đối chiếu cùng thiết kế ShippingPolicy trên năm ngôn ngữ và xác nhận parity bằng ràng buộc input, đơn vị tiền và test biên.
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

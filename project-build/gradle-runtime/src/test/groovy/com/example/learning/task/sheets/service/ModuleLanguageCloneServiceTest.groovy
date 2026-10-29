@@ -99,22 +99,6 @@ class ModuleLanguageCloneServiceTest {
         assertEquals('UNCHANGED', service.execute(f.root as File, module, true).status)
     }
 
-    @Test
-    void clonesOneCompletePracticeDocumentWithoutReformatting() {
-        Map f = fixture()
-        File module = f.module as File
-        String yaml = PracticeSheetImportServiceTest.SCENARIO
-        String path = 'content/readme/docs/vi/menu/1.Basic/practice/scenarios.yml'
-        write(module, path, yaml)
-        File source = file(module, path)
-        assertEquals('CLONED', new ModuleLanguageCloneService()
-                .execute(f.root as File, module, true).status)
-        File translated = file(module,
-                'content/readme/docs/en/menu/1.Basic/practice/scenarios.yml')
-        assertArrayEquals(source.bytes, translated.bytes)
-        assertFalse(file(module,
-                'content/readme/docs/en/menu/1.Basic/practice/scenario-01.yml').exists())
-    }
 
     @Test
     void oldInterviewFolderMustBeMigratedBeforeCloningEnglish() {
@@ -126,7 +110,7 @@ class ModuleLanguageCloneServiceTest {
             new ModuleLanguageCloneService().execute(f.root as File, module, false)
             fail('Legacy Interview folder should block STEP 13')
         } catch (GradleException expected) {
-            assertTrue(expected.message.contains('run STEP 9 import'))
+            assertTrue(expected.message.contains('run legacy Interview P:S import'))
         }
     }
 

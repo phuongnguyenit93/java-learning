@@ -1,0 +1,96 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "SYNCHRONIZERS — PHỐI HỢP LUỒNG TRONG JAVA"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: synchronizers-001
+    order: 1
+    title: "CountDownLatch chờ một mốc hoàn tất"
+    description: "Mô hình hóa một mốc hoàn tất bằng bộ đếm một lần, phân biệt bên phát tín hiệu và bên đợi, dùng timeout, finally và Future để xử lý lỗi."
+    transition:
+      to: synchronizers-002
+      description: "Từ mốc hoàn tất một chiều chuyển sang phối hợp các vòng với nhiều party cùng chờ."
+  - id: synchronizers-002
+    order: 2
+    title: "CyclicBarrier phối hợp các vòng làm việc"
+    description: "Phối hợp các vòng xử lý của nhóm worker cố định bằng await, hiểu generation, arrival index, barrier action và failure của cả nhóm."
+    transition:
+      to: synchronizers-003
+      description: "Sau điểm hẹn có số party cố định, mở rộng sang số participant linh hoạt qua các pha."
+  - id: synchronizers-003
+    order: 3
+    title: "Phaser cho số lượng participant linh hoạt"
+    description: "Mở rộng điểm hẹn sang nhiều phase với số participant thay đổi; giải thích registration, arrival, deregistration, termination và phục hồi lỗi."
+    transition:
+      to: synchronizers-004
+      description: "Sau cơ chế phối hợp phase, chuyển sang giới hạn quyền truy cập tài nguyên hữu hạn."
+  - id: synchronizers-004
+    order: 4
+    title: "Semaphore giới hạn truy cập tài nguyên hữu hạn"
+    description: "Nắm permit, acquire/release và các lựa chọn chờ để giới hạn số thao tác đồng thời trên một tài nguyên hữu hạn."
+    transition:
+      to: synchronizers-005
+      description: "Từ giới hạn số task được vào tài nguyên, xét giao thức hai thread trực tiếp trao đổi dữ liệu."
+  - id: synchronizers-005
+    order: 5
+    title: "Exchanger<T> trao đổi dữ liệu giữa hai luồng"
+    description: "Học giao thức rendezvous hai chiều của Exchanger<T>, trao đổi reference và xử lý khi một bên không tới đúng lúc."
+    transition:
+      to: synchronizers-006
+      description: "Khi đã biết các primitive cơ bản, đối chiếu timeout và interruption của từng kiểu chờ."
+  - id: synchronizers-006
+    order: 6
+    title: "Các thao tác timeout và interruption"
+    description: "Đối chiếu các nhánh timeout, interruption và thành công của từng synchronizer, thiết kế deadline tổng và cleanup phù hợp."
+    transition:
+      to: synchronizers-007
+      description: "Từ lỗi khi chờ, đi sâu vào cách CyclicBarrier chạy action và xử lý broken/reset."
+  - id: synchronizers-007
+    order: 7
+    title: "Barrier action, trạng thái broken và reset"
+    description: "Phân tích action chạy trước khi mở barrier, broken generation do lỗi một bên, và reset chỉ được dùng sau khi điều phối recovery."
+    transition:
+      to: synchronizers-008
+      description: "Sau failure của barrier, xem cách Semaphore mất hoặc thừa permit trên các đường lỗi."
+  - id: synchronizers-008
+    order: 8
+    title: "Đếm permit và phòng tránh permit leak"
+    description: "Định nghĩa nghĩa vụ hoàn trả permit, phát hiện leak, double release và over-release qua các nhánh lỗi và lifecycle tài nguyên."
+    transition:
+      to: synchronizers-009
+      description: "Từ kế toán permit, quay lại so sánh hai hợp đồng đồng bộ nền tảng để chọn API đúng."
+  - id: synchronizers-009
+    order: 9
+    title: "Latch dùng một lần so với barrier tái sử dụng"
+    description: "Đặt CountDownLatch và CyclicBarrier cạnh nhau để chọn đúng giữa mốc hoàn tất dùng một lần và điểm hẹn lặp lại."
+    transition:
+      to: synchronizers-010
+      description: "Khi đã chọn đúng primitive, ứng dụng chúng để kiểm thử interleaving và các bất biến."
+  - id: synchronizers-010
+    order: 10
+    title: "Sử dụng synchronizer trong test concurrency"
+    description: "Dùng latch, barrier, phaser, semaphore và Future tạo test concurrency có điều phối, tái hiện race và dọn thread an toàn."
+    transition:
+      to: synchronizers-011
+      description: "Từ test đồng bộ, xét producer–consumer nơi cần truyền dữ liệu chứ không chỉ báo tín hiệu."
+  - id: synchronizers-011
+    order: 11
+    title: "Khi nên dùng BlockingQueue thay vì tự phối hợp luồng"
+    description: "Chọn BlockingQueue cho producer–consumer để kết hợp dữ liệu, waiting và visibility, thay vì tự viết monitor dễ mất tín hiệu."
+    transition:
+      to: synchronizers-012
+      description: "Sau handoff qua queue, tổng kết cách thiếu tín hiệu hoặc release gây treo toàn hệ thống."
+  - id: synchronizers-012
+    order: 12
+    title: "Tránh deadlock do thiếu arrive(), countDown() hoặc release()"
+    description: "Tổng hợp các lỗi phối hợp do thiếu countDown, arrive hoặc release, phân biệt các dạng treo và kiểm toán nghĩa vụ cleanup."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | CountDownLatch chờ một mốc hoàn tất | CyclicBarrier phối hợp các vòng làm việc | Phaser cho số lượng participant linh hoạt | Semaphore giới hạn truy cập tài nguyên hữu hạn | Exchanger<T> trao đổi dữ liệu giữa hai luồng | Các thao tác timeout và interruption | Barrier action, trạng thái broken và reset | Đếm permit và phòng tránh permit leak | Latch dùng một lần so với barrier tái sử dụng | Sử dụng synchronizer trong test concurrency | Khi nên dùng BlockingQueue thay vì tự phối hợp luồng | Tránh deadlock do thiếu arrive(), countDown() hoặc release() |
+  | Vấn đề cần hiểu | Chờ nhiều tác vụ hoặc một sự kiện kết thúc mà không tự đoán lịch chạy | Không để worker vượt sang vòng mới khi bên khác chưa tới checkpoint | Số bên tham gia thay đổi qua các phase khiến barrier cố định không đủ | Nhiều worker có thể cùng làm quá tải tài nguyên chung | Hai thread cần hoán đổi payload cho nhau theo từng lần gặp | Các API chờ có kết quả và hiệu ứng lỗi khác nhau | Một worker hoặc barrier action lỗi làm cả vòng xử lý không còn hợp lệ | Giới hạn concurrency bị sai vì thiếu hoặc thừa release | Hai API cùng làm thread chờ nhưng vòng đời và bên báo hiệu khác nhau | Kết quả test thay đổi theo scheduler và lỗi worker bị che giấu | Tự điều phối luồng truyền item dễ lỗi wait/notify và không giới hạn backlog | Chỉ một tín hiệu hoặc permit không được hoàn trả có thể làm hệ thống chờ vô hạn |
+  | Giá trị đối với OOP/module | Biết tạo và giải phóng cổng một chiều an toàn | Thiết kế các vòng xử lý có điểm hẹn lặp lại | Điều phối workflow nhiều pha với lifecycle participant rõ ràng | Áp trần concurrency rõ ràng bằng permit | Áp dụng đổi buffer, kiểm soát partner và lifetime dữ liệu | Không nhầm timeout với việc hệ thống đã phục hồi | Giữ bất biến all-or-none khi recovery nhiều worker | Bảo toàn capacity và tính đúng đắn qua mọi code path | Chọn primitive đúng cho pha khởi tạo hoặc xử lý nhiều vòng | Viết test có checkpoint, timeout và assertion có căn cứ | Sử dụng queue có capacity và giao thức shutdown rõ ràng | Chẩn đoán và khôi phục liveness mà không phá correctness |
+  | Tư duy hình thành | Gắn countDown với nghĩa vụ thực sự hoàn thành | Suy luận theo generation và nghĩa vụ của từng party | Theo dõi party obligation trước khi cho phase tiến | Tách quyền vào tài nguyên khỏi số thread được tạo | Xem mỗi exchange là giao dịch ghép cặp hai phía | Phân loại nguyên nhân rồi mới chọn hành vi hủy | Phục hồi cả generation thay vì sửa cục bộ một waiter | Quản lý permit như nghĩa vụ có chủ sở hữu rõ ràng | Dựa vào hợp đồng phối hợp, không chỉ sự giống nhau của await | Kiểm thử quan hệ nhân quả và invariant thay vì chờ ngẫu nhiên | Chọn primitive theo dữ liệu cần chuyển giao và policy khi đầy | Theo dõi vòng đời nghĩa vụ thay vì chỉ quan sát thread đang WAITING |

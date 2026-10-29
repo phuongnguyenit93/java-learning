@@ -1,0 +1,103 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "THREAD API — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: thread-api-001
+    order: 1
+    title: "Tạo thread bằng Thread và Runnable"
+    description: "Tách logic Runnable khỏi luồng Thread và khởi chạy/chờ hoàn tất đúng cách. Phân tích chia sẻ bộ nhớ và ngắt để tránh tưởng rằng tạo Thread đã thực thi công việc."
+    transition:
+      to: thread-api-002
+      description: "Từ thread và Runnable khác nhau ra sao? chuyển sang start và run khác nhau chỗ nào?"
+  - id: thread-api-002
+    order: 2
+    title: "Phân biệt gọi start() và run()"
+    description: "Phân tích chính xác sự khác biệt giữa gọi phương thức run đồng bộ và khởi động một luồng mới bằng start. Vận dụng Thread.State, happens-before và đường đi exception để không chạy task hai lần."
+    transition:
+      to: thread-api-003
+      description: "Từ start và run khác nhau chỗ nào? chuyển sang làm sao xác định đúng thread hiện tại?"
+  - id: thread-api-003
+    order: 3
+    title: "Đọc thông tin currentThread(), name và ID"
+    description: "Nhận diện đúng thread đang thực thi bằng currentThread, không nhầm với tham chiếu Thread được giữ ở caller. Phân biệt Java thread name/ID, PID, native ID và task ID để lập log có thể truy vết."
+    transition:
+      to: thread-api-004
+      description: "Từ làm sao xác định đúng thread hiện tại? chuyển sang priority có quyết định thread chạy trước không?"
+  - id: thread-api-004
+    order: 4
+    title: "Thread priority: ý nghĩa và giới hạn bảo đảm"
+    description: "Hiểu priority là một hint cho scheduler platform thread chứ không bảo đảm thứ tự, fairness hay deadline. Đối chiếu priority với hàng đợi ưu tiên và các đặc điểm của virtual thread."
+    transition:
+      to: thread-api-005
+      description: "Từ priority có quyết định thread chạy trước không? chuyển sang tạo quá nhiều platform thread tốn gì?"
+  - id: thread-api-005
+    order: 5
+    title: "Platform thread và chi phí tạo tài nguyên"
+    description: "Phân tích chi phí OS thread, stack, scheduler và lifecycle của platform threads. Thiết kế pool có giới hạn, nhận biết khác biệt CPU-bound/I/O-bound và đo native memory trước khi tăng số luồng."
+    transition:
+      to: thread-api-006
+      description: "Từ tạo quá nhiều platform thread tốn gì? chuyển sang user/daemon giữ JVM sống thế nào?"
+  - id: thread-api-006
+    order: 6
+    title: "Daemon thread và user thread khi JVM kết thúc"
+    description: "Giải thích non-daemon thread giữ JVM sống trong khi daemon có thể bị bỏ dở lúc shutdown. Thiết kế tín hiệu dừng và join có kiểm soát, phân biệt return từ main, System.exit và halt."
+    transition:
+      to: thread-api-007
+      description: "Từ user/daemon giữ JVM sống thế nào? chuyển sang lỗi từ worker được quan sát bằng cơ chế nào?"
+  - id: thread-api-007
+    order: 7
+    title: "Đặt tên luồng và thiết lập UncaughtExceptionHandler"
+    description: "Chuẩn hóa tên luồng và sử dụng UncaughtExceptionHandler như điểm ghi nhận Throwable thoát khỏi thread. Phân biệt handler riêng/default với lỗi giữ trong Future khi submit vào executor."
+    transition:
+      to: thread-api-008
+      description: "Từ lỗi từ worker được quan sát bằng cơ chế nào? chuyển sang factory khác executor ở đâu?"
+  - id: thread-api-008
+    order: 8
+    title: "ThreadFactory để chuẩn hóa cách tạo luồng"
+    description: "Tập trung chính sách tạo worker mới vào ThreadFactory: gắn Runnable, đặt tên, daemon, priority, handler và trả về Thread chưa start. Giữ ranh giới với executor về queue, concurrency, reuse và shutdown."
+    transition:
+      to: thread-api-009
+      description: "Từ factory khác executor ở đâu? chuyển sang task trả kết quả và lỗi về caller bằng cách nào?"
+  - id: thread-api-009
+    order: 9
+    title: "Runnable, Callable và cách truyền kết quả tác vụ"
+    description: "Phân biệt tác vụ không có giá trị trả về với tác vụ trả kiểu V và checked exception. Kết hợp Callable, FutureTask, Future, ExecutorService và CompletableFuture để nhận kết quả, lỗi, timeout và cancellation."
+    transition:
+      to: thread-api-010
+      description: "Từ task trả kết quả và lỗi về caller bằng cách nào? chuyển sang sleep/yield có giúp đồng bộ hóa dữ liệu không?"
+  - id: thread-api-010
+    order: 10
+    title: "sleep(), yield() và các giới hạn khi điều phối"
+    description: "Giải thích sleep là chờ thời gian trên thread hiện tại và yield chỉ là scheduler hint. Chúng không tạo happens-before hoặc tự nhả monitor; bài học thay chờ đoán bằng latch/condition và xử lý interruption đúng."
+    transition:
+      to: thread-api-011
+      description: "Từ sleep/yield có giúp đồng bộ hóa dữ liệu không? chuyển sang làm sao biết worker đã kết thúc?"
+  - id: thread-api-011
+    order: 11
+    title: "join() để chờ kết thúc một thread"
+    description: "Học chờ một Thread kết thúc bằng join thay vì ngủ theo thời gian. Nắm overload timeout, isAlive, happens-before, interruption và các nguy cơ self-join hoặc chu trình chờ."
+    transition:
+      to: thread-api-012
+      description: "Từ làm sao biết worker đã kết thúc? chuyển sang task done và thread terminated có giống nhau không?"
+  - id: thread-api-012
+    order: 12
+    title: "Phân biệt công việc của thread và vòng đời task"
+    description: "Một worker có thể chạy nhiều task và task có thể đã bị hủy mà chưa từng chạy. Phân biệt trạng thái Thread, trạng thái Future/task và lifecycle của executor để tránh suy luận sai từ WAITING, isDone hoặc shutdown."
+    transition:
+      to: thread-api-013
+      description: "Từ task done và thread terminated có giống nhau không? chuyển sang builder tạo platform/virtual thread và factory ra sao?"
+  - id: thread-api-013
+    order: 13
+    title: "Thread.Builder: tạo platform thread, virtual thread và ThreadFactory theo cấu hình"
+    description: "Java 21 cung cấp OfPlatform và OfVirtual để cấu hình start/unstarted/factory, tên, handler và context inheritance. Bài học lựa chọn mô hình theo CPU/I/O và giới hạn tài nguyên downstream dù dùng virtual threads."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 | Bài 13 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Tạo thread bằng Thread và Runnable | Phân biệt gọi start() và run() | Đọc thông tin currentThread(), name và ID | Thread priority: ý nghĩa và giới hạn bảo đảm | Platform thread và chi phí tạo tài nguyên | Daemon thread và user thread khi JVM kết thúc | Đặt tên luồng và thiết lập UncaughtExceptionHandler | ThreadFactory để chuẩn hóa cách tạo luồng | Runnable, Callable và cách truyền kết quả tác vụ | sleep(), yield() và các giới hạn khi điều phối | join() để chờ kết thúc một thread | Phân biệt công việc của thread và vòng đời task | Thread.Builder: tạo platform thread, virtual thread và ThreadFactory theo cấu hình |
+  | Vấn đề cần hiểu | Thread và Runnable khác nhau ra sao? | start và run khác nhau chỗ nào? | Làm sao xác định đúng thread hiện tại? | Priority có quyết định thread chạy trước không? | Tạo quá nhiều platform thread tốn gì? | User/daemon giữ JVM sống thế nào? | Lỗi từ worker được quan sát bằng cơ chế nào? | Factory khác executor ở đâu? | Task trả kết quả và lỗi về caller bằng cách nào? | Sleep/yield có giúp đồng bộ hóa dữ liệu không? | Làm sao biết worker đã kết thúc? | Task done và thread terminated có giống nhau không? | Builder tạo platform/virtual thread và factory ra sao? |
+  | Giá trị đối với OOP/module | Tạo và phối hợp luồng Java an toàn. | Không nhầm chạy đồng bộ với khởi động thread. | Log chính xác khi nhiều workers xử lý task. | Tránh dùng scheduling hint để bảo đảm correctness. | Chọn pool và giới hạn tải đúng tài nguyên. | Ngăn bỏ dở task quan trọng khi shutdown. | Gỡ lỗi thread và task không bỏ sót exception. | Nhất quán cách tạo thread và tên worker. | Xử lý kết quả bất đồng bộ an toàn. | Tránh busy wait, data race và đoán thời gian. | Chờ thread đúng thay vì ngủ phỏng đoán. | Quan sát đúng vòng đời trong executor. | Dùng Thread.Builder phù hợp workload và JDK. |
+  | Tư duy hình thành | Phân biệt task, thread và dữ liệu chung. | Phân tách method call và lifecycle. | Tách identity thread khỏi identity công việc. | Diễn đạt ưu tiên nghiệp vụ bằng cấu trúc dữ liệu. | Liên kết concurrency với native/CPU capacity. | Phân biệt khả năng giữ process và hoàn tất công việc. | Phân tách uncaught handler khỏi Future failure. | Tách thread policy khỏi task scheduling. | Tách logic task, execution và completion handle. | Tách scheduler behavior khỏi synchronization. | Tách chờ thread khỏi lấy kết quả task. | Theo dõi thread, task và executor độc lập. | Tách loại thread khỏi giới hạn tài nguyên. |

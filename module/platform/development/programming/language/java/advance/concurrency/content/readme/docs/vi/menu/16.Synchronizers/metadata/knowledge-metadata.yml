@@ -1,0 +1,37 @@
+sections:
+  synchronizers-001:
+    difficulty: BASIC
+    isImportant: true
+  synchronizers-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  synchronizers-003:
+    difficulty: ADVANCED
+    isImportant: true
+  synchronizers-004:
+    difficulty: BASIC
+    isImportant: true
+  synchronizers-005:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  synchronizers-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  synchronizers-007:
+    difficulty: ADVANCED
+    isImportant: true
+  synchronizers-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  synchronizers-009:
+    difficulty: BASIC
+    isImportant: true
+  synchronizers-010:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  synchronizers-011:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  synchronizers-012:
+    difficulty: ADVANCED
+    isImportant: true

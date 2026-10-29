@@ -56,6 +56,7 @@ class ReadmeSheetImportService {
         List<List<Object>> knowledge = (client.spreadsheets().values()
                 .get(spreadsheetId, "${tab}!C20:N${lastRow}")
                 .execute().values ?: []) as List<List<Object>>
+        MenuLessonIdService.validate(parsed.groups as List<Map>, knowledge)
         Map<String, String> documents = buildDocuments(
                 parsed.groups as List<Map<String, Object>>, knowledge
         )
@@ -142,7 +143,10 @@ class ReadmeSheetImportService {
                 )
             }
             lastRow = sheetRow
-            if (title) {
+            // A child may now hold a stable ID. B on a parent holds a .md filename.
+            boolean childWithId = title && MenuLessonIdService.isLessonId(title) &&
+                    ! (value ==~ FILENAME_PATTERN) && !groups.isEmpty()
+            if (title && !childWithId) {
                 if (title.contains('\n') || title.contains('\r')) {
                     throw new GradleException("Unsafe Menu Cấp 1 title at A${sheetRow}.")
                 }
@@ -155,12 +159,14 @@ class ReadmeSheetImportService {
                 ])
             }
             else {
-                if (groups.isEmpty() || value.contains('\n') || value.contains('\r')) {
+                if (groups.isEmpty() || !value ||
+                        value.contains('\n') || value.contains('\r')) {
                     throw new GradleException("Invalid Menu Cấp 2 at B${sheetRow}.")
                 }
                 List<Map<String, Object>> children =
                         groups.last().children as List<Map<String, Object>>
-                children.add([title: value, row: sheetRow])
+                children.add([title: value, row: sheetRow,
+                              id: childWithId ? title : null])
                 lessonCount++
             }
         }
@@ -222,7 +228,7 @@ class ReadmeSheetImportService {
             String relative = "${groupIndex + 1}.${stem}/knowledge/${filename}"
             StringBuilder markdown = new StringBuilder("# ${escapeMenuTitle(group.title)}\n")
             Map<String, String> rawBodies = new LinkedHashMap<>()
-            (group.children as List<Map>).eachWithIndex { Map lesson, int index ->
+            (group.children as List<Map>).each { Map lesson ->
                 int row = lesson.row as int
                 List<Object> fragments = row - 20 < knowledgeRows.size()
                         ? (knowledgeRows[row - 20] ?: [])
@@ -247,7 +253,10 @@ class ReadmeSheetImportService {
                         answer.append(fragment)
                     }
                 }
-                String anchor = "${slug}-${String.format('%03d', index + 1)}"
+                String anchor = lesson.id as String
+                if (!MenuLessonIdService.isLessonId(anchor) || !anchor.startsWith(slug + '-')) {
+                    throw new GradleException("Missing or invalid lesson ID at A${row}.")
+                }
                 markdown.append("\n## <a id=\"${anchor}\">${escapeMenuTitle(lesson.title)}</a>\n")
                 if (answer.length() > 0) {
                     // Use an opaque marker while the existing internal-menu

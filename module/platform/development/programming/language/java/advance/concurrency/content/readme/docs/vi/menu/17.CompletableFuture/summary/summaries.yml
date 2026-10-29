@@ -1,0 +1,784 @@
+summaries:
+- id: completable-future-001
+  title: CompletionStage và CompletableFuture khác Future truyền thống
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CompletionStage và CompletableFuture khác Future truyền thống**
+
+    Future giúp đợi và hủy kết quả; CompletionStage cho phép mô tả đồ thị phụ thuộc; CompletableFuture triển khai cả hai và có quyền hoàn tất thủ công. Bài nền tảng phân biệt hợp đồng API với việc lập lịch và chạy tác vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. Vì sao Future truyền thống thường cần get và CompletionStage có thể chain callback?
+    2. CompletableFuture khác CompletionStage ở quyền complete và các thao tác quan sát nào?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Một stage normal, exceptional hoặc canceled ảnh hưởng dependent stage ra sao?
+    2. Vì sao API CompletableFuture không tự bảo đảm thêm thread hay non-blocking I/O?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ graph phụ thuộc | Mô tả thenApply, thenCompose, thenCombine và điểm chờ cuối. |
+    | Phân tích outcome | Dự đoán trạng thái kết quả, lỗi và cancellation. |
+- id: completable-future-002
+  title: completedFuture(), supplyAsync(), runAsync()
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **completedFuture(), supplyAsync(), runAsync()**
+
+    completedFuture trả giá trị đã có; supplyAsync chạy Supplier có kết quả; runAsync chạy Runnable và hoàn tất kiểu Void. Bài dạy chọn factory theo kiểu đầu ra, executor, exception và vòng đời.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. completedFuture có chạy một task trên thread khác không?
+    2. supplyAsync và runAsync khác nhau ở generic result và Void thế nào?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Không truyền executor thì callback dùng chính sách thực thi nào?
+    2. Supplier ném lỗi hoặc executor đã shutdown tạo outcome gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán trạng thái | Giải thích normal-null, pending và exceptional completion. |
+    | Quản lý executor | Sử dụng executor riêng, quan sát lỗi và shutdown đúng. |
+- id: completable-future-003
+  title: thenApply(), thenAccept(), thenRun()
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **thenApply(), thenAccept(), thenRun()**
+
+    thenApply chuyển đổi kết quả T sang U; thenAccept tiêu thụ giá trị, còn thenRun chỉ nhận tín hiệu hoàn tất bình thường. Bài nhấn mạnh kiểu kết quả Void, side effect, exception và callback placement.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. Ba phương thức nhận tham số callback gì và trả về loại stage nào?
+    2. thenAccept khác thenRun khi cần dùng dữ liệu nguồn ra sao?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Nếu callback ném lỗi, source và dependent thay đổi như thế nào?
+    2. Callback non-Async có thể chạy ở luồng nào và gây rủi ro gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán chain | Phân tích giá trị và các stage trả Void. |
+    | Quan sát lỗi | Kiểm tra outcome khi source hoặc action thất bại. |
+- id: completable-future-004
+  title: thenApplyAsync() và ý nghĩa của executor
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **thenApplyAsync() và ý nghĩa của executor**
+
+    thenApplyAsync tạo ranh giới lên lịch callback; overload truyền Executor kiểm soát pool, queue và rejection. Bài phân tích sự khác nhau với thenApply, callback trên source đã completed và direct executor.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. thenApply và thenApplyAsync khác nhau ở bảo đảm scheduling nào?
+    2. Khi source đã completed, non-Async callback có thể chạy ngay tại đâu?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Direct Executor có thể chạy inline dù callback mang tên Async không?
+    2. RejectedExecutionException ảnh hưởng dependent stage như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn tài nguyên | Phân phối callback CPU và blocking I/O vào executor thích hợp. |
+    | Chẩn đoán rejection | Đọc kết quả khi callback bị từ chối hoặc pool shutdown. |
+- id: completable-future-005
+  title: thenCompose() để nối các tác vụ bất đồng bộ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **thenCompose() để nối các tác vụ bất đồng bộ**
+
+    thenCompose làm phẳng một stage được trả từ mapper phụ thuộc dữ liệu đầu vào. Bài dạy diễn đạt chuỗi A rồi B, tránh nested future, lỗi upstream/inner stage và join blocking trong cùng pool.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. thenApply trả nested stage khác thenCompose trả flattened stage ra sao?
+    2. Khi A thất bại, mapper khởi động B có được gọi không?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Vì sao gọi join trong mapper có thể gây single-worker deadlock?
+    2. thenComposeAsync đổi executor có làm dependency trở thành song song không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Theo dõi lỗi | Chỉ ra propagation từ nguồn, mapper và inner stage. |
+    | Tránh block worker | Thay join trong callback bằng composition. |
+- id: completable-future-006
+  title: thenCombine() khi cần phối hợp hai kết quả
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **thenCombine() khi cần phối hợp hai kết quả**
+
+    thenCombine chờ hai nguồn độc lập thành công rồi chạy BiFunction để tạo một kết quả chung. Bài phân biệt với thenCompose, allOf, timeout và lỗi của từng nhánh.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. Khi nào A/B độc lập đủ điều kiện dùng thenCombine?
+    2. Callback kết hợp có được gọi nếu một nguồn thất bại không?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. thenCombineAsync khác ở chính sách thực thi callback thế nào?
+    2. Hủy combined stage có tự hủy hai source không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích lỗi | Giải thích stage bị bỏ qua khi một nhánh exceptional. |
+    | Quản lý deadline | Nêu ranh giới timeout và cancellation cho từng nguồn. |
+- id: completable-future-007
+  title: allOf(), anyOf() với nhiều tác vụ song song
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **allOf(), anyOf() với nhiều tác vụ song song**
+
+    allOf là barrier chờ mọi future, anyOf lấy outcome hoàn tất đầu tiên kể cả lỗi. Bài xử lý kiểu Void/Object, thu kết quả theo thứ tự, các trường hợp input rỗng và cancellation của aggregate.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. Vì sao allOf không tự trả một List các kết quả đầu vào?
+    2. anyOf chọn first completion hay first successful completion?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Với zero input, allOf và anyOf hoàn tất như thế nào?
+    2. Cancel aggregate có khiến task thành viên tự dừng không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn semantics | Phân tích first completion và first success riêng. |
+    | Xử lý edge cases | Giải thích input rỗng, lỗi và hủy aggregate. |
+- id: completable-future-008
+  title: applyToEither() và acceptEither() khi cạnh tranh kết quả
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **applyToEither() và acceptEither() khi cạnh tranh kết quả**
+
+    applyToEither biến đổi kết quả của một nhánh thắng, acceptEither dùng nó cho action trả Void. Bài phân biệt race normal/exceptional, hedged request, winner không bảo đảm first-success và side effect của loser.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. applyToEither và acceptEither khác nhau về callback và return type gì?
+    2. Khi một nguồn lỗi sớm, có bảo đảm nguồn thành công cuối cùng thắng không?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Hai nguồn đều lỗi làm dependent stage ra sao?
+    2. Khi nào cancellation loser hoặc hedged request có nguy cơ side effect kép?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích cuộc đua | Dự đoán normal, exceptional và cancel outcome. |
+    | Thiết kế hedging | Đặt deadline, idempotency và cleanup loser. |
+- id: completable-future-009
+  title: handle(), exceptionally(), whenComplete()
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **handle(), exceptionally(), whenComplete()**
+
+    handle nhìn cả success và failure; exceptionally phục hồi lỗi; whenComplete quan sát outcome và thường giữ nguyên nó. Bài tập trung vào semantics callback, lỗi khi observer ném và thứ tự recovery.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. handle, exceptionally và whenComplete chạy ở những trạng thái nào?
+    2. Vì sao whenComplete thường không biến failure thành success?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Nếu source và whenComplete callback đều lỗi, lỗi nào được ưu tiên?
+    2. Vị trí recovery trước hoặc sau mapper thay đổi phạm vi lỗi thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Bảo toàn nguyên nhân | Viết logging với whenComplete không nuốt lỗi gốc. |
+    | Đặt recovery | Chọn handler đúng vị trí trong pipeline. |
+- id: completable-future-010
+  title: Khác biệt get() và join() khi xử lý lỗi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khác biệt get() và join() khi xử lý lỗi**
+
+    get và join có thể block nhưng khác checked/unchecked exception và interruption; get có overload timeout, join thường bọc lỗi bằng CompletionException. Bài dạy unwrap cause và phân biệt timeout, cancel.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. Cùng một lỗi task thì get và join ném wrapper gì?
+    2. Interrupt thread đang đợi get khác hành vi chờ join thế nào?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. get(timeout) có làm task hay future tự hủy không?
+    2. CancellationException cần xử lý khác lỗi tác vụ thường thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Unwrap nguyên nhân | Tìm cause gốc từ ExecutionException/CompletionException. |
+    | Phân biệt timeout | Giải thích timeout khi chờ và cancellation riêng. |
+- id: completable-future-011
+  title: orTimeout(), completeOnTimeout() và fallback
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **orTimeout(), completeOnTimeout() và fallback**
+
+    orTimeout hoàn tất future bằng TimeoutException còn completeOnTimeout ghi giá trị fallback; cả hai thay đổi chính future nhận method. Bài phân tích race với producer, shared future và underlying task vẫn chạy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. orTimeout và completeOnTimeout tác động future nào?
+    2. Timeout lỗi khác fallback normal có hệ quả downstream gì?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Vì sao underlying supplier có thể còn chạy sau timeout?
+    2. Đặt timeout trên shared future có rủi ro đối với các caller khác ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế fallback | Nêu tiêu chí khi trả default có ý nghĩa nghiệp vụ. |
+    | Quản lý công việc nền | Tách future completion khỏi worker termination. |
+- id: completable-future-012
+  title: Propagate lỗi trong chuỗi CompletableFuture
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Propagate lỗi trong chuỗi CompletableFuture**
+
+    Exception lan qua normal dependent stages cho tới khi có recovery; lỗi source, mapper và inner stage có thể khác nhau. Bài phân tích nhánh lỗi, allOf, anyOf, cancellation và debug cause đúng chỗ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. Mapper sau source exceptional có chạy không?
+    2. Đặt exceptionally ở giữa chain và cuối chain khác nhau thế nào?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Một nhánh lỗi trong allOf có tự hủy các nhánh còn lại không?
+    2. Nếu bỏ future của callback phụ thất bại, lỗi được quan sát thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đặt recovery boundary | Lựa chọn handler theo phạm vi nghiệp vụ. |
+    | Debug cause | Tìm nguồn gốc lỗi và tránh log trùng. |
+- id: completable-future-013
+  title: Chọn custom executor để quản lý tải và tránh tắc nghẽn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn custom executor để quản lý tải và tránh tắc nghẽn**
+
+    Custom executor quyết định CPU/I/O worker, bounded queue và rejection khi chạy CompletableFuture callback. Bài tập trung vào lifecycle, backpressure và pool-starvation khi dependent task join cùng executor.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. Vì sao blocking I/O trong commonPool có thể ảnh hưởng workload khác?
+    2. ThreadPoolExecutor đi từ core worker tới queue và maximum worker ra sao?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. AbortPolicy, CallerRunsPolicy khác nhau về tác động đến caller thế nào?
+    2. Vì sao callback join task mới trong single-thread executor có thể treo?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân luồng workload | Tách callback CPU và blocking I/O khi có bằng chứng. |
+    | Tránh starvation | Đổi join phụ thuộc thành composition thích hợp. |
+- id: completable-future-014
+  title: Giới hạn concurrency khi tạo hàng loạt future
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn concurrency khi tạo hàng loạt future**
+
+    Bulk fan-out tạo nhiều futures có thể vượt giới hạn in-flight và downstream; batch window, semaphore trước submit và bounded executor giải quyết các phần khác nhau. Bài đặc biệt xét permit leak khi cancel trước run và khi future xong nhưng worker chưa dừng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. Batch window khác semaphore trước submit về mức concurrency thế nào?
+    2. Vì sao acquire permit bên trong supplier không chặn số pending future?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Cancel future trước khi worker bắt đầu gây nguy cơ permit leak gì?
+    2. Release permit qua whenComplete có thể giải phóng quá sớm khi nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quản lý permit | Phân tích acquire, execution, cancel và release. |
+    | Đo overload | Dự đoán in-flight, queue và downstream capacity. |
+- id: completable-future-015
+  title: Cancellation, interrupt và giới hạn của CompletableFuture
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Cancellation, interrupt và giới hạn của CompletableFuture**
+
+    CompletableFuture.cancel thường tạo exceptional completion chứ không đảm bảo interrupt supplier của supplyAsync. Bài đối chiếu FutureTask, get timeout, cooperative cancellation và cleanup side effect.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. cancel(true) của CompletableFuture và FutureTask khác nhau thế nào?
+    2. Khi Future bị canceled, get/join và dependent nhìn thấy gì?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. orTimeout hoặc completeOnTimeout có tự dừng worker không?
+    2. Muốn hủy underlying I/O cần thêm tín hiệu và cleanup gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế dừng hợp tác | Đặt flag, timeout I/O và xử lý interrupted state. |
+    | Kiểm chứng termination | Quan sát hoàn tất task riêng với trạng thái future. |
+- id: completable-future-016
+  title: Fan-out / fan-in thực hành với nhiều tác vụ I/O
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Fan-out / fan-in thực hành với nhiều tác vụ I/O**
+
+    Fan-out/fan-in thực hành nhiều I/O bằng HTTP loopback, allOf/thenCombine/thenCompose và partial-result strategy. Bài phân biệt transport failure, status, end-to-end deadline, backpressure và việc cancel aggregate.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. Lúc nào dùng all-required thay vì partial success cho ba nguồn I/O?
+    2. HTTP status 404 có tự làm sendAsync exceptional không?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Request timeout và deadline tổng hợp khác nhau ra sao?
+    2. Cancel aggregate có tự đóng I/O nhánh đang hoạt động không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thu outcome rõ kiểu | Phân biệt source success, timeout và error. |
+    | Giới hạn fan-out | Đặt permit, deadline và đo tail latency. |
+- id: completable-future-017
+  title: 'CompletableFuture chưa hoàn tất: complete(), completeExceptionally() và cuộc đua hoàn tất'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CompletableFuture chưa hoàn tất: complete(), completeExceptionally() và cuộc đua hoàn tất**
+
+    Promise pending có thể được nhiều producer cạnh tranh complete normal, exceptional, cancel hoặc timeout. Bài tập trung vào atomic first completion wins, boolean của complete và tránh check-then-act trên isDone.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. complete và completeExceptionally trả boolean thể hiện điều gì?
+    2. Vì sao isDone rồi complete không phải một giao dịch atomic?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Nhiều producer gọi complete có khiến callback chạy nhiều lần không?
+    2. Nếu timeout thắng nhưng external side effect vẫn xảy ra, cần xử lý gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm chứng race | Dùng latch để thử nhiều contender hoàn tất một promise. |
+    | Phòng rò pending | Thiết kế deadline và cleanup khi producer lỗi. |
+- id: completable-future-018
+  title: 'completedStage(), failedFuture(), failedStage(): kết quả đã có và kết quả lỗi'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **completedStage(), failedFuture(), failedStage(): kết quả đã có và kết quả lỗi**
+
+    completedStage và failedStage trả CompletionStage đã có outcome; failedFuture trả CompletableFuture exceptional. Bài phân tích quyền completion, kiểu trả về, null success so với Throwable và đường cache hit không cần task.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. completedStage khác completedFuture về kiểu API ra sao?
+    2. failedFuture và failedStage khác nhau về quyền thao tác gì?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Giá trị result null khác việc truyền Throwable null thế nào?
+    2. Khi stage đã failed, mapper normal và recovery hoạt động ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích lỗi | Dự đoán outcome với failedStage và exceptionally. |
+    | Thiết kế public API | Tách caller observation khỏi quyền complete. |
+- id: completable-future-019
+  title: 'getNow(): đọc kết quả không chặn và phân biệt null với chưa hoàn tất'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **getNow(): đọc kết quả không chặn và phân biệt null với chưa hoàn tất**
+
+    getNow trả result ngay khi đã complete hoặc fallback khi pending, không bao giờ đợi. Bài đào sâu completed-null, sentinel collision, exception/cancel và race của isDone cùng getNow.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. Vì sao getNow(null) không tách pending khỏi completed-null?
+    2. Sentinel identity hoặc Optional có thể biểu diễn trạng thái thế nào?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. getNow trả fallback hay ném lỗi trên future exceptional?
+    2. Hai lần gọi isDone và getNow có atomic snapshot không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tránh collision | Dùng sentinel hoặc envelope có kiểu. |
+    | Phân tích race | Giải thích trạng thái thay đổi giữa hai lần quan sát. |
+- id: completable-future-020
+  title: 'exceptionallyCompose(): phục hồi bằng một CompletionStage bất đồng bộ'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **exceptionallyCompose(): phục hồi bằng một CompletionStage bất đồng bộ**
+
+    exceptionallyCompose phục hồi lỗi bằng một stage bất đồng bộ khác, còn exceptionally phục hồi bằng giá trị. Bài dạy fallback async, khác thenCompose, lỗi fallback và giới hạn retry/timeout.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. exceptionallyCompose khác exceptionally ở return type như thế nào?
+    2. Nếu upstream thành công, callback fallback có được gọi không?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Fallback tự thất bại thì dependent stage nhận lỗi nào?
+    2. Vì sao không nên join future dự phòng ngay trong callback?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Theo dõi lỗi lồng | Phân tích lỗi của chính fallback. |
+    | Giới hạn retry | Đặt policy theo lỗi, deadline và executor. |
+- id: completable-future-021
+  title: 'minimalCompletionStage() và copy(): giới hạn quyền hoàn tất future của bên nhận'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **minimalCompletionStage() và copy(): giới hạn quyền hoàn tất future của bên nhận**
+
+    minimalCompletionStage và copy hạn chế quyền thay đổi source CompletableFuture ở API public; copy vẫn là future riêng có thể bị client complete. Bài xem toCompletableFuture, hủy bản sao và mutable payload.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. Chỉ trả interface CompletionStage có đủ ngăn client sửa source không?
+    2. copy cho phép client làm gì trên bản sao mà không sửa source?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. minimalCompletionStage().toCompletableFuture() ảnh hưởng source ra sao?
+    2. Vì sao copy của Future không tạo deep copy object kết quả?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm chứng isolation | Thử complete/cancel bản sao và đọc source. |
+    | Kiểm soát payload | Dùng immutable snapshot nếu chia sẻ dữ liệu mutable. |
+- id: completable-future-022
+  title: 'delayedExecutor(): lên lịch khởi chạy mà không chặn luồng chờ'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **delayedExecutor(): lên lịch khởi chạy mà không chặn luồng chờ**
+
+    delayedExecutor dời thời điểm dispatch task sang Executor, không tạo một lời chờ sleep ở caller. Bài phân biệt delay với deadline, default/base executor, ScheduledExecutorService và policy retry.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. delayedExecutor tạo task thực thi hay chỉ trả Executor trì hoãn?
+    2. Delay bắt đầu khi source completes hay khi callback được đăng ký?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Base Executor ảnh hưởng tên thread và policy thế nào?
+    2. Vì sao delay không đồng nghĩa deadline hoặc hủy ScheduledFuture?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích timeline | Tách delay, dispatch, execution và completion. |
+    | Chọn scheduler | Phân biệt delayedExecutor và ScheduledExecutorService. |
+- id: completable-future-023
+  title: Callback không có hậu tố Async có thể chạy trên luồng hoàn tất hoặc luồng gọi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Callback không có hậu tố Async có thể chạy trên luồng hoàn tất hoặc luồng gọi**
+
+    Callback không hậu tố Async có thể chạy bởi completer hoặc caller đăng ký sau completion; không có thread-affinity cố định. Bài dùng test trước/sau completion để lý giải latency, ThreadLocal và callback blocking.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. Đăng ký thenApply trước complete thì thread nào thường chạy callback?
+    2. Source đã complete trước lúc đăng ký thì callback có thể chạy ở đâu?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Vì sao callback blocking làm chậm thread gọi complete?
+    2. ThreadLocal có tự động truyền qua các callback không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tách callback nặng | Chọn Async và executor khi cần. |
+    | Quản lý context | Truyền context tường minh và test hành vi. |
+- id: completable-future-024
+  title: 'thenAcceptBoth() và runAfterBoth(): phối hợp hai nhánh không cần giá trị trả về'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **thenAcceptBoth() và runAfterBoth(): phối hợp hai nhánh không cần giá trị trả về**
+
+    thenAcceptBoth nhận hai giá trị để chạy action, runAfterBoth chỉ đợi cả hai thành công rồi chạy Runnable; cả hai tạo dependent Void stage. Bài so sánh cả hai với thenCombine và lỗi source/callback.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. thenAcceptBoth nhận input nào mà runAfterBoth không nhận?
+    2. Vì sao một source thất bại thì action không thể chạy như success?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Hai callback sibling có được Java cam kết thứ tự không?
+    2. Khi cần kết quả mới thay vì Void nên dùng API nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích barrier | Kiểm chứng hai source cùng success mới gọi callback. |
+    | Quản lý side effect | Nêu timeout, idempotency và lỗi callback. |
+- id: completable-future-025
+  title: 'HttpClient.sendAsync(): ghép phản hồi HTTP, lỗi mạng và CompletableFuture'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **HttpClient.sendAsync(): ghép phản hồi HTTP, lỗi mạng và CompletableFuture**
+
+    HttpClient.sendAsync trả CompletableFuture của HttpResponse; HTTP status 4xx/5xx thường là normal response, lỗi transport là exceptional completion. Bài thực hành loopback, BodyHandler, status mapping, timeout, retry và composition.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. Vì sao HTTP 404 không nhất thiết là exceptional CompletableFuture?
+    2. BodyHandler và HttpResponse quyết định kiểu dữ liệu nào?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. thenApply validate status khác thenCompose khởi chạy request tiếp theo ra sao?
+    2. Cần điều tiết retry, rate limit và network failure thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt failure | Tách HTTP error response khỏi I/O exception. |
+    | Kiểm chứng loopback | Chạy ví dụ offline và phân tích kết quả. |
+- id: completable-future-026
+  title: Thời hạn HTTP request so với timeout và cancellation của CompletableFuture
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thời hạn HTTP request so với timeout và cancellation của CompletableFuture**
+
+    HTTP request timeout, timeout khi get, orTimeout và cancel tác động ở các tầng khác nhau. Bài thiết kế deadline end-to-end, exception HttpTimeoutException/TimeoutException và cleanup transport best effort.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. HttpRequest.timeout bảo vệ thời gian nào ở tầng HTTP?
+    2. orTimeout và get(timeout) khác nhau về mutation của future như thế nào?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Cancel future sendAsync có bảo đảm I/O đã dừng không?
+    2. Vì sao retry nhiều bước phải dùng deadline tổng thay vì cộng các timeout?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại lỗi | Phân biệt HttpTimeoutException và TimeoutException. |
+    | Thiết kế deadline | Vẽ request, stage, cancellation và cleanup. |
+- id: completable-future-027
+  title: 'NIO CompletionHandler: chuyển callback completed()/failed() sang CompletionStage'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **NIO CompletionHandler: chuyển callback completed()/failed() sang CompletionStage**
+
+    NIO.2 CompletionHandler completed/failed được adapter thành CompletableFuture normal/exceptional rồi công bố CompletionStage. Bài tập trung vào partial read/write, EOF, callback race và closing channel khi cancel không tự lan.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API và cơ chế
+
+    1. completed và failed nên hoàn tất Future bằng phương thức nào?
+    2. Vì sao một lần đọc AsynchronousFileChannel chưa đảm bảo đủ toàn bộ file?
+
+    ### Ứng dụng, lỗi và giới hạn
+
+    1. Socket write có thể chỉ ghi một phần và cần xử lý ra sao?
+    2. Timeout/cancel stage có tự hủy operation NIO hoặc đóng channel không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xử lý partial I/O | Phân tích read/write, EOF và buffer ownership. |
+    | Quản lý tài nguyên | Quy định closing, deadline và callback đến muộn. |

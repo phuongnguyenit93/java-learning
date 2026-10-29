@@ -1,0 +1,404 @@
+summaries:
+- id: performance-001
+  title: Latency, throughput, utilization và độ ổn định
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Latency, throughput, utilization và độ ổn định**
+
+    Bài học định nghĩa bốn góc nhìn nền tảng để đánh giá hiệu năng đồng thời: latency của một request, throughput công việc hoàn thành, utilization của từng tài nguyên và stability khi tải kéo dài. Nếu chỉ tối ưu số thread hoặc một giá trị trung bình, hệ thống có thể có p99 xấu, queue dài hoặc nhiều lỗi dù throughput biểu kiến tăng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thước đo và ranh giới
+
+    1. Latency, throughput, utilization và stability trả lời bốn câu hỏi khác nhau như thế nào?
+    2. Vì sao phải xác định điểm bắt đầu và kết thúc trước khi đo latency và queue wait?
+    3. Vì sao throughput chỉ đếm task bắt đầu có thể che giấu task thất bại hoặc bị từ chối?
+
+    ### Phân tích khi tải tăng
+
+    1. Khi concurrency tăng nhưng throughput đứng yên còn p95 tăng, bạn suy luận nút thắt ra sao?
+    2. Làm thế nào đối chiếu CPU, memory, queue, error rate và percentile trong cùng một cửa sổ tải?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định nghĩa metric | Chọn đơn vị và ranh giới đo chính xác cho bốn đại lượng trong một executor. |
+    | Phân tích phân vị latency | Giải thích tình huống average ổn nhưng p95/p99 tăng theo tải và đề xuất dữ liệu cần thu. |
+    | Thiết kế thí nghiệm tải | Đo cả throughput, utilization, lỗi và độ bền thay vì chỉ so tốc độ tức thời. |
+- id: performance-002
+  title: Amdahl's law và giới hạn speedup
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Amdahl's law và giới hạn speedup**
+
+    Amdahl's Law cho biết phần bắt buộc tuần tự đặt giới hạn lên speedup của workload cố định dù tăng số worker. Người học dùng tỉ phần thời gian baseline, không dùng số dòng code hay thread count, để ước lượng cận trên và so sánh với benchmark thực tế.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình speedup
+
+    1. Tỉ phần tuần tự và song song trong Amdahl được tính theo thời gian baseline như thế nào?
+    2. Vì sao cận trên speedup vẫn hữu hạn dù số worker tăng không giới hạn khi phần tuần tự khác không?
+    3. Speedup, efficiency và throughput khác nhau khi đánh giá tối ưu ra sao?
+
+    ### Diễn giải giới hạn
+
+    1. Khi số worker tăng mà speedup giảm, overhead, contention và giới hạn phần cứng có thể tác động như thế nào?
+    2. Tại sao mô hình fixed-workload không đồng nghĩa tốc độ xử lý tối đa của hệ thống khi workload scale lên?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính speedup lý tưởng | Thay phần tuần tự và số worker vào công thức Amdahl, tính cận trên và efficiency. |
+    | Đối chiếu với thực nghiệm | So sánh dự báo lý tưởng với thời gian chạy ExecutorService và nhận diện overhead. |
+    | Ra quyết định tối ưu | Đề xuất cải thiện phần tuần tự hoặc loại bỏ contention dựa trên giới hạn tính toán. |
+- id: performance-003
+  title: Đo tác động của thread count và context switching
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đo tác động của thread count và context switching**
+
+    Số thread ảnh hưởng CPU scheduling, context switching, contention và thời gian chờ; vì vậy phải giữ workload và môi trường đo ổn định khi so các cấu hình. Bài học nối ThreadMXBean/JFR với chỉ số OS và phân biệt CPU-bound, blocking I/O cùng oversubscription.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Số thread và scheduling
+
+    1. Concurrency khác parallelism như thế nào khi số worker vượt số CPU hữu dụng?
+    2. Context switch ở hệ điều hành khác trạng thái `RUNNABLE` hoặc `WAITING` trong JVM ra sao?
+    3. Vì sao tăng thread count ban đầu có lợi nhưng sau đó giảm throughput?
+
+    ### Thiết kế phép đo
+
+    1. Làm thế nào đổi 1, 2, 4, 8 worker mà vẫn giữ lượng công việc và cơ chế warmup tương đương?
+    2. Vì sao phải đo CPU, context-switch rate, queue time, throughput và p95 cùng lúc?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chạy ma trận thread count | Thiết lập thí nghiệm ExecutorService với workload cố định và số worker thay đổi. |
+    | Đọc context-switch metric | Liên kết số liệu pidstat/perf hoặc Performance Monitor với thread state/JFR phù hợp. |
+    | Chọn pool size | Nhận diện oversubscription và giải thích điểm saturation từ kết quả đo. |
+- id: performance-004
+  title: CPU saturation so với I/O wait
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CPU saturation so với I/O wait**
+
+    Bài học chẩn đoán thread dùng CPU thật khác thread chờ file/network hoặc các điều kiện đồng bộ. Nó giải thích vì sao Linux `%wa` không phải phần trăm Java thread chờ I/O, và kết hợp per-thread CPU, run queue, cgroup quota, JFR, socket/file latency để chọn đúng hướng tối ưu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### CPU và I/O dưới góc nhìn hệ thống
+
+    1. CPU utilization và CPU saturation khác nhau thế nào; vì sao một hot core có thể bị nghẽn dù CPU tổng thấp?
+    2. Linux `%wa` mô tả loại thời gian nào và vì sao không đo thời gian Java đợi socket hay backend?
+    3. Wall-clock time trừ thread CPU time có thể chứa những loại chờ nào ngoài I/O?
+
+    ### Chẩn đoán và hành động
+
+    1. Vì sao Java `RUNNABLE` không đủ chứng minh thread đang tiêu CPU?
+    2. Làm thế nào ghép vmstat, mpstat, pidstat, iostat và JFR để xác định bottleneck CPU/remote I/O?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt saturation và wait | Giải thích dữ liệu CPU thấp nhưng socket latency cao hoặc một core đang full. |
+    | Thu thập chứng cứ đa lớp | Lập lộ trình lấy CPU per-thread, JFR, OS disk/network và metric backend cùng thời điểm. |
+    | Chọn giải pháp phù hợp | Đề xuất giới hạn worker CPU-bound hoặc giới hạn in-flight/timeout cho I/O-bound theo kết quả đo. |
+- id: performance-005
+  title: Lock contention, starvation và fairness trade-off
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lock contention, starvation và fairness trade-off**
+
+    Nhiều worker cùng tranh một lock có thể tạo queue, kéo dài tail latency và giảm throughput. Bài học phân biệt contention với starvation/deadlock/livelock, giải thích fair/nonfair ReentrantLock và cách đo thời gian đợi thực thay vì cho rằng fairness luôn nhanh hơn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế tranh chấp
+
+    1. Lock contention, starvation, deadlock và livelock khác nhau về tiến triển của thread ra sao?
+    2. Vì sao một critical section dài có thể khiến tăng worker làm throughput xấu đi?
+    3. `ReentrantLock(true)` ảnh hưởng thứ tự cấp khóa và barging của `tryLock()` ra sao?
+
+    ### Thực nghiệm và sửa thiết kế
+
+    1. Những metric nào chứng minh fair lock cải thiện tail latency nhưng có thể làm giảm throughput?
+    2. Khi nào rút ngắn critical section hoặc bỏ shared mutable state tốt hơn đổi fairness policy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại tình huống lock | Phân tích stack/metric để phân biệt chờ hợp lệ, starvation và deadlock. |
+    | So sánh fair/nonfair | Tổ chức benchmark hai chính sách với throughput và thời gian chờ per-thread. |
+    | Giảm contention | Đề xuất thu hẹp critical section hoặc phân tán state và kiểm chứng lợi ích. |
+- id: performance-006
+  title: Queue length, rejection và hiệu ứng quá tải
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Queue length, rejection và hiệu ứng quá tải**
+
+    Khi producer tạo task nhanh hơn worker tiêu thụ, queue dài chỉ trì hoãn vấn đề; nó không làm tăng công suất xử lý. Bài học chỉ rõ trình tự nhận task của ThreadPoolExecutor, ảnh hưởng queue capacity/maxPoolSize và các RejectedExecutionHandler trong tình huống quá tải.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Executor và queue
+
+    1. `ThreadPoolExecutor.execute()` chọn tạo core worker, đưa vào queue hay tạo worker thêm theo thứ tự nào?
+    2. Vì sao sử dụng queue gần như vô hạn làm `maximumPoolSize` khó có tác dụng?
+    3. Queue length tăng kéo dài khác một burst ngắn như thế nào?
+
+    ### Từ chối và điều tiết
+
+    1. Các chính sách Abort, CallerRuns, Discard, DiscardOldest thay đổi trách nhiệm của caller và khả năng mất task ra sao?
+    2. Đặt admission/rejection như thế nào để không chấp nhận công việc đã quá deadline?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế executor hữu hạn | Cấu hình pool, queue và rejection và dự đoán task thứ ba khi worker/queue đều đầy. |
+    | Giải thích overload | Liên hệ queue buildup, tail latency và timeout trong workload có tốc độ đến lớn hơn năng lực xử lý. |
+    | Chọn chính sách từ chối | Đánh giá mất dữ liệu, caller blocking và phản hồi quá tải cho từng tình huống nghiệp vụ. |
+- id: performance-007
+  title: Little's Law để liên hệ lượng tác vụ, thời gian chờ và throughput
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Little's Law để liên hệ lượng tác vụ, thời gian chờ và throughput**
+
+    Little's Law `L = λW` kết nối số task trung bình trong ranh giới đo, throughput hoàn thành và thời gian một task lưu lại ở đó trong trạng thái đủ ổn định. Bài học nhấn mạnh việc tách queued/running và chọn đúng mẫu số, thời gian nhằm tránh diễn giải sai khi có rejection hoặc tải biến động.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biến số và điều kiện áp dụng
+
+    1. L, λ và W đại diện chính xác cho số đo gì trong một ThreadPoolExecutor?
+    2. Vì sao arrival/throughput cần cùng ranh giới đo, và steady state quan trọng với công thức?
+    3. W có gồm queue wait lẫn service time khi lấy ranh giới từ lúc admission đến completion không?
+
+    ### Chẩn đoán bằng Little's Law
+
+    1. Nếu throughput giữ nguyên mà số task in-flight tăng, điều đó gợi ý xu hướng latency nào?
+    2. Little's Law có đủ để suy ra thread pool size tối ưu hoặc công suất tối đa không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính lượng task in-flight | Áp dụng L = λW với đơn vị nhất quán trong một kịch bản executor. |
+    | Kiểm tra tính nhất quán metrics | Ghép queue length, active count, completion rate và latency trên cùng boundary. |
+    | Phân tích capacity | Dự đoán khi W tăng hoặc throughput không tăng dù L lớn và giải thích hạn chế steady state. |
+- id: performance-008
+  title: False sharing và cache-line contention
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **False sharing và cache-line contention**
+
+    False sharing xảy ra khi hai thread ghi các biến logic độc lập nhưng dữ liệu cùng cache line khiến phần cứng liên tục chuyển quyền ghi. Bài học phân biệt true sharing, lock contention và false sharing, trình bày benchmark AtomicLongArray, padding/`@Contended` cùng giới hạn về layout, CPU architecture.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế cache line
+
+    1. Vì sao hai biến không dùng chung về logic vẫn có thể tranh quyền sở hữu cùng cache line?
+    2. False sharing khác true sharing và lock contention ra sao?
+    3. Vì sao không thể giả định mọi JVM/CPU bố trí dữ liệu theo cache line 64 byte?
+
+    ### Thực nghiệm và tối ưu
+
+    1. Làm thế nào so vị trí index gần/xa trong AtomicLongArray mà không khẳng định kết quả cố định?
+    2. Khi nào padding, giảm ghi nóng hoặc local aggregation đáng đánh đổi complexity/memory?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện false sharing | Giải thích cache coherence tạo overhead dù không có data race giữa hai biến độc lập. |
+    | Thiết kế benchmark phần cứng | So mẫu đọc/ghi ở vị trí gần/xa với điều kiện JVM, layout và CPU được kiểm soát. |
+    | Chọn biện pháp giảm contention | Ưu tiên phân vùng state, giảm tần suất ghi hoặc padding khi số liệu chứng minh lợi ích. |
+- id: performance-009
+  title: LongAdder so với AtomicLong dưới contention
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **LongAdder so với AtomicLong dưới contention**
+
+    AtomicLong duy trì một giá trị cập nhật nguyên tử và hỗ trợ CAS khi cần kết quả tức thời, còn LongAdder trải các lần cộng lên nhiều ô để tăng throughput dưới contention nhưng `sum()` không là snapshot tuyến tính đồng thời với updates. Bài học gắn lựa chọn với metric counter, sequence, quota và reset.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng và atomicity
+
+    1. AtomicLong bảo đảm điều gì cho `incrementAndGet()` và CAS?
+    2. LongAdder giảm tranh chấp bằng cách phân tán cập nhật như thế nào, và vì sao `sum()` không atomic đối với các update đồng thời?
+    3. Vì sao LongAdder không phù hợp làm sequence hoặc quyết định quota chính xác?
+
+    ### Benchmark và ứng dụng
+
+    1. Khi nào LongAdder có thể nhanh hơn AtomicLong và khi nào overhead không đáng kể?
+    2. `sumThenReset()` có thể làm mất độ chính xác nào nếu writer vẫn cập nhật đồng thời?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn primitive cho yêu cầu | Phân loại metric telemetry, ID sequence và admission counter để chọn AtomicLong/LongAdder. |
+    | Đọc và giải thích tổng | Giải thích snapshot không atomic và rủi ro reset dưới cập nhật đồng thời. |
+    | Đo contention | Thiết kế phép đo khi số writer tăng, đối chiếu throughput và tính đúng của kết quả. |
+- id: performance-010
+  title: Benchmark đáng tin cậy với JMH (công cụ ngoài JDK)
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Benchmark đáng tin cậy với JMH (công cụ ngoài JDK)**
+
+    JMH giúp tổ chức fork JVM, warmup, measurement iteration, trạng thái benchmark, `@Group`/`@Threads` và tránh nhiều lỗi microbenchmark. Bài học dùng benchmark contention AtomicLong/LongAdder và workload read/write, nhưng vẫn yêu cầu giả thuyết rõ, môi trường tái lập và không suy đoán sản phẩm từ microbenchmark.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế JMH
+
+    1. Vì sao `System.nanoTime()` quanh vài lời gọi không đủ để so sánh primitive concurrency?
+    2. `@State`, `@BenchmarkMode`, `@Warmup`, `@Measurement`, `@Fork` và `Blackhole` giải quyết những vấn đề gì?
+    3. Khi dùng `@Group` hoặc `@Threads`, đâu là shared state và cơ hội contention thực sự?
+
+    ### Đọc kết quả và kiểm chứng
+
+    1. Làm thế nào kiểm soát JIT, garbage collection và CPU scheduling giữa các fork?
+    2. Vì sao một benchmark cho throughput cao chưa chứng minh latency hoặc hiệu năng production tốt?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình JMH | Lập benchmark có annotation và build dependency/annotation processor phù hợp. |
+    | So sánh contention | Thiết kế hai phép đo AtomicLong/LongAdder trên trạng thái chia sẻ đúng cùng mức thread. |
+    | Đánh giá kết quả | Giải thích score/đơn vị/fork/độ nhiễu và các giới hạn khi áp dụng. |
+- id: performance-011
+  title: Warming up JVM, JIT và tránh microbenchmark sai
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Warming up JVM, JIT và tránh microbenchmark sai**
+
+    JVM thay đổi hiệu năng khi class loading, profiling, tiered compilation và GC đang diễn ra; một phép đo sớm có thể đo cả startup thay vì steady-state. Bài học phân tích dead-code elimination, constant folding, escape analysis, input và output quan sát được, cùng cách đọc warmup/JMH đúng bối cảnh.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### JVM lifecycle và tối ưu hóa
+
+    1. Class loading, interpreter, tiered compilation và JIT làm thời gian cùng một đoạn code thay đổi ra sao?
+    2. Vì sao warm-up cần phù hợp với workload, không chỉ chạy vài vòng lặp bất kỳ?
+    3. Dead-code elimination và constant folding có thể khiến microbenchmark đo gần như không có việc thế nào?
+
+    ### Xây dựng phép đo có ý nghĩa
+
+    1. Vì sao phải dùng dữ liệu đầu vào thay đổi và tiêu thụ kết quả có quan sát được?
+    2. Khi nào nên đo startup/cold latency thay vì loại bỏ nó bằng warmup?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chẩn đoán warmup | Giải thích khác biệt cold/warm timing qua JIT, allocation, GC và cache. |
+    | Loại bỏ benchmark sai | Sửa ví dụ bị dead-code elimination hoặc constant folding và dùng JMH khi cần. |
+    | Chọn phase cần đo | Tách cold-start, steady-state và tải dài bằng giả thuyết cùng scope rõ ràng. |
+- id: performance-012
+  title: Giới hạn tài nguyên và backpressure để bảo vệ hệ thống
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn tài nguyên và backpressure để bảo vệ hệ thống**
+
+    Backpressure và admission control buộc producer điều chỉnh tốc độ khi worker, memory hoặc downstream đã chạm capacity; queue hữu hạn, Semaphore, retry/timeout và `Flow` demand có các hợp đồng khác nhau. Bài học đặt ưu tiên vào giữ hệ thống ổn định thay vì nhận vô hạn task rồi timeout hàng loạt.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Điều tiết và tài nguyên
+
+    1. Queue bounded, Semaphore và rate limit bảo vệ những loại tài nguyên khác nhau như thế nào?
+    2. Backpressure truyền tín hiệu năng lực downstream về producer ra sao?
+    3. Tại sao unbounded queue có thể che quá tải rồi gây memory pressure và tail latency lớn?
+
+    ### Chính sách bảo vệ hệ thống
+
+    1. Khi nào nên reject, shed load, chặn có deadline hoặc trả lỗi để caller retry có kiểm soát?
+    2. Làm thế nào ghép bounded queue, timeout, cancellation, bulkhead và retry idempotent để tránh retry storm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế admission control | Cấu hình executor bounded, Semaphore và rejection phù hợp cho workload có quota. |
+    | Xây dựng backpressure | Diễn giải demand trong Flow hoặc cơ chế hạn chế producer theo công suất consumer. |
+    | Đánh giá ổn định | Thiết kế load test burst/steady, theo dõi queue, p95, error rate và recovery. |
+- id: performance-013
+  title: 'ThreadLocalRandom.current(): tránh tranh chấp, khả năng tái lập và giới hạn bảo mật'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ThreadLocalRandom.current(): tránh tranh chấp, khả năng tái lập và giới hạn bảo mật**
+
+    ThreadLocalRandom giúp những worker sinh số giả ngẫu nhiên mà không tranh cùng trạng thái seed chung; nhưng việc dùng current() không đem lại dãy số tái lập theo task và không có bảo đảm mật mã. Bài học phân biệt Random dùng chung, seeded generator cho test và SecureRandom cho token, cùng tình huống retry jitter.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thread-local PRNG
+
+    1. Vì sao nhiều worker dùng một `Random` chung có thể tranh chấp trạng thái seed?
+    2. `ThreadLocalRandom.current()` cần được lấy trong thread thực thi ra sao và API bound hoạt động thế nào?
+    3. Vì sao ThreadLocalRandom không có hợp đồng seed tái lập ổn định cho từng task?
+
+    ### Tính đúng và bảo mật
+
+    1. Làm thế nào gán generator/seed theo task để chạy lại mô phỏng mà không phụ thuộc scheduler?
+    2. Tại sao số giả ngẫu nhiên dùng cho token hoặc khóa bí mật cần `SecureRandom`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dùng ThreadLocalRandom đúng | Viết worker lấy ThreadLocalRandom.current() và kiểm tra giới hạn giá trị trả về. |
+    | Thiết kế phép thử tái lập | Gán seed độc lập cho task và giải thích vì sao thứ tự worker không được làm đổi dữ liệu test. |
+    | Phân loại yêu cầu bảo mật | Chọn Random/ThreadLocalRandom/SecureRandom cho mô phỏng, jitter hoặc token. |

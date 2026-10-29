@@ -62,8 +62,7 @@ roadmap:
 - id: object-009
   order: 9
   title: Theo dõi tương tác của các đối tượng trong một tình huống
-  description: |-
-    Tổng hợp identity, tham chiếu và state vào checkout cùng sequence diagram và nhánh lỗi.
+  description: Tổng hợp identity, tham chiếu và state vào checkout cùng sequence diagram và nhánh lỗi.
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

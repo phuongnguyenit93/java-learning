@@ -1,0 +1,110 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'ATOMIC & CAS — MẠCH LIÊN KẾT BÀI HỌC'
+roadmapHeading: 'Mạch liên kết bài học'
+roadmap:
+  - id: atomic-and-cas-001
+    order: 1
+    title: 'AtomicInteger, AtomicLong và AtomicBoolean'
+    description: 'Nắm ba lớp atomic primitive, cập nhật một giá trị và ranh giới giữa atomic operation với logic nhiều bước.'
+    transition:
+      to: atomic-and-cas-002
+      description: 'Từ atomic primitive tiến sang quản lý một reference chứa snapshot nhiều trường.'
+  - id: atomic-and-cas-002
+    order: 2
+    title: 'AtomicReference và cập nhật object state'
+    description: 'Công bố immutable object state qua AtomicReference và cập nhật nhiều field bằng một phép CAS reference.'
+    transition:
+      to: atomic-and-cas-003
+      description: 'Sau immutable reference, tìm hiểu phép compareAndSet làm điểm commit.'
+  - id: atomic-and-cas-003
+    order: 3
+    title: 'compareAndSet() và nguyên tắc CAS'
+    description: 'Làm rõ compareAndSet, điểm tuyến tính hóa, kết quả thành công/thất bại và điều kiện để retry.'
+    transition:
+      to: atomic-and-cas-004
+      description: 'Sau nguyên lý CAS, xử lý tình huống retry khi contention.'
+  - id: atomic-and-cas-004
+    order: 4
+    title: 'CAS loop, retry và contention'
+    description: 'Thiết kế CAS loop dưới tranh chấp, xử lý retry/backoff và bảo vệ invariant khi cập nhật thất bại.'
+    transition:
+      to: atomic-and-cas-005
+      description: 'Từ CAS loop thủ công, học các phương thức update dựa trên hàm.'
+  - id: atomic-and-cas-005
+    order: 5
+    title: 'getAndUpdate(), updateAndGet() và accumulator'
+    description: 'Thực hành functional atomic update và accumulation, phân biệt kết quả trước/sau và hàm callback thuần.'
+    transition:
+      to: atomic-and-cas-006
+      description: 'Từ API functional, thiết kế compound immutable state và invariant.'
+  - id: atomic-and-cas-006
+    order: 6
+    title: 'Atomic compound reference qua immutable state'
+    description: 'Gộp invariant nhiều field vào immutable state rồi thay nguyên tử một reference duy nhất.'
+    transition:
+      to: atomic-and-cas-007
+      description: 'Từ compound reference, nghiên cứu atomic updater trực tiếp trên field.'
+  - id: atomic-and-cas-007
+    order: 7
+    title: 'AtomicIntegerFieldUpdater và điều kiện áp dụng'
+    description: 'Dùng AtomicIntegerFieldUpdater với volatile int instance field và kiểm tra điều kiện access, ownership, contention.'
+    transition:
+      to: atomic-and-cas-008
+      description: 'Đã biết updater, phân tích ABA khi reference đổi rồi quay lại.'
+  - id: atomic-and-cas-008
+    order: 8
+    title: 'ABA problem và AtomicStampedReference'
+    description: 'Nhận diện ABA và dùng AtomicStampedReference để so cặp giá trị cùng version trong CAS.'
+    transition:
+      to: atomic-and-cas-009
+      description: 'Sau kiểm soát version, cân nhắc throughput của accumulator.'
+  - id: atomic-and-cas-009
+    order: 9
+    title: 'LongAdder và LongAccumulator khi cập nhật cạnh tranh'
+    description: 'Dùng LongAdder và LongAccumulator khi cập nhật cạnh tranh, hiểu sum/get/reset không cho snapshot nhất quán ngay.'
+    transition:
+      to: atomic-and-cas-010
+      description: 'Từ accumulator phân tán, tìm hiểu memory ordering chi tiết bằng VarHandle.'
+  - id: atomic-and-cas-010
+    order: 10
+    title: 'VarHandle: truy cập atomic và access mode'
+    description: 'Hiểu VarHandle và chọn chính xác memory ordering, atomicity cho field/array access.'
+    transition:
+      to: atomic-and-cas-011
+      description: 'Đã hiểu access mode, nhận diện giới hạn giao dịch nhiều object.'
+  - id: atomic-and-cas-011
+    order: 11
+    title: 'Atomic không thay thế giao dịch nhiều đối tượng'
+    description: 'Làm rõ vì sao atomic một biến không tạo transaction đa đối tượng; thiết kế một ranh giới commit chung.'
+    transition:
+      to: atomic-and-cas-012
+      description: 'Tiếp theo tổng hợp lựa chọn atomic, lock và confinement.'
+  - id: atomic-and-cas-012
+    order: 12
+    title: 'Chọn atomic, lock hay thread confinement'
+    description: 'Tổng hợp tiêu chí chọn atomic, lock hay confinement dựa trên invariant, ownership, ordering và hiệu năng.'
+    transition:
+      to: atomic-and-cas-013
+      description: 'Áp dụng nguyên tắc lựa chọn vào atomic array theo từng slot.'
+  - id: atomic-and-cas-013
+    order: 13
+    title: 'AtomicIntegerArray, AtomicLongArray và AtomicReferenceArray: cập nhật từng phần tử'
+    description: 'Học AtomicIntegerArray, AtomicLongArray, AtomicReferenceArray và phạm vi atomic từng phần tử.'
+    transition:
+      to: atomic-and-cas-014
+      description: 'Cuối cùng kiểm tra side effect khi callback atomic phải retry.'
+  - id: atomic-and-cas-014
+    order: 14
+    title: 'Hàm updateAndGet, accumulateAndGet và nguy cơ tác dụng phụ khi CAS phải thử lại'
+    description: 'Đào sâu side effect trong functional atomic callbacks khi CAS retry, tách attempt và commit.'
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 | Bài 13 | Bài 14 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | AtomicInteger, AtomicLong và AtomicBoolean | AtomicReference và cập nhật object state | compareAndSet() và nguyên tắc CAS | CAS loop, retry và contention | getAndUpdate(), updateAndGet() và accumulator | Atomic compound reference qua immutable state | AtomicIntegerFieldUpdater và điều kiện áp dụng | ABA problem và AtomicStampedReference | LongAdder và LongAccumulator khi cập nhật cạnh tranh | VarHandle: truy cập atomic và access mode | Atomic không thay thế giao dịch nhiều đối tượng | Chọn atomic, lock hay thread confinement | AtomicIntegerArray, AtomicLongArray và AtomicReferenceArray: cập nhật từng phần tử | Hàm updateAndGet, accumulateAndGet và nguy cơ tác dụng phụ khi CAS phải thử lại |
+  | Vấn đề cần hiểu | Làm sao tránh mất update trên counter hoặc flag? | Thay đồng thời nhiều field của object state bằng cách nào? | CAS so sánh và commit một state như thế nào? | CAS thất bại nhiều lần thì phải làm gì để đúng? | Các hàm cập nhật atomic trả kết quả và retry ra sao? | Cập nhật nhiều field cùng một điểm commit thế nào? | Atomic trên field trực tiếp yêu cầu điều kiện nào? | CAS có phát hiện state từng đổi rồi quay lại A? | Bộ đếm tải cao tăng throughput bằng cách nào? | Access mode nào đáp ứng happens-before và atomicity? | Cập nhật nhiều đối tượng cần giao dịch thế nào? | Công cụ đồng bộ nào phù hợp với bài toán cụ thể? | Làm sao cập nhật riêng từng ô mảng dùng chung? | Callback được gọi lại có thể gây side effect lặp thế nào? |
+  | Giá trị đối với OOP/module | Dùng counter, ID và cờ trạng thái có tính atomic | Giữ invariant của snapshot thống nhất | Nắm nguyên tắc nền của các API CAS | Vòng retry chịu tranh chấp và kiểm soát tiến triển | Cập nhật nguyên tử bằng API chức năng rõ nghĩa | Đảm bảo snapshot compound nhất quán | Tối ưu layout nhiều object khi cần thiết | Giữ thông tin phiên bản trong thuật toán lock-free | Tối ưu metric nhưng biết giới hạn consistency | Kiểm soát memory semantics cấp thấp | Giữ invariant nghiệp vụ nhiều bước | Ra quyết định concurrency có lý do | Atomic per-slot cho bucket và state độc lập | Tránh hành động nghiệp vụ lặp do retry CAS |
+  | Tư duy hình thành | Tìm đơn vị trạng thái nhỏ nhất cần bảo vệ | Gắn các field liên quan với một phiên bản bất biến | Phân biệt snapshot đã đọc với commit thành công | Mỗi lần thử lại phải dựa trên state mới | Tách việc tính candidate khỏi lần commit | Lấy invariant làm đơn vị state | Kiểm tra type và access trước khi tối ưu | Quan tâm lịch sử, không chỉ giá trị hiện hành | Chọn nguyên tử tức thời hay thống kê phân tán | Chứng minh ordering rồi mới chọn API | Đặt transaction boundary trước lựa chọn primitive | Bắt đầu từ ownership và invariant | Phân biệt slot với toàn mảng | Tách ứng viên cập nhật khỏi hiệu ứng thành công |

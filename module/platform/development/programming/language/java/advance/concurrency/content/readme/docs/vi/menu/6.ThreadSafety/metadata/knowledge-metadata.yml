@@ -1,0 +1,34 @@
+sections:
+  thread-safety-001:
+    difficulty: BASIC
+    isImportant: true
+  thread-safety-002:
+    difficulty: BASIC
+    isImportant: true
+  thread-safety-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-safety-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-safety-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-safety-006:
+    difficulty: ADVANCED
+    isImportant: true
+  thread-safety-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-safety-008:
+    difficulty: ADVANCED
+    isImportant: true
+  thread-safety-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  thread-safety-010:
+    difficulty: ADVANCED
+    isImportant: true
+  thread-safety-011:
+    difficulty: ADVANCED
+    isImportant: true

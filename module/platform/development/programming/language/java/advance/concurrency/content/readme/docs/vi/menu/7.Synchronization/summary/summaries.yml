@@ -1,0 +1,361 @@
+summaries:
+- id: synchronization-001
+  title: Intrinsic lock và monitor của mọi object
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Intrinsic lock và monitor của mọi object**
+
+    Xác định intrinsic monitor gắn với danh tính object và nguyên lý mutual exclusion. Đây là nền tảng để biết một vùng synchronized bảo vệ trạng thái nào, lúc nào monitor được nhả và vì sao việc đồng bộ cũng ảnh hưởng memory visibility.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện monitor
+
+    1. Vì sao hai biến trỏ cùng object lại đồng bộ với nhau còn hai object khác nhau thì không?
+    2. Ba cú pháp synchronized chọn monitor nào và Thread.holdsLock chứng minh được điều gì?
+
+    ### Hợp đồng của khóa
+
+    1. Vì sao unlock rồi lock cùng monitor tạo ra quan hệ happens-before?
+    2. Khi một thread sleep hoặc wait trong synchronized, monitor có được nhả trong từng trường hợp không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ánh xạ monitor | Chỉ đúng monitor được dùng trong synchronized method, block và static method. |
+    | Giải thích tính đúng đắn | Phân tích tại sao increment được bảo vệ cùng monitor tránh lost update. |
+    | Đọc vòng đời khóa | Dự đoán lock được nhả khi return, exception hoặc Object.wait. |
+- id: synchronization-002
+  title: synchronized method so với synchronized block
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **synchronized method so với synchronized block**
+
+    So sánh synchronized instance method với synchronized block theo monitor, phạm vi khóa và khả năng giới hạn critical section. Người học cần tránh giả định rằng một getter và setter synchronized riêng rẽ đã tạo thành phép cập nhật nguyên tử.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa cú pháp
+
+    1. Khi nào synchronized method và synchronized(this) có cùng tác dụng?
+    2. Vì sao một block dùng private final lock có thể hữu ích hơn khóa toàn method?
+
+    ### Thiết kế API
+
+    1. Vì sao tách get rồi set vẫn mất cập nhật dù cả hai method synchronized?
+    2. Khi nào scope của monitor phải bao trọn thao tác check-then-act?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đối chiếu hai cú pháp | Phân tích đối tượng monitor và phạm vi được bảo vệ ở hai implementation. |
+    | Sửa lost update | Gộp read-modify-write vào critical section thống nhất. |
+    | Chọn granularity | Đề xuất synchronized block hẹp hơn nhưng vẫn bảo vệ invariant. |
+- id: synchronization-003
+  title: Khóa theo instance và theo class
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khóa theo instance và theo class**
+
+    Làm rõ khác biệt giữa khóa trên receiver và khóa trên Class object, đặc biệt khi dữ liệu static được chia sẻ giữa nhiều instance. Bài giúp kiểm tra đúng lock identity trước khi kết luận hai phương thức loại trừ nhau.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân tách lock scope
+
+    1. Hai instance cùng lớp có synchronized instance method có thể chạy đồng thời vì sao?
+    2. Static synchronized method khóa đối tượng nào và tại sao không tự chặn instance synchronized method?
+
+    ### Bẫy nâng cao
+
+    1. Vì sao dùng instance lock để bảo vệ một static field có thể gây lost update?
+    2. Kế thừa, getClass và class loader ảnh hưởng việc xác định class monitor như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ánh xạ lock scope | Dự đoán các cặp thao tác dùng chung hoặc khác monitor. |
+    | Bảo vệ static state | Chọn class monitor hoặc private static lock phù hợp. |
+    | Kiểm thử cạnh tranh | Giải thích mất cập nhật khi dùng sai lock giữa các instance. |
+- id: synchronization-004
+  title: Reentrant synchronization là gì?
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Reentrant synchronization là gì?**
+
+    Hiểu tính tái nhập của monitor Java và ReentrantLock: cùng owner có thể acquire lại khóa mà không tự chặn, còn thread khác vẫn bị loại trừ. Cần cân đối việc tái nhập với invariant, callback và số lần unlock.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế tái nhập
+
+    1. Vì sao một synchronized method có thể gọi một synchronized method khác trên cùng object mà không tự deadlock?
+    2. Hold count của ReentrantLock tăng giảm thế nào khi một thread lock lồng nhau?
+
+    ### Giới hạn
+
+    1. Vì sao reentrancy không ngăn deadlock khi vòng chờ gồm các lock khác nhau?
+    2. Callback tái nhập có thể quan sát invariant đang ở trạng thái nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán reentry | Theo dõi owner và số lần giữ khóa qua lời gọi đệ quy/lồng nhau. |
+    | Đảm bảo cleanup | Viết cặp lock/unlock cân bằng qua try/finally. |
+    | Phân tích callback | Tìm reentry có thể làm lộ trạng thái chưa ổn định. |
+- id: synchronization-005
+  title: Mutual exclusion và memory visibility của monitor
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Mutual exclusion và memory visibility của monitor**
+
+    Liên hệ mutual exclusion với bảo đảm visibility theo happens-before của Java Memory Model. Người học phải biết rằng đồng bộ chỉ đúng khi cả đường đọc và ghi tuân theo giao thức monitor phù hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mutual exclusion
+
+    1. Vì sao một phép read-modify-write được bảo vệ toàn bộ mới tránh lost update?
+    2. Điều kiện nào giúp một snapshot nhiều field nhất quán?
+
+    ### Visibility
+
+    1. Quan hệ unlock-lock trên cùng monitor bảo đảm những gì về các ghi trước đó?
+    2. Vì sao chỉ synchronized ở writer hoặc dùng monitor khác ở reader không tạo ra visibility mong muốn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập luận JMM | Chứng minh đường happens-before thông qua cùng monitor. |
+    | Xác định race | Phân tích code thiếu đồng bộ trên một đường truy cập. |
+    | Bảo vệ snapshot | Thiết kế đọc và ghi nhiều field theo invariant thống nhất. |
+- id: synchronization-006
+  title: Thiết kế critical section đủ nhỏ và dễ kiểm chứng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thiết kế critical section đủ nhỏ và dễ kiểm chứng**
+
+    Rèn cách chọn ranh giới critical section từ invariant, giữ phần quyết định/cập nhật nguyên tử và đưa tính toán độc lập ra ngoài lock. Bài giúp tối ưu thời gian giữ khóa mà không đổi correctness lấy throughput.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới invariant
+
+    1. Làm sao xác định câu lệnh bắt buộc nằm cùng critical section cho thao tác check-and-update?
+    2. Vì sao chia nhỏ đoạn khóa có thể làm lộ state cập nhật dở?
+
+    ### Kiểm chứng tối ưu
+
+    1. Một phép tính từ snapshot đưa ra ngoài lock có thể bị stale như thế nào?
+    2. Khi nhiều tài nguyên cần đồng bộ, vì sao phải giữ lock order nhất quán?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tách prepare/commit | Đưa tính toán độc lập ra ngoài monitor và giữ phần commit nguyên tử. |
+    | Viết invariant | Nêu điều kiện trạng thái phải đúng trước mỗi lần nhả lock. |
+    | Đánh giá tradeoff | Kiểm thử interleaving để chứng minh refactor không thêm race. |
+- id: synchronization-007
+  title: Lock ordering để ngăn deadlock
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lock ordering để ngăn deadlock**
+
+    Phân tích vòng chờ lock và xây dựng một thứ tự khóa toàn cục để ngăn deadlock khi một thao tác cần nhiều tài nguyên. Người học phải xử lý thứ hạng, tie-breaker và lock ẩn từ callback.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đồ thị chờ
+
+    1. Vòng A giữ lock1 chờ lock2, B giữ lock2 chờ lock1 hình thành deadlock vì sao?
+    2. Thứ tự tổng của các khóa loại bỏ circular wait bằng lập luận nào?
+
+    ### Thiết kế nhiều lock
+
+    1. Làm sao bảo đảm thứ tự khi hai tài khoản chuyển tiền hai chiều?
+    2. Trường hợp hai khóa có cùng khóa sắp xếp hoặc khóa ẩn trong callback cần xử lý ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dựng wait-for graph | Chỉ ra chu trình deadlock từ các quan hệ hold/wait. |
+    | Áp đặt lock order | Thiết kế thứ tự khóa ổn định và tie-breaker nhất quán. |
+    | Kiểm thử deadlock | Tái hiện hai luồng đảo chiều rồi chứng minh bản sửa tiến triển. |
+- id: synchronization-008
+  title: Tránh khóa trên String literal hay public object
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tránh khóa trên String literal hay public object**
+
+    Nhận ra rủi ro của việc dùng String literal, public object hoặc monitor có identity dễ bị thay thế. Bài tập trung vào khả năng đóng gói quyền giữ khóa và thiết kế private final lock.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Danh tính khóa
+
+    1. Vì sao các String literal có thể chia sẻ monitor ngoài ý muốn?
+    2. Public object cho mã bên ngoài khả năng làm chậm hoặc khóa class như thế nào?
+
+    ### Thiết kế an toàn
+
+    1. Vì sao private final Object thường là lựa chọn tốt cho lock nội bộ?
+    2. Nếu một tham chiếu lock bị gán lại, hai thread có còn đồng bộ với nhau không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Review monitor | Phát hiện synchronized trên literal, boxed value hoặc public object. |
+    | Sửa encapsulation | Thay lock bị phơi lộ bằng monitor riêng ổn định. |
+    | Chứng minh identity | Giải thích nguy cơ hai luồng đồng bộ trên object khác nhau. |
+- id: synchronization-009
+  title: Đợi monitor bằng wait() và đánh thức bằng notify()/notifyAll()
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đợi monitor bằng wait() và đánh thức bằng notify()/notifyAll()**
+
+    Nắm giao thức monitor condition với Object.wait, notify và notifyAll. Khi đợi điều kiện, thread phải giữ đúng monitor, dùng while kiểm tra predicate và hiểu rằng tín hiệu đánh thức chưa đồng nghĩa lấy lại khóa ngay.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Wait set
+
+    1. Object.wait nhả monitor nào và phải lấy lại điều gì trước khi trả về?
+    2. Notify và notifyAll khác nhau thế nào khi có nhiều điều kiện chờ?
+
+    ### Protocol đúng
+
+    1. Vì sao phải dùng while cho predicate thay vì if sau khi wakeup?
+    2. Làm sao tránh lost notification, xử lý interrupt và timeout khi dùng wait?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Triển khai condition | Viết vòng while + wait và thay đổi predicate cùng monitor. |
+    | Chọn notify | Dự đoán các waiter nào có thể thức dậy và giành lại monitor. |
+    | Kiểm thử tín hiệu | Tái hiện producer–consumer để phát hiện race hoặc lost signal. |
+- id: synchronization-010
+  title: Giữ invariant khi chờ và sau khi thức dậy
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giữ invariant khi chờ và sau khi thức dậy**
+
+    Phân biệt invariant của đối tượng với predicate để một thread được tiếp tục sau khi wait hoặc Condition.await. Bài đào sâu việc bảo toàn trạng thái ở điểm nhả monitor, sau spurious wakeup, timeout và interrupt.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bất biến và điều kiện
+
+    1. Invariant khác predicate được chờ ở điểm nào?
+    2. Điều gì phải đúng trước khi thread nhả khóa vào wait set?
+
+    ### Phục hồi sau wakeup
+
+    1. Vì sao notify không bảo đảm predicate vẫn đúng khi waiter lấy lại lock?
+    2. Nếu timeout hoặc interrupt xảy ra giữa giao dịch, phải giữ invariant và xử lý cleanup như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế state machine | Viết invariant và các predicate chờ của bounded buffer. |
+    | Giữ đúng trạng thái | Kiểm tra mọi đường wait/notify/exception trước khi nhả khóa. |
+    | Điều phối condition | Phân biệt notFull/notEmpty, timeout và spurious wakeup bằng test. |
+- id: synchronization-011
+  title: Contended monitor và rủi ro giữ khóa quá lâu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Contended monitor và rủi ro giữ khóa quá lâu**
+
+    Phân tích contention ở intrinsic monitor và ảnh hưởng của critical section dài tới latency, throughput và thread state. Người học thực hành đo bằng thread dump, ThreadMXBean/JFR và tối ưu mà không làm sai dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguyên nhân contention
+
+    1. Vì sao thread BLOCKED tăng khi holder thực hiện thao tác lâu dưới synchronized?
+    2. Vì sao contention khác với deadlock và starvation?
+
+    ### Quan sát tối ưu
+
+    1. Những số liệu nào giúp xác định monitor là bottleneck?
+    2. Nếu thay synchronized bằng ReentrantLock.tryLock có timeout thì cần xử lý nhánh thất bại như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc thread state | Phân biệt BLOCKED của monitor và WAITING của các primitive khác. |
+    | Đo bottleneck | Dùng thread dump, ThreadMXBean hoặc JFR để nhận diện lock giữ quá lâu. |
+    | Đề xuất tối ưu | Thu gọn đoạn khóa và so sánh latency/throughput sau sửa. |
+- id: synchronization-012
+  title: Vấn đề khi gọi callback hoặc blocking I/O trong synchronized
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vấn đề khi gọi callback hoặc blocking I/O trong synchronized**
+
+    Phân tích tác hại của callback ngoài quyền kiểm soát và blocking I/O bên trong synchronized: convoy, deadlock, lỗi một phần và mất thứ tự sự kiện. Bài hướng tới mô hình chụp snapshot dưới khóa rồi xử lý ngoài khóa cùng cơ chế commit an toàn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Callback dưới khóa
+
+    1. Một callback reentrant cùng thread khác gì callback đợi một thread khác cần monitor?
+    2. Callback sửa listener list có thể gây lỗi gì khi đang lặp và giữ khóa?
+
+    ### I/O và điểm commit
+
+    1. Vì sao blocking queue put, network I/O hay callback dưới monitor làm tăng contention?
+    2. Sau khi đưa I/O ra ngoài critical section, phải kiểm tra version hoặc thứ tự commit để tránh stale state thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện call-out | Tìm callback hoặc I/O có khả năng block trong vùng synchronized. |
+    | Thiết kế snapshot | Lấy snapshot state/listeners dưới lock và chạy callback bên ngoài. |
+    | Bảo vệ commit | Dùng version check/queue hoặc chính sách ordering để duy trì invariant. |

@@ -1,0 +1,96 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "BÀI TẬP THỰC TẾ — THỰC HÀNH JAVA CONCURRENCY"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: practical-exercises-001
+    order: 1
+    title: "Xây counter bị race và lần lượt sửa bằng lock, atomic"
+    description: "Tái hiện lost update và sửa bằng lock hoặc AtomicInteger; kiểm tra correctness từ invariant."
+    transition:
+      to: practical-exercises-002
+      description: "Từ shared counter sang bài producer–consumer có kênh dữ liệu bounded."
+  - id: practical-exercises-002
+    order: 2
+    title: "Xây bounded producer–consumer bằng BlockingQueue"
+    description: "Bài thực hành producer–consumer bounded, backpressure và graceful stop qua poison pill."
+    transition:
+      to: practical-exercises-003
+      description: "Từ giới hạn queue dữ liệu đến giới hạn queue của executor."
+  - id: practical-exercises-003
+    order: 3
+    title: "Xây executor có bounded queue và rejection policy"
+    description: "Thiết kế bounded executor và kiểm tra quyết định nhận, từ chối hoặc chạy task tại caller."
+    transition:
+      to: practical-exercises-004
+      description: "Từ giới hạn nộp task đến lấy kết quả theo completion order."
+  - id: practical-exercises-004
+    order: 4
+    title: "Chạy nhiều Callable, lấy kết quả theo thứ tự hoàn tất"
+    description: "Thu mọi Callable theo completion order bằng ExecutorCompletionService có kiểm soát lỗi và deadline."
+    transition:
+      to: practical-exercises-005
+      description: "Từ nhiều task độc lập sang thuật toán CPU chia để trị với Fork/Join."
+  - id: practical-exercises-005
+    order: 5
+    title: "Tính tổng mảng bằng Fork/Join và so benchmark"
+    description: "Tính tổng mảng bằng Fork/Join rồi đánh giá overhead và benchmark theo workload."
+    transition:
+      to: practical-exercises-006
+      description: "Từ task CPU-bound sang I/O waiting và CompletableFuture."
+  - id: practical-exercises-006
+    order: 6
+    title: "Gọi nhiều I/O giả lập bằng CompletableFuture với timeout"
+    description: "Dùng CompletableFuture tổng hợp nhiều I/O đồng thời với timeout, fallback và deadline."
+    transition:
+      to: practical-exercises-007
+      description: "Từ I/O đồng thời đến chọn platform/virtual thread và giới hạn downstream."
+  - id: practical-exercises-007
+    order: 7
+    title: "So sánh platform threads và virtual threads cho tác vụ I/O"
+    description: "Benchmark platform/virtual threads trên cùng HTTP I/O, phân tích carrier, resource limit và pinning."
+    transition:
+      to: practical-exercises-008
+      description: "Từ giới hạn downstream sang Semaphore kiểm soát số request đồng thời."
+  - id: practical-exercises-008
+    order: 8
+    title: "Triển khai Semaphore giới hạn tài nguyên đồng thời"
+    description: "Dùng Semaphore làm giới hạn in-flight có timeout, đúng ownership và kiểm chứng peak."
+    transition:
+      to: practical-exercises-009
+      description: "Từ permit contention sang nguy cơ deadlock khi lấy nhiều lock."
+  - id: practical-exercises-009
+    order: 9
+    title: "Viết test tái hiện deadlock rồi sửa lock ordering"
+    description: "Tạo deadlock có kiểm soát, tìm chu trình monitor và sửa bằng global lock order."
+    transition:
+      to: practical-exercises-010
+      description: "Từ deadlock trong test sang thread dump thực tế."
+  - id: practical-exercises-010
+    order: 10
+    title: "Đọc thread dump và tìm vị trí chặn luồng"
+    description: "Đọc thread dump để tìm điểm blocking, lock owner và nguyên nhân chờ thực tế."
+    transition:
+      to: practical-exercises-011
+      description: "Từ chẩn đoán runtime đến thiết kế shutdown và cancellation có thể kiểm chứng."
+  - id: practical-exercises-011
+    order: 11
+    title: "Thiết kế shutdown có hủy, timeout và đóng tài nguyên"
+    description: "Thiết kế shutdown nhiều giai đoạn có timeout, cancel và resource close theo termination."
+    transition:
+      to: practical-exercises-012
+      description: "Từ các tình huống thực hành đến checklist review toàn bộ concurrency."
+  - id: practical-exercises-012
+    order: 12
+    title: "Tổng kết checklist: thread safety, cancellation, observability"
+    description: "Checklist cuối chương về correctness, cancellation và observability qua lifecycle task."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Xây counter bị race và lần lượt sửa bằng lock, atomic | Xây bounded producer–consumer bằng BlockingQueue | Xây executor có bounded queue và rejection policy | Chạy nhiều Callable, lấy kết quả theo thứ tự hoàn tất | Tính tổng mảng bằng Fork/Join và so benchmark | Gọi nhiều I/O giả lập bằng CompletableFuture với timeout | So sánh platform threads và virtual threads cho tác vụ I/O | Triển khai Semaphore giới hạn tài nguyên đồng thời | Viết test tái hiện deadlock rồi sửa lock ordering | Đọc thread dump và tìm vị trí chặn luồng | Thiết kế shutdown có hủy, timeout và đóng tài nguyên | Tổng kết checklist: thread safety, cancellation, observability |
+  | Vấn đề cần hiểu | Phép tăng counter dùng chung có thể mất cập nhật vì sao? | Truyền dữ liệu thế nào để backlog không tăng vô hạn? | Executor phải phản hồi thế nào khi hết khả năng tiếp nhận? | Làm sao nhận kết quả nhanh mà không chờ task submit đầu tiên? | Khi nào chia song song có lợi hơn vòng lặp đơn giản? | Phối hợp nhiều I/O mà không tuần tự hóa hoặc hủy sai. | Virtual threads có lợi cho tải chờ I/O trong điều kiện nào? | Một tài nguyên chỉ phục vụ được ba tác vụ cùng lúc. | Hai tác vụ giữ lock ngược hướng có thể treo vô hạn. | Worker đang bị chặn ở đâu và do ai sở hữu tài nguyên? | Dừng app mà không mất việc hoặc đóng resource còn bị dùng. | Làm sao review concurrency mà không bỏ qua lỗi chờ/hủy/quan sát? |
+  | Giá trị đối với OOP/module | Sửa race theo cơ chế atomic và chứng minh bằng test. | Bảo đảm capacity, completion và shutdown không mất công việc. | Giữ backlog hữu hạn và rõ ràng failure/backpressure. | Đọc Future đã hoàn tất và giữ đủ kết quả/lỗi. | Biết chứng minh tính đúng và đánh giá performance không võ đoán. | Thiết kế future chain và failure semantics đúng. | Chọn thread model từ phép đo và ràng buộc thực tế. | Giới hạn contention mà không rò permit hoặc phát permit giả. | Khắc phục vòng chờ cùng tính đúng dữ liệu. | Biết dùng thread dump thay vì đoán dựa vào timeout. | Bảo vệ lifecycle từ chấp nhận task đến cleanup. | Đưa ra bằng chứng rõ cho tính đúng và khả năng vận hành. |
+  | Tư duy hình thành | Xác định interleaving và phạm vi thao tác nguyên tử. | Xem capacity và vòng đời là cùng một thiết kế. | Rejection là hợp đồng khi hệ thống bão hòa. | Tách submit order, completion order và reporting order. | Đo song song bằng số liệu, không suy luận từ API. | Tách completion status, timeout và real task lifecycle. | Thread nhẹ hơn không làm dependency mạnh hơn. | Permit ownership và backlog là hai ngân sách khác nhau. | Không chỉ tránh treo; phải giữ đúng bất biến. | Theo dấu thread → state → stack → owner/condition. | Chỉ close khi có bằng chứng worker đã dừng. | Mỗi cam kết correctness cần phép kiểm chứng. |

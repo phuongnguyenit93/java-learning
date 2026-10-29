@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "RACE CONDITIONS — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: race-conditions-001
+    order: 1
+    title: "Shared mutable state tạo ra tranh chấp ra sao?"
+    description: "Thiết lập nền tảng về trạng thái dùng chung có thể thay đổi, xung đột đọc/ghi và nhu cầu bảo toàn tính đúng đắn khi nhiều thread cùng truy cập."
+    transition:
+      to: race-conditions-002
+      description: "Sau khi nhận diện trạng thái chia sẻ, cần hiểu cách các bước của các thread xen kẽ tạo ra kết quả khó đoán."
+  - id: race-conditions-002
+    order: 2
+    title: "Interleaving và tính không xác định của kết quả"
+    description: "Phân tích lịch xen kẽ giữa các thread, nhận diện nondeterminism và xác định khi nào thay đổi thứ tự làm hỏng tính đúng đắn."
+    transition:
+      to: race-conditions-003
+      description: "Từ lịch xen kẽ nói chung, đi vào trường hợp cụ thể hai thread làm mất một lần tăng biến đếm."
+  - id: race-conditions-003
+    order: 3
+    title: "Lost update trong thao tác tăng biến đếm"
+    description: "Đi sâu vào lost update trên counter, thí nghiệm tái hiện có kiểm soát và các phương án tăng biến đếm an toàn."
+    transition:
+      to: race-conditions-004
+      description: "Từ ví dụ counter cụ thể, khái quát nguyên lý read-modify-write và atomicity của một chuỗi thao tác."
+  - id: race-conditions-004
+    order: 4
+    title: "Read-modify-write không phải một thao tác atomic"
+    description: "Khái quát tính không nguyên tử của chuỗi read-modify-write và áp dụng CAS, lock hoặc API cập nhật nguyên tử theo phạm vi state."
+    transition:
+      to: race-conditions-005
+      description: "Cùng nguyên tắc atomicity ấy xuất hiện ở mẫu kiểm tra điều kiện rồi hành động dựa trên kết quả vừa kiểm tra."
+  - id: race-conditions-005
+    order: 5
+    title: "Check-then-act và lỗi kiểm tra rồi thao tác"
+    description: "Phân tích mẫu check-then-act và dùng thao tác composite, CAS hoặc khóa để biến phép kiểm tra và hành động thành một quyết định an toàn."
+    transition:
+      to: race-conditions-006
+      description: "Khi một quyết định chạm đến nhiều trường, cần bảo vệ invariant của toàn bộ trạng thái chứ không từng biến đơn lẻ."
+  - id: race-conditions-006
+    order: 6
+    title: "Broken invariant khi cập nhật nhiều biến liên quan"
+    description: "Giải thích broken invariant khi cập nhật nhiều biến liên quan và bảo vệ toàn bộ snapshot bằng lock hoặc atomic publication."
+    transition:
+      to: race-conditions-007
+      description: "Từ nhất quán nội bộ nhiều field, mở rộng đến điều kiện có thể đổi giữa thời điểm kiểm tra và sử dụng tài nguyên."
+  - id: race-conditions-007
+    order: 7
+    title: "TOCTOU và lỗi đồng thời theo thời điểm"
+    description: "Mở rộng check-then-act thành lỗi time-of-check-to-time-of-use ở filesystem, nhiều process và tài nguyên có trạng thái đổi theo thời gian."
+    transition:
+      to: race-conditions-008
+      description: "Sau các mẫu race trên giá trị và tài nguyên, cần xem chính collection chia sẻ có an toàn khi nhiều thread cập nhật hay không."
+  - id: race-conditions-008
+    order: 8
+    title: "Không an toàn khi dùng collection thường chung nhiều luồng"
+    description: "Khảo sát các lỗi khi chia sẻ java.util collection cho nhiều thread và chọn locking, concurrent collections hoặc immutable snapshots đúng theo loại thao tác."
+    transition:
+      to: race-conditions-009
+      description: "Những tình huống collection giúp phân biệt rõ data race trên bộ nhớ với race condition ở cấp logic ứng dụng."
+  - id: race-conditions-009
+    order: 9
+    title: "Phân biệt data race, race condition và logic race"
+    description: "Đối chiếu data race, race condition và logic race theo JMM, interleaving và invariant để tránh chọn sai biện pháp đồng bộ."
+    transition:
+      to: race-conditions-010
+      description: "Sau khi phân loại được race, cần xây test buộc xuất hiện lịch lỗi thay vì trông chờ một lần chạy may rủi."
+  - id: race-conditions-010
+    order: 10
+    title: "Minh họa lỗi bằng test điều phối thời điểm thực thi"
+    description: "Xây các test Java điều phối checkpoint để tái hiện race, bắt lỗi worker và phân biệt test minh họa lỗi với regression test sau sửa."
+    transition:
+      to: race-conditions-011
+      description: "Từ việc chứng minh lỗi, kết thúc chương bằng cách chọn chiến lược bảo vệ state và xác nhận invariant sau khi sửa."
+  - id: race-conditions-011
+    order: 11
+    title: "Phương án sửa: ownership, locking, atomic, immutable state"
+    description: "Tổng hợp ownership, locking, atomic và immutable snapshot thành quy trình lựa chọn và kiểm chứng biện pháp sửa race condition."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Shared mutable state tạo ra tranh chấp ra sao? | Interleaving và tính không xác định của kết quả | Lost update trong thao tác tăng biến đếm | Read-modify-write không phải một thao tác atomic | Check-then-act và lỗi kiểm tra rồi thao tác | Broken invariant khi cập nhật nhiều biến liên quan | TOCTOU và lỗi đồng thời theo thời điểm | Không an toàn khi dùng collection thường chung nhiều luồng | Phân biệt data race, race condition và logic race | Minh họa lỗi bằng test điều phối thời điểm thực thi | Phương án sửa: ownership, locking, atomic, immutable state |
+  | Vấn đề cần hiểu | Khi nào một mutable state chia sẻ tạo nguy cơ tranh chấp? | Vì sao cùng mã nguồn có nhiều lịch và kết quả quan sát khác nhau? | Vì sao hai lần counter++ có thể chỉ tăng một đơn vị? | Phép đọc, tính, ghi riêng lẻ hợp lệ vì sao vẫn sai khi ghép lại? | Điều kiện đúng khi kiểm tra có còn đúng lúc hành động không? | Vì sao các field riêng lẻ đúng mà trạng thái tổng vẫn sai? | Làm sao bảo đảm điều kiện vẫn đúng lúc dùng tài nguyên? | Vì sao collection thường và một chuỗi method thread-safe vẫn có race? | Đâu là xung đột bộ nhớ, đâu là lỗi logic phụ thuộc lịch? | Làm sao tái hiện và kiểm chứng race một cách đáng tin? | Chọn biện pháp nào phù hợp invariant và mức độ chia sẻ? |
+  | Giá trị đối với OOP/module | Xác định biên an toàn dữ liệu trước khi thiết kế worker. | Lập luận về những lịch hợp lệ thay vì dựa vào một lần chạy. | Kiểm chứng và sửa bộ đếm bị mất cập nhật. | Thiết kế cập nhật có linearization point rõ ràng. | Ngăn đặt chỗ vượt hạn mức và khởi tạo trùng. | Bảo toàn quy tắc nghiệp vụ nhiều trường khi có reader và writer. | Thiết kế thao tác nguyên tử đúng chủ sở hữu tài nguyên. | Bảo vệ container, iterator, phần tử và thao tác tổng hợp. | Chẩn đoán đúng loại race trước khi sửa. | Biến lịch lỗi khó gặp thành bằng chứng có assertion và timeout. | Xây chiến lược sửa hoàn chỉnh theo loại state và tải. |
+  | Tư duy hình thành | Bắt đầu từ ai sở hữu và ai được phép ghi state. | Đối chiếu mọi lịch cần xét với invariant và happens-before. | Bảo vệ cả phép tăng thay vì từng phép đọc hay ghi riêng. | Chọn phạm vi atomic theo thao tác logic, không theo dòng mã. | Giữ điều kiện và hành động trong một ranh giới nguyên tử. | Lấy invariant làm đơn vị đồng bộ và công bố trạng thái. | Đưa kiểm tra và sử dụng về cùng primitive cam kết tính đúng. | Định nghĩa quyền sở hữu và thao tác nguyên tử trên collection. | Tách quan hệ bộ nhớ khỏi quy tắc đúng đắn nghiệp vụ. | Điều phối interleaving tại điểm quyết định outcome. | Ưu tiên giảm chia sẻ; nếu bắt buộc chia sẻ, bảo vệ đúng toàn bộ invariant. |

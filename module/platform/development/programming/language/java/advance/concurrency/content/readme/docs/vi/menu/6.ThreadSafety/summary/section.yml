@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "THREAD SAFETY — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: thread-safety-001
+    order: 1
+    title: "Thế nào là một class thread-safe?"
+    description: "Xác định thế nào là đúng dưới truy cập đồng thời, dựa trên bất biến, atomicity, visibility và hợp đồng API."
+    transition:
+      to: thread-safety-002
+      description: "Sau tiêu chuẩn thread-safe, xét thiết kế không phải chia sẻ mutable state."
+  - id: thread-safety-002
+    order: 2
+    title: "Stateless objects và tránh trạng thái chia sẻ"
+    description: "Tránh mutable shared state bằng tham số, biến local và giá trị trả về; nhận diện phụ thuộc chia sẻ ẩn."
+    transition:
+      to: thread-safety-003
+      description: "Khi dữ liệu cần chia sẻ, xem cách xây dựng object graph bất biến."
+  - id: thread-safety-003
+    order: 3
+    title: "Immutability và immutable object graph"
+    description: "Thiết kế immutable object graph bằng defensive copy, kiểm soát alias và thay snapshot an toàn."
+    transition:
+      to: thread-safety-004
+      description: "Đối với state còn mutable, xác định một chủ sở hữu rõ ràng."
+  - id: thread-safety-004
+    order: 4
+    title: "Thread confinement và ownership rõ ràng"
+    description: "Áp dụng task confinement và chuyển giao ownership để giảm lock và tránh race."
+    transition:
+      to: thread-safety-005
+      description: "Ranh giới owner chỉ bền vững khi class không để lộ state được bảo vệ."
+  - id: thread-safety-005
+    order: 5
+    title: "Encapsulation của trạng thái cần đồng bộ"
+    description: "Đóng kín state và đồng bộ mọi access path theo cùng invariant, tránh rò rỉ representation."
+    transition:
+      to: thread-safety-006
+      description: "Sau đóng gói, phải công bố object sao cho thread khác nhìn thấy đúng dữ liệu."
+  - id: thread-safety-006
+    order: 6
+    title: "Safe publication qua final, volatile và khóa"
+    description: "Giải thích safe publication theo JMM với final, volatile, lock, constructor escape và double-checked locking."
+    transition:
+      to: thread-safety-007
+      description: "Một khi dữ liệu được công bố, cần phòng vệ các alias tại biên API."
+  - id: thread-safety-007
+    order: 7
+    title: "Defensive copy và snapshot bất biến"
+    description: "Thực hành defensive copy và immutable snapshot ở biên API, kiểm soát shallow copy và consistency."
+    transition:
+      to: thread-safety-008
+      description: "Snapshot đúng còn phải giữ invariant giữa các trường liên quan."
+  - id: thread-safety-008
+    order: 8
+    title: "Giữ nhất quán invariant khi nhiều trường liên quan"
+    description: "Bảo vệ invariant đa trường bằng lock hoặc atomic immutable state và chứng minh điểm tuyến tính hóa."
+    transition:
+      to: thread-safety-009
+      description: "Cùng lập luận về compound action áp dụng cho concurrent collections."
+  - id: thread-safety-009
+    order: 9
+    title: "Thread-safe collection và compound action chưa atomic"
+    description: "Phân tích compound operations và iteration trên concurrent collections, chọn atomic map methods đúng."
+    transition:
+      to: thread-safety-010
+      description: "Những bảo đảm và giới hạn này phải được mô tả rõ cho người dùng public API."
+  - id: thread-safety-010
+    order: 10
+    title: "Document thread-safety contract cho public API"
+    description: "Soạn và kiểm chứng hợp đồng public API cho atomicity, snapshot, callback, blocking và lifecycle."
+    transition:
+      to: thread-safety-011
+      description: "Sau contract, rà soát collaborator ẩn có thể làm sai cam kết."
+  - id: thread-safety-011
+    order: 11
+    title: "Nhận diện mutable collaborator làm phá vỡ thread safety"
+    description: "Phát hiện mutable collaborator và đường alias vượt synchronization policy của owner."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+  
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Thế nào là một class thread-safe? | Stateless objects và tránh trạng thái chia sẻ | Immutability và immutable object graph | Thread confinement và ownership rõ ràng | Encapsulation của trạng thái cần đồng bộ | Safe publication qua final, volatile và khóa | Defensive copy và snapshot bất biến | Giữ nhất quán invariant khi nhiều trường liên quan | Thread-safe collection và compound action chưa atomic | Document thread-safety contract cho public API | Nhận diện mutable collaborator làm phá vỡ thread safety |
+  | Vấn đề cần hiểu | Một class cần bảo đảm điều gì khi các thao tác xen kẽ? | Làm sao giảm nhu cầu đồng bộ bằng thiết kế stateless? | Khi nào object graph thực sự không thể bị caller sửa? | Ai có quyền sửa mutable data trước và sau khi bàn giao? | Vì sao đã synchronized mà caller vẫn có thể làm sai invariant? | Đọc dữ liệu từ thread khác được JMM bảo đảm ra sao? | Lấy bản sao khi nào để caller không thay đổi state? | Cập nhật nhiều field mà không lộ trạng thái dở dang như thế nào? | Vì sao collection thread-safe vẫn có thể lost update? | API cần nói rõ bảo đảm nào dưới truy cập đồng thời? | Dependency mutable có thể phá an toàn luồng từ đâu? |
+  | Giá trị đối với OOP/module | Thiết lập tiêu chuẩn an toàn cho lớp và public methods. | Cho phép tái sử dụng service giữa nhiều task mà không trộn dữ liệu. | Chia sẻ value objects và cấu hình an toàn. | Tạo protocol chia sẻ dựa trên owner. | Giữ quyền điều khiển đồng bộ trong public API. | Chứng minh tính đúng của các đường công bố reference. | Bảo vệ dữ liệu trả về và dữ liệu giữ lại trong object. | Bảo toàn consistency của object nhiều biến. | Sử dụng đúng hợp đồng nguyên tử của collection API. | Ngăn caller dựa vào giả định thread-safe sai. | Hoàn thiện audit representation và lock identity. |
+  | Tư duy hình thành | Bắt đầu từ invariant thay vì một vài lần test chạy thành công. | Loại bỏ chia sẻ không cần thiết trước khi chọn khóa. | Xét mọi node mutable bên trong thay vì chỉ kiểm tra final. | Suy luận quyền truy cập theo vòng đời, không đoán theo tên thread. | Kiểm tra toàn bộ đường truy cập, không chỉ getter và setter. | Dựa vào happens-before thay vì timing. | Thiết kế theo ranh giới copy và thời điểm quan sát. | Xem trạng thái liên quan như một đơn vị giao dịch logic. | Đánh giá atomicity theo nghiệp vụ, không theo một method. | Viết contract bằng hành vi có thể kiểm chứng. | Xem toàn bộ object graph cùng khả năng sửa gián tiếp. |

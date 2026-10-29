@@ -6,8 +6,7 @@ roadmap:
 - id: class-001
   order: 1
   title: 'Cấu trúc lớp: thuộc tính và phương thức'
-  description: Nhận diện field, constructor và method trên lớp `InventoryItem`; thấy trạng thái được thay đổi qua API có kiểm
-    tra.
+  description: Nhận diện field, constructor và method trên lớp `InventoryItem`; thấy trạng thái được thay đổi qua API có kiểm tra.
   transition:
     to: class-002
     description: '**Từ cấu trúc class → quan sát việc khai báo lớp tạo ra những instance và tham chiếu cụ thể**'
@@ -56,8 +55,7 @@ roadmap:
 - id: class-008
   order: 8
   title: Thiết kế lớp qua ví dụ tài khoản ngân hàng
-  description: |-
-    Áp dụng các nguyên tắc trên vào `BankAccount` có bất biến số dư và giao dịch được kiểm tra.
+  description: Áp dụng các nguyên tắc trên vào `BankAccount` có bất biến số dư và giao dịch được kiểm tra.
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

@@ -1,0 +1,301 @@
+summaries:
+- id: thread-context-001
+  title: 'ThreadLocal: set(), get(), remove()'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ThreadLocal: set(), get(), remove()**
+
+    Dùng ThreadLocal.set/get/remove để hiểu giá trị theo thread, khác với state chung; nhận diện hậu quả khi quên remove trong worker tái sử dụng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế từng thread
+
+    1. Vì sao hai thread dùng cùng một ThreadLocal vẫn đọc được hai giá trị khác nhau?
+    2. Sau khi set(null) và remove(), lần get tiếp theo khác nhau như thế nào?
+
+    ### Vòng đời và cleanup
+
+    1. Vì sao finally là vị trí cần dọn context sau một task?
+    2. Nếu một worker pool chạy task B sau task A quên remove, điều gì có thể xảy ra?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt scope | Giải thích dữ liệu gắn với thread chứ không tự gắn với request. |
+    | Thực hành API | Chạy ví dụ set/get/remove và dự đoán giá trị trên các thread. |
+    | Kiểm tra cleanup | Tái hiện và sửa lỗi context còn sót qua hai task dùng cùng worker. |
+- id: thread-context-002
+  title: Khởi tạo giá trị với ThreadLocal.withInitial()
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khởi tạo giá trị với ThreadLocal.withInitial()**
+
+    Sử dụng withInitial để tạo giá trị lười cho từng thread; phân biệt chưa khởi tạo, đã set(null), remove và trách nhiệm tạo object riêng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khởi tạo lười
+
+    1. Supplier của withInitial được gọi vào thời điểm nào đối với từng thread?
+    2. Vì sao set(null) không giống remove khi muốn chạy lại supplier?
+
+    ### Độc lập dữ liệu
+
+    1. Điều gì sai khi Supplier của ThreadLocal trả cùng một ArrayList mutable cho mọi thread?
+    2. Vì sao withInitial không phải bộ tạo state mới cho từng request trên thread pool?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán initializer | Theo dõi số lần supplier chạy qua get/set/remove. |
+    | Thiết kế supplier | Tạo mutable instance mới cho mỗi thread thay vì chia sẻ reference. |
+    | Đánh giá vòng đời | Giải thích cách worker reuse ảnh hưởng dữ liệu được khởi tạo. |
+- id: thread-context-003
+  title: InheritableThreadLocal và các giới hạn kế thừa
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **InheritableThreadLocal và các giới hạn kế thừa**
+
+    Phân tích InheritableThreadLocal tại lúc tạo child thread và childValue, giới hạn shallow reference, worker pool và tùy chọn inheritance của Thread.Builder.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thời điểm kế thừa
+
+    1. Giá trị child thread nhận được được xác định ở thời điểm tạo hay submit task?
+    2. childValue được thực hiện ở thread nào và có tự deep-copy dữ liệu mutable không?
+
+    ### Giới hạn ứng dụng
+
+    1. Vì sao InheritableThreadLocal không truyền context mới qua mỗi lần submit vào một fixed pool?
+    2. Khi nào cần tắt inheritable thread locals và chọn capture/bind riêng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích inheritance | Dự đoán giá trị parent/child sau các lần set khác thời điểm. |
+    | Phân tích aliasing | Chỉ ra khi hai thread chia sẻ cùng reference mutable. |
+    | Lựa chọn propagation | Đề xuất cơ chế truyền ngữ cảnh theo task thay vì dựa vào pool inheritance. |
+- id: thread-context-004
+  title: Rò rỉ context khi tái sử dụng thread pool
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Rò rỉ context khi tái sử dụng thread pool**
+
+    Nhận diện rò rỉ context trên thread pool cố định bằng hai task dùng lại worker; dùng try/finally và restore scope khi lồng nhau.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tái sử dụng worker
+
+    1. Vì sao task kế tiếp có thể đọc context của task trước dù submit bởi caller khác?
+    2. Làm sao dùng single-thread executor để tái hiện lỗi một cách xác định?
+
+    ### Cleanup an toàn
+
+    1. Vì sao set context mà không remove trong finally nguy hiểm khi có exception?
+    2. Khi scope con tạm ghi đè giá trị của scope cha, vì sao restore previous có thể đúng hơn remove?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tái hiện leak | Dùng hai Future liên tiếp trên cùng worker chỉ ra dữ liệu bị lẫn. |
+    | Đóng vòng đời | Cài đặt remove trong finally và kiểm tra task sau sạch context. |
+    | Phân biệt memory leak | Giải thích sự khác nhau giữa nhiễm dữ liệu logic và giữ object lâu trong ThreadLocalMap. |
+- id: thread-context-005
+  title: Truyền context qua Runnable, Callable và executor
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Truyền context qua Runnable, Callable và executor**
+
+    Thiết kế truyền context qua Runnable, Callable, Executor và ExecutorService: capture trước submit, bind trên worker, cleanup hoặc restore trong finally.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới executor
+
+    1. Vì sao ThreadLocal trên caller không tự xuất hiện ở worker thực thi Runnable?
+    2. Capture trước submit khác gì đọc ThreadLocal khi lambda đã chạy trên worker?
+
+    ### Wrapper và task
+
+    1. Runnable và Callable khác nhau thế nào về kết quả/exception khi bọc context?
+    2. Decorator của Executor.execute có tự bọc các lệnh submit trên ExecutorService hay không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Triển khai wrapper | Viết Runnable/Callable context-aware và restore previous trong finally. |
+    | Dự đoán propagation | Chỉ ra thời điểm capture và thread thực hiện bind. |
+    | Kiểm thử isolation | Chạy task có context khác nhau và exception rồi kiểm tra worker không lưu state cũ. |
+- id: thread-context-006
+  title: Context theo request và ranh giới vòng đời task
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Context theo request và ranh giới vòng đời task**
+
+    Phân biệt request, task, thread và lifetime khi một request fork nhiều công việc; xem nested context, deadline/cancellation và structured concurrency.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình vòng đời
+
+    1. Request kết thúc theo điều kiện nào và khác gì thời điểm thread worker chấm dứt?
+    2. Vì sao context theo thread không tự đại diện cho request có nhiều task?
+
+    ### Hủy và scope
+
+    1. Khi caller hết timeout, task con có chắc đã dừng và cleanup chưa?
+    2. Vì sao kết thúc scope lồng nhau cần khôi phục context bên ngoài và quản lý join/cancel?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập sơ đồ lifetime | Vẽ mốc request/task/thread và các điểm fork, join, cancel. |
+    | Giới hạn scope | Xác định ai chịu trách nhiệm tạo, đóng và restore context. |
+    | Thiết kế timeout | Phân biệt hết chờ, yêu cầu hủy và task thực sự dừng. |
+- id: thread-context-007
+  title: ThreadLocal khi chạy hàng nghìn virtual threads
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ThreadLocal khi chạy hàng nghìn virtual threads**
+
+    Đo và giải thích chi phí ThreadLocal khi có hàng nghìn virtual threads, phân biệt carrier và virtual thread, lưu ý per-thread cache/allocation.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa virtual threads
+
+    1. ThreadLocal được gắn với virtual thread hay carrier thread khi task bị unmount/remount?
+    2. Vì sao một cache với withInitial có thể tạo nhiều bản sao khi virtual thread per task tăng lớn?
+
+    ### Hiệu năng
+
+    1. Cần đo gì trước khi đặt buffer lớn vào ThreadLocal cho hàng nghìn virtual threads?
+    2. InheritableThreadLocal và truyền tham số có những đánh đổi nào trong môi trường này?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ước lượng allocation | Tính số object được tạo khi nhiều virtual threads đều gọi get. |
+    | Đánh giá context | Chỉ ra binding, memory retention và điều kiện cleanup của mỗi task. |
+    | Chọn thay thế | Đề xuất truyền record/ScopedValue khi phù hợp workload. |
+- id: thread-context-008
+  title: Scoped Values (preview ở Java 21) để chia sẻ context bất biến
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Scoped Values (preview ở Java 21) để chia sẻ context bất biến**
+
+    Phân tích ScopedValue preview ở JDK 21, binding theo dynamic scope và phiên bản API JDK 25 final, so với ThreadLocal mutable.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Binding theo scope
+
+    1. ScopedValue binding khác với set/remove của ThreadLocal như thế nào?
+    2. Binding lồng nhau được phục hồi ra sao khi inner scope kết thúc hoặc ném exception?
+
+    ### Đọc đúng phiên bản
+
+    1. Vì sao code ScopedValue preview của Java 21 cần --enable-preview và không áp dụng nguyên xi cho JDK 25?
+    2. Những điều kiện nào giúp context chỉ đọc được chia sẻ an toàn với child tasks?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng dynamic scope | Dự đoán binding ở outer/inner scope và sau exception. |
+    | Đối chiếu API | Phân biệt JDK21 preview và JDK25 finalized contract. |
+    | Đánh giá immutability | Chỉ ra vì sao binding tới mutable object không tự khiến object bất biến. |
+- id: thread-context-009
+  title: Ưu tiên tham số tường minh khi luồng dữ liệu đơn giản
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ưu tiên tham số tường minh khi luồng dữ liệu đơn giản**
+
+    Dùng tham số và record bất biến khi luồng dữ liệu rõ ràng, chuyển vào lambda/Callable qua closure, chỉ dùng context ngầm khi có lý do.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phụ thuộc tường minh
+
+    1. Vì sao một hàm nhận RequestContext làm tham số dễ kiểm thử hơn khi đọc ThreadLocal ngầm?
+    2. Khi nào nên truyền vài field riêng và khi nào gom record?
+
+    ### Qua ranh giới thread
+
+    1. Vì sao capture immutable record trước submit an toàn hơn đọc ambient state ở worker?
+    2. Đối tượng record chứa Map mutable có thực sự bất biến sâu không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế API | Viết hàm nhận đúng dữ liệu thay vì đọc context static. |
+    | Truyền bằng closure | Capture snapshot bất biến và dùng trong tác vụ executor. |
+    | Giải thích tradeoff | So sánh tham số tường minh và ambient context qua khả năng test, lifetime. |
+- id: thread-context-010
+  title: Không lưu state nghiệp vụ mutable vào context chung
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không lưu state nghiệp vụ mutable vào context chung**
+
+    Tách metadata bất biến khỏi state nghiệp vụ mutable, tránh mutable global context, shallow copy hoặc ThreadLocal chứa object được nhiều task cùng sửa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Rủi ro state chung
+
+    1. Vì sao ConcurrentHashMap thread-safe vẫn không ngăn hai request dùng chung khóa currentUser gây nhiễm dữ liệu?
+    2. InheritableThreadLocal và record có tự tạo deep copy đối với List mutable không?
+
+    ### Thiết kế đúng
+
+    1. Dữ liệu order/cart mutable cần thuộc request hay một owner độc lập nào?
+    2. Nếu hai task cần cập nhật cùng domain state, vì sao phải có giao thức đồng bộ/transaction riêng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện state leak | Tìm global mutable context và reference được share trái ý muốn. |
+    | Thiết kế snapshot | Tạo RequestContext chỉ chứa metadata bất biến hoặc defensive copy. |
+    | Đặt ownership | Chọn nơi lưu và cơ chế đồng bộ cho domain state cần cập nhật. |

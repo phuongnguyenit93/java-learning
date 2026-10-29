@@ -1,0 +1,349 @@
+summaries:
+- id: race-conditions-001
+  title: Shared mutable state tạo ra tranh chấp ra sao?
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Shared mutable state tạo ra tranh chấp ra sao?**
+
+    Bài học mở đầu xác định khi nào trạng thái có thể thay đổi trở thành dữ liệu chia sẻ giữa nhiều thread và vì sao kết quả mất tính đúng đắn nếu thiếu cơ chế phối hợp. Người học được nhìn toàn cảnh visibility, atomicity, ordering, bất biến và các hướng bảo vệ, tạo nền tảng trước khi đi sâu vào từng mẫu lỗi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện trạng thái tranh chấp
+
+    1. Ba thuộc tính shared, mutable và concurrent cần đồng thời xuất hiện như thế nào để làm nảy sinh nguy cơ race?
+    2. Vì sao một biến local không bị chia sẻ và một đối tượng chỉ được đọc có điều kiện an toàn khác với trạng thái có writer?
+
+    ### Cơ chế và hướng bảo vệ
+
+    1. Vì sao biểu thức tăng biến đếm có thể mất cập nhật dù mỗi phép đọc và ghi riêng lẻ hợp lệ?
+    2. Visibility, ordering và invariant đặt ra những yêu cầu đồng bộ khác nhau như thế nào?
+    3. Trong trường hợp nào nên dùng lock, thao tác atomic hoặc chuyển hẳn quyền sở hữu state cho một worker?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện shared mutable state | Vẽ đường truy cập đọc/ghi của các thread và chỉ ra vùng state có nguy cơ tranh chấp. |
+    | Phân tích lỗi căn bản | Mô phỏng một lịch mất cập nhật và phân biệt lỗi visibility với lỗi atomicity. |
+    | Chọn biện pháp sơ bộ | Giải thích bằng invariant vì sao dùng monitor, atomic counter, immutable snapshot hoặc ownership phù hợp một tình huống. |
+- id: race-conditions-002
+  title: Interleaving và tính không xác định của kết quả
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Interleaving và tính không xác định của kết quả**
+
+    Interleaving giải thích vì sao lịch thực thi có thể thay đổi giữa các lần chạy và tại sao sự không xác định của thứ tự chưa chắc là lỗi. Bài học dùng lịch bước cụ thể và điều phối thread để phân biệt nondeterminism được chấp nhận với lịch làm sai invariant.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tư duy về lịch thực thi
+
+    1. Một lịch xen kẽ phải tôn trọng những thứ tự và quan hệ happens-before nào?
+    2. Vì sao thứ tự hoàn thành task thay đổi không đủ để kết luận đã có race condition?
+    3. Khi có data race, mô hình interleaving tuần tự đơn giản còn thiếu khía cạnh nào của Java Memory Model?
+
+    ### Quan sát và kiểm soát
+
+    1. Có thể dựng lịch hai thread cùng đọc giá trị cũ rồi cùng ghi như thế nào?
+    2. Vì sao sleep, log hoặc một lần chạy đúng không chứng minh tính an toàn của chương trình?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ interleaving | Viết timeline các bước đọc/tính/ghi và chỉ ra lịch đúng, lịch làm mất cập nhật. |
+    | Phân biệt nondeterminism và sai lệch | Giải thích trường hợp thứ tự bất định nhưng tổng kết vẫn đúng sau join. |
+    | Thiết kế thử nghiệm | Dùng checkpoint/barrier để buộc một lịch thực thi then chốt thay cho timing may rủi. |
+- id: race-conditions-003
+  title: Lost update trong thao tác tăng biến đếm
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lost update trong thao tác tăng biến đếm**
+
+    Bài tập trung vào hiện tượng lost update của counter: hai thread cùng đọc một giá trị cũ, tính độc lập rồi ghi đè kết quả của nhau. Người học thực hiện thí nghiệm tái hiện xác định, sửa bằng synchronized hoặc AtomicInteger và đánh giá LongAdder khi phù hợp với bộ đếm thống kê.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Căn nguyên mất cập nhật
+
+    1. Một lần tăng biến đếm gồm những thao tác logic nào và lịch xen kẽ nào khiến hai lần tăng chỉ được tính một lần?
+    2. Vì sao volatile không sửa được phép tăng gồm nhiều bước?
+
+    ### Tái hiện và khắc phục
+
+    1. Điều phối hai thread như thế nào để tái hiện lost update một cách có chứng cứ?
+    2. Synchronized, AtomicInteger và LongAdder có điểm phù hợp, giới hạn và mục đích sử dụng khác nhau ra sao?
+    3. Vì sao một loạt API atomic riêng lẻ vẫn có thể làm sai quy tắc đặt chỗ có giới hạn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tái hiện lost update | Chạy hoặc phân tích thí nghiệm CountDownLatch và giải thích số đếm thấp hơn kỳ vọng. |
+    | Sửa counter | Thay counter không an toàn bằng synchronized hoặc AtomicInteger và kiểm tra kết quả sau join. |
+    | Đánh giá primitive | Chọn AtomicInteger hay LongAdder dựa vào yêu cầu cập nhật nguyên tử và độ nhất quán của snapshot. |
+- id: race-conditions-004
+  title: Read-modify-write không phải một thao tác atomic
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Read-modify-write không phải một thao tác atomic**
+
+    Một lệnh ngắn có thể bao gồm nhiều thao tác đọc, tính và ghi, và sự nguyên tử của từng bước không bảo đảm sự nguyên tử của toàn bộ phép cập nhật. Bài mở rộng từ counter sang CAS, update-and-get, collection và những invariant nhiều biến để xác định đúng ranh giới của thao tác atomic.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới của nguyên tử
+
+    1. Vì sao ba bước read, modify, write không tự trở thành một giao dịch atomic dù dùng volatile?
+    2. Một phương thức atomic riêng lẻ khác chuỗi nhiều lời gọi get rồi set ở điểm nào?
+
+    ### Thiết kế cập nhật
+
+    1. Vòng lặp compare-and-set xử lý tranh chấp cập nhật như thế nào và vì sao update function có thể bị gọi lại?
+    2. Khi nào AtomicInteger phù hợp hơn lock, và khi nào một atomic field không đủ bảo vệ invariant?
+    3. Thao tác đọc-rồi-ghi trên map cần API composite nào để tránh mất cập nhật?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân rã RMW | Đánh dấu các bước có thể xen kẽ và chỉ ra linearization point của phương án sửa. |
+    | Viết cập nhật an toàn | Phân tích synchronized, incrementAndGet và CAS loop cho một counter hay giới hạn chỗ. |
+    | Kiểm tra giới hạn của atomic | Phát hiện chuỗi get/set và nhiều field atomic riêng lẻ chưa tạo một invariant nguyên tử. |
+- id: race-conditions-005
+  title: Check-then-act và lỗi kiểm tra rồi thao tác
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Check-then-act và lỗi kiểm tra rồi thao tác**
+
+    Bài học phân tích lỗi check-then-act: một thread kiểm tra điều kiện rồi hành động trong khi thread khác có thể thay đổi trạng thái giữa hai bước. Ví dụ cache initialization, ConcurrentHashMap và giới hạn đặt chỗ giúp người học chuyển phép kiểm tra và hành động thành một quyết định nguyên tử.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mẫu lỗi kiểm tra rồi thao tác
+
+    1. Hai thread có thể cùng vượt qua phép kiểm tra nhưng cùng làm hành động không hợp lệ theo lịch nào?
+    2. Vì sao concurrent map an toàn ở từng method nhưng containsKey rồi put vẫn có race nghiệp vụ?
+
+    ### Sửa quyết định và xử lý tranh chấp
+
+    1. Khi nào nên dùng putIfAbsent, computeIfAbsent, CAS loop hoặc synchronized để bảo vệ quyết định?
+    2. Nếu supplier/cache loader có side effect, cần cân nhắc điều gì về tính nguyên tử và số lần thực thi?
+    3. Đối với tài nguyên nhiều field hoặc ngoài JVM, vì sao chỉ khóa một biến trong Java chưa đủ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tìm điểm TOCTOU trong mã | Chỉ ra khoảng hở giữa check và act trong logic cache/booking. |
+    | Thay bằng thao tác phù hợp | Thiết kế cập nhật theo key bằng concurrent map hoặc giới hạn capacity bằng CAS/lock. |
+    | Lập test tranh chấp | Dựng lịch hai thread cùng kiểm tra rồi so sánh invariant trước và sau khi sửa. |
+- id: race-conditions-006
+  title: Broken invariant khi cập nhật nhiều biến liên quan
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Broken invariant khi cập nhật nhiều biến liên quan**
+
+    Bài này phân tích broken invariant khi hai hay nhiều field liên quan phải thỏa quan hệ chung, chẳng hạn tổng số dư không đổi. Người học quan sát trạng thái trung gian sai, đối chiếu khóa cả thao tác đọc/ghi với immutable snapshot và tránh hiểu nhầm rằng volatile từng field hay nhiều AtomicInteger riêng biệt là đủ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bất biến của nhiều trường
+
+    1. Vì sao phép gán từng field có thể hợp lệ nhưng reader vẫn thấy trạng thái tổng không hợp lệ?
+    2. Broken invariant khác lost update ở loại sai lệch và điểm cần đồng bộ như thế nào?
+
+    ### Bảo vệ cả snapshot
+
+    1. Tại sao khóa riêng mỗi getter hoặc chỉ khóa writer không bảo đảm reader thấy một snapshot nhất quán?
+    2. Synchronized và AtomicReference chứa immutable record cung cấp ranh giới nhất quán khác nhau ra sao?
+    3. Exception và validation phải được tổ chức thế nào để không công bố trạng thái dở dang?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định nghĩa invariant | Viết phương trình quan hệ giữa các field và dựng lịch reader quan sát cặp giá trị sai. |
+    | Bảo vệ update và read | Chọn cùng monitor cho critical section hoặc AtomicReference để publish snapshot đầy đủ. |
+    | Kiểm tra API công khai | Phát hiện getter riêng lẻ hoặc field atomic riêng làm rò trạng thái chưa nhất quán. |
+- id: race-conditions-007
+  title: TOCTOU và lỗi đồng thời theo thời điểm
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **TOCTOU và lỗi đồng thời theo thời điểm**
+
+    TOCTOU đưa mẫu check-then-act vào chiều thời gian và các tài nguyên ngoài bộ nhớ Java, nhất là filesystem và nhiều process. Bài học so sánh cách kiểm tra exists trước khi thao tác với API create-if-absent và yêu cầu cơ chế nguyên tử tại nơi sở hữu tài nguyên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất khoảng hở thời gian
+
+    1. Từ time of check đến time of use, sự thay đổi nào có thể phá tiền điều kiện ban đầu?
+    2. TOCTOU khác data race thuần trong bộ nhớ và khác stale read ở ranh giới nào?
+
+    ### Bảo vệ tài nguyên thực
+
+    1. Vì sao Files.exists rồi Files.createFile không tự tạo một thao tác nguyên tử?
+    2. Trong điều kiện nào cần create-only, lock/transaction tại nơi sở hữu tài nguyên hoặc kiểm soát phiên bản?
+    3. Một race giữa nhiều process có thể được sửa chỉ bằng synchronized trong một JVM hay không, vì sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dựng kịch bản TOCTOU | Vẽ mốc check/use của hai tác nhân và chỉ ra cách trạng thái bị thay thế. |
+    | Chọn thao tác OS phù hợp | Giải thích cách sử dụng tạo file có điều kiện thay cho tồn tại-rồi-tạo. |
+    | Đánh giá phạm vi khóa | Phân biệt cơ chế chỉ bảo vệ một JVM với đồng bộ ở filesystem hoặc dịch vụ dùng chung. |
+- id: race-conditions-008
+  title: Không an toàn khi dùng collection thường chung nhiều luồng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không an toàn khi dùng collection thường chung nhiều luồng**
+
+    Các collection java.util như ArrayList, HashMap hoặc HashSet không tự bảo vệ việc đọc/ghi đồng thời trên mutable state. Người học đánh giá iterator, wrapper synchronized, concurrent collection, copy-on-write và immutable snapshot để lựa chọn theo thao tác, tần suất đọc/ghi và yêu cầu thứ tự.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Rủi ro của collection mutable
+
+    1. ArrayList và HashMap có thể hỏng tính đúng đắn khi nhiều thread sửa mà không có đồng bộ ra sao?
+    2. Vì sao ConcurrentModificationException không chứng minh có hoặc không có data race?
+    3. Một collection thread-safe có bảo đảm tính an toàn của object mutable bên trong hoặc chuỗi method nghiệp vụ không?
+
+    ### Chọn cấu trúc và giao thức
+
+    1. Khi nào duyệt synchronizedList phải giữ cùng lock trong toàn bộ vòng lặp?
+    2. ConcurrentHashMap.merge, CopyOnWriteArrayList và immutable snapshot phù hợp những tải đọc/ghi nào?
+    3. Vì sao concurrent queue giới hạn và chuyển quyền ownership có thể tốt hơn để nhiều producer bàn giao dữ liệu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đánh giá collection chia sẻ | Chỉ ra các thao tác đọc/ghi và iterator cần đồng bộ. |
+    | Sửa cập nhật theo key | Dùng merge hoặc compute trên ConcurrentHashMap cho phép toán composite thay vì get rồi put. |
+    | Chọn cấu trúc theo tải | So sánh lock, concurrent collection, copy-on-write và immutable copy theo chi phí và invariant. |
+    | Kiểm chứng giới hạn | Phân biệt collection thread-safe với an toàn của phần tử và queue chưa giới hạn capacity. |
+- id: race-conditions-009
+  title: Phân biệt data race, race condition và logic race
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt data race, race condition và logic race**
+
+    Bài học chuẩn hóa ba khái niệm thường bị dùng lẫn: data race theo quan hệ happens-before của JMM, race condition theo kết quả phụ thuộc lịch thực thi và logic race theo quy tắc nhiều bước. Các phản ví dụ cho thấy có logic race ngay cả khi từng thao tác atomic và có lịch bất định mà kết quả vẫn đúng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới thuật ngữ
+
+    1. Data race được định nghĩa bằng xung đột đọc/ghi và quan hệ happens-before như thế nào?
+    2. Một race condition có thể không có data race trong trường hợp nào?
+    3. Logic race ở thao tác nghiệp vụ khác kết quả nondeterministic nhưng hợp lệ như thế nào?
+
+    ### Phân loại từ ví dụ
+
+    1. Vì sao ConcurrentHashMap.containsKey rồi put có thể sai dù mỗi method thread-safe?
+    2. Volatile thay đổi quan hệ visibility nhưng có tự sửa logic race nhiều bước không?
+    3. Khi đánh giá một ví dụ, cần tìm invariant và tuyến đồng bộ trước hay trước hết tìm shared field?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại tình huống | Gán nhãn data race, race condition, logic race cho các đoạn mã và giải thích bằng happens-before/invariant. |
+    | Lập luận phản ví dụ | Trình bày một logic race không có data race và một lịch bất định nhưng đúng. |
+    | Chọn hướng sửa | Đề xuất synchronization/CAS/transaction/ownership theo phạm vi xung đột thực. |
+- id: race-conditions-010
+  title: Minh họa lỗi bằng test điều phối thời điểm thực thi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Minh họa lỗi bằng test điều phối thời điểm thực thi**
+
+    Bài thực hành tập trung vào điều phối thời điểm bằng CountDownLatch, CyclicBarrier và Phaser để tạo lại interleaving gây lỗi có thể kiểm chứng. Người học đặt checkpoint đúng vị trí, assert invariant sau Future.get và thiết kế test không bị đánh lừa bởi sleep, scheduler hoặc exception worker bị nuốt.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế test có chứng cứ
+
+    1. Một invariant và một lịch thực thi sai cần được mô tả như thế nào trước khi viết test?
+    2. CyclicBarrier khác CountDownLatch ở điều phối rendezvous và điều khiển cổng một chiều như thế nào?
+    3. Vì sao đặt checkpoint bên trong critical section có thể tạo deadlock giả?
+
+    ### Độ tin cậy và kiểm tra sửa lỗi
+
+    1. Làm sao dùng Future.get(timeout), điều phối lỗi và cleanup để test không thông báo pass giả?
+    2. Vì sao Thread.sleep và số lần stress test lớn không chứng minh absence of race?
+    3. Một regression test cần thay đổi assertion nào để bản lỗi fail và bản sửa pass?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dựng lịch lỗi xác định | Dùng barrier/latch đặt checkpoint giữa check và update để tái hiện vi phạm invariant. |
+    | Kiểm soát lifecycle | Kết hợp Future timeout và shutdown để phát hiện worker bị treo hoặc exception. |
+    | Viết regression test | Thiết kế assertion chống lost update hoặc double booking và kiểm chứng trước/sau sửa. |
+    | Tách bug khỏi test harness | Giải thích khác biệt giữa test cố ý chứng minh lỗi và test đòi implementation phải đúng. |
+- id: race-conditions-011
+  title: 'Phương án sửa: ownership, locking, atomic, immutable state'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phương án sửa: ownership, locking, atomic, immutable state**
+
+    Bài cuối tổng hợp bốn chiến lược: ownership/confinement, locking, atomic operations và immutable state được publish an toàn. Từ counter, tồn kho nhiều field, shared collection đến giao message, người học chọn giải pháp theo invariant, số writer và trade-off blocking/throughput.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chọn ranh giới bảo vệ
+
+    1. Ownership thay đổi quyền ghi và cách giao dữ liệu giữa thread như thế nào?
+    2. Khi nào dùng cùng monitor/ReentrantLock, khi nào dùng AtomicInteger hoặc CAS cho một state?
+    3. Vì sao nhiều AtomicInteger riêng rẽ không giữ được invariant xuyên các field?
+
+    ### Snapshot và thiết kế bền vững
+
+    1. Làm thế nào publish một immutable record bằng AtomicReference để reader luôn thấy bộ giá trị nhất quán?
+    2. Vì sao callback trong updateAndGet có thể chạy lại và không nên chứa side effect?
+    3. Làm sao kiểm chứng một bản sửa đã giải quyết atomicity, visibility và logic race mà không gây deadlock?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế theo ownership | Phân chia writer theo owner hoặc queue message và giải thích cách giảm shared mutation. |
+    | Chọn primitive bảo vệ | So sánh synchronized, ReentrantLock, CAS và AtomicReference cho counter, giới hạn và invariant nhiều trường. |
+    | Xây snapshot bất biến | Thiết kế record immutable và phương án công bố/cập nhật reference an toàn. |
+    | Đánh giá bản sửa | Lập test điều phối hoặc kiểm tra invariant, visibility, liveness và tác dụng phụ khi retry. |

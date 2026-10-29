@@ -125,18 +125,9 @@ class ModuleLanguageCloneValidationService {
             }
         }
         chapterAnchors.each { String chapter, Set<String> anchors ->
-            String practicePath = 'menu/' + chapter + '/practice/scenarios.yml'
-            if (docs.containsKey(practicePath)) {
-                Map practice = yaml(docs[practicePath], practicePath)
-                ContractSchemaValidateUtils.validateData('practiceSheet', practice)
-                List ids = (practice.scenarios as List).collect { it.id }
-                if (ids.size() != ids.toSet().size()) {
-                    throw new GradleException('Duplicate Practice scenario IDs: ' + practicePath)
-                }
-            }
             if (docs.containsKey('menu/' + chapter + '/interview/question.yml')) {
                 throw new GradleException('Legacy Interview source in ' + chapter +
-                        '; run STEP 9 import to migrate to questions/interview.yml before STEP 13.')
+                        '; run legacy Interview P:S import to migrate to questions/interview.yml before STEP 13.')
             }
             String sectionPath = 'menu/' + chapter + '/summary/section.yml'
             String summariesPath = 'menu/' + chapter + '/summary/summaries.yml'

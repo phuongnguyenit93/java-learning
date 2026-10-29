@@ -17,7 +17,6 @@ class SheetContentImportCoordinator {
     private final QuizSheetImportService quizImporter
     private final ReferenceSheetImportService referenceImporter
     private final SummarySheetImportService summaryImporter
-    private final PracticeSheetImportService practiceImporter
 
     SheetContentImportCoordinator(
             SheetsMetadataReaderService sheetsReader = new SheetsMetadataReaderService(),
@@ -27,8 +26,7 @@ class SheetContentImportCoordinator {
             InterviewSheetImportService interviewImporter = new InterviewSheetImportService(),
             QuizSheetImportService quizImporter = new QuizSheetImportService(),
             ReferenceSheetImportService referenceImporter = new ReferenceSheetImportService(),
-            SummarySheetImportService summaryImporter = new SummarySheetImportService(),
-            PracticeSheetImportService practiceImporter = new PracticeSheetImportService()
+            SummarySheetImportService summaryImporter = new SummarySheetImportService()
     ) {
         this.sheetsReader = sheetsReader
         this.roadmapImporter = roadmapImporter
@@ -38,7 +36,6 @@ class SheetContentImportCoordinator {
         this.quizImporter = quizImporter
         this.referenceImporter = referenceImporter
         this.summaryImporter = summaryImporter
-        this.practiceImporter = practiceImporter
     }
 
     Map<String, Object> importByLocation(
@@ -65,9 +62,9 @@ class SheetContentImportCoordinator {
             boolean apply,
             String part
     ) {
-        if (!(part in ['ALL', 'ROADMAP', 'README', 'VIDEO', 'INTERVIEW', 'QUIZ', 'REFERENCE', 'SUMMARY', 'PRACTICE'])) {
+        if (!(part in ['ALL', 'ROADMAP', 'README', 'VIDEO', 'INTERVIEW', 'QUIZ', 'REFERENCE', 'SUMMARY', 'FILL_LESSON_IDS'])) {
             throw new GradleException(
-                    "Invalid Sheet import part '${part}'. Use ALL, ROADMAP, README, VIDEO, INTERVIEW, QUIZ, REFERENCE, SUMMARY or PRACTICE."
+                    "Invalid Sheet import part '${part}'. Use ALL, ROADMAP, README, VIDEO, INTERVIEW, QUIZ, REFERENCE, SUMMARY."
             )
         }
         File root = rootDirectory.canonicalFile
@@ -79,7 +76,9 @@ class SheetContentImportCoordinator {
         }
         String expected = root.toPath().relativize(module.toPath())
                 .toString().replace(File.separatorChar, '/' as char)
-        Map<String, Object> context = sheetsReader.openTab(fileUrl, gid)
+        Map<String, Object> context = part == 'FILL_LESSON_IDS' && apply
+                ? sheetsReader.openTabForWrite(fileUrl, gid)
+                : sheetsReader.openTab(fileUrl, gid)
         if (context.moduleLocation != expected) {
             throw new GradleException(
                     "Module Location mismatch at tab '${context.tabTitle}' (gid=${gid}), I3: " +
@@ -88,6 +87,8 @@ class SheetContentImportCoordinator {
         }
         RoadmapSheetImportService.resolveDestination(root, expected)
         switch (part) {
+            case 'FILL_LESSON_IDS':
+                return new MenuLessonIdFillService().execute(context, apply)
             case 'ROADMAP':
                 return roadmapImporter.execute(root, context, apply)
             case 'README':
@@ -102,8 +103,6 @@ class SheetContentImportCoordinator {
                 return referenceImporter.execute(root, context, apply)
             case 'SUMMARY':
                 return summaryImporter.execute(root, context, apply)
-            case 'PRACTICE':
-                return practiceImporter.execute(root, context, apply)
             default:
                 return importTab(root, context, apply)
         }

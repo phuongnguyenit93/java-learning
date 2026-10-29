@@ -6,72 +6,63 @@ roadmap:
 - id: interface-001
   order: 1
   title: Giao diện như một hợp đồng và một vai trò
-  description: Xác lập interface là một hợp đồng về khả năng và hành vi, đồng thời là vai trò mà đối tượng có thể đảm nhận.
-    Chữ ký Java mới là phần compiler xác nhận; đầu vào, kết quả và lỗi còn cần quy ước riêng.
+  description: Xác lập interface là một hợp đồng về khả năng và hành vi, đồng thời là vai trò mà đối tượng có thể đảm nhận. Chữ ký Java mới là phần compiler xác nhận; đầu vào, kết quả và lỗi còn cần quy ước riêng.
   transition:
     to: interface-002
     description: '**Từ ý nghĩa lời hứa → biết khai báo và thực hiện đúng cú pháp Java**'
 - id: interface-002
   order: 2
   title: Khai báo và thực hiện giao diện
-  description: Thực hành interface, implements, public override, static method và đa hình qua hai chính sách phí giao hàng.
-    Xác minh compile, kết quả tính phí và kiểm tra hành vi dùng chung.
+  description: Thực hành interface, implements, public override, static method và đa hình qua hai chính sách phí giao hàng. Xác minh compile, kết quả tính phí và kiểm tra hành vi dùng chung.
   transition:
     to: interface-003
     description: '**Từ một ví dụ implements → chủ động tổ chức hướng phụ thuộc của service**'
 - id: interface-003
   order: 3
   title: Lập trình dựa trên giao diện
-  description: Cho CheckoutService nhận PaymentGateway từ constructor, chọn adapter ở composition root và thay bằng fake để
-    kiểm thử. Phân biệt dependency injection với dependency inversion và nêu contract thanh toán.
+  description: Cho CheckoutService nhận PaymentGateway từ constructor, chọn adapter ở composition root và thay bằng fake để kiểm thử. Phân biệt dependency injection với dependency inversion và nêu contract thanh toán.
   transition:
     to: interface-004
     description: '**Từ một dependency trừu tượng → xét cách một instance đảm nhiệm đồng thời nhiều vai trò**'
 - id: interface-004
   order: 4
   title: Một đối tượng đảm nhận nhiều giao diện
-  description: Một OfficeMachine có ba vai trò và bộ trạng thái chung, trong khi kiểu tham chiếu chỉ bộc lộ API của từng vai
-    trò. Bài mở rộng sang interface kế thừa nhiều interface và default method trùng tên.
+  description: Một OfficeMachine có ba vai trò và bộ trạng thái chung, trong khi kiểu tham chiếu chỉ bộc lộ API của từng vai trò. Bài mở rộng sang interface kế thừa nhiều interface và default method trùng tên.
   transition:
     to: interface-005
     description: '**Từ khả năng phối hợp vai trò → chọn mô hình chia sẻ hành vi/trạng thái phù hợp**'
 - id: interface-005
   order: 5
   title: Chọn giao diện hay lớp trừu tượng
-  description: Dùng interface cho hợp đồng DeliveryFeePolicy, abstract class cho họ WeightDistancePolicy dùng chung constructor
-    và thuật toán; cân nhắc composition khi các lớp không cùng họ.
+  description: Dùng interface cho hợp đồng DeliveryFeePolicy, abstract class cho họ WeightDistancePolicy dùng chung constructor và thuật toán; cân nhắc composition khi các lớp không cùng họ.
   transition:
     to: interface-006
     description: '**Từ chọn abstraction → thu hẹp hợp đồng theo đúng nhu cầu người sử dụng**'
 - id: interface-006
   order: 6
   title: Giao diện nhỏ và phân tách vai trò
-  description: Áp dụng ISP để tách DocumentReader, DocumentWriter, DocumentPublisher, tránh ép kho chỉ đọc triển khai API
-    ghi. Các service phụ thuộc vào đúng vai trò nhưng một class vẫn có thể hỗ trợ nhiều vai trò.
+  description: Áp dụng ISP để tách DocumentReader, DocumentWriter, DocumentPublisher, tránh ép kho chỉ đọc triển khai API ghi. Các service phụ thuộc vào đúng vai trò nhưng một class vẫn có thể hỗ trợ nhiều vai trò.
   transition:
     to: interface-007
     description: '**Từ kích thước và trách nhiệm contract → tìm hiểu những thành viên Java thật sự cho phép**'
 - id: interface-007
   order: 7
   title: Thành viên mặc định và giới hạn tùy ngôn ngữ
-  description: Phân biệt public abstract, default, static, private và field public static final, cùng quy tắc class wins,
-    default conflict, giới hạn Object và khác biệt Java với các ngôn ngữ khác.
+  description: Phân biệt public abstract, default, static, private và field public static final, cùng quy tắc class wins, default conflict, giới hạn Object và khác biệt Java với các ngôn ngữ khác.
   transition:
     to: interface-008
     description: '**Từ hiểu quy tắc khai báo và dispatch → kiểm chứng thay implementation có giữ lời hứa hay không**'
 - id: interface-008
   order: 8
   title: Thay thế cách thực hiện mà giữ hợp đồng
-  description: Đổi HashMapPriceCatalog sang TreeMapPriceCatalog nhưng giữ semantics về SKU, giá 0, thứ tự, snapshot và lỗi.
-    Contract tests và LSP phân biệt tương thích hành vi với chỉ tương thích chữ ký.
+  description: Đổi HashMapPriceCatalog sang TreeMapPriceCatalog nhưng giữ semantics về SKU, giá 0, thứ tự, snapshot và lỗi. Contract tests và LSP phân biệt tương thích hành vi với chỉ tương thích chữ ký.
   transition:
     to: interface-009
     description: '**Từ các nguyên tắc thay thế → tổng hợp vào bài toán có hai ranh giới hạ tầng và nguy cơ giao dịch**'
 - id: interface-009
   order: 9
   title: Thiết kế giao diện thanh toán hoặc lưu trữ
-  description: |-
-    Tách PaymentGateway, PaymentRepository và CheckoutService qua DTO và constructor injection; dùng fake kiểm tra luồng yêu cầu. Bài chỉ rõ giới hạn idempotency trong RAM khi gateway thành công nhưng lưu kết quả thất bại.
+  description: Tách PaymentGateway, PaymentRepository và CheckoutService qua DTO và constructor injection; dùng fake kiểm tra luồng yêu cầu. Bài chỉ rõ giới hạn idempotency trong RAM khi gateway thành công nhưng lưu kết quả thất bại.
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

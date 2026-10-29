@@ -1,0 +1,138 @@
+version: 1
+type: LEARNING_ROADMAP
+title: "EXECUTOR FRAMEWORK — MẠCH LIÊN KẾT BÀI HỌC"
+roadmapHeading: "Mạch liên kết bài học"
+roadmap:
+  - id: executor-framework-001
+    order: 1
+    title: "Executor, ExecutorService và ThreadPoolExecutor"
+    description: "Bài mở đầu giúp nhận diện trách nhiệm của từng tầng Executor Framework. Người học cần biết khi nào giao một Runnable, khi nào cần Future/lifecycle và khi nào phải kiểm soát worker, queue, rejection bằng ThreadPoolExecutor."
+    transition:
+      to: executor-framework-002
+      description: "Sau ba tầng trừu tượng để giao task, nhận kết quả và cấu hình pool, tiếp tục với ngữ nghĩa giao task và tuyến truyền lỗi trực tiếp hay qua future để nối kiến thức vào kỹ năng sử dụng Executor Framework."
+  - id: executor-framework-002
+    order: 2
+    title: "execute() so với submit() và xử lý lỗi"
+    description: "Bài này đi sâu vào hai phương thức giao task thường dùng và nơi ngoại lệ xuất hiện. Người học học cách mở Future để kiểm tra kết quả, phân biệt lỗi task với lỗi nộp việc và tránh bỏ sót exception bị FutureTask giữ lại."
+    transition:
+      to: executor-framework-003
+      description: "Sau ngữ nghĩa giao task và tuyến truyền lỗi trực tiếp hay qua future, tiếp tục với ba executor factory cố định, co giãn và tuần tự để nối kiến thức vào kỹ năng sử dụng Executor Framework."
+  - id: executor-framework-003
+    order: 3
+    title: "Fixed, cached và single-thread executors"
+    description: "Bài học so sánh trực tiếp fixed, cached và single-thread executor thông qua giới hạn worker, cơ chế nhận việc và khả năng bảo toàn thứ tự. Các ví dụ có latch giúp người học quan sát hành vi trước khi tự cấu hình bounded pool."
+    transition:
+      to: executor-framework-004
+      description: "Sau ba executor factory cố định, co giãn và tuần tự, tiếp tục với hậu quả của backlog gần như không giới hạn lên heap và tail latency để nối kiến thức vào kỹ năng sử dụng Executor Framework."
+  - id: executor-framework-004
+    order: 4
+    title: "Đánh giá rủi ro của queue không giới hạn"
+    description: "Bài này đánh giá một rủi ro kiến trúc: queue nhận việc quá nhanh dù worker hữu hạn. Qua ví dụ backlog, cancellation và GC pressure, người học học cách ước lượng ngân sách queue theo bộ nhớ và thời gian chờ."
+    transition:
+      to: executor-framework-005
+      description: "Sau hậu quả của backlog gần như không giới hạn lên heap và tail latency, tiếp tục với ý nghĩa core, max và keepalive trong thuật toán cấp worker để nối kiến thức vào kỹ năng sử dụng Executor Framework."
+  - id: executor-framework-005
+    order: 5
+    title: "corePoolSize, maximumPoolSize và keepAliveTime"
+    description: "Bài này tập trung vào ba tham số cấu hình lõi của ThreadPoolExecutor. Người học hiểu vì sao max không được dùng trước khi queue đầy, keepAlive không hủy task đang chạy và core timeout phải được bật đúng điều kiện."
+    transition:
+      to: executor-framework-006
+      description: "Sau ý nghĩa core, max và keepalive trong thuật toán cấp worker, tiếp tục với work queue hữu hạn/không hữu hạn và semantics blockingqueue để nối kiến thức vào kỹ năng sử dụng Executor Framework."
+  - id: executor-framework-006
+    order: 6
+    title: "Work queue: ArrayBlockingQueue, LinkedBlockingQueue"
+    description: "Bài này đặt work queue làm trọng tâm: thao tác offer/put/take, cấu trúc mảng và linked nodes, bound và tác động lên admission. Người học thực hành quan sát queue đầy, extra worker và backpressure khi dùng ThreadPoolExecutor."
+    transition:
+      to: executor-framework-007
+      description: "Sau work queue hữu hạn/không hữu hạn và semantics blockingqueue, tiếp tục với hợp đồng rejectedexecutionhandler và bốn policy tích hợp để nối kiến thức vào kỹ năng sử dụng Executor Framework."
+  - id: executor-framework-007
+    order: 7
+    title: "RejectedExecutionHandler và bốn chính sách từ chối"
+    description: "Bài này giới thiệu RejectedExecutionHandler và bốn policy chuẩn trong cùng điều kiện saturation có kiểm soát. Người học cần hiểu chính xác caller thấy exception, thực thi đồng bộ hay mất task trong mỗi trường hợp."
+    transition:
+      to: executor-framework-008
+      description: "Sau hợp đồng rejectedexecutionhandler và bốn policy tích hợp, tiếp tục với tùy biến thread creation và chẩn đoán ngoại lệ uncaught để nối kiến thức vào kỹ năng sử dụng Executor Framework."
+  - id: executor-framework-008
+    order: 8
+    title: "ThreadFactory và UncaughtExceptionHandler trong executor"
+    description: "Bài này đi từ cơ chế tạo worker đến cách báo lỗi ở cấp thread. Các ví dụ tên thread và uncaught exception giúp học viên kiểm tra worker chết bất thường, phân biệt lỗi execute trực tiếp với lỗi được Future giữ lại."
+    transition:
+      to: executor-framework-009
+      description: "Sau tùy biến thread creation và chẩn đoán ngoại lệ uncaught, tiếp tục với định cỡ pool từ cpu time, blocking time và quota downstream để nối kiến thức vào kỹ năng sử dụng Executor Framework."
+  - id: executor-framework-009
+    order: 9
+    title: "Lựa chọn pool size cho CPU-bound và I/O-bound"
+    description: "Bài này rèn kỹ năng chọn pool size dựa trên loại workload và số đo. Thay vì dùng một hằng số, người học tách CPU work khỏi blocking I/O, cân nhắc connection quota, p95/p99 và backpressure."
+    transition:
+      to: executor-framework-010
+      description: "Sau định cỡ pool từ cpu time, blocking time và quota downstream, tiếp tục với task dependency và thread starvation do nested submit/get để nối kiến thức vào kỹ năng sử dụng Executor Framework."
+  - id: executor-framework-010
+    order: 10
+    title: "submit task độc lập và tránh thread starvation"
+    description: "Bài này phân biệt submit các task độc lập với việc tạo quan hệ phụ thuộc sai trong pool. Người học mô phỏng starvation trên single-thread executor, sau đó sử dụng composition/CompletableFuture thay vì chặn worker không cần thiết."
+    transition:
+      to: executor-framework-011
+      description: "Sau task dependency và thread starvation do nested submit/get, tiếp tục với semantics của metric active, queued, completed và business outcome để nối kiến thức vào kỹ năng sử dụng Executor Framework."
+  - id: executor-framework-011
+    order: 11
+    title: "Khả năng quan sát active count, queue size, completed tasks"
+    description: "Bài quan sát pool giúp người học giải thích chính xác getActiveCount, getQueue().size, getCompletedTaskCount và giới hạn số liệu ước lượng. Các ví dụ với latch và task lỗi chứng minh completed không có nghĩa success."
+    transition:
+      to: executor-framework-012
+      description: "Sau semantics của metric active, queued, completed và business outcome, tiếp tục với shutdown, termination, interruption và ownership executor để nối kiến thức vào kỹ năng sử dụng Executor Framework."
+  - id: executor-framework-012
+    order: 12
+    title: "Lifecycle: đóng executor và tránh thread leak"
+    description: "Bài này tập trung vào lifecycle của pool, chênh lệch shutdown/shutdownNow/awaitTermination và ownership. Người học xây mẫu đóng hai giai đoạn và nhận biết task không phản hồi interrupt khiến pool chưa thể terminated."
+    transition:
+      to: executor-framework-013
+      description: "Sau shutdown, termination, interruption và ownership executor, tiếp tục với bounded admission, callerruns, semaphore và quản lý permit để nối kiến thức vào kỹ năng sử dụng Executor Framework."
+  - id: executor-framework-013
+    order: 13
+    title: "Kiểm soát số task đang chờ và backpressure"
+    description: "Bài này chuyển từ phát hiện overload sang cơ chế điều tiết: bounded queue, CallerRunsPolicy, semaphore trước submit và chờ admission có timeout. Người học cần phân tích cả trường hợp rejection, cancel và shutdown để permit không bị rò."
+    transition:
+      to: executor-framework-014
+      description: "Sau bounded admission, callerruns, semaphore và quản lý permit, tiếp tục với đơn vị request nghiệp vụ khác số worker và queue task để nối kiến thức vào kỹ năng sử dụng Executor Framework."
+  - id: executor-framework-014
+    order: 14
+    title: "Phân biệt user task concurrency với thread pool concurrency"
+    description: "Bài này phân biệt user task/request in-flight với số worker thực thi, queue task và parallelism. Một request có thể tạo nhiều subtasks, còn nhiều request có thể chờ mà không giữ worker; vì vậy phải đặt metric và quota riêng."
+    transition:
+      to: executor-framework-015
+      description: "Sau đơn vị request nghiệp vụ khác số worker và queue task, tiếp tục với thuật toán admission đầy đủ và các race khi shutdown để nối kiến thức vào kỹ năng sử dụng Executor Framework."
+  - id: executor-framework-015
+    order: 15
+    title: "Thứ tự tiếp nhận việc của ThreadPoolExecutor: core threads, queue, maximum và rejection"
+    description: "Bài này đào sâu thứ tự execute của ThreadPoolExecutor bằng các trace admission, SynchronousQueue và race khi shutdown xảy ra sau queue.offer. Người học tự tái hiện các nhánh và giải thích lý do recheck trạng thái pool."
+    transition:
+      to: executor-framework-016
+      description: "Sau thuật toán admission đầy đủ và các race khi shutdown, tiếp tục với hệ quả dữ liệu của bốn rejection policy trong overload và shutdown để nối kiến thức vào kỹ năng sử dụng Executor Framework."
+  - id: executor-framework-016
+    order: 16
+    title: "AbortPolicy, CallerRunsPolicy, DiscardPolicy và DiscardOldestPolicy: hệ quả khi quá tải"
+    description: "Bài này đi sâu vào hậu quả nghiệp vụ của bốn handler, đặc biệt task bị bỏ im lặng, Future không bao giờ done và CallerRuns phá giả định thread confinement. Người học kiểm thử outcomes của cả task mới lẫn task đang đợi."
+    transition:
+      to: executor-framework-017
+      description: "Sau hệ quả dữ liệu của bốn rejection policy trong overload và shutdown, tiếp tục với prestart core workers và cho phép core idle timeout để nối kiến thức vào kỹ năng sử dụng Executor Framework."
+  - id: executor-framework-017
+    order: 17
+    title: "prestartAllCoreThreads() và allowCoreThreadTimeOut(): quản lý luồng lõi"
+    description: "Bài này nghiên cứu hai API điều chỉnh vòng đời core worker: prestart tạo trước worker để giảm độ trễ khởi tạo, core timeout thu hồi worker idle để giảm chi phí. Người học kiểm tra điều kiện keepAliveTime dương và không đánh đồng timeout worker idle với timeout task."
+    transition:
+      to: executor-framework-018
+      description: "Sau prestart core workers và cho phép core idle timeout, tiếp tục với hooks beforeexecute/afterexecute và futuretask che exception để nối kiến thức vào kỹ năng sử dụng Executor Framework."
+  - id: executor-framework-018
+    order: 18
+    title: "beforeExecute(), afterExecute() và cách nhận biết ngoại lệ của tác vụ submit()"
+    description: "Bài kết chương đi sâu vào hook của ThreadPoolExecutor và mối quan hệ với FutureTask. Người học nắm khi nào before/after chạy, cách mở Future đã done để xem failure/cancellation, và giới hạn instrumentation để tránh làm nghẽn worker."
+    transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 | Bài 13 | Bài 14 | Bài 15 | Bài 16 | Bài 17 | Bài 18 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Executor, ExecutorService và ThreadPoolExecutor | execute() so với submit() và xử lý lỗi | Fixed, cached và single-thread executors | Đánh giá rủi ro của queue không giới hạn | corePoolSize, maximumPoolSize và keepAliveTime | Work queue: ArrayBlockingQueue, LinkedBlockingQueue | RejectedExecutionHandler và bốn chính sách từ chối | ThreadFactory và UncaughtExceptionHandler trong executor | Lựa chọn pool size cho CPU-bound và I/O-bound | submit task độc lập và tránh thread starvation | Khả năng quan sát active count, queue size, completed tasks | Lifecycle: đóng executor và tránh thread leak | Kiểm soát số task đang chờ và backpressure | Phân biệt user task concurrency với thread pool concurrency | Thứ tự tiếp nhận việc của ThreadPoolExecutor: core threads, queue, maximum và rejection | AbortPolicy, CallerRunsPolicy, DiscardPolicy và DiscardOldestPolicy: hệ quả khi quá tải | prestartAllCoreThreads() và allowCoreThreadTimeOut(): quản lý luồng lõi | beforeExecute(), afterExecute() và cách nhận biết ngoại lệ của tác vụ submit() |
+  | Vấn đề cần hiểu | Executor, ExecutorService và ThreadPoolExecutor giải quyết những trách nhiệm nào? | execute và submit khác nhau ra sao khi task ném lỗi hoặc bị từ chối? | Fixed, cached và single-thread executor khác nhau ở worker, queue và rủi ro tải cao? | Unbounded queue gây tích lũy tác vụ, memory pressure và deadline miss như thế nào? | corePoolSize, maximumPoolSize, keepAliveTime thực sự tác động lên số worker và vòng đời idle ra sao? | ArrayBlockingQueue và LinkedBlockingQueue ảnh hưởng admission, capacity và tài nguyên ra sao? | Một executor đầy hoặc shutdown xử lý task mới bằng bốn policy ra sao? | ThreadFactory và UncaughtExceptionHandler kiểm soát những gì trong vòng đời worker? | Vì sao CPU-bound và blocking I/O cần chiến lược pool size khác nhau? | Vì sao parent chờ child trong cùng pool có thể làm mọi worker bị kẹt? | Đọc các số liệu ThreadPoolExecutor thế nào mà không nhầm completed với successful? | Làm sao đóng executor mà không rò thread hoặc bỏ nhầm việc chưa xong? | Kiểm soát task outstanding và truyền quá tải về producer như thế nào? | Vì sao số user requests còn sống không bằng số thread pool đang chạy? | ThreadPoolExecutor thực hiện core → queue → max → reject theo điều kiện nào? | Abort/CallerRuns/Discard/DiscardOldest thay đổi tính đúng đắn và Future ra sao? | prestartAllCoreThreads và allowCoreThreadTimeOut tác động tới startup/idle thế nào? | Tại sao afterExecute có thể nhận Throwable null dù task submit ném exception? |
+  | Giá trị đối với OOP/module | Chọn đúng API và phân định rõ việc gửi task, theo dõi Future và sở hữu vòng đời pool | Không đánh mất exception, cancellation và trạng thái tác vụ | Chọn factory theo nhu cầu thứ tự, độ song song và giới hạn backlog | Đánh giá rủi ro vận hành trước khi tăng queue hoặc số worker | Cấu hình pool tránh kỳ vọng sai về mở rộng worker và timeout | Chọn đúng queue và không lạm dụng thao tác trực tiếp vào queue nội bộ | Định nghĩa phản ứng quá tải rõ ràng theo loại tác vụ | Đặt tên worker và hiểu đúng ranh giới handler với exception của submit | Tuning theo bottleneck thật và workload đo được | Cấu trúc tác vụ độc lập hoặc pipeline không chặn worker chờ chính queue | Nhìn đúng bức tranh tải và lỗi thay vì tin snapshot đơn lẻ | Quản lý vòng đời executor rõ ràng và kiểm chứng termination | Giảm backlog mà không rò permit hoặc làm rơi task quan trọng | Đo đúng concurrency của business và executor khi có fan-out/async | Dự đoán chính xác hành vi tiếp nhận và lý giải edge cases admission | Đưa ra quyết định overload nhất quán với yêu cầu không mất dữ liệu | Điều chỉnh tradeoff latency khởi động và chi phí worker nhàn rỗi | Instrument worker đúng cách mà không bỏ sót failure hoặc chặn pool |
+  | Tư duy hình thành | Phân rã abstraction trước khi chọn cấu hình thực thi | Theo dõi riêng đường nộp việc và đường quan sát kết quả | Nhìn cả worker lẫn queue trước khi chọn tên factory | Xem backlog là khoản nợ xử lý và bộ nhớ đang được giữ | Tách thông số cấu hình khỏi quan sát worker tại một thời điểm | Đọc capacity và semantics enqueue trước khi dự đoán executor | Xem rejection là một phần của hợp đồng giao việc | Tách lifecycle của worker khỏi kết quả của từng task | Phân tích thời gian tính/chờ trước khi tăng worker | Biểu diễn quan hệ phụ thuộc trước khi thêm thread | Tách metric executor khỏi outcome của nghiệp vụ | Tách ngừng nhận việc, yêu cầu hủy và xác nhận dừng | Đặt giới hạn tại ranh giới nhận việc, không chỉ tăng queue | Xác định đơn vị đếm trước khi nói hệ thống đang bão hòa | Suy luận theo thứ tự quyết định, queue.offer và bước recheck | Đánh giá policy theo mất tác vụ, thứ tự và phản hồi caller | Phân biệt số core cấu hình với số worker tồn tại thực tế | Phân biệt kết thúc Runnable wrapper với business outcome |

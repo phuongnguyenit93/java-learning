@@ -1,0 +1,335 @@
+summaries:
+- id: overview-001
+  title: Concurrency, parallelism và asynchronous execution khác nhau thế nào?
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Concurrency, parallelism và asynchronous execution khác nhau thế nào?**
+
+    Phân biệt ba góc nhìn concurrency, parallelism và asynchronous execution giúp chọn cơ chế Java phù hợp và tránh suy luận sai khi thấy nhiều thread hoặc một CompletableFuture. Người học cần liên hệ cách tổ chức tiến độ, chồng lấn thực thi và thời điểm caller phải nhận kết quả.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ba trục ý nghĩa
+
+    1. Vì sao hai tác vụ có thể concurrent trên một CPU core mà không thực sự parallel?
+    2. Một lời gọi bất đồng bộ có nhất thiết dùng non-blocking I/O hoặc tạo thread mới không?
+    3. Làm thế nào phân biệt tính async của giao diện caller với khả năng thực thi song song bên trong?
+
+    ### Quan sát trong Java
+
+    1. Trong ExecutionModesDemo, bước nào cho phép main tiếp tục và bước nào có thể làm main chờ?
+    2. Vì sao lời gọi parallel stream không tự chứng minh speedup trên mọi máy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại mô hình | Lập bảng xác định concurrency, parallelism và async cho từng lịch thực thi hoặc API Java cụ thể. |
+    | Phân tích luồng điều khiển | Giải thích thứ tự submit, thenCombine, join và thời điểm caller có thể block. |
+    | Kiểm chứng kết quả | Chạy các ví dụ CompletableFuture và parallel sum, giải thích vì sao output giữ thứ tự. |
+    | Lựa chọn cách thực thi | Phân tích task độc lập/phụ thuộc và nêu điều kiện cần đo trước khi tăng parallelism. |
+- id: overview-002
+  title: Process, platform thread, virtual thread và task
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Process, platform thread, virtual thread và task**
+
+    Bài này đặt process, platform thread, virtual thread và task vào đúng tầng của JVM và hệ điều hành. Sự phân biệt giúp ước lượng chi phí tài nguyên, hiểu cách executor nhận task và biết khi nào virtual thread Java 21+ phù hợp với nhiều tác vụ blocking I/O.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới thực thi
+
+    1. Vì sao hai JVM process không trực tiếp dùng chung heap hay biến static?
+    2. Thread khác task ở điểm nào và tại sao Runnable mới tạo chưa hề chạy?
+    3. Một virtual thread dùng carrier platform thread ra sao khi nó chạy hoặc đang chờ I/O?
+
+    ### Vòng đời và giới hạn
+
+    1. Vì sao virtual thread không làm CPU-bound chạy nhanh hơn chỉ vì số lượng thread tăng?
+    2. Thread.ofVirtual và newVirtualThreadPerTaskExecutor yêu cầu JDK nào, và cần chờ vòng đời ra sao?
+    3. Tại sao virtual thread không loại bỏ race condition hay giới hạn connection pool?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ kiến trúc thực thi | Mô tả mối quan hệ process, JVM, platform thread, carrier, virtual thread và task. |
+    | Dự đoán vòng đời | Giải thích hành vi start, join, Future.get và đóng virtual-thread executor. |
+    | Chọn đơn vị phù hợp | Đề xuất process, platform thread hoặc virtual thread theo nhu cầu isolation, CPU và I/O wait. |
+    | Giới hạn tài nguyên | Nhận diện giới hạn OS thread, carrier, memory, socket và connection khi tăng task. |
+- id: overview-003
+  title: 'CPU-bound và I/O-bound: chọn cách thực thi'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CPU-bound và I/O-bound: chọn cách thực thi**
+
+    Phân loại CPU-bound, I/O-bound và workload hỗn hợp theo từng pha giúp chọn fixed pool, fork/join, platform thread, virtual thread hoặc API async có căn cứ. Bài học nhấn mạnh đo bottleneck, giới hạn tài nguyên phụ thuộc và timeout thay vì chọn số worker theo cảm tính.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân loại tải
+
+    1. Phép đo nào giúp phân biệt thời gian CPU với thời gian chờ I/O, khóa hay hàng đợi?
+    2. Vì sao một pipeline download, resize và upload nên xem từng pha riêng?
+    3. Trong mô hình Little, số tác vụ đang chờ có đồng nghĩa số worker cần tạo không?
+
+    ### Chọn và điều tiết thực thi
+
+    1. Vì sao tăng platform thread có thể giúp I/O-bound nhưng gây overhead với CPU-bound?
+    2. Khi nào dùng blocking API trong virtual thread Java 21+ và khi nào giữ sendAsync của HttpClient?
+    3. Cần giới hạn connection, queue, timeout và cancellation thế nào khi nguồn công việc tăng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại workload | Đánh dấu CPU time, I/O wait và phụ thuộc ở từng pha của một pipeline Java. |
+    | Chọn executor | Nêu lý do chọn fixed CPU pool, bounded I/O pool, virtual-thread-per-task hoặc async I/O. |
+    | Thiết lập ranh giới tải | Đề xuất giới hạn worker, queue, connection, permit và deadline gắn với bottleneck. |
+    | Đánh giá thực nghiệm | So sánh CPU, throughput, tail latency và queue khi thay đổi mức concurrency. |
+- id: overview-004
+  title: Latency, throughput, responsiveness và utilization
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Latency, throughput, responsiveness và utilization**
+
+    Bốn thước đo latency, throughput, responsiveness và utilization giải thích những ý nghĩa khác nhau của hiệu năng concurrent. Người học luyện đo queue wait, execution elapsed, p95/p99 và quan hệ Little để nhận ra quá tải mà không nhầm worker bận với CPU bận.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định nghĩa và đo đạc
+
+    1. Latency tính từ submit đến hoàn thành gồm những giai đoạn nào và vì sao execution elapsed không phải CPU time?
+    2. Throughput hoàn tất khác arrival rate và capacity duy trì ra sao?
+    3. Tại sao responsiveness của lần phản hồi đầu khác completion latency?
+
+    ### Đọc số liệu tải
+
+    1. Vì sao p95, p99 và mean có thể kể những câu chuyện khác nhau?
+    2. Trong điều kiện ổn định, Little's law liên hệ số công việc đang có với throughput và thời gian thế nào?
+    3. Từ thí nghiệm 12 tác vụ với pool 2 và 4 worker, có thể và không thể kết luận những gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định ranh giới đo | Phác thảo t0, t1, t2 và tính queue wait, execution time, end-to-end latency. |
+    | Tính metrics | Dùng dữ liệu mẫu tính throughput, percentile theo quy tắc công bố và L = λW. |
+    | Đọc triệu chứng | Phân biệt CPU utilization với worker/connection utilization và nhận ra dấu hiệu queue saturation. |
+    | Thiết kế phép đo | Nêu cách warm-up, phân phối latency, error rate và kiểm soát coordinated omission. |
+- id: overview-005
+  title: 'Concurrency trong ứng dụng Java: use case và rủi ro'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Concurrency trong ứng dụng Java: use case và rủi ro**
+
+    Bài này nhìn concurrency ở quy mô ứng dụng: phục vụ yêu cầu độc lập, I/O, background jobs, pipeline, CPU processing và scheduling, đồng thời nối mỗi use case với rủi ro về dữ liệu, tài nguyên, lỗi và vòng đời. Người học cần đánh giá giới hạn bền vững chứ không coi submit vào executor là đảm bảo giao việc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Use case thực tế
+
+    1. Điều kiện nào cho phép hai lời gọi dịch vụ chạy đồng thời mà vẫn đúng nghiệp vụ?
+    2. Tại sao background task chỉ nằm trong executor không tự bảo đảm durability hoặc retry?
+    3. Pipeline có giai đoạn đầu nhanh hơn giai đoạn sau cần admission control hay queue ra sao?
+
+    ### Phân tích rủi ro và vòng đời
+
+    1. Rủi ro data race, unsafe publication, deadlock và thread-pool starvation khác nhau ở đâu?
+    2. Tại sao get(timeout) không làm task dừng, và điều kiện nào cần xử lý interrupt?
+    3. ThreadLocal, bounded queue và giới hạn downstream ảnh hưởng tính đúng của hệ thống thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Khớp use case và cơ chế | Chọn mô hình xử lý phù hợp cho yêu cầu độc lập, pipeline, tác vụ nền và batch. |
+    | Lập risk register | Liệt kê và phân tích race, blocking, timeout, lost task, overload, shutdown. |
+    | Kiểm chứng kết quả task | Giải thích output invokeAll, Future và AtomicInteger trong ConcurrentWorkDemo. |
+    | Thiết kế ranh giới | Đề xuất queue/connection cap, deadline và chính sách xử lý lỗi cho một use case cụ thể. |
+- id: overview-006
+  title: Shared mutable state, coordination và thread confinement
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Shared mutable state, coordination và thread confinement**
+
+    Khả năng điều phối đúng đắn bắt đầu từ quyền sở hữu dữ liệu. Bài phân tích shared mutable state theo atomicity, visibility, ordering và Java Memory Model, rồi chọn synchronized, atomic, queue, latch và thread confinement để bảo vệ invariant đồng thời phối hợp tiến độ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Trạng thái chia sẻ
+
+    1. Vì sao một đối tượng được trỏ tới từ biến local vẫn có thể là shared mutable state?
+    2. Lost update của count++ khác vấn đề visibility và safe publication thế nào?
+    3. Một invariant nhiều trường đòi phạm vi khóa nào và tại sao atomic trên một field có thể chưa đủ?
+
+    ### Coordination và ownership
+
+    1. CountDownLatch có làm counter++ atomic không, và Future.get tạo quan hệ hoàn tất gì?
+    2. BlockingQueue chuyển giao dữ liệu theo hợp đồng nào, khi nào producer vẫn gây data race?
+    3. Vì sao ThreadLocal trong pooled worker cần remove và không tự theo request qua async stages?
+
+    ### Lựa chọn công cụ
+
+    1. Trong tình huống nào dùng synchronized, AtomicInteger, ReentrantLock hoặc concurrent collection?
+    2. Khi nào nên dùng state riêng cho mỗi task thay vì khóa trên một collection chung?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích JMM | Chỉ ra quan hệ happens-before từ start/join, queue, future, lock hoặc volatile. |
+    | Bảo vệ invariant | Sửa check-then-act bằng đồng bộ hoặc thao tác atomic đúng phạm vi. |
+    | Thiết kế phối hợp | Mô tả producer-consumer, CountDownLatch và giao thức tín hiệu kết thúc. |
+    | Kiểm soát ownership | Thiết kế confinement/immutable handoff và cleanup ThreadLocal khi tái sử dụng worker. |
+- id: overview-007
+  title: Safety, liveness, progress và starvation
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Safety, liveness, progress và starvation**
+
+    Phân biệt safety với liveness và hiểu progress guarantee giúp đánh giá thuật toán concurrent ngay cả khi không có lỗi hiển nhiên. Bài học dùng invariant, CAS, linearizability, fairness và starvation để tách tính đúng của kết quả khỏi khả năng hoàn thành của từng tác vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### An toàn và tiến triển
+
+    1. Tại sao check-then-act với AtomicInteger vẫn có thể vi phạm invariant?
+    2. Safety và liveness khác nhau thế nào khi một thread giữ lock nhưng không bao giờ trả lại?
+    3. Linearizability giải thích điểm hiệu lực của CAS thành công như thế nào?
+
+    ### Progress và fairness
+
+    1. Obstruction-free, lock-free và wait-free khác nhau về mức bảo đảm tiến triển ra sao?
+    2. Vì sao một CAS loop có thể cho progress toàn hệ thống trong khi một thread vẫn starvation?
+    3. Fair ReentrantLock có bảo đảm deadline hoặc FIFO tuyệt đối trong mọi lịch OS không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát biểu bất biến | Mô tả safety property cho một shared state và tìm interleaving gây vi phạm. |
+    | Phân tích tiến triển | Phân biệt blocking, obstruction-free, lock-free và wait-free qua ví dụ. |
+    | Chẩn đoán starvation | Phân tích trường hợp toàn hệ thống có throughput nhưng một thread không hoàn thành. |
+    | Lựa chọn primitive | Giải thích đánh đổi giữa lock có fairness, CAS và timed waits. |
+- id: overview-008
+  title: 'Race condition, deadlock, livelock: nhận diện ở mức tổng quan'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Race condition, deadlock, livelock: nhận diện ở mức tổng quan**
+
+    Bài tập trung vào phương pháp nhận diện triệu chứng của race condition, deadlock và livelock trên Java, khác với việc định nghĩa tiến triển ở mức thuật toán. Các ví dụ có latch, lock graph, thread dump và log retry giúp chọn bằng chứng trước khi sửa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Triệu chứng và cơ chế
+
+    1. Lịch đọc–tính–ghi nào làm hai lần tăng count nhưng kết quả chỉ là một?
+    2. Tại sao vòng chờ lockA và lockB là deadlock, còn vòng nhường nhau/retry có thể là livelock?
+    3. Starvation khác deadlock ở biểu hiện tiến triển của toàn hệ thống như thế nào?
+
+    ### Chẩn đoán có bằng chứng
+
+    1. Làm sao dùng CountDownLatch để tái hiện lost update một cách xác định?
+    2. Vì sao Thread.State.BLOCKED hoặc CPU thấp riêng lẻ không đủ kết luận deadlock?
+    3. Những bằng chứng từ nhiều thread dump, lock owner và retry counter hỗ trợ phân biệt ba lỗi thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tái hiện race | Diễn giải lịch interleaving và chạy RaceConditionDemo đối chiếu AtomicCounterDemo. |
+    | Đọc wait graph | Vẽ chu trình giữ/chờ monitor và đề xuất thứ tự khóa nhất quán. |
+    | Phân biệt sự cố | Dựa vào log tiến độ, retry và thread dump phân loại race, deadlock, livelock, starvation. |
+    | Đưa ra biện pháp | Chọn atomic/lock, lock ordering hoặc bounded retry có backoff theo đúng nguyên nhân. |
+- id: overview-009
+  title: 'Concurrency overhead: context switch, contention, scheduling'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Concurrency overhead: context switch, contention, scheduling**
+
+    Bài tập trung vào chi phí làm concurrency chậm đi: context switch của OS thread, tranh chấp monitor/atomic/queue và thứ tự cấp CPU của scheduler. Người học thực hành AtomicLong–LongAdder, đọc thread state và dùng JFR, ThreadMXBean, công cụ OS để đo đúng tầng thay vì đoán từ số thread.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn overhead
+
+    1. Vì sao context switch khác thread-state transition và thread migration?
+    2. Contended monitor, CAS hot spot và false sharing khác nhau thế nào?
+    3. Khi pool có nhiều worker hơn số core hữu dụng, scheduling và queue ảnh hưởng latency thế nào?
+
+    ### Quan sát và tối ưu
+
+    1. Trong OverheadLab, vì sao chỉ hai dòng count có kết quả cố định còn thời gian phụ thuộc môi trường?
+    2. ThreadMXBean blocked count có phải OS context-switch count không?
+    3. Cần đối chiếu JFR monitor/park events, CPU profile và OS counters ra sao trước khi tối ưu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại overhead | Nêu đúng dấu hiệu của context switch, lock contention, CAS retry và oversubscription. |
+    | Phân tích thí nghiệm | Giải thích khác biệt semantics AtomicLong và LongAdder dưới cập nhật đồng thời. |
+    | Thu thập chứng cứ | Chỉ ra lệnh JFR, thread dump, ThreadMXBean và công cụ OS phù hợp từng câu hỏi. |
+    | Đề xuất tối ưu | Giảm critical section, phân mảnh state hoặc giới hạn worker kèm phép đo so sánh. |
+- id: overview-010
+  title: Khi nào nên dùng tuần tự thay vì đa luồng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khi nào nên dùng tuần tự thay vì đa luồng**
+
+    Bài cuối giúp ra quyết định dựa trên baseline thay vì giả định đa luồng luôn nhanh: nhiệm vụ nhỏ, phụ thuộc chặt, thứ tự nghiêm ngặt hoặc tài nguyên đơn thường phù hợp với tuần tự. Người học so sánh ví dụ Java 17, cân nhắc Amdahl và đo correctness/latency trước khi tăng concurrency.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chọn tuần tự
+
+    1. Khi nào chi phí submit, queue và Future lớn hơn công việc hữu ích?
+    2. Vì sao chuỗi A → B → C có quan hệ dữ liệu không tự chạy nhanh hơn nếu chuyển mỗi bước vào thread riêng?
+    3. Nếu mọi task cùng tranh một lock hoặc tài nguyên đơn, nhiều worker có giúp throughput không?
+
+    ### Quyết định bằng số liệu
+
+    1. Trong SequentialOrConcurrent, hai phiên bản có cùng kết quả nào và điều gì chưa được chứng minh về speedup?
+    2. Amdahl giới hạn tăng tốc ra sao khi 20% thời gian không song song hóa được?
+    3. Cần đo điều gì trước khi đổi từ baseline tuần tự sang executor nhiều worker?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích phụ thuộc | Vẽ đường phụ thuộc và đánh dấu các nhánh thực sự có thể xử lý đồng thời. |
+    | Kiểm chứng tương đương | Chạy SmallSum và SequentialOrConcurrent, xác nhận kết quả trước khi benchmark. |
+    | Tính giới hạn lý tưởng | Áp dụng công thức Amdahl để tính trần speedup trong ví dụ fixed workload. |
+    | Đưa ra quyết định | Lập luận chọn tuần tự hoặc đa luồng theo workload, latency, throughput, tranh chấp và chi phí bảo trì. |

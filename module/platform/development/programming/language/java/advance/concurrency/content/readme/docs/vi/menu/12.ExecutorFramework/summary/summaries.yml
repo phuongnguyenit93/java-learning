@@ -1,0 +1,523 @@
+summaries:
+- id: executor-framework-001
+  title: Executor, ExecutorService và ThreadPoolExecutor
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Executor, ExecutorService và ThreadPoolExecutor**
+
+    Bài mở đầu giúp nhận diện trách nhiệm của từng tầng Executor Framework. Người học cần biết khi nào giao một Runnable, khi nào cần Future/lifecycle và khi nào phải kiểm soát worker, queue, rejection bằng ThreadPoolExecutor.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và bản chất
+
+    1. Vì sao Executor chỉ có execute(Runnable) mà không cam kết chạy trên thread khác?
+    2. ExecutorService bổ sung hợp đồng nào liên quan Callable, Future và shutdown?
+
+    ### Ứng dụng, đánh đổi và kiểm chứng
+
+    1. Khi nào một chương trình cần cấu hình ThreadPoolExecutor thay vì dùng ExecutorService được cấp sẵn?
+    2. Nếu task chờ kết quả của task con trong cùng pool, làm sao lý giải nguy cơ starvation?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt ba tầng API | Lập bảng trách nhiệm và chọn interface phù hợp cho ba tình huống giao việc khác nhau |
+    | Thiết kế một pool có kiểm soát | Phác thảo worker, queue, cách nhận Future, xử lý rejection và shutdown cho workload cụ thể |
+- id: executor-framework-002
+  title: execute() so với submit() và xử lý lỗi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **execute() so với submit() và xử lý lỗi**
+
+    Bài này đi sâu vào hai phương thức giao task thường dùng và nơi ngoại lệ xuất hiện. Người học học cách mở Future để kiểm tra kết quả, phân biệt lỗi task với lỗi nộp việc và tránh bỏ sót exception bị FutureTask giữ lại.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và bản chất
+
+    1. Vì sao exception từ Runnable gửi bằng execute không tự quay về thread đã gọi execute?
+    2. submit biến ngoại lệ của Callable thành tín hiệu gì khi gọi Future.get()?
+
+    ### Ứng dụng, đánh đổi và kiểm chứng
+
+    1. Làm thế nào để phân biệt RejectedExecutionException tại lúc nộp với ExecutionException lúc lấy kết quả?
+    2. Khi Future.get bị interrupt hoặc timeout, vì sao không thể kết luận task đã dừng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết đường lỗi | Mô tả đúng điểm ném và cách xử lý exception cho execute, submit và Future.get |
+    | Xử lý kết quả an toàn | Viết đường xử lý success, failure, cancellation và rejection cho một nhóm Callable |
+- id: executor-framework-003
+  title: Fixed, cached và single-thread executors
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Fixed, cached và single-thread executors**
+
+    Bài học so sánh trực tiếp fixed, cached và single-thread executor thông qua giới hạn worker, cơ chế nhận việc và khả năng bảo toàn thứ tự. Các ví dụ có latch giúp người học quan sát hành vi trước khi tự cấu hình bounded pool.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và bản chất
+
+    1. Vì sao newFixedThreadPool giới hạn worker nhưng không mặc định giới hạn số task đang xếp hàng?
+    2. Cached thread pool sử dụng SynchronousQueue để handoff như thế nào?
+
+    ### Ứng dụng, đánh đổi và kiểm chứng
+
+    1. Khi nào yêu cầu tuần tự khiến newSingleThreadExecutor phù hợp hơn fixed pool?
+    2. Nếu workload có burst kéo dài, cần chuyển sang ThreadPoolExecutor có queue hữu hạn ở điểm nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn loại executor | Giải thích lựa chọn fixed, cached hoặc single-thread cho ba workload với yêu cầu khác nhau |
+    | Phân tích overload | Dự đoán backlog, worker growth và thứ tự thực hiện khi vượt công suất |
+- id: executor-framework-004
+  title: Đánh giá rủi ro của queue không giới hạn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đánh giá rủi ro của queue không giới hạn**
+
+    Bài này đánh giá một rủi ro kiến trúc: queue nhận việc quá nhanh dù worker hữu hạn. Qua ví dụ backlog, cancellation và GC pressure, người học học cách ước lượng ngân sách queue theo bộ nhớ và thời gian chờ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và bản chất
+
+    1. Khi tốc độ nhận task cao hơn throughput, vì sao queue dài mà số worker vẫn không tăng với LinkedBlockingQueue mặc định?
+    2. Queued task có thể giữ các object nào khiến heap/GC xấu đi?
+
+    ### Ứng dụng, đánh đổi và kiểm chứng
+
+    1. Vì sao Future.cancel(true) không nhất thiết loại wrapper khỏi queue ngay?
+    2. Bạn sẽ dùng chỉ số nào và ngân sách nào để quyết định thay queue bằng bounded admission?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích rủi ro queue | Giải thích chuỗi backlog tăng, giữ heap, kéo dài latency và timeout |
+    | Đề xuất giới hạn thực dụng | Ước lượng capacity từ throughput, wait budget và retained heap thay vì mặc định queue vô hạn |
+- id: executor-framework-005
+  title: corePoolSize, maximumPoolSize và keepAliveTime
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **corePoolSize, maximumPoolSize và keepAliveTime**
+
+    Bài này tập trung vào ba tham số cấu hình lõi của ThreadPoolExecutor. Người học hiểu vì sao max không được dùng trước khi queue đầy, keepAlive không hủy task đang chạy và core timeout phải được bật đúng điều kiện.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và bản chất
+
+    1. Khi số worker đã đạt corePoolSize và queue còn chỗ, maximumPoolSize có làm mở thêm worker ngay không?
+    2. keepAliveTime áp dụng cho worker idle nào khi chưa bật allowCoreThreadTimeOut?
+
+    ### Ứng dụng, đánh đổi và kiểm chứng
+
+    1. Nếu đặt core=2, max=8 với LinkedBlockingQueue không giới hạn, bạn dự đoán số worker khi backlog tăng thế nào?
+    2. Bạn sẽ đo những metric nào trước khi thay đổi setCorePoolSize hoặc keepAliveTime trong runtime?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cấu hình | Dự đoán số worker và thời điểm thu hồi worker từ core, max, queue và keep-alive |
+    | Review cấu hình thật | Chỉ ra trường hợp max vô hiệu do queue lớn và phân biệt idle timeout với task timeout |
+- id: executor-framework-006
+  title: 'Work queue: ArrayBlockingQueue, LinkedBlockingQueue'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Work queue: ArrayBlockingQueue, LinkedBlockingQueue**
+
+    Bài này đặt work queue làm trọng tâm: thao tác offer/put/take, cấu trúc mảng và linked nodes, bound và tác động lên admission. Người học thực hành quan sát queue đầy, extra worker và backpressure khi dùng ThreadPoolExecutor.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và bản chất
+
+    1. ArrayBlockingQueue và LinkedBlockingQueue khác nhau ở cấu trúc lưu trữ và cách đặt capacity như thế nào?
+    2. Vì sao FIFO khi dequeue không bảo đảm task hoàn thành đúng thứ tự?
+
+    ### Ứng dụng, đánh đổi và kiểm chứng
+
+    1. Trong ThreadPoolExecutor, vì sao trực tiếp getQueue().put(task) không tương đương execute(task)?
+    2. Khi cần ngăn backlog tăng, bạn chọn queue và rejection policy dựa trên những chỉ số nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh BlockingQueue | Giải thích bound, memory tradeoff và điều kiện offer/put của hai queue |
+    | Cấu hình work queue an toàn | Viết cấu hình queue hữu hạn và dự đoán khi nào extra worker/rejection xuất hiện |
+- id: executor-framework-007
+  title: RejectedExecutionHandler và bốn chính sách từ chối
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **RejectedExecutionHandler và bốn chính sách từ chối**
+
+    Bài này giới thiệu RejectedExecutionHandler và bốn policy chuẩn trong cùng điều kiện saturation có kiểm soát. Người học cần hiểu chính xác caller thấy exception, thực thi đồng bộ hay mất task trong mỗi trường hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và bản chất
+
+    1. Khi nào ThreadPoolExecutor kích hoạt RejectedExecutionHandler?
+    2. AbortPolicy, CallerRunsPolicy, DiscardPolicy và DiscardOldestPolicy xử lý Runnable khác nhau ở điểm nào?
+
+    ### Ứng dụng, đánh đổi và kiểm chứng
+
+    1. CallerRunsPolicy có thể làm chậm producer và tạo nguy cơ gì cho caller thread?
+    2. Tại sao dùng DiscardPolicy với submit có thể khiến người chờ Future không nhận được kết quả?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt rejection policy | Dự đoán outcome của task mới/cũ và tín hiệu caller dưới bốn policy |
+    | Chọn chính sách theo dữ liệu | Đề xuất fail-fast, caller-runs hay loss-tolerant policy và biện minh theo tính chất công việc |
+- id: executor-framework-008
+  title: ThreadFactory và UncaughtExceptionHandler trong executor
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ThreadFactory và UncaughtExceptionHandler trong executor**
+
+    Bài này đi từ cơ chế tạo worker đến cách báo lỗi ở cấp thread. Các ví dụ tên thread và uncaught exception giúp học viên kiểm tra worker chết bất thường, phân biệt lỗi execute trực tiếp với lỗi được Future giữ lại.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và bản chất
+
+    1. ThreadFactory được gọi cho mỗi task hay chỉ khi executor cần tạo worker?
+    2. Khi nào UncaughtExceptionHandler được gọi, và vì sao exception từ submit có thể không tới đó?
+
+    ### Ứng dụng, đánh đổi và kiểm chứng
+
+    1. Làm thế nào đặt tên worker và kiểm chứng handler bằng CountDownLatch/Future?
+    2. Daemon worker và context class loader ảnh hưởng quản lý lifecycle ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tùy chỉnh worker | Viết ThreadFactory đặt tên thread và đăng ký UncaughtExceptionHandler |
+    | Phân loại ngoại lệ | Dự đoán kết quả khác nhau giữa execute, submit và handler cấp thread |
+- id: executor-framework-009
+  title: Lựa chọn pool size cho CPU-bound và I/O-bound
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lựa chọn pool size cho CPU-bound và I/O-bound**
+
+    Bài này rèn kỹ năng chọn pool size dựa trên loại workload và số đo. Thay vì dùng một hằng số, người học tách CPU work khỏi blocking I/O, cân nhắc connection quota, p95/p99 và backpressure.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và bản chất
+
+    1. CPU-bound tăng worker vượt năng lực CPU có thể làm throughput xấu đi vì sao?
+    2. Đối với blocking I/O, tỷ lệ thời gian chờ trên thời gian CPU gợi ý mức concurrency như thế nào?
+
+    ### Ứng dụng, đánh đổi và kiểm chứng
+
+    1. Làm thế nào đo CPU time, wait time, throughput và latency trước khi tuning?
+    2. Nếu pool tính toán và pool gọi API chậm cùng chia tài nguyên, bạn sẽ quyết định tách pool và giới hạn downstream thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại workload | Phân tích CPU-bound, I/O-bound và workload pha trộn từ trace thực thi |
+    | Thiết kế kích thước pool | Đưa ra cấu hình khởi đầu có căn cứ và kế hoạch load test xác nhận |
+- id: executor-framework-010
+  title: submit task độc lập và tránh thread starvation
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **submit task độc lập và tránh thread starvation**
+
+    Bài này phân biệt submit các task độc lập với việc tạo quan hệ phụ thuộc sai trong pool. Người học mô phỏng starvation trên single-thread executor, sau đó sử dụng composition/CompletableFuture thay vì chặn worker không cần thiết.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và bản chất
+
+    1. Task độc lập khác task có quan hệ parent–child phụ thuộc như thế nào?
+    2. Với single-thread executor, vì sao parent gọi child.get() sau khi submit child có thể không bao giờ tiến triển?
+
+    ### Ứng dụng, đánh đổi và kiểm chứng
+
+    1. Bạn sửa tình huống starvation bằng CompletableFuture hoặc tách bước xử lý như thế nào?
+    2. Timeout tại Future.get giúp phát hiện hay giải quyết tận gốc deadlock kiểu starvation?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chẩn đoán starvation | Vẽ quan hệ parent–child và chứng minh mọi worker đang chờ task nằm trong queue |
+    | Tái thiết kế tác vụ | Chuyển dependency thành composition hoặc cấu trúc không block để giữ tiến độ |
+- id: executor-framework-011
+  title: Khả năng quan sát active count, queue size, completed tasks
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khả năng quan sát active count, queue size, completed tasks**
+
+    Bài quan sát pool giúp người học giải thích chính xác getActiveCount, getQueue().size, getCompletedTaskCount và giới hạn số liệu ước lượng. Các ví dụ với latch và task lỗi chứng minh completed không có nghĩa success.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và bản chất
+
+    1. getActiveCount(), getQueue().size() và getCompletedTaskCount() cùng đo các giai đoạn khác nhau thế nào?
+    2. Vì sao completed task count không phải số task thành công?
+
+    ### Ứng dụng, đánh đổi và kiểm chứng
+
+    1. Làm sao quan sát pool khi CallerRunsPolicy hoặc rejection khiến counter pool không phản ánh toàn bộ công việc?
+    2. Bạn sẽ xây dashboard nào để phân biệt bão hòa queue, thiếu CPU và lỗi nghiệp vụ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc metric chính xác | Phân loại gauge/snapshot, completed count và outcome riêng cho một kịch bản có task lỗi |
+    | Thiết kế quan sát tải | Lập dashboard gồm active, queue wait, completed, rejected và latency |
+- id: executor-framework-012
+  title: 'Lifecycle: đóng executor và tránh thread leak'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lifecycle: đóng executor và tránh thread leak**
+
+    Bài này tập trung vào lifecycle của pool, chênh lệch shutdown/shutdownNow/awaitTermination và ownership. Người học xây mẫu đóng hai giai đoạn và nhận biết task không phản hồi interrupt khiến pool chưa thể terminated.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và bản chất
+
+    1. shutdown() và shutdownNow() thay đổi admission và task đang chạy khác nhau ra sao?
+    2. awaitTermination() trả false nói điều gì và không nói điều gì?
+
+    ### Ứng dụng, đánh đổi và kiểm chứng
+
+    1. Nếu task phớt lờ interrupt, vì sao không thể tuyên bố dừng an toàn sau một timeout?
+    2. Bạn tổ chức owner, try/finally và cleanup ThreadLocal ra sao để tránh thread leak?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế graceful shutdown | Viết trình tự shutdown, chờ có hạn và escalation có kiểm tra terminated |
+    | Kiểm thử vòng đời | Tái hiện worker chậm, queued task và trường hợp không hợp tác interrupt bằng latch |
+- id: executor-framework-013
+  title: Kiểm soát số task đang chờ và backpressure
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm soát số task đang chờ và backpressure**
+
+    Bài này chuyển từ phát hiện overload sang cơ chế điều tiết: bounded queue, CallerRunsPolicy, semaphore trước submit và chờ admission có timeout. Người học cần phân tích cả trường hợp rejection, cancel và shutdown để permit không bị rò.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và bản chất
+
+    1. Queue capacity, active workers và outstanding task count khác nhau về giới hạn nào?
+    2. CallerRunsPolicy làm producer chậm lại bằng cách nào và khi nào tác dụng đó không phù hợp?
+
+    ### Ứng dụng, đánh đổi và kiểm chứng
+
+    1. Nếu dùng Semaphore trước executor, cần release permit ở những đường thành công, lỗi, rejection và cancellation nào?
+    2. Bạn sẽ kiểm thử backpressure và điều kiện shutdown để phát hiện rò permit ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây admission có giới hạn | Thiết kế bounded queue và semaphore theo ngân sách tài nguyên cụ thể |
+    | Phân tích đường lỗi permit | Liệt kê các nhánh cancel/reject/timeout khiến permit có thể bị giữ mãi |
+- id: executor-framework-014
+  title: Phân biệt user task concurrency với thread pool concurrency
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt user task concurrency với thread pool concurrency**
+
+    Bài này phân biệt user task/request in-flight với số worker thực thi, queue task và parallelism. Một request có thể tạo nhiều subtasks, còn nhiều request có thể chờ mà không giữ worker; vì vậy phải đặt metric và quota riêng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và bản chất
+
+    1. User task concurrency, active worker count và queued tasks đo những tập hợp nào?
+    2. Fan-out một request thành nhiều subtasks khiến phép so sánh requests với worker dễ sai như thế nào?
+
+    ### Ứng dụng, đánh đổi và kiểm chứng
+
+    1. Vì sao tăng maximumPoolSize có thể không giảm latency nếu queue vẫn nhận task?
+    2. Khi có 500 requests nhưng chỉ 8 workers, bạn cần đo thêm gì để biết đây là quá tải thực hay async waiting bình thường?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt đơn vị concurrency | Dựng bảng accepted, queued, executing, request in-flight cho trường hợp fan-out |
+    | Đặt quota phù hợp | Đề xuất business concurrency limiter riêng và kiểm chứng với executor metrics |
+- id: executor-framework-015
+  title: 'Thứ tự tiếp nhận việc của ThreadPoolExecutor: core threads, queue, maximum và rejection'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thứ tự tiếp nhận việc của ThreadPoolExecutor: core threads, queue, maximum và rejection**
+
+    Bài này đào sâu thứ tự execute của ThreadPoolExecutor bằng các trace admission, SynchronousQueue và race khi shutdown xảy ra sau queue.offer. Người học tự tái hiện các nhánh và giải thích lý do recheck trạng thái pool.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và bản chất
+
+    1. Ở từng bước dưới core, offer queue, add non-core worker và reject, điều kiện cần thỏa là gì?
+    2. Vì sao core=2, max=8 và queue lớn không khiến executor lập tức dùng tám worker?
+
+    ### Ứng dụng, đánh đổi và kiểm chứng
+
+    1. Với SynchronousQueue, thứ tự tiếp nhận khác bounded queue lưu phần tử ở điểm nào?
+    2. Sau khi queue.offer thành công nhưng shutdown xảy ra đồng thời, executor phải recheck để ngăn tình huống gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Trace admission | Diễn giải đường đi task với nhiều loại queue và mốc core/max |
+    | Phân tích race | Dự đoán tương tác queue.offer, shutdown và workerCount khi đọc thuật toán execute |
+- id: executor-framework-016
+  title: 'AbortPolicy, CallerRunsPolicy, DiscardPolicy và DiscardOldestPolicy: hệ quả khi quá tải'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **AbortPolicy, CallerRunsPolicy, DiscardPolicy và DiscardOldestPolicy: hệ quả khi quá tải**
+
+    Bài này đi sâu vào hậu quả nghiệp vụ của bốn handler, đặc biệt task bị bỏ im lặng, Future không bao giờ done và CallerRuns phá giả định thread confinement. Người học kiểm thử outcomes của cả task mới lẫn task đang đợi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và bản chất
+
+    1. DiscardPolicy và DiscardOldestPolicy có thể khiến Future hoặc task trong queue mang hậu quả gì?
+    2. Khi executor đã shutdown, CallerRunsPolicy và DiscardOldestPolicy có còn thực thi task như lúc bão hòa không?
+
+    ### Ứng dụng, đánh đổi và kiểm chứng
+
+    1. Nếu một task không được phép mất, bạn sẽ bác bỏ chính sách nào và xử lý rejection cách nào?
+    2. Khi CallerRunsPolicy chạy task trên request thread, nguy cơ gì xuất hiện với latency và ThreadLocal?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm chứng bốn handler | Tái hiện task chạy, bị bỏ hoặc bị từ chối và quan sát Future/queue |
+    | Chọn policy an toàn | Phân tích hậu quả mất dữ liệu, độ trễ và thứ tự để chọn policy theo nghiệp vụ |
+- id: executor-framework-017
+  title: 'prestartAllCoreThreads() và allowCoreThreadTimeOut(): quản lý luồng lõi'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **prestartAllCoreThreads() và allowCoreThreadTimeOut(): quản lý luồng lõi**
+
+    Bài này nghiên cứu hai API điều chỉnh vòng đời core worker: prestart tạo trước worker để giảm độ trễ khởi tạo, core timeout thu hồi worker idle để giảm chi phí. Người học kiểm tra điều kiện keepAliveTime dương và không đánh đồng timeout worker idle với timeout task.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và bản chất
+
+    1. prestartAllCoreThreads() trả về số gì và khác prestartCoreThread() thế nào?
+    2. Điều kiện keepAliveTime > 0 khi bật allowCoreThreadTimeOut có ý nghĩa gì?
+
+    ### Ứng dụng, đánh đổi và kiểm chứng
+
+    1. Trong hệ thống tải theo đợt, bạn cân bằng latency cold start và RAM giữ thread nhàn rỗi ra sao?
+    2. Vì sao prestart workers không ngăn queue buildup hoặc tự tăng maximumPoolSize?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình vòng đời core | Dự đoán worker growth/retirement khi bật prestart và core timeout |
+    | Kiểm thử điều kiện API | Viết ví dụ xác nhận keepAlive không hợp lệ và giải thích metric pool size theo thời gian |
+- id: executor-framework-018
+  title: beforeExecute(), afterExecute() và cách nhận biết ngoại lệ của tác vụ submit()
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **beforeExecute(), afterExecute() và cách nhận biết ngoại lệ của tác vụ submit()**
+
+    Bài kết chương đi sâu vào hook của ThreadPoolExecutor và mối quan hệ với FutureTask. Người học nắm khi nào before/after chạy, cách mở Future đã done để xem failure/cancellation, và giới hạn instrumentation để tránh làm nghẽn worker.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và bản chất
+
+    1. beforeExecute và afterExecute được gọi tại điểm nào trong worker loop và trường hợp nào hook bị bỏ qua?
+    2. Vì sao submit thường đưa FutureTask vào pool và afterExecute(r, t) có thể nhận t == null?
+
+    ### Ứng dụng, đánh đổi và kiểm chứng
+
+    1. Trong afterExecute, vì sao cần Future.isDone() và xử lý ExecutionException/CancellationException/InterruptedException riêng?
+    2. Nếu hook ghi log/block lâu hoặc tự ném exception, worker và việc quan sát lỗi chịu hậu quả gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Theo dõi outcome qua hook | Viết afterExecute phân biệt throwable trực tiếp, Future failure, success và cancelled |
+    | Thiết kế instrumentation an toàn | Đánh giá overhead, deadlock và thời điểm hook không đại diện cho mọi task đã nộp |

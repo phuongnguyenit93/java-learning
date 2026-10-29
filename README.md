@@ -66,10 +66,7 @@ Chi tiết workflow: [`GENERAL_AGENT_RULES.md`](module-generate-agent/GENERAL_AG
 - [`STEP_3.md`](./module-generate-agent/STEP_3.md) — Menu.
 - [`STEP_4.md`](./module-generate-agent/STEP_4.md) — Knowledge.
 - [`STEP_5.md`](./module-generate-agent/STEP_5.md) — review Knowledge, metadata và Java chapter skeleton.
-- [`STEP_6.md`](./module-generate-agent/STEP_6.md) — Java API và tests.
-- [`STEP_7.md`](./module-generate-agent/STEP_7.md) — Swagger VI/EN theo chương.
-- **STEP 8** — Real-world Problems & Practical Exercises: worker tạo skeleton rồi nội dung trong cùng một phiên, ghi YAML ở Sheet AD:AG; Prime QA, Gradle import thuần code thành `content/readme/docs/vi/menu/<chapter>/practice/scenarios.yml`.
-- [`STEP_9.md`](./module-generate-agent/STEP_9.md) — Interview + Summary Questions YAML, import thành hai file riêng trong `questions/`.
+- [`STEP_6.md`](./module-generate-agent/STEP_6.md) — 4 Phase Interview, Case Study, Quiz; 11 worker contracts ở [`worker/STEP_6_WORKER/`](./module-generate-agent/worker/STEP_6_WORKER/).
 - [`STEP_10.md`](./module-generate-agent/STEP_10.md) — Quiz YAML.
 - [`STEP_11.md`](./module-generate-agent/STEP_11.md) — Related metadata cho Swagger, Quiz, Interview theo chương và Roadmap toàn module.
 - [`STEP_12.md`](./module-generate-agent/STEP_12.md) — Xuất snapshot Google Sheets của module thành Excel offline.

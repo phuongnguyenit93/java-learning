@@ -1,0 +1,49 @@
+sections:
+  concurrent-collections-001:
+    difficulty: BASIC
+    isImportant: true
+  concurrent-collections-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  concurrent-collections-003:
+    difficulty: ADVANCED
+    isImportant: true
+  concurrent-collections-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  concurrent-collections-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  concurrent-collections-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  concurrent-collections-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  concurrent-collections-008:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  concurrent-collections-009:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  concurrent-collections-010:
+    difficulty: INTERMEDIATE
+    isImportant: true
+  concurrent-collections-011:
+    difficulty: ADVANCED
+    isImportant: true
+  concurrent-collections-012:
+    difficulty: ADVANCED
+    isImportant: true
+  concurrent-collections-013:
+    difficulty: ADVANCED
+    isImportant: true
+  concurrent-collections-014:
+    difficulty: ADVANCED
+    isImportant: true
+  concurrent-collections-015:
+    difficulty: INTERMEDIATE
+    isImportant: false
+  concurrent-collections-016:
+    difficulty: INTERMEDIATE
+    isImportant: false

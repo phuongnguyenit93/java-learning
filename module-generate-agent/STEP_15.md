@@ -2,7 +2,6 @@
 
 
 
-> **STEP 8 extension:** For a module with Practice, EN tab/workbook requires **33 columns A:AG**, with `AD18=Real-world Practice` and `AD19:AG19=Practice YAML`. `practice/scenarios.yml` EN maps verbatim to the chapter parent row AD:AG (not one file or row per scenario). Summary AC remains unchanged.
 
 ## 0. Hard rule: code-only, no AI, no workers
 
@@ -30,7 +29,7 @@ than being pushed into Sheet cells.
    mapping. Confirm STEP 14 fully completed and readback on the VI gid.
 2. Verify VI tab `I3` exact module root-relative path, `CURRENT_STEP.VALUE = "14"` in module `master.json`; verify STEP 12 offline VI Excel has exactly one worksheet,
    correct `I3` and final VI menu row mapping.
-3. Validate the Google-native `Template`: 700+ rows, **A:AG (33 columns) for Practice-enabled modules** (legacy modules without Practice may retain A:AC), Difficulty
+3. Validate the Google-native `Template`: 700+ rows, **at least A:AC (29 columns)** (extra legacy columns are preserved), Difficulty
    dropdown BASIC/INTERMEDIATE/ADVANCED at O20/O21/O700, isImportant
    dropdown TRUE/FALSE at AB20/AB700, and three conditional coloring rules
    for BASIC/INTERMEDIATE/ADVANCED on O20:O700.
@@ -92,7 +91,6 @@ All default to `DRY_RUN`; only `APPLY` mutates Sheets or local files.
    Không AI, không tạo Summary nếu nguồn không có; không làm mất hai nhóm khi round-trip.
    Mỗi câu hỏi chỉ lưu `readmeRelated.anchor`; chapter được xác định bằng
    vị trí file, không dựa vào `readmeRelated.file`.
-   **Practice:** đọc **một file `menu/<chapter>/practice/scenarios.yml` EN** trên mỗi chapter có nội dung, validate `practiceSheet`, đối chiếu scenario ID/type/order với VI, giữ toàn bộ chuỗi YAML EN không đổi và chia greedy theo newline tối đa 30.000 ký tự/ô vào `AD:AG` của hàng cha. Không tạo scenario/file mới, không dùng AI; thiếu VI/EN pair hoặc vượt giới hạn Excel → BLOCKER.
    **Summary:** đọc đầy đủ `menu/<chapter>/summary/section.yml` EN, validate
    root `version/type/title/roadmapHeading/roadmap/comparisonMarkdown`, lesson
    ID/order/transition và bảng GFM; **ghi toàn bộ chuỗi YAML không chuyển đổi vào

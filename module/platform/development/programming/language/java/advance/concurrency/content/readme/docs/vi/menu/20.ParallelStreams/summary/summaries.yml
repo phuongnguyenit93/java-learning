@@ -1,0 +1,331 @@
+summaries:
+- id: parallel-streams-001
+  title: Stream.parallel() và parallelStream()
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Stream.parallel() và parallelStream()**
+
+    Đặt nền tảng cho việc chuyển một Stream pipeline giữa tuần tự và song song bằng `parallel()` hoặc `Collection.parallelStream()`, đồng thời hiểu tính lazy của pipeline. Bài giúp phân biệt chế độ xử lý với cam kết về tốc độ hay thứ tự, và đặt ra các điều kiện an toàn trước khi sử dụng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hình thành pipeline song song
+
+    1. `parallel()` và `parallelStream()` khác nhau ở vị trí gọi và nguồn tạo stream như thế nào?
+    2. Vì sao gọi `parallel()` chưa khởi chạy công việc ngay và terminal operation mới quyết định kết quả?
+
+    ### Đúng đắn và hiệu năng
+
+    1. Vì sao một pipeline có side effect hoặc phép reduce không kết hợp đúng có thể sai khi chuyển sang parallel?
+    2. Khi nào chi phí split, lập lịch và kết hợp kết quả khiến sequential tốt hơn parallel?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây pipeline đúng chế độ | Tạo ví dụ `stream().parallel()` và `parallelStream()` với kết quả chức năng tương đương. |
+    | Đánh giá độ an toàn | Chỉ ra các bước cần stateless, non-interfering và phép gộp associative. |
+    | Lựa chọn theo dữ liệu | Giải thích vì sao một workload cụ thể có hoặc không hưởng lợi từ parallel. |
+- id: parallel-streams-002
+  title: Spliterator và khả năng chia nguồn dữ liệu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Spliterator và khả năng chia nguồn dữ liệu**
+
+    Hiểu cơ chế Java chia nguồn thành các phần việc, thay vì cho rằng chỉ gọi `parallel()` là đủ để tận dụng CPU. Trọng tâm là `trySplit()`, `tryAdvance()`, `estimateSize()`, đặc tính `SIZED/SUBSIZED/ORDERED` và chất lượng cân bằng khi chia nguồn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cách nguồn được chia
+
+    1. `trySplit()` tạo hai miền duyệt như thế nào và vì sao một Spliterator khó chia có thể cản trở parallel speedup?
+    2. Vai trò của `estimateSize()`, `SIZED` và `SUBSIZED` trong việc phân chia và dự đoán kích thước là gì?
+
+    ### Hợp đồng và lựa chọn
+
+    1. Khi tự cài đặt `Spliterator.OfInt`, làm sao chứng minh không mất hoặc lặp phần tử qua nhiều lần split?
+    2. Các characteristics như `ORDERED`, `IMMUTABLE` và `CONCURRENT` ảnh hưởng đến cách pipeline được phép tối ưu ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích phân vùng | Mô phỏng `trySplit()` và `tryAdvance()` trên một tập dữ liệu đã biết. |
+    | Kiểm chứng custom Spliterator | Xác nhận coverage, không trùng, đúng estimated size và characteristics đã khai báo. |
+    | Dự đoán hiệu năng | So sánh nguồn dễ chia với nguồn từ iterator về workload phân phối và overhead. |
+- id: parallel-streams-003
+  title: ForkJoin common pool phía sau parallel streams
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ForkJoin common pool phía sau parallel streams**
+
+    Quan sát cách các stream song song thường dùng fork/join task và `ForkJoinPool.commonPool()` trong các triển khai JDK hiện hành. Bài chỉ ra work-stealing, parallelism, sự chia sẻ tài nguyên và vì sao không nên xem số thread hay pool nội bộ là hợp đồng API bất biến.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Work-stealing và tài nguyên
+
+    1. Các subtasks do Spliterator chia ra được fork, steal và join theo mô hình nào?
+    2. Vì sao common pool là tài nguyên dùng chung và parallelism khác số lượng phần tử đang xử lý?
+
+    ### Ranh giới lựa chọn
+
+    1. Khi callback trong parallel stream chờ I/O blocking, sự nghẽn common pool có thể lan sang tác vụ khác như thế nào?
+    2. Tại sao đặt yêu cầu timeout, cancellation hoặc giới hạn worker chính xác thường phù hợp với executor quản lý riêng hơn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ luồng thực thi | Mô tả pipeline terminal → split → fork/join → kết quả. |
+    | Đọc kết quả quan sát | Giải thích tên thread và độ không xác định của lịch chạy mà không phụ thuộc output thứ tự. |
+    | Nhận diện chia sẻ pool | Phân tích rủi ro khi nhiều pipeline cùng sử dụng common pool. |
+- id: parallel-streams-004
+  title: Associativity của phép reduce và tính đúng đắn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Associativity của phép reduce và tính đúng đắn**
+
+    Học các luật đại số bắt buộc để reduction vẫn cho ý nghĩa đúng khi JVM chia và ghép các phần dữ liệu theo nhóm khác nhau. Bài tập trung vào associative operator, identity trung hòa, phân biệt commutativity và sai số/overflow trong biểu diễn Java.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Luật của reduction
+
+    1. Vì sao phép trừ không associative làm `reduce` có thể đổi kết quả khi chia nhiều nhánh?
+    2. Identity trung hòa và yêu cầu accumulator/combiner tương thích thể hiện thế nào qua các overload của `reduce`?
+
+    ### Giới hạn kết quả
+
+    1. Vì sao phép cộng số thực có thể khác do thứ tự nhóm dù phép cộng số học được coi là kết hợp?
+    2. Tại sao dùng chung mutable container làm identity nguy hiểm ngay cả khi phiên bản sequential có vẻ chạy đúng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra luật đại số | Đưa ra phản ví dụ cho operator không associative và identity sai. |
+    | Thiết kế reduction đúng | Chọn overload, identity và phép kết hợp hợp lệ cho tập dữ liệu cụ thể. |
+    | Đánh giá tính tương đương | Giải thích các khác biệt do floating-point grouping và overflow. |
+- id: parallel-streams-005
+  title: Stateless lambda và tránh shared mutable state
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Stateless lambda và tránh shared mutable state**
+
+    Chuyển cách viết stream sang các hàm stateless, non-interfering để kết quả không phụ thuộc interleaving. Bài minh họa rủi ro của việc mutate biến ngoài trong `map`, `filter`, `forEach` và cách dùng reduction/collector có container được framework quản lý.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng của lambda
+
+    1. Stateless lambda khác lambda chỉ không khai báo biến local ở điểm nào?
+    2. Vì sao sửa source hoặc cập nhật một `ArrayList` chia sẻ từ `parallelStream().forEach()` có thể gây race và sai kết quả?
+
+    ### Chọn cách tổng hợp
+
+    1. Khi nào `map/filter/reduce` giúp bỏ side effect mà vẫn giữ đúng chức năng nghiệp vụ?
+    2. Vì sao dùng concurrent collection chỉ giúp chống data race của collection nhưng chưa bảo đảm ordering hay logic pipeline?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện shared state | Tìm các truy cập mutable state từ lambda có thể chạy trên nhiều worker. |
+    | Refactor pipeline | Thay append vào collection bên ngoài bằng `collect` hoặc transformation thuần. |
+    | Kiểm chứng điều kiện an toàn | Giải thích non-interference, statelessness và happens-before ở ranh giới tổng hợp. |
+- id: parallel-streams-006
+  title: 'Ordering: forEachOrdered(), findFirst(), unordered()'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ordering: forEachOrdered(), findFirst(), unordered()**
+
+    Phân biệt encounter order của nguồn với thứ tự chạy của các worker và semantics terminal operation. Bài cho phép lựa chọn `forEach`, `forEachOrdered`, `findFirst`, `findAny` và `unordered()` theo yêu cầu về thứ tự và hiệu năng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Encounter order
+
+    1. Một parallel stream có thể xử lý phần tử khác thứ tự nhưng `forEachOrdered()` vẫn bảo đảm điều gì?
+    2. Khác biệt giữa `findFirst()` và `findAny()` khi nguồn có encounter order là gì?
+
+    ### Bỏ ràng buộc đúng lúc
+
+    1. `unordered()` thay đổi những bảo đảm nào mà không thực hiện xáo trộn phần tử?
+    2. Vì sao `limit()` hoặc thao tác stateful có thể đổi ý nghĩa/chi phí khi upstream được đánh dấu unordered?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán output theo hợp đồng | Phân biệt những phần kết quả bảo đảm thứ tự và những phần không thể khẳng định. |
+    | Thiết kế stream có order | Chọn terminal operation và nguồn phù hợp với yêu cầu lấy phần tử đầu tiên. |
+    | Đánh giá tối ưu | Giải thích khi nào bỏ ordering cho phép tăng throughput và khi nào làm sai nghiệp vụ. |
+- id: parallel-streams-007
+  title: Collector concurrent so với collector tuần tự
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Collector concurrent so với collector tuần tự**
+
+    Hiểu contract của Collector (`supplier`, `accumulator`, `combiner`, `finisher`, characteristics) và vì sao collector không concurrent vẫn có thể dùng đúng với parallel stream. Bài đi sâu vào `groupingBy`/`groupingByConcurrent`, `CONCURRENT`, `UNORDERED`, `IDENTITY_FINISH` và cạnh tranh trên key nóng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Collector contract
+
+    1. Vì sao `groupingBy()` vẫn hợp lệ trên parallel stream dù không phải concurrent collector?
+    2. Ba characteristics `CONCURRENT`, `UNORDERED` và `IDENTITY_FINISH` thay đổi quyền tối ưu của Stream framework như thế nào?
+
+    ### Thiết kế và giới hạn
+
+    1. Vì sao khai báo `CONCURRENT` cho một accumulator dùng `ArrayList` không thread-safe có thể phá kết quả?
+    2. Khi nhiều phần tử cùng nhóm về một key nóng, collector concurrent có thể chậm hơn gom cục bộ rồi combine vì sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích Collector contract | Giải thích vai trò và tương tác của supplier/accumulator/combiner/finisher. |
+    | Chọn collector | Đối chiếu groupingBy và groupingByConcurrent với yêu cầu thứ tự/khả năng cạnh tranh. |
+    | Kiểm định collector tự tạo | Kiểm tra characteristics có khớp an toàn của container và kết quả tổng hợp. |
+- id: parallel-streams-008
+  title: Combiner, identity và lỗi reduction khi chạy song song
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Combiner, identity và lỗi reduction khi chạy song song**
+
+    Đào sâu ba overload `reduce`, cách identity được áp dụng trên các nhánh và tương thích giữa accumulator với combiner. Bài chứng minh những sai lầm khó nhận ra như identity khác phần tử trung hòa, combiner bỏ nhánh, mutate object chung hoặc dùng phép cộng/trừ không tương thích.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Luật phối hợp nhánh
+
+    1. Vì sao `reduce(10, Integer::sum)` có thể cộng identity nhiều lần trong parallel stream và không có nghĩa cộng phụ phí 10 một lần?
+    2. Các điều kiện identity, associativity và compatibility giữa accumulator/combiner được kiểm chứng bằng ví dụ nào?
+
+    ### Điều tra sai lệch
+
+    1. Vì sao combiner chỉ trả nhánh trái hoặc sửa mutable identity có thể làm mất dữ liệu khi parallel?
+    2. Khi cần tích lũy vào container mutable, tại sao `collect` thường phù hợp hơn `reduce` ba tham số?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chứng minh identity | Đặt bộ dữ liệu mẫu chứng minh identity trung hòa cho mọi nhánh. |
+    | Kiểm tra combiner | Phát hiện lỗi bỏ nhánh, không associative và accumulator không tương thích. |
+    | Sửa reduction | Đổi sang phép reduce đúng luật hoặc collect có accumulator an toàn. |
+- id: parallel-streams-009
+  title: Vì sao blocking I/O có thể làm nghẽn parallel stream?
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vì sao blocking I/O có thể làm nghẽn parallel stream?**
+
+    Phân tích sự khác nhau giữa CPU-bound work và blocking I/O khi một callback của parallel stream chờ mạng, file hoặc database. Bài giải thích common pool có tài nguyên hữu hạn, vì sao blocking gây starvation và khi nào nên chuyển sang executor riêng, async API hay virtual threads.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế nghẽn
+
+    1. Vì sao một worker fork/join đang chờ I/O không thể đồng thời phục vụ các phần tính toán khác?
+    2. ManagedBlocker hỗ trợ một số loại block như thế nào và vì sao không thể mặc định cứu mọi blocking API?
+
+    ### Chọn thiết kế phù hợp
+
+    1. Khi nào nên dùng executor I/O riêng với giới hạn kết nối thay cho `parallelStream()`?
+    2. Virtual threads từ Java 21 giúp chờ blocking thế nào mà vẫn không tăng số CPU core hoặc khả năng chịu tải của backend?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chẩn đoán nghẽn pool | Liên hệ busy worker, queue, throughput và thời gian chờ của I/O. |
+    | Chọn mô hình đồng thời | Phân biệt bài toán CPU-bound phù hợp stream và blocking I/O phù hợp executor/async/virtual threads. |
+    | Kiểm chứng tác động chéo | Thiết kế phép đo hoặc mô phỏng khi nhiều luồng công việc cùng tranh common pool. |
+- id: parallel-streams-010
+  title: Dùng benchmark để xác định ngưỡng có lợi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dùng benchmark để xác định ngưỡng có lợi**
+
+    Lựa chọn sequential hay parallel bằng số liệu thay vì giả định nhiều thread luôn nhanh hơn. Bài tập trung vào JMH, warm-up, fork, input size, công việc mỗi phần tử, collector/allocation và break-even point trên môi trường được kiểm soát.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế phép đo
+
+    1. Vì sao một lần đo `System.nanoTime()` có thể bị sai lệch do JIT, GC, CPU contention và dead-code elimination?
+    2. Làm sao đảm bảo hai pipeline sequential/parallel làm cùng một việc và JMH thực sự tiêu thụ output?
+
+    ### Ngưỡng và quyết định
+
+    1. Các yếu tố overhead split/scheduling/combine và chi phí mỗi phần tử dịch chuyển điểm hòa vốn ra sao?
+    2. Khi nào nên tiếp tục dùng sequential dù một cấu hình parallel đạt throughput trung bình cao hơn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây benchmark hợp lệ | Cấu hình JMH với warm-up, measurement, forks, input sizes và workload tương đương. |
+    | Đọc kết quả | Nhận diện điểm hòa vốn, phân bố độ trễ và biến động giữa các phép chạy. |
+    | Đặt ngưỡng sử dụng | Giải thích lựa chọn parallel theo CPU budget, p95/p99, GC và tải production. |
+- id: parallel-streams-011
+  title: Tránh nested parallel streams thiếu kiểm soát
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tránh nested parallel streams thiếu kiểm soát**
+
+    Đánh giá rủi ro khi parallel stream bên ngoài tiếp tục chạy các parallel pipeline bên trong. Bài hướng dẫn chọn một cấp song song, cân bằng task granularity, tránh tranh common pool, làm phẳng workload khi hợp lý và chuyển sang executor quản lý riêng nếu cần giới hạn chặt.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nesting và tranh chấp
+
+    1. Vì sao hai tầng `parallel()` không đồng nghĩa nhân đôi tốc độ hoặc tăng số worker thực tế?
+    2. Task quá nhỏ, work-stealing và nested blocking có thể tạo overhead hoặc starvation như thế nào?
+
+    ### Chọn cấp thực thi
+
+    1. Khi nhóm dữ liệu không đều, ưu nhược của song song cấp ngoài, cấp trong và flatten một lần là gì?
+    2. Trong bài toán cần deadline hoặc số concurrent request rõ ràng, tại sao executor giới hạn riêng phù hợp hơn phụ thuộc cách parallel stream dùng pool?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện nested overhead | Vẽ cấu trúc các task lồng nhau và chỉ ra điểm tranh chấp worker. |
+    | So sánh chiến lược | Viết hoặc phân tích ba biến thể outer-only, inner-only và flatten-once. |
+    | Đánh giá độ lợi | Đề xuất benchmark và lựa chọn một mức parallelism phù hợp workload. |

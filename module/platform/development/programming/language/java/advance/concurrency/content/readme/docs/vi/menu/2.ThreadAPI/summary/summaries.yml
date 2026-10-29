@@ -1,0 +1,415 @@
+summaries:
+- id: thread-api-001
+  title: Tạo thread bằng Thread và Runnable
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tạo thread bằng Thread và Runnable**
+
+    Tách logic Runnable khỏi luồng Thread và khởi chạy/chờ hoàn tất đúng cách. Phân tích chia sẻ bộ nhớ và ngắt để tránh tưởng rằng tạo Thread đã thực thi công việc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế một luồng
+
+    1. Vì sao Runnable mô tả công việc nhưng không tự khởi chạy?
+    2. Khi nào dùng lambda/implements Runnable thay vì extends Thread?
+    3. Vì sao `new Thread(task)` vẫn ở trạng thái NEW?
+
+    ### Vòng đời và dữ liệu
+
+    1. Nếu hai thread nhận cùng Runnable, những trạng thái nào được chia sẻ?
+    2. Tại sao `join()` không làm cho `count++` nguyên tử?
+    3. Làm sao dừng hợp tác khi một worker bị interrupt?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết Thread cơ bản | Tạo Runnable, khởi chạy và join từng thread để xác định thứ tự đầu ra. |
+    | Đánh giá an toàn dữ liệu | Nhận ra data race và thay bằng AtomicInteger hoặc đồng bộ đúng. |
+    | Quản lý ngắt | Giải thích tình huống sleep ném InterruptedException và khôi phục cờ thích hợp. |
+- id: thread-api-002
+  title: Phân biệt gọi start() và run()
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt gọi start() và run()**
+
+    Phân tích chính xác sự khác biệt giữa gọi phương thức run đồng bộ và khởi động một luồng mới bằng start. Vận dụng Thread.State, happens-before và đường đi exception để không chạy task hai lần.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ cảnh thực thi
+
+    1. `run()` trực tiếp chạy trên thread nào, và `start()` chạy trên thread nào?
+    2. Vì sao đối tượng vẫn NEW nếu chỉ gọi run trực tiếp?
+    3. Gọi start lần hai trên cùng Thread sẽ ra sao?
+
+    ### Bộ nhớ và exception
+
+    1. Quan hệ happens-before của start và join được dùng thế nào?
+    2. Tại sao try/catch quanh start không bắt được lỗi phát sinh trong worker?
+    3. Điều gì xảy ra với logic nghiệp vụ nếu vừa gọi start rồi lại run?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán thread | Xác định tên thread in ra và trạng thái Thread trong từng trường hợp. |
+    | Phân tích exception | So sánh lỗi từ run trực tiếp với lỗi uncaught trong worker. |
+    | Giải thích đồng bộ | Chỉ ra thời điểm start/join tạo memory ordering và phần nào vẫn cần lock. |
+- id: thread-api-003
+  title: Đọc thông tin currentThread(), name và ID
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đọc thông tin currentThread(), name và ID**
+
+    Nhận diện đúng thread đang thực thi bằng currentThread, không nhầm với tham chiếu Thread được giữ ở caller. Phân biệt Java thread name/ID, PID, native ID và task ID để lập log có thể truy vết.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Identity tại thời điểm chạy
+
+    1. `Thread.currentThread()` có thể trả đối tượng nào khi cùng method chạy ở main và worker?
+    2. Vì sao `worker.getName()` khác tên thread thực thi task?
+    3. Tên thread và ID có những giới hạn duy nhất/tái sử dụng nào?
+
+    ### Gỡ lỗi và phiên bản
+
+    1. Vì sao executor tái sử dụng worker cần taskId riêng trong log?
+    2. `getId()` và `threadId()` khác nhau ở các phiên bản Java nào?
+    3. Tại sao không suy Java thread ID chính là OS thread ID?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quan sát identity | Viết code lấy current thread, name và ID đúng JDK mục tiêu. |
+    | Đọc trace | Ghép log theo taskId mà không dùng thread name như khóa duy nhất. |
+    | Đánh giá phiên bản | Giải thích lỗi biên dịch của `threadId()` khi --release 17. |
+- id: thread-api-004
+  title: 'Thread priority: ý nghĩa và giới hạn bảo đảm'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thread priority: ý nghĩa và giới hạn bảo đảm**
+
+    Hiểu priority là một hint cho scheduler platform thread chứ không bảo đảm thứ tự, fairness hay deadline. Đối chiếu priority với hàng đợi ưu tiên và các đặc điểm của virtual thread.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### API và scheduler
+
+    1. Thread priority có thang giá trị gì và lỗi khi ngoài phạm vi?
+    2. Vì sao priority cao không buộc thread lấy được lock?
+    3. Virtual thread Java 21 có cho thay priority thực sự không?
+
+    ### Thiết kế và kiểm chứng
+
+    1. Khi cần task khẩn được lấy trước, vì sao dùng PriorityBlockingQueue?
+    2. Vì sao một lần đo nhanh/chậm không đủ chứng minh chính sách scheduler?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình | Thiết lập/đọc priority và kiểm tra giới hạn ThreadGroup. |
+    | Chọn thiết kế | Phân biệt task ordering với CPU scheduling trong tình huống cụ thể. |
+    | Đánh giá fairness | Giải thích nguy cơ starvation và cách đo trên môi trường thật. |
+- id: thread-api-005
+  title: Platform thread và chi phí tạo tài nguyên
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Platform thread và chi phí tạo tài nguyên**
+
+    Phân tích chi phí OS thread, stack, scheduler và lifecycle của platform threads. Thiết kế pool có giới hạn, nhận biết khác biệt CPU-bound/I/O-bound và đo native memory trước khi tăng số luồng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chi phí tài nguyên
+
+    1. Thread object, native thread và CPU core khác nhau ra sao?
+    2. Tại sao thread chờ I/O vẫn giữ tài nguyên?
+    3. Vì sao stack reserved memory không đồng nghĩa RSS?
+
+    ### Điều phối tải
+
+    1. Bounded queue và ThreadPoolExecutor giúp giới hạn nguồn lực thế nào?
+    2. Tăng worker khi CPU đã bão hòa có thể gây tác dụng phụ gì?
+    3. Những metric nào cần xem trước khi đổi -Xss hoặc số workers?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại chi phí | Mô tả chi phí native stack, context switching và trạng thái chờ. |
+    | Giới hạn concurrency | Thiết kế pool với bounded queue, timeout và rejection policy. |
+    | Quan sát hệ thống | Phân biệt heap/native/RSS, số threads và CPU trong báo cáo vận hành. |
+- id: thread-api-006
+  title: Daemon thread và user thread khi JVM kết thúc
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Daemon thread và user thread khi JVM kết thúc**
+
+    Giải thích non-daemon thread giữ JVM sống trong khi daemon có thể bị bỏ dở lúc shutdown. Thiết kế tín hiệu dừng và join có kiểm soát, phân biệt return từ main, System.exit và halt.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Điều kiện kết thúc JVM
+
+    1. Vì sao main trả về chưa chắc process kết thúc?
+    2. Daemon thread có được bảo đảm chạy finally khi JVM đóng không?
+    3. Khi nào được gọi setDaemon và khi nào gây IllegalThreadStateException?
+
+    ### Dừng an toàn
+
+    1. Thiết kế cơ chế stop và join cho daemon như thế nào?
+    2. System.exit và Runtime.halt khác nhau ở shutdown hooks ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán lifecycle | Giải thích khi nào JVM có thể thoát với daemon/user thread. |
+    | Cấu hình thread | Tạo daemon trước start và xác minh isDaemon. |
+    | Graceful shutdown | Dùng latch/interrupt/join để hoàn thành cleanup có kiểm soát. |
+- id: thread-api-007
+  title: Đặt tên luồng và thiết lập UncaughtExceptionHandler
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đặt tên luồng và thiết lập UncaughtExceptionHandler**
+
+    Chuẩn hóa tên luồng và sử dụng UncaughtExceptionHandler như điểm ghi nhận Throwable thoát khỏi thread. Phân biệt handler riêng/default với lỗi giữ trong Future khi submit vào executor.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tên và handler
+
+    1. Vì sao tên thread phải tách khỏi task/request ID?
+    2. Khi nào handler riêng và handler default được lựa chọn?
+    3. Vì sao interrupt đơn thuần không gọi uncaught handler?
+
+    ### Đường đi lỗi
+
+    1. execute và submit chuyển exception của task như thế nào?
+    2. Handler có nên retry, block lâu hoặc tự ném exception không?
+    3. Làm sao lấy nguyên nhân thất bại qua Future.get?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đặt tên | Viết mã đặt tên và khôi phục tên worker theo đúng vòng đời. |
+    | Cấu hình handler | Gắn handler để ghi nhận Throwable thoát khỏi một raw thread. |
+    | Quan sát task | Đọc Future lỗi thay vì trông chờ mọi lỗi đi tới handler. |
+- id: thread-api-008
+  title: ThreadFactory để chuẩn hóa cách tạo luồng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ThreadFactory để chuẩn hóa cách tạo luồng**
+
+    Tập trung chính sách tạo worker mới vào ThreadFactory: gắn Runnable, đặt tên, daemon, priority, handler và trả về Thread chưa start. Giữ ranh giới với executor về queue, concurrency, reuse và shutdown.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng factory
+
+    1. Tại sao newThread không nên tự gọi start?
+    2. Vì sao factory phải truyền đúng Runnable và trả Thread mới?
+    3. AtomicInteger giải quyết lỗi tên worker trùng khi tạo đồng thời thế nào?
+
+    ### Tích hợp executor
+
+    1. Factory có quyết định số worker, queue và rejection không?
+    2. Vì sao submit không nhất thiết gọi factory mỗi lần?
+    3. ThreadLocal có thể rò context thế nào khi worker được tái sử dụng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết factory | Tạo ThreadFactory với tên tăng an toàn và thread trạng thái NEW. |
+    | Tách trách nhiệm | Chọn pool policy riêng, truyền factory vào executor rồi shutdown đúng. |
+    | Kiểm tra behavior | So sánh exception ở raw thread, execute và submit theo cách quan sát phù hợp. |
+- id: thread-api-009
+  title: Runnable, Callable và cách truyền kết quả tác vụ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Runnable, Callable và cách truyền kết quả tác vụ**
+
+    Phân biệt tác vụ không có giá trị trả về với tác vụ trả kiểu V và checked exception. Kết hợp Callable, FutureTask, Future, ExecutorService và CompletableFuture để nhận kết quả, lỗi, timeout và cancellation.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kết quả tác vụ
+
+    1. Runnable và Callable khác ở chữ ký/checked exception ra sao?
+    2. submit(Runnable) và submit(Callable) tạo Future có kết quả như thế nào?
+    3. FutureTask đóng vai trò gì khi muốn chạy Callable trên Thread?
+
+    ### Lỗi và hủy
+
+    1. Vì sao Future.isDone không chứng minh tác vụ thành công?
+    2. get(timeout) có tự dừng task không?
+    3. cancel(true) và interrupt có bảo đảm tác vụ dừng ngay không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lựa chọn abstraction | Chọn Runnable hoặc Callable theo hợp đồng trả giá trị. |
+    | Thu thập kết quả | Viết executor trả Future và xử lý ExecutionException, CancellationException. |
+    | Timeout/cancellation | Đề xuất cách giới hạn chờ và dừng tác vụ hợp tác. |
+- id: thread-api-010
+  title: sleep(), yield() và các giới hạn khi điều phối
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **sleep(), yield() và các giới hạn khi điều phối**
+
+    Giải thích sleep là chờ thời gian trên thread hiện tại và yield chỉ là scheduler hint. Chúng không tạo happens-before hoặc tự nhả monitor; bài học thay chờ đoán bằng latch/condition và xử lý interruption đúng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Điều phối
+
+    1. sleep và yield khác nhau về thời gian, interrupt và bảo đảm gì?
+    2. Vì sao sleep trong synchronized vẫn giữ monitor?
+    3. Yield có thể bị scheduler bỏ qua hoàn toàn không?
+
+    ### Visibility và tín hiệu
+
+    1. Vì sao while(!ready) yield là anti-pattern khi ready không volatile?
+    2. Khi bị interrupt trong sleep, nên xử lý cờ interrupt ra sao?
+    3. Khi nào latch/queue/join phù hợp hơn sleep?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại API | Giải thích sleep/yield chỉ điều chỉnh lịch chạy, không đồng bộ dữ liệu. |
+    | Sửa polling | Dùng CountDownLatch thay vòng busy wait thiếu visibility. |
+    | Xử lý hủy | Cài code bắt InterruptedException và khôi phục flag khi cần. |
+- id: thread-api-011
+  title: join() để chờ kết thúc một thread
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **join() để chờ kết thúc một thread**
+
+    Học chờ một Thread kết thúc bằng join thay vì ngủ theo thời gian. Nắm overload timeout, isAlive, happens-before, interruption và các nguy cơ self-join hoặc chu trình chờ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cách chờ
+
+    1. Thread nào bị chặn khi gọi worker.join?
+    2. Vì sao join(0) chờ vô hạn?
+    3. Sau join(timeout), làm cách nào biết worker đã dừng thật?
+
+    ### Đồng bộ và deadlock
+
+    1. Join tạo happens-before nào khi worker hoàn tất?
+    2. Vì sao self-join hay vòng A-join-B/B-join-A có thể treo?
+    3. Join có tự truyền exception từ worker không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chờ hoàn tất | Viết start/join và đọc kết quả sau khi worker kết thúc. |
+    | Xử lý timeout | Kiểm tra isAlive sau timed join và áp chính sách chưa xong. |
+    | Phân tích lỗi | Chỉ ra vòng chờ và trường hợp giữ lock khi join gây bế tắc. |
+- id: thread-api-012
+  title: Phân biệt công việc của thread và vòng đời task
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt công việc của thread và vòng đời task**
+
+    Một worker có thể chạy nhiều task và task có thể đã bị hủy mà chưa từng chạy. Phân biệt trạng thái Thread, trạng thái Future/task và lifecycle của executor để tránh suy luận sai từ WAITING, isDone hoặc shutdown.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các vòng đời
+
+    1. Task xong có buộc worker pool kết thúc không?
+    2. Task đang queued có Thread.State riêng không?
+    3. Future.isDone là true trong những trường hợp thất bại/hủy nào?
+
+    ### Hủy và quan sát
+
+    1. Future.cancel(true) có luôn dừng code đang chạy không?
+    2. Thread.join, Future.get và awaitTermination theo dõi những đối tượng gì?
+    3. Làm sao phát hiện tình huống worker chờ task con trong chính pool bị giới hạn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ mô hình | Giải thích 3 trục task/thread/executor bằng ví dụ pool. |
+    | Quan sát trạng thái | Phân biệt WAITING của worker với done/cancel của Future. |
+    | Thiết kế shutdown | Chọn cancel/get/awaitTermination theo mục tiêu cần chờ. |
+- id: thread-api-013
+  title: 'Thread.Builder: tạo platform thread, virtual thread và ThreadFactory theo cấu hình'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thread.Builder: tạo platform thread, virtual thread và ThreadFactory theo cấu hình**
+
+    Java 21 cung cấp OfPlatform và OfVirtual để cấu hình start/unstarted/factory, tên, handler và context inheritance. Bài học lựa chọn mô hình theo CPU/I/O và giới hạn tài nguyên downstream dù dùng virtual threads.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Builder và API
+
+    1. start(task), unstarted(task), factory() khác nhau thế nào?
+    2. Những tùy chọn daemon/priority/group/stackSize nào chỉ thuộc OfPlatform?
+    3. Vì sao factory từ builder dùng đồng thời được nhưng builder không thread-safe?
+
+    ### Virtual threads và giới hạn
+
+    1. Vì sao virtual thread không tạo thêm CPU core?
+    2. Khi nào nên dùng virtual-thread-per-task thay cho fixed platform pool?
+    3. Semaphore giới hạn được tài nguyên nào và không giới hạn được điều gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình JDK21 | Viết code tạo platform và virtual thread qua builder rồi join. |
+    | Chọn executor | Giải thích tình huống CPU-bound và blocking I/O để chọn chiến lược. |
+    | Bảo vệ downstream | Giới hạn access bằng semaphore/connection pool và xử lý shutdown. |
