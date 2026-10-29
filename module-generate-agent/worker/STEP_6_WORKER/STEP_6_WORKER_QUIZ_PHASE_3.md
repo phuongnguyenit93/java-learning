@@ -24,7 +24,7 @@ quiz:
         correctAnswerId: B
 ~~~
 
-- Đủ bốn `explanation` không rỗng cho mỗi câu; `readmeRelated.anchorList` vẫn là `[]`, không có `apiRelated` hoặc `readmeRelated.anchor/file`. Không điền ID Knowledge hay `null` trong STEP 6. Nếu phát hiện `correctAnswerId` của Phase 2 sai/mơ hồ, báo BLOCKER; không âm thầm đổi đáp án đúng. Quiz dừng ở Phase 3.
+- Đủ bốn `explanation` không rỗng cho mỗi câu; `readmeRelated.anchorList` vẫn là `[]`, không có `apiRelated` hoặc `readmeRelated.anchor/file`. Không điền ID Knowledge hay `null` trong STEP 6. Nếu phát hiện `correctAnswerId` của Phase 2 sai/mơ hồ **hoặc lựa chọn vi phạm gate chống lộ đáp án từ Phase 1** (đúng dài/chuẩn nổi bật, distractor phi lý, pattern chữ cái), báo `BLOCKER: STEP6_QUIZ_ANSWER_LEAK` khi phù hợp; **không âm thầm sửa** câu hỏi, lựa chọn hay đáp án đúng ở Phase 3. Quiz dừng ở Phase 3.
 
 ## An toàn ghi và nghiệm thu
 

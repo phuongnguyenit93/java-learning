@@ -7,7 +7,7 @@
 Đọc nguồn Phase 1 của đúng Quiz tại **`V25:W26`** (ghép **V25→W25→V26→W26**); đọc `A1,B1` để xác nhận module. **Chỉ chuyển các câu hỏi và 4 lựa chọn thành khung YAML theo group**.
 
 - **Chỉ ghi:** `V20:W24` (đúng vùng Prime giao).
-- Mỗi câu hỏi phải giữ chính xác nội dung, 4 lựa chọn A/B/C/D và **một `correctAnswerId`** như Phase 1; không tự đổi đáp án hoặc thêm câu hỏi. GroupID 1..N, mỗi nhóm không rỗng.
+- Mỗi câu hỏi phải giữ chính xác nội dung, 4 lựa chọn A/B/C/D và **một `correctAnswerId`** như Phase 1; không tự đổi đáp án hoặc thêm câu hỏi. GroupID 1..N, mỗi nhóm không rỗng. **Đối chiếu gate chống lộ đáp án của Quiz Phase 1 trước khi chuyển sang YAML**: nếu thấy đáp án đúng thường dài/chi tiết vượt trội, distractor quá ngớ ngẩn hoặc pattern A/B/C/D rõ rệt → `BLOCKER: STEP6_QUIZ_ANSWER_LEAK`, báo Prime yêu cầu QA/sửa lại Phase 1; Phase 2 **không tự sửa** nội dung hay `correctAnswerId` để che lỗi.
 - **`explanation` có mặt nhưng rỗng cho cả 4 đáp án** (tương thích cách gọi giải thích của STEP 10):
 
 ~~~yaml
