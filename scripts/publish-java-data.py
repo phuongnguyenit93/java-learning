@@ -19,7 +19,7 @@ import yaml
 
 EXPOSED_FIELDS = (
     "overview", "knowledge", "roadmap", "video", "quiz",
-    "interview", "api", "reference", "codeExplorer",
+    "interview", "casestudy", "api", "reference", "codeExplorer",
 )
 ALLOWED_EXTENSIONS = frozenset({".json", ".yml", ".yaml", ".md"})
 EXPLORER_SOURCE_RE = re.compile(
@@ -174,6 +174,7 @@ def validate(directory):
     seen_modules = set()
     checked_refs = 0
     explorers = {}
+    group_indexes = {}
 
     def walk(node):
         nonlocal checked_refs
@@ -191,6 +192,14 @@ def validate(directory):
                 if node["codeExplorer"] != expected:
                     fail(f"Unexpected Code Explorer catalog path for {module_id}")
                 explorers[module_id] = directory / expected.lstrip("/")
+            for kind in ("quiz", "interview", "casestudy"):
+                localized = node.get(kind)
+                if not isinstance(localized, dict):
+                    continue
+                for language, ref in localized.items():
+                    if (isinstance(ref, str) and
+                            ref == f"/module/{module_id}/{kind}/{language}/index.json"):
+                        group_indexes[(module_id, kind, language)] = directory / ref.lstrip("/")
             for field in EXPOSED_FIELDS:
                 value = node.get(field)
                 if value is None:
@@ -208,6 +217,40 @@ def validate(directory):
     walk(root)
     if not seen_modules or checked_refs == 0:
         fail("No module data references were validated")
+
+    # A grouped assessment's index is a manifest for lazily loaded YAML.
+    # Validate every group document before publishing; a missing group must
+    # fail the release even when the top-level index itself exists.
+    for (module_id, kind, language), index_file in group_indexes.items():
+        index = json.loads(index_file.read_text(encoding="utf-8"))
+        if index.get("mode") != "groups":
+            continue  # Existing chapter-local indexes remain supported.
+        groups = index.get("chapters")
+        if not isinstance(groups, list) or not groups:
+            fail(f"Invalid {kind} group index: {index_file}")
+        total = 0
+        for position, group in enumerate(groups, 1):
+            expected = f"groups/{position}.yml"
+            if (not isinstance(group, dict) or
+                    group.get("id") != f"group-{position}" or
+                    group.get("path") != expected or
+                    not isinstance(group.get("title"), str) or not group["title"].strip() or
+                    not isinstance(group.get("questionCount"), int) or
+                    isinstance(group.get("questionCount"), bool) or
+                    group["questionCount"] < 1):
+                fail(f"Invalid {kind} group index entry: {index_file}")
+            source = resolve_asset(directory,
+                    f"/module/{module_id}/{kind}/{language}/{expected}")
+            with source.open(encoding="utf-8-sig") as stream:
+                document = yaml.safe_load(stream)
+            key = "cases" if kind == "casestudy" else "questions"
+            if not isinstance(document, dict) or not isinstance(document.get(key), list) or (
+                    len(document[key]) != group["questionCount"]):
+                fail(f"Invalid {kind} group document: {source}")
+            checked_refs += 1
+            total += group["questionCount"]
+        if total != index.get("totalQuestions"):
+            fail(f"Invalid {kind} group total: {index_file}")
 
     # Code Explorer is a private-to-this-material allowlist for Java sources.
     # Validate every declared source by SHA-256, and reject orphan/extra Java.

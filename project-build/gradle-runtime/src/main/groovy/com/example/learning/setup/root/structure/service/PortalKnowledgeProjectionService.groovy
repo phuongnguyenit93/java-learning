@@ -12,6 +12,7 @@ import org.gradle.api.logging.Logger
 import org.yaml.snakeyaml.Yaml
 
 import java.nio.file.Files
+import java.nio.file.InvalidPathException
 import java.nio.file.Path
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -1265,14 +1266,18 @@ Expected YAML boolean true or false.
         }
 
 
-        File targetFile =
-                new File(
-                        sourceFile.parentFile,
-                        pathPart
-                )
-                        .toPath()
-                        .normalize()
-                        .toFile()
+        File targetFile
+        try {
+            targetFile = new File(sourceFile.parentFile, pathPart)
+                    .toPath().normalize().toFile()
+        } catch (InvalidPathException exception) {
+            // Authored Markdown sometimes contains an unfinished/quoted link.
+            // Like a missing local file, preserve that raw link for display;
+            // never let a malformed reference abort the entire Portal release.
+            logger.warn('[PORTAL-KNOWLEDGE] Keep invalid relative link raw: {} -> {}',
+                    sourceFile.absolutePath, rawTarget)
+            return null
+        }
 
 
         if (!targetFile.isFile()) {
@@ -1425,14 +1430,15 @@ Expected YAML boolean true or false.
         }
 
 
-        File targetFile =
-                new File(
-                        sourceFile.parentFile,
-                        pathPart
-                )
-                        .toPath()
-                        .normalize()
-                        .toFile()
+        File targetFile
+        try {
+            targetFile = new File(sourceFile.parentFile, pathPart)
+                    .toPath().normalize().toFile()
+        } catch (InvalidPathException exception) {
+            logger.warn('[PORTAL-KNOWLEDGE] Keep invalid relative link raw: {} -> {}',
+                    sourceFile.absolutePath, rawTarget)
+            return
+        }
 
 
         if (!targetFile.exists()) {

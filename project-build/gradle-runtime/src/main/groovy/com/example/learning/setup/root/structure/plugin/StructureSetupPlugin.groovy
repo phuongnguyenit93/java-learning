@@ -3,6 +3,7 @@ package com.example.learning.setup.root.structure.plugin
 import com.example.learning.setup.root.structure.service.ProjectStructureService
 import com.example.learning.setup.root.structure.service.PortalApiProjectionService
 import com.example.learning.setup.root.structure.service.PortalInterviewProjectionService
+import com.example.learning.setup.root.structure.service.PortalCaseStudyProjectionService
 import com.example.learning.setup.root.structure.service.PortalKnowledgeProjectionService
 import com.example.learning.setup.root.structure.service.PortalKnowledgeSearchProjectionService
 import com.example.learning.setup.root.structure.service.PortalQuizProjectionService
@@ -76,6 +77,8 @@ ${project.path}
                 new PortalInterviewProjectionService(
                         project.logger
                 )
+        PortalCaseStudyProjectionService caseStudyService =
+                new PortalCaseStudyProjectionService(project.logger)
 
 
         PortalRoadmapProjectionService roadmapService =
@@ -374,6 +377,14 @@ ${project.path}
                         }
                 }
 
+        def generatePortalCaseStudy = project.tasks.register('generatePortalCaseStudy') { task ->
+            task.group = 'learning portal'
+            task.description = 'Publish module-wide Case Study groups.'
+            task.dependsOn(cleanupLegacyPortalData)
+            task.inputs.files(portalDataInputs)
+            task.doLast { caseStudyService.generate(project) }
+        }
+
 
         def generatePortalRoadmap =
                 project.tasks.register(
@@ -599,6 +610,7 @@ ${project.path}
                         generatePortalApi,
                         generatePortalQuiz,
                         generatePortalInterview,
+                        generatePortalCaseStudy,
                         generatePortalRoadmap,
                         generatePortalVideo,
                         generatePortalReference,

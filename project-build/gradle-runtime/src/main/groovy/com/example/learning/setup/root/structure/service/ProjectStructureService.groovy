@@ -373,6 +373,7 @@ ${moduleDirectory.absolutePath}
                             moduleLanguages,
                             'interview'
                     )
+            node.caseStudyCounts = findQuestionCounts(directory, moduleLanguages, 'casestudy')
         }
 
 
@@ -844,6 +845,13 @@ ${moduleDirectory.absolutePath}
                                 }
                 result.interviewQuestionCounts = node.interviewQuestionCounts
             }
+            if (!node.caseStudyCounts.isEmpty()) {
+                result.casestudy = node.caseStudyCounts.keySet().toList().sort().collectEntries {
+                    String language ->
+                        [(language): "/module/${resolveRouteId(node)}/casestudy/${language}/index.json"]
+                }
+                result.caseStudyCounts = node.caseStudyCounts
+            }
 
 
             if (node.sourceFingerprint != null && !node.sourceFingerprint.isBlank()) {
@@ -1221,6 +1229,15 @@ ${moduleDirectory.absolutePath}
     ) {
         Map<String, Integer> counts = new LinkedHashMap<>()
         moduleLanguages.each { String language ->
+            File moduleSource = new File(moduleDirectory,
+                    "content/${kind}/${language}/${kind}.yml")
+            if (moduleSource.isFile()) {
+                List<Map> groups = ModuleAssessmentProjectionSupport.groups(moduleSource, kind)
+                String key = ModuleAssessmentProjectionSupport.KINDS[kind].items
+                counts[language] = groups.sum { Map group -> (group[key] as List).size() } as Integer
+                return
+            }
+            if (kind == 'casestudy') return
             File menu = new File(moduleDirectory, "content/readme/docs/${language}/menu")
             if (!menu.isDirectory()) return
             File[] chapters = menu.listFiles()
@@ -1760,6 +1777,7 @@ ${exception.message}
         Set<String> apiLanguages = [] as Set<String>
         Map<String, Integer> quizQuestionCounts = [:]
         Map<String, Integer> interviewQuestionCounts = [:]
+        Map<String, Integer> caseStudyCounts = [:]
         List<StructureNode> children = []
     }
 }

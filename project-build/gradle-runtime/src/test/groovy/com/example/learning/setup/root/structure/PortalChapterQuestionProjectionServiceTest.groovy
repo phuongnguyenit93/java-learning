@@ -1,6 +1,7 @@
 package com.example.learning.setup.root.structure
 
 import com.example.learning.setup.root.structure.service.PortalInterviewProjectionService
+import com.example.learning.setup.root.structure.service.PortalCaseStudyProjectionService
 import com.example.learning.setup.root.structure.service.PortalQuizProjectionService
 import com.example.learning.setup.root.structure.service.ProjectStructureService
 import groovy.json.JsonSlurper
@@ -16,6 +17,71 @@ import static org.junit.Assert.*
 
 class PortalChapterQuestionProjectionServiceTest {
     @Rule public TemporaryFolder temporary = new TemporaryFolder()
+
+    @Test
+    void publishesModuleGroupsAndKeepsLegacyQuestionProjectionForOtherModules() {
+        Fixture fixture = fixture()
+        // A central source overrides any stale chapter question sources.
+        lesson(fixture.moduleDir, '1.Basics', 'One.md', 'one')
+        writeYaml(fixture.moduleDir, '1.Basics/quiz/question.yml',
+                [questions: [quizQuestion('old', 'one')]])
+        Map anchors = [anchorList: ['one', 'elsewhere']]
+        writeModuleYaml(fixture.moduleDir, 'quiz', [
+                quiz: [[groupID: 1, groupName: 'Quiz group',
+                        questions: [[question: 'New question', readmeRelated: anchors,
+                                     answers: quizQuestion('old', 'one').answers, correctAnswerId: 'A']]]]
+        ])
+        writeModuleYaml(fixture.moduleDir, 'interview', [
+                interviewQuestion: [[groupID: 1, groupName: 'Interview group',
+                        questions: [[question: 'New interview', answer: 'New answer',
+                                     readmeRelated: anchors, knowledge: 'Knowledge']]]]
+        ])
+        writeModuleYaml(fixture.moduleDir, 'casestudy', [
+                caseStudy: [[groupID: 1, groupName: 'Case group',
+                        cases: [[situation: 'Situation', resolve: 'Resolve', knowledge: 'Knowledge',
+                                 code: '~~~java\nclass A {}\n~~~', readmeRelated: anchors]]]]
+        ])
+
+        new PortalQuizProjectionService(fixture.root.logger).generate(fixture.root)
+        new PortalInterviewProjectionService(fixture.root.logger).generate(fixture.root)
+        new PortalCaseStudyProjectionService(fixture.root.logger).generate(fixture.root)
+
+        for (String kind : ['quiz', 'interview', 'casestudy']) {
+            Map index = readJson(fixture.root, "DEMO/${kind}/vi/index.json")
+            assertEquals('groups', index.mode)
+            assertEquals(1, index.totalQuestions)
+            assertEquals(['group-1'], index.chapters*.id)
+            assertEquals(['groups/1.yml'], index.chapters*.path)
+            assertFalse(published(fixture.root, "DEMO/${kind}/vi/menu/1.Basics/question.yml").exists())
+        }
+        assertEquals(['one', 'elsewhere'], readYaml(fixture.root,
+                'DEMO/quiz/vi/groups/1.yml').questions[0].readmeRelated.anchorList)
+        assertNull(readYaml(fixture.root, 'DEMO/quiz/vi/groups/1.yml').questions[0].id)
+        assertEquals('New answer', readYaml(fixture.root,
+                'DEMO/interview/vi/groups/1.yml').questions[0].answer)
+        assertEquals('Situation', readYaml(fixture.root,
+                'DEMO/casestudy/vi/groups/1.yml').cases[0].situation)
+        def counts = ProjectStructureService.getDeclaredMethod('findQuestionCounts', File, List, String)
+        counts.accessible = true
+        assertEquals([vi: 1], counts.invoke(null, fixture.moduleDir, ['vi'], 'quiz'))
+        assertEquals([vi: 1], counts.invoke(null, fixture.moduleDir, ['vi'], 'interview'))
+        assertEquals([vi: 1], counts.invoke(null, fixture.moduleDir, ['vi'], 'casestudy'))
+    }
+
+    @Test
+    void rejectsNonSequentialModuleGroupIdsBeforePublishing() {
+        Fixture fixture = fixture()
+        writeModuleYaml(fixture.moduleDir, 'quiz', [
+                quiz: [[groupID: 2, groupName: 'Wrong group',
+                        questions: [[question: 'Question', readmeRelated: [anchorList: []],
+                                     answers: quizQuestion('unused', '').answers,
+                                     correctAnswerId: 'A']]]]
+        ])
+        expectFailure('group 1') {
+            new PortalQuizProjectionService(fixture.root.logger).generate(fixture.root)
+        }
+        assertFalse(published(fixture.root, 'DEMO/quiz/vi/index.json').exists())
+    }
 
     @Test
     void projectsPerChapterQuestionsAndAddsResolvedKnowledgeFileWithoutEditingSource() {
@@ -212,6 +278,12 @@ class PortalChapterQuestionProjectionServiceTest {
         // failure scenario must reach the intended anchor/id check.
         assertEquals(contents, new Yaml().load(yaml))
         source.setText(yaml, 'UTF-8')
+    }
+
+    private static void writeModuleYaml(File moduleDir, String kind, Map contents) {
+        File source = new File(moduleDir, "content/${kind}/vi/${kind}.yml")
+        assertTrue(source.parentFile.isDirectory() || source.parentFile.mkdirs())
+        source.setText(new Yaml().dump(contents), 'UTF-8')
     }
 
     private static File published(Project root, String relative) {

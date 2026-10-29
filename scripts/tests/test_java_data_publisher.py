@@ -81,6 +81,37 @@ class JavaDataPublisherTests(unittest.TestCase):
         self.assertFalse(any(name.startswith("search/knowledge-search.") for name in names))
         self.assertEqual(len(names), len(files) + 1)
 
+    def test_module_group_assessment_assets_are_published_and_checked(self):
+        path = "/module/EXAMPLE/casestudy/vi/index.json"
+        catalog_file = self.data / "module-catalog.json"
+        catalog = json.loads(catalog_file.read_text(encoding="utf-8"))
+        catalog["root"]["children"][0]["casestudy"] = {"vi": path}
+        self.write_json(catalog_file, catalog)
+        self.write_json(self.module / "casestudy" / "vi" / "index.json", {
+            "mode": "groups",
+            "chapters": [{"id": "group-1", "title": "First", "questionCount": 1,
+                          "path": "groups/1.yml"}],
+            "totalQuestions": 1,
+        })
+        self.write_text(self.module / "casestudy" / "vi" / "groups" / "1.yml",
+                        "cases:\n  - situation: Test\n    resolve: Done\n"
+                        "    knowledge: SRP\n    code: Example\n")
+        files, _, refs, _ = publisher.validate(self.data)
+        self.assertTrue(any(f.name == "1.yml" for f in files))
+        self.assertGreaterEqual(refs, 4)
+        (self.module / "casestudy" / "vi" / "index.json").unlink()
+        with self.assertRaisesRegex(ValueError, "Missing referenced asset"):
+            publisher.validate(self.data)
+        self.write_json(self.module / "casestudy" / "vi" / "index.json", {
+            "mode": "groups",
+            "chapters": [{"id": "group-1", "title": "First", "questionCount": 1,
+                          "path": "groups/1.yml"}],
+            "totalQuestions": 1,
+        })
+        (self.module / "casestudy" / "vi" / "groups" / "1.yml").unlink()
+        with self.assertRaisesRegex(ValueError, "Missing referenced asset"):
+            publisher.validate(self.data)
+
     def test_legacy_search_files_are_excluded_and_not_required(self):
         files, _, _, _ = publisher.validate(self.data)
         self.assertFalse(any("knowledge-search." in str(file) for file in files))

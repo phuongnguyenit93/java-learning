@@ -60,6 +60,17 @@ class ChapterQuestionProjectionSupport {
             boolean hasQuestions = false
 
             languages.each { String language ->
+                // STEP 6/7 module assessments take precedence over chapter-local
+                // legacy files. Preserve the latter for unmigrated modules.
+                File moduleSource = new File(module.projectDir,
+                        "content/${kind}/${language}/${kind}.yml")
+                if (moduleSource.isFile()) {
+                    ModuleAssessmentProjectionSupport.addOutputs(
+                            outputs, moduleSource, routeId, kind, language)
+                    hasQuestions = true
+                    return
+                }
+                if (kind == 'casestudy') return
                 File menu = new File(module.projectDir, "content/readme/docs/${language}/menu")
                 if (!menu.isDirectory()) return
                 List<File> chapters = chapterDirectories(menu)
