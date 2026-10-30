@@ -1,0 +1,359 @@
+summaries:
+- id: lifecycle-shutdown-001
+  title: Để container khởi tạo và đóng executor hoặc scheduler được khai báo thành bean
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Để container khởi tạo và đóng executor hoặc scheduler được khai báo thành bean**
+
+    Khi ứng dụng dùng `ThreadPoolTaskExecutor` hoặc `ThreadPoolTaskScheduler` chung cho nhiều service, phải có một chủ sở hữu đảm nhiệm khởi tạo và đóng đúng lúc. Bài này dạy hợp đồng lifecycle của Spring bean, lý do container thường tự gọi `afterPropertiesSet`/`initialize` rồi `destroy`/`shutdown`, và cách tránh tự đóng pool đang được những thành phần khác sử dụng.
+
+    Các ví dụ context, scheduler phát job sang executor và shutdown có latch giúp phân biệt worker đã chạy, executor đã nhận yêu cầu đóng và tác vụ nghiệp vụ thực sự hoàn tất. Người học cũng biết giới hạn của quản lý bean khi còn raw threads, nhiều ApplicationContexts hoặc nhiều pods.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bean ownership và vòng đời
+    1. Vì sao `Runnable` được gửi vào một Spring bean executor không cần service tự gọi `initialize()` và `shutdown()`?
+    2. Khi nào `new ThreadPoolTaskExecutor()` ngoài context cần quản lý khởi tạo/đóng riêng?
+    3. Sự khác nhau về trách nhiệm lifecycle giữa bean `ThreadPoolTaskExecutor`, `ThreadPoolTaskScheduler` và raw `ExecutorService` đăng ký bằng `@Bean` là gì?
+    4. Vì sao không nên tự gọi shutdown trên pool chung trong một service hoặc callback `@PreDestroy` gửi thêm `@Async`?
+
+    ### Kiểm chứng khi đóng ứng dụng
+    1. Dùng cách nào xác nhận scheduler callback và task nó gửi sang executor khác đã hoàn tất độc lập?
+    2. Vì sao `isShutdown` không tương đương `isTerminated` hay một job đã thành công?
+    3. Khi có nhiều context, nhiều pods và khả năng SIGKILL, container-managed lifecycle có giới hạn nào đối với task RAM-only?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định quyền sở hữu executor | Phân biệt bean-managed pool và raw pool, chỉ đúng nơi chịu trách nhiệm initialize/destroy. |
+    | Cấu hình shared Spring bean | Viết cấu hình `ThreadPoolTaskExecutor` hoặc scheduler, nêu giới hạn worker/queue và lifecycle. |
+    | Phân biệt hai tầng xử lý | Mô tả lifecycle scheduler trigger và executor job được delegate, kiểm tra từng đường hoàn tất. |
+    | Kiểm chứng stop bằng test | Sử dụng context, latch, Future và trạng thái backend để xác minh khởi tạo/chạy/đóng. |
+    | Đánh giá giới hạn bảo đảm | Giải thích lý do container close không thay durable queue, idempotency hay cluster coordination. |
+- id: lifecycle-shutdown-002
+  title: Phân biệt dừng nhận tác vụ mới với chờ tác vụ đang chạy
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt dừng nhận tác vụ mới với chờ tác vụ đang chạy**
+
+    Một executor được yêu cầu `shutdown()` sẽ ngừng tiếp nhận công việc mới, nhưng những tác vụ đã nhận còn có thể đang chạy hoặc chờ queue. Bài học giúp tách **admission**, **drain** và **termination**, cùng khác biệt giữa `shutdown`, `awaitTermination` và `shutdownNow`.
+
+    Thông qua Java 17 latch demo và Spring admission gate, người học lập kế hoạch dừng producer trước worker, dành deadline cho backlog và xử lý rejection thay vì báo nhầm đã hoàn tất ngay khi yêu cầu đóng pool được gửi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Admission và drain
+    1. Sau `shutdown()`, vì sao `isShutdown()` có thể true trong khi `isTerminated()` vẫn false?
+    2. Khi worker đang chờ latch và queue có task B, `shutdown` và `shutdownNow` đối xử với B khác nhau thế nào?
+    3. Vì sao gọi `awaitTermination` từ worker của chính pool có thể tạo self-wait hoặc deadlock?
+    4. Kết quả `awaitTermination(timeout) == false` xác nhận điều gì và không tự thực hiện hành động nào?
+
+    ### Phối hợp Spring và nghiệp vụ
+    1. Tại sao phải dừng HTTP ingress, message listener và scheduler trước khi drain executor?
+    2. Một admission gate chỉ dùng `AtomicBoolean` còn có race nào giữa kiểm tra và gửi việc?
+    3. Khi queue chưa kịp drain trước SIGKILL, cần những điều kiện gì để công việc được khôi phục đúng và không bị thực hiện trùng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tách giai đoạn dừng | Vẽ timeline stop admission, drain accepted tasks, terminate và dispose dependencies. |
+    | Đọc trạng thái executor | Dự đoán chính xác `isShutdown`, `isTerminated` và khả năng queue tiếp tục chạy sau `shutdown`. |
+    | Xây quy trình hai pha | Mô tả graceful wait rồi escalation bằng `shutdownNow`, có deadline và xử lý pending. |
+    | Thiết kế cổng tiếp nhận | Phác thảo admission gate bắt rejection và giải quyết race với submission. |
+    | Xác minh bằng latch | Tạo ca thử một running, một queued task và quan sát việc từ chối task mới sau shutdown. |
+- id: lifecycle-shutdown-003
+  title: SmartLifecycle và phối hợp thứ tự dừng các thành phần
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **SmartLifecycle và phối hợp thứ tự dừng các thành phần**
+
+    Ứng dụng có producer, scheduler, worker và resource cần được dừng theo thứ tự phù hợp, không chỉ theo thứ tự khai báo bean. Bài học dạy hợp đồng `Lifecycle`, `Phased`, `SmartLifecycle` và `DefaultLifecycleProcessor`: phase nhỏ start trước, phase lớn stop trước, còn `@DependsOn` có thể ưu tiên hơn phase.
+
+    Ví dụ hai context cho thấy `stop(Runnable)` cần gọi callback **sau khi** bước drain thật hoàn tất; callback sớm hoặc bị bỏ quên khiến Spring đóng resource quá sớm hoặc chờ hết timeout của phase.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phase, dependency và lifecycle
+    1. Tại sao Spring start các `SmartLifecycle` theo phase tăng dần nhưng stop theo phase giảm dần?
+    2. Khi hai bean cùng phase, vì sao không thể dựa vào thứ tự `@Bean` để suy ra thứ tự stop?
+    3. `@DependsOn` ghi đè phase theo thứ tự start/stop trong quan hệ dependent–dependency thế nào?
+    4. Giá trị mặc định `SmartLifecycle.DEFAULT_PHASE` có thể làm sai ý định giữ executor sống khi worker drain ra sao?
+
+    ### Callback hoàn tất và kiểm thử
+    1. `stop()` khác `stop(Runnable callback)` trong khả năng thông báo kết thúc async cleanup thế nào?
+    2. Vì sao gọi callback ngay sau khi submit tác vụ drain là sai và có thể khiến resource phase thấp bị đóng trước?
+    3. `DefaultLifecycleProcessor` làm gì khi callback không được gọi trước timeout của shutdown phase?
+    4. Dùng latch và context close thế nào để chứng minh resource vẫn running trong lúc worker chưa gọi callback?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Sắp phase theo dependency | Chọn và giải thích phase cho ingress, scheduler, worker và resource; xét thêm `@DependsOn`. |
+    | Triển khai SmartLifecycle stop | Viết `stop(Runnable)` đúng contract, báo hoàn tất sau actual drain và không gọi callback hai lần. |
+    | Kiểm chứng thứ tự | Đọc event timeline hoặc tạo test context để assert startup/stop đúng thứ tự. |
+    | Kiểm soát timeout phase | Phân biệt timeout của lifecycle processor với thời gian đợi termination của executor. |
+    | Đánh giá shutdown production | Chỉ ra khi nào cần admission, in-flight tracking, deadline và durable recovery ngoài SmartLifecycle. |
+- id: lifecycle-shutdown-004
+  title: waitForTasksToCompleteOnShutdown và thời gian chờ kết thúc
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **waitForTasksToCompleteOnShutdown và thời gian chờ kết thúc**
+
+    Hai setter Spring nhìn tương tự nhưng phục vụ hai quyết định: `setWaitForTasksToCompleteOnShutdown(true)` chọn **orderly shutdown** cho running và queued tasks; `setAwaitTerminationSeconds(N)` chọn **giới hạn thời gian container chờ** lúc executor shutdown. Bài này so sánh các tổ hợp, đặc biệt rủi ro khi await không đủ hoặc chỉ đặt một flag.
+
+    Ví dụ ba kịch bản với `ThreadPoolTaskExecutor` chứng minh queue có thể được drain, bị loại bởi nhánh immediate, hoặc tiếp tục chạy sau khi await timeout. Mục tiêu là đọc đúng kết quả của cấu hình và không nhầm thời hạn shutdown với timeout I/O.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Policy xử lý queue và thời gian chờ
+    1. Vì sao `waitForTasksToCompleteOnShutdown=true` không tự làm `ApplicationContext.close()` chờ vô hạn để mọi job thành công?
+    2. Khi `wait=false` nhưng await là 30 giây, vì sao queued jobs vẫn có thể bị hủy ở final shutdown?
+    3. Khi `wait=true` và await timeout quá ngắn, worker và dependency có thể ở trạng thái nào sau khi close trả về?
+    4. `isShutdown` khác `isTerminated` ra sao khi một task đang chờ I/O?
+
+    ### Spring runtime và scheduler
+    1. `ContextClosedEvent`, coordinated lifecycle stop và destruction ảnh hưởng cách đọc hai setter thế nào?
+    2. Vì sao property `spring.task.execution.shutdown.*` của Boot không tự áp lên mọi custom `@Bean`?
+    3. Chính sách delayed one-shot và periodic tasks của `ThreadPoolTaskScheduler` tạo ngoại lệ nào với kỳ vọng drain queue?
+    4. Cần test các tổ hợp flags bằng latch ra sao để tránh phụ thuộc scheduler timing?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn shutdown policy | Mô tả tác động độc lập của `waitForTasksToCompleteOnShutdown` với running/queued work. |
+    | Cấu hình budget chờ | Thiết lập `awaitTerminationSeconds/Millis` theo thời hạn deployment và giải thích trường hợp chờ hết. |
+    | Phân tích các tổ hợp | Dự đoán queued task được drain, cancel hay chưa kết thúc trong ma trận wait/await. |
+    | Phân biệt JDK và Spring | Tách tác động của `shutdown`/`shutdownNow` khỏi context lifecycle events. |
+    | Kiểm thử cấu hình | Dùng latch và native pool state để xác nhận cả ba tình huống dừng Spring được dạy. |
+- id: lifecycle-shutdown-005
+  title: awaitTermination không tạo bảo đảm hoàn tất vô hạn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **awaitTermination không tạo bảo đảm hoàn tất vô hạn**
+
+    `ExecutorService.awaitTermination(timeout, unit)` chỉ chờ trạng thái terminated sau khi shutdown đã được yêu cầu. Nó trả true, false hoặc ném `InterruptedException`; không tự gọi shutdown, hủy task, khắc phục deadlock hoặc chứng minh mọi tác động nghiệp vụ thành công.
+
+    Bài này đi sâu vào global shutdown deadline, kết quả await khi thread caller bị interrupt, worker không hợp tác và sự khác biệt giữa Future của một job với trạng thái toàn executor. Demo Java/Spring dùng latch cho thấy close có thể trả về khi worker vẫn chạy sau hết hạn chờ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giá trị trả về và giới hạn hợp đồng
+    1. Tại sao `awaitTermination` trước `shutdown` có thể timeout ngay cả khi executor đang idle?
+    2. `true`, `false` và `InterruptedException` từ `awaitTermination` lần lượt khẳng định điều gì?
+    3. Vì sao pool terminated không chứng minh các Future đều thành công hoặc remote side effects đã commit?
+    4. Khi waiter thread bị interrupt trong lúc `awaitTermination`, điều đó nói gì về worker đang chạy?
+
+    ### Deadline, cancellation và phục hồi
+    1. Vì sao gọi `shutdownNow()` sau timeout chưa bảo đảm task block I/O/CPU loop sẽ dừng?
+    2. Một global deadline dùng `System.nanoTime()` ngăn tổng thời gian chờ nhiều pools vượt ngân sách thế nào?
+    3. Khi Spring context close đã trả nhưng worker còn chạy, tại sao tài nguyên phụ thuộc và job state vẫn là vấn đề?
+    4. Dùng latch và `awaitTermination(0, MILLISECONDS)` thế nào để kiểm chứng false rồi true có kiểm soát?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc đúng awaitTermination | Giải thích ba outcome, phân biệt trạng thái executor với business outcome. |
+    | Xây chiến lược bounded shutdown | Viết two-phase shutdown có escalation, preserve interrupt và giới hạn tổng chờ. |
+    | Kiểm chứng timeout/interrupt | Dùng latch và waiter thread để tạo kết quả false/true/InterruptedException không flaky. |
+    | Phân tích worker không hợp tác | Chỉ ra thiếu I/O timeout, interrupt checkpoint, deadlock hoặc delayed schedule khiến await hết hạn. |
+    | Thiết kế recovery | Đề xuất cách ghi unfinished job, idempotent replay và reconciliation khi process bị kill. |
+- id: lifecycle-shutdown-006
+  title: Tương tác của các tùy chọn shutdown và khác biệt theo phiên bản
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tương tác của các tùy chọn shutdown và khác biệt theo phiên bản**
+
+    Spring executor/scheduler có nhiều cơ chế đóng khác nhau ở `ContextClosedEvent`, coordinated `SmartLifecycle` stop và bean destruction. Bài này chuyên đọc **tương tác giữa flags và phiên bản**: `acceptTasksAfterContextClose`, `waitForTasksToCompleteOnShutdown`, `awaitTermination`, `strictEarlyShutdown` từ Spring 6.1.4 và phase.
+
+    Phần scheduler làm rõ policy chạy delayed one-shot và periodic tasks sau orderly shutdown. Ví dụ Spring 6.1.3 tránh gọi API chưa tồn tại, và Java 17 demo kiểm chứng những lịch vẫn chạy hoặc bị hủy theo policy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Flags và phiên bản Spring
+    1. `acceptTasksAfterContextClose=true` khác `strictEarlyShutdown=false` về coordinated lifecycle stop thế nào?
+    2. Vì sao `setStrictEarlyShutdown(true)` không biên dịch trong Spring Framework 6.1.3?
+    3. Khi bật `waitForTasksToCompleteOnShutdown=true`, hiệu lực strict early và lựa chọn lifecycle phase có thể thay đổi ra sao?
+    4. Vì sao đặt await termination dài không tự biến final immediate shutdown thành orderly shutdown?
+
+    ### Policy lịch và kiểm chứng thực nghiệm
+    1. Tại sao delayed one-shot task đã đăng ký có thể tiếp tục sau `shutdown()`, nhưng periodic thường không tiếp tục theo default?
+    2. Bật `continueExistingPeriodicTasksAfterShutdownPolicy(true)` có thể cản trở executor terminated thế nào?
+    3. Nếu đặt `executeExistingDelayedTasksAfterShutdownPolicy(false)`, cần cơ chế nào để không mất lịch quan trọng sau restart?
+    4. Phải đối chiếu Javadoc của những class và phiên bản nào trước khi nâng cấp Spring/Boot?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích version compatibility | Chỉ ra API `strictEarlyShutdown` xuất hiện từ 6.1.4 và kiểm tra đúng Javadoc mục tiêu. |
+    | Giải thích flag precedence | Lập bảng các tổ hợp accept/wait/await/strict và dự đoán early/late shutdown. |
+    | Phân tích scheduler shutdown | Dự đoán outcome delayed/periodic tasks dựa trên policy native JDK. |
+    | Kiểm chứng phiên bản | Chạy hoặc đọc demo Spring 6.1.3 và Java 17, kiểm tra scheduled future/cancel đúng contract. |
+    | Đánh giá rủi ro vận hành | Xác định tác động đến late submissions, backlog, resource lifetime và durability khi đổi flags. |
+- id: lifecycle-shutdown-007
+  title: Ngắt tác vụ đang chạy và hủy công việc chưa bắt đầu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ngắt tác vụ đang chạy và hủy công việc chưa bắt đầu**
+
+    Khi phải dừng nhanh, shutdown cần xử lý riêng task đã chạy và task còn ở queue. `shutdownNow()` cố interrupt worker và trả danh sách queued `Runnable` chưa bắt đầu; `Future.cancel(false/true)` tác động lên handle và khả năng interrupt, không chứng minh worker đã cleanup hoặc side effect được hoàn tác.
+
+    Bài này đặc biệt nhấn mạnh: raw JDK `shutdownNow` có thể lấy một `FutureTask` khỏi queue mà không cancel Future, khiến `get()` có nguy cơ chờ mãi; Spring bean shutdown có hook xử lý remaining tasks riêng. Ví dụ latch so sánh rõ running, queued, cancelled và terminated.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Interrupt, queue và Future
+    1. `Thread.currentThread().isInterrupted()` khác `Thread.interrupted()` về việc giữ cờ ngắt thế nào?
+    2. Vì sao `cancel(true)` không chứng minh worker đã ngừng hoặc HTTP/DB side effect đã rollback?
+    3. Khi `shutdownNow()` trả queued `FutureTask`, vì sao handle chưa được cancel có thể khiến `get()` chờ vô hạn?
+    4. `CompletableFuture.cancel(true)` khác `FutureTask.cancel(true)` ở khả năng interrupt computation ra sao?
+
+    ### Spring và cancellation đúng phạm vi
+    1. Spring `cancelRemainingTask` có vai trò gì trong lúc bean executor thực hiện shutdown non-graceful?
+    2. Vì sao hủy một report qua job handle tốt hơn shutdown cả pool đang phục vụ nhiều job?
+    3. Hủy một `ScheduledFuture` registration khác gì hủy business task đã dispatch vào executor khác?
+    4. Dùng pool một worker và latch thế nào để chứng minh running task đã nhận interrupt và queued task chưa từng chạy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt running/queued work | Xác định task nào bị yêu cầu interrupt và task nào bị loại khỏi queue khi `shutdownNow`. |
+    | Triển khai cooperative stop | Viết catch `InterruptedException` đúng cách, bảo toàn cờ và cleanup tài nguyên có giới hạn. |
+    | Quản lý Future pending | Cancel đúng Future wrapper được lấy khỏi queue, tránh để caller chờ mãi. |
+    | Thiết kế hủy theo job ID | Chọn handle/token và trạng thái job riêng thay vì shutdown shared executor. |
+    | Kiểm chứng hủy và side effect | Dùng latch, Future state và termination để phân biệt cancel requested, task exited và business outcome. |
+- id: lifecycle-shutdown-008
+  title: Pause, resume và giới hạn theo loại triển khai, phiên bản
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Pause, resume và giới hạn theo loại triển khai, phiên bản**
+
+    Không phải mọi `TaskScheduler` có API pause/resume chung. Trên `ThreadPoolTaskScheduler` của Spring Framework 6.1+, lifecycle `stop()` dùng để pause và `start()` để resume khi executor chưa shutdown; `stop(Runnable callback)` thông báo sau các tác vụ in-flight theo contract. Bài học giúp tránh dùng shutdown không thể đảo ngược khi chỉ cần bảo trì tạm thời.
+
+    Các ví dụ Spring kiểm chứng task đến hạn được giữ trong lúc paused, callback đợi in-flight hoàn tất và task đã chuyển sang `@Async` executor khác không tự được pause. Người học cần xem implementation, version và backlog/missed windows khi resume.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng pause/resume và version
+    1. Vì sao interface `TaskScheduler` không cung cấp `pause()`/`resume()` và biến chỉ có static type này không gọi `stop()` được?
+    2. Trên `ThreadPoolTaskScheduler` Spring 6.1+, `stop` và `start` khác `shutdown`, `initiateShutdown` thế nào?
+    3. Vì sao `stop(Runnable callback)` không tự interrupt tác vụ đang chạy và không đợi business Future đã offload?
+    4. Những khác biệt nào giữa `ThreadPoolTaskScheduler`, `SimpleAsyncTaskScheduler`, JDK scheduler và Quartz buộc ta kiểm tra đúng implementation?
+
+    ### Lịch bị trễ và phạm vi kiểm soát
+    1. `ScheduledFuture.cancel` khác việc pause toàn scheduler như thế nào?
+    2. Sau resume, vì sao không thể hứa mọi fixed-rate/cron window bỏ lỡ đều được bù chính xác một lần?
+    3. Khi có nhiều pods, pause một scheduler bean có ảnh hưởng tới các replicas khác không?
+    4. Dùng latch thế nào để kiểm chứng pending task không chạy khi paused nhưng có thể hoàn tất sau resume?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn đúng API theo version | Kiểm tra Spring Framework 6.1+ và gọi `stop/start` trên đúng scheduler bean có lifecycle. |
+    | Phân biệt pause/cancel/shutdown | Diễn giải tác động lên running task, pending registration và khả năng resume. |
+    | Kiểm chứng callback | Dùng latch chứng minh `stop(callback)` đợi in-flight nhưng không ngắt worker. |
+    | Phân tích backlog sau resume | Dự đoán schedule lag, missed windows, burst và nhu cầu durable watermark/idempotency. |
+    | Xác định phạm vi bảo trì | Phân biệt scheduler bean cục bộ, job offload và điều phối multi-replica. |
+- id: lifecycle-shutdown-009
+  title: Giữ tài nguyên phụ thuộc còn hoạt động tới khi tác vụ cần dùng kết thúc
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giữ tài nguyên phụ thuộc còn hoạt động tới khi tác vụ cần dùng kết thúc**
+
+    Một worker `@Async` có thể cần `DataSource`, HTTP client, message producer hoặc object storage **tới bước commit/flush/ack cuối**. Nếu Spring đóng resource trước khi worker drain, task có thể thất bại dù executor đang orderly shutdown. Bài này tập trung vào dependency lifetime thay vì chỉ trạng thái pool.
+
+    Người học đối chiếu `@DependsOn`, stop phase `SmartLifecycle` và thứ tự bean destruction, đồng thời thử nghiệm đóng `ApplicationContext` lúc worker đang giữ latch. Họ phải hiểu vì sao wait policy cần phối hợp await termination và resource ordering, nhưng vẫn có giới hạn khi hết budget hoặc process bị kill.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lifetime và dependency ordering
+    1. Vì sao `setWaitForTasksToCompleteOnShutdown(true)` một mình chưa bảo đảm `DataSource` còn sống tới khi job kết thúc?
+    2. `@DependsOn("dataResource")` trên executor làm thứ tự khởi tạo và destroy hai bean thay đổi thế nào?
+    3. Vì sao đặt `@DependsOn("workerExecutor")` lên resource có thể tạo thứ tự destroy ngược mong muốn?
+    4. Resource đã chưa gọi `destroy()` nhưng có `SmartLifecycle.stop()` sớm thì task có thể vẫn mất khả năng I/O ra sao?
+
+    ### Kiểm thử và bảo đảm nghiệp vụ
+    1. Khi task cần DB transaction, HTTP call và producer ACK, phải giữ những resources nào tới mốc nào?
+    2. Trong demo `ContextClosedEvent` và latch, cách nào chứng minh worker dùng resource trước khi resource bị close?
+    3. Nếu await termination vượt deployment grace, vì sao `@DependsOn` vẫn chưa đủ để cứu công việc?
+    4. Muốn bảo đảm task sống qua crash và không lặp side effect, phải bổ sung giao thức nào ngoài bean lifecycle?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ dependency lifetime | Chỉ ra worker cần resource đến bước commit/flush/ack và xác định hazard đóng sớm. |
+    | Cấu hình destruction order | Đặt `@DependsOn` đúng hướng, phối hợp wait-for-tasks và await termination cho Spring executor. |
+    | Phân biệt stop và destroy | Giải thích vì sao SmartLifecycle resource có thể ngừng phục vụ trước khi bean bị hủy. |
+    | Kiểm chứng race có điều phối | Tạo test context close bằng thread riêng/latch, xác nhận resource chỉ close sau worker hoàn tất. |
+    | Thiết kế phương án quá hạn | Lập chính sách deadline, unfinished job state và retry idempotent khi resource không thể giữ mãi. |
+- id: lifecycle-shutdown-010
+  title: Kiểm chứng khi context đóng trong lúc hàng đợi còn công việc
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm chứng khi context đóng trong lúc hàng đợi còn công việc**
+
+    Bài cuối yêu cầu kiểm chứng **trên Spring ApplicationContext thật**, không chỉ suy từ JDK `ExecutorService.shutdown()`. Với một worker bị giữ bởi latch và task thứ hai ở queue, bài dựng hai context: orderly shutdown cho task B chạy hết và immediate destruction khiến B bị cancel, A nhận interrupt.
+
+    Người học phải phân biệt queue size tại `ContextClosedEvent` với trạng thái sau `close()`, hiểu tương tác flags trong Spring 6.2.1 và đo outcome bằng Future, latch, event và trạng thái native pool. Đây là kiểm thử tổng hợp cho toàn chương trước khi ứng dụng vào deploy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dựng một integration fixture xác định
+    1. Vì sao test gọi `context.close()` sau `Thread.sleep(50)` chưa chứng minh task B thực sự đã vào queue?
+    2. Dùng `CountDownLatch` và pool một worker thế nào để bảo đảm A RUNNING còn B QUEUED trước khi close?
+    3. `ContextClosedEvent` được phát ở giai đoạn nào, và vì sao queue size bằng một tại event chưa dự đoán outcome sau destruction?
+    4. Đóng context trên thread riêng có ích gì khi cần xác nhận close đang đợi task A?
+
+    ### Kết quả và rủi ro của hai cấu hình
+    1. Với `waitForTasksToCompleteOnShutdown=true` và await đủ dài, cần assert những tín hiệu nào để chứng minh B thực sự chạy?
+    2. Vì sao nhánh immediate trong demo bật `acceptTasksAfterContextClose=true` để đi qua destruction path?
+    3. `queuedFuture.isCancelled` và `runningInterrupted` chứng minh điều gì, và không chứng minh side effects nào?
+    4. Khi chuyển test sang Spring Boot hoặc scheduler khác, phải kiểm tra bean/version/policy nào trước khi suy rộng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dựng kiểm thử context thật | Tạo hai `AnnotationConfigApplicationContext` và queue có task A giữ worker, B chờ. |
+    | Quan sát event so với trạng thái cuối | Ghi queue tại `ContextClosedEvent` và phân biệt với task outcomes sau `close()`. |
+    | Xác minh graceful drain | Assert A không interrupt, B hoàn tất, Future trả bình thường và close chờ đúng chỗ. |
+    | Xác minh immediate cancellation | Assert A nhận interruption, B không chạy và queued Future chuyển cancelled theo Spring test path. |
+    | Rà soát rủi ro sản xuất | Chỉ ra giới hạn deadline, dependency lifetime, durable recovery và tác động của version trước deploy. |

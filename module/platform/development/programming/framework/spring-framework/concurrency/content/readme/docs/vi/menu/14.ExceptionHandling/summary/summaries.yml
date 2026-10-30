@@ -1,0 +1,308 @@
+summaries:
+- id: exception-handling-001
+  title: Ngoại lệ xảy ra khi gửi tác vụ khác với ngoại lệ trong lúc chạy
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ngoại lệ xảy ra khi gửi tác vụ khác với ngoại lệ trong lúc chạy**
+
+    Bài học mở đầu phân biệt **submission failure** khi executor từ chối tác vụ với **execution failure** sau khi worker đã nhận việc. Việc xác định đúng thời điểm và API giúp đặt đúng `catch`, giữ nguyên thông tin lỗi và lựa chọn phản hồi nghiệp vụ đáng tin cậy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biên tiếp nhận công việc
+
+    1. Với một pool giới hạn worker và queue, làm sao tạo tình huống `TaskRejectedException` bằng latch có kiểm soát?
+    2. Tại sao `execute()` trả về bình thường không khẳng định nhiệm vụ đã thành công hoặc đã được lưu bền vững?
+    3. `AbortPolicy`, `CallerRunsPolicy` và `DiscardPolicy` tạo ra khác biệt gì cho caller khi executor quá tải?
+
+    ### Lỗi khi đã thực thi
+
+    1. Nếu một task `submit(Callable)` ném `IllegalStateException`, lỗi sẽ đến caller qua kênh nào?
+    2. Vì sao lỗi thực thi có thể xuất hiện ngay trong lời `execute()` khi policy là `CallerRunsPolicy`?
+    3. API đã trả `202 Accepted` mà worker lỗi sau đó thì hệ thống cần cơ chế nào để báo trạng thái cuối?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt giai đoạn lỗi | Phân loại một sự kiện thành rejection, execution failure hoặc lỗi validation của caller theo timeline cụ thể. |
+    | Tái hiện saturation | Thiết kế pool core/max bằng 1, queue bằng 1 và latch chứng minh task thứ ba bị từ chối. |
+    | Chọn điểm bắt lỗi | Đặt catch ở submitter, Future observer hoặc void handler đúng hợp đồng của từng API. |
+    | Đánh giá rejection policy | Giải thích tác động tới latency, mất việc và tín hiệu acceptance của ba policy thông dụng. |
+    | Xác lập trạng thái nghiệp vụ | Nêu cách phân biệt accepted, running, succeeded, failed và rejected ở biên dịch vụ. |
+- id: exception-handling-002
+  title: ExecutionException, CompletionException và nguyên nhân gốc
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ExecutionException, CompletionException và nguyên nhân gốc**
+
+    Bài này tập trung vào cách `Future.get()` và `CompletableFuture.join()` bộc lộ lỗi dưới hai loại wrapper khác nhau. Học viên cần đọc cause chain có giới hạn, không đánh đồng timeout/cancellation với lỗi tính toán, và giữ bối cảnh khi phân loại exception.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng Future và CompletableFuture
+
+    1. Cùng một `CompletableFuture.failedFuture(root)`, `get()` và `join()` ném những wrapper gì?
+    2. Tại sao `isDone()==true` không chứng minh Future đã thành công?
+    3. Với `get(timeout, unit)`, `TimeoutException`, `InterruptedException` và `CancellationException` khác lỗi execution ở điểm nào?
+
+    ### Đọc nguyên nhân đúng
+
+    1. Nếu có hai tầng `CompletionException` và `ExecutionException`, làm sao lấy cause gốc mà không gỡ nhầm exception domain?
+    2. Vì sao logging nên giữ full Throwable, stack trace và suppressed exceptions thay vì chỉ in `ex.getMessage()`?
+    3. Trong `allOf`, một cause của Future tổng có cho biết toàn bộ các nhánh đã thất bại không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đối chiếu wrapper | Dự đoán đúng lỗi checked của `get()` và unchecked của `join()` trên một future thất bại. |
+    | Gỡ wrapper có kiểm soát | Xây helper chỉ tháo hai wrapper async đã biết và có điều kiện dừng rõ. |
+    | Phân loại trạng thái | Phân biệt execution, rejection, cancellation, waiting timeout và interrupt. |
+    | Kiểm thử root cause | Viết assertion với failedFuture và submit để xác minh exception/cause chính xác. |
+    | Ghi nhận lỗi đầy đủ | Trình bày cách log cả ranh giới async, loại exception gốc và thông tin chẩn đoán an toàn. |
+- id: exception-handling-003
+  title: AsyncUncaughtExceptionHandler cho phương thức @Async trả về void
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **AsyncUncaughtExceptionHandler cho phương thức @Async trả về void**
+
+    Một method Spring `@Async` trả `void` không tạo Future để caller nhận lỗi từ worker. Bài này làm rõ khi nào `AsyncUncaughtExceptionHandler` được gọi, ý nghĩa `Throwable`, `Method`, `params`, cách kiểm thử qua proxy và cách không đánh đồng handler với retry.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đường đi của lỗi void
+
+    1. Vì sao try/catch tại caller không nhận lỗi target của `@Async void` sau khi executor đã nhận task?
+    2. Handler khác gì với việc `@Async` bị từ chối lúc submit hoặc self-invocation bỏ qua proxy?
+    3. Nếu đổi thành `CompletableFuture<Void>`, caller có thêm khả năng quan sát trạng thái gì?
+
+    ### Dữ liệu và kiểm thử handler
+
+    1. Handler nhận ba đối số nào và tại sao không nên log toàn bộ `params`?
+    2. Bạn sẽ dùng `CountDownLatch` kiểm thử `Method`, exception type và số argument thế nào?
+    3. Vì sao handler mặc định ghi log không tự retry, rollback hay bảo đảm delivery?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô tả kênh lỗi | Vẽ đường gọi qua proxy, worker, handler và phân biệt rejection ở caller. |
+    | Đọc metadata exception | Sử dụng tên method, exception type và correlation ID được phép trong log/metric. |
+    | Đối chiếu return type | Giải thích lựa chọn void so với CompletableFuture khi caller cần biết completion. |
+    | Kiểm thử handler | Xây test Spring context với latch có timeout, xác nhận lỗi được gửi tới handler đúng một lần. |
+    | Đánh giá vận hành | Nhận diện việc cần job status, metric và chính sách xử lý side effect riêng. |
+- id: exception-handling-004
+  title: Cấu hình bộ xử lý ngoại lệ bằng AsyncConfigurer
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Cấu hình bộ xử lý ngoại lệ bằng AsyncConfigurer**
+
+    Bài này đi vào **cấu hình Spring**, dùng `AsyncConfigurer` chọn executor mặc định và khai báo `AsyncUncaughtExceptionHandler`. Trọng tâm là bean lifecycle, `@EnableAsync`, qualifier và rủi ro một dependency/proxy được khởi tạo quá sớm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Wiring Spring Async
+
+    1. `getAsyncExecutor()` và `getAsyncUncaughtExceptionHandler()` cấu hình hai trách nhiệm độc lập nào?
+    2. Vì sao có thể chỉ override handler nhưng vẫn chọn bean bằng `@Async("backgroundExecutor")`?
+    3. Tại sao một bean `AsyncUncaughtExceptionHandler` tùy ý chưa bảo đảm interceptor đã sử dụng nó?
+
+    ### Bootstrap và xác minh
+
+    1. Vì sao cấu hình `AsyncConfigurer` có thể được khởi tạo sớm, và `ObjectProvider` giúp hoãn lấy recorder ra sao?
+    2. Self-invocation hoặc đối tượng tạo bằng `new` tác động thế nào tới `@Async` proxy?
+    3. Bạn sẽ kiểm thử riêng handler của void, exception của Future và rejection tại submitter như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình handler | Tạo `@Configuration @EnableAsync implements AsyncConfigurer` với handler xác định. |
+    | Phân giải executor | Chỉ rõ default executor, bean name và qualifier khi có nhiều executor. |
+    | Giữ lifecycle an toàn | Giải thích nguy cơ khởi tạo sớm recorder và dùng `ObjectProvider` khi xử lý lỗi. |
+    | Xác minh wiring | Dùng ApplicationContext và bean proxy để kiểm tra handler cùng executor thật. |
+    | Thiết kế logging | Định nghĩa metric/log với dữ liệu cho phép và fallback tối thiểu khi handler lỗi. |
+- id: exception-handling-005
+  title: exceptionally(), handle() và whenComplete()
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **exceptionally(), handle() và whenComplete()**
+
+    Ba API của `CompletableFuture` có mục đích khác nhau: `exceptionally` phục hồi lỗi, `handle` ánh xạ success/failure và `whenComplete` quan sát kết quả. Bài giúp dự đoán đúng stage phụ thuộc, callback tự lỗi và hành vi thread.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng ba toán tử
+
+    1. API nào chỉ chạy trên failure, API nào chạy cả hai trạng thái và API nào có thể đổi kiểu kết quả?
+    2. Vì sao `completedFuture(null)` vẫn thành công và điều kiện nào xác định failure trong callback?
+    3. Phục hồi bằng `exceptionally` có thay đổi trạng thái của source Future hay không?
+
+    ### Sắp thứ tự stage
+
+    1. Khi observer `whenComplete` tự ném lỗi ở nhánh success và nhánh đã failed, nguyên nhân nào được ưu tiên?
+    2. Đặt `exceptionally` trước hoặc sau `thenApply` thay đổi kết quả cuối thế nào?
+    3. Callback không hậu tố Async có thể chạy trên thread nào và vì sao không nên block lâu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh API | Lập bảng nhánh callback, giá trị trả về, cùng kiểu hay đổi kiểu và cách truyền lỗi. |
+    | Dự đoán pipeline | Tính outcome của stage nguồn và stage sau recovery theo từng thứ tự operator. |
+    | Xử lý lỗi observer | Đối chiếu exception priority của whenComplete trên source thành công và source thất bại. |
+    | Phân loại null/cancel | Kiểm tra success-null khác failure và cancellation kích hoạt exceptional branch. |
+    | Kiểm thử xác định | Dùng completedFuture/failedFuture để xác minh callback counts và kết quả không cần sleep. |
+- id: exception-handling-006
+  title: Phân biệt phục hồi bằng giá trị thay thế với chỉ quan sát lỗi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt phục hồi bằng giá trị thay thế với chỉ quan sát lỗi**
+
+    Trọng tâm của bài này là **quyết định nghiệp vụ**: ghi nhận lỗi nguồn khác với dùng fallback để tiếp tục. Học viên thiết kế pipeline đo lỗi trước và sau phục hồi, đánh dấu kết quả suy giảm, và không nhầm timeout/cancel với việc side effect đã dừng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quan sát trước khi phục hồi
+
+    1. Vì sao đặt `whenComplete` trước hoặc sau `exceptionally` khiến số lần lỗi backend quan sát khác nhau?
+    2. Đối với một dịch vụ đọc cache, khi nào fallback hợp lệ và khi nào lỗi phải truyền tiếp?
+    3. Bạn sẽ biểu diễn kết quả `degraded` thế nào để HTTP caller không hiểu nó là dữ liệu primary?
+
+    ### Bảo toàn chứng cứ và vòng đời
+
+    1. `exceptionally` có tự retry không, và khi nào dùng `exceptionallyCompose` thay cho `join()` blocking?
+    2. Timeout hoặc cancellation có bảo đảm worker và thao tác remote ngừng không?
+    3. Nên đo `primary_failure_total`, `fallback_success_total`, `final_request_failure_total` ở những ranh giới nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế telemetry boundary | Đặt observer ở nguồn và kết quả cuối với metric phân biệt hai loại thất bại. |
+    | Chọn fallback | Lập chính sách cache/degraded theo lỗi tạm thời, dữ liệu còn hạn và quyền truy cập. |
+    | Biểu diễn kết quả | Dùng Outcome có trạng thái và nguồn kết quả thay vì biến lỗi thành success giả. |
+    | Kết hợp fallback async | Sử dụng exceptionallyCompose khi dự phòng trả một stage khác. |
+    | Kiểm thử semantics | Xác minh upstream vẫn lỗi, fallback mới thành công, và side effect không tự bị dừng. |
+- id: exception-handling-007
+  title: Không bỏ qua Future rồi đánh mất lỗi nghiệp vụ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không bỏ qua Future rồi đánh mất lỗi nghiệp vụ**
+
+    `Future` lưu kết quả và exception, nhưng một lời `submit()` trả thành công chưa phải nghiệp vụ hoàn tất. Nếu không có owner lưu, trả tiếp hoặc quan sát Future, lỗi có thể bị mất khỏi luồng ứng dụng. Bài liên hệ completion với job status, HTTP 202 và durability.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quan sát Future đúng cách
+
+    1. Vì sao `ExecutorService.submit` có thể giữ lỗi trong FutureTask mà không có stack trace từ worker uncaught handler?
+    2. `Future.isDone()` có chỉ ra task đã thành công hay chưa, và làm sao kiểm tra trạng thái terminal?
+    3. Điều gì xảy ra khi chỉ gắn `thenAccept` mà không quan sát exceptional completion?
+
+    ### Ownership và trạng thái bền vững
+
+    1. Trả HTTP 202 kèm job ID cần những bằng chứng tiếp nhận nào để không báo thành công giả?
+    2. Khi JVM crash hoặc có nhiều replica, vì sao Future in-memory không thay được job ledger/outbox?
+    3. Observer `whenComplete` tự thất bại thì việc bỏ stage mới tạo có nguy cơ gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tìm Future bị bỏ quên | Phát hiện lời gọi submit/supplyAsync/Async mà kết quả không có owner. |
+    | Xử lý terminal outcomes | Đặt observer hoặc trả Future, phân loại success, failed, cancelled, timed-out, rejected. |
+    | Thiết kế API nền | Phân biệt async HTTP response với 202 kèm job ID có tra trạng thái. |
+    | Thiết kế job state | Mô tả PENDING, RUNNING, SUCCEEDED, FAILED và cách đối soát sau restart. |
+    | Kiểm thử failure visibility | Viết test chứng minh exception trong Future vẫn được báo đúng cause sau completion. |
+- id: exception-handling-008
+  title: Giới hạn bắt lỗi bằng TaskDecorator khi tác vụ được bọc trong Future
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn bắt lỗi bằng TaskDecorator khi tác vụ được bọc trong Future**
+
+    `TaskDecorator` bọc Runnable thực tế, đôi khi là `FutureTask` hoặc callback nội bộ. Vì `FutureTask.run()` giữ exception thay vì ném ra wrapper, `catch` của decorator không thấy mọi lỗi. Bài làm rõ cơ chế và vị trí quan sát đáng tin hơn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### FutureTask và decorator
+
+    1. Vì sao một `FutureTask.run()` có thể trả bình thường dù `Callable.call()` ném `IllegalArgumentException`?
+    2. Đường `execute(rawRunnable)` và `submit(Callable)` khác nhau thế nào khi decorator có try/catch?
+    3. Tại sao `r instanceof Future<?>` không được bảo đảm nếu decorator đã tạo Runnable wrapper?
+
+    ### Quan sát lỗi và context
+
+    1. Khi nào `Future.get()` trong decorator an toàn và khi nào có thể block/deadlock worker?
+    2. Với `@Async void`, `@Async CompletableFuture` và rejection, mỗi loại cần kênh lỗi nào?
+    3. Cần snapshot và restore `ThreadLocal`/MDC ở đâu để pool tái sử dụng worker không rò context?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế wrapper | Vẽ luồng từ FutureTask.run đến exceptional state và Future.get. |
+    | Tái hiện bằng JDK | Chứng minh decorator catch thấy direct Runnable failure nhưng không thấy lỗi lưu trong FutureTask. |
+    | Đặt observer đúng ranh giới | Chọn Future callback/get, void handler hoặc catch tại submitter. |
+    | Đánh giá afterExecute | Giải thích vì sao Throwable hoặc instanceof Future có thể không thể hiện failure đã được wrap. |
+    | Thiết kế TaskDecorator an toàn | Sử dụng finally để restore MDC/ThreadLocal và đo callback duration đúng scope. |
+- id: exception-handling-009
+  title: Xác định chính sách thử lại có giới hạn và tính an toàn khi chạy lại
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Xác định chính sách thử lại có giới hạn và tính an toàn khi chạy lại**
+
+    Retry phải vượt lỗi tạm thời nhưng không được nhân đôi tác dụng phụ hoặc tạo retry storm. Bài này thiết kế số attempts, deadline, backoff, jitter, Retry-After và idempotency key với tình huống kết quả không chắc chắn, nhiều instance và crash.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quyết định có retry không
+
+    1. Vì sao timeout sau khi gửi thanh toán chưa chứng minh server chưa commit?
+    2. `maxAttempts=3` của Spring Retry khác `maxRetries=3` trong Spring Framework 7 như thế nào?
+    3. Per-attempt timeout, overall deadline, backoff cap và jitter phối hợp để hạn chế tải ra sao?
+
+    ### Idempotency và kiểm thử
+
+    1. Tại sao cùng một logical operation phải giữ idempotency key qua tất cả attempts?
+    2. Atomic claim, request fingerprint và trạng thái IN_PROGRESS xử lý concurrent duplicate như thế nào?
+    3. Bạn sẽ kiểm thử timeout sau commit, crash và hai request cùng key sao cho side effect không trùng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại lỗi | Phân nhóm transient, permanent, ambiguous outcome và quyết định retry đúng từng loại. |
+    | Tính ngân sách | Đếm tổng attempts, backoff và thời hạn còn lại khi có nhiều tầng retry. |
+    | Thiết kế idempotency | Mô tả key ổn định, payload hash, atomic claim, provider idempotency và reconciliation. |
+    | Viết bounded retry | Kiểm thử max attempts, lỗi không retry và exhaustion bằng fake sleeper. |
+    | Đánh giá môi trường phân tán | Phân tích lợi ích và giới hạn của outbox, job store, distributed coordination. |
+    | Phòng retry storm | Chọn rate/bulkhead/circuit breaker, Retry-After và quan sát metric retry. |

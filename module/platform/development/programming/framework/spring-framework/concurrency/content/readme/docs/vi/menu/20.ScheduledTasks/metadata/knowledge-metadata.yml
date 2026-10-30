@@ -1,0 +1,25 @@
+sections:
+  scheduled-tasks-001:
+    difficulty: BASIC
+  scheduled-tasks-002:
+    difficulty: BASIC
+  scheduled-tasks-003:
+    difficulty: INTERMEDIATE
+  scheduled-tasks-004:
+    difficulty: INTERMEDIATE
+  scheduled-tasks-005:
+    difficulty: BASIC
+  scheduled-tasks-006:
+    difficulty: INTERMEDIATE
+  scheduled-tasks-007:
+    difficulty: INTERMEDIATE
+  scheduled-tasks-008:
+    difficulty: ADVANCED
+  scheduled-tasks-009:
+    difficulty: INTERMEDIATE
+  scheduled-tasks-010:
+    difficulty: ADVANCED
+  scheduled-tasks-011:
+    difficulty: INTERMEDIATE
+  scheduled-tasks-012:
+    difficulty: ADVANCED

@@ -1,0 +1,76 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Xử lý ngoại lệ trong Spring Framework concurrency
+roadmapHeading: Lộ trình học xử lý ngoại lệ bất đồng bộ
+roadmap:
+- id: exception-handling-001
+  order: 1
+  title: Ngoại lệ xảy ra khi gửi tác vụ khác với ngoại lệ trong lúc chạy
+  description: Nhận diện sự khác biệt giữa tác vụ không được nhận và tác vụ đã chạy rồi thất bại; chỉ đúng submitter hoặc worker là nơi quan sát lỗi.
+  transition:
+    to: exception-handling-002
+    description: Từ việc phân loại hai giai đoạn, tiếp tục tìm đúng cause của lỗi đã được Future ghi lại.
+- id: exception-handling-002
+  order: 2
+  title: ExecutionException, CompletionException và nguyên nhân gốc
+  description: Phân tích ExecutionException, CompletionException và cause chain khi caller quan sát lỗi Future bằng get hoặc join.
+  transition:
+    to: exception-handling-003
+    description: Sau đường lỗi Future, xem trường hợp method void không có handle để caller gọi get hoặc join.
+- id: exception-handling-003
+  order: 3
+  title: AsyncUncaughtExceptionHandler cho phương thức @Async trả về void
+  description: Xác định hợp đồng AsyncUncaughtExceptionHandler cho exception chưa bắt từ method @Async trả về void và yêu cầu đi qua proxy.
+  transition:
+    to: exception-handling-004
+    description: Khi đã hiểu handler dành cho void, cấu hình handler và executor trong Spring context.
+- id: exception-handling-004
+  order: 4
+  title: Cấu hình bộ xử lý ngoại lệ bằng AsyncConfigurer
+  description: Cấu hình AsyncConfigurer cùng executor, handler, qualifier và lifecycle bean; kiểm chứng wiring trong Spring context.
+  transition:
+    to: exception-handling-005
+    description: Sau wiring của @Async, học các toán tử xử lý outcome trong CompletableFuture.
+- id: exception-handling-005
+  order: 5
+  title: exceptionally(), handle() và whenComplete()
+  description: Áp dụng chính xác ba API exceptionally, handle, whenComplete lên CompletionStage, kể cả lỗi ở callback.
+  transition:
+    to: exception-handling-006
+    description: Biết ba toán tử rồi, cần quyết định lúc nào chỉ quan sát lỗi và lúc nào được dùng fallback.
+- id: exception-handling-006
+  order: 6
+  title: Phân biệt phục hồi bằng giá trị thay thế với chỉ quan sát lỗi
+  description: Thiết kế quan sát lỗi nguồn và fallback có điều kiện, biểu diễn kết quả degraded và đo chất lượng kết quả cuối.
+  transition:
+    to: exception-handling-007
+    description: Sau chính sách quan sát, xác định ai sở hữu Future và chịu trách nhiệm trạng thái terminal.
+- id: exception-handling-007
+  order: 7
+  title: Không bỏ qua Future rồi đánh mất lỗi nghiệp vụ
+  description: Quy định ownership của Future để không bỏ qua failure và chuyển trạng thái công việc vào job ledger khi cần bền vững.
+  transition:
+    to: exception-handling-008
+    description: Khi đã bảo đảm Future có owner, phân tích giới hạn của decorator trong quan sát exception.
+- id: exception-handling-008
+  order: 8
+  title: Giới hạn bắt lỗi bằng TaskDecorator khi tác vụ được bọc trong Future
+  description: Giải thích TaskDecorator bọc Runnable thực tế và vì sao FutureTask che lỗi khỏi catch ngoài run, kèm context cleanup.
+  transition:
+    to: exception-handling-009
+    description: Sau các đường quan sát lỗi, chuyển sang chính sách retry an toàn với ngân sách hữu hạn.
+- id: exception-handling-009
+  order: 9
+  title: Xác định chính sách thử lại có giới hạn và tính an toàn khi chạy lại
+  description: Xây dựng bounded retry có deadline, backoff, jitter và idempotency chống side effect trùng trong trường hợp outcome chưa rõ.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài học
+
+  | Tiêu chí | Bài 1: Gửi tác vụ | Bài 2: Root cause | Bài 3: @Async void | Bài 4: AsyncConfigurer | Bài 5: Ba callback | Bài 6: Quan sát và fallback | Bài 7: Sở hữu Future | Bài 8: TaskDecorator | Bài 9: Bounded retry |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Vấn đề | Reject trước worker hay lỗi trong worker | Wrapper của lỗi khi lấy Future | Exception từ void không có Future | Lắp handler và executor đúng context | Ba semantics của stage phụ thuộc | Lỗi nguồn và giá trị suy giảm | Bỏ Future làm mất tín hiệu nghiệp vụ | Lỗi nằm trong FutureTask không thoát run | Retry có thể tăng tải và tạo side effect trùng |
+  | API trung tâm | TaskExecutor và rejection policy | Future.get và CompletableFuture.join | AsyncUncaughtExceptionHandler | AsyncConfigurer và EnableAsync | exceptionally, handle, whenComplete | whenComplete trước fallback, Outcome | submit, whenComplete, job ledger | TaskDecorator, FutureTask, afterExecute | maxAttempts, backoff, key, outbox |
+  | Kỹ năng cần chứng minh | Tạo rejection có latch và phân biệt failure | Unwrap wrapper có giới hạn và giữ root cause | Xác minh handler nhận Throwable và Method | Kiểm tra proxy và qualifier được chọn | Dự đoán trạng thái stage gốc và stage mới | Đo lỗi nguồn và trạng thái cuối riêng | Giữ hoặc trả handle và ghi terminal status | Chứng minh khác biệt raw Runnable và FutureTask | Đếm attempts và chống duplicate đồng thời |
+  | Sai lầm chính | Accepted nghĩa là succeeded | isDone nghĩa là success | Handler tự truyền lỗi về caller | Một bean handler bất kỳ tự được chọn | whenComplete tự fallback | Fallback nghĩa là backend khỏe | 202 tự bảo đảm job bền vững | Decorator catch bắt mọi lỗi | Timeout nghĩa là chưa commit |
+  | Bối cảnh sử dụng | Executor bão hòa khi nhận request | get/join báo lỗi domain | Notification void thất bại | Spring bean có recorder và executor | Pipeline CompletableFuture nhiều bước | Đọc dữ liệu có cache fallback | Invoice nền có job ID | MDC và metrics tại task boundary | Payment và workflow có idempotency |

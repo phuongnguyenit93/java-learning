@@ -1,0 +1,19 @@
+sections:
+  bean-state-001:
+    difficulty: BASIC
+  bean-state-002:
+    difficulty: BASIC
+  bean-state-003:
+    difficulty: ADVANCED
+  bean-state-004:
+    difficulty: INTERMEDIATE
+  bean-state-005:
+    difficulty: INTERMEDIATE
+  bean-state-006:
+    difficulty: INTERMEDIATE
+  bean-state-007:
+    difficulty: ADVANCED
+  bean-state-008:
+    difficulty: INTERMEDIATE
+  bean-state-009:
+    difficulty: ADVANCED

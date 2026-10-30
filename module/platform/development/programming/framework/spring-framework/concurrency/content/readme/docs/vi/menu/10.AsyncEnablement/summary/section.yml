@@ -1,0 +1,76 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'Bật @Async: cấu hình, lời gọi, executor và hạ tầng Spring'
+roadmapHeading: Lộ trình học @Async theo cơ chế và thực hành
+roadmap:
+- id: async-enablement-001
+  order: 1
+  title: Khai báo @EnableAsync trong lớp cấu hình
+  description: Khởi đầu bằng @EnableAsync trong cấu hình được nạp, xác định cơ chế annotation-driven async đã bật và nơi khai báo executor.
+  transition:
+    to: async-enablement-002
+    description: Từ cấu hình bật async, cần biết bean nào thực sự được Spring xử lý để lời gọi đi qua proxy.
+- id: async-enablement-002
+  order: 2
+  title: Bean phải được container quản lý để annotation được xử lý
+  description: Nhận diện điều kiện bean do Spring quản lý cùng ranh giới proxy, phân biệt new ngoài container và lời gọi self-invocation.
+  transition:
+    to: async-enablement-003
+    description: Khi ranh giới proxy đã rõ, cần quyết định phạm vi annotation để không vô tình async hóa các API đồng bộ.
+- id: async-enablement-003
+  order: 3
+  title: Đặt @Async trên phương thức hoặc lớp
+  description: Quyết định dùng @Async ở mức method hay class, hiểu ưu tiên annotation và tránh phủ lên API đồng bộ.
+  transition:
+    to: async-enablement-004
+    description: Sau khi chọn vị trí annotation, phải thiết kế kiểu trả về để caller quan sát completion và exception.
+- id: async-enablement-004
+  order: 4
+  title: Kiểu trả về void, Future và CompletableFuture
+  description: Lựa chọn void, Future hoặc CompletableFuture để caller biết trạng thái, nhận lỗi và phối hợp kết quả có deadline.
+  transition:
+    to: async-enablement-005
+    description: Hiểu return contract giúp tách đúng logic nghiệp vụ khỏi lớp cấu hình, nơi @Async không được hỗ trợ.
+- id: async-enablement-005
+  order: 5
+  title: Giới hạn dùng @Async trên phương thức trong lớp @Configuration
+  description: Phân biệt nơi bật @EnableAsync với nơi khai báo business @Async; refactor logic ra khỏi lớp @Configuration.
+  transition:
+    to: async-enablement-006
+    description: Khi service đã đặt đúng chỗ, tiếp tục xác định pool mặc định cùng cách quản lý lỗi void và lifecycle.
+- id: async-enablement-006
+  order: 6
+  title: Chọn bộ thực thi mặc định bằng AsyncConfigurer
+  description: Thiết lập default executor và uncaught handler qua AsyncConfigurer, đồng thời quản lý lifecycle pool.
+  transition:
+    to: async-enablement-007
+    description: Sau cấu hình mặc định tường minh, học cơ chế Framework tự chọn executor khi cấu hình này vắng mặt.
+- id: async-enablement-007
+  order: 7
+  title: Cơ chế tìm TaskExecutor hoặc bean taskExecutor khi không cấu hình tường minh
+  description: Phân tích thuật toán lookup mặc định theo type/name và fallback khi không có lựa chọn tường minh, tính cả Boot auto-configuration.
+  transition:
+    to: async-enablement-008
+    description: Biết nhánh lookup và fallback rồi có thể chủ động route tác vụ theo tên hoặc qualifier để cô lập tải.
+- id: async-enablement-008
+  order: 8
+  title: Chỉ định bộ thực thi theo tên hoặc qualifier trong @Async
+  description: Định tuyến explicit theo bean name, qualifier hoặc property và kiểm chứng hai pool thực sự được chọn.
+  transition:
+    to: async-enablement-009
+    description: Khi routing đã kiểm chứng, đi sâu vào processor/advisor để lý giải vì sao Spring chặn được lời gọi.
+- id: async-enablement-009
+  order: 9
+  title: Vai trò của AsyncAnnotationBeanPostProcessor
+  description: Kết nối toàn bộ cơ chế qua AsyncAnnotationBeanPostProcessor, advisor, proxy và interceptor đến worker lúc invocation.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh bài học trong chương Bật @Async
+
+  | Tiêu chí | Bài 1: 107 · Bật @EnableAsync | Bài 2: 108 · Bean và proxy | Bài 3: 109 · Vị trí @Async | Bài 4: 110 · Return contract | Bài 5: 111 · Config limit | Bài 6: 112 · AsyncConfigurer | Bài 7: 113 · Default lookup | Bài 8: 114 · Named routing | Bài 9: 115 · BPP nội bộ |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | Bật annotation advice trong context | Managed bean và proxy boundary | Method-level và class-level | void, Future, CompletableFuture | @Async không hỗ trợ trong @Configuration | Chọn executor mặc định tường minh | TaskExecutor type rồi taskExecutor name | Bean name/qualifier theo workload | Post-processing đến async interception |
+  | Câu hỏi chính | Annotation async đã được kích hoạt chưa? | Caller có đi qua proxy không? | Method nào được coi là async? | Caller nhận lỗi/kết quả bằng cách nào? | Business method nằm đúng class chưa? | Default executor là bean nào? | Vì sao Spring chọn pool này? | Method vào pool I/O hay CPU? | Processor và interceptor làm gì khi nào? |
+  | Lỗi tiêu biểu | Chỉ đặt @Async mà thiếu EnableAsync | new object và this.method bỏ qua proxy | Class-level phủ getter trả String | get/join chặn và bỏ sót lỗi | Gắn @Async vào method trong config | Tạo pool thủ công không quản lý lifecycle | Fallback SimpleAsyncTaskExecutor ngoài ý muốn | Nhầm qualifier với thread-prefix | Tưởng BPP tự thực hiện task |
+  | Tự kiểm chứng | Nạp config và quan sát worker | So sánh new với context.getBean | Test method/class override | Test completion, exception, timeout | Refactor config sang service riêng | Test default và void handler | Test nhiều context và lookup | Test hai executor có prefix riêng | Test BPP, AOP proxy và worker |
+  | Giá trị đối với chương | Điểm khởi động cơ chế | Điều kiện có hiệu lực thực tế | Phạm vi tác vụ được đánh dấu | Hợp đồng quan sát công việc | Ranh giới kiến trúc đúng | Chính sách thực thi mặc định | Khả năng dự đoán fallback | Phân chia tài nguyên theo loại tải | Giải thích cơ chế sâu của Spring |

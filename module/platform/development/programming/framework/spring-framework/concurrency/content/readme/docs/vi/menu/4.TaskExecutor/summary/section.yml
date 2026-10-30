@@ -1,0 +1,68 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'TaskExecutor: hợp đồng, kết quả và tích hợp'
+roadmapHeading: Lộ trình học TaskExecutor
+roadmap:
+- id: task-executor-001
+  order: 1
+  title: TaskExecutor là hợp đồng thực thi tác vụ của Spring
+  description: Giải thích TaskExecutor là hợp đồng giao Runnable, các implementation, cơ chế completion và giới hạn của execute.
+  transition:
+    to: task-executor-002
+    description: Tiếp theo cần kiểm chứng execute thực sự chạy ở caller hay worker, nhất là khi pool bão hòa.
+- id: task-executor-002
+  order: 2
+  title: execute(Runnable) không mặc nhiên bảo đảm chạy trên luồng khác
+  description: Kiểm chứng thread thực thi theo implementation, CallerRunsPolicy và cách thiết kế phép thử bằng latch.
+  transition:
+    to: task-executor-003
+    description: Từ sự khác biệt thread, chuyển sang Future để caller nhận kết quả và exception thay vì suy từ return của execute.
+- id: task-executor-003
+  order: 3
+  title: AsyncTaskExecutor và các phương thức submit()
+  description: Dùng AsyncTaskExecutor.submit để nhận Future, kết quả, nguyên nhân lỗi, timeout và cancellation.
+  transition:
+    to: task-executor-004
+    description: Sau Future đơn lẻ, dùng CompletableFuture để kết hợp nhiều tác vụ và quan sát lỗi theo từng stage.
+- id: task-executor-004
+  order: 4
+  title: Nhận CompletableFuture qua submitCompletable() khi phiên bản hỗ trợ
+  description: Dùng submitCompletable từ Spring 6.0 để ghép các stage CompletableFuture và xử lý lỗi cùng executor.
+  transition:
+    to: task-executor-005
+    description: Khi đã rõ API async, tách dependency vào interface để thay pool mà không sửa business code.
+- id: task-executor-005
+  order: 5
+  title: Tiêm bộ thực thi qua interface để tách khỏi cách triển khai
+  description: Tách service khỏi pool bằng constructor injection, qualifier, profile và fake executor trong kiểm thử.
+  transition:
+    to: task-executor-006
+    description: Đã tách cách thực thi thì cần phân biệt thêm khi nào công việc được kích hoạt theo lịch.
+- id: task-executor-006
+  order: 6
+  title: Phân biệt TaskExecutor với TaskScheduler
+  description: Phân biệt TaskExecutor thực thi task với TaskScheduler quyết định thời điểm qua fixed rate, delay và cron.
+  transition:
+    to: task-executor-007
+    description: Hiểu nhịp điều phối xong, cần xử lý đúng lúc executor không thể nhận thêm việc.
+- id: task-executor-007
+  order: 7
+  title: TaskRejectedException và hợp đồng khi không nhận được tác vụ
+  description: Xử lý TaskRejectedException, saturation, rejection handlers, backpressure và durability/idempotency.
+  transition:
+    to: task-executor-008
+    description: Cuối cùng áp dụng giới hạn executor vào từng component Spring và cách chọn pool theo workload.
+- id: task-executor-008
+  order: 8
+  title: Vai trò của bộ thực thi trong các thành phần Spring khác
+  description: Phân tích TaskExecutor trong MVC, events, Batch và Integration cùng ranh giới context và lỗi.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh tám bài TaskExecutor
+
+  | Tiêu chí | Bài 1: TaskExecutor là hợp đồng thực thi tác vụ của Spring | Bài 2: execute(Runnable) không mặc nhiên bảo đảm chạy trên luồng khác | Bài 3: AsyncTaskExecutor và các phương thức submit() | Bài 4: Nhận CompletableFuture qua submitCompletable() khi phiên bản hỗ trợ | Bài 5: Tiêm bộ thực thi qua interface để tách khỏi cách triển khai | Bài 6: Phân biệt TaskExecutor với TaskScheduler | Bài 7: TaskRejectedException và hợp đồng khi không nhận được tác vụ | Bài 8: Vai trò của bộ thực thi trong các thành phần Spring khác |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | API chính | TaskExecutor và Runnable | SyncTaskExecutor và CallerRunsPolicy | AsyncTaskExecutor.submit và Future | submitCompletable và CompletionStage | @Bean, @Qualifier và @Profile | TaskScheduler, @Scheduled và @Async | TaskRejectedException và reject handlers | MVC Callable, events, Batch, ExecutorChannel |
+  | Nhầm lẫn cần tránh | Submit không có nghĩa hoàn tất | Pool không luôn chạy khác caller khi overload | isDone không bảo đảm thành công | join và cancel không dừng mọi I/O | DI không tự truyền context | fixedDelay callback không đợi async worker | Discard có thể mất task im lặng | Một bean không tự được mọi module chọn |
+  | Thực hành | Dùng latch đọc kết quả | So sánh Thread với latch | get kết quả và cause exception | thenCombine và exceptionally | Đổi profile và fake executor | Dự đoán mốc fixed-rate và fixed-delay | Dựng saturation và kiểm tra reject | Quan sát execute, @Async và event |
+  | Năng lực | Chọn contract giao tác vụ | Xác minh thread và overload | Kiểm soát kết quả/lỗi | Thiết kế pipeline composition | Tách service khỏi implementation | Chọn cơ chế thời gian | Bảo vệ hợp đồng nhận việc | Tích hợp có kiểm soát |

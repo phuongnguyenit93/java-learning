@@ -1,0 +1,297 @@
+summaries:
+- id: scheduling-failures-001
+  title: Lỗi tác vụ chạy một lần khác lỗi tác vụ lặp lại
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lỗi tác vụ chạy một lần khác lỗi tác vụ lặp lại**
+
+    Một tác vụ chạy một lần và một đăng ký lặp lại có thể ném cùng `IllegalStateException` nhưng tạo kết quả khác nhau: one-shot mặc định của Spring ghi log rồi propagate để `ScheduledFuture.get()` thấy lỗi, còn recurring mặc định ghi log rồi suppress nhằm giữ các tick tiếp theo. Bài này xây trực giác về **loại đăng ký, lỗi của một lượt và trạng thái Future**, rồi kiểm chứng bằng latch và Future trong một Spring context. Nhờ đó người học không suy nhầm rằng log ERROR luôn làm lịch chết, hoặc lịch tiếp tục nghĩa là lỗi nghiệp vụ đã được khắc phục.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Một lần hay lặp lại: khác nhau ở kết quả gì?
+
+    1. Vì sao one-shot `schedule(Runnable, Instant)` và repeating `scheduleAtFixedRate` được Spring chọn ErrorHandler mặc định khác nhau?
+    2. Với one-shot, cần đọc `get`, `isDone` và `ExecutionException` ra sao khi thân `Runnable` ném lỗi?
+    3. Vì sao `get()` của một periodic Future đang hoạt động không phải cách đợi kết quả của tick đầu tiên?
+    4. Điều gì khiến một periodic registration JDK ngừng sau exception nhưng Spring mặc định vẫn có tick kế tiếp?
+
+    ### Tự chứng minh và xác định ranh giới lỗi
+
+    1. Trong demo Spring, latch đếm ba lần chạy xác nhận điều gì mà `Thread.sleep()` không chứng minh chắc được?
+    2. Một custom ErrorHandler rethrow có thể làm thay đổi Future và các tick sau của repeating registration như thế nào?
+    3. Tại sao `Mono.onError` của reactive `@Scheduled` và lỗi `CompletableFuture` từ `@Async` không tự đi qua ErrorHandler của Runnable đồng bộ?
+    4. Khi lịch tiếp tục nhưng từng tick đều lỗi, nên đo những tín hiệu nào để nhận biết thất bại nghiệp vụ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt loại đăng ký | Phân loại one-shot/recurring, nhận diện Future của một execution và Future của cả registration. |
+    | Giải thích chính sách mặc định | Dự đoán log-suppress/propagate từ Spring TaskUtils cho đúng từng loại lịch. |
+    | Đọc đúng Future | Giải thích `get()`, `isDone()`, exception/cancel và tránh block vô hạn trên periodic Future. |
+    | Kiểm chứng bằng đồng bộ hóa | Dùng `CountDownLatch` và Future timeout để kiểm chứng one-shot failure, recurring continuation và custom stop. |
+    | Tách lỗi nghiệp vụ khỏi lifecycle | Đề xuất metric per-run, retry/idempotency và đường giám sát không nhầm với trạng thái lịch. |
+- id: scheduling-failures-002
+  title: ErrorHandler trong hạ tầng scheduler
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ErrorHandler trong hạ tầng scheduler**
+
+    `ErrorHandler` chỉ nhận `Throwable` đã đi qua **lớp bọc tác vụ đồng bộ** của scheduler; nó không phải bộ thu gom mọi lỗi của Spring. Bài này phân tích `org.springframework.util.ErrorHandler`, `DelegatingErrorHandlingRunnable`, `TaskUtils`, setter `ThreadPoolTaskScheduler.setErrorHandler` và đường chọn bean thực cho `@Scheduled`. Bài cũng đối chiếu với lỗi ở `@Async`, reactive publisher, FutureTask, rejection và startup, từ đó thiết kế handler ngắn, có metric/job identity và không vô ý chấm dứt lịch.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lỗi đi qua những tầng nào?
+
+    1. ErrorHandler của Spring thuộc package nào, nhận kiểu đối số gì và tại sao không đồng nhất với RejectedExecutionHandler?
+    2. Vì sao một exception trong FutureTask có thể không đến `Thread.UncaughtExceptionHandler` hoặc tham số Throwable của `afterExecute`?
+    3. Spring dùng `TaskUtils` và Runnable wrapper để biến lỗi periodic thành execution hoàn tất bình thường như thế nào?
+    4. Những lỗi nào ở reactive `onError`, async Future, submit/rejection hoặc cron invalid không thuộc phạm vi ErrorHandler đồng bộ?
+
+    ### Cấu hình và xác minh đúng scheduler
+
+    1. SetErrorHandler trên bean `ThreadPoolTaskScheduler` khác gì so với chỉ inject abstraction `TaskScheduler`?
+    2. Khi có nhiều scheduler beans, làm sao bảo đảm `@Scheduled` thực sự sử dụng bean đã gắn handler?
+    3. Vì sao một handler chỉ ghi metric nhưng chính metric client ném lỗi có thể biến chính sách suppress thành propagate?
+    4. Integration test cần quan sát những điều kiện nào để chứng minh handler nhận lỗi tick đầu nhưng tick sau vẫn chạy?
+    5. Vì sao chỉ ghi lỗi ở handler không đủ xác định job ID, transaction outcome và retry của record nghiệp vụ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết error boundary | Vẽ đường callback → wrapper → ErrorHandler → underlying executor, chỉ ra lỗi nằm ngoài boundary. |
+    | Cấu hình handler có chủ đích | Khai báo `ThreadPoolTaskScheduler.setErrorHandler` với policy log/metric và kiểm tra scheduler bean được chọn. |
+    | Dự đoán stop/continue | Giải thích khác biệt giữa handler return và throw đối với periodic registration và one-shot Future. |
+    | Viết integration test | Dùng `@EnableScheduling`, bean, latch và bounded await để chứng minh behavior thực, không đoán qua sleep. |
+    | Thiết kế quan sát đúng chỗ | Tách lỗi synchronous scheduling, `@Async`, reactive `onError`, rejection, startup và exception trong transaction. |
+- id: scheduling-failures-003
+  title: Phân biệt chính sách ghi nhận rồi tiếp tục với cho lỗi lan ra
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt chính sách ghi nhận rồi tiếp tục với cho lỗi lan ra**
+
+    Hai ErrorHandler có thể **cùng ghi log** nhưng tạo chính sách vận hành trái ngược: handler trả về bình thường cho recurring schedule chạy tiếp, còn handler rethrow có thể làm periodic Future hoàn tất exceptionally và dừng các lượt kế. Bài này đặt hai lựa chọn suppress/propagate trong ngữ cảnh transient failure, lỗi cấu hình nghiêm trọng, one-shot Future và nghiệp vụ phải đủ từng kỳ. Năm tình huống chạy được giúp kiểm chứng trade-off thay vì chọn theo cảm giác “log nhiều hay ít”.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quyết định tiếp tục hay dừng lịch
+
+    1. Điều khác biệt bản chất giữa record-and-suppress và record-and-propagate là logging hay việc exception thoát khỏi callback?
+    2. Khi callback periodic thất bại và handler rethrow, `isDone`, `isCancelled` và `get` có thể cho biết điều gì?
+    3. Vì sao một custom suppress handler gắn toàn scheduler có thể làm one-shot Future trả bình thường dù nghiệp vụ lỗi?
+    4. Những tình huống nào phù hợp với tiếp tục sau transient 503, và khi nào fail-fast để tránh dữ liệu sai?
+
+    ### Giám sát và vận dụng policy
+
+    1. Vì sao suppress cho lịch tiếp tục không phải là retry của bản ghi hay thời điểm nghiệp vụ vừa thất bại?
+    2. Nếu một critical periodic registration dừng do propagate, ai phát alert và xác định cách đăng ký lại?
+    3. Trong demo năm tình huống, latch và Future khẳng định các kết quả continue/stop/one-shot bằng cách nào?
+    4. Một handler dùng chung nhiều jobs với error policy trái nhau có thể gây rủi ro thiết kế gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh policy | Diễn giải tác động của suppress và propagate tới wrapper, periodic Future và người gọi. |
+    | Chọn policy theo nghiệp vụ | Đánh giá transient/permanent, rủi ro silent failure và nguy cơ tiếp tục gây tác dụng phụ sai. |
+    | Bảo toàn lỗi one-shot | Phát hiện cấu hình handler che `ExecutionException` và đề xuất tách scheduler/observer. |
+    | Kiểm chứng năm kịch bản | Dùng Spring demo để xác nhận default repeating, custom suppress, custom propagate và one-shot hai kiểu. |
+    | Thiết kế vận hành sau lỗi | Nêu metrics, alert, backfill, retry budget và cơ chế khôi phục có chủ đích. |
+- id: scheduling-failures-004
+  title: Không để công việc mất lịch mà không có tín hiệu quan sát
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không để công việc mất lịch mà không có tín hiệu quan sát**
+
+    Một lịch có thể không được đăng ký từ đầu, bị hủy sau lỗi, chậm do thiếu worker, hoặc vẫn tick đều nhưng công việc đã thất bại nhiều giờ. Bài này xây thiết kế **observability chống mất lịch im lặng**: kiểm tra registration, đo last start/finish/success, nhận diện stuck và async delegation, dùng Actuator `scheduledtasks` đúng giới hạn, tạo Prometheus freshness/absence alert và watchdog độc lập với scheduler được giám sát. Demo Spring Boot cùng test latch chỉ ra vì sao heartbeat của scheduler không đủ để kết luận dữ liệu đã được xử lý.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện mất lịch thật và tín hiệu giả
+
+    1. Job không có registration, periodic future failed, scheduler worker bị chặn và mọi tick đều lỗi khác nhau thế nào về tín hiệu quan sát?
+    2. Vì sao thấy job trong `/actuator/scheduledtasks` chưa chứng minh một lượt nghiệp vụ thành công?
+    3. Khi job chỉ submit vào executor khác, tại sao `lastSuccessAt` không được cập nhật ngay sau `execute()`?
+    4. Đối với cron chạy một lần mỗi ngày, làm sao đặt ngưỡng no-start/no-success tránh false alarm sau restart?
+
+    ### Thiết kế giám sát và kiểm thử
+
+    1. Cần thu thập `lastStartedAt`, `lastFinishedAt`, `lastSuccessAt`, duration và start lag ở các mốc nào?
+    2. Vì sao PromQL so sánh thời gian từ last-success phải đi kèm `absent(...)` hoặc target-down alert?
+    3. Tại sao watchdog nằm trong chính scheduler có thể mất khả năng cảnh báo khi scheduler worker bị block?
+    4. Làm sao chứng minh Spring recurring job lỗi một lượt nhưng được gọi lượt thứ hai bằng integration test?
+    5. Khi một replica follower chủ động không chạy job, giám sát nên xét leader ownership và business freshness toàn cluster ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại lỗi mất lịch | Phân biệt chưa đăng ký, cancellation, future failed, lag, business failure và detached future. |
+    | Thiết kế telemetry theo mốc | Đặt sự kiện/counter/timestamp started/finished/success/failure đúng thời điểm nghiệp vụ. |
+    | Sử dụng Actuator có giới hạn | Dùng `scheduledtasks` kiểm tra registration nhưng không đồng nhất nó với health của data. |
+    | Thiết lập cảnh báo độc lập | Viết logic last-success/stuck/no-start, kiểm tra thiếu series và không tự giám sát trong cùng failure domain. |
+    | Kiểm thử chống mất tín hiệu | Dùng latch, fake clock, startup grace và runbook xác nhận recovery có bằng chứng durable success. |
+- id: scheduling-failures-005
+  title: Phân biệt thất bại từng lần với trạng thái của cả lịch
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt thất bại từng lần với trạng thái của cả lịch**
+
+    `FAILED` của một lần thực thi không phải `TERMINATED` của cả lịch. Bài này tách **schedule definition**, **runtime registration**, **scheduled occurrence** và **execution attempt**, giải thích tại sao `ScheduledFuture` không thay thế audit từng lần, và xây bảng trạng thái/ledger cho job cần retry hoặc backfill từng kỳ. Người học xử lý đúng việc occurrence hôm trước lỗi nhưng lịch hôm sau vẫn chạy, thiết kế pause/resume, cancellation, transaction boundaries và source-of-truth khi nhiều replica cùng nhận việc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình bốn lớp trạng thái
+
+    1. Vì sao một occurrence `FAILED` vẫn có thể cùng tồn tại với schedule registration `ACTIVE`?
+    2. Schedule definition, runtime registration, occurrence và attempt có ID, trách nhiệm và trạng thái khác nhau thế nào?
+    3. Vì sao periodic `ScheduledFuture.isDone()==false` không chứng minh mọi occurrence thành công, còn `isDone()==true` chưa phải success?
+    4. Một cron tick mới khác retry cùng occurrence cũ về business date, attempt number và idempotency key như thế nào?
+
+    ### Lưu trạng thái, phục hồi và nhiều instance
+
+    1. Khi một nightly job của ngày 29/10 lỗi rồi lịch ngày 30/10 thành công, làm sao phát hiện ngày cũ còn thiếu để backfill?
+    2. Thiết kế bảng job_schedules và job_occurrences cần những thuộc tính nào để không bị ghi đè lịch sử?
+    3. Khi ErrorHandler suppress hoặc propagate, trạng thái attempt và registration phải được cập nhật riêng ra sao?
+    4. Giữa cancel, pause có chủ đích và abnormal termination, cần theo dõi những lý do nào để operator có thể resume an toàn?
+    5. Với nhiều replica, tại sao local ScheduledFuture không phải trạng thái nguồn của toàn cụm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô hình hóa schedule lifecycle | Phân biệt desired schedule, local registration, occurrence và attempt với status riêng. |
+    | Ghi lịch sử per-occurrence | Phác thảo ledger lưu scheduled_for, attempt_count, success/failure và last error. |
+    | Thiết kế retry/backfill đúng kỳ | Giữ occurrence/business key khi retry, tạo kỳ mới bằng ID mới và phát hiện các kỳ chưa complete. |
+    | Xử lý pause/cancel/terminate | Nêu chính sách dừng chủ động, lý do, cảnh báo và cách resume không làm trùng effect. |
+    | Đối soát nhiều instance | Phân tích owner/lease/fencing và quan sát aggregate job state thay vì chỉ local Future. |
+- id: scheduling-failures-006
+  title: Thử lại có khoảng nghỉ và giới hạn thời gian
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thử lại có khoảng nghỉ và giới hạn thời gian**
+
+    Việc Spring tiếp tục tick sau lỗi không tạo ra một retry policy cho **cùng logical job**. Bài này phân biệt maxAttempts, fixed/exponential backoff có cap và jitter, per-attempt timeout, deadline toàn job cùng `Retry-After`. Demo Java 17 và Spring Boot dùng delayed one-shot scheduling thay cho ngủ vô hạn trên scheduler worker, đồng thời xử lý rejected submission, cancellation, overlap và lưu `next_attempt_at` cho công việc cần sống qua restart.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chọn lỗi và tính ngân sách retry
+
+    1. Vì sao `maxAttempts=3` tương đương tối đa hai retries nếu tính cả lần thử đầu?
+    2. HTTP 503, HTTP 429 có Retry-After, validation 400 và interrupt cần chính sách retry khác nhau như thế nào?
+    3. Khi overallDeadline chỉ còn một giây nhưng client timeout cần năm giây, bạn xác định timeout của lần thử cuối ra sao?
+    4. Exponential backoff cần cap, jitter và kiểm tra overflow để ngăn những tình huống nào?
+
+    ### Lập lịch retry không làm nghẽn timer
+
+    1. Vì sao `@Scheduled` tick tiếp không mang theo attempt count và logical-job deadline của tick trước?
+    2. Chuyển một retry thành `TaskScheduler.schedule(Runnable, Instant)` giúp tránh giữ scheduler worker ngủ như thế nào?
+    3. Khi scheduler từ chối lần hẹn tiếp theo hoặc process shutdown giữa backoff, làm sao tránh Future treo hoặc mất job?
+    4. Vì sao `Future.get(timeout)`/`CompletableFuture.orTimeout` không chứng minh underlying I/O và side effect đã dừng?
+    5. Với nhiều pods hoặc `@Scheduled` dispatch async, cần chống overlap và phục hồi durable next_attempt_at ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại retryable | Quyết định retry cho lỗi transient, permanent, 429, rejection, interruption và deadline. |
+    | Tính backoff có ngân sách | Tính capped exponential/jitter, remaining deadline và phân biệt attempts với retries. |
+    | Lập lịch delayed retry | Viết one-shot attempt tiếp theo qua ScheduledExecutorService/TaskScheduler, tránh vòng sleep không giới hạn. |
+    | Xử lý terminal outcome | Hoàn tất Future/job status khi success, permanent failure, timeout, cancellation hoặc scheduler reject. |
+    | Thiết kế retry bền vững | Đề xuất next_attempt_at, lease, idempotency và test overlap/restart. |
+- id: scheduling-failures-007
+  title: Thiết kế tác vụ có thể chạy lại mà không lặp tác dụng phụ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thiết kế tác vụ có thể chạy lại mà không lặp tác dụng phụ**
+
+    Scheduled jobs có thể chạy lại sau timeout, crash, retry, replay hoặc trên nhiều pods. Nếu một lần xử lý đã cộng tiền/gửi email nhưng ACK mất, chạy lại thiếu cơ chế bảo vệ có thể nhân đôi side effects. Bài này hướng dẫn **idempotency key ổn định theo business event/period**, UNIQUE marker và thay đổi nghiệp vụ trong cùng DB transaction, rollback/proxy `@Transactional`, rồi mở rộng sang external gateway, transactional outbox, lease/fencing và reconciliation. Hai demo Java 17 và Spring JDBC/H2 chứng minh race và recovery sau rollback.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới không lặp tác dụng phụ
+
+    1. At-least-once attempts và exactly-once effect khác nhau ở phạm vi bảo đảm nào?
+    2. Vì sao dùng UUID mới hay LocalDate.now tại mỗi retry làm idempotency key mất khả năng chống trùng?
+    3. Khi hai worker cùng SELECT thấy chưa xử lý, UNIQUE constraint giải quyết cuộc đua như thế nào?
+    4. Điều gì xảy ra nếu marker và cập nhật số dư được commit bằng hai transaction tách biệt?
+
+    ### Transaction, hệ thống ngoài và retry nhiều node
+
+    1. Trong demo H2, vì sao marker rollback sau exception rồi retry mới được ghi thành công mà không cộng số dư hai lần?
+    2. Vì sao gọi `this.method()` trong cùng bean có thể bỏ qua `@Transactional` proxy và gây sai ranh giới commit?
+    3. Khi HTTP payment đã charge nhưng response timeout, local DB transaction có thể rollback side effect ở gateway không?
+    4. Transactional outbox giải quyết cửa sổ commit/publish nào và tại sao consumer vẫn phải dedupe?
+    5. Lease hết hạn khi worker cũ còn chạy cần fencing/unique key để ngăn stale write như thế nào?
+    6. Khi retry sau nửa đêm hoặc replay muộn, cách chọn business period và retention marker ảnh hưởng an toàn ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định danh công việc logic | Chọn key có tenant/operation/business ID hoặc kỳ, giữ ổn định qua retry/restart. |
+    | Chống trùng trong DB | Thiết kế UNIQUE marker và business update cùng transaction, xác minh rollback và concurrency. |
+    | Cấu hình giao dịch đúng | Gọi `@Transactional` qua proxy/manager và tránh nuốt lỗi trong transaction. |
+    | Thiết kế hiệu ứng ngoài DB | Giải thích outbox, downstream idempotency, timeout không rõ outcome và reconciliation. |
+    | Bảo vệ nhiều worker | Kết hợp claim/lease/fencing và retention để chống duplicate khi restart hoặc scale. |
+    | Kiểm thử cửa sổ lỗi | Dùng Java/H2 tests kiểm tra parallel calls, rollback, after-commit ACK loss và payload key conflict. |
+- id: scheduling-failures-008
+  title: Đối chiếu hành vi scheduler Spring với ScheduledExecutorService trực tiếp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đối chiếu hành vi scheduler Spring với ScheduledExecutorService trực tiếp**
+
+    Spring `TaskScheduler` và Java `ScheduledExecutorService` có thể cùng dùng `ScheduledThreadPoolExecutor` nhưng **khác hợp đồng API và chính sách lỗi mặc định**. Bài này đối chiếu delay/TimeUnit với Instant/Duration/CronTrigger, cho thấy exception của raw JDK periodic task có thể dừng registration còn Spring repeating được wrapper log/suppress, và phân biệt one-shot, Future, cancellation và lifecycle. Demo Maven sử dụng latch/Future để chứng minh hai hành vi và nhắc giới hạn của reactive, virtual threads, missed cron và resource ownership.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai API và cùng nền tảng nhưng khác semantics
+
+    1. JDK `scheduleAtFixedRate`/`scheduleWithFixedDelay` nhận relative delay và period khác Spring `TaskScheduler` dùng Instant, Duration, Trigger ra sao?
+    2. Vì sao raw JDK periodic callback ném exception làm dừng chuỗi, còn Spring ThreadPoolTaskScheduler mặc định có thể tick tiếp?
+    3. Với one-shot của hai API, Future nhận exception như thế nào và custom suppress handler ở Spring có thể thay đổi gì?
+    4. Vì sao một registration periodic không được dùng Future.get để đợi kết quả từng lượt?
+
+    ### Lựa chọn và quản lý scheduler trong ứng dụng
+
+    1. Trong Maven demo, Future của JDK và latch của Spring xác minh số lượt chạy khác nhau bằng cách nào?
+    2. Tại sao CronTrigger theo múi giờ không tương đương fixed-rate JDK, nhất là khi có missed firings?
+    3. Khi tự tạo JDK scheduler và khi đăng ký Spring-managed ThreadPoolTaskScheduler bean, quyền shutdown khác nhau thế nào?
+    4. Vì sao `SimpleAsyncTaskScheduler` và reactive @Scheduled cần xem lại giả định Future/error handler của ThreadPoolTaskScheduler?
+    5. Nếu một worker bị block hoặc một periodic registration dừng, những metric nào chứng minh registration state và business outcome riêng rẽ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đối chiếu API JDK và Spring | Chọn schedule delay/fixed period/Instant/CronTrigger đúng cách và giải thích đơn vị thời gian. |
+    | Dự đoán lỗi periodic | Phân tích JDK Future terminal so với Spring wrapper log/suppress và one-shot error. |
+    | Chạy phép kiểm chứng | Dùng `Future.get(timeout)` cho JDK failure và CountDownLatch cho Spring next tick, không dùng sleep suy đoán. |
+    | Quản lý lifecycle | Đóng JDK executor tự sở hữu; cấu hình bean Spring pool/remove-on-cancel và đọc cancel/interrupt đúng. |
+    | Đánh giá chọn implementation | Nêu giới hạn cron/zone, reactive Publisher, virtual-thread scheduler, lag và monitoring per-execution. |

@@ -1,0 +1,83 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Ngữ cảnh thực thi
+roadmapHeading: Lộ trình học ngữ cảnh thực thi trong Spring concurrency
+roadmap:
+- id: execution-context-001
+  order: 1
+  title: ThreadLocal không tự theo công việc sang nhóm luồng khác
+  description: Khảo sát ThreadLocal theo thread và cách task rời caller để chạy trên worker.
+  transition:
+    to: execution-context-002
+    description: Từ mất context chuyển sang quan sát worker còn giữ dữ liệu của task trước.
+- id: execution-context-002
+  order: 2
+  title: Nguy cơ dữ liệu ngữ cảnh của tác vụ trước bị dùng lại
+  description: Tái hiện stale tenant và MDC trên một worker, xử lý context vắng mặt và fail-closed.
+  transition:
+    to: execution-context-003
+    description: Dùng TaskDecorator để đặt cleanup tập trung tại ranh giới executor.
+- id: execution-context-003
+  order: 3
+  title: TaskDecorator bao tác vụ để thiết lập và dọn ngữ cảnh
+  description: Bọc callback với TaskDecorator, cấu hình ThreadPoolTaskExecutor và quan sát Future.
+  transition:
+    to: execution-context-004
+    description: Đi sâu vào thời điểm snapshot và phục hồi đúng previous trong finally.
+- id: execution-context-004
+  order: 4
+  title: Chụp ngữ cảnh ở bên gửi rồi khôi phục trạng thái cũ bằng try-finally
+  description: Chụp lúc submit, bảo vệ nested scope với previous và finally kể cả CallerRuns.
+  transition:
+    to: execution-context-005
+    description: Áp dụng nguyên lý đó cho correlation ID và logging MDC.
+- id: execution-context-005
+  order: 5
+  title: Truyền mã liên kết yêu cầu và ngữ cảnh ghi nhật ký
+  description: Truyền correlation ID qua filter, MDC, executor và downstream headers.
+  transition:
+    to: execution-context-006
+    description: Mở rộng sang Micrometer Context Propagation với registry và accessor.
+- id: execution-context-006
+  order: 6
+  title: ContextPropagatingTaskDecorator và điều kiện tích hợp thư viện ngữ cảnh
+  description: Tích hợp ContextPropagatingTaskDecorator, đăng ký accessor và xác minh @Async.
+  transition:
+    to: execution-context-007
+    description: Sau correctness, đánh giá hiệu năng của từng lần capture/restore.
+- id: execution-context-007
+  order: 7
+  title: Đánh giá chi phí trang trí với số lượng tác vụ rất nhỏ
+  description: Phân tích overhead, warm-up, JMH và lựa chọn tối ưu cho tiny tasks.
+  transition:
+    to: execution-context-008
+    description: Từ chi phí snapshot chuyển sang nguy cơ giữ request object trong task chờ queue.
+- id: execution-context-008
+  order: 8
+  title: Không giữ toàn bộ đối tượng request sau khi yêu cầu đã kết thúc
+  description: Tạo job input bất biến, phân biệt Servlet async completion và background job.
+  transition:
+    to: execution-context-009
+    description: Giữ metadata cần thiết, nhưng xử lý ngữ cảnh bảo mật bằng hợp đồng riêng.
+- id: execution-context-009
+  order: 9
+  title: Phân biệt ngữ cảnh bảo mật cần bộ hỗ trợ riêng với ThreadLocal tùy ý
+  description: Sử dụng DelegatingSecurityContext* wrapper và kiểm tra principal/authorization.
+  transition:
+    to: execution-context-010
+    description: Cuối cùng loại bỏ ảo tưởng inheritance sẽ cấp context mới cho mỗi pooled task.
+- id: execution-context-010
+  order: 10
+  title: Không dùng InheritableThreadLocal như giải pháp chung cho nhóm luồng tái sử dụng
+  description: Giải thích InheritableThreadLocal kế thừa tại thread creation và thay bằng per-task context.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh mười bài
+
+  | Tiêu chí | Bài 1: ThreadLocal không tự theo công việc sang nhóm luồng khác | Bài 2: Nguy cơ dữ liệu ngữ cảnh của tác vụ trước bị dùng lại | Bài 3: TaskDecorator bao tác vụ để thiết lập và dọn ngữ cảnh | Bài 4: Chụp ngữ cảnh ở bên gửi rồi khôi phục trạng thái cũ bằng try-finally | Bài 5: Truyền mã liên kết yêu cầu và ngữ cảnh ghi nhật ký | Bài 6: ContextPropagatingTaskDecorator và điều kiện tích hợp thư viện ngữ cảnh | Bài 7: Đánh giá chi phí trang trí với số lượng tác vụ rất nhỏ | Bài 8: Không giữ toàn bộ đối tượng request sau khi yêu cầu đã kết thúc | Bài 9: Phân biệt ngữ cảnh bảo mật cần bộ hỗ trợ riêng với ThreadLocal tùy ý | Bài 10: Không dùng InheritableThreadLocal như giải pháp chung cho nhóm luồng tái sử dụng |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | ThreadLocal không tự theo task | Stale context giữa task | TaskDecorator Spring | Thời điểm snapshot và finally | Correlation ID và MDC | Micrometer accessor và registry | Overhead tiny task | Servlet request lifetime | SecurityContext propagation | Inheritance khi tạo thread |
+  | Thử nghiệm | Caller → worker | A/B cùng một worker | @Async đúng executor | CallerRuns và nested scope | Filter → worker → downstream | Có/không accessor | 20 và 30000 tasks | Request đóng trước worker | Alice và Bob trong pool | Tenant A rồi tenant B |
+  | Kỹ thuật | ThreadLocal và DTO | Cleanup và fail closed | TaskDecorator.decorate | previous và finally | MDC map, HTTP headers | ContextSnapshot.Scope | JMH, JFR và metrics | Immutable snapshot, storage key | DelegatingSecurityContext wrappers | childValue và per-task wrapper |
+  | Giới hạn | Không tự chuyển transaction | Non-null có thể stale | FutureTask giữ exception | Mutable map cần copy | ID không cấp quyền | Không copy mọi ThreadLocal | Benchmark ít mẫu nhiễu | Không giữ HttpServletRequest | Context không thay authorization | Không kế thừa mỗi submit |
+  | Năng lực kiểm chứng | Worker có đúng ID | Task kế không giữ tenant A | Executor có wrapper và cleanup | Nested context được restore | Log và header cùng ID | Custom tenant được capture | Giải thích chênh lệch đo | Job chỉ cần DTO | Principal sạch sau task | Worker B không thừa A |

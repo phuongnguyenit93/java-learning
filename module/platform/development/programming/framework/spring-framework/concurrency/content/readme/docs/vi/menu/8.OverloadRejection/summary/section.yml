@@ -1,0 +1,76 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'Lộ trình học: Quá tải và từ chối'
+roadmapHeading: Từ nhận diện rejection đến kiểm chứng khả năng chịu tải
+roadmap:
+- id: overload-rejection-001
+  order: 1
+  title: Những tình huống bộ thực thi từ chối tác vụ
+  description: 'Nhận diện mọi đường dẫn tới rejection trong Spring executor: bão hòa worker và queue, direct handoff, shutdown, burst và công việc bị kẹt, rồi phân biệt rejection với lỗi thực thi.'
+  transition:
+    to: overload-rejection-002
+    description: Sau khi xác định được tình huống từ chối, cần hiểu chính xác giao diện RejectedExecutionHandler của JDK và loại ngoại lệ TaskRejectedException của Spring.
+- id: overload-rejection-002
+  order: 2
+  title: RejectedExecutionHandler và TaskRejectedException
+  description: 'Nắm ranh giới Java và Spring khi từ chối task: hợp đồng handler, `TaskRejectedException`, bốn chính sách JDK và tác động lên Future cùng lời gọi qua `@Async`.'
+  transition:
+    to: overload-rejection-003
+    description: Sau khi biết các handler có thể làm gì, đi sâu vào AbortPolicy để thấy cách báo lỗi ngay tại nơi gửi và tách rejection khỏi lỗi trong worker.
+- id: overload-rejection-003
+  order: 3
+  title: AbortPolicy báo lỗi tại điểm gửi tác vụ
+  description: 'Thực hành nhánh fail-fast của AbortPolicy: xác định exception ở caller JDK/Spring, giữ nguyên các tác vụ đã nhận và xây dựng kiểm thử saturation ổn định.'
+  transition:
+    to: overload-rejection-004
+    description: AbortPolicy trả lỗi rõ ràng; nhánh đối lập CallerRunsPolicy thử xử lý ngay trên thread đang gửi, dẫn tới hiệu ứng backpressure và thay đổi độ trễ.
+- id: overload-rejection-004
+  order: 4
+  title: CallerRunsPolicy chuyển công việc sang luồng gọi và thay đổi độ trễ
+  description: Khảo sát CallerRunsPolicy như backpressure bằng thời gian của bên gửi và những thay đổi về latency, transaction/thread context, tính lồng nhau, metrics và shutdown.
+  transition:
+    to: overload-rejection-005
+    description: Khi một handler chọn chạy công việc ngay tại caller, ta hiểu giá của việc không báo lỗi; tiếp theo cần nhìn thẳng hai handler chủ động loại bỏ tác vụ và nguy cơ mất việc âm thầm.
+- id: overload-rejection-005
+  order: 5
+  title: DiscardPolicy, DiscardOldestPolicy và nguy cơ mất công việc
+  description: Phân biệt DiscardPolicy bỏ việc mới và DiscardOldestPolicy đẩy việc chờ khỏi queue, nhận diện việc mất tác vụ và Future không có trạng thái kết thúc.
+  transition:
+    to: overload-rejection-006
+    description: Sau khi thấy một tác vụ bị loại có thể để lại Future đang chờ, cần tìm cơ chế kết thúc Future bằng cancel, lỗi hoặc timeout thay vì để caller treo vô thời hạn.
+- id: overload-rejection-006
+  order: 6
+  title: Không để Future chờ vô hạn do chính sách loại bỏ không hoàn tất tác vụ
+  description: Khắc phục tình trạng Future bị bỏ quên bằng terminal state rõ ràng, tách timeout chờ với hủy thực thi, và hoàn tất ngoại lệ ở gateway Spring.
+  transition:
+    to: overload-rejection-007
+    description: Một Future terminal vẫn chưa trả lời việc có nên nhận job từ đầu; tiếp theo cần chọn chính sách trả lỗi, admission control hay ghi việc vào kho bền vững.
+- id: overload-rejection-007
+  order: 7
+  title: Chọn trả lỗi, hạn chế nhận thêm hoặc lưu công việc bền vững
+  description: 'Chọn chiến lược nhận việc theo SLO: 429/503 khi quá tải, admission control bằng rate và concurrency, hoặc 202 sau khi ghi durable job/outbox với idempotency và recovery.'
+  transition:
+    to: overload-rejection-008
+    description: Dù đã có cơ chế từ chối hoặc lưu bền vững, xử lý lỗi tạm thời vẫn có thể gây retry storm; cần thiết kế backoff, jitter và ngân sách retry.
+- id: overload-rejection-008
+  order: 8
+  title: Không lặp gửi lại tức thời làm quá tải nghiêm trọng hơn
+  description: 'Phòng retry storm khi bị reject hoặc gặp lỗi tạm thời: giới hạn attempts và deadline, exponential backoff với jitter, retry budget, scheduling không giữ worker và idempotency.'
+  transition:
+    to: overload-rejection-009
+    description: Sau các quyết định xử lý quá tải, người học cần một thí nghiệm lặp lại được để xác minh chính xác pool, queue và handler tại thời điểm bão hòa.
+- id: overload-rejection-009
+  order: 9
+  title: Thực nghiệm nhóm luồng và hàng đợi cùng đạt giới hạn
+  description: 'Kiểm chứng saturation qua chương trình Java 17 và Spring: giữ worker bằng CountDownLatch, lấp queue, quan sát số luồng và từ chối một task kế tiếp.'
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh vai trò của chín bài học
+
+  | Tiêu chí | Bài 1: 88. Tình huống | Bài 2: 89. Handler và lỗi | Bài 3: 90. AbortPolicy | Bài 4: 91. CallerRuns | Bài 5: 92. Discard | Bài 6: 93. Future | Bài 7: 94. Chiến lược | Bài 8: 95. Retry | Bài 9: 96. Thực nghiệm |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Câu hỏi trọng tâm | Khi nào task bị từ chối? | JDK và Spring báo rejection thế nào? | Abort tác vụ mới ở đâu? | Caller bị chặn ra sao? | Tác vụ nào bị bỏ? | Future có kết thúc không? | Nên nhận job theo hợp đồng nào? | Khi nào được retry? | Làm sao đo sự bão hòa thật? |
+  | Cơ chế trọng tâm | core → queue → max → reject; shutdown | RejectedExecutionHandler; TaskRejectedException | AbortPolicy; catch tại submit | CallerRunsPolicy; thực thi inline | DiscardPolicy; DiscardOldestPolicy; queue.poll | FutureTask; cancel; get timeout; orTimeout | 429/503/202; semaphore; outbox | Exponential backoff; jitter; retry budget | CountDownLatch; active; queue; completed |
+  | Tình huống thực hành | Bão hòa do I/O, burst, shutdown | Bốn handler và @Async submit | 1 worker và 1 queue slot; Abort | Worker bận, queue đầy, caller tự chạy | A chạy, B chờ, C mới đến | Future của task bị drop vẫn pending | API report, multi-tenant, broker sau DB commit | Retry storm, 429/503, timeout remote | core=1, max=2, queue=1, task #4 reject |
+  | Rủi ro phải phòng | Nhầm lỗi chạy task với reject | Handler silent drop che tín hiệu | Nuốt exception rồi trả accepted | Chặn HTTP thread; deadlock; shutdown drop | Mất việc cũ hoặc mới không báo | Future treo hoặc side effect sau timeout | Hứa durable nhưng chỉ queue RAM | Thử lại nóng; trùng side effect | Test flaky do sleep và không cleanup |
+  | Năng lực kiểm chứng | Giải thích tình huống rejection và chẩn đoán | Chọn handler, catch đúng lớp ngoại lệ | Viết fail-fast và tái hiện rejection | Đo latency caller và chọn policy | Chỉ ra task/Future mất trong mỗi policy | Thiết kế đường terminal state cho future | Chọn admission hoặc durable job theo SLO | Tính lịch retry có giới hạn và idempotent | Dự đoán stdout, assert metric và task count |

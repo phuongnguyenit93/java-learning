@@ -1,0 +1,76 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Lập lịch reactive
+roadmapHeading: Lộ trình reactive scheduling trong Spring
+roadmap:
+- id: reactive-scheduling-001
+  order: 1
+  title: Hỗ trợ @Scheduled cho phương thức reactive từ Spring Framework 6.1
+  description: Nhận diện hợp đồng reactive @Scheduled từ Spring 6.1 và các loại tín hiệu, lịch, cách khởi tạo.
+  transition:
+    to: reactive-scheduling-002
+    description: Phân biệt Publisher được tạo một lần với subscriptions theo mỗi tick.
+- id: reactive-scheduling-002
+  order: 2
+  title: Publisher được lấy một lần và được đăng ký nhận nhiều lần theo lịch
+  description: Phân tích lifecycle một Publisher được giữ lại và nguồn cold, hot, cached.
+  transition:
+    to: reactive-scheduling-003
+    description: Đưa việc tạo nguồn và trạng thái riêng của từng tick vào defer.
+- id: reactive-scheduling-003
+  order: 3
+  title: Dùng defer để tạo công việc mới ở mỗi lần đăng ký nhận
+  description: Tạo pipeline con, jobId và dữ liệu mới tại subscription với các nguồn lazy.
+  transition:
+    to: reactive-scheduling-004
+    description: Hiểu scheduler xử lý giá trị onNext như thế nào.
+- id: reactive-scheduling-004
+  order: 4
+  title: Giá trị onNext bị bỏ qua trong phương thức lập lịch
+  description: Xác định vì sao onNext bị bỏ qua và xử lý dữ liệu bên trong pipeline.
+  transition:
+    to: reactive-scheduling-005
+    description: Phân tích onError và quan hệ giữa một lượt lỗi với những lịch sau.
+- id: reactive-scheduling-005
+  order: 5
+  title: Tín hiệu onError được ghi nhận và lịch vẫn có thể tiếp tục
+  description: Tách onError terminal khỏi retry và bảo vệ business job state bền vững.
+  transition:
+    to: reactive-scheduling-006
+    description: Đối chiếu đường lỗi của Reactor với Runnable ErrorHandler.
+- id: reactive-scheduling-006
+  order: 6
+  title: ErrorHandler cho Runnable không xử lý tín hiệu lỗi reactive theo cùng cách
+  description: Chọn đúng nơi xử lý exception của scheduled Runnable và tín hiệu onError của Publisher.
+  transition:
+    to: reactive-scheduling-007
+    description: Kiểm tra completion của subscription với fixed-delay.
+- id: reactive-scheduling-007
+  order: 7
+  title: Fixed-delay chờ đăng ký nhận hoàn tất để giữ ngữ nghĩa
+  description: Bảo đảm fixed-delay đợi terminal thật, không đợi detached task hoặc infinite source.
+  transition:
+    to: reactive-scheduling-008
+    description: Quản lý hủy các active subscriptions khi application shutdown.
+- id: reactive-scheduling-008
+  order: 8
+  title: Hủy các đăng ký nhận khi bean bị hủy hoặc context đóng
+  description: Phân biệt hủy lịch, hủy subscription và hoàn tác side effect, kiểm thử đóng context.
+  transition:
+    to: reactive-scheduling-009
+    description: Xác minh các return type được thích nghi có deferred semantics.
+- id: reactive-scheduling-009
+  order: 9
+  title: Không coi CompletableFuture là nguồn trì hoãn đăng ký nhận phù hợp trong mọi trường hợp
+  description: Đánh giá CompletableFuture non-deferred và cách khởi tạo Future mới trong Mono.defer hoặc scheduled void.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài học
+
+  | Tiêu chí | Bài 1: Hỗ trợ @Scheduled cho phương thức reactive từ Spring Framework 6.1 | Bài 2: Publisher được lấy một lần và được đăng ký nhận nhiều lần theo lịch | Bài 3: Dùng defer để tạo công việc mới ở mỗi lần đăng ký nhận | Bài 4: Giá trị onNext bị bỏ qua trong phương thức lập lịch | Bài 5: Tín hiệu onError được ghi nhận và lịch vẫn có thể tiếp tục | Bài 6: ErrorHandler cho Runnable không xử lý tín hiệu lỗi reactive theo cùng cách | Bài 7: Fixed-delay chờ đăng ký nhận hoàn tất để giữ ngữ nghĩa | Bài 8: Hủy các đăng ký nhận khi bean bị hủy hoặc context đóng | Bài 9: Không coi CompletableFuture là nguồn trì hoãn đăng ký nhận phù hợp trong mọi trường hợp |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Vai trò | Tổng quan Spring 6.1 | Lifecycle Publisher | Tạo job mới bằng defer | Xử lý output onNext | onError và retry | ErrorHandler vs signal | Terminal của fixed-delay | Cancellation khi destroy | Future adapter isDeferred |
+  | Điểm dễ sai | Method reactive gọi mỗi tick | Nguồn cached phát lại | Tạo jobId trước defer | Để onNext không xử lý | Nhầm tick sau là retry | Chỉ theo dõi ErrorHandler | Chờ subscribe return | Nghĩ cancel rollback | Future eager là deferred |
+  | Cơ chế chính | @EnableScheduling, Mono | Assembly/subscribe | Mono.defer, fromCallable | flatMap, then, doOnNext | doOnError, retryWhen | Runnable, ErrorHandler | Finite source, terminal | Subscription, doFinally | ReactiveAdapterRegistry, Mono.fromFuture |
+  | Thực hành | Factory một lần | Eager vs lazy output | Eager/defer và counter | Hai ticks bốn onNext | Hai lỗi rồi thành công | Custom handler hai đường lỗi | Naive callback so với chờ task | Context.close, Mono.never | Future false, Mono true |
+  | Năng lực hình thành | Nhận diện contract reactive | Phân biệt nguồn/lượt | Đặt lazy boundary đúng | Nối xử lý business result | Chọn error policy | Đo lỗi đúng kênh | Bảo vệ fixed delay | Cleanup và recovery | Chọn async API phù hợp |

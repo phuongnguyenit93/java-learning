@@ -1,0 +1,70 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Giới hạn phân tán trong Spring Framework
+roadmapHeading: Từ lịch cục bộ đến đảm bảo kết quả nghiệp vụ phân tán
+roadmap:
+- id: distributed-limits-001
+  order: 1
+  title: '@Scheduled đăng ký lịch riêng trên từng thể hiện ứng dụng'
+  description: Nhận diện @Scheduled được đăng ký ở từng Spring ApplicationContext và phân biệt local tick với một business run toàn cluster.
+  transition:
+    to: distributed-limits-002
+    description: Sau khi thấy mỗi context đều có lịch, cần hiểu vì sao mutex Java không bảo vệ được các replicas khác.
+- id: distributed-limits-002
+  order: 2
+  title: Khóa trong JVM không ngăn công việc ở máy khác
+  description: Chứng minh synchronized/ReentrantLock chỉ bảo vệ JVM, rồi chọn shared lock hoặc claim có fencing/idempotency.
+  transition:
+    to: distributed-limits-003
+    description: Từ giới hạn JVM lock, chọn ranh giới trigger và shared coordination phù hợp với business scope.
+- id: distributed-limits-003
+  order: 3
+  title: Chọn một nơi kích hoạt hoặc cơ chế phối hợp có phạm vi phù hợp
+  description: Chọn một trigger owner hay nhiều pods cùng tick và shared claim, định nghĩa phạm vi theo tenant, partition và logical window.
+  transition:
+    to: distributed-limits-004
+    description: Khi đã có coordination, còn cần chặn cùng logical operation bị replay sau timeout hoặc crash.
+- id: distributed-limits-004
+  order: 4
+  title: Tính lặp an toàn bằng mã công việc và dấu mốc xử lý
+  description: Dùng operationId ổn định, fingerprint, unique marker và transaction để replay một nghiệp vụ mà không nhân đôi effect.
+  transition:
+    to: distributed-limits-005
+    description: Sau idempotency, tìm hiểu mốc nào thực sự được xem là công việc đã được lưu và được phép báo nhận.
+- id: distributed-limits-005
+  order: 5
+  title: Không coi nhận tác vụ trong bộ nhớ là đã lưu công việc bền vững
+  description: Chỉ xác nhận durable acceptance sau DB/broker commit; tách in-memory execution, job store và business completion.
+  transition:
+    to: distributed-limits-006
+    description: Đã ghi durable job, cần thiết kế worker recovery khi tiến trình chết giữa một attempt.
+- id: distributed-limits-006
+  order: 6
+  title: Xử lý mất tiến trình, khởi động lại và công việc bị bỏ dở
+  description: Khôi phục job RUNNING sau crash bằng lease, heartbeat, generation, conditional ACK, checkpoint và retry/reconciliation.
+  transition:
+    to: distributed-limits-007
+    description: Từ lifecycle recovery của từng job, so sánh khi nào nên dùng queue, workflow hay clustered scheduler chuyên dụng.
+- id: distributed-limits-007
+  order: 7
+  title: Phân biệt điều phối tác vụ cục bộ với hàng đợi, workflow hoặc lịch phân tán
+  description: Phân biệt executor local, broker queue, durable workflow và distributed scheduler để chọn tổ hợp tối thiểu theo SLO.
+  transition:
+    to: distributed-limits-008
+    description: Cuối cùng chuyển lựa chọn công cụ thành contract kiểm chứng được về duplicate, missed và ordering.
+- id: distributed-limits-008
+  order: 8
+  title: Ghi rõ kỳ vọng về chạy trùng, bỏ lỡ và thứ tự
+  description: Đặc tả ba hợp đồng duplicate, missed windows và ordering theo key/commit, gắn với test matrix và metrics.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài học
+
+  | Tiêu chí | Bài 1: @Scheduled đăng ký lịch riêng trên từng thể hiện ứng dụng | Bài 2: Khóa trong JVM không ngăn công việc ở máy khác | Bài 3: Chọn một nơi kích hoạt hoặc cơ chế phối hợp có phạm vi phù hợp | Bài 4: Tính lặp an toàn bằng mã công việc và dấu mốc xử lý | Bài 5: Không coi nhận tác vụ trong bộ nhớ là đã lưu công việc bền vững | Bài 6: Xử lý mất tiến trình, khởi động lại và công việc bị bỏ dở | Bài 7: Phân biệt điều phối tác vụ cục bộ với hàng đợi, workflow hoặc lịch phân tán | Bài 8: Ghi rõ kỳ vọng về chạy trùng, bỏ lỡ và thứ tự |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | Registration per context | JVM-local lock vs shared lock | Trigger owner vs shared claim | Operation key và marker | Durable acceptance | Orphaned job recovery | Chọn lớp kiến trúc | Duplicate / missed / order contract |
+  | Nguồn trạng thái | Context / scheduler local | Monitor JVM hoặc shared store | Owner role và coordination store | Marker + business DB | Executor RAM vs DB/broker | Durable RUNNING/lease/checkpoint | Broker / history / trigger store | Logical window + sequence ledger |
+  | Bằng chứng kỹ thuật | Hai Spring contexts | Hai JVM + PG advisory lock | SharedClaimDemo và case matrix | CreditService marker transaction | shutdownNow và H2 file demo | LeaseRecoveryDemo và recovery test | CoordinationBoundaryDemo, Quartz, workflow | DeliveryContractDemo và gap handling |
+  | Sai lầm dễ gặp | Một cron tưởng là một pod | static lock tưởng global | Một global lock cho mọi tenant | UUID attempt làm dedupe key | 202 trước durable commit | Reset RUNNING đang có owner | Queue là workflow hoặc scheduler | Delivery order là commit order |
+  | Tiêu chí kiểm thử | Đếm tick riêng; effect theo key | Multi-process và stale lease | Failover và skip/queue/catch-up | Same-key replay/conflict/rollback | Commit/restart/ACK/dual-write | Crash sau claim, token cũ, checkpoint | Cross-layer crash/retry/versioning | Duplicate effect, missing period, sequence gap |
+  | Năng lực cuối | Chẩn đoán @Scheduled nhiều bản | Chọn primitive đúng ranh giới | Chọn ownership/scope theo SLO | Đảm bảo idempotent effect | Thiết kế durable intake | Phục hồi attempt an toàn | Lắp ghép công cụ tối thiểu | Viết contract và test theo ba chiều |

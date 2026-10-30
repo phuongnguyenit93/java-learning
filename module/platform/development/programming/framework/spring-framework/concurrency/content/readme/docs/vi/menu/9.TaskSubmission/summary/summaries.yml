@@ -1,0 +1,283 @@
+summaries:
+- id: task-submission-001
+  title: Gửi Runnable không có kết quả bằng execute()
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Gửi Runnable không có kết quả bằng execute()**
+
+    Một `Runnable` chỉ mô tả công việc, còn `Executor.execute()` quyết định cách thực thi. Bài này giúp người học phân biệt giao tác vụ với hoàn tất tác vụ, vì sao API `void` vẫn có thể chạy đồng bộ trên caller, qua pool hoặc bị từ chối, và cách dùng `ThreadPoolTaskExecutor` trong Spring mà không gây hiểu nhầm về kết quả.
+
+    Qua ví dụ direct executor, pool một worker, queue giới hạn và latch, người học nhận ra sự khác nhau giữa lỗi nộp việc và lỗi thực thi cùng trách nhiệm quản lý vòng đời executor.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng Runnable và Executor
+    1. `Runnable.run()`, `Thread.start()` và `executor.execute(task)` quyết định nơi chạy và giá trị trả về khác nhau như thế nào?
+    2. Vì sao `execute()` trả `void` không chứng minh công việc đã hoàn tất, và khi nào nó có thể chạy ngay trên thread gửi?
+    3. Cần phối hợp bằng công cụ nào để kiểm chứng một `Runnable` đã chạy xong thay vì dùng `Thread.sleep()`?
+
+    ### Cấu hình, lỗi và vòng đời Spring
+    1. `corePoolSize`, `maxPoolSize` và `queueCapacity` khiến task được chạy, chờ hoặc từ chối theo thứ tự nào?
+    2. Vì sao phải tách `TaskRejectedException` đồng bộ khỏi lỗi phát sinh trong worker?
+    3. Khi gửi nhiều Runnable từ singleton Spring, cần bảo vệ trạng thái chung và context như thế nào?
+    4. Trong trường hợp nào `execute` chưa đáp ứng nhu cầu quan sát mà phải dùng `Future` hoặc kho job bền vững?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích API thực thi | Dự đoán chính xác luồng chạy và giá trị trả về của `run`, `start`, direct executor và pool. |
+    | Cấu hình TaskExecutor | Thiết lập pool có giới hạn worker/queue và xác định phản ứng với rejection. |
+    | Quan sát task void | Viết ví dụ latch chờ hoàn tất và diễn giải riêng lỗi gửi so với lỗi worker. |
+    | Chọn giải pháp phù hợp | Quyết định khi nào `execute` đủ dùng, khi nào cần kênh kết quả, bảo vệ trạng thái và lifecycle. |
+- id: task-submission-002
+  title: Gửi Runnable hoặc Callable qua submit()
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Gửi Runnable hoặc Callable qua submit()**
+
+    `submit()` cho bên gửi một `Future` để nhận kết quả hoặc theo dõi hoàn tất. Bài học phân biệt `Runnable` không trả giá trị với `Callable` có thể trả dữ liệu và checked exception; nêu vì sao `TaskExecutor` thuần không khai báo `submit` còn Spring `AsyncTaskExecutor` có khả năng này.
+
+    Từ demo Spring context, người học lấy kết quả `null`, số nguyên và lỗi từ `Future.get()`, xử lý timeout có kiểm soát mà vẫn hiểu queue và worker không tự bền vững sau restart.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### API và kiểu kết quả
+    1. `submit(Runnable)` và `submit(Callable)` tạo Future khác nhau thế nào về kết quả thành công?
+    2. Vì sao khai báo biến là `TaskExecutor` rồi gọi `submit()` không biên dịch, còn `AsyncTaskExecutor` thì được?
+    3. `Future.get()` đưa checked exception hoặc runtime exception từ task trở lại caller bằng cơ chế nào?
+
+    ### Lỗi và phối hợp
+    1. Làm sao tách `TaskRejectedException` lúc nộp với `ExecutionException` lúc lấy kết quả?
+    2. Vì sao gọi `get()` ngay sau `submit` khiến request thread vẫn có thể bị block?
+    3. Khi task A submit task B và chờ B trong cùng pool chỉ có một worker, điều gì có thể xảy ra?
+    4. Khi timeout hoặc hủy, những side effect nào vẫn có thể tồn tại và ai chịu trách nhiệm quản lý Future?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn kiểu tác vụ | Viết hai overload `submit` và dự đoán giá trị `null` hoặc kết quả có kiểu. |
+    | Dùng abstraction Spring | Inject đúng `AsyncTaskExecutor` mà không phụ thuộc ép kiểu implementation. |
+    | Lấy outcome | Đọc kết quả, `ExecutionException.getCause()` và xử lý hủy/timeout theo từng nhánh. |
+    | Phân tích phụ thuộc | Vẽ được starvation deadlock khi worker chờ task con trong cùng pool. |
+    | Bảo vệ vòng đời | Đề xuất owner cho Future, executor và cơ chế theo dõi nếu công việc cần bền vững. |
+- id: task-submission-003
+  title: Nhận kết quả, kiểm tra hoàn tất và nhận biết hủy qua Future
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Nhận kết quả, kiểm tra hoàn tất và nhận biết hủy qua Future**
+
+    Bài này dạy cách đọc trạng thái của `Future`: pending, success, failure và cancelled. `isDone()` chỉ xác nhận Future đã đi tới trạng thái cuối; `cancel(true)` chỉ yêu cầu dừng theo khả năng hợp tác, không hoàn tác side effect.
+
+    Ví dụ Java 17 dùng worker duy nhất và latch chứng minh một Future đang chạy, một task chờ queue bị hủy và một task lỗi. Mục tiêu là diễn giải đúng từng tín hiệu trước khi ứng dụng Spring báo trạng thái kết quả.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kết quả và trạng thái
+    1. Vì sao `isDone() == true` không chứng minh task đã thành công?
+    2. `get()` trả giá trị, `null` hoặc ném `ExecutionException` hay `CancellationException` trong những tình huống nào?
+    3. Sau khi `Future.get()` trả về, quan hệ happens-before cho phép đọc dữ liệu task thế nào và không bảo vệ điều gì?
+
+    ### Hủy và điều phối
+    1. `cancel(false)` và `cancel(true)` khác nhau ra sao với task đang ở queue và task đang chạy?
+    2. Vì sao `isCancelled` không có nghĩa worker, giao dịch hay HTTP request đã được hoàn tác?
+    3. Dùng latch và pool một worker để chứng minh task chờ bị hủy trước lúc chạy như thế nào?
+    4. Với nhiều Future, làm sao thu thập kết quả mà không nhầm thứ tự `get` với thứ tự kết thúc?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc trạng thái Future | Lập bảng `isDone`, `isCancelled` và hành vi `get` cho bốn trạng thái. |
+    | Xử lý kết quả cuối | Viết nhánh xử lý lỗi, timeout, cancellation và interrupt đúng hợp đồng. |
+    | Đánh giá cancellation | Giải thích tác động thực tế của `cancel(true)` và giới hạn với side effect. |
+    | Kiểm chứng bằng đồng bộ hóa | Tái hiện hủy tác vụ còn chờ bằng latch và đối chiếu kết quả. |
+    | Đọc dữ liệu an toàn | Nêu điều kiện dùng `get` để công bố kết quả, phân biệt với bảo vệ trạng thái chia sẻ. |
+- id: task-submission-004
+  title: get() có giới hạn thời gian chờ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **get() có giới hạn thời gian chờ**
+
+    `Future.get(timeout, unit)` giới hạn **một lần caller chờ kết quả** chứ không giới hạn tuổi của task tính từ lúc submit. Bài học giải thích nguyên nhân timeout, kết quả đến muộn, deadline chung và sự khác biệt giữa chờ Future, timeout I/O của worker với `CompletableFuture.orTimeout`.
+
+    Ví dụ Spring `@Async` dùng latch để bắt buộc lần `get` đầu timeout, sau đó giải phóng worker và nhận kết quả từ chính Future ấy. Điều này giúp thiết kế thời hạn chờ cho request mà không coi timeout là cancellation.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng chờ kết quả
+    1. Mốc bắt đầu của `get(500, MILLISECONDS)` là lúc submit hay lúc gọi `get`?
+    2. Vì sao `TimeoutException` không có nghĩa task bị hủy hoặc worker đã dừng I/O?
+    3. Trong demo Spring `@Async`, latch bảo đảm kết quả timeout rồi thành công ở lần gọi kế tiếp như thế nào?
+
+    ### Deadline và chính sách lỗi
+    1. Vì sao gọi ba lần `get(1, SECONDS)` không tự tạo deadline chung một giây?
+    2. Làm sao dùng `System.nanoTime()` phân bổ ngân sách chờ còn lại giữa nhiều Future?
+    3. `orTimeout` và `completeOnTimeout` khác `get(timeout)` ở tác động lên trạng thái Future như thế nào?
+    4. Nếu servlet thread chờ Future trong pool đang quá tải, cần giới hạn những tài nguyên và side effect nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích timed get | Chỉ đúng phạm vi deadline và các exception của một lần lấy kết quả. |
+    | Chứng minh kết quả đến muộn | Dùng hai latch điều khiển worker, quan sát timeout rồi nhận kết quả khi mở chốt. |
+    | Thiết kế ngân sách chung | Viết phép tính deadline dựa trên `nanoTime` để tránh cộng dồn nhiều lần chờ. |
+    | So sánh các tầng timeout | Phân biệt timeout caller, HTTP/JDBC trong worker, request và completion stage. |
+    | Chọn xử lý hậu timeout | Lập kế hoạch fallback, cancel hoặc tiếp tục nền có xét idempotency và tài nguyên. |
+- id: task-submission-005
+  title: Khác biệt đường truyền ngoại lệ giữa execute() và submit()
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khác biệt đường truyền ngoại lệ giữa execute() và submit()**
+
+    Một `Runnable` thô chạy bằng `execute()` có thể ném lỗi tới `UncaughtExceptionHandler` của worker, trong khi `submit()` thường bọc task bằng `FutureTask` và giữ lỗi cho `Future.get()` ném `ExecutionException`. Bài này phân biệt lỗi khi nộp, lỗi khi chạy, wrapper và trường hợp executor đồng bộ/caller-runs.
+
+    Phần Spring đi sâu vào `ThreadPoolTaskExecutor`, `TaskDecorator`, `afterExecute`, `@Async void` và phương thức async trả Future để tránh bỏ sót lỗi hoặc ghi nhận failure sai nơi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế lỗi và FutureTask
+    1. Lỗi `RejectedExecutionException` lúc gửi khác lỗi do `run()` ném trong worker thế nào?
+    2. Vì sao `submit` có thể lưu cause vào FutureTask dù `execute` với Runnable thô làm worker nhận uncaught exception?
+    3. Tình huống `execute(new FutureTask<>(...))` chứng minh điều gì về vai trò wrapper?
+    4. `CallerRunsPolicy` khiến try/catch tại caller thấy exception trong những trường hợp nào?
+
+    ### Quan sát trong Spring
+    1. Vì sao `afterExecute(task, null)` chưa chứng minh task gửi bằng `submit` thành công?
+    2. Vì sao `TaskDecorator` có thể không bắt lỗi nghiệp vụ khi đối tượng chạy là FutureTask?
+    3. `@Async void` dùng `AsyncUncaughtExceptionHandler` khác thế nào với `@Async` trả CompletableFuture?
+    4. Kiểm thử hai đường lỗi bằng latch, Future và timeout như thế nào để giữ nguyên cause?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại lỗi | Xác định lỗi submission hoặc execution và thread quan sát chúng. |
+    | Phân tích wrapper | Dự đoán đường lỗi của `execute`, `submit` và `execute(FutureTask)` trên pool thực. |
+    | Chọn error observer | Giải thích giới hạn `afterExecute` và `TaskDecorator`, sử dụng Future hoặc handler phù hợp. |
+    | Xử lý lỗi @Async | Thiết kế hai đường xử lý riêng cho `void` và Future/CompletableFuture. |
+    | Kiểm thử exception | Thu thập đúng cause và dọn executor khi xảy ra lỗi hoặc timeout. |
+- id: task-submission-006
+  title: Thời điểm gửi tác vụ khác với thời điểm bắt đầu chạy
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thời điểm gửi tác vụ khác với thời điểm bắt đầu chạy**
+
+    Bài học phân biệt các mốc `submit`, `accept`, `return`, `start` và `finish`. Task có thể được nhận vào queue từ lâu trước khi worker rảnh; trái lại direct executor hoặc `CallerRunsPolicy` có thể thực thi ngay trên thread gửi.
+
+    Người học sử dụng latch và `TaskDecorator` để đo queue wait, execution duration, end-to-end latency; từ đó phân tích tác động của `corePoolSize`, `maxPoolSize` và `queueCapacity` đối với SLA thực tế.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Timeline và lịch thực thi
+    1. Các mốc `t_submit`, `t_accept`, `t_return`, `t_start` và `t_finish` phản ánh những sự kiện nào?
+    2. Vì sao nhận Future không chứng minh task đã chạy và khi nào worker có thể start trước khi caller return?
+    3. Với một worker và latch giữ task A, làm sao chứng minh task B được submit nhưng chưa bắt đầu?
+
+    ### Queue và quan sát trong Spring
+    1. Khi đã đạt `corePoolSize`, pool thường ưu tiên queue trước hay mở worker đến `maxPoolSize`?
+    2. Vì sao TaskDecorator có thể đo queue wait nhưng không tự bắt được exception của task bọc trong FutureTask?
+    3. Nếu đo thời gian chạy method `@Async` mà bỏ qua queue, dashboard sai lệch thế nào với latency người dùng?
+    4. Khi nghiệp vụ yêu cầu thứ tự theo key, cần gì ngoài thứ tự `submit` vào pool nhiều worker?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ timeline | Chỉ ra submission duration, queue wait, run duration và end-to-end. |
+    | Kiểm thử hàng đợi | Dùng latch giữ worker A để chứng minh B đã được nhận nhưng vẫn chờ. |
+    | Phân tích pool | Dự đoán core/max/queue/rejection và tình trạng backlog khi tăng tải. |
+    | Thiết kế đo lường | Cài TaskDecorator minh họa hai thời lượng, nêu giới hạn do wrapper và caller-runs. |
+    | Chẩn đoán chậm | Dựa vào queue depth, pool size, wait time và downstream để xác định nguồn nghẽn. |
+- id: task-submission-007
+  title: Chụp dữ liệu đầu vào phù hợp trước khi chuyển sang luồng khác
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chụp dữ liệu đầu vào phù hợp trước khi chuyển sang luồng khác**
+
+    Lambda capture biến `effectively final` chỉ giữ tham chiếu; nó không làm đối tượng mutable thành bất biến. Bài này dạy cách chọn một input snapshot **đủ dùng**, giữ quyền sở hữu, copy phòng vệ các collection và nested object khi chuyển request sang `Executor`, `@Async` hoặc `CompletableFuture`.
+
+    Ví dụ Java và Spring MVC làm rõ snapshot theo thời điểm submit so với đọc dữ liệu mới lúc worker chạy, cùng nguy cơ chuyển trực tiếp request, entity, stream hoặc dữ liệu nhạy cảm có vòng đời không phù hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Immutability và aliasing
+    1. Vì sao biến `final` trỏ tới `ArrayList` vẫn có thể cho worker đọc dữ liệu mới sau submit?
+    2. `List.copyOf` khác một `Collections.unmodifiableList` view ở điểm nào, và vì sao shallow copy có thể chưa đủ?
+    3. Khi record giữ `List` phần tử mutable hoặc `byte[]`, cần defensive copy ở những ranh giới nào?
+    4. Happens-before khi submit bảo đảm visibility gì và không bảo đảm isolation gì?
+
+    ### Ranh giới Spring và dữ liệu nghiệp vụ
+    1. Khi nào gửi immutable DTO chụp tại submit, khi nào chỉ gửi ID để worker tải trạng thái mới nhất?
+    2. Vì sao không nên chuyển `HttpServletRequest`, `EntityManager` hoặc stream sang worker tùy ý?
+    3. Nếu snapshot rất lớn hoặc có token bí mật, cần chọn dữ liệu và cách lưu trữ như thế nào?
+    4. Dùng latch thế nào để test caller sửa nguồn sau submit mà worker vẫn đọc đúng snapshot cũ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện mutable alias | Chỉ ra object được lambda chia sẻ và dự đoán dữ liệu worker sẽ thấy. |
+    | Tạo immutable snapshot | Chuyển input thành record/DTO và copy list, nested object hoặc mảng đúng mức. |
+    | Bảo vệ request boundary | Chỉ truyền dữ liệu phù hợp vào `@Async`, tránh giữ tài nguyên gắn thread/transaction. |
+    | Lựa chọn thời điểm dữ liệu | So sánh snapshot/version với ID cần tải lại theo hợp đồng nghiệp vụ. |
+    | Kiểm chứng isolation | Dùng latch tạo xen kẽ có kiểm soát và assert snapshot không đổi khi nguồn mutate. |
+- id: task-submission-008
+  title: Không đồng nhất tác vụ đã được nhận với nghiệp vụ đã hoàn thành
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không đồng nhất tác vụ đã được nhận với nghiệp vụ đã hoàn thành**
+
+    Bài cuối của chương phân biệt executor đã **accepted** một task, Future đã **done**, HTTP `202 Accepted` và nghiệp vụ thật sự đạt `SUCCEEDED`. Những tuyên bố này cần những mức bằng chứng khác nhau. Người học xây hợp đồng job status rõ ràng, tránh trả “đã hoàn tất” chỉ vì việc submit không ném lỗi.
+
+    Từ ví dụ trạng thái trong RAM tới thiết kế transactional outbox và idempotency, bài học nêu cửa sổ crash/retry, transaction rollback, side effect thành công nhưng status chưa ghi, và nguy cơ có nhiều replica.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tiếp nhận và hoàn tất
+    1. `ACCEPTED`, `QUEUED`, `RUNNING`, `SUCCEEDED` và `FAILED` khác nhau ở điều kiện quan sát nào?
+    2. Vì sao `Future.isDone()` hay một method trả bình thường chưa chứng minh kết quả đã commit?
+    3. HTTP `202 Accepted` cho phép API cam kết điều gì và cần trả job ID/status ra sao?
+    4. Vì sao một task có thể bị báo FAILED sau khi side effect đã xảy ra?
+
+    ### Phục hồi và tính nhất quán
+    1. Vì sao `ConcurrentHashMap` lưu trạng thái job không đáp ứng restart hoặc nhiều replica?
+    2. Transactional outbox khép cửa sổ lỗi giữa ghi DB và gửi broker như thế nào?
+    3. Idempotency key, unique constraint và điều kiện chuyển state giúp ngăn xử lý trùng ra sao?
+    4. Khi quan sát vận hành, vì sao jobs accepted không đồng nghĩa jobs succeeded?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định nghĩa outcome nghiệp vụ | Viết tiêu chí `SUCCEEDED` dựa trên bằng chứng thực sự, khác terminal state của Future. |
+    | Thiết kế API job | Phác thảo `POST` trả 202 và `jobId`, `GET` trả status và phản hồi rejection. |
+    | Phân tích cửa sổ lỗi | Chỉ ra crash sau accepted, rollback trước commit và result đến trễ. |
+    | Thiết kế durability | Vẽ DB transaction có job+outbox, worker idempotent và cập nhật trạng thái an toàn. |
+    | Đánh giá observability | Tách accepted, queued, started, succeeded, failed, rejected và queue age. |

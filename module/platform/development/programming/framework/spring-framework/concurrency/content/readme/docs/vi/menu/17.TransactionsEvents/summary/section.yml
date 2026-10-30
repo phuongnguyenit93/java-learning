@@ -1,0 +1,70 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Giao dịch và sự kiện trong Spring concurrency
+roadmapHeading: Từ ranh giới thread đến tính nhất quán sự kiện
+roadmap:
+- id: transactions-events-001
+  order: 1
+  title: Giao dịch thông thường gắn với luồng không tự truyền vào tác vụ @Async
+  description: Nhận diện transaction imperative gắn với caller thread và quan sát vì sao @Async trên worker không nhận cùng connection, context hay dữ liệu chưa commit.
+  transition:
+    to: transactions-events-002
+    description: Khi đã thấy worker không mang transaction của caller, xác định lúc nào worker cần mở một transaction độc lập và cách đặt đúng proxy boundary.
+- id: transactions-events-002
+  order: 2
+  title: Tạo ranh giới giao dịch mới trong bean xử lý khi nghiệp vụ yêu cầu
+  description: Thiết kế bean transactional độc lập cho công việc async, chọn REQUIRED/REQUIRES_NEW/NESTED theo đúng thread và phân tích commit riêng, lock và pool.
+  transition:
+    to: transactions-events-003
+    description: Một transaction riêng vẫn có thể đọc quá sớm; tiếp tục xác định thời điểm commit của producer và khả năng hiển thị dữ liệu với consumer độc lập.
+- id: transactions-events-003
+  order: 3
+  title: Thời điểm commit của bên gửi và nguy cơ bên nhận đọc dữ liệu chưa hoàn tất
+  description: Phân tích race producer phát sự kiện trước DB commit, đối chiếu visibility trên connection độc lập và phân biệt after-commit với outbox bền vững.
+  transition:
+    to: transactions-events-004
+    description: Đọc dữ liệu đúng lúc vẫn chưa đủ nếu hai thread cùng sử dụng một persistence context; tiếp tục bảo vệ quyền sở hữu EntityManager và Hibernate Session.
+- id: transactions-events-004
+  order: 4
+  title: Không truyền EntityManager hoặc phiên ORM sang luồng xử lý khác
+  description: Xác định EntityManager/Session thực và JPA persistence context phải thuộc từng unit of work; phân biệt shared @PersistenceContext proxy với target không thread-safe.
+  transition:
+    to: transactions-events-005
+    description: Từ ranh giới ownership của ORM, thiết kế payload async an toàn bằng ID, immutable snapshot hoặc ID kèm version theo ý nghĩa dữ liệu.
+- id: transactions-events-005
+  order: 5
+  title: Truyền mã định danh hoặc dữ liệu bất biến thay cho thực thể đang gắn phiên
+  description: Chọn hợp đồng truyền ID, immutable event-time snapshot hoặc ID+version; kiểm soát lazy data, deep immutability, stale writes và tenant scope.
+  transition:
+    to: transactions-events-006
+    description: Khi payload đã độc lập với ORM context, dùng transaction-bound event listener để chỉ kích hoạt xử lý ở đúng pha commit/rollback.
+- id: transactions-events-006
+  order: 6
+  title: '@TransactionalEventListener cho xử lý gắn với kết quả giao dịch'
+  description: Lựa chọn bốn phase của @TransactionalEventListener, hiểu fallback/no-transaction, resource sau commit, async dispatch và giao dịch REQUIRES_NEW.
+  transition:
+    to: transactions-events-007
+    description: Khi đã xử lý đúng phase, cần đối chiếu khả năng event được phục hồi sau crash vì callback nội bộ bất đồng bộ vẫn nằm trong bộ nhớ.
+- id: transactions-events-007
+  order: 7
+  title: Sự kiện nội bộ bất đồng bộ không thay thế hàng đợi bền vững
+  description: Nhận diện event trong JVM và @Async queue chỉ best-effort; chuyển sang outbox/registry/broker bền vững với relay, ACK, retry và idempotent consumer.
+  transition:
+    to: transactions-events-008
+    description: Sau khi tách delivery thành nhiều transaction, kiểm tra giả định rollback chung giữa các worker và cách dùng saga/compensation khi không thể có một local commit.
+- id: transactions-events-008
+  order: 8
+  title: Không giả định hai tác vụ trên hai luồng có thể rollback cùng nhau
+  description: Phân tích vì sao hai worker/transactions không rollback cùng nhau, Future.join không hợp nhất commit và cách chọn local atomicity, outbox hoặc saga.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài trong chương Giao dịch và sự kiện
+
+  | Tiêu chí | Bài 1: Giao dịch thông thường gắn với luồng không tự truyền vào tác vụ @Async | Bài 2: Tạo ranh giới giao dịch mới trong bean xử lý khi nghiệp vụ yêu cầu | Bài 3: Thời điểm commit của bên gửi và nguy cơ bên nhận đọc dữ liệu chưa hoàn tất | Bài 4: Không truyền EntityManager hoặc phiên ORM sang luồng xử lý khác | Bài 5: Truyền mã định danh hoặc dữ liệu bất biến thay cho thực thể đang gắn phiên | Bài 6: @TransactionalEventListener cho xử lý gắn với kết quả giao dịch | Bài 7: Sự kiện nội bộ bất đồng bộ không thay thế hàng đợi bền vững | Bài 8: Không giả định hai tác vụ trên hai luồng có thể rollback cùng nhau |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Vai trò kiến thức | Nhận diện transaction gắn thread | Tạo transaction do worker sở hữu | Bảo đảm thứ tự producer commit | Giữ ORM context đúng owner | Xây payload độc lập với entity | Ràng buộc listener theo outcome | Bảo đảm ý định event có thể replay | Đánh giá atomicity nhiều giao dịch |
+  | Cơ chế trọng tâm | TransactionSynchronizationManager, @Async | REQUIRED, REQUIRES_NEW, TransactionTemplate | Isolation READ_COMMITTED, AFTER_COMMIT | EntityManager proxy, persistence context | ID, immutable snapshot, @Version | TransactionPhase, fallbackExecution | ApplicationEventPublisher, outbox, ACK | Future, local transaction, saga |
+  | Ví dụ thực hành | Spring/H2 quan sát hai worker trước commit | H2 parent rollback, worker commit | Immediate listener vs after-commit visibility | Hibernate/ORM ID đến OrderReader DTO | Mutable record, deep snapshot, CAS version | Callback 4 phases và TransactionTemplate | Local async event, outbox relay và dedupe | ThreadLocal audit, JDBC orphan và compensation |
+  | Rủi ro cần tránh | Nghĩ transaction tự truyền qua @Async | Dùng REQUIRES_NEW như cơ chế đổi thread | Publish trước commit hoặc đọc replica lag | Chia sẻ provider EM/Session qua thread | Payload mutable/lazy và stale update | Tưởng AFTER_COMMIT có transaction mới/durability | Queue RAM mất task, ack sai, duplicate | Đợi Future rồi tưởng rollback toàn cục |
+  | Kỹ năng kiểm chứng | Đo active tx và visible rows tại worker | Phân biệt outcome A/B qua DB | Test separate connection, commit và rollback | Xác minh worker transaction, DTO/lazy | Test ID/snapshot/version theo timeline | Test commit/rollback/no-tx/fallback | Fault-injection crash và consumer retry | Test T1/T2 rollback riêng, idempotency |
+  | Kết quả đóng góp | Chẩn đoán thread boundary | Đặt local transaction mới đúng lúc | Không cho consumer chạy quá sớm | Ngăn sai lifecycle ORM | Giữ contract dữ liệu theo thời điểm | Chọn đúng phase sự kiện | Tạo nền delivery đáng tin | Không hứa all-or-nothing xuyên worker |

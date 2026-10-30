@@ -1,0 +1,77 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'Lộ trình học: Thiết kế và thực hành Spring Concurrency'
+roadmapHeading: Từ chọn cơ chế xử lý đến kiểm chứng và đánh giá giải pháp
+roadmap:
+- id: design-practice-001
+  order: 1
+  title: Chọn xử lý đồng bộ, @Async hoặc lưu công việc bền vững theo yêu cầu
+  description: Quyết định theo hợp đồng nghiệp vụ giữa xử lý đồng bộ, @Async best-effort và nhận job bền vững; phân biệt ACK với completion và bảo vệ giao dịch, idempotency, recovery.
+  transition:
+    to: design-practice-002
+    description: Từ việc chọn được cơ chế tiếp nhận, cần xác định cụ thể command, trạng thái và kết quả để worker không còn phụ thuộc vào vòng đời HTTP request.
+- id: design-practice-002
+  order: 2
+  title: Thiết kế đầu vào, kết quả và trạng thái công việc độc lập với request
+  description: Thiết kế hợp đồng input–state–result cho background job không phụ thuộc request, với DTO bất biến, chuyển trạng thái hợp lệ, job ID, tenant scope và kết quả quan sát được.
+  transition:
+    to: design-practice-003
+    description: Khi đã có hợp đồng job, hãy thực hành thực thi nhiều báo cáo trên một pool có số worker và queue hữu hạn, cùng tín hiệu từ chối rõ ràng.
+- id: design-practice-003
+  order: 3
+  title: Thực hành nhóm luồng hữu hạn cho tác vụ tạo báo cáo
+  description: Thực hành report worker trên ThreadPoolTaskExecutor hữu hạn, với saturation test bằng latch, xử lý TaskRejectedException, CSV @Async và điều phối batch theo cửa sổ in-flight.
+  transition:
+    to: design-practice-004
+    description: Sau bài pool báo cáo, chuyển sang ghép hai lời gọi độc lập bằng CompletableFuture để rút latency khi có đủ tài nguyên và xử lý phụ thuộc kết quả chính xác.
+- id: design-practice-004
+  order: 4
+  title: Thực hành kết hợp hai lời gọi độc lập bằng CompletableFuture
+  description: 'Ghép hai I/O call độc lập với CompletableFuture: submit song song, thenCombine DTO, Spring MVC async response, timeout/fallback và test hai nhánh bằng future điều khiển.'
+  transition:
+    to: design-practice-005
+    description: Tiếp tục với @Async ở mức ứng dụng để thực nghiệm lỗi worker, lỗi void, timeout khi đợi và propagation của MDC qua executor.
+- id: design-practice-005
+  order: 5
+  title: Thực hành @Async có lỗi, timeout và ngữ cảnh nhật ký
+  description: Thực nghiệm @Async với CompletableFuture và void, phân biệt lỗi submit/task/caller wait; truyền MDC bằng TaskDecorator và xác nhận không rò context sau khi worker tái sử dụng.
+  transition:
+    to: design-practice-006
+    description: 'Khi đã quan sát async execution theo thread, chuyển sang một dạng điều phối khác: scheduled refresh với fixedDelay rồi cron và trạng thái snapshot không bị ghi dở.'
+- id: design-practice-006
+  order: 6
+  title: Thực hành lịch cập nhật dữ liệu với fixedDelay rồi cron
+  description: 'Thực hành Scheduled refresh: so sánh fixedDelay với cron sáu trường và timezone, tách trigger khỏi nghiệp vụ, công bố snapshot nguyên tử và kiểm thử logic khác với wiring.'
+  transition:
+    to: design-practice-007
+    description: Một ứng dụng có thể cấu hình đúng mà vẫn lỗi do proxy bypass, pool cạn hoặc mất context; bài kế tiếp cố tình tái hiện ba failure mode đó bằng integration test.
+- id: design-practice-007
+  order: 7
+  title: Tái hiện tự gọi @Async, cạn nhóm luồng và mất ngữ cảnh
+  description: 'Tái hiện và sửa ba failure modes: self-invocation bỏ qua @Async proxy, thread pool trực tiếp từ chối khi queue=0, ThreadLocal context mất hoặc rò giữa các worker.'
+  transition:
+    to: design-practice-008
+    description: Sau khi tái hiện được lỗi thực thi, cần đo tải toàn pipeline để biết pool, queue hay dependency mới là nút thắt và điều chỉnh concurrency theo SLO.
+- id: design-practice-008
+  order: 8
+  title: Đo tải và điều chỉnh đồng thời với giới hạn tài nguyên phụ thuộc
+  description: 'Đo và tuning concurrency theo giới hạn DB/HTTP/downstream: Little''s Law, queue/connection wait, goodput, p95/p99, k6 arrival rate và admission control dựa trên bằng chứng.'
+  transition:
+    to: design-practice-009
+    description: Cuối cùng tổng hợp các failure mode thành checklist review và rubric có bằng chứng để tự đánh giá một giải pháp concurrency trước khi merge hoặc triển khai.
+- id: design-practice-009
+  order: 9
+  title: Danh sách lỗi thường gặp và tiêu chí tự đánh giá giải pháp
+  description: Tổng hợp lỗi proxy, pool, Future, context, scheduler và shutdown thành rubric 0/1/2; chỉ công nhận thiết kế khi có test/metric và rủi ro bắt buộc đã được đóng.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh vai trò của chín bài học
+
+  | Tiêu chí | Bài 1: 319. Lựa chọn | Bài 2: 320. Job contract | Bài 3: 321. Report pool | Bài 4: 322. Ghép Future | Bài 5: 323. Lỗi @Async | Bài 6: 324. Scheduling | Bài 7: 325. Failure modes | Bài 8: 326. Đo tải | Bài 9: 327. Review |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Vấn đề chính | Chọn sync/async/durable | Tách input/state/result | Worker và queue hữu hạn | Ghép hai upstream độc lập | Future, timeout và MDC | fixedDelay sang cron | Proxy, pool, ThreadLocal | Tìm giới hạn downstream | Chứng minh giải pháp đúng |
+  | Cơ chế trọng tâm | HTTP ACK, outbox, job lease | DTO, state CAS, idempotency | ThreadPoolTaskExecutor, latch | supplyAsync, thenCombine | AsyncConfigurer, TaskDecorator | @Scheduled, profile, snapshot | AOP proxy, queue=0, decorator | Little, semaphore, k6 | Checklist P/C/D/S, rubric |
+  | Thực hành đặc trưng | Chọn cơ chế theo use case | Java JobService và GET status | CSV worker, bounded batch | Profile/Points aggregation | r-ok/r-fail/r-slow/r-void | CatalogRefreshService + cron | JUnit tái hiện 3 lỗi | Load test và capacity calculation | Chấm 0/1/2 kèm evidence |
+  | Điểm dễ sai | 202 khi chưa ghi bền vững | Job cần request còn sống | Queue vô hạn, silent reject | join sớm hoặc fallback sai | Timeout coi như đã stop | Chạy trùng trên nhiều replica | Self-call không qua proxy | Tăng thread khi DB nghẽn | Điểm cao che lỗi bắt buộc |
+  | Bằng chứng hoàn thành | Bảng quyết định và crash analysis | Transition test và tenant access | active/queue/reject + CSV test | Hai future cùng hoàn tất | Log MDC, timeout, handler | Refresh test và cron.next | Worker identity + rejection + trace | Goodput/p95 + dependency pending | Review record + tests/metrics |
+  | Ứng dụng tiếp nối | Cam kết job đúng mức | Kết quả truy vết độc lập | Nhận report có giới hạn | Tổng hợp API nhanh hơn | Quan sát lỗi thực thi | Lịch dữ liệu có kiểm soát | Tìm nguyên nhân thất bại | Chọn mức đồng thời phù hợp | Chốt rủi ro trước merge |

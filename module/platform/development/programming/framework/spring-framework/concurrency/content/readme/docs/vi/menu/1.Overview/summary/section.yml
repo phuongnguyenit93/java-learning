@@ -1,0 +1,69 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Tổng quan về concurrency trong Spring Framework
+roadmapHeading: Lộ trình từ nhu cầu đến thực hành concurrency
+roadmap:
+- id: overview-001
+  order: 1
+  title: 'Đồng thời trong Spring: mục đích và các tình huống sử dụng'
+  description: Nhận diện nhu cầu điều phối nhiều request, I/O và tác vụ nền; phân biệt lợi ích về độ trễ với rủi ro tài nguyên, mất job và sai lệch dữ liệu.
+  transition:
+    to: overview-002
+    description: Khi đã xác định vì sao cần concurrency, làm rõ các trục đồng bộ, bất đồng bộ, song song và lập lịch để không chọn sai cơ chế.
+- id: overview-002
+  order: 2
+  title: Phân biệt đồng bộ, bất đồng bộ, song song và lập lịch
+  description: Làm rõ các trục thời gian của caller, cách thực thi đồng thời hoặc song song, hoạt động blocking và thời điểm scheduler kích hoạt.
+  transition:
+    to: overview-003
+    description: Sau khi phân biệt tên gọi, lần theo task, caller thread, worker thread và future để quan sát công việc thật sự chạy ở đâu.
+- id: overview-003
+  order: 3
+  title: Tác vụ, luồng gọi, luồng xử lý và kết quả
+  description: Truy vết từ task và caller đến worker và Future, xác định lúc nhận value, error hoặc timeout cùng các ranh giới thread-local.
+  transition:
+    to: overview-004
+    description: Từ dòng chạy thực tế, học cách Spring tách abstraction thực thi và abstraction lập lịch qua TaskExecutor, @Async, TaskScheduler, @Scheduled.
+- id: overview-004
+  order: 4
+  title: Mối liên hệ giữa TaskExecutor, @Async, TaskScheduler và @Scheduled
+  description: Kết nối TaskExecutor với @Async và TaskScheduler với @Scheduled; cấu hình hai pool và giải thích việc scheduler giao xử lý cho worker.
+  transition:
+    to: overview-005
+    description: Sau khi biết cách gửi task nền, thiết kế hợp đồng nhận việc và nhận kết quả để HTTP không đánh đồng accepted với completed.
+- id: overview-005
+  order: 5
+  title: Tách thời điểm nhận yêu cầu khỏi thời điểm hoàn thành công việc
+  description: Mô hình hóa accept → execute → complete, hợp đồng HTTP 202 và status endpoint, phân biệt async response với job nền bền vững.
+  transition:
+    to: overview-006
+    description: Khi API đã tách nhận việc và hoàn tất, làm rõ những bảo đảm Spring thực sự cung cấp và bất biến nghiệp vụ ứng dụng phải tự giữ.
+- id: overview-006
+  order: 6
+  title: Những bảo đảm Spring cung cấp và trách nhiệm của mã nghiệp vụ
+  description: Phân biệt cơ chế Spring với trách nhiệm đảm bảo thread safety, transaction, invariant DB, idempotency và phục hồi khi nhiều instance hoặc retry.
+  transition:
+    to: overview-007
+    description: Dùng toàn bộ ranh giới đó để đọc và kiểm chứng một ví dụ tích hợp báo cáo theo yêu cầu với cập nhật số liệu theo lịch.
+- id: overview-007
+  order: 7
+  title: 'Ví dụ xuyên suốt: xử lý báo cáo và cập nhật dữ liệu định kỳ'
+  description: Theo dõi case study Spring Boot có endpoint báo cáo, worker @Async, trạng thái ConcurrentHashMap và tác vụ @Scheduled cập nhật H2.
+  transition:
+    to: overview-008
+    description: Sau case study, củng cố nền Java Memory Model, executor, synchronization, cancellation và virtual threads để học các phần chuyên sâu.
+- id: overview-008
+  order: 8
+  title: Lộ trình học và kiến thức Java concurrency cần có
+  description: Xây lộ trình kiến thức Java concurrency từ Thread và JMM tới synchronization, ExecutorService, CompletableFuture, cancellation và virtual threads Java 21.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh vai trò các bài trong chương Tổng quan
+
+  | Tiêu chí | Bài 1: Đồng thời trong Spring: mục đích và các tình huống sử dụng | Bài 2: Phân biệt đồng bộ, bất đồng bộ, song song và lập lịch | Bài 3: Tác vụ, luồng gọi, luồng xử lý và kết quả | Bài 4: Mối liên hệ giữa TaskExecutor, @Async, TaskScheduler và @Scheduled | Bài 5: Tách thời điểm nhận yêu cầu khỏi thời điểm hoàn thành công việc | Bài 6: Những bảo đảm Spring cung cấp và trách nhiệm của mã nghiệp vụ | Bài 7: Ví dụ xuyên suốt: xử lý báo cáo và cập nhật dữ liệu định kỳ | Bài 8: Lộ trình học và kiến thức Java concurrency cần có |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Vai trò trong chương | Định vị nhu cầu concurrency | Phân biệt trục khái niệm | Truy vết lifecycle của task | Ghép abstraction Spring | Thiết kế vòng đời HTTP job | Làm rõ biên giới framework và nghiệp vụ | Minh họa tích hợp các cơ chế | Củng cố nền tảng Java |
+  | Trọng tâm | Lợi ích, tình huống và giới hạn tài nguyên | Sync, async, parallel, schedule, blocking | Caller, worker, task và Future | Executor, scheduler, proxy và pool | Accept, execute, complete và trạng thái | Shared state, transaction, invariant, idempotency | Báo cáo nền và cập nhật H2 theo lịch | JMM, locks, futures, interruption, virtual threads |
+  | Tình huống hoặc code | API I/O và @Async MVC | CallVsExecution và ModesApplication | AsyncFlowDemo với differentThread | ReportSchedule giao ReportWorker | POST /jobs và GET /jobs/{id} | AtomicCounter và SQL UPDATE điều kiện | POST /reports, GET /metrics, MetricJob | AtomicCounter, Latch, Executor, CompletableFuture |
+  | Ranh giới phải nhớ | Concurrency không mặc nhiên tăng tốc | Async không đồng nghĩa parallel hay non-blocking | Future không đồng nghĩa kết quả sẵn sàng | @Scheduled không tự thực thi qua @Async | 202 không cam kết job thành công | Annotation không thay thế invariant nghiệp vụ | RAM/H2 demo không phải job store bền vững | Virtual threads không bỏ giới hạn CPU/DB |
+  | Năng lực cần đạt | Chọn mô hình theo workload và độ tin cậy | Dự đoán caller chờ và chu kỳ trigger | Lần trace và quan sát kết quả/lỗi | Cấu hình, giới hạn và phối hợp hai pool | Thiết kế API job/status có backpressure | Bảo vệ tính đúng đắn xuyên JVM, DB và retry | Giải thích và kiểm thử end-to-end | Thực hành JMM, điều phối và hủy tác vụ |

@@ -1,0 +1,313 @@
+summaries:
+- id: task-scheduler-001
+  title: TaskScheduler biểu diễn lập lịch tách khỏi môi trường thực thi
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **TaskScheduler biểu diễn lập lịch tách khỏi môi trường thực thi**
+
+    `TaskScheduler` cung cấp hợp đồng lập lịch độc lập với loại backend và cách quản lý worker. Bài học này xây nền tảng để phân biệt thời điểm kích hoạt với nơi thực thi `Runnable`, dùng đúng `Instant`, `Duration` và `Trigger`, đồng thời nhận diện giới hạn của lịch chỉ nằm trong JVM và nguy cơ callback giữ scheduler thread quá lâu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng lập lịch và thực thi
+
+    1. `TaskScheduler` khác `TaskExecutor` ở câu hỏi cốt lõi nào và vì sao một interface lập lịch không cam kết có một worker pool thứ hai?
+    2. Với `ThreadPoolTaskScheduler`, callback thực sự chạy trên loại thread nào và vì sao callback I/O chậm có thể gây trễ cho lịch khác?
+    3. Phân biệt vai trò `ThreadPoolTaskScheduler`, `ConcurrentTaskScheduler` và `DefaultManagedTaskScheduler` theo nguồn backend và quyền sở hữu thế nào?
+
+    ### Mốc thời gian và kiểu lịch
+
+    1. Khi nào dùng `schedule(Runnable, Instant)`, `scheduleAtFixedRate`, `scheduleWithFixedDelay` hay `schedule(Runnable, Trigger)`?
+    2. Trong `TriggerContext`, `lastScheduledExecution`, `lastActualExecution` và `lastCompletion` biểu diễn những mốc nào?
+    3. Vì sao cron theo 09:00 địa phương không thể luôn thay bằng chu kỳ `Duration.ofHours(24)`?
+
+    ### Lỗi, giám sát và vòng đời
+
+    1. Một `ScheduledFuture` periodic khác handle one-shot ở cách kiểm tra hoàn tất như thế nào?
+    2. Vì sao ba replica có thể kích hoạt cùng một lịch và cần thêm cơ chế nào nếu side effect không được trùng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tách hai trách nhiệm | Vẽ đường đi `TaskScheduler → backend → Runnable` và chỉ ra ranh giới lập lịch so với thực thi. |
+    | Lựa chọn chữ ký API | Ánh xạ yêu cầu one-shot, fixed-rate, fixed-delay và cron sang đúng phương thức `TaskScheduler`. |
+    | Phân tích context của Trigger | Giải thích đúng planned, actual và completion khi scheduler chạy muộn. |
+    | Chẩn đoán scheduler thread | Dự đoán ảnh hưởng của callback blocking tới lịch khác trên pool một worker. |
+    | Nhận diện giới hạn vận hành | Nêu chính sách cho lỗi, cancel, timezone, multi-replica và lịch cần khôi phục sau restart. |
+- id: task-scheduler-002
+  title: schedule() để chạy một lần tại thời điểm chỉ định
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **schedule() để chạy một lần tại thời điểm chỉ định**
+
+    `TaskScheduler.schedule(Runnable, Instant)` tạo một lịch one-shot theo thời điểm tuyệt đối và trả handle để quan sát/hủy. Bài giúp người học chuyển giờ địa phương thành `Instant` đúng múi giờ, hiểu ý nghĩa mốc đã quá khứ và độ trễ thực thi, đồng thời quản lý lỗi, cancellation và persistence của từng reminder hay deadline.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đăng ký một lần và mốc thời gian
+
+    1. `schedule(Runnable, Instant)` khác lịch periodic ở số lần callback được lập lịch như thế nào?
+    2. Nếu `Instant` đã thuộc quá khứ, scheduler sẽ xử lý ra sao và nghiệp vụ có thể áp chính sách bổ sung nào?
+    3. Muốn chạy lúc 09:00 tại Việt Nam, vì sao phải ghép `LocalDateTime` với `ZoneId` trước khi tạo `Instant`?
+
+    ### Handle, lỗi và cancellation
+
+    1. Vì sao `ScheduledFuture.getDelay()` không chứng minh one-shot đã bắt đầu hoặc hoàn tất?
+    2. Phân biệt rejection khi đăng ký lịch với exception bên trong `Runnable`, và nhận biết chúng qua đường nào?
+    3. Vì sao `cancel(false)` không có nghĩa callback đang chạy đã dừng hoặc giao dịch xa đã rollback?
+
+    ### Độ tin cậy và kiểm thử
+
+    1. Khi nào một lịch một lần trong RAM sẽ bị mất sau restart hoặc bị tạo nhiều bản trên các replica?
+    2. Cách dùng `Future.get(timeout)` và hủy lịch cách xa tương lai giúp kiểm thử one-shot xác định như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo lịch one-shot | Viết lời gọi `schedule(task, Instant)` và xác định kết quả là handle, không phải kết quả nghiệp vụ. |
+    | Xử lý múi giờ | Chuyển một local date/time kèm `ZoneId` thành `Instant` và nhận biết DST gap/overlap. |
+    | Quan sát trạng thái | Phân biệt waiting, running, succeeded, failed và cancelled qua Future và business status. |
+    | Kiểm chứng bằng code | Dùng one-shot `get(timeout)` và test cancel-before-start mà không phụ thuộc `Thread.sleep`. |
+    | Thiết kế persistence | Xác định khi nào cần job ID, trạng thái bền vững, idempotency và cluster claim. |
+- id: task-scheduler-003
+  title: scheduleAtFixedRate() và lịch theo chu kỳ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **scheduleAtFixedRate() và lịch theo chu kỳ**
+
+    Fixed-rate xác định nhịp dự kiến từ thời điểm bắt đầu và `Duration period`, nên các lượt có thể chạy sát nhau khi tác vụ chậm. Bài này giúp phân tích đúng sự khác biệt giữa planned và actual start, thiết kế periodic jobs không vô tình overlap khi có delegation, và kiểm soát lỗi, cancellation, tải nền trong Spring.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mốc fixed-rate và overload
+
+    1. Với period 5 giây và task mất 8 giây, mốc dự kiến với thời gian bắt đầu thực tế khác nhau thế nào?
+    2. Vì sao một periodic registration trên `ScheduledThreadPoolExecutor` không overlap chính nó dù có nhiều worker?
+    3. Lúc nào dùng overload có `Instant startTime`, và overload chỉ nhận `Duration` bắt đầu lượt đầu khi nào?
+
+    ### So sánh các chiến lược
+
+    1. Với task mất 3 giây, fixed-rate 5 giây và fixed-delay 5 giây dẫn đến các mốc thực thi khác nhau ra sao?
+    2. Vì sao fixed-rate 24 giờ không bảo đảm lịch hàng ngày tại cùng giờ địa phương khi có DST?
+    3. Nếu mỗi tick chỉ gọi một service `@Async` rồi trả về, business jobs có còn được bảo đảm không overlap không?
+
+    ### Trạng thái, lỗi và metrics
+
+    1. Vì sao không được dùng `ScheduledFuture.get()` như kết quả một tick của lịch lặp?
+    2. Một unchecked exception trong periodic JDK task khác ErrorHandler mặc định của Spring `ThreadPoolTaskScheduler` thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng nhịp thời gian | Vẽ nominal start times và actual starts của fixed-rate khi một run dài hơn period. |
+    | Chọn overload | Cấu hình `Duration` dương và `Instant` startTime phù hợp với initial delay. |
+    | Giới hạn overlap | Chứng minh same-handle JDK không overlap và xác định nguồn overlap do delegation, registration khác hay replicas. |
+    | Quản lý lỗi và hủy | Dùng `ScheduledFuture.cancel` đúng ý nghĩa, phân biệt lỗi một run với trạng thái cả chuỗi. |
+    | Thiết kế observability | Đề xuất metric tick, run success/failure, duration và start lag để kiểm tra tải thật. |
+- id: task-scheduler-004
+  title: scheduleWithFixedDelay() và khoảng nghỉ sau khi hoàn tất
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **scheduleWithFixedDelay() và khoảng nghỉ sau khi hoàn tất**
+
+    Fixed-delay đặt thời gian nghỉ sau khi callback trước kết thúc, phù hợp polling khi muốn tránh chạy dồn. Bài giúp người học tính thời điểm bắt đầu lượt kế theo thời gian xử lý thực tế, phân biệt completion của callback với completion của job được giao sang executor khác, và tránh treo lịch vì I/O không có timeout.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thời điểm tính delay
+
+    1. Vì sao task chạy 7 giây với delay 5 giây khiến hai mốc bắt đầu cách nhau ít nhất khoảng 12 giây?
+    2. Overload `scheduleWithFixedDelay(Runnable, Duration)` kích hoạt lượt đầu khi nào so với overload có `Instant`?
+    3. Fixed-delay khác fixed-rate, cron và một cơ chế throttle sự kiện ở điểm nào?
+
+    ### Ranh giới hoàn tất và overlap
+
+    1. Nếu Runnable chỉ gửi `CompletableFuture` sang worker rồi trả về, delay được tính từ lúc nào?
+    2. Vì sao một registration fixed-delay không overlap callback nhưng nhiều pod hay nhiều registrations vẫn có thể overlap nghiệp vụ?
+    3. Với `SimpleAsyncTaskScheduler` dùng virtual threads, fixed-delay có đặc điểm thread nào cần tránh nhầm với các loại lịch khác?
+
+    ### Thất bại và kiểm chứng
+
+    1. Vì sao một API call treo vô hạn có thể khiến fixed-delay không tạo lượt tiếp theo?
+    2. Dùng latch và `System.nanoTime()` thế nào để xác nhận delay được tính sau khi run trước hoàn tất?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Diễn giải fixed-delay | Tính earliest next start từ mốc completion và delay, phân biệt với fixed-rate. |
+    | Cấu hình đúng lần đầu | Sử dụng `Duration` và `Instant startTime` đúng với yêu cầu bắt đầu. |
+    | Phát hiện overlap sai nghĩa | Phân biệt thời điểm callback trả về với khi business Future thật sự xong. |
+    | Bảo vệ vòng đời polling | Thiết kế timeout, failure policy, checkpoint và cancellation để không giữ một suất mãi. |
+    | Tạo kiểm thử deterministic | Dùng latch làm rõ mốc kết thúc của lượt đầu và xác minh ngưỡng nghỉ cho lượt thứ hai. |
+- id: task-scheduler-005
+  title: ScheduledFuture để theo dõi và hủy lịch
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ScheduledFuture để theo dõi và hủy lịch**
+
+    `ScheduledFuture` là handle kiểm soát một lịch trong JVM, không phải trạng thái bền vững của nghiệp vụ. Bài này giúp hiểu rõ `getDelay`, `isDone`, `isCancelled`, `get` và `cancel(false/true)` cho one-shot và periodic, tránh nhầm hủy lịch với dừng worker hoặc rollback side effect, đồng thời tổ chức registry và shutdown an toàn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Future của một lần và cả chuỗi
+
+    1. Vì sao `isDone()==false` vẫn có thể đúng sau hàng chục lần periodic task hoàn tất thành công?
+    2. Khác biệt giữa `get()` của one-shot và periodic `ScheduledFuture` là gì, và vì sao `get()` của periodic có thể chờ mãi?
+    3. Khi nào `schedule(Runnable, Trigger)` có thể trả `null` và phải xử lý ra sao?
+
+    ### Hủy và theo dõi tác vụ
+
+    1. Điều gì khác nhau giữa `cancel(false)` và `cancel(true)` khi một callback đã bắt đầu?
+    2. Vì sao `isCancelled()==true` hoặc `isDone()==true` không đủ để kết luận nghiệp vụ thành công hay I/O đã dừng?
+    3. Khi `TaskUtils` suppress exception trong repeating job, cần quan sát thất bại của từng lượt bằng cơ chế nào?
+
+    ### Vòng đời và registry
+
+    1. Làm thế nào giữ và thay handle theo job ID trong một JVM mà không đăng ký trùng không kiểm soát?
+    2. Vì sao hủy một ScheduledFuture khác với shutdown cả scheduler và khác với hủy ở tất cả replica?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích trạng thái Future | Lập bảng isDone/isCancelled cho waiting, success, failure và cancellation của one-shot/periodic. |
+    | Hủy đúng ngữ nghĩa | Chọn cancel(false/true) theo khả năng interrupt và giải thích phần side effect vẫn có thể tồn tại. |
+    | Quan sát một lượt chạy | Thiết kế per-run status/metric thay vì lấy kết quả của cả periodic Future. |
+    | Quản lý handle | Tổ chức registry theo business ID, chống race replace/cancel và dọn handle không còn dùng. |
+    | Kiểm thử graceful stop | Dùng latch tách thời điểm Future đã hủy khỏi thời điểm worker thật sự thoát. |
+- id: task-scheduler-006
+  title: Clock của scheduler và ý nghĩa thời gian sử dụng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Clock của scheduler và ý nghĩa thời gian sử dụng**
+
+    Bài tập trung vào cách Spring tính lịch bằng `Clock` và `TriggerContext`, phân biệt `Instant`, `Duration`, `LocalDateTime`, `ZoneId` và đồng hồ đo elapsed time. Người học học cách kiểm chứng cron với fixed clock, tránh lệch giờ do timezone/DST và hiểu vì sao thay `Clock` không tạo một virtual-time scheduler có khả năng điều khiển queue thực.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn thời gian và kiểu dữ liệu
+
+    1. `TaskScheduler.getClock()`/`ThreadPoolTaskScheduler.setClock()` có vai trò gì và không kiểm soát được điều gì?
+    2. Phân biệt `Instant`, `Duration`, `LocalDateTime`, `ZonedDateTime`, `ZoneId` và `System.nanoTime()` khi lập lịch hoặc đo duration?
+    3. Vì sao `Clock.withZone(UTC)` không tự dịch chuyển `Instant` của một `Clock.fixed`?
+
+    ### Cron, TriggerContext và timezone
+
+    1. `lastScheduledExecution`, `lastActualExecution` và `lastCompletion` khác nhau thế nào khi callback bị trễ?
+    2. Cùng biểu thức cron 09:00, một `CronTrigger` dùng zone UTC và một trigger dùng `Asia/Ho_Chi_Minh` tạo ra `Instant` khác thế nào?
+    3. Vì sao lịch có DST gap/overlap cần chính sách nghiệp vụ và idempotency theo business date?
+
+    ### Kiểm thử và giới hạn
+
+    1. Dùng `SimpleTriggerContext(Clock.fixed(...))` kiểm chứng thời điểm kế tiếp mà không mở worker thật ra sao?
+    2. Tại sao tạo `Clock.offset` mới không tự làm delayed queue của `ThreadPoolTaskScheduler` chạy một giờ tương lai?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn kiểu thời gian | Lựa chọn Instant/Duration/ZoneId phù hợp với mốc tuyệt đối, chu kỳ và lịch dân sự. |
+    | Kiểm chứng timezone | Chuyển local 09:00 HCM sang UTC và so sánh cron có zone tường minh với zone mặc định. |
+    | Đọc TriggerContext | Phân biệt scheduled, actual, completion và dự đoán lịch tiếp theo của trigger lenient/fixed. |
+    | Test bằng clock giả | Viết test `CronTrigger.nextExecution` với `Clock.fixed`, tách khỏi test thực thi bằng worker. |
+    | Tránh lỗi clock và metrics | Dùng monotonic time cho elapsed duration, giải thích DST, time shift và giới hạn không real-time. |
+- id: task-scheduler-007
+  title: Phân biệt luồng kích hoạt lịch với luồng thực thi công việc
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt luồng kích hoạt lịch với luồng thực thi công việc**
+
+    `ThreadPoolTaskScheduler` thường chạy callback trên chính scheduler threads; tách xử lý nghiệp vụ sang `TaskExecutor` chỉ xảy ra khi kiến trúc chủ động delegate. Bài giúp người học thiết kế hai pool có giới hạn, đo riêng trigger lag với worker queue wait, kiểm soát overlap, rejection và shutdown mà không suy rằng callback hoàn tất là job đã xong.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới thread và callback
+
+    1. Vì sao `ThreadPoolTaskScheduler` poolSize=1 có thể làm trễ job B khi callback A đang chặn I/O?
+    2. Trong mô hình scheduler callback gọi `TaskExecutor.execute(...)`, Future của scheduler biểu diễn completion của phần nào?
+    3. Tăng scheduler poolSize khác với thêm một bounded worker pool về trách nhiệm và tài nguyên như thế nào?
+
+    ### Backpressure và overlap
+
+    1. Vì sao fixed-delay của callback delegate không bảo đảm khoảng nghỉ sau khi business job hoàn tất?
+    2. Khi worker pool dùng `CallerRunsPolicy`, điều gì có thể xảy ra với scheduler thread lúc executor bão hòa?
+    3. Một `AtomicBoolean` single-flight guard chống overlap ở phạm vi nào và vì sao vẫn cần chính sách rejection rõ?
+
+    ### Observability, context và lifecycle
+
+    1. Phân biệt scheduling lag, dispatch latency, worker queue wait và business execution duration như thế nào?
+    2. Khi tắt hai pool, nên ngăn các callback mới và xử lý các job đã submit theo trình tự nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô hình hóa hai pool | Vẽ đường từ trigger tới callback, queue worker và business completion. |
+    | Ngăn business overlap | Thiết kế single-flight guard an toàn với finally và nhánh submit bị rejection. |
+    | Phân tích overload | Giải thích hậu quả của AbortPolicy, CallerRunsPolicy và DiscardPolicy với scheduler callback. |
+    | Đo lường đúng tầng | Thiết kế metric riêng cho trigger lag, callback duration, queue wait, job result và cancellation. |
+    | Quản lý context và shutdown | Phân biệt Future scheduler với Future worker, xác định propagation và thứ tự stop/drain. |
+- id: task-scheduler-008
+  title: Chọn lập lịch trực tiếp hay annotation theo mức cần điều khiển
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn lập lịch trực tiếp hay annotation theo mức cần điều khiển**
+
+    Cả `@Scheduled` và API `TaskScheduler` có thể dùng cùng scheduler nhưng cho mức điều khiển khác nhau. Bài hướng tới quyết định theo yêu cầu nghiệp vụ: lịch cấu hình cố định dùng annotation; lịch có job ID, start/replace/cancel động cần quản lý handle bằng code hoặc job store. Bài cũng nêu rủi ro property không hot reload, nhiều replica và tính bền vững sau restart.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khi nào dùng cách nào
+
+    1. Những dấu hiệu nào cho thấy `@Scheduled` phù hợp hơn lập lịch bằng code trực tiếp?
+    2. Khi mỗi khách hàng có một job ID và có thể thay đổi/hủy lịch lúc runtime, vì sao `TaskScheduler` programmatic thuận tiện hơn?
+    3. Vì sao annotation và direct scheduling không mặc nhiên khác nhau về backend, tốc độ hoặc tính bền vững?
+
+    ### Cấu hình và điều khiển runtime
+
+    1. Vai trò của `@EnableScheduling` đối với annotated methods khác lời gọi `TaskScheduler.schedule(...)` trực tiếp như thế nào?
+    2. Vì sao sửa property cron trên runtime không tự bảo đảm một method `@Scheduled` được reschedule ngay?
+    3. Một dynamic registry hủy và đăng ký lại handle có thể gặp race/overlap nào?
+
+    ### Quá tải, vận hành và độ tin cậy
+
+    1. Tại sao thay annotation bằng direct API không tự sửa scheduler saturation, lỗi task hoặc queue không giới hạn?
+    2. Khi nào một lịch cần job store, idempotency và cluster coordination dù nó được khai báo bằng cách nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn abstraction theo yêu cầu | Lập ma trận `@Scheduled` so với direct API dựa trên tính ổn định của lịch, ID và quyền cancel. |
+    | Cấu hình annotation | Viết annotation cron/fixed-delay với zone hoặc property và giải thích yêu cầu `@EnableScheduling`. |
+    | Điều khiển lịch động | Thiết kế start/replace/stop theo job ID với ScheduledFuture và quản lý race. |
+    | Phân biệt lifecycle | Giải thích giới hạn của registry in-memory đối với restart và nhiều instance. |
+    | Đánh giá vận hành | Đề xuất test wiring, cancellation, overload, timezone và job durability tương ứng từng cách. |

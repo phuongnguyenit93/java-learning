@@ -1,0 +1,25 @@
+{
+  "runId": "STEP8-OOP-G1-20261030-PILOT",
+  "phase": 1,
+  "groupID": 1,
+  "caseIndex": 9,
+  "status": "GENERATED",
+  "sourceCodeSha256": "8d8e9c72f2e97fdb94743775bffdc70ea42a841fee89698b8191718359744e30",
+  "mainPackage": "com.example.learning.casestudy.temp.g1.c9",
+  "controllerClass": "Case9Controller",
+  "serviceClass": "Case9Service",
+  "route": "POST /api/v1/java/case-studies/groups/1/cases/9/execute",
+  "files": [
+    "/java-learning/module/platform/development/programming/paradigm/object-oriented/src/main/java/com/example/learning/casestudy/temp/g1/c9/Case9Controller.java",
+    "/java-learning/module/platform/development/programming/paradigm/object-oriented/src/main/java/com/example/learning/casestudy/temp/g1/c9/Case9Service.java",
+    "/java-learning/module/platform/development/programming/paradigm/object-oriented/src/test/java/com/example/learning/casestudy/temp/g1/c9/Case9ControllerTest.java",
+    "/java-learning/module/platform/development/programming/paradigm/object-oriented/src/test/java/com/example/learning/casestudy/temp/g1/c9/Case9ServiceTest.java"
+  ],
+  "buildStatus": "BUILD_DEFERRED",
+  "testEvidence": [],
+  "limitations": [
+    "Gradle compilation and JUnit execution are deferred until Prime establishes a safe checkpoint after concurrent Phase 1 workers finish.",
+    "No JFR recording, GC events, profiler measurements, latency results, or performance bottleneck conclusions are claimed by this API.",
+    "HTTP allocation is bounded at 20000 rounds (approximately 20 MiB of allocated byte-array payloads) per request; the original two-million-round allocation example remains suitable only for explicitly controlled offline JFR runs."
+  ]
+}

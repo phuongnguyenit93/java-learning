@@ -1,0 +1,305 @@
+summaries:
+- id: quartz-integration-001
+  title: Khi nào lịch cần lưu trữ, khôi phục và quản lý bên ngoài tiến trình
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khi nào lịch cần lưu trữ, khôi phục và quản lý bên ngoài tiến trình**
+
+    Chọn `@Scheduled`, Quartz RAMJobStore hay Quartz JDBC JobStore là quyết định về vòng đời của lịch, không chỉ cú pháp cron. Bài này phân biệt định nghĩa lịch, trạng thái trigger, lần thực thi và kết quả nghiệp vụ để đánh giá khi nào cần persistence, misfire/recovery, quản trị runtime và cơ chế chống trùng sau restart.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lịch và vòng đời dữ liệu
+
+    1. Trường hợp nào lịch khai báo bằng `@Scheduled` là đủ, và khi nào lịch do người dùng quản lý phải tồn tại ngoài JVM?
+    2. Bốn lớp trạng thái schedule definition, trigger state, execution attempt và business outcome khác nhau ở mục đích gì?
+    3. Vì sao `JobBuilder.storeDurably()` không làm `RAMJobStore` tự lưu lịch qua restart?
+
+    ### Persistence, recovery và vận hành
+
+    1. Khi scheduler ngừng qua giờ hẹn, misfire khác recovery của job đang chạy dở như thế nào?
+    2. Vì sao Quartz JDBC clustering và `requestsRecovery` không tạo bảo đảm exactly-once cho payment hoặc email?
+    3. Bạn chọn `initialize-schema`, `overwrite-existing-jobs`, quản trị pause/reschedule và audit như thế nào để không mất lịch đã được sửa?
+
+    ### Kiểm chứng yêu cầu bền vững
+
+    1. Bạn kiểm tra gì trên cùng JDBC database trước và sau restart để xác nhận lịch động và trạng thái pause tồn tại?
+    2. Nếu admin pause một lịch lúc job đang chạy, vì sao execution hiện tại vẫn cần quy tắc xử lý riêng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quyết định engine lập lịch | Lập ma trận yêu cầu để chọn Spring scheduling, Quartz RAM hoặc Quartz JDBC. |
+    | Tách lịch khỏi kết quả nghiệp vụ | Vẽ được schedule state, trigger state, attempt và outcome với kho lưu tương ứng. |
+    | Thiết kế restart an toàn | Đề xuất schema migration, misfire/recovery policy, admin API và idempotency. |
+    | Viết kịch bản kiểm thử | Mô tả các bước restart, sửa cron, pause, crash node và xác minh business key không trùng. |
+- id: quartz-integration-002
+  title: Vai trò JobDetail, Trigger và Scheduler trong Quartz
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vai trò JobDetail, Trigger và Scheduler trong Quartz**
+
+    Muốn đọc hoặc tự tạo một lịch Quartz phải xác định đúng ai mô tả việc, ai định giờ và ai thực thi. Bài này thiết lập mô hình `Job`–`JobDetail`–`Trigger`–`Scheduler`, các `JobKey`/`TriggerKey`, cách dữ liệu được merge khi trigger fire và điều kiện scheduler đã đăng ký, start thì job mới chạy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình Quartz
+
+    1. `Job` class, `JobDetail` descriptor và một lần thực thi Job khác nhau như thế nào?
+    2. Một Trigger có thể trỏ mấy JobDetails, và vì sao một JobDetail có thể được nhiều Trigger kích hoạt?
+    3. Quartz Scheduler và Spring TaskScheduler khác nhau ở loại job, trigger và JobStore ra sao?
+
+    ### Identity và dữ liệu
+
+    1. Bạn diễn đạt quan hệ `JobKey`, `TriggerKey` và `Trigger.getJobKey()` để thay một lịch mà không xóa JobDetail như thế nào?
+    2. Nếu JobDataMap của Trigger và JobDetail có cùng key, merged map trong `execute` lấy giá trị nào?
+    3. Khi nào cần `storeDurably()` và tại sao durable không đồng nghĩa persistent?
+
+    ### Thực thi và chẩn đoán
+
+    1. Những bước đăng ký, `scheduler.start()`, cấp worker và `Job.execute` xảy ra theo thứ tự khái niệm nào?
+    2. Bạn dùng `CountDownLatch` và `Scheduler.checkExists` để chứng minh metadata đã đăng ký và job thật sự chạy ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích vai trò ba thành phần | Vẽ được JobDetail – Trigger – Scheduler và vị trí `Job.execute`. |
+    | Dựng job và trigger có khóa ổn định | Tạo JobDetail/Trigger với `JobKey`/`TriggerKey` đúng và gọi Scheduler đăng ký. |
+    | Dự đoán merged data | Dùng `getMergedJobDataMap()` giải thích tham số của một lần fire. |
+    | Kiểm chứng lifecycle tối thiểu | Kiểm tra trước/sau start và execution bằng API Scheduler cùng latch. |
+- id: quartz-integration-003
+  title: SchedulerFactoryBean tích hợp vòng đời Quartz với Spring
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **SchedulerFactoryBean tích hợp vòng đời Quartz với Spring**
+
+    Khi Quartz chạy trong Spring, phải có một chủ thể chịu trách nhiệm tạo Scheduler, đăng ký trigger, khởi động đúng lúc và shutdown mà không rò worker. `SchedulerFactoryBean` nối Quartz runtime với `FactoryBean<Scheduler>`, `SmartLifecycle` và cơ chế quản lý bean, giúp tránh tạo Scheduler thứ hai hoặc để job chạy sau khi context đã đóng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### FactoryBean và lifecycle
+
+    1. `SchedulerFactoryBean` là Quartz Scheduler hay là `FactoryBean` tạo ra Scheduler, và tiền tố `&` trong `getBean` có tác dụng gì?
+    2. `afterPropertiesSet`, `SmartLifecycle.start/stop` và `destroy` đóng vai trò gì trong các giai đoạn Spring context?
+    3. `autoStartup`, `startupDelay` theo giây và lifecycle phase ảnh hưởng thời điểm job được phép fire thế nào?
+
+    ### Shutdown và cấu hình
+
+    1. `setWaitForJobsToCompleteOnShutdown(true)` khác shutdown của `ThreadPoolTaskExecutor` và khác crash SIGKILL ở chỗ nào?
+    2. Khi Spring Boot đã auto-configure Quartz, vì sao tạo thêm `StdSchedulerFactory` dễ sinh hai schedulers?
+    3. Spring-managed DataSource và Quartz jobStore properties có thể xung đột ra sao nếu cấu hình hai lần?
+
+    ### Kiểm chứng thực thi
+
+    1. Bạn dùng `triggerJob`, latch và `scheduler.isShutdown()` để chứng minh Spring quản lý cả start, execution và cleanup thế nào?
+    2. Nếu bật `autoStartup=false` rồi quên gọi `start`, metadata và execution sẽ khác nhau ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định ownership Scheduler | Phân biệt Bean sản phẩm `org.quartz.Scheduler` với `SchedulerFactoryBean`. |
+    | Cấu hình vòng đời | Chọn startup delay, phase, autoStartup và shutdown policy dựa trên dependency readiness. |
+    | Dùng Boot mà không tạo trùng | Xác định khi nào inject Scheduler auto-configured và khi nào dùng customizer. |
+    | Kiểm thử lifecycle | Dựng test Spring Context xác minh trigger registered, job executed và shutdown. |
+- id: quartz-integration-004
+  title: JobDetailFactoryBean và các loại trigger được Spring hỗ trợ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **JobDetailFactoryBean và các loại trigger được Spring hỗ trợ**
+
+    Spring cung cấp các `FactoryBean` giúp khai báo JobDetail, SimpleTrigger và CronTrigger bằng bean properties, nhưng vẫn dựa trên Quartz Scheduler để thực thi. Bài này chọn đúng wrapper cho one-shot, interval hoặc cron theo timezone, hiểu repeat count/start delay và cách hai trigger cùng liên kết một JobDetail mà không đăng ký dư.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### FactoryBean và JobDetail
+
+    1. `JobDetailFactoryBean`, `SimpleTriggerFactoryBean`, `CronTriggerFactoryBean` lần lượt tạo loại Quartz object nào?
+    2. Tại sao tiêm `@Qualifier("demoJobDetail") JobDetail` nhận sản phẩm FactoryBean và khi nào cần cú pháp `&beanName`?
+    3. `setDurability`, `setRequestsRecovery` và dữ liệu từ `setJobDataAsMap` diễn đạt những thuộc tính nào của JobDetail?
+
+    ### Chọn đúng loại trigger
+
+    1. `SimpleTriggerFactoryBean.setRepeatCount(3)` dự kiến có bao nhiêu lần fire, và đơn vị của `setStartDelay` là gì?
+    2. Bạn chọn `SimpleTriggerFactoryBean` hay `CronTriggerFactoryBean` cho interval, one-shot và lịch 02:00 hằng ngày?
+    3. Quartz `CalendarIntervalTrigger` hoặc `DailyTimeIntervalTrigger` có được dùng qua Quartz builder và `setTriggers` không?
+
+    ### Liên kết, chạy và giới hạn
+
+    1. Khi hai trigger cùng tham chiếu một JobKey, bạn xác nhận link và tránh overlap như thế nào?
+    2. Khi RAMJobStore hoặc JDBCJobStore được chọn, sự khác nhau giữa JobDataMap cho tham số lịch và Spring bean dependency là gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo product từ FactoryBean | Khai báo đúng JobDetail và trigger beans, inject bằng type/qualifier. |
+    | Tính lịch cho Simple/Cron | Dự đoán repeatCount, startDelay và cron/timezone từ cấu hình thực tế. |
+    | Đăng ký hai triggers | Nối SimpleTrigger và CronTrigger cùng JobDetail qua SchedulerFactoryBean. |
+    | Rà soát lỗi cấu hình | Chẩn đoán thiếu JobKey, trigger chưa đăng ký, overlap hoặc nhầm FactoryBean với product. |
+- id: quartz-integration-005
+  title: Tiêm phụ thuộc vào job theo cơ chế phù hợp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tiêm phụ thuộc vào job theo cơ chế phù hợp**
+
+    Quartz `JobFactory` tạo Job instances mỗi lần fire, không phải mọi Quartz Job đều là singleton Spring bean. Bài học phân biệt service dependency từ Spring với execution data từ `JobDataMap`, xác định điều kiện Boot/SpringBeanJobFactory cho constructor injection, và lựa chọn QuartzJobBean, custom factory hoặc MethodInvokingJobDetailFactoryBean theo JobStore.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn tạo Job và DI
+
+    1. Vì sao đánh dấu `@Component` lên một Quartz Job chưa chứng minh `JobFactory` sẽ dùng đúng Spring bean đó?
+    2. Ở Spring Boot 3.5 với `SpringBeanJobFactory` được gắn ApplicationContext, constructor injection hoạt động qua cơ chế tạo bean nào?
+    3. Khi tự tạo `SchedulerFactoryBean`, điều gì xảy ra nếu quên gắn JobFactory tích hợp Spring?
+
+    ### Execution data so với dependency
+
+    1. Vì sao `NotificationService` thuộc constructor DI còn `recipient` thuộc merged `JobDataMap`?
+    2. `QuartzJobBean` điền setter dữ liệu như thế nào, và vì sao setter của service không tự được autowire nếu không có cơ chế tương ứng?
+    3. Vì sao `MethodInvokingJobDetailFactoryBean` không dùng được với JDBC persistent JobStore?
+
+    ### Test và trạng thái
+
+    1. Bạn xác minh factory thật, dependency không null và fallback khi thiếu JobDataMap key bằng test gì?
+    2. Vì sao không lưu `ApplicationContext` hoặc `DataSource` trong persisted JobDataMap, nhất là khi cluster chạy trên node khác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn đúng JobFactory | Đối chiếu factory mặc định, SpringBeanJobFactory tích hợp context và custom job factory. |
+    | Tách DI và job data | Tạo Job nhận service qua constructor và chỉ đọc tham số đơn giản từ `JobExecutionContext`. |
+    | Chọn pattern thay thế | Giải thích điều kiện dùng QuartzJobBean setter hoặc MethodInvokingJobDetailFactoryBean. |
+    | Kiểm thử injection và persistence | Lập test với Spring context, dữ liệu thiếu, job execution và JDBC serializability. |
+- id: quartz-integration-006
+  title: Phân biệt CronTrigger của Spring với CronTrigger của Quartz
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt CronTrigger của Spring với CronTrigger của Quartz**
+
+    Hai class/interface `CronTrigger` cùng tên nhưng thuộc hai engine khác nhau và không hoán đổi được. Bài này so sánh Spring TaskScheduler với Quartz Scheduler, đối chiếu cron grammar, day-of-week numbering, timezone và sự khác nhau giữa Spring lenient/fixed execution với Quartz misfire để tránh đổi lịch sai khi migrate.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai API và nguồn trigger
+
+    1. `org.springframework.scheduling.support.CronTrigger` và `org.quartz.CronTrigger` khác nhau ở kiểu, nơi đăng ký và đối tượng được chạy như thế nào?
+    2. `CronTriggerFactoryBean` ở package Spring tạo trigger của engine nào?
+    3. Vì sao `@Scheduled` không tự tạo Quartz JobDetail dù project có `spring-boot-starter-quartz`?
+
+    ### Cron grammar và clock
+
+    1. Với trường day-of-week bằng số `2`, Spring và Quartz diễn giải ngày nào, và dùng tên MON/TUE tránh nhầm ra sao?
+    2. Vì sao Quartz có thể nhận trường năm thứ bảy nhưng Spring cron parser yêu cầu đúng sáu trường?
+    3. Bạn so sánh time zone, DST và next fire times khi chuyển cùng một lịch giữa hai parser như thế nào?
+
+    ### Lịch bị lỡ
+
+    1. `CronTrigger.forLenientExecution` và `forFixedExecution` của Spring khác Quartz `DoNothing`/`FireAndProceed` ở loại cơ chế nào?
+    2. Khi nào dùng Spring TaskScheduler với Runnable, khi nào phải dùng Quartz JobDetail/Trigger/JDBC store?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn đúng import và engine | Phân biệt class Spring CronTrigger với Quartz interface CronTrigger và factory bridge. |
+    | Chuyển cron có kiểm chứng | Đổi weekday numeric sang tên và đối chiếu sáu/bảy trường, zone, DST. |
+    | So sánh missed schedules | Giải thích Spring lenient/fixed khác Quartz misfire/recovery. |
+    | Chọn giải pháp triển khai | Đề xuất TaskScheduler hoặc Quartz theo yêu cầu persistence, runtime control và clustering. |
+- id: quartz-integration-007
+  title: Misfire và chính sách chạy bù cần quyết định tường minh
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Misfire và chính sách chạy bù cần quyết định tường minh**
+
+    Một trigger đến hạn không đồng nghĩa job được thực thi đúng thời điểm. Bài học tách misfire khỏi JobExecutionException và recovery, chọn chính sách bù hoặc bỏ lượt cho Cron/SimpleTrigger, và chỉ rõ khi cần xử lý mọi kỳ bỏ lỡ thì phải có checkpoint/idempotency ngoài Quartz.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa misfire
+
+    1. `misfireThreshold` đo điều gì, và vì sao nó không phải job timeout hay số lượt cần bù?
+    2. Misfire của trigger khác lỗi bên trong `Job.execute` và `JobExecutionContext.isRecovering()` như thế nào?
+    3. Scheduler nghỉ ba ngày với một cron hằng ngày; `DoNothing`, `FireAndProceed` và `IgnoreMisfires` dẫn tới những khả năng nào?
+
+    ### Lựa chọn chính sách
+
+    1. Vì sao `CronTrigger` SMART_POLICY thường dẫn tới fire-once-now chứ không phải skip?
+    2. SimpleTrigger với `repeatCount=9` và `NextWithRemainingCount` phải được hiểu thế nào so với `ExistingCount`?
+    3. Chính sách nào phù hợp cho refresh cache, đồng bộ delta và báo cáo phải bù từng kỳ?
+
+    ### Backfill và kiểm chứng
+
+    1. Bạn lưu checkpoint theo business period và giới hạn số cửa sổ mỗi lượt thế nào để không bỏ hoặc xử lý trùng kỳ?
+    2. Với JDBC JobStore, bạn thiết kế test shutdown/restart, check nextFireTime và backlog thế nào để phân biệt policy thật?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại lịch trễ | Phân biệt misfire, business failure và job recovery theo trạng thái hệ thống. |
+    | Chọn misfire instruction | Dự đoán DoNothing, FireAndProceed và SimpleTrigger count policies theo nhu cầu nghiệp vụ. |
+    | Thiết kế backfill idempotent | Vẽ bảng checkpoint, business key, batch limit và trạng thái retry cho mọi kỳ bị lỡ. |
+    | Kiểm thử failure scenarios | Thiết kế thử nghiệm scheduler downtime, restart và job crash không giả định timing tuyệt đối. |
+- id: quartz-integration-008
+  title: Giới hạn chạy đồng thời, lưu trữ và cụm phụ thuộc cấu hình Quartz
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn chạy đồng thời, lưu trữ và cụm phụ thuộc cấu hình Quartz**
+
+    Giới hạn Quartz workers, bảo vệ không chạy chồng theo JobKey, JobStore persistence và cluster JDBC là bốn cơ chế khác nhau. Bài này kết hợp chúng thành một cấu hình có thể vận hành, hiểu điều kiện cluster shared DB/instance identity/clock và đánh giá recovery, misfire, idempotency và monitoring theo từng tầng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Concurrency và scope
+
+    1. `org.quartz.threadPool.threadCount` giới hạn trên mỗi node hay toàn cluster, và điều gì xảy ra nếu Job tự tạo thêm async work?
+    2. `@DisallowConcurrentExecution` áp dụng theo cùng JobKey hay toàn bộ Job class?
+    3. Vì sao `@PersistJobDataAfterExecution` không thay transaction hoặc unique business key?
+
+    ### Persistence và cluster
+
+    1. Vì sao `RAMJobStore` không phối hợp nhiều node, còn JDBC clustered JobStore cần cùng schema, schedulerName, instanceId riêng và đồng bộ đồng hồ?
+    2. Bạn dùng `isClustered`, `clusterCheckinInterval`, `misfireThreshold` và `overwrite-existing-jobs` ra sao trong hai Spring Boot instances?
+    3. Node chết giữa một Job có `requestRecovery(true)` có thể khiến business side effect trùng trong tình huống nào?
+
+    ### Kiểm thử vận hành
+
+    1. Bạn sẽ thử một node và hai node thế nào để kiểm tra worker limit, không overlap cùng JobKey và recovery?
+    2. Những metric/log/Quartz tables nào giúp phân biệt DB lock, worker starvation, misfire và node check-in thất bại?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân định đúng giới hạn | Giải thích sự khác nhau của worker count/node, JobKey serialization và quota downstream. |
+    | Cấu hình persistence/cluster | Nêu đầy đủ JDBC schema, instance identity, cluster flag, clock và migration safety. |
+    | Thiết kế recovery an toàn | Kết hợp `requestRecovery`, idempotency key, run status và retry/reconciliation. |
+    | Chẩn đoán và kiểm thử cụm | Lập test kill node, restart, trigger ownership và đo pool/DB/cluster metrics. |

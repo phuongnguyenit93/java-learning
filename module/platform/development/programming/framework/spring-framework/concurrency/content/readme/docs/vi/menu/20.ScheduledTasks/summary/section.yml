@@ -1,0 +1,97 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'Lịch tác vụ Spring: từ đăng ký @Scheduled tới xử lý và hoàn tất công việc'
+roadmapHeading: Lộ trình học @Scheduled theo trigger, registration và completion
+roadmap:
+- id: scheduled-tasks-001
+  order: 1
+  title: Bật @EnableScheduling và điều kiện bean được phát hiện
+  description: Khởi động bằng @EnableScheduling để chỉ ra chính xác nơi Spring đăng ký scheduled callbacks và điều kiện bean được phát hiện.
+  transition:
+    to: scheduled-tasks-002
+    description: Biết hạ tầng đã bật rồi, bước tiếp là bảo đảm chữ ký @Scheduled hợp lệ và nhận dependency đúng.
+- id: scheduled-tasks-002
+  order: 2
+  title: Phương thức lập lịch không nhận đối số
+  description: Cố định hợp đồng method không tham số, sau đó chọn injection hoặc TaskScheduler API để cung cấp input đúng cách.
+  transition:
+    to: scheduled-tasks-003
+    description: Sau khi method không nhận tham số, phải chọn nhịp kích hoạt và đo completion của từng callback.
+- id: scheduled-tasks-003
+  order: 3
+  title: fixedDelay đo khoảng cách từ lần chạy trước hoàn tất
+  description: Phân tích fixedDelay dựa trên thời điểm hoàn tất của callback trước để hiểu nhịp nghỉ thật.
+  transition:
+    to: scheduled-tasks-004
+    description: Hiểu completion-based delay giúp đối chiếu với cadence fixedRate và tác vụ kéo dài quá period.
+- id: scheduled-tasks-004
+  order: 4
+  title: fixedRate theo nhịp lịch và hành vi khi công việc chạy lâu
+  description: Chuyển sang fixedRate để phân biệt cadence planned start, độ trễ và non-overlap của cùng periodic registration.
+  transition:
+    to: scheduled-tasks-005
+    description: Biết planned/actual start rồi mới đọc chính xác initialDelay, unit và mốc chạy đầu tiên.
+- id: scheduled-tasks-005
+  order: 5
+  title: initialDelay và đơn vị timeUnit
+  description: Kiểm soát initialDelay và timeUnit để không hiểu sai mili giây, giây hoặc thời điểm bắt đầu.
+  transition:
+    to: scheduled-tasks-006
+    description: Initial delay có thể vừa mở đầu lịch lặp vừa tạo one-shot trên version hỗ trợ; cần phân biệt hai contract.
+- id: scheduled-tasks-006
+  order: 6
+  title: Chạy một lần bằng initialDelay trên phiên bản Spring hỗ trợ
+  description: Mở rộng từ lịch lặp sang one-shot initialDelay chỉ được Spring hỗ trợ từ 6.1, không nhầm với exactly-once.
+  transition:
+    to: scheduled-tasks-007
+    description: Sau one-shot tương đối, chuyển sang lịch theo đồng hồ địa phương bằng cron với timezone cụ thể.
+- id: scheduled-tasks-007
+  order: 7
+  title: cron và zone cho lịch theo thời gian địa phương
+  description: Học cron và zone để lập lịch theo giờ dân sự, quy đổi Instant và xử lý DST gap/overlap.
+  transition:
+    to: scheduled-tasks-008
+    description: Khi trigger đến hạn đúng zone, cần hiểu giá trị trả về hoặc Publisher có thật sự được tiêu thụ không.
+- id: scheduled-tasks-008
+  order: 8
+  title: Giá trị trả về thông thường bị bỏ qua và khác biệt với phương thức reactive
+  description: Xét return values và reactive Publisher để biết callback sync, subscription và completion khác nhau thế nào.
+  transition:
+    to: scheduled-tasks-009
+    description: Biết cơ chế một method được gọi/subscribed, tiếp tục xét nhiều declarations có thể cùng kích hoạt method.
+- id: scheduled-tasks-009
+  order: 9
+  title: Annotation lặp lại tạo nhiều lịch độc lập trên cùng phương thức
+  description: Khám phá repeatable annotations tạo nhiều registrations trên cùng method, kể cả khi có cùng nhịp.
+  transition:
+    to: scheduled-tasks-010
+    description: Repeatable annotations là một nguồn nhân lịch; bean instances và application contexts còn là nguồn khác.
+- id: scheduled-tasks-010
+  order: 10
+  title: Nhiều thể hiện bean có thể đăng ký nhiều lịch
+  description: Xác định nhiều bean instances/prototypes/contexts làm nhân số lịch, học cách tìm owner và chống trùng.
+  transition:
+    to: scheduled-tasks-011
+    description: Sau khi đếm đúng registrations, cần quản lý externalized config và trạng thái cron enabled/disabled.
+- id: scheduled-tasks-011
+  order: 11
+  title: Đưa chu kỳ ra cấu hình và dùng giá trị cron vô hiệu hóa
+  description: Đưa cron/delay ra property và dùng CRON_DISABLED cho runtime deployment có thể bật/tắt có kiểm soát.
+  transition:
+    to: scheduled-tasks-012
+    description: Khi lịch cấu hình được bật, phối hợp @Async còn làm thay đổi nghĩa completion và cần policy riêng.
+- id: scheduled-tasks-012
+  order: 12
+  title: Phối hợp @Scheduled với @Async làm thay đổi thời điểm được coi là đã hoàn tất
+  description: Khép chương bằng @Scheduled phối hợp @Async để thiết kế completion-aware scheduling, giới hạn overlap và lưu job bền vững.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài học @Scheduled
+
+  | Tiêu chí | Bài 1: 206 · Bật lịch | Bài 2: 207 · No-arg | Bài 3: 208 · fixedDelay | Bài 4: 209 · fixedRate | Bài 5: 210 · initialDelay | Bài 6: 211 · One-shot | Bài 7: 212 · cron/zone | Bài 8: 213 · Return/reactive | Bài 9: 214 · Repeatable | Bài 10: 215 · Nhiều bean | Bài 11: 216 · Cron config | Bài 12: 217 · Async completion |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | EnableScheduling, bean | No-arg method | Completion-to-start | Planned cadence, lag | Độ trễ và đơn vị | OneTimeTask 6.1+ | Local clock và ZoneId | Return/discard/Publisher | Nhiều annotations | Nhiều instances | Property, sentinel '-' | Trigger vs worker |
+  | Phân biệt chính | Bean được scan hay không | Input bằng injection/API | Đợi sau body return | Không tự overlap một JDK series | ms mặc định, string duration | Một registration mỗi context | Six-field cron, DST | Sync return vs reactive subscribe | Một method nhiều schedules | Một class nhiều objects | Tắt trigger vs tắt bean | Handoff vs business commit |
+  | Rủi ro | Thiếu infrastructure | Method có đối số | Nhầm worker completion | Lag, backlog | Sai đơn vị | Nhầm exactly-once | Sai zone hoặc DST | Eager Mono, future non-deferred | Chạy trùng do 2 triggers | @Component+@Bean trùng | Nhầm '-' cho fixedRate | Submit xong tưởng đã thành công |
+  | Kiểm chứng | Post-processor/bean | Context no-arg test | Timeline và latch | JDK periodic latch | Unit/duration test | OneTimeTask inspection | CronExpression.next | Factory/subscription counts | Two-trigger latch | Bean identity/registry | Enabled/disabled contexts | Second tick while worker busy |
+  | Ứng dụng | Bật scheduling đúng scope | Thiết kế input rõ | Poll sau nghỉ | Cadence và catch-up | Startup timing | Warm-up local | Báo cáo giờ địa phương | Job reactive có thể kiểm soát | Hai lịch theo nhu cầu | Một owner mỗi job | Triển khai đa profile | Completion-aware coordination |

@@ -1,0 +1,276 @@
+summaries:
+- id: task-executor-001
+  title: TaskExecutor là hợp đồng thực thi tác vụ của Spring
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **TaskExecutor là hợp đồng thực thi tác vụ của Spring**
+
+    Từ một service gửi tác vụ, người học cần hiểu `TaskExecutor` là hợp đồng tách công việc cần làm khỏi cách tạo thread, queue và pool. Bài này xây dựng nền để đọc `execute(Runnable)`, chọn abstraction đúng và không nhầm nộp việc với hoàn tất nghiệp vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất hợp đồng
+
+    1. Vì sao Spring cung cấp `TaskExecutor` dù JDK đã có `Executor`?
+    2. `execute(Runnable)` cam kết điều gì và không bảo đảm những gì?
+    3. `SyncTaskExecutor` và `ThreadPoolTaskExecutor` cùng một interface nhưng khác hành vi ra sao?
+
+    ### Kết quả và tài nguyên
+
+    1. Khi `execute` trả `void`, caller làm cách nào chờ task hoàn tất đúng lúc?
+    2. Vì sao queue còn chỗ có thể khiến pool chưa mở rộng tới `maxPoolSize`?
+    3. Tại sao service nên inject bean executor thay vì tạo một pool mới cho từng request?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc hợp đồng | Giải thích `TaskExecutor` kế thừa `Executor`, nhận `Runnable` và không có Future từ `execute`. |
+    | Chọn chiến lược | Phân loại đồng bộ, thread riêng, pool và adapter theo nhu cầu thực thi. |
+    | Chờ completion | Phân tích ví dụ latch và chỉ đọc kết quả khi task hoàn tất. |
+    | Tách trách nhiệm | Thiết kế service nhận `TaskExecutor` qua constructor, để Spring quản lý cấu hình/vòng đời pool. |
+    | Nhận diện rủi ro | Phân biệt acceptance với durability, lỗi worker và rejection lúc giao việc. |
+- id: task-executor-002
+  title: execute(Runnable) không mặc nhiên bảo đảm chạy trên luồng khác
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **execute(Runnable) không mặc nhiên bảo đảm chạy trên luồng khác**
+
+    Việc gọi `execute(Runnable)` không chứng minh tác vụ chắc chắn chạy trên thread khác. Bài này cho người học công cụ phân biệt thời điểm submit/start/finish và nhận biết `CallerRunsPolicy` làm request thread trực tiếp chạy việc khi pool bão hòa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thread và completion
+
+    1. Tại sao tên interface không đủ kết luận task dùng thread khác?
+    2. Điều gì quyết định thứ tự in khi dùng `SyncTaskExecutor` so với pool?
+    3. Vì sao chỉ đo latency hoặc đọc log chưa chứng minh task đã hoàn tất?
+
+    ### Quá tải và kiểm thử
+
+    1. Pool với một worker và queue một slot cần điều kiện nào để `CallerRunsPolicy` kích hoạt?
+    2. Chính sách `AbortPolicy` khác gì về đường lỗi và caller latency?
+    3. Dùng `Thread.currentThread()` với `CountDownLatch` thế nào để kiểm chứng thay vì `sleep`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt thời điểm | Mô tả dispatch, bắt đầu, hoàn tất và đường caller-runs trong một trace. |
+    | Kiểm tra thread | Viết phép so sánh đối tượng `Thread` và tín hiệu latch đúng thời điểm. |
+    | Dự đoán overload | Dự đoán output của ví dụ JDK dùng CallerRunsPolicy khi bão hòa có chủ đích. |
+    | Thiết kế chính sách | Giải thích ảnh hưởng của rejection handler đến off-thread, latency và context. |
+    | Kiểm thử an toàn | Dùng timeout hữu hạn và phân biệt lỗi submit với exception worker. |
+- id: task-executor-003
+  title: AsyncTaskExecutor và các phương thức submit()
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **AsyncTaskExecutor và các phương thức submit()**
+
+    Nếu business code cần biết tác vụ đã hoàn tất, nhận kết quả hoặc bắt lỗi từ worker, `execute` không đủ. `AsyncTaskExecutor` bổ sung hai overload `submit` và `Future`; bài học hướng dẫn cách sử dụng chúng cùng timeout, interruption, cancellation và quan sát exception chính xác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lựa chọn API
+
+    1. Vì sao biến kiểu `TaskExecutor` không có method `submit`?
+    2. `submit(Runnable)` và `submit(Callable)` khác nhau như thế nào về kiểu Future và giá trị `get()`?
+    3. Vì sao `isDone()` đúng không có nghĩa nghiệp vụ đã thành công?
+
+    ### Failure và vòng đời
+
+    1. Làm sao tách `TaskRejectedException` tại submit khỏi `ExecutionException` ở get?
+    2. `Future.get(timeout)` và `cancel(true)` giới hạn điều gì, không tự rollback điều gì?
+    3. Vì sao bỏ qua Future có thể khiến exception của task không được quan sát?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn overload | Viết đúng `submit(Runnable)` hoặc `submit(Callable)` theo nhu cầu. |
+    | Quan sát kết quả | Gọi `Future.get` với timeout, kiểm chứng giá trị null hoặc dữ liệu trả về. |
+    | Phân tích lỗi | Bắt `ExecutionException`, kiểm tra `getCause()` và phân biệt rejection tại submit. |
+    | Quản lý hủy | Giải thích `cancel`, interrupt, timeout và tính không bền vững của task trong RAM. |
+    | Thiết kế giám sát | Xác định owner cần theo dõi completion, failure và queue thay vì bỏ Future. |
+- id: task-executor-004
+  title: Nhận CompletableFuture qua submitCompletable() khi phiên bản hỗ trợ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Nhận CompletableFuture qua submitCompletable() khi phiên bản hỗ trợ**
+
+    Khi cần phối hợp các công việc bất đồng bộ, `submitCompletable` trong Spring 6.0+ cung cấp `CompletableFuture` với các stage kết hợp dữ liệu và phục hồi lỗi. Bài này tập trung vào ranh giới phiên bản, overload, thread chạy continuation và lỗi có thể xuất hiện ngay tại submit hoặc sau đó.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### API theo phiên bản
+
+    1. Cần xác minh những gì để gọi được `AsyncTaskExecutor.submitCompletable`?
+    2. Vì sao overload Runnable có kết quả null còn Callable có giá trị kiểu cụ thể?
+    3. Với Spring 5.x, dùng `supplyAsync` hoặc `runAsync` kèm executor thế nào?
+
+    ### Composition và lỗi
+
+    1. Chọn `thenApply`, `thenCombine`, `thenCompose` hoặc `exceptionally` dựa vào quan hệ các bước ra sao?
+    2. Vì sao `thenApplyAsync` không truyền executor có thể chạy ngoài Spring pool?
+    3. `CompletionException`, rejection và lỗi trong continuation khác nhau ở giai đoạn nào?
+    4. Tại sao `orTimeout` hoặc `CompletableFuture.cancel(true)` không bảo đảm dừng I/O đang chạy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra compatibility | Xác định mốc Spring 6.0 và kiểu `AsyncTaskExecutor` có hai overload. |
+    | Ghép pipeline | Dùng `thenCombine` và `thenApply` tạo kết quả từ các future độc lập. |
+    | Xử lý lỗi | Áp dụng `handle`/`exceptionally` và bắt rejection tại thời điểm submit. |
+    | Chọn execution context | Truyền executor cho stage Async khi cần giữ cùng pool và giới hạn tải. |
+    | Tránh starvation | Giải thích rủi ro chặn worker đợi task con trong cùng pool. |
+- id: task-executor-005
+  title: Tiêm bộ thực thi qua interface để tách khỏi cách triển khai
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tiêm bộ thực thi qua interface để tách khỏi cách triển khai**
+
+    Một service chỉ cần gửi `Runnable` không nên mang trách nhiệm quản trị pool và thread. Bài này đưa ra constructor injection qua `TaskExecutor`, lựa chọn bean bằng `@Qualifier`, chuyển profile pool/sync và cách dùng fake executor để test service không phụ thuộc timing.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dependency injection
+
+    1. Vì sao inject interface ổn định hơn việc service tự `new ThreadPoolTaskExecutor`?
+    2. Hai profile dùng cùng bean name nhưng đổi implementation được cấu hình như thế nào?
+    3. Vì sao `@Qualifier` cần thiết khi có nhiều executor cùng kiểu?
+
+    ### Kiểm thử và ranh giới
+
+    1. Fake executor lưu `Runnable` cho phép kiểm thử hành vi submit ra sao?
+    2. Khi nào nên đổi dependency thành `AsyncTaskExecutor` hoặc `TaskScheduler`?
+    3. DI có giải quyết hộ transaction, ThreadLocal hoặc thread safety của singleton không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tách cấu hình | Thiết kế service giữ field `TaskExecutor` và cấu hình pool trong Spring. |
+    | Chọn đúng bean | Thêm qualifier theo tên vai trò và giải thích tránh injection ambiguity. |
+    | Thay implementation | Dùng profile chuyển giữa pool và đồng bộ mà không sửa logic service. |
+    | Kiểm thử xác định | Thu Runnable vào fake executor và chủ động thực thi, kiểm tra side effect/latch. |
+    | Xác định giới hạn | Giải thích ranh giới lỗi, shutdown, context và shared state sau DI. |
+- id: task-executor-006
+  title: Phân biệt TaskExecutor với TaskScheduler
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt TaskExecutor với TaskScheduler**
+
+    `TaskExecutor` thực thi công việc được giao, còn `TaskScheduler` quyết định thời điểm một callback phải chạy. Bài này giúp người học đọc fixed-rate, fixed-delay, cron và cách kết hợp `@Scheduled` với `@Async` mà không hiểu sai completion của công việc nền.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng về thời gian
+
+    1. Tại sao `execute(Runnable)` không thể trực tiếp mô tả cron hoặc fixed-delay?
+    2. Fixed-rate và fixed-delay khác nhau thế nào khi tác vụ chạy lâu hơn chu kỳ?
+    3. `@EnableScheduling`, `TaskScheduler` và timezone có vai trò gì trong lịch định kỳ?
+
+    ### Điều phối cùng executor
+
+    1. Nếu callback scheduled chỉ submit `@Async` rồi trả về, fixed-delay đo theo mốc nào?
+    2. `ScheduledFuture` của callback dispatch chứng minh điều gì, không chứng minh điều gì?
+    3. Vì sao nhiều replica Spring có thể cùng thực hiện lịch nếu thiếu khóa phân tán?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn abstraction | Phân loại tình huống cần executor hay scheduler theo điểm kích hoạt. |
+    | Phân tích nhịp | Dự đoán mốc fixed rate/delay với job lâu hơn khoảng lập lịch. |
+    | Đọc cấu hình | Giải thích cron, timezone và hai annotation enable độc lập. |
+    | Quan sát completion | Phân biệt kết thúc callback với kết thúc tác vụ do callback gửi đi. |
+    | Xử lý chồng lấp | Đề xuất in-flight control, idempotency hoặc điều phối phân tán khi cần. |
+- id: task-executor-007
+  title: TaskRejectedException và hợp đồng khi không nhận được tác vụ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **TaskRejectedException và hợp đồng khi không nhận được tác vụ**
+
+    Pool có giới hạn có thể từ chối nhiệm vụ khi worker/queue đầy hoặc khi shutdown. Nếu application vẫn xác nhận đã nhận công việc, người dùng có thể mất job không thể phục hồi. Bài này dạy cách phân biệt rejection với lỗi thực thi và chọn chính sách xử lý quá tải đúng hợp đồng nghiệp vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguyên nhân và policy
+
+    1. Điều kiện nào khiến `ThreadPoolTaskExecutor` không thể nhận thêm task?
+    2. So sánh `AbortPolicy`, `CallerRunsPolicy`, `DiscardPolicy` và `DiscardOldestPolicy` theo nguy cơ mất việc?
+    3. Tại sao `execute()` không ném lỗi có thể vẫn dẫn đến mất task với discard policy?
+
+    ### Kiểm thử và reliability
+
+    1. Làm sao dùng một worker, queue một slot và latch để tạo rejection chắc chắn?
+    2. Lúc nào API có thể trả 202, 429 hoặc 503 mà không hứa sai về việc được nhận?
+    3. Vì sao retry và queue trong RAM không tự bảo đảm durable delivery hay idempotency?
+    4. Metric nào phân biệt saturation, shutdown và backlog?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán saturation | Giải thích thứ tự core, queue, max và điều kiện từ chối. |
+    | Chọn policy | Đánh giá trade-off của bốn rejection handlers đối với latency và mất job. |
+    | Viết test overload | Dùng latch dàn dựng rejection và bắt `TaskRejectedException` đúng boundary. |
+    | Thiết kế giao thức nhận việc | Chọn fail-fast, retry hữu hạn hoặc durable queue/outbox theo nghiệp vụ. |
+    | Quan sát vận hành | Nêu active threads, queue depth, rejection rate và thời gian chờ cần theo dõi. |
+- id: task-executor-008
+  title: Vai trò của bộ thực thi trong các thành phần Spring khác
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vai trò của bộ thực thi trong các thành phần Spring khác**
+
+    Executor được dùng trong nhiều phần của Spring nhưng các thành phần lựa chọn bean và xử lý completion, exception khác nhau. Bài này đưa `TaskExecutor` vào các tình huống tích hợp MVC Callable, Application Events, Spring Batch, Spring Integration và đối chiếu với scheduler/reactive execution.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đường tích hợp
+
+    1. Lời gọi `@Async` đi qua proxy và qualifier chọn executor như thế nào?
+    2. MVC Callable khác DeferredResult về việc ai nộp task vào worker ra sao?
+    3. `@Async @EventListener` khác multicaster async trong cách giao listener như thế nào?
+
+    ### Ranh giới vận hành
+
+    1. Spring Batch chạy song song có tự làm reader/writer và transaction an toàn không?
+    2. `ExecutorChannel` thay đổi thứ tự và transaction context của message handler như thế nào?
+    3. Reactor Scheduler và TaskScheduler khác TaskExecutor ở mục đích gì?
+    4. Làm sao chọn pool và theo dõi queue/rejection riêng cho từng workload?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ đường dispatch | Giải thích executor tham gia tại `@Async`, MVC, events, Batch, ExecutorChannel. |
+    | Chọn đúng executor | Kiểm tra qualifier, bean name và cấu hình riêng của từng integration. |
+    | Đánh giá thread boundary | Phân tích transaction, security/MDC, ordering và error propagation khi chuyển thread. |
+    | Đọc demo tích hợp | Diễn giải ba đường execute, @Async, event dùng chung pool và các tín hiệu completion. |
+    | Vận hành có kiểm soát | Đề xuất tách pool và durable messaging khi cần, nêu metric bottleneck. |

@@ -1,0 +1,382 @@
+summaries:
+- id: design-practice-001
+  title: Chọn xử lý đồng bộ, @Async hoặc lưu công việc bền vững theo yêu cầu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn xử lý đồng bộ, @Async hoặc lưu công việc bền vững theo yêu cầu**
+
+    Bài này hướng dẫn quyết định **giữ tác vụ trong request**, gửi qua `@Async`, hay **ghi job bền vững rồi mới xác nhận đã nhận việc**. Cùng một nghiệp vụ có thể cần nhiều ranh giới: commit đơn hàng đồng bộ, còn gửi biên nhận qua outbox và worker.
+
+    Người học không chỉ so sánh độ trễ mà còn xác định chính xác thời điểm được trả `200/201/202`, khả năng phục hồi sau crash, độ tin cậy của retry, xử lý duplicate và giới hạn của transaction gắn với thread. Ví dụ HTTP và PostgreSQL làm rõ đánh đổi từ lựa chọn kiến trúc đến claim job và trạng thái kết thúc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng kết quả và mức bảo đảm
+
+    1. Khi nào phải xử lý đồng bộ để client nhận kết quả nghiệp vụ cuối cùng, thay vì chỉ nhận acknowledgment?
+    2. Vì sao chuyển một lời gọi sang `@Async` giúp thread caller rảnh hơn nhưng không làm công việc bền vững qua JVM crash?
+    3. Khi nào chỉ được trả `202 Accepted` sau khi job hoặc message đã được commit bền vững, và cần cung cấp trạng thái gì?
+
+    ### Giao dịch, job bền vững và duplicate
+
+    1. Điều gì có thể xảy ra nếu một method `@Transactional` gửi `@Async` đọc dữ liệu trước khi giao dịch commit?
+    2. Transactional outbox khắc phục khoảng trống crash giữa DB commit và broker publish bằng cơ chế nào?
+    3. Job table cần dùng `operation_key`, claim/lease, attempt number và idempotency để giải quyết những race nào?
+
+    ### Lựa chọn theo tình huống thực
+
+    1. Với một API xác thực thanh toán và gửi email biên nhận, nên phân chia các bước đồng bộ và durable như thế nào?
+    2. Khi nào một task best-effort có thể dùng executor trong RAM, còn khi nào phải dùng queue/job store và worker độc lập?
+    3. Bạn sẽ đo rejection, backlog, time-to-complete và duplicate suppression để kiểm chứng lời hứa xử lý ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại mức bảo đảm | Phân tích tình huống và chọn sync, `@Async` hoặc durable job từ deadline, ACK và yêu cầu chống mất việc. |
+    | Thiết kế ranh giới HTTP | Vẽ luồng phản hồi `200/201/202` cùng job ID và điều kiện commit tương ứng. |
+    | Thiết kế giao dịch | Chỉ ra crash window của dual-write và thiết kế job/outbox trong cùng transaction. |
+    | Giải thích recovery | Phác họa claim bằng lease, retry có giới hạn, fencing và idempotency của side effect. |
+    | Đánh giá kiến trúc | So sánh chi phí, vận hành và metrics cho ít nhất ba use case trong bài. |
+- id: design-practice-002
+  title: Thiết kế đầu vào, kết quả và trạng thái công việc độc lập với request
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thiết kế đầu vào, kết quả và trạng thái công việc độc lập với request**
+
+    Một HTTP request có thể kết thúc trước khi worker tạo xong báo cáo; vì vậy job cần **input, state và result** tồn tại độc lập với request thread. Bài này giúp thiết kế command bất biến, trạng thái có chuyển tiếp hợp lệ, mã lỗi an toàn và endpoint riêng để tra cứu hoặc tải kết quả.
+
+    Qua ví dụ Java 17/Spring `ConcurrentHashMap`, người học kiểm chứng mô hình trong một JVM rồi nâng yêu cầu lên DB/outbox khi cần restart và multi-instance. Các vấn đề tenant authorization, idempotency, timeout, cancel và late callback được đặt đúng vào state machine thay vì giấu trong Future.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đầu vào và kết quả độc lập
+
+    1. Vì sao command nền không nên giữ `HttpServletRequest`, session, request-scoped bean hoặc JPA entity còn managed?
+    2. Làm thế nào tạo `tenantId`, `requestedBy`, `schemaVersion` và snapshot input từ dữ liệu được server xác thực?
+    3. Kết quả thành công và lỗi của một job nên chứa những trường nào để client tra cứu mà không lộ stack trace hay secret?
+
+    ### State machine và đồng thời
+
+    1. Bạn sẽ ngăn một callback đến muộn ghi đè trạng thái `SUCCEEDED` hoặc `FAILED` bằng điều kiện chuyển trạng thái nào?
+    2. Khác biệt giữa `jobId`, `Idempotency-Key` và `attemptId` là gì, đặc biệt khi client retry và worker bị redeliver?
+    3. Vì sao `Future.isDone()` không đủ kết luận job đã `SUCCEEDED`, và timeout/cancel không chứng minh side effect đã dừng?
+
+    ### API, durability và an toàn
+
+    1. HTTP POST tạo job và GET đọc trạng thái nên có hợp đồng `202`, `Location` và kiểm tra tenant như thế nào?
+    2. Khi chuyển từ map trong RAM sang DB/outbox, phải bổ sung commit, lease, fencing và phục hồi crash ở đâu?
+    3. Bằng bài test nào bạn chứng minh request đã kết thúc vẫn không làm mất dữ liệu input, state hoặc result của job?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế command | Xây dựng DTO/record có phiên bản, input bất biến, identity đáng tin và không phụ thuộc servlet. |
+    | Thiết kế state machine | Liệt kê chuyển trạng thái hợp lệ và bảo vệ terminal state bằng CAS/version/conditional update. |
+    | Phân biệt job và attempt | Xử lý idempotent POST, worker retry và không công bố kết quả trùng hoặc sai owner. |
+    | Thiết kế API trạng thái | Viết hợp đồng POST/GET với mã lỗi chuẩn, jobId, resultRef và authorization theo tenant. |
+    | Kiểm thử vòng đời | Dựng test success, failure, rejection, late callback, cancellation, request disconnect và restart. |
+- id: design-practice-003
+  title: Thực hành nhóm luồng hữu hạn cho tác vụ tạo báo cáo
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thực hành nhóm luồng hữu hạn cho tác vụ tạo báo cáo**
+
+    Bài thực hành xây dựng luồng tạo báo cáo bằng `ThreadPoolTaskExecutor` chuyên dụng, thay vì mở thread vô hạn hoặc để mọi job chung một pool mặc định. Người học thấy thứ tự nhận việc core → queue → max, cách `AbortPolicy` thông báo quá tải, và vì sao báo cáo nặng phải có queue budget cùng giới hạn tài nguyên DB/storage.
+
+    Chương trình Java 17 dùng latch ép tình huống hai worker bận, một job chờ và job thứ tư bị từ chối. Phần Spring tạo CSV bằng `@Async`, kiểm tra đúng worker và thử điều phối một batch với cửa sổ in-flight để tránh gửi không kiểm soát.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Pool, queue và admission
+
+    1. Với `core=2`, `max=4`, `queueCapacity=8`, vì sao các task thường vào queue trước khi pool tăng vượt core?
+    2. Vì sao bốn worker và tám slot queue không đồng nghĩa API có thể hứa tất cả báo cáo hoàn tất sau restart?
+    3. Khi cả worker và queue đầy, điều gì phải xảy ra để caller không tưởng job đã được chấp nhận?
+
+    ### Thực hành và phép thử
+
+    1. Vì sao `CountDownLatch` giúp chứng minh hai worker đang bận và task thứ tư bị reject chắc chắn hơn `Thread.sleep`?
+    2. Bạn kiểm tra `reportId`, nội dung CSV, tổng số cents và prefix worker của `ReportWorker.generate` bằng JUnit ra sao?
+    3. Trong một batch lớn, cửa sổ in-flight và `ExecutorCompletionService` giới hạn số task chưa thu kết quả như thế nào?
+
+    ### Giới hạn hệ thống và lifecycle
+
+    1. Khi worker tạo report phải gọi database và ghi object storage, những tài nguyên nào ngoài số thread cần giới hạn?
+    2. Vì sao để worker `get()` một future con trong cùng pool nhỏ có thể dẫn đến starvation deadlock?
+    3. Cần tổ chức cancellation, shutdown, transaction và job recovery thế nào nếu báo cáo không được mất?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình executor | Tạo bean reportExecutor với core/max/queue hữu hạn, tên worker và handler ném rejection. |
+    | Chứng minh saturation | Chạy test Java 17 có latch, dự đoán `active=2`, `queued=1`, số job accepted và rejected. |
+    | Tạo báo cáo async | Viết hoặc kiểm chứng `@Async` CSV worker qua Spring proxy, assert kết quả và tên thread. |
+    | Giới hạn batch | Mô tả/triển khai cửa sổ in-flight, thu kết quả có timeout và xử lý reject hoặc failure. |
+    | Bảo vệ tài nguyên | Chọn giới hạn DB, memory, storage, request deadline và shutdown/recovery theo SLA. |
+- id: design-practice-004
+  title: Thực hành kết hợp hai lời gọi độc lập bằng CompletableFuture
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thực hành kết hợp hai lời gọi độc lập bằng CompletableFuture**
+
+    Khi API cần cả hồ sơ khách hàng và điểm thưởng từ hai nguồn độc lập, thực thi tuần tự khiến độ trễ gần bằng tổng hai lời gọi. Bài này cho người học khởi chạy **cả hai future trước khi chờ**, dùng `thenCombine` tạo `Summary`, và hiểu lúc nào thay bằng `thenCompose` hoặc `allOf`.
+
+    Đường Spring MVC trả `CompletableFuture` trực tiếp để không chặn request thread, còn bài JUnit tạo hai future điều khiển được để chứng minh kết quả chỉ hình thành sau khi cả hai thành công. Timeout, fallback, rejection và thread context được xử lý như giới hạn của lời gọi thực tế.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cách tạo và ghép future
+
+    1. Vì sao `profileFuture.join()` trước khi submit `pointsFuture` khiến hai lời gọi độc lập chạy gần như tuần tự?
+    2. Trong trường hợp nào dùng `thenCombine` thay vì `thenCompose`, `thenApply` hoặc `allOf`?
+    3. Khi cả hai future hoàn thành thành công, `thenCombine` tạo DTO từ các dữ liệu nào và hàm ghép có tự tạo thread mới không?
+
+    ### Spring, lỗi và timeout
+
+    1. Tại sao Spring MVC controller có thể trả `CompletableFuture<Summary>` trực tiếp mà không gọi `join()`?
+    2. Nếu một upstream thất bại hoặc executor từ chối lúc submit, hai đường lỗi đến caller khác nhau thế nào?
+    3. `orTimeout` trên future ghép có tự ngắt socket và hai upstream supplier không, và cần cấu hình timeout thật ở đâu?
+    4. Vì sao fallback `0 điểm` có thể sai nghĩa nếu upstream trả lỗi chứ không trả số 0?
+
+    ### Đo và kiểm thử
+
+    1. Bằng cách nào bạn tạo hai `CompletableFuture` chưa hoàn tất để assert chỉ một nhánh xong thì summary vẫn pending?
+    2. Khi hai upstream dùng blocking I/O và cùng một executor, cần kiểm tra worker/connection limit và latency như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Diễn đạt phép ghép | Phân biệt thenCombine, thenCompose và allOf theo đồ thị phụ thuộc của hai nguồn. |
+    | Lập trình futures | Khởi chạy hai supplier độc lập rồi kết hợp DTO bất biến mà không chờ giữa các lần submit. |
+    | Tích hợp Spring MVC | Trả future từ controller và chọn executor bằng qualifier, tránh block Servlet thread. |
+    | Xử lý lỗi | Phân biệt exceptional completion, submit rejection, caller timeout và fallback theo business semantics. |
+    | Kiểm thử xác định | Assert thứ tự hoàn tất, lỗi một nhánh và kết quả ghép bằng future điều khiển thủ công. |
+- id: design-practice-005
+  title: Thực hành @Async có lỗi, timeout và ngữ cảnh nhật ký
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thực hành @Async có lỗi, timeout và ngữ cảnh nhật ký**
+
+    Bài lab kết hợp ba vấn đề thường bị trộn vào nhau khi dùng `@Async`: **submission có thể bị từ chối**, **task có thể lỗi sau khi đã nhận**, và **caller có thể hết thời gian đợi** mà worker vẫn chạy. Người học chạy ứng dụng Boot có `@Async` trả `CompletableFuture` lẫn `void`, so sánh `ExecutionException`, `TimeoutException` và `AsyncUncaughtExceptionHandler`.
+
+    Điểm thực hành quan trọng là dùng `TaskDecorator` chụp map MDC tại submit, đặt trên worker rồi khôi phục trong `finally` để giữ `requestId` mà không rò sang job kế tiếp. Demo dùng tín hiệu latch để đồng bộ exception `void` thay vì suy theo thứ tự log.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các đường lỗi của @Async
+
+    1. Rejection tại thời điểm submit khác gì với ngoại lệ bên trong method `@Async` đã chạy?
+    2. Với `@Async void`, vì sao caller không nhận `ExecutionException` và cần `AsyncUncaughtExceptionHandler` ở đâu?
+    3. Khi một `CompletableFuture` thất bại, `get()` và `join()` biểu diễn nguyên nhân lỗi khác nhau thế nào?
+
+    ### Timeout và lifecycle
+
+    1. Vì sao `future.get(50, MILLISECONDS)` có thể timeout nhưng task giả lập 500ms vẫn hoàn thành về sau?
+    2. `orTimeout`, `completeOnTimeout` và `cancel(true)` thay đổi đối tượng future hoặc tác vụ nền khác nhau thế nào?
+    3. Để giới hạn thực sự một remote call, cần đặt deadline tại những tầng HTTP/DB/task nào?
+
+    ### MDC, TaskDecorator và kiểm chứng
+
+    1. Tại sao `requestId` trong MDC của caller thường không tự xuất hiện trong thread `lab-*`?
+    2. Bạn triển khai chuỗi `capture → restore snapshot → task.run → restore previous` trong `TaskDecorator` ra sao?
+    3. Vì sao callback `whenComplete` có thể chạy trên thread khác với cả caller lẫn worker và cần ngữ cảnh quan sát riêng?
+    4. Những marker nào trong runner chứng minh thành công, Future failure, caller timeout, late success và void exception?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại exception | Xác định vị trí bắt TaskRejectedException, ExecutionException và TimeoutException. |
+    | Vận hành @Async void | Cấu hình/kiểm chứng AsyncUncaughtExceptionHandler có log và tín hiệu hoàn tất quan sát được. |
+    | Phân biệt timeout | Tái hiện `get(timeout)` nhưng task vẫn hoàn thành, không coi timeout là hủy tác vụ. |
+    | Truyền MDC an toàn | Viết TaskDecorator capture/restore context mỗi lần submit và dọn trong finally. |
+    | Đọc log xác định | Đối chiếu các marker `WORK_START`, `FUTURE_FAILURE`, `LATE_SUCCESS`, `VOID_FAILURE` với requestId đúng. |
+- id: design-practice-006
+  title: Thực hành lịch cập nhật dữ liệu với fixedDelay rồi cron
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thực hành lịch cập nhật dữ liệu với fixedDelay rồi cron**
+
+    Bài này đưa Spring scheduling vào một luồng cập nhật snapshot dữ liệu. Người học bắt đầu bằng `fixedDelay`, chờ một khoảng sau khi lần refresh trước kết thúc, sau đó **chuyển sang cron sáu trường** để kích hoạt ở mốc giờ theo múi giờ rõ ràng mà không thay logic business.
+
+    Phần thực hành dùng hai Spring profile để không đăng ký cả hai lịch đồng thời, `AtomicReference` chỉ công bố snapshot khi load thành công và `AtomicBoolean` chống hai lượt refresh chồng lấn trong JVM. Test logic refresh/cron được tách khỏi kiểm tra scheduler chạy theo đồng hồ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân biệt trigger
+
+    1. Vì sao một job mất 2 giây với `fixedDelay=5000ms` thường có hai lần START cách nhau khoảng 7 giây?
+    2. Cron `0/10 * * * * *` của Spring có mấy trường và kích hoạt tại các mốc giây nào?
+    3. Đặt `zone=Asia/Ho_Chi_Minh` làm rõ lịch nghiệp vụ ra sao khi server chạy ở nơi khác?
+
+    ### Thiết kế refresh an toàn
+
+    1. Vì sao cần chọn đúng một profile `delay` hoặc `cron` thay vì bật cả hai bộ kích hoạt?
+    2. AtomicReference và `List.copyOf` bảo đảm người đọc snapshot không nhìn thấy trạng thái cập nhật dở bằng cách nào?
+    3. Khi `CatalogSource.load()` lỗi, service nên giữ dữ liệu và version nào, và phải đo/log điều gì?
+
+    ### Kiểm thử và vận hành nhiều instance
+
+    1. Test `CronExpression.next` khác gì với test Spring đã đăng ký và kích hoạt scheduler thật?
+    2. Nếu hai replica cùng chạy `@Scheduled`, cần phối hợp hoặc idempotency thế nào để tránh một cập nhật nghiệp vụ bị thực hiện trùng?
+    3. Khi task chạy dài hơn khoảng cron, bạn sẽ định nghĩa skip/misfire/recovery và timeout ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn lịch thực thi | Giải thích chính xác fixedDelay và cron theo elapsed time, wall-clock và timezone. |
+    | Thiết kế cấu hình Spring | Tạo hai @Scheduled job theo profile dùng chung CatalogRefreshService và không đăng ký trùng. |
+    | Công bố snapshot | Dùng AtomicReference để thay dữ liệu nguyên vẹn, giữ snapshot cũ nếu đọc nguồn lỗi. |
+    | Kiểm chứng lịch | Viết JUnit kiểm tra refresh và parse cron, xác nhận wiring qua integration test riêng. |
+    | Xử lý deployment | Giải thích giới hạn AtomicBoolean trong JVM và đề xuất điều phối/idempotency khi multi-replica. |
+- id: design-practice-007
+  title: Tái hiện tự gọi @Async, cạn nhóm luồng và mất ngữ cảnh
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tái hiện tự gọi @Async, cạn nhóm luồng và mất ngữ cảnh**
+
+    Bài thực nghiệm không chỉ mô tả mà cố ý **làm hỏng ba giả định**: method `@Async` tự gọi nên không đi qua Spring proxy, executor một worker với queue=0 từ chối task mới, và `ThreadLocal` trên caller không tự đi sang worker. Người học dùng Spring TestContext, JUnit và latch để tạo bằng chứng ổn định cho từng nguyên nhân.
+
+    Khi sửa, bài yêu cầu tách bean để lời gọi qua proxy, chọn giới hạn executor có thể đo, và truyền/khôi phục context bằng `TaskDecorator`. Ba lỗi khác nhau cần ba tập tín hiệu khác nhau; không thể sửa hết chỉ bằng tăng pool size hoặc gắn thêm annotation.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đường gọi proxy
+
+    1. Vì sao `AopUtils.isAopProxy(service)==true` không chứng minh lời gọi `this.gated()` trong target sẽ được intercept?
+    2. Bạn dùng danh tính Thread của caller và worker như thế nào để kiểm tra self-invocation khác external bean call?
+    3. Vì sao `new MyService()` hoặc test chỉ mock service không đủ kiểm chứng `@EnableAsync` và Spring advice thật?
+
+    ### Pool saturation và hai loại thất bại
+
+    1. Với `core=max=1` và `queueCapacity=0`, vì sao task thứ hai bị TaskRejectedException khi worker đầu đang đợi latch?
+    2. Điều gì khác giữa executor saturation và self-invocation, dù cả hai có thể khiến API chạy chậm?
+    3. Vì sao tăng `maxPoolSize` nhưng để queue quá lớn không nhất thiết giải quyết backlog?
+
+    ### Context propagation và test an toàn
+
+    1. ThreadLocal của caller biến mất trên worker vì cơ chế gắn thread nào?
+    2. Làm sao TaskDecorator thực hiện `capture → set → restore` để lần không có trace không đọc nhầm trace của job trước?
+    3. Vì sao không nên sao chép nguyên transaction, EntityManager hay HTTP request sang worker?
+    4. Test cần dọn latch, pool và ThreadLocal như thế nào để không làm CI treo hoặc test kế tiếp bị nhiễu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chứng minh self-invocation | Viết assertion caller thread bằng worker khi self-call, và khác khi đi qua Spring proxy. |
+    | Dựng saturation test | Khống chế worker bằng latch, queueCapacity=0, rồi assert exception của task mới tại caller. |
+    | Tách loại lỗi | Dùng evidence về proxy, active/queue và context để phân loại từng lỗi thay vì suy đoán. |
+    | Truyền context | Cấu hình TaskDecorator cho TRACE_ID và kiểm tra giá trị có/không có sau mỗi task. |
+    | Làm bài test ổn định | Dùng timeout, @SpringJUnitConfig và cleanup để test ba failure mode không phụ thuộc sleep. |
+- id: design-practice-008
+  title: Đo tải và điều chỉnh đồng thời với giới hạn tài nguyên phụ thuộc
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đo tải và điều chỉnh đồng thời với giới hạn tài nguyên phụ thuộc**
+
+    Bài này lý giải tại sao tăng từ 8 lên 32 worker có thể không cải thiện throughput nếu database chỉ có 8 connection. Thay vì điều chỉnh theo cảm giác, người học đo **arrival rate, goodput, queue wait, dependency acquisition wait, end-to-end p95/p99 và rejection** trên cùng một workload.
+
+    Từ định luật Little đến thí nghiệm Java dùng Semaphore và k6 constant-arrival-rate, bài giúp tìm bottleneck theo ranh giới tài nguyên. Người học thiết kế baseline, thay đổi từng giả thuyết và đánh giá kết quả theo deadline, lỗi và sức khỏe downstream, không chỉ số thread đang hoạt động.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tài nguyên và chỉ số
+
+    1. Định luật Little `L = λ × W` yêu cầu các đại lượng phải dùng cùng ranh giới đo và điều kiện ổn định nào?
+    2. Vì sao 8 connection giữ trung bình 0,2s chỉ cho trần lý tưởng xấp xỉ 40 calls/s chứ chưa phải capacity production?
+    3. Executor queue wait, worker run duration và thời gian chờ lấy DB connection khác nhau ở đâu?
+    4. Vì sao throughput hoặc HTTP 202 rate cao có thể che giấu goodput công việc thật thấp?
+
+    ### Kiểm soát concurrency tại đúng chỗ
+
+    1. Nếu pool có 32 worker nhưng Hikari active luôn 8 và pending tăng, tăng worker có giải quyết được bottleneck không?
+    2. Semaphore trong một replica có giới hạn gì khi dịch vụ triển khai nhiều pod cùng truy cập downstream?
+    3. Vì sao virtual threads không tự tăng DB connection, quota API hoặc năng lực CPU của dependency?
+
+    ### Đo tải và chọn thay đổi
+
+    1. Khi chạy k6 constant-arrival-rate, cần đo thêm dropped iterations và actual arrival rate vì sao?
+    2. Bạn sẽ chọn baseline và một thay đổi có giả thuyết cụ thể thế nào để so sánh goodput, p95/p99, timeout, rejection và dependency pending?
+    3. Khi tăng pool làm p99 và lỗi xấu đi dù throughput tăng nhẹ, bạn sẽ kết luận và chọn guardrails ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ước lượng capacity | Tính đúng concurrency trung bình và trần throughput lý tưởng từ λ, W và số slot dependency. |
+    | Đo đa tầng | Thiết kế timer queue wait, worker runtime, DB/HTTP acquisition và end-to-end cùng nhãn phù hợp. |
+    | Giới hạn downstream | Dùng Semaphore/bulkhead và giải thích per-instance vs toàn cụm. |
+    | Tạo kế hoạch load test | Cấu hình thử tải nhiều bậc với k6 constant-arrival-rate, warm-up, metrics lỗi và SLO. |
+    | Điều chỉnh theo bằng chứng | Đề xuất và kiểm chứng một thay đổi mỗi lần, đánh giá goodput và tail latency thay vì thread count. |
+- id: design-practice-009
+  title: Danh sách lỗi thường gặp và tiêu chí tự đánh giá giải pháp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Danh sách lỗi thường gặp và tiêu chí tự đánh giá giải pháp**
+
+    Bài kết thúc chương biến các lỗi đã thực hành thành một **rubric review có bằng chứng**, thay vì tuyên bố 'chạy được trên máy tôi'. Các nhóm P/C/D/S giúp rà proxy, executor, mutable state, timeout, transaction, scheduling, shutdown, và phân biệt khi nào một dấu hiệu thực sự chứng minh thiết kế đã đúng.
+
+    Người học dùng ví dụ Spring có test kết quả, thread, lỗi và context close rồi chấm 0/1/2 cho từng tiêu chí. Điều quan trọng là **không dùng điểm tổng để che một rủi ro bắt buộc** như mất dữ liệu, lộ quyền, starvation hoặc task bị mất khi quá tải.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện anti-patterns
+
+    1. Vì sao `@Async` tự gọi trong cùng bean, quên `@EnableAsync` hoặc dùng executor không đúng có thể làm sai contract xử lý?
+    2. Queue vô hạn, chờ child task trong cùng pool hoặc dùng DiscardPolicy cho nghiệp vụ quan trọng dẫn đến những dạng lỗi nào?
+    3. Vì sao `CompletableFuture.orTimeout()` và `cancel(true)` chưa chứng minh I/O hoặc side effect đã dừng?
+    4. Transaction, MDC/SecurityContext và lịch @Scheduled nhiều replica cần được kiểm tra ranh giới nào?
+
+    ### Tiêu chí đánh giá bằng chứng
+
+    1. Thang điểm 0/1/2 phân biệt chưa đạt, có thiết kế nhưng thiếu chứng cứ, và đã kiểm chứng ra sao?
+    2. Vì sao rubric cho phép N/A có lý do nhưng không được tính tổng điểm để bỏ qua một lỗi bắt buộc mức 0?
+    3. Với một API gửi thông báo async, bạn sẽ yêu cầu test nào để xác minh lỗi task, overload, duplicate, shutdown và đúng quyền truy cập?
+
+    ### Kết luận và cải tiến thiết kế
+
+    1. Vì sao chỉ một test `@Async` trả kết quả đúng chưa chứng minh khả năng chịu tải, retry hay phục hồi khi crash?
+    2. Bạn sẽ điền mẫu review về contract, worker, queue, retry, security, metrics và rủi ro còn lại như thế nào để hỗ trợ quyết định merge?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại anti-pattern | Ánh xạ lỗi thực tế vào nhóm proxy, capacity, data safety, scheduling và lifecycle kèm nguyên nhân. |
+    | Review theo bằng chứng | Ghi yêu cầu, thiết kế, phép thử và kết quả; chỉ chấm 2 khi có kiểm chứng độc lập. |
+    | Tính rubric | Chấm 0/1/2, loại N/A hợp lệ và phát hiện tiêu chí bắt buộc chưa đạt dù điểm tổng cao. |
+    | Đánh giá ví dụ | Kiểm tra code/test Spring về result, worker thread, exception và executor shutdown. |
+    | Đề xuất remediation | Lập danh sách test bổ sung cho saturation, retry duplicate, context, multi-replica và production metrics. |

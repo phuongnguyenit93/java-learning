@@ -1,0 +1,17 @@
+sections:
+  task-scheduler-001:
+    difficulty: BASIC
+  task-scheduler-002:
+    difficulty: BASIC
+  task-scheduler-003:
+    difficulty: INTERMEDIATE
+  task-scheduler-004:
+    difficulty: INTERMEDIATE
+  task-scheduler-005:
+    difficulty: INTERMEDIATE
+  task-scheduler-006:
+    difficulty: ADVANCED
+  task-scheduler-007:
+    difficulty: ADVANCED
+  task-scheduler-008:
+    difficulty: INTERMEDIATE

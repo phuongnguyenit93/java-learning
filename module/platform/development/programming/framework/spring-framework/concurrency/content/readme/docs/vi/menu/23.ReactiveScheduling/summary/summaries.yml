@@ -1,0 +1,337 @@
+summaries:
+- id: reactive-scheduling-001
+  title: Hỗ trợ @Scheduled cho phương thức reactive từ Spring Framework 6.1
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Hỗ trợ @Scheduled cho phương thức reactive từ Spring Framework 6.1**
+
+    Spring Framework 6.1 cho phép `@Scheduled` trả Publisher. Điều cần học là Spring tạo nguồn một lần và subscribe nhiều lần, các dạng reactive hợp lệ và ý nghĩa tín hiệu, lịch, timeout, hủy trong thiết kế job hữu hạn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng hỗ trợ
+
+    1. Spring 6.1 mở rộng `@Scheduled` cho Publisher khác method void như thế nào?
+    2. Spring gọi method tạo Publisher vào thời điểm nào và subscribe lúc nào?
+    3. Vì sao method reactive phải không có tham số và nguồn cần lặp subscription được?
+
+    ### Nguồn và lịch
+
+    1. Vì sao `Mono.just(expensiveCall())` không gọi lại mỗi tick?
+    2. Khi nào dùng defer hay fromCallable cho thao tác phải thực thi lại?
+    3. Spring làm gì với onNext, onError và terminal của fixed-delay?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Diễn giải vòng đời | Vẽ sơ đồ một Publisher, nhiều subscriptions theo Spring 6.1. |
+    | Chọn nguồn | Nhận diện lazy/cold Publisher phù hợp thay cho eager hoặc single-use nguồn. |
+    | Giải thích tín hiệu | Phân biệt onNext bị bỏ qua với onError WARN và onComplete của lượt chạy. |
+    | Kiểm chứng demo | Phân tích factory counter bằng một, subscription counter từ ba trở lên và eager/deferred outputs. |
+- id: reactive-scheduling-002
+  title: Publisher được lấy một lần và được đăng ký nhận nhiều lần theo lịch
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Publisher được lấy một lần và được đăng ký nhận nhiều lần theo lịch**
+
+    Một Publisher được giữ lâu không bảo đảm mỗi tick có dữ liệu mới. Bài học phân biệt invocation, assembly, subscription, execution, terminal và dùng thí nghiệm để nhận diện cold, hot, cached Publisher, Future đã khởi động sớm và nguồn lặp hợp lệ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lifecycle của Publisher
+
+    1. Method invocation khác thời điểm subscription và terminal thế nào?
+    2. Một method có nhiều `@Scheduled` annotations có thể sinh những registration nào?
+    3. Vì sao một cold Mono có thể chạy lại nguồn dù cùng Publisher object?
+
+    ### Kiểm chứng và bẫy
+
+    1. `Mono.just`, `Mono.fromSupplier` và `Mono.cache` tạo giá trị vào thời điểm nào?
+    2. Làm sao chứng minh method gọi một lần nhưng subscription nhiều lần bằng counter và latch?
+    3. Fixed-rate với nguồn async dài có thể tạo bao nhiêu subscription còn active?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập bản đồ giai đoạn | Phân biệt lúc tạo Publisher, lúc nguồn thực thi và lúc subscription kết thúc. |
+    | So sánh cold/hot | Giải thích khi nào cache hoặc Future eager làm lặp lại kết quả cũ. |
+    | Dự đoán output | Giải thích eager=1,1 và lazy=1,2 từ cùng Publisher được subscribe hai lần. |
+    | Kiểm thử lịch | Dùng counter ở method và supplier với latch để assert method=1 và subscribe nhiều lần. |
+- id: reactive-scheduling-003
+  title: Dùng defer để tạo công việc mới ở mỗi lần đăng ký nhận
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dùng defer để tạo công việc mới ở mỗi lần đăng ký nhận**
+
+    `Mono.defer` cho phép xây request, jobId, snapshot và cả Publisher con mới theo từng scheduled subscription. Bài học đặt ranh giới trì hoãn đúng chỗ, so sánh các operator lazy, chỉ ra cache/subscribeOn/retry/single-flight và giới hạn của context khi công việc chạy nền.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lựa chọn lazy source
+
+    1. Mono.defer khác fromCallable và fromSupplier ở việc tạo nguồn nào?
+    2. Vì sao đặt cache ngoài defer có thể làm mọi tick dùng lại cùng kết quả?
+    3. Tạo jobId hoặc immutable config snapshot ở đâu để dữ liệu tách theo tick?
+
+    ### Thread và điều phối
+
+    1. Vì sao defer không tự đưa blocking work sang thread khác?
+    2. subscribeOn và publishOn khác nhau thế nào nếu nguồn JDBC đồng bộ?
+    3. RetryWhen có thể làm factory của defer chạy nhiều lần trong một tick ra sao?
+
+    ### Trạng thái và reliability
+
+    1. Dùng AtomicBoolean single-flight cần reset ở đường complete, error, cancel nào?
+    2. Vì sao scheduled job không tự kế thừa HTTP request ThreadLocal hoặc transaction?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo nguồn mới | Sửa eager job bằng defer hoặc operator lazy theo đúng subscription. |
+    | Phân tích cache | Chỉ ra ảnh hưởng khi cache ở ngoài hay trong supplier của defer. |
+    | Cấu hình thread | Đặt subscribeOn boundedElastic quanh nguồn blocking và giới hạn concurrency. |
+    | Kiểm chứng | Giải thích eager/defer counter trước và sau các lần subscribe cùng bài demo. |
+    | Thiết kế job state | Tạo immutable jobId theo tick cùng timeout, retry có giới hạn và lifecycle cleanup. |
+- id: reactive-scheduling-004
+  title: Giá trị onNext bị bỏ qua trong phương thức lập lịch
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giá trị onNext bị bỏ qua trong phương thức lập lịch**
+
+    Spring reactive scheduling subscribe để thực thi pipeline, không lấy các payload onNext làm kết quả. Bài học giúp xử lý dữ liệu bằng flatMap/concatMap trước terminal, tránh nested subscribe và đo đúng item đã thực sự được lưu thay vì chỉ đếm giá trị phát ra.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tín hiệu scheduling
+
+    1. Vì sao onNext bị Spring bỏ qua nhưng operator doOnNext vẫn có thể tăng metric?
+    2. onNext, onComplete và onError có vai trò khác nhau với fixed-delay thế nào?
+
+    ### Xử lý nghiệp vụ
+
+    1. Vì sao chỉ trả một Flux phát dữ liệu không làm dữ liệu tự được ghi DB?
+    2. Cách nối flatMap và then để đợi lưu dữ liệu trước onComplete là gì?
+    3. Vì sao gọi subscribe lồng nhau rồi trả Mono.empty làm mất lifecycle công việc?
+
+    ### Kiểm thử
+
+    1. Các counter method=1, subscriptions=2, upstream onNext=4 chứng minh được điều gì?
+    2. Vì sao items emitted không thể dùng thay items persisted ở dashboard?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lần theo tín hiệu | Giải thích upstream onNext chạy trước khi scheduler discard payload. |
+    | Nối tác vụ đúng | Chuyển job sang flatMap/concatMap rồi then, chỉ hoàn tất khi side effect xong. |
+    | Sửa fire-and-forget | Bỏ nested subscribe để Spring sở hữu lỗi, completion và cancellation. |
+    | Đo kết quả đúng | Giải thích Probe demo và phân biệt số item phát với số item lưu thành công. |
+- id: reactive-scheduling-005
+  title: Tín hiệu onError được ghi nhận và lịch vẫn có thể tiếp tục
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tín hiệu onError được ghi nhận và lịch vẫn có thể tiếp tục**
+
+    `onError` kết thúc một subscription nhưng không tự xóa đăng ký lịch. Bài học phân biệt tiếp tục tick với retry cùng tick, lỗi lúc tạo Publisher với lỗi subscription, cách lựa chọn fallback, retry hữu hạn và durable job status để tránh mất hoặc gửi trùng dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lỗi terminal và lịch
+
+    1. Sau onError ở tick trước, vì sao một subscription mới vẫn có thể thành công?
+    2. Exception khi method tạo Publisher khác signal từ Mono.defer ra sao?
+    3. Spring ghi onError WARN và tiếp tục lịch như thế nào?
+
+    ### Recovery và độ bền
+
+    1. doOnError khác onErrorResume và retryWhen về tín hiệu cuối cùng như thế nào?
+    2. Vì sao retryWhen có thể thực hiện nhiều business attempts trong cùng tick?
+    3. Nếu một batch lỗi sau khi xử lý một phần, cần lưu pending state nào để không mất việc?
+
+    ### Kiểm chứng
+
+    1. StepVerifier nhiều lần subscribe chứng minh điều gì mà chưa chứng minh được WARN của Spring?
+    2. Vì sao Reactor virtual time chưa tự điều khiển TaskScheduler của Spring?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt retry | Vẽ timeline tick kế tiếp so với retry attempt của một tick. |
+    | Chọn error policy | Đặt doOnError, onErrorResume hoặc retryWhen đúng theo loại lỗi. |
+    | Thiết kế durable processing | Đề xuất idempotency key, pending/retryable state và tránh duplicate side effects. |
+    | Kiểm chứng | Dùng cùng Mono để test hai lần error, lần sau complete; đối chiếu Spring integration. |
+    | Quan sát reliability | Tách metric terminal error, retry attempt và business success. |
+- id: reactive-scheduling-006
+  title: ErrorHandler cho Runnable không xử lý tín hiệu lỗi reactive theo cùng cách
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ErrorHandler cho Runnable không xử lý tín hiệu lỗi reactive theo cùng cách**
+
+    Lỗi Java thoát khỏi scheduled Runnable và tín hiệu `onError` được subscriber reactive nhận là hai đường khác nhau. Bài học so sánh trực tiếp `ThreadPoolTaskScheduler.ErrorHandler` với Reactor doOnError, thiết kế metrics và quan sát bằng một Spring context chứa cả job void lẫn job Mono.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Error boundaries
+
+    1. RuntimeException từ `@Scheduled void` đi đến ErrorHandler như thế nào?
+    2. Vì sao `Mono.error` không nhất thiết ném exception ra ngoài Runnable.run?
+    3. Những lỗi infrastructure nào vẫn có thể thoát khỏi Runnable dù reactive onError không đi cùng đường?
+
+    ### Metric và recovery
+
+    1. Vì sao dashboard chỉ đếm ErrorHandler có thể bỏ sót lỗi nghiệp vụ reactive?
+    2. DoOnError, onErrorResume, onErrorMap và retryWhen khác nhau ở tín hiệu cuối nào?
+    3. Đặt metric attempt trước retry và terminal failure sau retry có ích gì?
+
+    ### Demo
+
+    1. Làm sao demo chứng minh ErrorHandler nhận lỗi void nhưng không nhận onError của Mono?
+    2. Làm sao phân biệt lỗi business với cancellation và trạng thái job bền vững?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lần theo call stack | Vẽ hai đường Throwable: Runnable exception và Publisher onError. |
+    | Đánh giá thử nghiệm | Giải thích năm boolean quan sát ErrorHandler, reactive errors và continued subscriptions. |
+    | Cấu hình quan sát | Đặt metrics/log lỗi tại đúng Reactor operator và nhãn phù hợp. |
+    | Phân loại xử lý | Chọn recovery, retry hoặc disable job theo loại lỗi và giới hạn API. |
+- id: reactive-scheduling-007
+  title: Fixed-delay chờ đăng ký nhận hoàn tất để giữ ngữ nghĩa
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Fixed-delay chờ đăng ký nhận hoàn tất để giữ ngữ nghĩa**
+
+    Với reactive fixed-delay, Spring giữ scheduled Runnable chờ terminal của subscription rồi mới tính khoảng nghỉ. Bài học chỉ ra khác biệt giữa method return, subscribe return và business completion, bẫy detached child, Publisher vô hạn, scheduler starvation và phép thử timing bằng latch.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa delay
+
+    1. Vì sao đợi subscribe return không đảm bảo delay tính từ lúc công việc xong?
+    2. Subscription tám giây và delay năm giây tạo mốc sớm nhất của tick kế thế nào?
+    3. Tín hiệu onNext có đủ để Spring bắt đầu delay chưa?
+
+    ### Ranh giới và tài nguyên
+
+    1. Vì sao một nested subscribe khiến outer Mono báo completion quá sớm?
+    2. Một Mono.never hoặc Flux.interval vô hạn ảnh hưởng scheduler thread thế nào?
+    3. Fixed-rate/cron khác fixed-delay ở khả năng overlap công việc nào?
+
+    ### Thử nghiệm
+
+    1. Java demo naive dispatch và completion-aware Future khác nhau về tick thứ hai ra sao?
+    2. Làm sao dùng latch và monotonic timestamp để kiểm thử thay vì Thread.sleep?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dựng timeline | Tính mốc tick mới từ terminal trước cộng delay, không từ lúc subscribe return. |
+    | Phát hiện detachment | Sửa nested subscribe thành một Publisher bao toàn bộ công việc. |
+    | Đánh giá overload | Giải thích vì sao fixed-delay với nguồn không terminal có thể chiếm scheduler worker. |
+    | Kiểm chứng demo | Giải thích sáu dòng kiểm chứng naive versus chờ terminal trong Java 17. |
+    | Giới hạn thời gian | Đặt finite source, timeout và chính sách cancel/idempotency phù hợp. |
+- id: reactive-scheduling-008
+  title: Hủy các đăng ký nhận khi bean bị hủy hoặc context đóng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Hủy các đăng ký nhận khi bean bị hủy hoặc context đóng**
+
+    Spring quản lý cả đăng ký lịch tương lai và reactive subscriptions đang active khi bean bị destroy hoặc context đóng. Bài học phân biệt cancellation signal, tài nguyên có thể giải phóng và remote side effect đã commit, đồng thời thử shutdown bằng Mono.never và latches.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng đời và ownership
+
+    1. Spring bean, scheduled registration và reactive Subscription có lifecycle nào khác nhau?
+    2. Context.close hủy những lịch và active subscriptions nào?
+    3. Vì sao manual subscribe không tự thuộc ownership của Spring scheduled processor?
+
+    ### Hủy và nguồn bên ngoài
+
+    1. DoOnCancel khác doFinally khi subscription complete, error hoặc cancel ra sao?
+    2. Vì sao nhận cancel chưa chứng minh HTTP/JDBC operation đã dừng hoặc rollback?
+    3. Một JVM crash khác graceful shutdown về callback cleanup như thế nào?
+
+    ### Kiểm thử
+
+    1. Vì sao Mono.never cộng CountDownLatch chứng minh cancellation tốt hơn chỉ đợi thời gian?
+    2. Complete gần đúng lúc close có thể dẫn đến SignalType nào khác CANCEL?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ lifecycle | Phân biệt bean/schedule/subscription và chủ sở hữu của chúng. |
+    | Phân tích cancel | Giải thích demo Java Flow owner đóng hai subscriptions active và idempotent. |
+    | Viết cleanup hook | Dùng doFinally hoặc usingWhen theo vòng đời resource hợp lệ. |
+    | Kiểm thử shutdown | Xác nhận đã subscribe trước khi close và nhận cancel bằng latch. |
+    | Thiết kế recovery | Phân biệt local cancel với remote effect và durable checkpoint. |
+- id: reactive-scheduling-009
+  title: Không coi CompletableFuture là nguồn trì hoãn đăng ký nhận phù hợp trong mọi trường hợp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không coi CompletableFuture là nguồn trì hoãn đăng ký nhận phù hợp trong mọi trường hợp**
+
+    `CompletableFuture` có ReactiveAdapter nhưng descriptor mặc định isDeferred bằng false, do đó không mặc nhiên hợp lệ cho reactive `@Scheduled`. Bài học kiểm tra adapter registry, so sánh eager Future với cold Mono, chuyển việc tạo Future vào mỗi subscription hoặc chọn scheduled void kết hợp `@Async` đúng trách nhiệm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Adapter eligibility
+
+    1. Vì sao có ReactiveAdapter cho Future chưa đủ chứng minh eligible return type?
+    2. isDeferred là thuộc tính của type descriptor hay trạng thái của từng Future?
+    3. Khi nào return CompletableFuture trực tiếp có thể bị từ chối lúc đăng ký lịch?
+
+    ### Tạo Future theo tick
+
+    1. Mono.fromFuture của Future đã có khác Mono.defer tạo Future mới mỗi lần subscribe ra sao?
+    2. Vì sao Mono.cache hoặc Mono.just của lời gọi eager dễ tạo dữ liệu cũ?
+    3. Khi nào scheduled void gọi client async phù hợp hơn trả Mono?
+
+    ### Kiểm chứng và vận hành
+
+    1. Làm sao truy vấn ReactiveAdapterRegistry chứng minh Future false và Mono true?
+    2. Nếu cancel Mono hoặc CompletableFuture, có chắc HTTP/DB side effect dừng không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra metadata | Truy vấn ReactiveAdapterRegistry và đọc isDeferred của CompletableFuture so với Mono. |
+    | Phân biệt contract | Giải thích một Future eager khác Publisher lạnh có thể subscribe nhiều lần. |
+    | Thiết kế bridge | Đưa việc tạo Future vào Mono.defer để mỗi tick có một computation mới. |
+    | Chọn API | Đối chiếu reactive @Scheduled, scheduled void và @Async CompletableFuture. |
+    | Kiểm chứng demo | Giải thích bốn boolean của chương trình và giới hạn cancellation. |

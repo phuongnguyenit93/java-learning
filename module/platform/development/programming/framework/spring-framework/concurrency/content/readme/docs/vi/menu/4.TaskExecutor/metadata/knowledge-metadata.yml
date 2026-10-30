@@ -1,0 +1,17 @@
+sections:
+  task-executor-001:
+    difficulty: BASIC
+  task-executor-002:
+    difficulty: INTERMEDIATE
+  task-executor-003:
+    difficulty: INTERMEDIATE
+  task-executor-004:
+    difficulty: INTERMEDIATE
+  task-executor-005:
+    difficulty: BASIC
+  task-executor-006:
+    difficulty: INTERMEDIATE
+  task-executor-007:
+    difficulty: ADVANCED
+  task-executor-008:
+    difficulty: ADVANCED

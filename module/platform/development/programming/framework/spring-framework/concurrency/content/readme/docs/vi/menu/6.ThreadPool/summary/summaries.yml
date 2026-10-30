@@ -1,0 +1,331 @@
+summaries:
+- id: thread-pool-001
+  title: Khai báo ThreadPoolTaskExecutor thành bean do container quản lý
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khai báo ThreadPoolTaskExecutor thành bean do container quản lý**
+
+    Bài đặt nền cho việc tạo một ThreadPoolTaskExecutor có vòng đời do Spring container quản lý. Người học khai báo bean, inject theo tên và chọn cấu hình cơ bản, đồng thời tránh tự tạo hoặc tự đóng nhóm luồng trong các thành phần nghiệp vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bean và dependency injection
+
+    1. ThreadPoolTaskExecutor cung cấp gì hơn một TaskExecutor abstraction và vì sao nên khai báo pool thành Spring bean?
+    2. Vì sao phương thức @Bean chỉ cấu hình rồi return executor, thay vì tự gọi initialize()?
+    3. Khi có nhiều executor bean, @Qualifier và @Async("beanName") giải quyết các vấn đề chọn nhầm pool nào?
+
+    ### Lifecycle và quá tải
+
+    1. Spring gọi callback khởi tạo và hủy executor ở giai đoạn nào của ApplicationContext?
+    2. Nếu một service tự shutdown bean dùng chung, các service khác có thể gặp hậu quả gì?
+    3. Khi shutdown còn task trong queue hoặc executor đầy, nên đánh giá policy chờ và từ chối theo các yêu cầu nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Khai báo bean do container quản lý | Viết @Configuration và @Bean với core/max/queue, prefix, rejection; để Spring khởi tạo và hủy đúng lifecycle. |
+    | Sử dụng dependency injection | Dùng constructor injection và @Qualifier đúng tên; xác định đường @Async qua proxy. |
+    | Kiểm tra vòng đời | Chạy ví dụ ApplicationContext, xác minh worker chạy và pool shutdown khi đóng context. |
+    | Phát hiện lỗi sử dụng | Sửa mô hình tạo pool trong mỗi request, gọi initialize() trùng hoặc shutdown từ consumer. |
+- id: thread-pool-002
+  title: corePoolSize và maxPoolSize
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **corePoolSize và maxPoolSize**
+
+    Bài phân biệt ngưỡng corePoolSize và trần maxPoolSize, cho phép dự đoán số worker thực sự được tạo theo tải. Việc cấu hình phải kết hợp queueCapacity, CPU, I/O và tài nguyên downstream thay vì chỉ tăng max.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế giới hạn worker
+
+    1. corePoolSize khác maxPoolSize ở điểm nào về việc tạo worker và giới hạn song song?
+    2. Vì sao corePoolSize không có nghĩa toàn bộ core worker phải tồn tại ngay từ lúc khởi tạo?
+    3. Tại sao maxPoolSize=20 chưa chắc tạo hai mươi worker khi hàng đợi vẫn nhận được task?
+
+    ### Mô phỏng và điều chỉnh
+
+    1. Với core=2, max=4, queue=2 và bảy task bị giữ bận, số worker/queue/rejection thay đổi thế nào?
+    2. Khi tăng core hoặc max cho task CPU-bound và I/O-bound, bạn cần kiểm tra những giới hạn nào?
+    3. Phân biệt getPoolSize, getActiveCount và getQueueSize khi đọc trạng thái pool ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lý giải hai ngưỡng | Chỉ ra vai trò core, max và queue trong đường quyết định nhận task. |
+    | Mô phỏng admission | Lập bảng 7 task với worker/queue/rejection theo điều kiện latch. |
+    | Chạy kiểm chứng | Đối chiếu kết quả PoolSizingDemo với worker và queue thực tế. |
+    | Tuning có bằng chứng | Giải thích lựa chọn core/max dựa trên CPU, DB connections, độ trễ và tải. |
+- id: thread-pool-003
+  title: queueCapacity và lựa chọn hàng đợi nội bộ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **queueCapacity và lựa chọn hàng đợi nội bộ**
+
+    Bài tập trung vào lựa chọn hàng đợi nội bộ: LinkedBlockingQueue khi queueCapacity dương và SynchronousQueue khi bằng 0. Mục tiêu là hiểu backlog, giới hạn memory, queue wait và sự khác biệt khi executor bị bão hòa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc hàng đợi
+
+    1. queueCapacity dương hoặc bằng 0 tạo queue loại nào trong ThreadPoolTaskExecutor?
+    2. Khác biệt giữa lưu task trong LinkedBlockingQueue và direct handoff của SynchronousQueue là gì?
+    3. Vì sao getQueueSize() bằng 0 chưa đủ kết luận một pool với SynchronousQueue đang rảnh?
+
+    ### Sizing và backpressure
+
+    1. Giữ nguyên core/max mà thay queueCapacity, thứ tự task được chạy/chờ/từ chối đổi ra sao?
+    2. Làm thế nào ước lượng một ngân sách chờ từ throughput và mục tiêu queue-wait mà không xem đó là bảo đảm?
+    3. Tại sao setQueueCapacity sau initialize không tự thay work queue hiện có?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn đúng queue | Nêu được loại queue theo capacity và hệ quả trên backlog. |
+    | Phân tích thực nghiệm | Giải thích poolSize, queueSize và rejection của hai lần chạy QueueCapacityDemo. |
+    | Thiết kế giới hạn | Đề xuất capacity gắn với workload CPU/I/O, queue wait và downstream. |
+    | Quan sát quá tải | Đối chiếu queue size, activeCount và rejection thay vì chỉ nhìn một chỉ số. |
+- id: thread-pool-004
+  title: 'Thứ tự nhận tác vụ: tạo luồng cơ bản, xếp hàng, mở rộng rồi từ chối'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thứ tự nhận tác vụ: tạo luồng cơ bản, xếp hàng, mở rộng rồi từ chối**
+
+    Bài dạy quy trình nhận tác vụ của ThreadPoolExecutor: tạo core worker, thử queue, mở rộng đến max khi queue không nhận, rồi xử lý rejection. Người học phân tích được các nhánh khi shutdown, thứ tự chạy khác thứ tự gửi và hiện tượng starvation.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Luồng quyết định
+
+    1. Thứ tự tạo worker dưới core, queue.offer, mở rộng và reject được quyết định bởi những điều kiện nào?
+    2. Task đến sau có thể bắt đầu trước task đã xếp queue bằng đường mở rộng non-core worker như thế nào?
+    3. Trạng thái shutdown và việc nhiều caller submit cùng lúc ảnh hưởng đến nhánh kiểm tra lại queue ra sao?
+
+    ### Bão hòa và kiểm chứng
+
+    1. Với core=1, max=2, queue=1, vì sao task thứ hai chờ còn task thứ ba được giao worker mới?
+    2. AbortPolicy, CallerRunsPolicy và DiscardOldestPolicy tác động thế nào tới caller và task chờ?
+    3. Vì sao worker chờ Future của task con nộp lại cùng pool có thể gây starvation?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Diễn giải thuật toán | Vẽ đúng thứ tự core → queue → max → rejection với điều kiện từng bước. |
+    | Mô phỏng race | Giải thích PoolAdmissionDemo và vì sao thứ tự bắt đầu khác thứ tự submit. |
+    | Đánh giá policy | Phân biệt từ chối do saturation với shutdown và chọn cách xử lý hợp đồng. |
+    | Chẩn đoán starvation | Dùng stack trace, activeCount và queue depth để suy nguyên nhân chờ. |
+- id: thread-pool-005
+  title: Vì sao hàng đợi không giới hạn làm maxPoolSize khó phát huy tác dụng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vì sao hàng đợi không giới hạn làm maxPoolSize khó phát huy tác dụng**
+
+    Bài giải thích hiện tượng maxPoolSize rất lớn vẫn không phát huy vì hàng đợi gần như vô hạn liên tục nhận task. Người học chẩn đoán độ trễ backlog, dùng thử nghiệm ba loại queue và tuning theo tài nguyên thực tế.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Queue quá lớn
+
+    1. Tại sao queue.offer liên tục thành công khiến executor hiếm khi mở worker tới maxPoolSize?
+    2. Giới hạn Integer.MAX_VALUE khác thế nào với một queue vô hạn tuyệt đối?
+    3. Với core=2 và max=16, vì sao có hàng nghìn task chờ mà worker thứ ba chưa được tạo?
+
+    ### So sánh và điều chỉnh
+
+    1. Sáu task với core=2 max=6 cho kết quả pool/queue khác nhau ra sao giữa unbounded, bounded=2 và direct handoff?
+    2. Khi poolSize gần core, queue tăng nhưng rejection gần 0 và p99 xấu đi, bạn sẽ điều tra điều gì?
+    3. Vì sao giảm queue hoặc tăng max mà không đo DB connections có thể chuyển điểm nghẽn sang hệ thống khác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích hiện tượng | Chỉ rõ nhánh offer thành công liên tục ngăn đường mở non-core worker. |
+    | Kiểm chứng ba chiến lược | Đối chiếu QueueGrowthDemo cho queue gần vô hạn, bounded và SynchronousQueue. |
+    | Đọc dấu hiệu backlog | Nhận ra hiện tượng queue chờ dài và memory tăng dù rejectedCount thấp. |
+    | Điều chỉnh theo SLO | Lập luận chọn core/max/queue, rejection và tải thử theo các số đo latency. |
+- id: thread-pool-006
+  title: queueCapacity bằng 0 và chuyển giao trực tiếp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **queueCapacity bằng 0 và chuyển giao trực tiếp**
+
+    Bài tập trung vào queueCapacity=0 và direct handoff của SynchronousQueue. Người học thấy rằng không có buffer chờ vẫn có thể tái sử dụng worker, nhưng pool sẽ tăng đến max hoặc từ chối nhanh khi bị bão hòa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Handoff và tái sử dụng
+
+    1. SynchronousQueue không lưu task nhưng offer có thể thành công theo điều kiện nào?
+    2. Vì sao direct handoff khác thread-per-task và vẫn có thể dùng lại một worker cũ?
+    3. Với core=2 max=4 queue=0 và bốn worker bận, task thứ năm nhận kết quả gì khi dùng AbortPolicy?
+
+    ### Quá tải và Spring integration
+
+    1. Vì sao maxPoolSize rất lớn cùng queueCapacity=0 có thể gây cạn native threads hoặc downstream connections?
+    2. CallerRunsPolicy có thể làm một lời gọi @Async chạy trên request thread và tăng latency ra sao?
+    3. Những metric nào ngoài queueSize giúp phát hiện saturation khi dùng SynchronousQueue?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt mô hình | So sánh direct handoff và thread reuse với executor tạo thread cho từng task. |
+    | Cấu hình bean | Đặt queueCapacity=0, max hữu hạn và rejection policy trong ThreadPoolTaskExecutor. |
+    | Mô phỏng saturation | Giải thích vì sao DirectHandoffDemo nhận bốn task và từ chối task thứ năm. |
+    | Quan sát tải | Đọc activeCount/max, rejection và task duration thay cho queue size đơn lẻ. |
+- id: thread-pool-007
+  title: keepAliveSeconds và allowCoreThreadTimeOut
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **keepAliveSeconds và allowCoreThreadTimeOut**
+
+    Bài phân biệt idle timeout của keepAliveSeconds với quyền cho core worker tự hết hạn bằng allowCoreThreadTimeOut. Người học quyết định giữ core worker nóng hay tiết kiệm tài nguyên lúc không có tải.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thời gian sống của worker
+
+    1. keepAliveSeconds đo thời gian nào và vì sao không phải timeout của một task đang chạy?
+    2. allowCoreThreadTimeOut mặc định false và khi bật true khiến core worker có thể biến mất thế nào?
+    3. Tại sao keepAliveTime bằng 0 không hợp lệ khi cho core workers timeout?
+
+    ### Quan sát và đánh đổi
+
+    1. Pool core=2 max=4 có thể co về 2 hoặc 0 worker sau thời gian idle tùy cờ nào?
+    2. Trong CoreTimeoutExperiment, vì sao một lần sleep ngắn không phải phép thử ổn định để assert thời điểm thread được thu hồi?
+    3. Khi nào nên giữ worker nóng và khi nào tiết kiệm số worker lúc traffic ít?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích idle timeout | Phân biệt idle worker duration với thời gian thực thi của task. |
+    | Dự đoán thu hồi | Dự đoán worker non-core và core được thu hồi theo hai cài đặt. |
+    | Chọn cấu hình hợp lệ | Đặt keepAliveSeconds dương và kiểm tra allowsCoreThreadTimeOut trên native pool. |
+    | Phân tích trade-off | Đánh giá thread churn, bộ nhớ và latency khi tải quay lại. |
+- id: thread-pool-008
+  title: Khởi động trước luồng cơ bản bằng prestartAllCoreThreads
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khởi động trước luồng cơ bản bằng prestartAllCoreThreads**
+
+    Bài phân biệt prestartAllCoreThreads của JDK và setter Spring, để tạo sẵn các core worker thay vì chạy ứng dụng warm-up. Người học quyết định có cần prestart để giảm độ trễ lúc nhận task đầu, và đo kiểm với readiness.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế prestart
+
+    1. prestartAllCoreThreads() trả về số nào khi pool chưa có worker hoặc đã đủ core worker?
+    2. prestartCoreThread() khác prestartAllCoreThreads() về phạm vi và kiểu trả về như thế nào?
+    3. setPrestartAllCoreThreads(true) trong Spring có hiệu lực ở thời điểm nào so với gọi JDK method trực tiếp?
+
+    ### Startup và readiness
+
+    1. Tại sao prestart không khiến pool tạo đủ max worker hoặc chạy kết nối DB, JIT, cache warm-up?
+    2. Điều gì có thể xảy ra với core workers prestart nếu allowCoreThreadTimeOut bật và pool idle lâu?
+    3. Làm sao thiết kế phép đo latency của task đầu để phân biệt chi phí thread creation với startup của dependency?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt API | Giải thích return value của JDK prestartAllCoreThreads và setter Spring. |
+    | Cấu hình khởi động | Viết bean dùng prestartAllCoreThreads và để container quản lý lifecycle. |
+    | Chạy ví dụ | Đối chiếu các giá trị before, started, startedAgain, completed của PrestartDemo. |
+    | Đánh giá hiệu năng | Thiết kế thí nghiệm đo first-task latency, startup và readiness độc lập. |
+- id: thread-pool-009
+  title: Đặt tên luồng bằng threadNamePrefix hoặc ThreadFactory
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đặt tên luồng bằng threadNamePrefix hoặc ThreadFactory**
+
+    Bài dạy cách quan sát worker bằng threadNamePrefix hoặc ThreadFactory, đồng thời phân biệt tên thread với mã công việc. Người học sẽ đặt prefix cho executor/scheduler, kiểm tra @Async thực sự dùng pool nào và tránh rò ngữ cảnh trong log khi thread được tái sử dụng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đặt tên worker
+
+    1. Khi chỉ cần tên pool dễ đọc trong Spring, vì sao threadNamePrefix thường đơn giản hơn custom ThreadFactory?
+    2. Một ThreadFactory.newThread(Runnable) phải trả Thread ở trạng thái nào và vì sao không start() sẵn?
+    3. Vì sao không nên nhúng taskId hoặc userId vào tên một worker có thể được tái sử dụng?
+
+    ### Chẩn đoán qua log
+
+    1. Executor của @Async và scheduler của @Scheduled có luôn cùng prefix không và cách kiểm chứng là gì?
+    2. Nếu đổi Thread.currentThread().setName trong task, bạn cần làm gì trong finally để tránh ảnh hưởng task sau?
+    3. Tên thread, MDC và traceId giúp liên kết log như thế nào mà không dùng tên thread làm cơ chế phân quyền?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình prefix | Đặt tên riêng cho ThreadPoolTaskExecutor và ThreadPoolTaskScheduler. |
+    | Tùy chỉnh factory | Tạo ThreadFactory với AtomicInteger và trả Thread mới chưa start. |
+    | Kiểm chứng runtime | Giải thích kết quả demo @Async, scheduler, Spring executor và JDK factory. |
+    | Dọn context | Chỉ ra cách restore tên/MDC trong finally để tránh lẫn log giữa task. |
+- id: thread-pool-010
+  title: Phân biệt giá trị mặc định của Framework với cấu hình do ứng dụng cung cấp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt giá trị mặc định của Framework với cấu hình do ứng dụng cung cấp**
+
+    Bài tổng hợp các lớp nguồn cấu hình khác nhau: default của class Spring, executor được annotation lựa chọn, auto-config của Spring Boot và cấu hình tường minh của ứng dụng. Người học phải chứng minh cấu hình đang có hiệu lực dựa trên bean thật cùng phiên bản Java/Boot.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Class default và bean selection
+
+    1. ThreadPoolTaskExecutor mới tạo trực tiếp có mặc định core/max/queue nào và vì sao khác Boot auto-config?
+    2. Khi @EnableAsync xử lý @Async, cơ chế chọn TaskExecutor duy nhất, tên taskExecutor và fallback diễn ra thế nào?
+    3. Tên applicationTaskExecutor có vai trò riêng gì trong một số tích hợp như Spring MVC async?
+
+    ### Boot, profiles và virtual threads
+
+    1. Khi ứng dụng tự khai báo Executor bean, Boot auto-config có thể back off như thế nào?
+    2. Vì sao đổi spring.task.execution.pool.core-size trong properties không chắc ảnh hưởng bean tự cấu hình bằng setter?
+    3. Với Java 21 virtual threads, vì sao cần kiểm tra runtime class thay vì diễn giải pool-size như platform pool?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại nguồn mặc định | So sánh Framework class defaults với auto-config platform pool của Boot. |
+    | Xác minh bean chọn | Theo @Async qualifier, AsyncConfigurer và TaskScheduler để xác định executor cụ thể. |
+    | Chạy hai cấu hình | Giải thích getter core/max/queue/scheduler khác nhau trong demo Boot custom/default. |
+    | Đánh giá môi trường | Kiểm tra Java/Boot version, profiles, virtual threads và bean runtime trước khi kết luận. |

@@ -1,0 +1,349 @@
+summaries:
+- id: cron-timezones-001
+  title: Sáu trường của biểu thức cron trong Spring
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Sáu trường của biểu thức cron trong Spring**
+
+    Lịch `@Scheduled` và `CronTrigger` chỉ đúng khi người đọc hiểu Spring cron có sáu trường theo thứ tự giây – phút – giờ – ngày-tháng – tháng – thứ. Bài mở nền tảng để nhận diện tần suất thực, phân biệt cron với Unix/Quartz, rồi dùng `CronExpression` kiểm tra ngày giờ trước khi đăng ký việc định kỳ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc và cách đọc
+
+    1. Tại sao Spring cron phải có trường giây và vì sao biểu thức năm hoặc bảy trường không tương thích?
+    2. Bạn sẽ phân tích `0 30 9 * * MON-FRI` theo từng trường và giải thích ý nghĩa của `0`, `*`, tên thứ như thế nào?
+    3. Vì sao `* * * * * *` chọn mỗi giây còn `0 * * * * *` chọn mỗi phút?
+
+    ### Từ biểu thức đến chạy thật
+
+    1. `CronExpression.parse` và `next(ZonedDateTime)` chứng minh được gì, và điều gì vẫn cần `@Scheduled` hoặc `TaskScheduler`?
+    2. Tại sao cùng sáu trường có thể tạo hai `Instant` khác nhau khi zone khác nhau?
+    3. Vì sao job hợp lệ không tự có retry, exactly-once hoặc đảm bảo không bị trễ ở nhiều replica?
+
+    ### Bằng chứng và lỗi thường gặp
+
+    1. Làm sao chứng minh cron 09:30 thứ Sáu chuyển sang thứ Hai sau mốc đã khớp bằng seed cố định?
+    2. Nếu một cấu hình Linux có năm trường hoặc Quartz có year field, bước kiểm tra đầu tiên trước khi deploy Spring là gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải mã biểu thức | Giải thích đúng vai trò và miền của cả sáu trường, đặc biệt giây và weekday Spring. |
+    | Phân biệt tần suất | Dự đoán số mốc trong giờ cho biểu thức mở/giới hạn trường giây, phút và giờ. |
+    | Chạy `CronExpression` demo | Đối chiếu next 15 giây, lần tiếp theo thứ Hai, `L` và các case invalid năm/bảy trường. |
+    | Phân định ba tầng | Chỉ rõ parser, trigger và executor làm việc khác nhau trong một lịch Spring. |
+    | Xác nhận tính an toàn | Nêu tác động của zone, DST, scheduler lag và nhiều instance đối với lịch. |
+- id: cron-timezones-002
+  title: Dấu *, ?, phạm vi, danh sách và bước nhảy
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dấu *, ?, phạm vi, danh sách và bước nhảy**
+
+    Một ký hiệu cron có thể thay đổi lịch từ mỗi phút thành mỗi giây hoặc chọn sai ngày. Bài học đi sâu `*`, `?`, khoảng `-`, danh sách `,`, bước `/` và khi kết hợp các trường; đặc biệt giải thích vì sao bước nhảy được tính trong miền của trường và hai điều kiện ngày trong Spring phải được hiểu đúng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nghĩa của từng toán tử
+
+    1. Dấu `*` chọn giá trị như thế nào theo từng trường và tại sao không có nghĩa là một lần chạy?
+    2. Tại sao `?` chỉ nằm ở trường day-of-month/day-of-week, và khi nào dùng nó giúp ý định rõ hơn?
+    3. Giải thích khác biệt giữa `8-10`, `8,10` và `8-10/2` khi xuất hiện trong trường giờ.
+
+    ### Phối hợp điều kiện
+
+    1. Từ `0 0/15 9-10 ? * MON-FRI`, làm sao liệt kê đủ tám mốc mỗi ngày làm việc?
+    2. Vì sao Spring với cả day-of-month và day-of-week bị giới hạn không nên được suy diễn từ logic OR của Unix?
+    3. Tại sao `*/7` trong trường giây có thể tạo khoảng cách bốn giây qua biên phút, không phải nhịp đều bảy giây?
+
+    ### Kiểm thử sản phẩm
+
+    1. Khi nào phải dùng `fixedDelay` thay cho cron step, và phép thử nào chứng minh sự khác nhau?
+    2. Vì sao các toán tử hợp lệ chưa đủ chứng minh không có ngày lễ, DST issue hay overload?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc ký hiệu | Giải nghĩa `*`, `?`, `-`, `,`, `/` theo từng trường và chỉ ra vị trí `?` hợp lệ. |
+    | Tính lịch kết hợp | Liệt kê các lần khớp cho phạm vi giờ, danh sách thứ và bước phút. |
+    | Phân tích biên trường | Giải thích `*/7` từ giây 56 đến giây 00 và phân biệt với fixed-rate/delay. |
+    | Kiểm chứng bằng parser | Chạy `CronExpression.next` cho combo sáu trường và seed cố định. |
+    | Chẩn đoán config | Đề xuất sửa khi cron chọn giờ/weekday/tần suất khác yêu cầu. |
+- id: cron-timezones-003
+  title: 'Các ký hiệu L, W và # khi cần lịch theo ngày'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Các ký hiệu L, W và # khi cần lịch theo ngày**
+
+    Những lịch theo vị trí ngày trong tháng không thể mô tả an toàn bằng ngày 31 cố định. Bài chuyên giải thích `L`, `LW`, `nW`, `dL` và `d#n`, gồm ranh giới tháng, tháng không có thứ thứ năm, quy ước weekday của Spring và giới hạn ngày lễ nghiệp vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa các ký hiệu
+
+    1. `L`, `L-3`, `LW` và `FRIL` chọn những ngày khác nhau như thế nào?
+    2. Tại sao `1W` khi ngày đầu tháng rơi vào cuối tuần không thể chọn một ngày ở tháng trước?
+    3. Vì sao `31W` không tương đương `LW`, nhất là trong tháng Hai?
+    4. Phân biệt `FRI#5`, `FRI#2` với `FRIL` khi một tháng chỉ có bốn thứ Sáu.
+
+    ### Kiểm chứng lịch ngày
+
+    1. Tại sao số thứ của Quartz có thể khiến `5L` hoặc `FRI#2` sai khi dùng trong Spring?
+    2. Bạn sẽ dùng `YearMonth`, `TemporalAdjusters` và `CronExpression.next` để kiểm tra tháng nhuận/cuối tuần ra sao?
+    3. Vì sao `LW` và `nW` không bảo đảm ngày giao dịch theo lịch nghỉ lễ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn biểu thức theo yêu cầu | Lựa chọn đúng `L/LW/nW/dL/d#n` cho các bài toán ngày cuối, weekday gần nhất hoặc thứ nth. |
+    | Tính qua tháng đặc biệt | Dự đoán `1W`, `31W`, `FRI#5` trong tháng có bốn/năm thứ phù hợp. |
+    | Kiểm chứng Java | Diễn giải kết quả từ `YearMonth` và `TemporalAdjusters` trong demo độc lập. |
+    | Kiểm chứng Spring | Xem trước mốc `LW` và `FRI#2` bằng `CronExpression` đúng `ZoneId`. |
+    | Phân biệt business calendar | Chỉ ra trường hợp cần holiday calendar/ledger ngoài ký hiệu cron. |
+- id: cron-timezones-004
+  title: CronExpression để phân tích và tìm lần chạy kế tiếp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CronExpression để phân tích và tìm lần chạy kế tiếp**
+
+    `CronExpression` cung cấp API xác thực chuỗi cron và dự đoán mốc khớp tiếp theo mà không khởi chạy task. Bài này chuyển kiến thức cú pháp thành quy trình parse, kiểm tra lỗi, sinh `N` occurrences từ `ZonedDateTime`, bảo vệ input/limit và phân biệt preview với lịch thực thi của `CronTrigger`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng API
+
+    1. `parse(String)`, `isValidExpression(String)` và `next(Temporal)` trả gì và xử lý lỗi như thế nào?
+    2. Tại sao `next(seed)` tìm mốc sau seed thay vì trả lại mốc seed đã khớp?
+    3. Trong trường hợp nào `next(...)` có thể trả `null`, và caller nên xử lý ra sao?
+
+    ### Thời gian và độ chính xác
+
+    1. Tại sao một `Instant` trần hoặc `LocalDateTime` không giải quyết đủ lịch theo múi giờ và DST?
+    2. Làm sao dùng `ZonedDateTime` với Europe/Berlin để chứng minh giờ 02:30 bị mất hoặc lặp offset?
+    3. Vì sao nhiều lần gọi `next` chỉ là preview chứ không phản ánh misfire/catch-up của scheduler?
+
+    ### Thiết kế API preview
+
+    1. Một endpoint preview cần các input và output nào để hiển thị `localDateTime`, offset và `Instant` không mơ hồ?
+    2. Tại sao cần giới hạn số occurrences, kiểm tra tần suất và quyền tạo schedule khi cron do người dùng nhập?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại API | Chỉ ra chức năng và đường lỗi của `parse`, `isValidExpression`, `next`. |
+    | Sinh lịch an toàn | Viết vòng lặp có `limit`, kiểm tra `null` và yêu cầu `nextInstant` tăng. |
+    | Chứng minh theo zone | Dùng seed cố định ở Việt Nam/Berlin để giải thích lịch và DST. |
+    | Tách preview khỏi thực thi | Đối chiếu `CronExpression` với `CronTrigger` và `TaskScheduler`. |
+    | Thiết kế validation | Đưa ra hợp đồng API giới hạn input, tần suất, số mốc và metadata offset. |
+    | Đọc demo Java | Kiểm tra output nhiều mốc tiếp, lỗi parse, macro và hai trường hợp DST. |
+- id: cron-timezones-005
+  title: Macro cron và cách đọc lịch rõ nghĩa
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Macro cron và cách đọc lịch rõ nghĩa**
+
+    Các macro chuẩn của Spring giúp diễn đạt lịch thông dụng dễ đọc hơn sáu trường số nhưng không tạo scheduler mới. Bài này dạy năm nhóm macro và hai alias, thứ thực sự chạy của `@weekly`, sự khác biệt với fixed-rate/fixed-delay và tác động của timezone, lịch bỏ lỡ hay restart.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Macro và mốc calendar
+
+    1. Những macro và alias nào được Spring hỗ trợ, chúng tương đương biểu thức sáu trường nào?
+    2. Tại sao `@weekly` chạy đầu Chủ nhật chứ không mặc nhiên là đầu tuần kinh doanh thứ Hai?
+    3. Vì sao `@monthly` và `@yearly` không đồng nghĩa khoảng thời gian 30 hoặc 365 ngày?
+
+    ### So sánh và vận hành
+
+    1. Khi ứng dụng khởi động lúc 08:23, `@hourly` khác `fixedRate` một giờ và `fixedDelay` một giờ ra sao?
+    2. Cùng macro `@daily` có cho cùng `Instant` giữa UTC và Asia/Ho_Chi_Minh không?
+    3. Tại sao macro hợp lệ không tự quản lý missed fire, job store hoặc idempotency trên nhiều pod?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc macro/alias | Mở rộng năm nhóm macro Spring thành cron sáu trường và nêu nghĩa lịch rõ ràng. |
+    | Chọn scheduler semantics | Phân biệt lịch đầu giờ/ngày/tháng với duration-based fixed-rate/fixed-delay. |
+    | Kiểm chứng output | Dùng `CronExpression.next` xác nhận macro và expanded expression cho seed cố định. |
+    | Định nghĩa zone | Giải thích hai planned `Instant` khác nhau của `@daily` ở UTC và HCM. |
+    | Đánh giá giới hạn | Nhận diện macro lạ, disabled sentinel, restart và trùng lặp ở replicas. |
+- id: cron-timezones-006
+  title: Chỉ định múi giờ thay cho phụ thuộc môi trường máy chủ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chỉ định múi giờ thay cho phụ thuộc môi trường máy chủ**
+
+    Một cron 09:30 không tự nêu được đó là giờ Việt Nam, UTC hay New York. Bài hướng dẫn ghim `@Scheduled.zone` hoặc `CronTrigger(..., ZoneId)`, phân biệt timezone OS/JVM/scheduler clock, kiểm thử bằng `Clock.fixed`, và xử lý business date, tenant zone, thay đổi cấu hình trong runtime.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn zone và biểu diễn thời gian
+
+    1. `@Scheduled(zone="Asia/Ho_Chi_Minh")` khác việc bỏ `zone` ở điểm nào?
+    2. Vì sao thay timezone JVM/container không phải giải pháp cho một lịch địa phương của nhiều tenant?
+    3. `Instant`, `ZonedDateTime`, `LocalDateTime` và region `ZoneId` có vai trò khác nhau thế nào?
+
+    ### Thực nghiệm sự độc lập với server
+
+    1. Cùng `CronTrigger` ghim HCM zone có trả một `Instant` khi đổi clock UTC/NY không, và trigger không ghim sẽ ra sao?
+    2. Tại sao `LocalDate.now()` trong thân job có thể dùng sai business date dù cron trigger đã được ghim zone?
+    3. Thay zone trong property lúc ứng dụng chạy có tự thay lịch đăng ký không, cần cancel/re-register thế nào?
+
+    ### Ứng dụng thực tế
+
+    1. Một tenant đổi timezone giữa hai kỳ thì cần giữ thông tin schedule version và business period như thế nào?
+    2. Vì sao ghim zone chỉ ổn định planned time chứ không đảm bảo độ trễ thấp, duy nhất toàn cluster hay side effect thành công?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình zone tường minh | Chọn `@Scheduled.zone` hoặc constructor `CronTrigger` với IANA `ZoneId`. |
+    | Đối chiếu môi trường | Chạy phép kiểm chứng pinned/unpinned qua clock UTC và New York, so sánh `Instant`. |
+    | Xác định business date | Phân biệt planned UTC Instant, actual start và ngày nghiệp vụ khi code/DB có timezone riêng. |
+    | Quản lý cấu hình động | Mô tả thay đổi zone/cron theo version với cancel/re-registration và tránh duplicate. |
+    | Thiết kế multi-tenant | Đề xuất lưu per-tenant ZoneId, cron, nextDueAt, business key và trạng thái durable. |
+- id: cron-timezones-007
+  title: Giờ bị bỏ qua hoặc lặp lại khi chuyển giờ mùa hè
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giờ bị bỏ qua hoặc lặp lại khi chuyển giờ mùa hè**
+
+    Giờ địa phương có thể không tồn tại hoặc xuất hiện hai lần tại DST; `@Scheduled` không tự bảo đảm một business result cho mỗi ngày. Bài chuyên sâu vào `ZoneRules` gap/overlap, `CronExpression.next` với hai offsets, chính sách skip/shift/dedupe, và lưu job ledger phù hợp để hồi phục khi restart hoặc nhiều replica.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện gap và overlap
+
+    1. Tại sao New York không có 02:30 ngày 08/03/2026 nhưng có hai 01:30 ngày 01/11/2026?
+    2. `ZoneRules.getValidOffsets(LocalDateTime)` trả 0, 1, 2 offset mang nghĩa gì?
+    3. Vì sao `LocalDateTime.atZone` có thể tự điều chỉnh giờ gap và không phải chính sách cron chạy bù được phê duyệt?
+
+    ### Dự đoán nhưng không nhầm với thực thi
+
+    1. Spring `CronExpression.next` có thể cho hai `Instant` 01:30 khác nhau như thế nào?
+    2. Vì sao `CronTrigger` lenient hoặc scheduler đang bận có thể không chạy đủ mọi occurrence preview?
+    3. Gap do giờ địa phương không tồn tại khác một mốc hợp lệ bị bỏ vì JVM downtime ra sao?
+
+    ### Chính sách nghiệp vụ và dữ liệu
+
+    1. Khi nào chọn skip/shift và khi nào cần một completed job trên mỗi business date?
+    2. Nếu cho phép cả hai lần 01:30, nên dùng idempotency key theo `scheduledInstant` hay theo `businessDate`, vì sao?
+    3. Tại sao fixed-rate 24h, zone offset cố định và distributed lock đơn lẻ chưa giải quyết DST/retry/exactly-once?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích ZoneRules | Tìm gap/overlap bằng danh sách offset và phân biệt hai `Instant` cùng local time. |
+    | Đọc CronExpression demo | Giải thích output gap bị skip và hai lần fall-back ở New York. |
+    | Định nghĩa policy | So sánh skip, dời tới thời điểm hợp lệ, dời độ dài gap và once-per-business-day. |
+    | Chọn idempotency key | Thiết kế business-date key hoặc per-occurrence Instant key đúng yêu cầu. |
+    | Tách nguyên nhân missed run | Phân biệt DST, scheduler overload, downtime và duplicate giữa replicas. |
+    | Thiết kế phục hồi | Nêu ledger, atomic claim, retry budget và reconciliation cho kỳ chưa hoàn tất. |
+- id: cron-timezones-008
+  title: Không suy rộng cú pháp cron của hệ điều hành hoặc Quartz sang Spring
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không suy rộng cú pháp cron của hệ điều hành hoặc Quartz sang Spring**
+
+    Linux crontab, Quartz Scheduler và Spring đều dùng tên cron nhưng không dùng cùng dialect hoặc execution guarantee. Bài này dạy quy trình chuyển đổi đúng số trường, số thứ, year, ký hiệu mở rộng, timezone và semantics Quartz job-store/misfire, tránh trường hợp parse được mà chạy sai ngày.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dialect và sai lệch cú pháp
+
+    1. Vì sao user crontab Unix có năm trường, Spring sáu trường và Quartz có thể có trường năm thứ bảy?
+    2. Đổi `*/5 * * * *` từ Linux sang Spring bằng cách nào để không biến năm phút thành năm giây?
+    3. Tại sao `0 0 9 ? * 2` vẫn parse hợp lệ ở Spring nhưng có thể đổi thứ Hai Quartz thành thứ Ba?
+
+    ### Giữ nguyên nghĩa lịch
+
+    1. Nếu xóa year 2027 trong Quartz cron, giới hạn thời gian nào bị mất?
+    2. Các ký hiệu `?`, `L`, `W`, `#` và macro có thể được sao chép tùy tiện giữa các engine không?
+    3. Cùng tên `CronTrigger` ở Quartz và Spring có ngụ ý cùng JobStore, misfire và cluster policy không?
+
+    ### Quy trình kiểm chứng
+
+    1. Bạn sẽ dùng `CronExpression.parse/next(ZonedDateTime)` để chứng minh một phép chuyển dialect bảo toàn mốc như thế nào?
+    2. Ngoài syntax, các trường hợp DST, cuối tháng, nhiều pods, side effect cần được test ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại cron nguồn | Xác định số trường, ý nghĩa command/user/year và parser đích trước khi chuyển. |
+    | Chuyển Unix sang Spring | Thêm trường giây đúng ở đầu và không làm tăng tần suất 60 lần. |
+    | Chuyển Quartz có kiểm soát | Map weekday số sang tên, bảo toàn giới hạn year bằng cơ chế nghiệp vụ khác. |
+    | Chạy parser proof | Giải thích output năm/sáu/bảy trường và `weekday=2` thực tế của Spring. |
+    | Đánh giá khác biệt runtime | Nêu misfire, jobstore, cluster và idempotency không theo expression qua thư viện khác. |
+- id: cron-timezones-009
+  title: Kiểm chứng lịch quanh ranh giới tháng, năm và thay đổi múi giờ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm chứng lịch quanh ranh giới tháng, năm và thay đổi múi giờ**
+
+    Cron hợp lệ có thể sai ở ngày 31, 29/2, ranh giới năm hoặc DST, nên bài cuối xây bộ kiểm thử theo mốc cố định. Bài kết hợp Java time, `Clock.fixed`, `SimpleTriggerContext`, `CronTrigger.nextExecution` và `CronExpression.next(ZonedDateTime)`, đối chiếu expected `Instant`, business period và thực thi trễ/khôi phục qua nhiều instance.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biên lịch và thời gian tuyệt đối
+
+    1. Tại sao `0 0 9 L * *` khác ngày 31 cố định trong tháng 2 và tháng 30 ngày?
+    2. Test ranh giới 31/12 → 01/01 theo HCM phải assert UTC `Instant` nào và vì sao khác UTC schedule?
+    3. Lịch 29/2 ở năm nhuận 2028 và năm không nhuận 2100 phải kiểm chứng thế nào?
+    4. Vì sao tại DST overlap test phải kiểm tra `Instant` tiến dù local hour có thể lùi?
+
+    ### Công cụ kiểm thử có thể tái lập
+
+    1. `Clock.fixed` và `SimpleTriggerContext` cho phép test `CronTrigger.nextExecution` mà không cần đợi scheduler thật thế nào?
+    2. Vì sao một lần `next` chưa đủ và cần duyệt N lần qua nhiều tháng với giới hạn?
+    3. Khi nào dùng JUnit time calculation, khi nào cần integration test `@Scheduled` cùng idempotent worker?
+
+    ### Vận hành và bảo vệ nghiệp vụ
+
+    1. Lenient trigger khác fixed execution và job store bền vững ở cách xử lý mốc trễ/mất như thế nào?
+    2. Nếu tenant đổi ZoneId hoặc job tháng 12 được retry sang tháng 1, business period cần được giữ ra sao?
+    3. Những metrics planned/actual, schedule lag và claim attempts nào giúp chứng minh hệ thống không bỏ kỳ hoặc tạo side effect trùng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế golden vectors | Viết expected next `Instant` cho cuối năm, cuối tháng, tháng nhuận và hai zone. |
+    | Dùng Clock và TriggerContext | Kiểm chứng `CronTrigger.nextExecution` bằng clock cố định, không `Thread.sleep`. |
+    | Duyệt occurrences | Sinh chuỗi nhiều tháng bằng `CronExpression.next(ZonedDateTime)` và kiểm tra tính tăng của Instant. |
+    | Phân tích DST trong test | Dùng `ZoneRules` phân biệt gap/overlap và quy định số result theo business policy. |
+    | Kiểm tra recovery | Đánh giá `lastScheduled/lastCompletion`, missed periods, job ledger và idempotency. |
+    | Đo production | Phân biệt planned time, actual start, run duration và logical business period trong metrics. |

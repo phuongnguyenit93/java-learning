@@ -1,0 +1,77 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Cấu hình tài nguyên
+roadmapHeading: Lộ trình thiết kế, giới hạn và kiểm chứng tài nguyên đồng thời
+roadmap:
+- id: resource-configuration-001
+  order: 1
+  title: Tách bộ thực thi cho các nhóm công việc có đặc điểm khác nhau
+  description: Nhận diện head-of-line blocking giữa nhóm tác vụ nhanh, chậm và batch; cấu hình executor tách biệt bằng bean và @Async rồi chứng minh cách ly bằng latch.
+  transition:
+    to: resource-configuration-002
+    description: Sau khi xác định nên tách pool nào, cần định lượng worker phù hợp cho CPU-bound và I/O-bound thay vì chọn số luồng tùy tiện.
+- id: resource-configuration-002
+  order: 2
+  title: Chọn số luồng cho tác vụ nặng CPU và tác vụ thường chờ nhập xuất
+  description: Phân loại CPU-bound, blocking I/O và non-blocking I/O; dùng số lõi và tỷ lệ W/C để ước lượng số worker, sau đó kiểm chứng queue và giới hạn phụ thuộc.
+  transition:
+    to: resource-configuration-003
+    description: Số worker hợp lý vẫn phải được ràng buộc bởi kết nối DB và năng lực của dịch vụ đích mà các tác vụ cùng sử dụng.
+- id: resource-configuration-003
+  order: 3
+  title: Giới hạn theo số kết nối cơ sở dữ liệu hoặc dịch vụ đích
+  description: Đo giới hạn HikariCP, transaction và HTTP target; phân bổ số connection theo replica, dùng semaphore/bulkhead đúng thời điểm và xác minh dưới tải.
+  transition:
+    to: resource-configuration-004
+    description: Sau khi giới hạn số lời gọi đang thực thi, phải giới hạn thêm số tác vụ được giữ trong queue theo heap và deadline.
+- id: resource-configuration-004
+  order: 4
+  title: Chọn sức chứa hàng đợi theo bộ nhớ và thời gian chờ cho phép
+  description: Tính queueCapacity từ retained heap và thời gian chờ được phép; hiểu core-queue-max-reject và xác minh bằng burst, latch, queue wait p99.
+  transition:
+    to: resource-configuration-005
+    description: Giới hạn số task đang chạy hoặc đang chờ khác với việc kiểm soát bao nhiêu yêu cầu được cho phép mỗi giây.
+- id: resource-configuration-005
+  order: 5
+  title: Phân biệt giới hạn đồng thời với giới hạn số yêu cầu theo thời gian
+  description: Phân biệt concurrent in-flight với requests theo cửa sổ thời gian; chọn semaphore/bulkhead, fixed/sliding window hoặc token bucket và scope local/global.
+  transition:
+    to: resource-configuration-006
+    description: Khi đã hiểu từng loại giới hạn, cần ước lượng công suất thực và xác nhận bằng dữ liệu thử tải ở nhiều mức arrival.
+- id: resource-configuration-006
+  order: 6
+  title: Ước lượng công suất rồi kiểm chứng bằng phép đo tải
+  description: Ước lượng worker và backlog từ arrival/service time, thiết kế load test k6, đo accepted/completed và p95/p99 để lựa chọn công suất đạt SLO.
+  transition:
+    to: resource-configuration-007
+    description: Để hiện thực các mức tài nguyên đã đo, cần biết khai báo executor/scheduler thành bean Java hoặc XML và kích hoạt đúng annotation.
+- id: resource-configuration-007
+  order: 7
+  title: Cấu hình bằng @Bean hoặc namespace task trong XML
+  description: Khai báo và kết nối TaskExecutor/TaskScheduler bằng @Bean hoặc task namespace XML; tách việc tạo tài nguyên khỏi bật @Async/@Scheduled.
+  transition:
+    to: resource-configuration-008
+    description: Sau khi tạo bean đúng cách, cần đưa core/max/queue ra cấu hình ngoài và từ chối cấu hình không hợp lệ ngay lúc khởi động.
+- id: resource-configuration-008
+  order: 8
+  title: Đưa tham số ra cấu hình ngoài và kiểm tra giá trị không hợp lệ
+  description: Externalize core/max/queue bằng properties, validate kiểu và ràng buộc liên trường bằng Spring Boot hoặc Environment thuần, kiểm thử fail-fast.
+  transition:
+    to: resource-configuration-009
+    description: Cuối cùng phải phân biệt bean do Framework khai báo với executor được Spring Boot tự cấu hình để biết property nào thực sự có hiệu lực.
+- id: resource-configuration-009
+  order: 9
+  title: Phân biệt cấu hình Spring Framework với tự động cấu hình Spring Boot
+  description: Đối chiếu bean do Spring Framework khai báo với Boot auto-configuration; theo dõi điều kiện bean, applicationTaskExecutor, virtual threads và lifecycle.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài học trong chương
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên bài | Tách bộ thực thi cho các nhóm công việc có đặc điểm khác nhau | Chọn số luồng cho tác vụ nặng CPU và tác vụ thường chờ nhập xuất | Giới hạn theo số kết nối cơ sở dữ liệu hoặc dịch vụ đích | Chọn sức chứa hàng đợi theo bộ nhớ và thời gian chờ cho phép | Phân biệt giới hạn đồng thời với giới hạn số yêu cầu theo thời gian | Ước lượng công suất rồi kiểm chứng bằng phép đo tải | Cấu hình bằng @Bean hoặc namespace task trong XML | Đưa tham số ra cấu hình ngoài và kiểm tra giá trị không hợp lệ | Phân biệt cấu hình Spring Framework với tự động cấu hình Spring Boot |
+  | Vai trò trong chương | Cách ly nhóm tác vụ | Sizing worker theo bản chất tải | Bảo vệ DB và HTTP | Giới hạn queue theo ngân sách | Phân biệt rate và concurrency | Đo và xác nhận công suất | Cấu hình bean Java hoặc XML | Externalize và validate pool | Phân biệt Framework với Boot |
+  | Cơ chế trọng tâm | Nhiều executor và @Async qualifier | CPU budget và W/C heuristic | HikariCP, Semaphore và HTTP pool | Retained heap, queue wait, core-queue-max | Semaphore, fixed/sliding window, token bucket | Little-style sizing, k6, goodput | @Bean, task namespace, annotation-driven | @ConfigurationProperties, @AssertTrue, Environment | Auto-config conditions, bean naming, virtual threads |
+  | Quyết định phải thực hiện | Nhóm nào cần pool riêng | Cấp bao nhiêu worker cho CPU và I/O | Cấp bao nhiêu slot cho từng dependency | Queue tối đa bao nhiêu task | Dùng giới hạn đồng thời hay số lượt theo thời gian | Cấu hình nào đáp ứng SLO ở tải mục tiêu | Tạo và inject executor/scheduler bằng cách nào | Khóa nào bind vào bean và giá trị nào bị từ chối | Bean nào được tạo, được chọn và nhận property nào |
+  | Bằng chứng cần kiểm tra | FAST chạy khi SLOW còn bị latch giữ | Throughput, CPU quota, JDBC pending và rejection | Hikari pending, timeout và permit giới hạn | Heap retained, queue p99 và task rejection | In-flight, quota window và mã lỗi 429/503 | Offered/accepted/completed, p95/p99 và dropped iterations | Bean type, XML/Java parity và Future | Startup failure case, effective property values | Bean listing, conditions report, thread prefix |
+  | Sai lầm điển hình | Tưởng nhiều bean tên khác là đã cách ly toàn tài nguyên | Lấy số CPU làm kích cỡ mọi I/O pool | Tăng worker khi DB connection đã cạn | Tăng queue để che overload bền vững | Đồng nhất mười permit với mười RPS | Lấy HTTP 202 làm bằng chứng job hoàn tất | Chỉ có bean mà quên enable annotation | Chỉ validate từng số mà quên max lớn hơn core | Đổi spring.task.* và tưởng custom bean tự đổi |

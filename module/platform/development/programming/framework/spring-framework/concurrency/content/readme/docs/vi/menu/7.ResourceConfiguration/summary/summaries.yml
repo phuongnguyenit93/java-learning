@@ -1,0 +1,330 @@
+summaries:
+- id: resource-configuration-001
+  title: Tách bộ thực thi cho các nhóm công việc có đặc điểm khác nhau
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tách bộ thực thi cho các nhóm công việc có đặc điểm khác nhau**
+
+    Một executor dùng chung có thể để tác vụ HTTP chậm chiếm toàn bộ worker và hàng đợi, khiến phép tính nhanh phải chờ. Bài này giúp thiết kế ranh giới thực thi riêng cho nhóm FAST, SLOW và batch, cấu hình bean Spring theo mục đích, rồi kiểm chứng bằng CountDownLatch rằng công việc nhanh vẫn hoàn tất trong khi worker chậm đang chờ. Người học đồng thời đánh giá những giới hạn còn chia sẻ như CPU, heap, JDBC và quota bên ngoài.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế cách ly và lựa chọn nhóm
+
+    1. Vì sao tác vụ tính toán hai mili giây vẫn có thể trả kết quả muộn khi hai worker của executor chung đang chờ network?
+    2. Điều kiện nào khiến tách executor có ý nghĩa hơn việc tạo thêm một pool cho mọi method?
+    3. Tách fastExecutor và slowExecutor bảo vệ được tài nguyên nào, còn những tài nguyên chung nào vẫn có thể làm cả hai nhóm nghẽn?
+
+    ### Cấu hình, kiểm chứng và quá tải
+
+    1. Spring chọn bean nào cho @Async có tên và vì sao lời gọi this.method() có thể bỏ qua cấu hình đó?
+    2. Cần bố trí CountDownLatch và Future theo thứ tự nào để chứng minh FAST chạy xong khi SLOW vẫn bị giữ?
+    3. Khi slowExecutor đầy queue, AbortPolicy và CallerRunsPolicy gây hậu quả khác nhau ra sao cho thread gọi và SLO?
+    4. Khi shutdown hoặc lỗi Future, cần quan sát và dọn tài nguyên như thế nào để không mất việc quan trọng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện head-of-line blocking | Vẽ luồng ba nhóm công việc và giải thích vì sao FAST chờ trong một executor chung. |
+    | Thiết kế cách ly executor | Chọn nhóm cần pool riêng dựa trên CPU/I/O, deadline và tài nguyên dùng chung; chỉ ra phần không được cách ly. |
+    | Định tuyến Spring @Async | Khai báo bean có tên rõ, gọi qua proxy và xác minh đúng pool bằng prefix thread hoặc bean identity. |
+    | Kiểm chứng thực thi | Dùng latch giữ nhóm SLOW, dùng Future chờ FAST hữu hạn và giải thích từng quan sát. |
+    | Thiết kế backpressure và lifecycle | Chọn queue/rejection/shutdown theo hậu quả nghiệp vụ, giải thích đường failure và retry. |
+- id: resource-configuration-002
+  title: Chọn số luồng cho tác vụ nặng CPU và tác vụ thường chờ nhập xuất
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn số luồng cho tác vụ nặng CPU và tác vụ thường chờ nhập xuất**
+
+    Số lõi CPU không trực tiếp quyết định số worker phù hợp cho mọi tác vụ. Bài học giúp tách CPU-bound, blocking I/O và non-blocking I/O, dùng ngân sách CPU cùng tỷ lệ chờ/tính toán để đề xuất cấu hình ban đầu, rồi kiểm tra giới hạn connection và hiện tượng executor xếp queue trước khi mở rộng tới max. Các thí nghiệm Java 17 cho thấy kết quả và từ chối có kiểm soát, không dùng thời gian sleep làm benchmark.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất công việc và công thức sizing
+
+    1. Tại sao tăng từ bốn lên bốn mươi worker có thể làm tác vụ thuần CPU chậm đi dù lượng việc không đổi?
+    2. Tác vụ JDBC blocking và tác vụ WebFlux non-blocking khác nhau thế nào về số thread bị giữ?
+    3. Với P=4, U=0,8, W=80 ms và C=20 ms, heuristic sizing cho giá trị nào và giới hạn áp dụng của nó là gì?
+    4. Dùng Little's Law cho phạm vi toàn hệ thống khác gì với việc tính số worker đang bận?
+
+    ### Đưa sizing vào Spring và xác nhận
+
+    1. Tại sao maxPoolSize lớn không giúp mở rộng vượt core nếu queueCapacity còn rộng?
+    2. Khi có nhiều executor CPU-bound trong một JVM, cần chia tổng ngân sách CPU như thế nào?
+    3. Phải đo những chỉ số nào của executor và dependency trước khi tăng blockingIoExecutor?
+    4. Trong thí nghiệm Java 17, latch và queue một vị trí chứng minh rejection bằng cách nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại workload | Đối chiếu CPU time, blocking I/O và event-loop để chọn cách cấp phát thread thích hợp. |
+    | Tính điểm bắt đầu | Tính P×U×(1+W/C), diễn giải kết quả như giả thuyết và nêu giới hạn connection/CPU. |
+    | Cấu hình pool theo nhóm | Tạo cpuExecutor và blockingIoExecutor có bounded queue và tên bean rõ ràng. |
+    | Kiểm chứng độ bão hòa | Phân tích throughput, p95/p99, CPU quota, queue depth và JDBC pending khi thay số worker. |
+    | Thử nghiệm quá tải | Dự đoán và xác nhận hành vi từ chối với một worker đang bị giữ bằng CountDownLatch. |
+- id: resource-configuration-003
+  title: Giới hạn theo số kết nối cơ sở dữ liệu hoặc dịch vụ đích
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn theo số kết nối cơ sở dữ liệu hoặc dịch vụ đích**
+
+    Một executor có nhiều thread vẫn có thể dừng tiến triển vì pool JDBC hoặc dịch vụ HTTP chỉ cấp một số slot hữu hạn. Bài này đào sâu HikariCP, transaction dài, connection acquisition, quota per-instance và cluster, semaphore/bulkhead và HTTP/2 multiplexing. Người học học cách đặt giới hạn sát tài nguyên, giải phóng permit đúng cả khi lỗi, và xác định nguyên nhân bằng metrics thay vì tăng connection hoặc worker theo cảm tính.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngân sách tài nguyên và giao dịch
+
+    1. maximumPoolSize và connectionTimeout của HikariCP giới hạn những sự kiện nào, và vì sao không tương đương SQL mỗi giây?
+    2. Một transaction mở trong lúc gọi HTTP chậm ảnh hưởng thế nào tới connection active/pending?
+    3. Lập ngân sách kết nối từ giới hạn database, phần dự phòng, số datasource và số replica cực đại ra sao?
+    4. Vì sao giới hạn bốn task reportDbExecutor không đảm bảo luôn còn tám connection cho luồng khác?
+
+    ### Dịch vụ HTTP và cách bảo vệ đúng ranh giới
+
+    1. HTTP connection count khác request in-flight và rate quota như thế nào, nhất là khi có HTTP/2?
+    2. Trong ví dụ Semaphore hai permit, latch và tryAcquire chứng minh giới hạn hoạt động như thế nào?
+    3. Tại sao không thể release semaphore trong finally ngay sau khi trả một Mono chưa subscribe?
+    4. Cần nhìn metric nào để phân biệt connection leak, query/lock chậm và quá tải dịch vụ đích?
+    5. Với năm pod mỗi pod có sáu permit, làm sao tránh nhầm giới hạn cục bộ với hạn mức toàn cluster?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập ngân sách kết nối | Tính tổng trần connections theo datasource và replica, kèm dự phòng cho workload khác. |
+    | Chẩn đoán HikariCP | Phân tích active, idle, pending, acquisition timeout, transaction length và DB lock wait. |
+    | Đặt bulkhead đúng biên | Bao lời gọi blocking bằng permit và finally; giải thích cách giữ permit tới terminal/cancel khi reactive. |
+    | Phân biệt giới hạn HTTP | Chọn connection pool, request concurrency hay rate limiter theo hợp đồng của downstream. |
+    | Thiết kế ứng phó sự cố | Đề xuất timeout, retry budget, transaction scope và test đa instance để bảo vệ dependency. |
+- id: resource-configuration-004
+  title: Chọn sức chứa hàng đợi theo bộ nhớ và thời gian chờ cho phép
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn sức chứa hàng đợi theo bộ nhớ và thời gian chờ cho phép**
+
+    QueueCapacity là một quyết định về bộ nhớ và độ trễ, không chỉ là tham số tránh rejection. Bài học hướng dẫn đo retained heap của task đang chờ, chia ngân sách queue từ SLO, ước tính Q_memory và Q_time, rồi dùng giá trị nhỏ hơn làm ứng viên thử tải. Người học cũng hiểu queue-before-grow của ThreadPoolExecutor, sự khác biệt SynchronousQueue, hậu quả khi tải đến vượt năng lực xử lý, và cách kiểm chứng bằng chương trình Java 17 có latch.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bộ nhớ và thời gian chờ
+
+    1. Một Runnable xếp hàng có thể giữ những object graph nào ngoài bản thân phần tử queue?
+    2. Từ 20 MiB ngân sách heap và 96 KiB retained/task, tính Q_memory như thế nào?
+    3. Từ thông lượng hiệu dụng 80 task/s và ngân sách wait 0,2 giây, ước lượng Q_time ra sao và vì sao không bảo đảm p99?
+    4. Vì sao phải lấy min(Q_memory,Q_time) thay vì chọn queue theo dung lượng heap lớn nhất?
+
+    ### Hành vi executor và xử lý overload
+
+    1. corePoolSize, queueCapacity, maxPoolSize quyết định thứ tự nhận task và rejection ra sao?
+    2. SynchronousQueue ở queueCapacity=0 khác hàng đợi có một vị trí thế nào?
+    3. Nếu λ_in lớn hơn tốc độ hoàn thành lâu dài, việc tăng queue chỉ thay đổi thời gian chạm trần như thế nào?
+    4. Một Future.get(timeout) có đặt timeout cho thời gian tác vụ tồn tại trong queue không?
+    5. Trong BoundedQueueDemo, tại sao task thứ tư bị từ chối chính xác khi worker đầu đang chờ latch?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ước lượng retained memory | Nhận diện payload bị closure giữ và tính giới hạn task từ ngân sách MiB/KiB. |
+    | Tính ngân sách queue wait | Suy ra giới hạn thời gian từ SLO, dùng throughput đã đo và phân biệt mean với p99. |
+    | Đặt queueCapacity có căn cứ | Tính Q_candidate theo cả bộ nhớ và độ trễ, giải thích vai trò core/max và SynchronousQueue. |
+    | Kiểm thử overload | Dùng latch và bounded queue chứng minh các trạng thái queued/rejected có thứ tự xác định. |
+    | Thiết kế xử lý quá tải | Chọn backpressure, deadline, cancellation và job persistence đúng hậu quả nghiệp vụ. |
+- id: resource-configuration-005
+  title: Phân biệt giới hạn đồng thời với giới hạn số yêu cầu theo thời gian
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt giới hạn đồng thời với giới hạn số yêu cầu theo thời gian**
+
+    Concurrency limit và rate limit giải quyết hai vấn đề khác nhau nhưng thường bị đặt cùng một tên “giới hạn tải”. Bài này giúp người học phân biệt số operation in-flight với số lượt được cấp theo thời gian, so sánh semaphore/bulkhead với fixed window, sliding window và token bucket, rồi dùng Little's Law để giải thích tại sao cùng RPS có thể tạo số request đang chạy rất khác. Nội dung còn hướng dẫn đặt mã HTTP 429/503, quyết định local/global quota và kiểm thử hai lớp độc lập.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai đại lượng và các thuật toán
+
+    1. Tại sao Semaphore(10) không đồng nghĩa tối đa mười request mỗi giây?
+    2. Định luật Little giải thích quan hệ giữa request rate, thời gian xử lý và in-flight trung bình ra sao?
+    3. Fixed window có thể tạo burst ở ranh giới hai cửa sổ như thế nào?
+    4. Token bucket khác sliding window ở ý nghĩa refill, burst capacity và thời điểm cấp quyền ra sao?
+    5. Tại sao ThreadPoolTaskExecutor chỉ giới hạn worker/queue mà chưa phải rate limiter?
+
+    ### Ranh giới Spring và trường hợp phân tán
+
+    1. Permit nên được lấy và trả ở mốc nào nếu muốn giới hạn operation thật sự đang chạy thay vì task còn trong queue?
+    2. Cần dùng cơ chế gì khi API đối tác giới hạn requests/giây trên toàn cluster nhưng mỗi pod đang giữ rate state cục bộ?
+    3. Khi nào 429 diễn đạt lỗi hợp đồng quota tốt hơn 503 do server bão hòa?
+    4. Thiết kế hai test nào để riêng rẽ chứng minh concurrency cap và time-window quota?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt loại giới hạn | Nêu đại lượng, đơn vị, phạm vi và sự kiện lấy/trả quyền của concurrency so với rate. |
+    | Áp dụng định luật Little | Tính in-flight trung bình từ throughput và thời gian giữ tài nguyên mà không coi đó là hard cap. |
+    | Chọn thuật toán rate | Giải thích burst biên fixed window và cấu hình cơ bản của token bucket, sliding window. |
+    | Kết hợp Spring bulkhead và rate | Đặt semaphore/Resilience4j ở đúng boundary, xử lý overload qua 429/503 và timeout. |
+    | Kiểm chứng nhiều instance | Tính tổng cap/quota cục bộ, đề xuất state chia sẻ và test kiểm soát timing. |
+- id: resource-configuration-006
+  title: Ước lượng công suất rồi kiểm chứng bằng phép đo tải
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ước lượng công suất rồi kiểm chứng bằng phép đo tải**
+
+    Một bảng cấu hình thread/queue mới chỉ là giả thuyết năng lực. Bài học chuyển các đại lượng arrival, accepted, completed, worker time và queue wait thành phép ước lượng định lượng, sau đó thiết kế thử tải có warm-up, steady state, burst, overload và phục hồi. Người học sử dụng k6 constant-arrival-rate, đối chiếu goodput với p95/p99, dropped iterations và đặc biệt không nhầm HTTP 202 với job đã hoàn tất.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình hóa công suất
+
+    1. Offered rate, accepted rate và completed throughput khác nhau như thế nào khi executor đang quá tải?
+    2. Với 100 job/s, S=80 ms và worker utilization mục tiêu 70%, vì sao điểm xuất phát là mười hai worker?
+    3. Công suất lý tưởng m/S khác công suất đáp ứng SLO dưới tải thực ở đâu?
+    4. Dự báo backlog từ burst có ý nghĩa gì và vì sao queue chứa đủ chưa chứng minh đạt deadline?
+
+    ### Thiết kế và diễn giải load test
+
+    1. Vì sao k6 constant-arrival-rate giúp bộc lộ overload mà vòng kín theo thời gian response có thể che đi?
+    2. Cần theo dõi dropped_iterations và tài nguyên load generator để tránh kết luận sai như thế nào?
+    3. Nếu endpoint trả HTTP 202 rất nhanh nhưng task hoàn tất rất chậm, chỉ số nào phải bổ sung?
+    4. Làm sao phân biệt queue saturation, CPU quota và JDBC pending qua biểu đồ cùng timestamp?
+    5. Những điều kiện nào chứng minh một cấu hình vừa đủ tại tải mục tiêu nhưng vẫn phục hồi sau burst?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây dựng giả thuyết capacity | Tính busyWorkers≈λ×S, đề xuất thread count theo utilization và giải thích giả định. |
+    | Thiết kế workload kiểm thử | Lập các pha warm-up, baseline, steady, burst, overload, recovery cùng tiêu chí SLO. |
+    | Sử dụng k6 đúng đơn vị | Cấu hình constant-arrival-rate, đọc actual iterations và dropped_iterations. |
+    | Đo công suất hữu ích | Đối chiếu accepted/completed, job end-to-end p95/p99, rejection, CPU và dependency saturation. |
+    | Ra quyết định tuning | Chỉ ra bottleneck, thử một thay đổi có đối chứng và xác nhận kết quả có thể lặp lại. |
+- id: resource-configuration-007
+  title: Cấu hình bằng @Bean hoặc namespace task trong XML
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Cấu hình bằng @Bean hoặc namespace task trong XML**
+
+    Spring Framework cho phép định nghĩa tài nguyên thực thi và lên lịch bằng @Bean hoặc task namespace trong XML. Bài học đối chiếu TaskExecutor với TaskScheduler, chỉ rõ việc tạo bean khác việc bật @Async/@Scheduled, và xây một ví dụ trong đó cùng WorkService chạy qua Java config hoặc XML context. Người học cũng kiểm chứng bean name, DI, lifecycle, shutdown và lỗi khai báo trùng tài nguyên giữa hai đường cấu hình.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bean resource và kích hoạt annotation
+
+    1. TaskExecutor khác TaskScheduler ở thời điểm nhận và kích hoạt công việc như thế nào?
+    2. Khác biệt giữa khai báo ThreadPoolTaskExecutor bean và @EnableAsync là gì?
+    3. Các phần tử task:executor, task:scheduler và task:annotation-driven đảm nhiệm phần việc riêng nào trong XML?
+    4. pool-size="2-4" và queue-capacity="8" ánh xạ ra sao sang cấu hình core/max/queue của Java?
+
+    ### Wiring và kiểm chứng hai cách khai báo
+
+    1. Cùng một WorkService có thể nhận TaskExecutor từ @Bean hoặc từ <constructor-arg> của XML bằng cách nào?
+    2. Vì sao cần tránh vừa import XML vừa khai báo Java bean trùng id trong cùng context?
+    3. Điều gì xảy ra khi @Async gọi nội bộ this.method() dù executor bean đã tồn tại?
+    4. Làm sao kiểm tra bean và cấu hình shutdown mà không mặc định việc đã submit sẽ hoàn tất?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt abstraction | Chọn TaskExecutor cho thực thi tác vụ và TaskScheduler cho kích hoạt có lịch. |
+    | Tạo tài nguyên Java | Khai báo @Bean ThreadPoolTaskExecutor/TaskScheduler với core, max, queue, tên và lifecycle. |
+    | Tạo tài nguyên XML | Viết task namespace/schema và cấu hình executor, scheduler, annotation-driven hợp lệ. |
+    | Chứng minh DI độc lập cấu hình | Chạy cùng service với hai context, quan sát bean type và Future completion. |
+    | Phát hiện lỗi wiring | Xử lý thiếu enable annotation, self-invocation, duplicate bean và khác biệt shutdown. |
+- id: resource-configuration-008
+  title: Đưa tham số ra cấu hình ngoài và kiểm tra giá trị không hợp lệ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đưa tham số ra cấu hình ngoài và kiểm tra giá trị không hợp lệ**
+
+    Các thông số core/max/queue thường thay đổi theo môi trường; nếu hard-code và không validate, một cấu hình sai có thể chỉ gây sự cố khi tăng tải. Bài học giải thích Spring Boot @ConfigurationProperties với record và Jakarta Bean Validation, kiểm tra quan hệ max>=core, cơ chế profile/CLI/environment override, và đường Environment thủ công cho Spring Framework thuần. Người học thực hành trường hợp valid/invalid, đọc lỗi startup và phân biệt validation cấu hình với quá tải runtime.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Binding, ràng buộc và nguồn giá trị
+
+    1. Vì sao @ConfigurationProperties record thuận tiện hơn nhiều @Value rời rạc cho một executor?
+    2. Cần kiểm tra những miền giá trị nào của core, max, queue và keepAlive, và vì sao max>=core là ràng buộc liên trường?
+    3. Trong ví dụ Spring Boot, @Validated cùng @Min/@Max/@AssertTrue cần dependency nào để chạy validation thật?
+    4. Placeholder APP_IO_CORE_POOL_SIZE và relaxed-binding env key APP_EXECUTOR_IO_COREPOOLSIZE khác nhau như thế nào?
+
+    ### Đảm bảo khởi động và hiệu lực cấu hình
+
+    1. Cấu hình queueCapacity=0 có hợp lệ về API không và ứng dụng có thể cấm nó theo chính sách riêng khi nào?
+    2. Khi CLI, profile và application.yml cung cấp cùng một khóa, phải tìm giá trị hiệu lực cuối như thế nào?
+    3. Spring Framework thuần dùng Environment/getRequiredProperty khác Boot auto binding ở đâu?
+    4. Muốn chứng minh cấu hình sai khiến context không khởi động, test cần kiểm tra điều gì thay vì chỉ gọi một getter?
+    5. Vì sao sửa YAML sau khi bean đã khởi tạo chưa có nghĩa executor được cập nhật động?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế schema cấu hình | Tổ chức prefix, default và kiểu cho core/max/queue/keepAlive, phân biệt nguồn cấu hình. |
+    | Thực hiện validation | Áp dụng @Min, @Max, @NotBlank và kiểm tra max>=core bằng @AssertTrue. |
+    | Ánh xạ Spring Boot properties | Bind record qua @EnableConfigurationProperties và tạo ThreadPoolTaskExecutor. |
+    | Hỗ trợ Spring thuần | Đọc Environment và fail-fast khi thiếu hoặc sai kiểu/quan hệ. |
+    | Kiểm thử cấu hình sai | Chạy context với giá trị invalid, quan sát startup failure và xác minh runtime bean dùng giá trị cuối. |
+- id: resource-configuration-009
+  title: Phân biệt cấu hình Spring Framework với tự động cấu hình Spring Boot
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt cấu hình Spring Framework với tự động cấu hình Spring Boot**
+
+    Spring Framework tạo và quản lý bean theo cấu hình ứng dụng; Spring Boot có thể tự tạo executor/scheduler khi thỏa điều kiện. Bài này giúp lần theo @Async/@Scheduled tới bean thực, phân biệt taskExecutor và applicationTaskExecutor, kiểm tra @ConditionalOnMissingBean và condition report, nhận diện trường hợp custom executor làm Boot back off, và đối chiếu virtual threads với pool platform threads. Người học học cách xác định nguồn cấu hình có hiệu lực và lifecycle thay vì phỏng đoán từ application.yml.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân tầng và điều kiện auto-configuration
+
+    1. Bốn việc tạo bean, bật annotation, chọn executor và đặt pool size khác nhau như thế nào?
+    2. Trong Spring Framework thuần, @EnableAsync tìm executor mặc định theo cơ chế nào khi không có bean được chỉ định?
+    3. Khi một custom Executor xuất hiện, @ConditionalOnMissingBean của Boot có thể khiến applicationTaskExecutor biến mất như thế nào?
+    4. Vai trò của bean taskExecutor và applicationTaskExecutor khác nhau ra sao với @Async và Spring MVC async?
+
+    ### Truy nguồn cấu hình và hành vi runtime
+
+    1. Vì sao đổi spring.task.execution.pool.core-size không tự thay bean domainExecutor được tạo bằng setter?
+    2. Condition evaluation report và ApplicationContext bean listing giúp xác định nguyên nhân auto-config back off ra sao?
+    3. Khi bật virtual threads trên Java 21+, loại executor/scheduler có thể đổi và property nào không còn đúng nghĩa pool platform threads?
+    4. Bean do Spring quản lý khác local Executors.newFixedThreadPool ở trách nhiệm shutdown ra sao?
+    5. Bạn kiểm tra đường annotation tới thread và transaction boundary như thế nào khi production khác môi trường test?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt trách nhiệm Spring/Boot | Giải thích bean definition của Framework và auto-configuration theo điều kiện của Boot. |
+    | Truy executor thực tế | Đối chiếu @Async qualifier, AsyncConfigurer, taskExecutor và applicationTaskExecutor theo integration. |
+    | Phân tích điều kiện Boot | Dùng beans/conditions report xác định custom Executor làm auto-config back off hay không. |
+    | Giải thích virtual threads | So sánh SimpleAsyncTaskExecutor/virtual scheduler với ThreadPoolTaskExecutor và các giới hạn downstream. |
+    | Kiểm chứng hiệu lực và vòng đời | Quan sát runtime class/core/max/thread prefix, property source và chính sách shutdown. |

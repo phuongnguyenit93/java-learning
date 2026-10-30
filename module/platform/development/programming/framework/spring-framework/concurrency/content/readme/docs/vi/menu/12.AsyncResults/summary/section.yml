@@ -1,0 +1,69 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Kết quả bất đồng bộ trong Spring Framework
+roadmapHeading: Lộ trình học hợp đồng kết quả, composition và an toàn tài nguyên
+roadmap:
+- id: async-results-001
+  order: 1
+  title: void phù hợp khi bên gọi không cần nhận kết quả trực tiếp
+  description: Chọn @Async void có chủ đích khi caller không cần Future và nắm được lỗi, overload, reliability.
+  transition:
+    to: async-results-002
+    description: Tiếp theo học Future khi caller cần nhận kết quả hoặc biết task đã thất bại.
+- id: async-results-002
+  order: 2
+  title: Future cho phép chờ kết quả hoặc nhận lỗi khi công việc kết thúc
+  description: Đọc giá trị và trạng thái Future, phân biệt exception, timeout, cancel và interruption.
+  transition:
+    to: async-results-003
+    description: Sau một Future, học cách ghép các kết quả thành pipeline đa bước.
+- id: async-results-003
+  order: 3
+  title: CompletableFuture cho phép kết hợp các bước xử lý
+  description: Phối hợp các stage CompletableFuture bằng apply, compose, combine và allOf cùng đường lỗi rõ.
+  transition:
+    to: async-results-004
+    description: Từ composition, đi sâu vào hai tầng Future của proxy và target trong Spring.
+- id: async-results-004
+  order: 4
+  title: Vai trò giá trị Future tạm từ phương thức đích với Future do proxy trả về
+  description: Hiểu Future tạm của target và Future do Spring proxy trả ra bằng dấu hiệu identity/timing.
+  transition:
+    to: async-results-005
+    description: Đã hiểu async bridge, tìm hiểu vì sao completedFuture phù hợp để bàn giao giá trị đã tính.
+- id: async-results-005
+  order: 5
+  title: Dùng completedFuture() cho giá trị đã tính trong luồng xử lý
+  description: Dùng completedFuture để đóng gói giá trị đã tính mà không lập lịch thêm task.
+  transition:
+    to: async-results-006
+    description: Sau factory, kiểm tra chữ ký method để Spring @Async thực sự hỗ trợ kết quả.
+- id: async-results-006
+  order: 6
+  title: Không dùng kiểu trả về đồng bộ thông thường để giả định vẫn nhận kết quả
+  description: Thiết kế chữ ký @Async hợp lệ thay cho kiểu đồng bộ String, DTO hoặc primitive.
+  transition:
+    to: async-results-007
+    description: 'Chữ ký đúng chưa đủ: kết quả cần độc lập khỏi resource đã đóng.'
+- id: async-results-007
+  order: 7
+  title: Trả về dữ liệu độc lập với tài nguyên đã đóng
+  description: Map dữ liệu độc lập với JDBC, JPA session và stream đã đóng; thiết kế ownership an toàn.
+  transition:
+    to: async-results-008
+    description: Cuối cùng đặt điểm chờ để công việc độc lập có cơ hội overlap mà vẫn đảm bảo resource.
+- id: async-results-008
+  order: 8
+  title: Không gọi get() hoặc join() ngay lập tức nếu mục tiêu là chồng lấp công việc
+  description: Đưa các tác vụ độc lập vào executor trước khi chờ và kiểm chứng cơ hội chạy chồng lấp.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài học
+
+  | Tiêu chí | Bài 1: void phù hợp khi bên gọi không cần nhận kết quả trực tiếp | Bài 2: Future cho phép chờ kết quả hoặc nhận lỗi khi công việc kết thúc | Bài 3: CompletableFuture cho phép kết hợp các bước xử lý | Bài 4: Vai trò giá trị Future tạm từ phương thức đích với Future do proxy trả về | Bài 5: Dùng completedFuture() cho giá trị đã tính trong luồng xử lý | Bài 6: Không dùng kiểu trả về đồng bộ thông thường để giả định vẫn nhận kết quả | Bài 7: Trả về dữ liệu độc lập với tài nguyên đã đóng | Bài 8: Không gọi get() hoặc join() ngay lập tức nếu mục tiêu là chồng lấp công việc |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Vấn đề chính | Caller không cần handle | Chờ kết quả, nhận lỗi | Ghép nhiều stage | Hai tầng Future Spring | Factory future có sẵn | Sai chữ ký @Async | Resource đã đóng | Chờ quá sớm |
+  | Cơ chế chính | void, handler, rejection | get, isDone, cancel | thenApply/Compose/Combine | temporary vs caller Future | completedFuture/supplyAsync | void/Future/CompletableFuture | DTO snapshot, transaction | submit trước, await sau |
+  | Thực hành | execute và latch | Future timeout/cancel | Pipeline giá và đặt chỗ | Signals/latch chứng minh proxy | JDK factory với latch | Sửa String thành Future | Đóng reader rồi đọc DTO | Hai worker với latch |
+  | Lỗi cần tránh | Mất lỗi và tác vụ nền | Nhầm done với success | Join trong callback | Nested wait/double submit | Tưởng factory tạo thread | Self-invocation che bug | Lazy proxy/Reader đã đóng | Starvation và queue backlog |
+  | Năng lực đạt được | Chọn void phù hợp | Xử lý kết quả Future | Thiết kế composition | Giải thích bridge Spring | Bàn giao giá trị đã tính | Chọn return type hợp lệ | Đảm bảo dữ liệu độc lập | Đặt điểm chờ hợp lý |

@@ -1,0 +1,361 @@
+summaries:
+- id: monitoring-tuning-001
+  title: Đặt tên luồng để lần theo đường đi tác vụ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đặt tên luồng để lần theo đường đi tác vụ**
+
+
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa và giới hạn của tên luồng
+
+    1. Tên `audit-async-1` cho biết điều gì, và vì sao hậu tố worker không phải thứ tự hay mã của một tác vụ?
+    2. Vì sao một luồng có thể chạy nhiều task, còn một request có thể đi qua nhiều luồng và service?
+    3. Khi gom log từ nhiều JVM, cần thông tin instance/pod và correlation ID như thế nào để tránh nhầm worker trùng tên?
+
+    ### Cấu hình executor và scheduler
+
+    1. `ThreadPoolTaskExecutor.setThreadNamePrefix` và `ThreadFactory` đặt tên ở thời điểm nào, cho thread hay cho từng Runnable?
+    2. Làm sao chứng minh method `@Async("auditExecutor")` thực sự chạy trên bean executor đúng tên, và self-invocation ảnh hưởng gì?
+    3. Khi cấu hình `ThreadPoolTaskScheduler` cho `@Scheduled`, điểm khác biệt về mục đích với `ThreadPoolTaskExecutor` là gì?
+
+    ### Log và context truyền qua thread
+
+    1. Vì sao `%thread` nên kết hợp với `traceId`/`eventId` để ghép log một tác vụ?
+    2. `TaskDecorator` cần chụp, thiết lập và khôi phục MDC theo bước nào để không rò context sang request sau?
+    3. Khi `CompletableFuture.supplyAsync` không chỉ định executor, vì sao tên thread và trace context có thể đổi?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình tên worker | Đặt prefix khác nhau cho hai `ThreadPoolTaskExecutor` và xác minh log mang đúng tên. |
+    | Thực hành ThreadFactory | Tạo `newFixedThreadPool` với factory đánh số thread và giải thích khác biệt giữa task ID và thread ID. |
+    | Đọc đường chuyển luồng | Đối chiếu log HTTP với log `@Async` để xác định có chạy qua Spring proxy/executor hay không. |
+    | Truy vết một task | Kết hợp `traceId` và `eventId`, kiểm tra `TaskDecorator` khôi phục MDC trong `finally`. |
+    | Phân biệt quan sát | Giải thích tình huống cùng thread chạy nhiều task mà không đồng nhất các sự kiện. |
+- id: monitoring-tuning-002
+  title: Ghi nhận thời điểm gửi, bắt đầu, hoàn tất và mã công việc
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ghi nhận thời điểm gửi, bắt đầu, hoàn tất và mã công việc**
+
+
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mốc thời gian và trạng thái
+
+    1. `taskId` khác `logicalJobId`/`attemptId` ở phạm vi nào khi công việc có retry?
+    2. Vì sao `submittedAt` phải được ghi trước `execute`, còn `startedAt` chỉ được ghi ở đầu callback thật sự?
+    3. Các trạng thái `SUBMITTED`, `RUNNING`, `SUCCEEDED`, `FAILED` và `REJECTED` khác nhau ở timestamp nào?
+
+    ### Đo và ghi nhận an toàn
+
+    1. Khi nào dùng `Instant.now()` cho sự kiện và `System.nanoTime()` cho duration, và vì sao không trừ nanoTime từ hai JVM?
+    2. Bọc `Runnable` bằng `TrackedExecutor` thế nào để future phản ánh thành công, lỗi và từ chối?
+    3. Vì sao `TaskDecorator` có thể bọc `FutureTask` và không thấy exception nghiệp vụ chỉ bằng catch quanh `run()`?
+
+    ### Áp dụng Spring và vận hành
+
+    1. Với một `@Async` trả `CompletableFuture`, vì sao thoát khỏi method chưa chắc là lúc pipeline nghiệp vụ đã hoàn tất?
+    2. Những trường nào phù hợp đưa vào log/trace, còn taskId có nên dùng làm Micrometer tag không?
+    3. Nếu thiếu event hoàn tất sau restart hoặc task timeout, tại sao không được tự kết luận task vẫn chạy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế sự kiện vòng đời | Đặt đúng ba timestamp và tạo định danh riêng cho mỗi attempt trước khi submit. |
+    | Tính duration chính xác | Tính queue wait, run time và total từ tick monotonic của một JVM. |
+    | Quan sát nhánh lỗi | Chứng minh `FAILED` có completedAt và `REJECTED` không có startedAt/completedAt. |
+    | Tích hợp @Async | Xác định future/stage cuối khi method tạo pipeline rồi trả về sớm. |
+    | Thiết kế dấu vết | Kết hợp taskId, taskType, traceId với TTL/retention hợp lý; tránh high-cardinality labels. |
+- id: monitoring-tuning-003
+  title: Đo thời gian chờ hàng đợi khác thời gian thực thi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đo thời gian chờ hàng đợi khác thời gian thực thi**
+
+
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới phép đo
+
+    1. Ba mốc t0, t1, t2 tương ứng bước nào, và làm sao tính submission-to-start, run duration, total?
+    2. Vì sao t1−t0 không phải lúc nào cũng bằng thời gian cư trú trong `BlockingQueue` thật?
+    3. Vì sao run duration bao gồm chờ HTTP/DB nhưng không đồng nghĩa CPU time, còn `Future.get()` đo một khoảng khác?
+
+    ### Thực nghiệm và tích hợp
+
+    1. `QueueWaitDemo` dùng một worker và latch để cố ý tạo khoảng chờ thứ hai như thế nào?
+    2. `TaskDecorator` ghi timer ở đâu để đo cả task lỗi, và tại sao nó có thể bọc `FutureTask`?
+    3. Task bị reject hoặc bị cancel trước khi chạy có xuất hiện trong histogram run duration không? Cần số đo bổ sung nào?
+
+    ### Diễn giải và tuning
+
+    1. Khi p95 queue wait tăng nhưng run ổn định, cần xem những metric nào trước khi tăng pool?
+    2. Vì sao p95(wait) + p95(run) không chắc bằng p95(total), và phải đo total ra sao?
+    3. `CallerRunsPolicy` làm thay đổi thời gian chờ và độ trễ thread gửi theo hướng nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân rã thời gian | Tính đúng ba duration từ tick của cùng một tác vụ và phân biệt với HTTP latency. |
+    | Tái hiện queue backlog | Dùng latch giữ worker và chứng minh queue wait lớn hơn run duration của task chờ. |
+    | Instrument Spring | Cấu hình `TaskDecorator` ghi Micrometer Timer cho delay và callback runtime. |
+    | Diễn giải histogram | Đọc p95/p99 với count, rejection, queue depth và active threads mà không cộng phân vị tùy tiện. |
+    | Đề xuất cải tiến | Xác định cần tối ưu dependency, giới hạn đầu vào hay điều chỉnh core/max/queue dựa trên bằng chứng. |
+- id: monitoring-tuning-004
+  title: Quan sát số luồng, activeCount, kích thước hàng đợi và tác vụ bị từ chối
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Quan sát số luồng, activeCount, kích thước hàng đợi và tác vụ bị từ chối**
+
+
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc và metric của pool
+
+    1. `corePoolSize`, `maxPoolSize` và `queueCapacity` ảnh hưởng thứ tự tạo worker và xếp queue ra sao?
+    2. Vì sao `getPoolSize()` khác `getActiveCount()`, và `queueSize=0` chưa chứng minh executor rảnh?
+    3. Tại sao `completedTaskCount` không phải số nghiệp vụ thành công, còn số reject cần một counter riêng?
+
+    ### Từ chối và thực nghiệm
+
+    1. `AbortPolicy`, `CallerRunsPolicy`, `DiscardPolicy` và `DiscardOldestPolicy` có hệ quả quan sát nào?
+    2. Trong `PoolPressureDemo`, latch và bounded queue tạo snapshot `pool=2 active=2 queued=1 rejected=1` như thế nào?
+    3. Khi nào `RejectedExecutionException` được Spring biểu diễn thành `TaskRejectedException`, và tránh đếm trùng reject bằng cách nào?
+
+    ### Dashboard và tìm nguyên nhân
+
+    1. Khi queue tăng nhưng pool chưa chạm max, vì sao cần kiểm tra queueCapacity trước khi tăng max?
+    2. Vì sao nên đặt các gauge hiện tại cạnh rejection rate, task duration và throughput theo thời gian?
+    3. Nếu active sát max nhưng worker chờ DB/lock, tăng thread có thể tác động gì đến downstream?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc số liệu executor | Lấy pool, active, queue, capacity và completed từ Spring/JDK API đúng phạm vi. |
+    | Chứng minh tiếp nhận task | Giải thích đường core→queue→max→reject bằng mô hình pool bounded. |
+    | Phân loại lỗi | Tách rejected submission khỏi failed/cancelled task và tránh counter trùng. |
+    | Thiết lập dashboard | Xuất gauge/counter nhãn cố định, xem xu hướng backlog và rate reject. |
+    | Chọn backpressure | Đề xuất hành vi khi quá tải mà không tin rằng maxPoolSize lớn sẽ tự giải quyết. |
+- id: monitoring-tuning-005
+  title: Theo dõi số lần chạy lịch thành công, lỗi và lần chạy gần nhất
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Theo dõi số lần chạy lịch thành công, lỗi và lần chạy gần nhất**
+
+
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định nghĩa một lần chạy
+
+    1. Vì sao thời điểm được trigger, bắt đầu và kết thúc là ba sự kiện khác nhau trong `@Scheduled`?
+    2. `fixedRate`, `fixedDelay` và cron tác động đến lịch kích hoạt thực tế như thế nào khi job chạy chậm?
+    3. Vì sao bộ đếm success chỉ tăng sau khi nghiệp vụ xong, còn skipped/cancelled cần outcome riêng?
+
+    ### Meter và trạng thái cuối
+
+    1. Khi nào dùng `Counter`, `Timer`, `Gauge` và `AtomicReference<RunSnapshot>` cho một scheduler?
+    2. Tại sao `lastStartedAt` và `lastFinishedAt` không phải cùng một lần chạy khi job mới bắt đầu?
+    3. Làm thế nào nhận biết job chưa từng chạy hoặc chưa có success mà không tạo alert sai từ gauge epoch=0?
+
+    ### Vận hành đa instance
+
+    1. `/actuator/scheduledtasks` cho thông tin gì, và vì sao không thay thế lịch sử các lần chạy dài hạn?
+    2. Nếu hai replica cùng chạy `@Scheduled`, metrics có ngăn trùng lịch hay không và cần phối hợp ở đâu?
+    3. Sau restart, vì sao counter/Gauge trong RAM reset và khi nào nên lưu từng run trong DB?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định outcome | Phân biệt attempted, success, failure, skipped và mốc hoàn tất thật. |
+    | Instrument scheduler | Tạo Counter có outcome, Timer trong finally và Gauge thời điểm gần nhất. |
+    | Đọc snapshot an toàn | Dùng `AtomicReference` để liên kết startedAt/finishedAt/outcome của một lần chạy. |
+    | Thiết kế cảnh báo | Đặt ngưỡng thiếu success dựa vào lịch, kỳ vọng và thời gian chạy tối đa. |
+    | Đối chiếu nhiều replica | Giải thích vì sao metric không kiểm soát leader/lock và khi nào cần DB run history. |
+- id: monitoring-tuning-006
+  title: Không đưa dữ liệu riêng của yêu cầu vào nhãn số liệu có quá nhiều giá trị
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không đưa dữ liệu riêng của yêu cầu vào nhãn số liệu có quá nhiều giá trị**
+
+
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cardinality và tác động
+
+    1. Một time series được phân biệt theo tên metric và tổ hợp nhãn như thế nào?
+    2. Vì sao 4 job types × 2 outcomes × 3 executors chỉ có 24 tổ hợp nhưng thêm 50.000 request IDs có thể tạo tới 1.200.000 tổ hợp?
+    3. Tại sao hash hoặc cắt ngắn user ID không giải quyết số lượng giá trị hay rủi ro lộ dữ liệu?
+
+    ### Lựa chọn nhãn an toàn
+
+    1. Khi nào tag `executor`, `job.type`, `outcome` hoặc route template phù hợp, còn URI đầy đủ thì không?
+    2. Làm thế nào dùng enum/allowlist và nhánh `other` để chặn tag do input tự do tạo ra?
+    3. Low-cardinality và high-cardinality keys trong Micrometer Observation đi tới metrics/traces theo mặc định ra sao?
+
+    ### Kiểm tra và phòng vệ
+
+    1. `MeterFilter.maximumAllowableTags` giúp gì, và vì sao giới hạn cứng có thể làm mất số liệu?
+    2. Kịch bản thử 10.000 request IDs khác nhau nhưng vài job types phải chứng minh điều gì về số meter/series?
+    3. Khi nào đặt request ID trong log/trace và cần kiểm soát quyền truy cập, sampling hay thời hạn lưu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ước lượng cardinality | Tính số tổ hợp tag tối đa và dự đoán ảnh hưởng của nhãn biến thiên theo request. |
+    | Thiết kế tags | Chọn allowlist job.type/outcome, dùng route template và tránh PII/ID động. |
+    | Instrument @Async | Ghi Timer bên trong task mà không đưa requestId thành metric label. |
+    | Áp dụng hàng rào | Cấu hình `MeterFilter` và mô tả hậu quả thiếu metric khi vượt giới hạn. |
+    | Kiểm chứng series | Đối chiếu số meter khi ID tăng, kiểm tra tên thực tế trên Prometheus/Actuator. |
+- id: monitoring-tuning-007
+  title: Dùng thread dump và công cụ JVM để tìm chờ khóa hoặc cạn nhóm luồng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dùng thread dump và công cụ JVM để tìm chờ khóa hoặc cạn nhóm luồng**
+
+
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đọc trạng thái và tài nguyên chờ
+
+    1. Vì sao `BLOCKED` trên monitor khác `WAITING (parking)` ở `ReentrantLock` hoặc `Future.get`?
+    2. Làm thế nào tìm monitor ID và thread owner từ các dòng `waiting to lock`/`locked` trong dump?
+    3. Vì sao worker ở `BlockingQueue.take` có thể đang rảnh thay vì pool đã cạn?
+
+    ### Thu thập và kiểm chứng
+
+    1. Lệnh `jcmd Thread.print -l`, `jstack -l` và JFR hỗ trợ điều tra theo cách nào khác nhau?
+    2. Tại sao nên lấy 2–3 dump ở cùng PID/instance rồi đối chiếu stack và timestamp?
+    3. `ThreadMXBean.findDeadlockedThreads` phát hiện loại vòng chờ nào và bỏ sót những phụ thuộc task nào?
+
+    ### Áp dụng trên Spring pool
+
+    1. Khi active sát max, queue/reject tăng, cần xác nhận worker thực sự đang chờ DB, monitor, Future hay CPU như thế nào?
+    2. Hai chế độ `lock` và `pool` của `ThreadDumpLab` tạo bằng chứng khác nhau ra sao?
+    3. Vì sao `unable to create native thread` không đồng nghĩa với `TaskRejectedException` khi queue đầy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thu thập chứng cứ JVM | Chạy jcmd/jstack/JFR đúng PID, có timestamp và nhiều snapshot. |
+    | Phân tích lock | Lần theo waiter→monitor ID→owner→stack nghiệp vụ để phân biệt contention/deadlock. |
+    | Chẩn đoán starvation | Dùng dump cùng active/queue/completed/rejected xác định worker giữ task hoặc đang rảnh. |
+    | Tái hiện lỗi | Đọc `ThreadDumpLab` để dự đoán state của lock waiter và hai worker bị chặn bởi latch. |
+    | Đề xuất sửa đúng | Chọn rút ngắn critical section, sửa task dependency, timeout hoặc backpressure từ bằng chứng. |
+- id: monitoring-tuning-008
+  title: Đối chiếu thay đổi cấu hình với độ trễ, công suất và tài nguyên đích
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đối chiếu thay đổi cấu hình với độ trễ, công suất và tài nguyên đích**
+
+
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mục tiêu và phép đo
+
+    1. Latency p95/p99, successful throughput, accepted rate và capacity tại SLO khác nhau ra sao?
+    2. Vì sao phải đo queue wait, run duration và total của cùng một loại task/cửa sổ trước khi so sánh?
+    3. Cần giữ cố định workload, CPU quota, pod count, phiên bản code và dependency như thế nào để kết luận một thay đổi có tác dụng?
+
+    ### Cơ chế pool và thí nghiệm
+
+    1. Vì sao tăng `maxPoolSize` không giúp khi queueCapacity lớn và chưa đầy?
+    2. Trong `PoolSizingLab`, vì sao cấu hình core=2, max=4, queue=2 cho kết quả accepted=6, rejected=2?
+    3. Warm-up, tải đến ổn định và tải burst phải được đo thế nào để tránh so sánh sai?
+
+    ### Ra quyết định theo giới hạn hệ thống
+
+    1. Tại sao phương án có p95 thấp hơn nhưng CPU vượt 75% vẫn không đạt mục tiêu giả định?
+    2. Áp dụng `L=λ×W` ở trạng thái ổn định thế nào, và vì sao không nhân p95 với throughput để lấy concurrency trung bình?
+    3. Nếu executor queue giảm nhưng DB pending/timeout tăng, cần kiểm tra bottleneck nào và quyết định rollback ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế benchmark | Lập bảng baseline/config, SLO, workload, code/JVM/quota và các chỉ số so sánh. |
+    | Phân tích chính sách pool | Giải thích core→queue→max và ảnh hưởng của CallerRuns/AbortPolicy lên caller/reject. |
+    | Đọc số liệu tổng thể | So sánh p95/p99, completed throughput, CPU/heap, queue và downstream health cùng lúc. |
+    | Chọn cấu hình có căn cứ | Loại phương án vi phạm guardrail dù một metric cải thiện. |
+    | Kiểm chứng rollout | Thiết kế canary, điều kiện rollback và đo lại dưới cùng dạng tải sau thay đổi. |
+- id: monitoring-tuning-009
+  title: Giám sát không thay thế cơ chế lưu kết quả nghiệp vụ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giám sát không thay thế cơ chế lưu kết quả nghiệp vụ**
+
+
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn sự thật và API
+
+    1. Log `completed`, success counter và `CompletableFuture` có thể khác bản ghi business result đã commit ở những điểm nào?
+    2. `POST /jobs` trả `202 Accepted` nên cam kết điều gì, còn `GET /jobs/{id}` phải lấy trạng thái từ đâu?
+    3. State machine `QUEUED/RUNNING/SUCCEEDED/FAILED` cần ràng buộc chuyển trạng thái và định danh nào?
+
+    ### Transaction và ghi kết quả
+
+    1. Vì sao transaction `@Transactional` của HTTP thread không tự truyền sang worker `@Async`?
+    2. Trong ví dụ `OutcomeStore`, vì sao `result` và trạng thái `SUCCEEDED` phải được ghi trong cùng DB transaction?
+    3. Vì sao metric đếm success nên phát sau khi lời gọi lưu commit, nhưng vẫn có thể thiếu nếu tiến trình chết ngay sau commit?
+
+    ### Khôi phục và chống trùng
+
+    1. Nếu crash sau commit `QUEUED` nhưng trước dispatch vào executor, cần durable outbox hoặc DB polling/claim ở đâu?
+    2. Nếu side effect ngoài đã xảy ra nhưng ghi outcome thất bại, idempotency key và reconciliation ngăn sai lệch như thế nào?
+    3. `@Version` giúp phát hiện xung đột gì, và vì sao nó không thay thế lease, unique idempotency key hay lưu trữ bền vững?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tách telemetry và persistence | Giải thích tình huống metric báo success nhưng DB rollback/không có kết quả. |
+    | Thiết kế job state | Mô tả bản ghi jobId/status/result/error/version và API 202 + GET tra cứu. |
+    | Đặt ranh giới transaction | Chia enqueue, begin, succeed/fail thành transaction worker và ghi result cùng trạng thái. |
+    | Thử restart và crash | Kiểm chứng H2 file giữ outcome, còn metric RAM reset; tìm gap commit→dispatch. |
+    | Thiết kế phục hồi | Đề xuất outbox/queue bền vững, lease, retry có idempotency và reconciliation. |

@@ -1,0 +1,319 @@
+summaries:
+- id: transactions-events-001
+  title: Giao dịch thông thường gắn với luồng không tự truyền vào tác vụ @Async
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giao dịch thông thường gắn với luồng không tự truyền vào tác vụ @Async**
+
+    Trong Spring imperative, transaction do `PlatformTransactionManager` quản lý thường gắn với thread hiện tại. Nếu caller gọi một phương thức `@Async` qua Spring proxy và executor thực sự chuyển việc sang worker, transaction cùng JDBC connection của caller không được truyền theo. Vì vậy worker có thể không đọc được bản ghi chưa commit; worker tự mở transaction cũng không đồng nghĩa tham gia transaction gốc.
+
+    Bài học xây dựng khả năng quan sát ranh giới thật bằng `TransactionSynchronizationManager`, thread name, Spring/JDBC/H2 và các Future được phối hợp có chủ đích. Từ kết quả caller commit/rollback và listener sau commit, người học biết vì sao phải thiết kế thời điểm giao việc thay vì trông cậy vào tốc độ thread.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thread-bound transaction và đường gọi qua proxy
+
+    1. Spring gắn transaction và JDBC resource với thread qua cơ chế nào, và `@Async` thay đổi thread thực thi ở điểm nào?
+    2. Tại sao `TransactionSynchronizationManager.isActualTransactionActive()` có thể đúng ở caller nhưng sai tại worker?
+    3. Trường hợp self-invocation hoặc `SyncTaskExecutor` có thể làm ta kết luận sai rằng transaction được truyền xuyên thread như thế nào?
+
+    ### Commit visibility và transaction riêng
+
+    1. Worker dùng transaction riêng với `Propagation.REQUIRED` có nhìn được row caller chưa commit dưới `READ_COMMITTED` không, và vì sao?
+    2. Đặt `Future.get()` trong transaction caller để chờ worker có thể tạo rủi ro deadlock hoặc cạn connection bằng cách nào?
+    3. Vì sao `@TransactionalEventListener(AFTER_COMMIT)` sửa được một phần lỗi timing nhưng cần outbox khi task phải tồn tại qua crash?
+
+    ### Kiểm chứng bằng Spring/H2
+
+    1. Trong demo hai worker queries trước caller commit, các giá trị transaction-active và visible-row nào chứng minh hai thread độc lập?
+    2. Khi caller rollback, cần đối chiếu row và callback `AFTER_COMMIT` như thế nào để không suy luận từ thứ tự log ngẫu nhiên?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết transaction theo thread | Vẽ ranh giới T1 caller và worker, xác định lúc bind/unbind transaction resource và lúc method async thực thi. |
+    | Phân biệt hai giao dịch | Giải thích tại sao worker `@Transactional` có thể tạo T2 nhưng không được thừa hưởng dữ liệu chưa commit của T1. |
+    | Chẩn đoán lỗi đọc trước commit | Đọc output Spring/H2 và chỉ ra nguyên nhân query worker thấy 0 row, sau commit mới thấy 1 row. |
+    | Chọn điểm giao việc an toàn | Đề xuất after-commit listener hoặc outbox theo yêu cầu timing và độ bền, không giữ transaction mở để chờ Future. |
+- id: transactions-events-002
+  title: Tạo ranh giới giao dịch mới trong bean xử lý khi nghiệp vụ yêu cầu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tạo ranh giới giao dịch mới trong bean xử lý khi nghiệp vụ yêu cầu**
+
+    Một async worker đôi khi cần ghi một nhóm kết quả như một unit of work nguyên tử. Bài này hướng dẫn tách bean giao việc bất đồng bộ khỏi bean xử lý có `@Transactional` hoặc `TransactionTemplate`, đồng thời chỉ rõ `REQUIRED` mở transaction mới nếu worker chưa có transaction và `REQUIRES_NEW` chỉ cần khi phải tách khỏi transaction đang có trong chính thread đó.
+
+    Ví dụ Spring JDBC/H2 cho thấy transaction B ở worker commit trong khi transaction A của caller rollback. Kết quả ấy có thể đúng cho audit độc lập, nhưng nguy hiểm với shipping/payment phụ thuộc một order chưa commit; vì vậy phải đánh giá propagation, connection pool, self-invocation, failure và thời điểm dispatch.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế ranh giới transaction tại worker
+
+    1. Khi nào worker nên có transaction riêng và khi nào nghiệp vụ đòi hai thao tác ở cùng một transaction?
+    2. Vì sao mẫu `AsyncGateway → TransactionalWorker` với hai Spring bean giúp bảo đảm `@Async` và `@Transactional` cùng đi qua proxy?
+    3. Nếu thread worker chưa có transaction, `Propagation.REQUIRED` khác `REQUIRES_NEW` ra sao; khi nào sự khác biệt mới quan trọng?
+    4. `NESTED` dùng savepoint khác transaction vật lý độc lập như thế nào?
+
+    ### Lỗi giao dịch, lock và giới hạn tài nguyên
+
+    1. Trong demo, tại sao `callerRowsAfterRollback=0` nhưng `workerRowsAfterCallerRollback=1` là kết quả hợp lệ?
+    2. Vì sao caller giữ DB connection rồi `Future.get()` chờ worker có thể khiến pool thiếu connection hoặc phát sinh deadlock?
+    3. Nếu worker ném RuntimeException, catch rồi nuốt lỗi, hoặc timeout Future, những kết quả commit/rollback nào vẫn có thể xảy ra?
+    4. Khi caller tạo dữ liệu mà worker chỉ được xử lý sau commit, cần phối hợp after-commit/outbox như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tổ chức bean/proxy hợp lệ | Thiết kế dispatcher `@Async` và writer `@Transactional` ở hai bean khác nhau, xác minh transaction active ngay trong worker. |
+    | Chọn propagation có lý do | So sánh REQUIRED, REQUIRES_NEW, NESTED trong tình huống có/không có transaction trên cùng thread và hậu quả connection. |
+    | Đối chiếu rollback độc lập | Giải thích sáu dòng output H2 của demo caller rollback/worker commit, không gộp chúng thành global transaction. |
+    | Xây chính sách thất bại | Đặt giới hạn queue, timeout, retry/idempotency và điểm dispatch sau commit khi job phụ thuộc dữ liệu gốc. |
+- id: transactions-events-003
+  title: Thời điểm commit của bên gửi và nguy cơ bên nhận đọc dữ liệu chưa hoàn tất
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thời điểm commit của bên gửi và nguy cơ bên nhận đọc dữ liệu chưa hoàn tất**
+
+    `repository.save()` hoặc một câu SQL đã chạy không có nghĩa transaction bên gửi đã commit. Nếu producer phát event trước commit và consumer truy vấn bằng connection khác, consumer có thể thấy row chưa tồn tại hoặc phiên bản cũ; producer rollback còn có thể để lại một thông báo sai. Bài học minh họa lỗi này bằng timeline và demo Spring/H2 có listener tức thời đọc `false`, còn listener `AFTER_COMMIT` đọc `true`.
+
+    Người học phân biệt mốc ghi/commit/xử lý event, cách `@EventListener` khác `@TransactionalEventListener`, và sự khác biệt giữa publish sau commit với outbox có thể phục hồi qua crash. Bài còn xét replica lag, consumer idempotency, event version và retry có giới hạn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thứ tự commit và mức nhìn thấy dữ liệu
+
+    1. Ba mốc thực thi SQL, transaction commit thành công và consumer xử lý event khác nhau thế nào?
+    2. Vì sao `@EventListener` mặc định có thể đọc dữ liệu chưa commit trên cùng connection trong khi consumer độc lập ở `READ_COMMITTED` không thấy?
+    3. Consumer đọc replica hoặc transaction có snapshot cũ sau commit có thể vẫn thấy dữ liệu cũ do đâu?
+    4. Vì sao gửi event ngay sau `save()` trước khi transactional proxy kết thúc chưa tạo quan hệ after-commit?
+
+    ### Chọn after-commit, outbox và phương án đối soát
+
+    1. Demo H2 cho ba output immediate=false, afterCommit=true, afterTx=true bằng thứ tự cơ chế nào?
+    2. `AFTER_COMMIT` loại bỏ lớp lỗi nào khi producer rollback, và khoảng trống crash nào nó chưa giải quyết?
+    3. Outbox ghi order và event intent trong cùng transaction giúp gì, và tại sao consumer vẫn cần event ID/version/idempotency?
+    4. Nếu consumer nhận event hợp lệ nhưng đọc replica chậm, khi nào nên dùng snapshot payload, primary read hoặc bounded retry?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích race trước commit | Vẽ timeline producer INSERT/publish/COMMIT và consumer query từ connection độc lập, dự đoán kết quả dưới READ_COMMITTED. |
+    | Kiểm chứng isolation | Giải thích demo Spring/H2 immediate listener false và after-commit true, không coi kết quả cùng connection là bằng chứng consumer độc lập. |
+    | Thiết kế event an toàn | Lựa chọn transaction-bound listener cho timing và outbox cho durability, có xử lý duplicate/out-of-order. |
+    | Đánh giá dữ liệu sau commit | Đề xuất read policy hoặc event snapshot/version khi consumer dùng replica, cache hoặc projection có lag. |
+- id: transactions-events-004
+  title: Không truyền EntityManager hoặc phiên ORM sang luồng xử lý khác
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không truyền EntityManager hoặc phiên ORM sang luồng xử lý khác**
+
+    Hibernate `Session` và provider `EntityManager` thực giữ identity map, dirty-checking, lazy loading và transaction resources theo unit of work; chúng không thread-safe để chuyền qua `@Async`. Bài này tách rõ factory chia sẻ được, persistence context do worker sở hữu, đối tượng JPA managed/detached và một điểm dễ nhầm: field `@PersistenceContext` trong singleton repository thường là **shared proxy của Spring**, không phải Session thực duy nhất.
+
+    Qua ứng dụng Spring ORM/Hibernate/H2, người học chuyển một ID sang worker, gọi `OrderReader` transactional qua proxy, map thành `OrderView` bất biến rồi trả qua Future. Điều này cũng giải thích tại sao OSIV, `readOnly=true`, entity lazy và việc hủy Future không biến Session cũ thành thread-safe.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng đời ORM và quyền sở hữu context
+
+    1. `EntityManagerFactory` và Hibernate `SessionFactory` chia sẻ được theo cách nào mà một `EntityManager`/`Session` thực lại không?
+    2. Shared `@PersistenceContext` proxy trong Spring singleton khác underlying provider EntityManager ở đâu?
+    3. Vì sao `@PersistenceContext(type=EXTENDED)` và một Session thực được giữ trong singleton nguy hiểm khi bị nhiều thread truy cập?
+    4. Managed entity, lazy proxy và JPA stream có thể hỏng thế nào khi người gọi chuyển sang worker khác?
+
+    ### Thiết kế và kiểm chứng worker JPA
+
+    1. Tại sao worker nên nhận ID, tự mở transaction qua bean `OrderReader` và trả DTO thay vì trả entity?
+    2. `OpenEntityManagerInView` hoặc `@Transactional(readOnly=true)` có sửa được việc dùng chung EntityManager thực không, và vì sao?
+    3. Trong ví dụ Hibernate/H2, bốn output kiểm tra ID, field, worker thread và transaction active chứng minh những ranh giới nào?
+    4. Vì sao gửi async trước commit có thể gây not-found dù mọi repository đã dùng shared proxy đúng cách?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt ORM resources | Giải thích lifecycle của EMF, Spring shared EM proxy, underlying EM, Hibernate Session và persistence context. |
+    | Nhận diện handoff không an toàn | Tìm nơi truyền provider EM/Session, managed entity, lazy collection hoặc cursor qua executor và lý giải lỗi có thể xảy ra. |
+    | Thiết kế worker transactional | Cho caller commit, gửi ID, worker load bằng `@Transactional` qua bean khác và tạo DTO đã materialize. |
+    | Kiểm thử lazy, race và cleanup | Xác minh worker dùng context riêng, xử lý lazy mapping đúng transaction và không giữ resource sau completion. |
+- id: transactions-events-005
+  title: Truyền mã định danh hoặc dữ liệu bất biến thay cho thực thể đang gắn phiên
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Truyền mã định danh hoặc dữ liệu bất biến thay cho thực thể đang gắn phiên**
+
+    Truyền reference của một JPA entity cho worker không tự clone trạng thái, tách session hay giữ nguyên thời điểm sự kiện. Bài học thiết kế hợp đồng dữ liệu rõ ràng qua ranh giới thread và event: truyền **ID để re-fetch state hiện tại**, **immutable snapshot cho historical fact**, hoặc **ID + version** khi phải từ chối thao tác lỗi thời.
+
+    Các ví dụ Java 17 về reference mutable, `record`, `List.copyOf`, CAS version và mẫu Spring/JPA loader cho thấy vì sao immutable nông khác deep immutability, transaction worker phải riêng, và event chỉ hợp lệ sau commit. Người học cũng xem xét tenant scope, serialization, outbox/idempotency và optimistic locking cho update cạnh tranh.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lựa chọn ngữ nghĩa dữ liệu qua ranh giới async
+
+    1. Truyền một managed entity reference khác truyền ID hoặc snapshot immutable về lifetime, lazy association và trạng thái nhìn thấy thế nào?
+    2. Trong tình huống order đổi từ CREATED sang CANCELLED trước khi worker chạy, ID re-fetch và snapshot tại event có thể đưa ra hai kết quả nào?
+    3. Khi nào ID+expectedVersion hoặc hybrid ID/version/snapshot cần thiết để không ghi đè dữ liệu mới?
+    4. Vì sao record chứa `List<MutableLine>` và `List.copyOf` chưa bảo đảm deep immutability?
+
+    ### Transaction, tính đúng đắn và kiểm thử
+
+    1. Caller nên materialize các lazy fields ở đâu trước khi tạo event snapshot; worker cần transactional loader nào khi chỉ nhận ID?
+    2. `@Version` đọc trước flush có thể không phản ánh revision đã commit như thế nào?
+    3. Vì sao kiểm tra version chỉ bằng if trong Java chưa ngăn check-then-act race với DB/external API?
+    4. Với hệ multi-tenant hoặc cần gửi qua broker, payload nên có metadata tối thiểu nào để kiểm soát quyền, dedup và schema evolution?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn hợp đồng payload | Quyết định ID/fresh state, snapshot/historical state hoặc ID+version cho ba tình huống khác nhau và nêu hệ quả. |
+    | Tạo snapshot bất biến | Map entity/lazy association thành nested record/List.copyOf của immutable elements trong transaction hợp lệ. |
+    | Bảo vệ stale update | Phân tích `@Version`, CAS và SQL conditional UPDATE; xác định lúc cần DB atomic check hoặc downstream idempotency. |
+    | Kiểm thử cách truyền dữ liệu | Chạy mô phỏng mutable reference vs snapshot và kiểm tra kết quả giữ nguyên sau khi nguồn thay đổi. |
+    | Giữ scope dữ liệu an toàn | Bổ sung tenantId/eventId/version khi cần, tránh chuyển entity và secret vào broker/event. |
+- id: transactions-events-006
+  title: '@TransactionalEventListener cho xử lý gắn với kết quả giao dịch'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **@TransactionalEventListener cho xử lý gắn với kết quả giao dịch**
+
+    `@TransactionalEventListener` gắn listener với **outcome của transaction chứa lời gọi publish**, mặc định `AFTER_COMMIT` và còn ba pha `BEFORE_COMMIT`, `AFTER_ROLLBACK`, `AFTER_COMPLETION`. Bài này đi sâu hành vi khi không có transaction (`fallbackExecution`), transaction lồng nhau/`REQUIRES_NEW`, thứ tự callback, Spring proxy và sự khác biệt với listener `@EventListener`.
+
+    Người học xác định vì sao callback sau commit vẫn có thể nhìn thấy resource cũ nhưng không còn lượt commit tiếp, nên write DB mới thường cần `REQUIRES_NEW` trong bean khác. Việc thêm `@Async` chỉ chuyển body listener sang executor khi cấu hình phù hợp; nó không truyền transaction cũ hoặc tạo durable delivery. Bài cũng giới thiệu reactive transaction/`TransactionalEventPublisher` và phép thử thật theo phase.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân biệt các pha và điều kiện nhận event
+
+    1. Bốn `TransactionPhase` BEFORE_COMMIT, AFTER_COMMIT, AFTER_ROLLBACK và AFTER_COMPLETION kích hoạt theo outcome nào?
+    2. `@EventListener` thường khác `@TransactionalEventListener` ra sao khi producer rollback?
+    3. Phát event ngoài transaction với `fallbackExecution=false` sẽ thế nào; bật true làm thay đổi semantic after-commit ra sao?
+    4. Event được publish trong inner `REQUIRES_NEW` rồi outer rollback gắn với transaction nào, và vì sao?
+
+    ### Tài nguyên sau commit và async listener
+
+    1. Tại sao gọi repository write trực tiếp ở callback `AFTER_COMMIT` có thể không được commit dù transaction chính đã thành công?
+    2. Khi nào listener cần gọi bean khác có `@Transactional(REQUIRES_NEW)`, và vì sao điều đó vẫn không tạo durability qua crash?
+    3. `@Async` trên transactional listener khác cấu hình multicaster async ở bước đăng ký transaction synchronization như thế nào?
+    4. Transaction reactive trong Spring 6.1+ cần context/event source khác ThreadLocal imperative ra sao?
+
+    ### Kiểm thử hành vi đúng pha
+
+    1. Với `TransactionTemplate` và test không bao ngoài bởi test transaction rollback mặc định, bạn sẽ chứng minh callback nào chạy ở commit/rollback/no-transaction bằng cách nào?
+    2. Vì sao `@Order` và latch không thay thế guarantee về thứ tự hoàn tất giữa nhiều worker hoặc broker?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại transaction listener | Chọn phase đúng cho validation, notification, audit rollback và cleanup, giải thích được giới hạn. |
+    | Kiểm soát hậu commit DB write | Đặt `REQUIRES_NEW` trong Spring bean đúng proxy để ghi sau commit mà không dựa vào resource cũ. |
+    | Kết hợp async và transaction event | Diễn giải thời điểm đăng ký synchronization so với lúc body được executor chạy, kiểm soát rejection/exception. |
+    | Thiết kế integration test | Dùng `TransactionTemplate`, latch và commit/rollback thật để xác nhận phase, fallback và trường hợp no-tx. |
+    | Phân biệt độ bền sự kiện | Giải thích vì sao phase listener không thay thế outbox và vì sao reactive transaction cần cơ chế publication riêng. |
+- id: transactions-events-007
+  title: Sự kiện nội bộ bất đồng bộ không thay thế hàng đợi bền vững
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Sự kiện nội bộ bất đồng bộ không thay thế hàng đợi bền vững**
+
+    Spring `ApplicationEventPublisher` và `@Async @EventListener` rất hữu ích để tách bean và trì hoãn xử lý bên trong JVM, nhưng việc callback được submit chưa phải bằng chứng message đã được lưu hoặc side effect đã hoàn tất. Bài phân loại lỗi khi queue trong RAM bị mất, executor rejection, listener thất bại, JVM crash sau commit, broker ACK bị mất và consumer xử lý lại event.
+
+    Từ đó người học thiết kế transactional outbox hoặc event publication registry bền vững, relay chỉ đánh dấu SENT sau producer confirmation, và consumer idempotent theo `eventId`. Bài cũng so sánh Spring Modulith publication registry, broker được cấu hình độ bền, backpressure, DLQ và monitoring end-to-end.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Local event và durability
+
+    1. `ApplicationEventPublisher.publishEvent()` cam kết điều gì, và tại sao `@EventListener` thông thường khác `@Async @EventListener` về thread thực thi?
+    2. Vì sao executor queue lớn hoặc listener `AFTER_COMMIT` không đủ giúp event tồn tại khi JVM chết giữa DB commit và dispatch?
+    3. Khi nào local best-effort event chấp nhận được, và khi nào business event cần outbox/registry/broker có persistence?
+    4. Spring Modulith event publication registry bổ sung điều gì so với Spring Framework core và cần cấu hình recovery nào?
+
+    ### Outbox, broker và duplicate
+
+    1. Outbox record và domain data phải được ghi trong cùng transaction để tránh dual-write gap như thế nào?
+    2. Vì sao relay phải nhận broker confirm trước khi đánh dấu SENT; nếu chết sau publish nhưng trước mark-SENT sẽ xảy ra gì?
+    3. Consumer nhận lại một event sau khi DB side effect đã commit nhưng trước ACK phải dùng dedupe/transaction ra sao?
+    4. Độ bền broker phụ thuộc queue persistence, acknowledgement, retention và replication khác nhau thế nào?
+
+    ### Quan sát và xử lý lỗi
+
+    1. Khi executor hoặc broker quá tải, backpressure/retry/DLQ nên được thiết kế theo tín hiệu nào?
+    2. Những metric nào phân biệt event đã publish, outbox backlog, broker ACK và business side effect đã hoàn tất?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt cơ chế event | So sánh local synchronous, async event, transactional event và durable outbox theo failure window và cam kết. |
+    | Thiết kế outbox relay | Vẽ luồng domain transaction → outbox → broker confirm → consumer ACK có retry/lease đúng điểm. |
+    | Ngăn duplicate side effect | Đề xuất eventId ổn định, unique processed-events marker và idempotency cho DB/external API. |
+    | Kiểm thử crash/recovery | Xây matrix các cửa sổ lỗi (trước listener, sau broker send, trước ACK), dự đoán trạng thái và cách replay. |
+    | Định nghĩa monitoring đáng tin | Chọn số outbox pending, oldest age, retry, DLQ, consumer lag và độ trễ đến side effect cuối. |
+- id: transactions-events-008
+  title: Không giả định hai tác vụ trên hai luồng có thể rollback cùng nhau
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không giả định hai tác vụ trên hai luồng có thể rollback cùng nhau**
+
+    Hai phương thức được gắn `@Transactional` không tự dùng chung transaction khi chúng chạy trên hai thread. Nếu worker T2 đã commit audit/shipping còn caller T1 rollback, side effect của T2 không bị hoàn tác; `CompletableFuture.allOf().join()` chỉ đợi completion chứ không hợp nhất commit. Bài trình bày mô phỏng `ThreadLocal` Java 17 và anti-pattern Spring JDBC về audit mồ côi để kiểm chứng hệ quả.
+
+    Người học xác định khi nào phải ghi hai bảng trong **một transaction đồng bộ**, khi nào nên phát event sau commit và dùng outbox, và khi workflow phân tán phải chấp nhận eventual consistency, saga/compensation và idempotency. Bài cũng nhấn mạnh XA/JTA chỉ là một kiến trúc coordinator riêng, không tự xuất hiện từ annotation.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai ranh giới commit và lỗi rollback chung
+
+    1. Vì sao `@Transactional` trên caller T1 và worker T2 không tạo một transaction ACID chung chỉ vì dùng cùng DataSource?
+    2. Trong Java `ThreadLocal` demo, điều gì chứng minh worker không thừa hưởng transaction nhưng đã commit audit khi caller rollback?
+    3. Nếu `CompletableFuture.allOf(f1,f2).join()` ném lỗi sau khi f1 commit, thao tác nào có thể rollback và thao tác nào không?
+    4. `Propagation.REQUIRED`, `REQUIRES_NEW`, `NESTED` và ngoại lệ self-invocation ảnh hưởng kết luận rollback như thế nào?
+
+    ### Lựa chọn local atomicity hoặc phối hợp phân tán
+
+    1. Khi ghi order và audit phải cùng thành công hoặc thất bại, tại sao một method transactional cùng thread là phương án phù hợp?
+    2. Listener `AFTER_COMMIT` giải quyết quan hệ với commit gốc nhưng không bảo đảm durable job bằng cách nào?
+    3. Outbox giải quyết tính atomic của event intent và domain data ra sao, và vì sao cần consumer idempotent?
+    4. Saga compensation khác rollback DB vật lý ở đâu, và khi nào JTA/XA mới là phương án cần phân tích riêng?
+
+    ### Kiểm tra thực tế
+
+    1. Vì sao foreign key có thể làm worker bị chặn hoặc ném lỗi mà vẫn không tạo transaction chung?
+    2. Nên kiểm thử bốn kết cục T1/T2 commit/rollback cùng các trạng thái failure sau HTTP 202 bằng cách nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện rollback độc lập | Vẽ hai transaction trên hai thread và phân tích trạng thái còn lại khi T1 rollback, T2 commit. |
+    | Phân biệt Future với commit | Chỉ ra `join()`, cancellation, timeout và lỗi Future không đảo ngược database commit đã hoàn tất. |
+    | Thiết kế local atomic transaction | Giữ các ghi cần all-or-nothing trong cùng transaction/resource, tránh truyền Connection/EntityManager qua worker. |
+    | Chọn orchestration sau commit | Đề xuất outbox, idempotency và trạng thái job bền vững cho workflow nhiều bước. |
+    | Giải thích compensation | Mô tả saga với các hành động bù trừ và giới hạn so với rollback vật lý hoặc XA/JTA. |

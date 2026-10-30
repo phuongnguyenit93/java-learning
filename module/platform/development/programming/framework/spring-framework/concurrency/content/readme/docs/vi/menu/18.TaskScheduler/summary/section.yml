@@ -1,0 +1,70 @@
+version: 1
+type: LEARNING_ROADMAP
+title: TaskScheduler
+roadmapHeading: Lộ trình học TaskScheduler trong Spring
+roadmap:
+- id: task-scheduler-001
+  order: 1
+  title: TaskScheduler biểu diễn lập lịch tách khỏi môi trường thực thi
+  description: 'Xây nền tảng `TaskScheduler`: diễn đạt khi nào callback chạy, phân biệt scheduler với executor và quan sát giới hạn backend.'
+  transition:
+    to: task-scheduler-002
+    description: Đã có hợp đồng chung, tiếp tục với lần chạy tại một `Instant` để biết tạo và điều khiển lịch đơn lẻ.
+- id: task-scheduler-002
+  order: 2
+  title: schedule() để chạy một lần tại thời điểm chỉ định
+  description: Đăng ký một `Runnable` one-shot bằng `schedule(..., Instant)`, chuyển múi giờ đúng và quản lý lateness/cancellation.
+  transition:
+    to: task-scheduler-003
+    description: Từ lịch một lần, mở rộng sang lịch lặp theo mốc bắt đầu dự kiến và hiểu độ trễ dưới tải.
+- id: task-scheduler-003
+  order: 3
+  title: scheduleAtFixedRate() và lịch theo chu kỳ
+  description: Định nghĩa fixed-rate bằng chu kỳ từ mốc bắt đầu, phân biệt lịch dự kiến và thời điểm thực tế, quản trị exception định kỳ.
+  transition:
+    to: task-scheduler-004
+    description: Sau fixed-rate, đối chiếu fixed-delay để biết thời lượng xử lý quyết định thời điểm lượt sau thế nào.
+- id: task-scheduler-004
+  order: 4
+  title: scheduleWithFixedDelay() và khoảng nghỉ sau khi hoàn tất
+  description: Áp dụng fixed-delay như khoảng nghỉ sau khi callback hoàn tất, đặc biệt xác định ranh giới với công việc được delegate.
+  transition:
+    to: task-scheduler-005
+    description: Khi đã nắm hai nhịp định kỳ, học cách đọc và hủy handle của toàn bộ lịch mà không nhầm với trạng thái mỗi lượt.
+- id: task-scheduler-005
+  order: 5
+  title: ScheduledFuture để theo dõi và hủy lịch
+  description: Quản trị handle `ScheduledFuture` cho one-shot, periodic và Trigger; đọc trạng thái, cancel và theo dõi từng lượt đúng nghĩa.
+  transition:
+    to: task-scheduler-006
+    description: Từ trạng thái lịch, xét nguồn clock/zone và cách `TriggerContext` tính mốc để tránh sai giờ và test chập chờn.
+- id: task-scheduler-006
+  order: 6
+  title: Clock của scheduler và ý nghĩa thời gian sử dụng
+  description: Tính thời điểm bằng `Clock`/`TriggerContext`, kiểm thử cron với zone tường minh và tránh nhầm fake clock với virtual scheduler.
+  transition:
+    to: task-scheduler-007
+    description: Sau khi hiểu timing, xem callback thực thi ở thread nào và khi nào cần tách sang worker có giới hạn.
+- id: task-scheduler-007
+  order: 7
+  title: Phân biệt luồng kích hoạt lịch với luồng thực thi công việc
+  description: Tách callback của `ThreadPoolTaskScheduler` khỏi business worker khi cần, xử lý queue, rejection và overlap ở hai tầng.
+  transition:
+    to: task-scheduler-008
+    description: Kết hợp API, thời gian, thread và vòng đời để chọn giữa scheduling khai báo và scheduling điều khiển bằng code.
+- id: task-scheduler-008
+  order: 8
+  title: Chọn lập lịch trực tiếp hay annotation theo mức cần điều khiển
+  description: Chọn `@Scheduled` cho lịch cấu hình ổn định hay `TaskScheduler` programmatic cho job runtime cần ID, cancel và reschedule.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài học
+
+  | Tiêu chí | Bài 1: TaskScheduler biểu diễn lập lịch tách khỏi môi trường thực thi | Bài 2: schedule() để chạy một lần tại thời điểm chỉ định | Bài 3: scheduleAtFixedRate() và lịch theo chu kỳ | Bài 4: scheduleWithFixedDelay() và khoảng nghỉ sau khi hoàn tất | Bài 5: ScheduledFuture để theo dõi và hủy lịch | Bài 6: Clock của scheduler và ý nghĩa thời gian sử dụng | Bài 7: Phân biệt luồng kích hoạt lịch với luồng thực thi công việc | Bài 8: Chọn lập lịch trực tiếp hay annotation theo mức cần điều khiển |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Điểm học chính | Hợp đồng lịch vs thực thi | Một lần theo Instant | Nhịp fixed-rate | Nghỉ sau completion | Handle và cancellation | Clock, timezone, TriggerContext | Scheduler callback vs worker job | Annotation vs dynamic API |
+  | API và đối tượng | TaskScheduler, Trigger | schedule(Runnable, Instant) | scheduleAtFixedRate | scheduleWithFixedDelay | ScheduledFuture | Clock, CronTrigger | TaskScheduler + TaskExecutor | @Scheduled / Schedule API |
+  | Đơn vị thời gian | Instant / Duration / Trigger | Thời điểm tuyệt đối | Start time + period | Completion + delay | Delay còn lại / trạng thái Future | Instant, zone, monotonic elapsed | Trigger lag + queue wait | Property / trigger / runtime start-stop |
+  | Trách nhiệm runtime | Backend quyết định worker | Thực thi one-shot đúng hạn khả thi | Nhịp định kỳ, không hard real-time | Delay phụ thuộc callback completion | Cancel không kill business effect | Clock không advance executor queue | Hai pool, hai queue, hai Future | Ai đăng ký, ai giữ handle và sửa lịch |
+  | Lỗi cần tránh | Tưởng scheduler tự tách worker | Nhầm LocalDateTime hoặc tưởng durable | Nhầm fixed-rate luôn overlap | Nhầm delegate completion là job completion | Gọi periodic get như tick result | DST sai giờ, fake clock sai mục tiêu | CallerRuns block scheduler, overlap job | Tưởng property hot-reload hoặc direct tạo durability |
+  | Kết quả tự kiểm chứng | Mô tả đúng đường scheduling | One-shot Future hoàn tất/hủy | Vẽ planned và actual cadence | Đo delay với latch | Đọc trạng thái cancel và per-run result | Cron fixed clock tạo Instant mong đợi | Tách metric trigger và worker | Chọn annotation hay programmatic từ tình huống |

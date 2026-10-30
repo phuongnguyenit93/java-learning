@@ -1,0 +1,264 @@
+summaries:
+- id: async-results-001
+  title: void phù hợp khi bên gọi không cần nhận kết quả trực tiếp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **void phù hợp khi bên gọi không cần nhận kết quả trực tiếp**
+
+    Phương thức `@Async void` phù hợp khi bên gọi không cần handle hoàn tất và công việc có trách nhiệm xử lý lỗi độc lập. Người học cần phân biệt không trả dữ liệu với việc executor đã nhận task, task đã thành công và tác vụ có thể được phục hồi qua restart.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng của void và Spring proxy
+
+    1. Vì sao một method Java trả `void` vẫn chạy đồng bộ nếu không có cơ chế dispatch?
+    2. Khi nào `@Async void` thích hợp, và khi nào `CompletableFuture<Void>` cho caller hợp đồng tốt hơn?
+
+    ### Trạng thái, lỗi và độ bền
+
+    1. Lỗi trong worker của `@Async void` khác lỗi `TaskRejectedException` tại submit ở vị trí quan sát nào?
+    2. Vì sao trả HTTP 202 sau khi đưa việc vào executor trong bộ nhớ không bảo đảm công việc đã xong?
+    3. Bạn dùng latch, `AsyncUncaughtExceptionHandler` và metric nào để kiểm thử cũng như giám sát?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lựa chọn hợp đồng | Phân loại tác vụ best-effort, tác vụ cần completion và tác vụ cần queue bền vững, nêu lý do. |
+    | Xác định đường lỗi | Phân biệt exception từ lúc submit và từ worker, chọn handler và log/metric tương ứng. |
+    | Kiểm chứng điều phối | Dựng ví dụ `Executor.execute` với latch để chứng minh caller không nhận Future và task có thể còn chạy. |
+    | Đánh giá reliability | Giải thích rủi ro khi JVM crash và trường hợp cần outbox, job store, retry và idempotency. |
+- id: async-results-002
+  title: Future cho phép chờ kết quả hoặc nhận lỗi khi công việc kết thúc
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Future cho phép chờ kết quả hoặc nhận lỗi khi công việc kết thúc**
+
+    `Future<T>` là handle để đợi, lấy giá trị, quan sát exception và yêu cầu hủy phép tính đã được submit. Bài học giúp lựa chọn điểm chờ có timeout, diễn giải chính xác trạng thái và tránh nhầm lỗi worker với lỗi lúc executor không tiếp nhận task.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Trạng thái và API
+
+    1. `isDone()` đúng có chứng minh thành công hay không, và `isCancelled()` cho biết thêm điều gì?
+    2. Lời gọi `submit(Callable)` có hợp đồng trả kết quả khác `execute(Runnable)` như thế nào?
+    3. `Future.get()` tạo quan hệ happens-before nào với các hành động của task?
+
+    ### Timeout, exception và giới hạn
+
+    1. `ExecutionException`, `InterruptedException`, `TimeoutException`, `CancellationException` báo những chuyện khác nhau ra sao?
+    2. Vì sao `get(timeout)` không tự hủy việc đang chạy và `cancel(true)` không phải rollback?
+    3. Điều gì xảy ra khi worker duy nhất đợi Future của task con cũng nằm trong cùng queue?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thao tác với Future | Viết ví dụ submit/get và xử lý exception theo đúng nguồn lỗi. |
+    | Diễn giải trạng thái | Dự đoán `isDone`, `isCancelled`, `get` ở trạng thái pending, success, failure, cancelled. |
+    | Kiểm thử timeout | Dùng latch để xác nhận caller timeout nhưng worker vẫn hoàn tất sau khi mở chốt. |
+    | Phân tích starvation | Phát hiện và giải thích deadlock do task cha giữ worker đợi task con. |
+- id: async-results-003
+  title: CompletableFuture cho phép kết hợp các bước xử lý
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CompletableFuture cho phép kết hợp các bước xử lý**
+
+    `CompletableFuture` mô tả quan hệ giữa các bước bất đồng bộ, hỗ trợ biến đổi kết quả, nối stage phụ thuộc, ghép hai nguồn độc lập và tập hợp nhiều future. Bài dạy cách thiết kế pipeline đúng dependency cùng chính sách lỗi, timeout và executor.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đồ thị phụ thuộc
+
+    1. Khi nào dùng `thenApply`, `thenCompose` và `thenCombine` cho ba dạng phụ thuộc khác nhau?
+    2. Vì sao `allOf` không tự trả danh sách kết quả và `anyOf` có thể hoàn thành bằng exception?
+    3. Bạn phân biệt nhánh độc lập với nhánh cần kết quả của bước trước thế nào?
+
+    ### Lỗi và thread thực thi
+
+    1. `exceptionally`, `handle`, `whenComplete` khác nhau khi giữ hoặc chuyển hóa lỗi ra sao?
+    2. Callback không hậu tố Async có thể chạy trên thread nào, và overload Async không truyền executor chọn gì?
+    3. Vì sao `orTimeout` và `cancel` của CompletableFuture không chứng minh JDBC hoặc HTTP call đã ngừng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế composition | Vẽ pipeline giá, thuế, vận chuyển, giữ chỗ bằng thenApply/thenCombine/thenCompose. |
+    | Tập hợp kết quả | Viết `allOf` trả tập giá trị có thứ tự và xử lý nhánh lỗi. |
+    | Xử lý exceptional completion | Chọn fallback hợp lệ hoặc giữ lỗi qua exceptionally/handle/whenComplete. |
+    | Kiểm soát executor | Truyền executor cho bước nặng, tránh join gây starvation và đặt deadline phù hợp. |
+- id: async-results-004
+  title: Vai trò giá trị Future tạm từ phương thức đích với Future do proxy trả về
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vai trò giá trị Future tạm từ phương thức đích với Future do proxy trả về**
+
+    Trong Spring `@Async`, Future tạm mà target method trả ra dùng để giao kết quả cho interceptor, còn Future Spring proxy trả caller đại diện toàn bộ invocation. Tách hai tầng này cho phép giải thích trường hợp target hoàn tất nhưng caller vẫn pending và nhận diện nguy cơ nested scheduling.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai vai trò của Future
+
+    1. Future tạm của target và Future của proxy khác nhau thế nào về identity, thời điểm hoàn tất, trách nhiệm?
+    2. Spring interceptor chuyển kết quả hoặc exception từ target Future thành trạng thái caller Future ra sao?
+    3. Khi tự gọi `this.asyncMethod()`, vì sao không còn đúng đường proxy được mô tả?
+
+    ### Bằng chứng và edge case
+
+    1. Làm sao dùng Signals và CountDownLatch chứng minh Future tạm done trong khi proxy còn pending?
+    2. Nếu target trả một Future chưa completed, worker bridge có thể phải chờ theo cách nào?
+    3. Rejection lúc submit khác exception bên trong target ở điểm nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô tả async bridge | Vẽ timeline caller, proxy, worker, future tạm và future ngoài. |
+    | Kiểm chứng hai trạng thái | Dùng latch và Signals bean so sánh isDone và identity của hai Future. |
+    | Phát hiện thiết kế sai | Giải thích double scheduling và thread-starvation nếu target lại chờ future con. |
+    | Đặt giới hạn kết luận | Phân biệt contract public và chi tiết implementation của Spring proxy. |
+- id: async-results-005
+  title: Dùng completedFuture() cho giá trị đã tính trong luồng xử lý
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dùng completedFuture() cho giá trị đã tính trong luồng xử lý**
+
+    `completedFuture(value)` chỉ đóng gói giá trị đã tính thành một future hoàn tất ngay, không tự submit phép tính. Trong target Spring `@Async`, factory thường được dùng sau công việc trên worker để chuyển giá trị cho async interceptor, tránh tạo thêm tầng `supplyAsync` không cần thiết.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Factory và lập lịch
+
+    1. Factory `completedFuture` tạo trạng thái nào và có tự mở thread hay submit không?
+    2. Vì sao biểu thức `completedFuture(expensiveCalculation())` đánh giá phép tính trước khi gọi factory?
+    3. `completedFuture`, `failedFuture`, `new CompletableFuture` và `supplyAsync` khác nhau thế nào?
+
+    ### Tích hợp với Spring và dữ liệu
+
+    1. Vì sao target `@Async` trả completed Future nhưng proxy Future của caller vẫn có thể pending?
+    2. Điều gì xảy ra khi lồng `supplyAsync` không truyền executor bên trong một method đã có @Async?
+    3. Completed future chứa collection mutable có tự biến payload thành dữ liệu thread-safe không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt tính toán và completion | Chạy Java 17 demo đối chiếu future completed ngay với task đã submit nhưng còn bị latch giữ. |
+    | Trả kết quả đúng Spring | Viết target @Async tính kết quả trong worker và trả `completedFuture(result)`. |
+    | Xử lý factory khi lỗi | Chỉ ra khi nào dùng `failedFuture` thay vì completedFuture mang giá trị Throwable. |
+    | Phát hiện double scheduling | Rà lại `supplyAsync` bên trong @Async và đề xuất đơn giản hóa khi không cần pool thứ hai. |
+- id: async-results-006
+  title: Không dùng kiểu trả về đồng bộ thông thường để giả định vẫn nhận kết quả
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không dùng kiểu trả về đồng bộ thông thường để giả định vẫn nhận kết quả**
+
+    Một method Spring `@Async` trả `String`, primitive hoặc DTO trực tiếp không thỏa hợp đồng async interceptor; phải dùng `void` hay kiểu `Future` phù hợp. Bài giúp sửa chữ ký service, đường gọi và xử lý HTTP, đồng thời phát hiện self-invocation đang che giấu một chữ ký sai.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Return type
+
+    1. Vì sao `@Async String load()` không được Spring async proxy hỗ trợ theo cách thông thường?
+    2. `Future<T>`, `CompletableFuture<T>`, `void` khác `CompletionStage<T>` khai báo trực tiếp ở điểm nào?
+    3. Vì sao method trả String vẫn có thể trông như hoạt động khi self-invocation bỏ qua proxy?
+
+    ### Áp dụng vào service và HTTP
+
+    1. Làm sao đổi method trả DTO trực tiếp thành `CompletableFuture<DTO>` và cập nhật tất cả caller?
+    2. Vì sao gọi join ngay trong Servlet controller vẫn có thể giữ thread chờ?
+    3. Khi nào trả Future cho MVC và khi nào thiết kế HTTP 202 cùng job ID/trạng thái?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra chữ ký | Phân loại method @Async trả void, Future, CompletableFuture, DTO, primitive, Optional và CompletionStage. |
+    | Sửa service/caller | Thay chữ ký sai bằng Future có kiểu và xử lý completion/error ở caller. |
+    | Kiểm chứng proxy | Dùng Spring context và lời gọi từ bean khác để phát hiện return type invalid hoặc self-invocation. |
+    | Thiết kế response | So sánh CompletableFuture<ResponseEntity> với ResponseEntity thuần và điểm chờ HTTP thực tế. |
+- id: async-results-007
+  title: Trả về dữ liệu độc lập với tài nguyên đã đóng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Trả về dữ liệu độc lập với tài nguyên đã đóng**
+
+    Kết quả Future không tự duy trì vòng đời của JPA session, transaction, JDBC ResultSet hay stream mà worker đã đóng. Bài hướng dẫn tạo snapshot DTO độc lập trước khi thoát scope tài nguyên, bảo đảm ownership và chọn streaming/locator có kiểm soát khi dữ liệu lớn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng đời dữ liệu
+
+    1. Vì sao `Future.get()` không mở lại Reader hoặc association LAZY sau khi session đóng?
+    2. Một detached entity khi nào còn đọc được và vì sao DTO có hợp đồng rõ hơn?
+    3. List.copyOf có giúp phần tử mutable trở thành deep immutable không?
+
+    ### Transaction và streaming
+
+    1. Transaction ở HTTP caller có tự đi qua thread @Async không, và reader bean cần boundary gì?
+    2. Bạn mở, đọc, map, đóng resource ở đâu nếu caller chỉ nhận một DTO sau khi task kết thúc?
+    3. Với file nhiều GB, khi nào dùng paging, streaming callback hoặc locator thay vì materialize vào heap?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo DTO độc lập | Map dữ liệu trước khi đóng JDBC/Reader rồi chứng minh caller vẫn đọc được. |
+    | Thiết kế transaction | Tách transactional reader bean và async service theo ranh giới proxy. |
+    | Bảo vệ ownership | Áp dụng defensive copy với list/array và phân biệt shallow/deep immutability. |
+    | Xử lý dữ liệu lớn | Chọn paging/streaming/file locator có lifetime, TTL, ACL và memory limit rõ. |
+- id: async-results-008
+  title: Không gọi get() hoặc join() ngay lập tức nếu mục tiêu là chồng lấp công việc
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không gọi get() hoặc join() ngay lập tức nếu mục tiêu là chồng lấp công việc**
+
+    Đặt `get()`/`join()` ngay sau mỗi lời gọi async có thể khiến hai tác vụ độc lập không bao giờ chạy chồng lấp. Bài hướng dẫn submit tất cả nhánh độc lập trước, thiết kế dependency graph, đợi tại điểm thật cần dữ liệu và kiểm tra overlap bằng latch cùng metrics.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Submit, execute và await
+
+    1. Vì sao `aAsync().join(); bAsync().join()` có thể làm mất cơ hội chạy đồng thời?
+    2. Sơ đồ timeline submit, worker execution và await khác nhau thế nào giữa hai cách gọi?
+    3. Khi B phụ thuộc dữ liệu từ A, vì sao nên dùng thenCompose hơn là chờ bằng join trong callback?
+
+    ### Bằng chứng và tài nguyên
+
+    1. Làm sao dùng hai worker và CountDownLatch chứng minh A và B đã bắt đầu trước khi nhả chốt?
+    2. `get()` và `join()` khác về exception nhưng giống ở việc giữ caller chờ thế nào?
+    3. Vì sao gửi hai Future trước vẫn có thể bị giới hạn bởi DB connection, queue, khóa hoặc CPU?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Refactor điểm chờ | Chuyển code get/join sớm thành submit trước và thenCombine hoặc await ở cuối. |
+    | Vẽ dependency graph | Tách nhánh độc lập, nhánh phụ thuộc và chọn thenCompose/thenCombine/allOf phù hợp. |
+    | Kiểm chứng thực thi chồng lấp | Dựng latch chứng minh hai worker đã chạy trước khi future hoàn tất. |
+    | Chẩn đoán giới hạn | Phân tích starvation, queue, pool, downstream và timeout khi lợi ích concurrency không xuất hiện. |

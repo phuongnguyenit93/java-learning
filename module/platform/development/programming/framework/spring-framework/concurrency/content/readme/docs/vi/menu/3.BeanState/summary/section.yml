@@ -1,0 +1,76 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Trạng thái bean
+roadmapHeading: Lộ trình thiết kế trạng thái bean an toàn trong Spring
+roadmap:
+- id: bean-state-001
+  order: 1
+  title: Bean singleton được nhiều luồng sử dụng và không tự trở nên an toàn luồng
+  description: Nhận diện một singleton trong Spring IoC container và vì sao nhiều request có thể cùng sửa field mutable.
+  transition:
+    to: bean-state-002
+    description: Phân biệt biến riêng của invocation với field và đối tượng có thể được chia sẻ.
+- id: bean-state-002
+  order: 2
+  title: Biến cục bộ, trường đối tượng và dữ liệu dùng chung
+  description: Phân loại local, instance field, static và tài nguyên dùng chung để định vị mutable state.
+  transition:
+    to: bean-state-003
+    description: Bảo đảm một trạng thái chia sẻ được xây dựng và công bố an toàn cho reader.
+- id: bean-state-003
+  order: 3
+  title: Đối tượng bất biến và công bố dữ liệu an toàn
+  description: Thiết kế immutable snapshot và safe publication bằng final, volatile, CAS khi phù hợp.
+  transition:
+    to: bean-state-004
+    description: Áp dụng quyền sở hữu state vào dữ liệu riêng của từng HTTP request.
+- id: bean-state-004
+  order: 4
+  title: Giữ dữ liệu của từng yêu cầu tách khỏi trạng thái bean
+  description: Giữ request state trong tham số/DTO hoặc scope phù hợp và xử lý async boundary.
+  transition:
+    to: bean-state-005
+    description: Xác định các quy tắc nghiệp vụ có check-then-act phải thực hiện nguyên tử.
+- id: bean-state-005
+  order: 5
+  title: Phép kiểm tra rồi cập nhật và thao tác nhiều bước cần bảo vệ
+  description: Bảo vệ một quyết định nhiều bước bằng CAS, lock hoặc thao tác có điều kiện ở DB.
+  transition:
+    to: bean-state-006
+    description: Lựa chọn primitive cụ thể theo số field và hành vi chờ khóa.
+- id: bean-state-006
+  order: 6
+  title: Chọn synchronized, Lock hoặc atomic theo phạm vi bất biến
+  description: Chọn AtomicInteger, synchronized, ReentrantLock hoặc snapshot CAS theo phạm vi invariant.
+  transition:
+    to: bean-state-007
+    description: Giữ đúng invariant mà không để I/O hay future kéo dài thời gian sở hữu khóa.
+- id: bean-state-007
+  order: 7
+  title: Không giữ khóa khi chờ nhập xuất hoặc chờ tác vụ phụ thuộc
+  description: Tách I/O khỏi critical section và dùng version guard tránh ghi đè kết quả lỗi thời.
+  transition:
+    to: bean-state-008
+    description: Đối chiếu lại vòng đời bean để tránh nghĩ đổi scope là một dạng khóa.
+- id: bean-state-008
+  order: 8
+  title: Phân biệt phạm vi bean với cơ chế đồng bộ
+  description: Phân biệt scope với cơ chế đồng bộ qua singleton, prototype, request, session và ObjectProvider.
+  transition:
+    to: bean-state-009
+    description: Theo dõi các tham chiếu mutable vượt qua ranh giới tham số và giá trị trả về.
+- id: bean-state-009
+  order: 9
+  title: Theo dõi trạng thái bị chia sẻ qua đối số và giá trị trả về
+  description: Truy tìm alias/escape qua input, return, cache và async rồi thiết kế immutable boundary.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh trọng tâm các bài trong chương
+
+  | Tiêu chí | Bài 1: Bean singleton được nhiều luồng sử dụng và không tự trở nên an toàn luồng | Bài 2: Biến cục bộ, trường đối tượng và dữ liệu dùng chung | Bài 3: Đối tượng bất biến và công bố dữ liệu an toàn | Bài 4: Giữ dữ liệu của từng yêu cầu tách khỏi trạng thái bean | Bài 5: Phép kiểm tra rồi cập nhật và thao tác nhiều bước cần bảo vệ | Bài 6: Chọn synchronized, Lock hoặc atomic theo phạm vi bất biến | Bài 7: Không giữ khóa khi chờ nhập xuất hoặc chờ tác vụ phụ thuộc | Bài 8: Phân biệt phạm vi bean với cơ chế đồng bộ | Bài 9: Theo dõi trạng thái bị chia sẻ qua đối số và giá trị trả về |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | Chia sẻ singleton và race | Local, field và shared object | Immutability và safe publication | Cô lập dữ liệu HTTP request | Nguyên tử cho check-then-act | Chọn atomic, monitor, Lock | Vùng khóa ngắn, tránh chờ vòng | Scope và vòng đời của bean | Alias qua input, return, async |
+  | Rủi ro chính | Lost update trong singleton | Dữ liệu request nằm nhầm field | Reader thấy state chưa công bố đúng | Hai request lẫn user hoặc context | Hai request cùng vượt qua kiểm tra tồn kho | Khóa/cập nhật không bao trọn invariant | Contended lock, deadlock, stale result | Đổi scope nhưng vẫn chia sẻ object | Mutable alias rò sang caller/task |
+  | Bằng chứng thực hành | CyclicBarrier: 2 lần tăng thành 1 | Latch: local khác shared counter | CAS: 400 updates và snapshot cũ | Latch: An đọc nhầm Bình | 2 đặt chỗ cùng 1 suất; CAS/DB update | 100 lần tranh 10 suất qua 3 primitive | Quick task vượt slow task; version guard | getBean, ObjectProvider và prototype | View vs copy; payload đổi sau submit |
+  | Cách bảo vệ | Stateless, atomic, monitor, DB | Local/DTO, atomic theo nhu cầu | Defensive copy, volatile, AtomicReference | RequestSnapshot, @RequestScope đúng vòng đời | CAS/lock/conditional UPDATE và unique key | Một monitor/Lock hoặc snapshot CAS | I/O ngoài khóa, version check, timeout | Chọn scope theo lifecycle, đồng bộ theo state | Ownership rõ, immutable DTO, copy đúng boundary |
+  | Năng lực cần đạt | Nhận ra singleton không tự thread-safe | Phân loại vị trí state và quyền sửa | Thiết kế snapshot được công bố đúng | Thiết kế không rò dữ liệu giữa request | Bảo vệ cả quyết định nghiệp vụ | Chọn công cụ theo invariant cụ thể | Phát hiện deadlock và rút ngắn critical section | Phân biệt cấp phát instance với synchronization | Lần theo reference và sửa alias không mong muốn |

@@ -1,0 +1,382 @@
+summaries:
+- id: overload-rejection-001
+  title: Những tình huống bộ thực thi từ chối tác vụ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Những tình huống bộ thực thi từ chối tác vụ**
+
+    Bài học giúp người đọc nhận ra chính xác lúc nào lời gọi gửi việc đến `ThreadPoolTaskExecutor` không được chấp nhận. Khi nắm thứ tự core → queue → max, trường hợp queue không chờ và trạng thái shutdown, người học có thể xác định nguyên nhân thay vì tăng số luồng theo cảm tính.
+
+    Phần thực nghiệm và các tình huống I/O, retry, starvation còn cho thấy việc không có exception không đồng nghĩa tác vụ đã chạy, đồng thời đặt nền cho các chính sách xử lý cụ thể trong chương.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Điều kiện phát sinh từ chối
+
+    1. Vì sao pool thường đưa task vào queue sau khi đạt core thay vì lập tức tăng đến `maxPoolSize`?
+    2. Trong cấu hình core=2, max=4, queueCapacity=2, khi sáu task chưa kết thúc thì task thứ bảy sẽ đi qua nhánh nào?
+    3. Tại sao executor đã shutdown vẫn có thể từ chối một task dù hàng đợi chưa đầy?
+    4. Khi `queueCapacity=0` sử dụng `SynchronousQueue`, điều kiện nào cho phép nhận thêm task và khi nào phải từ chối?
+
+    ### Phân biệt hiện tượng khi vận hành
+
+    1. Vì sao CPU thấp nhưng `activeCount` cao và queue đầy vẫn có thể dẫn đến rejection?
+    2. Làm cách nào phân biệt một task đã được nhận rồi ném exception với một task bị từ chối ngay lúc submit?
+    3. Tại sao tăng queue lên mức rất lớn có thể che tín hiệu từ chối nhưng khiến thời gian chờ và RAM tăng?
+
+    ### Kiểm chứng và xử lý an toàn
+
+    1. Dùng `CountDownLatch` như thế nào để giữ worker bận và chứng minh task mới bị từ chối một cách xác định?
+    2. Khi nhận lỗi từ chối, cần đo những chỉ số nào và lựa chọn phản hồi nào để tránh retry storm hoặc mất job?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô tả admission | Vẽ và giải thích chính xác trình tự core, queue, max, rejection cho một cấu hình executor hữu hạn. |
+    | Dự đoán sự cố | Tính được mốc task bắt đầu bị từ chối khi worker bị giữ, kể cả với queueCapacity bằng 0. |
+    | Phân loại nguyên nhân | Tách bão hòa, shutdown, lỗi trong worker, timeout và starvation bằng tín hiệu quan sát phù hợp. |
+    | Kiểm chứng hành vi | Dựng được thí nghiệm Java 17 có latch và đối chiếu exception tại nơi submit. |
+    | Đề xuất ứng xử | Giải thích lựa chọn fail-fast, backpressure hoặc lưu job bền vững theo yêu cầu không mất việc. |
+- id: overload-rejection-002
+  title: RejectedExecutionHandler và TaskRejectedException
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **RejectedExecutionHandler và TaskRejectedException**
+
+    Bài này làm rõ `RejectedExecutionHandler` quyết định làm gì với task mà JDK `ThreadPoolExecutor` không nhận, còn `TaskRejectedException` thể hiện sự từ chối qua hợp đồng Spring. Phân biệt hai lớp này giúp đặt `catch` đúng vị trí và tránh nhầm rejection đồng bộ với exception của nghiệp vụ trong một `Future`.
+
+    Qua các policy JDK, ví dụ Spring và `@Async`, người học học cách chọn semantics báo lỗi, chạy trên caller hoặc bỏ việc theo hậu quả thật đối với job và người chờ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng JDK và Spring
+
+    1. Khi nào `ThreadPoolExecutor` gọi `RejectedExecutionHandler` và handler nhận loại task nào?
+    2. `TaskRejectedException` liên quan thế nào tới `RejectedExecutionException`, và trường hợp nào tầng Spring chuyển đổi ngoại lệ?
+    3. Tại sao không thể mặc nhiên áp dụng bốn handler JDK cho mọi triển khai `TaskExecutor` của Spring?
+
+    ### Policy và Future
+
+    1. Bốn chính sách `AbortPolicy`, `CallerRunsPolicy`, `DiscardPolicy` và `DiscardOldestPolicy` khác nhau về cách tiếp nhận hoặc bỏ task ra sao?
+    2. Khi `submit` tạo `FutureTask`, vì sao một handler trả về bình thường vẫn có thể làm `Future` chờ mãi?
+    3. Trong trường hợp executor đã shutdown, `CallerRunsPolicy` có đảm bảo chạy task hay báo lỗi không?
+
+    ### Sử dụng trong ứng dụng
+
+    1. Tại sao caller của phương thức `@Async` cần xử lý rejection riêng với lỗi hoàn tất bất đồng bộ của Future?
+    2. Một custom rejection handler chỉ ghi counter rồi trả về sẽ tạo rủi ro hợp đồng tiếp nhận nào?
+    3. Bạn sẽ instrument và kiểm thử handler thế nào để phân biệt refused, caller-runs và silently dropped?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích API | Phân biệt đúng vị trí và phạm vi của `RejectedExecutionHandler`, `RejectedExecutionException` và `TaskRejectedException`. |
+    | So sánh policy | Lập bảng hệ quả của bốn handler đối với caller, worker, queue và Future. |
+    | Xử lý hai đường lỗi | Viết mã bắt rejection tại submit và theo dõi exception của task đã nhận qua Future/CompletableFuture. |
+    | Cấu hình Spring | Chọn và cấu hình `setRejectedExecutionHandler` trên đúng bean `ThreadPoolTaskExecutor`. |
+    | Kiểm thử hợp đồng | Dùng pool hữu hạn và latch để chứng minh kết quả của handler mà không dựa vào lịch chạy may rủi. |
+- id: overload-rejection-003
+  title: AbortPolicy báo lỗi tại điểm gửi tác vụ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **AbortPolicy báo lỗi tại điểm gửi tác vụ**
+
+    `AbortPolicy` giúp biến tình trạng pool hết sức chứa thành ngoại lệ quan sát được ngay tại lời gọi `execute` hoặc `submit`. Bài này cần thiết vì đặt `try/catch` bên trong task bị từ chối không bao giờ có tác dụng: task đó chưa được chạy.
+
+    Người học thực hành trường hợp worker bận và queue đầy có `CountDownLatch`, so sánh exception JDK và Spring, rồi quyết định cách phản hồi HTTP hoặc đánh dấu job khi nhiệm vụ chưa được tiếp nhận.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Fail-fast tại ranh giới gửi việc
+
+    1. Vì sao `AbortPolicy` ném exception trên caller mà không dừng cả pool hoặc huỷ các task đã nhận?
+    2. Trường hợp nào `AbortPolicy` ném vì shutdown dù queue chưa đầy?
+    3. Vì sao khối `catch` đặt trong thân Runnable không thể bắt rejection của chính Runnable đó?
+
+    ### Thực nghiệm Java và Spring
+
+    1. Với core=max=1 và queueCapacity=1, bạn dùng hai latch thế nào để task thứ ba chắc chắn bị từ chối?
+    2. JDK `execute` ném kiểu nào, còn `ThreadPoolTaskExecutor` của Spring ném kiểu nào?
+    3. Nếu `submit` bị từ chối, liệu caller có luôn nhận được một `Future` trước khi exception xuất hiện không?
+
+    ### Quyết định sau lỗi
+
+    1. Làm cách nào phân biệt `TaskRejectedException` lúc nộp với `ExecutionException` từ một `Callable` đã chạy?
+    2. Khi API trả `202 Accepted`, vì sao việc đã bị AbortPolicy từ chối là dấu hiệu hợp đồng sai?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Bắt đúng exception | Viết `catch(TaskRejectedException)` ở caller Spring và không nhầm với exception trong worker. |
+    | Tái hiện rejection | Chạy được kịch bản latch với một worker và một queue slot, dự đoán stdout và trạng thái queue. |
+    | Phân biệt vòng đời task | Chỉ ra được các task đã được nhận vẫn tiếp tục, dù task mới bị AbortPolicy từ chối. |
+    | Quyết định phản hồi | Chọn phản hồi 429/503 hoặc phương án lưu bền vững theo lý do quá tải và cam kết nghiệp vụ. |
+    | Chẩn đoán cấu hình | Giải thích vì sao tăng max nhưng giữ queue rất lớn chưa chắc cải thiện khả năng tiếp nhận. |
+- id: overload-rejection-004
+  title: CallerRunsPolicy chuyển công việc sang luồng gọi và thay đổi độ trễ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CallerRunsPolicy chuyển công việc sang luồng gọi và thay đổi độ trễ**
+
+    `CallerRunsPolicy` có thể giải quyết việc pool bão hòa bằng cách chạy task ngay trên thread đang submit. Cách này làm producer chậm lại, nhưng cũng có thể đẩy một tác vụ blocking vào HTTP request thread, scheduler hoặc event-loop, khiến độ trễ tăng mạnh đúng lúc hệ thống quá tải.
+
+    Bài học giúp phân tích cả mặt lợi và rủi ro: giới hạn worker không còn là giới hạn tổng task đang chạy, thread-local/transaction thay đổi theo nhánh xử lý, có thể tự deadlock khi task chờ một tín hiệu từ caller, và handler vẫn có thể bỏ task khi executor shutdown.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa và cơ chế backpressure
+
+    1. Điều kiện nào khiến `CallerRunsPolicy` gọi trực tiếp `Runnable.run()` trên thread gửi việc?
+    2. Vì sao một producer tuần tự bị giảm tốc khi `execute()` phải chờ task inline kết thúc?
+    3. Tại sao pool `maxPoolSize=4` vẫn có thể có nhiều hơn bốn công việc đang chạy nếu nhiều HTTP caller cùng bị caller-runs?
+
+    ### Rủi ro về latency và thread context
+
+    1. Độ trễ `execute()` và p95/p99 HTTP thay đổi thế nào khi một task nặng chạy trên request thread?
+    2. Transaction, MDC, SecurityContext hoặc ThreadLocal có thể mang ngữ nghĩa khác gì giữa worker và caller-runs?
+    3. Tình huống nào có thể deadlock khi task bị chạy inline rồi đợi một latch mà caller dự định mở sau lời gọi `execute()`?
+
+    ### Shutdown và kiểm chứng
+
+    1. `CallerRunsPolicy` xử lý task mới ra sao khi executor đã shutdown, và vì sao một Future có thể mãi pending?
+    2. Bạn dùng latch và kiểm tra danh tính `Thread.currentThread()` như thế nào để chứng minh task thực thi trên caller?
+    3. Khi nào nên thay CallerRuns bằng admission control hoặc AbortPolicy để giữ deadline và giới hạn tổng concurrency?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Diễn giải nhánh caller | Chứng minh bằng code task bão hòa chạy đồng bộ trên thread submit, phân biệt với worker thông thường. |
+    | Phân tích ảnh hưởng | Ước lượng tác động lên latency, HTTP threads, số task song song và các metric chỉ đếm worker. |
+    | Phòng deadlock | Nhận diện được reentrancy, khóa và latch phụ thuộc caller gây tự chặn. |
+    | Bảo vệ context | Giải thích sự khác biệt ThreadLocal/transaction/security giữa hai đường thực thi và nêu biện pháp kiểm thử. |
+    | Chọn đúng policy | Đưa ra quyết định CallerRuns, AbortPolicy hoặc concurrency cap dựa trên deadline và rủi ro mất việc khi shutdown. |
+- id: overload-rejection-005
+  title: DiscardPolicy, DiscardOldestPolicy và nguy cơ mất công việc
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **DiscardPolicy, DiscardOldestPolicy và nguy cơ mất công việc**
+
+    Hai chính sách discard tưởng giúp tránh exception khi pool quá tải, nhưng có thể khiến hệ thống tin đã nhận việc trong khi một job không bao giờ chạy. `DiscardPolicy` loại task mới; `DiscardOldestPolicy` lấy phần tử đầu hàng đợi rồi thử nhận task mới, không biết việc nào quan trọng hơn.
+
+    Bài học dùng một worker và queue hữu hạn để quan sát task bị giữ lại hoặc bị bỏ, cùng trạng thái của `Future` liên quan. Nhờ vậy người học biết khi nào policy bỏ việc có thể được chấp nhận và khi nào phải thay bằng rejection minh bạch hoặc kho job bền vững.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tác động của hai handler
+
+    1. Trong tình huống A đang chạy, B chờ trong queue, C vừa đến lúc đầy, `DiscardPolicy` bỏ task nào và vì sao?
+    2. Cùng tình huống đó, `DiscardOldestPolicy` thao tác `poll()` phần tử nào rồi thử gửi lại task nào?
+    3. Vì sao gọi `DiscardOldest` không bảo đảm xóa task đến sớm nhất đối với queue có thứ tự ưu tiên?
+    4. Điều gì xảy ra nếu DiscardOldest retry trên queue không có phần tử chờ như `SynchronousQueue`?
+
+    ### Mất tín hiệu khi có Future
+
+    1. Vì sao Future của task bị discard có thể còn `isDone()==false` dù lời gọi `submit` đã trả về?
+    2. Vì sao `Future.get(timeout)` chỉ giới hạn thời gian chờ mà không phát lại task bị bỏ?
+    3. `execute` trả về bình thường có đủ bằng chứng task đã accepted hoặc completed không?
+
+    ### Chính sách nghiệp vụ
+
+    1. Trong trường hợp cache refresh có thể bỏ, ứng dụng cần định nghĩa những tín hiệu và điều kiện nào trước khi dùng policy drop?
+    2. Nếu phải giữ job thanh toán hay đơn hàng, bạn chọn phản hồi hoặc cơ chế bền vững nào thay cho DiscardPolicy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán task thất lạc | Dùng cấu hình một worker và queue một chỗ để chỉ ra task mới hay task cũ bị loại cho từng policy. |
+    | Giải thích Future pending | Chứng minh việc `poll` khỏi queue không tự cancel một `FutureTask` và nêu hậu quả cho người chờ. |
+    | Thiết kế quan sát loss | Phân biệt các metric submitted, accepted, dropped, replaced, started và completed. |
+    | Chọn policy có trách nhiệm | Đánh giá khi nào việc drop được phép và đề xuất AbortPolicy hoặc durable job khi không chấp nhận mất việc. |
+    | Kiểm thử kiểm soát | Chạy ví dụ latch có `Future.isDone()`, `cancel(false)` và bounded wait để không làm suite treo. |
+- id: overload-rejection-006
+  title: Không để Future chờ vô hạn do chính sách loại bỏ không hoàn tất tác vụ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không để Future chờ vô hạn do chính sách loại bỏ không hoàn tất tác vụ**
+
+    Khi executor loại một `FutureTask` mà không chạy hoặc hủy, `submit` vẫn có thể trả Future còn pending mãi. Bài học đưa người học từ việc nhận diện silent discard sang thiết kế một hợp đồng **có kết thúc ở mọi nhánh**: thành công, thực thi lỗi, rejection, cancellation, timeout và shutdown.
+
+    Các ví dụ Java/Spring cho thấy `get(timeout)` chỉ ngừng chờ, còn `CompletableFuture.orTimeout()` hoàn tất exceptionally trên chính future nhưng không dừng side effect đã bắt đầu. Từ đó người học biết khi nào cần cancel hoặc completeExceptionally và vì sao phải theo dõi job bền vững khi có retry.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng đời và trạng thái Future
+
+    1. Vì sao một `FutureTask` bị DiscardPolicy bỏ có thể vẫn báo `isDone()==false` vô thời hạn?
+    2. Sự khác biệt nào giữa Future đang queue, đang chạy, completed, cancelled và bị thất lạc không có terminal state?
+    3. `DiscardOldestPolicy` có thể khiến Future của tác vụ cũ bị mồ côi như thế nào?
+
+    ### Timeout, cancellation và lỗi
+
+    1. `future.get(timeout)` khác `CompletableFuture.orTimeout()` về trạng thái cuối của đối tượng Future ra sao?
+    2. Vì sao `Future.cancel(true)` không bảo đảm worker dừng ngay hoặc rollback một side effect đã ghi?
+    3. Một gateway Spring nên hoàn tất `CompletableFuture` ra sao khi `ThreadPoolTaskExecutor.execute` từ chối, khi task thành công và khi body ném lỗi?
+
+    ### Khôi phục và kiểm thử
+
+    1. Nếu một future đã timeout nhưng task vẫn tiếp tục ghi database, phải thiết kế idempotency hoặc trạng thái job thế nào?
+    2. Khi `shutdownNow()` trả về task đang chờ, trường hợp nào bạn có thể cancel Future và trường hợp nào wrapper không thể xử lý bằng cast đơn giản?
+    3. Dùng latch và bounded `get` như thế nào để chứng minh không còn người chờ Future vô hạn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích trạng thái | Vẽ vòng đời Future với accepted, pending, done, failed, cancelled và silent discard. |
+    | Giới hạn chờ | Chọn và giải thích đúng `get(timeout)`, `orTimeout`, `cancel` và `completeExceptionally` theo khả năng tác động lên task thật. |
+    | Viết gateway rõ kết quả | Tách nhánh submit-rejected khỏi execution-failed để Future đạt trạng thái terminal quan sát được. |
+    | Kiểm thử orphan Future | Dựng thí nghiệm một worker, một queue, latch, `get(timeout)` và assertions về `isDone`/`isCancelled`. |
+    | Xử lý vòng đời bền vững | Giải thích vì sao timeout trong RAM không thay thế durable job state, retry idempotent hay shutdown recovery. |
+- id: overload-rejection-007
+  title: Chọn trả lỗi, hạn chế nhận thêm hoặc lưu công việc bền vững
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn trả lỗi, hạn chế nhận thêm hoặc lưu công việc bền vững**
+
+    Bài này chuyển trọng tâm từ handler của một executor sang hợp đồng nhận việc của cả dịch vụ. Khi tốc độ đến vượt khả năng xử lý, ứng dụng phải quyết định trả 429/503, giảm số việc được tiếp nhận bằng rate/concurrency/backlog limit, hoặc ghi job vào DB/broker trước khi phản hồi 202.
+
+    Người học cũng theo dõi các cửa sổ crash giữa commit DB và publish broker, hiểu transactional outbox, trạng thái job, lease/ack, retry và idempotency để phân biệt 'đã nhận bền vững' với 'đang chờ trong RAM'.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng HTTP và tiếp nhận
+
+    1. Tại sao request đã đến server không có nghĩa công việc được chấp nhận hoặc hoàn thành?
+    2. Trong trường hợp nào `429 Too Many Requests` phù hợp hơn `503 Service Unavailable`?
+    3. Khi nào API có thể trả `202 Accepted` và cần cung cấp job ID/trạng thái gì để hợp đồng đáng tin?
+
+    ### Bảo vệ capacity
+
+    1. Rate limit, semaphore giới hạn concurrent requests và queue backlog limit bảo vệ ba tài nguyên nào khác nhau?
+    2. Vì sao tăng queue dài có thể làm job hết deadline dù chưa xuất hiện rejection?
+    3. Nếu triển khai sáu replica, vì sao `Semaphore(10)` trên từng instance không tạo ra giới hạn toàn cụm là 10?
+
+    ### Durability và recovery
+
+    1. Vì sao ghi job vào DB rồi publish broker ở transaction riêng có thể gây mất thông điệp sau crash?
+    2. Transactional outbox khép kín khoảng trống giữa job và event bằng cách ghi dữ liệu nào cùng transaction?
+    3. Khi publisher phát lại message hoặc worker chết sau side effect nhưng trước ack, idempotency và lease giải quyết những rủi ro gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế HTTP contract | Chọn đúng 429, 503 hoặc 202 và giải thích ranh giới client nhận trách nhiệm xử lý. |
+    | Đặt admission cap | Thiết kế rate limit, concurrency permit và queue budget dựa trên SLO/deadline. |
+    | Lưu công việc bền vững | Phác họa mô hình jobs + outbox + publisher + worker + status endpoint. |
+    | Xử lý idempotency | Đề xuất ràng buộc tenant/idempotency key, dedupe, retry và chuyển trạng thái có điều kiện. |
+    | Đánh giá crash window | Phân tích các lỗi trước/sau commit, publish, side effect và ack; nêu phương án phục hồi. |
+    | Đo hiệu quả vận hành | Xác định chỉ số ingress, queue, job age, outbox lag, retry và tỉ lệ terminal state. |
+- id: overload-rejection-008
+  title: Không lặp gửi lại tức thời làm quá tải nghiêm trọng hơn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không lặp gửi lại tức thời làm quá tải nghiêm trọng hơn**
+
+    Khi thread pool hoặc dependency đã quá tải, vòng lặp retry tức thời tiêu thêm chính CPU, queue slot và connection đang thiếu. Bài này giúp người học hiểu vòng phản hồi retry storm, dự đoán hệ số khuếch đại từ nhiều tầng, rồi chuyển sang backoff có jitter và điểm dừng rõ ràng.
+
+    Phần Java/Spring thực hành `ScheduledExecutorService`, `TaskScheduler` cùng retry budget để không giữ worker khan hiếm chỉ để ngủ, đồng thời nhấn mạnh idempotency nếu một lời gọi từ xa có thể đã tạo side effect trước khi timeout.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế khuếch đại tải
+
+    1. Vì sao vòng `catch(TaskRejectedException)` rồi submit lại ngay có thể làm hệ thống càng khó phục hồi?
+    2. Nếu mỗi tầng client, gateway và service cùng thử tối đa ba lần, tối đa bao nhiêu attempt có thể tới tầng thấp nhất và vì sao?
+    3. Tại sao lỗi do shutdown, lỗi dữ liệu không hợp lệ và lỗi tạm thời của downstream không nên dùng chung chính sách retry?
+
+    ### Backoff, jitter và ngân sách
+
+    1. Bạn tính dãy exponential backoff có trần cho base=200ms như thế nào?
+    2. Vì sao các client cùng exponential backoff nhưng không jitter vẫn gây thundering herd?
+    3. `maxAttempts`, deadline end-to-end và retry budget toàn dịch vụ khác nhau ở giới hạn nào?
+    4. Khi nhận HTTP `Retry-After`, cần phối hợp hướng dẫn của server với jitter và deadline ra sao?
+
+    ### Điều phối trong Spring
+
+    1. Vì sao `Thread.sleep()` để backoff trong worker đang bão hòa có thể làm giảm throughput thực?
+    2. Làm sao sử dụng `TaskScheduler` hoặc durable job retry để thử lại sau delay mà không giữ work thread?
+    3. Vì sao retry một khoản thanh toán bị timeout cần giữ nguyên idempotency key và kiểm tra trạng thái từ xa?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích retry storm | Mô tả vòng khuếch đại tải và tính worst-case attempts khi nhiều tầng cùng retry. |
+    | Tính backoff | Xây dựng delay có exponential cap và full/equal jitter trong khoảng đúng. |
+    | Đặt giới hạn | Xác định maxAttempts, deadline và retry budget để có terminal failure rõ. |
+    | Tách scheduler và worker | Thiết kế cơ chế retry có delay mà không sleep ngay trên worker đang quá tải. |
+    | Phòng side effect trùng | Chọn retryable errors và sử dụng idempotency key, trạng thái job và reconciliation. |
+    | Kiểm thử an toàn | Kiểm tra khoảng thời gian retry, giới hạn lượt thử, shutdown, retry exhaustion và dồn tải bằng test điều phối. |
+- id: overload-rejection-009
+  title: Thực nghiệm nhóm luồng và hàng đợi cùng đạt giới hạn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thực nghiệm nhóm luồng và hàng đợi cùng đạt giới hạn**
+
+    Bài thực nghiệm đưa các quy tắc core → queue → max → reject thành kết quả có thể quan sát và tự kiểm tra. Thay vì dựa vào `Thread.sleep()` khiến test lúc đạt lúc trượt, chương trình Java 17 dùng `CountDownLatch` giữ hai worker hoạt động, một task chờ và gửi task thứ tư để buộc `AbortPolicy` từ chối.
+
+    Người học dự đoán và kiểm chứng `activeCount`, `queueSize`, số task hoàn thành, rồi thay đổi cấu hình để hiểu tại sao pool và queue phải cùng hết sức chứa. Cấu hình Spring `ThreadPoolTaskExecutor` và `@Async` bổ sung điểm áp dụng vào môi trường thực tế.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế trạng thái saturation
+
+    1. Với core=1, max=2 và queueCapacity=1, những task nào sẽ chạy, chờ, mở rộng worker và bị reject nếu không task nào kết thúc?
+    2. Vì sao queue đầy chưa đủ chứng minh rejection khi pool vẫn còn khả năng mở thêm worker?
+    3. Vì sao pool đạt max cũng chưa đủ nếu hàng đợi còn slot?
+
+    ### Kiểm thử có kiểm soát
+
+    1. `CountDownLatch` xác nhận task đầu đã chạy và giữ hai worker ở thời điểm thử rejection như thế nào?
+    2. Vì sao chỉ dùng `Thread.sleep(100)` không bảo đảm task thứ tư luôn bị từ chối?
+    3. Trước khi nộp task thứ tư, bạn sẽ kiểm tra `getActiveCount()` và `getQueue().size()` bằng giá trị nào?
+    4. Vì sao sau khi thả latch và `awaitTermination`, số task hoàn thành là ba chứ không phải bốn?
+
+    ### Mở rộng thực nghiệm với Spring
+
+    1. Lỗi nào ném từ JDK AbortPolicy và lỗi nào xuất hiện từ `ThreadPoolTaskExecutor` của Spring?
+    2. Khi thay AbortPolicy bằng CallerRunsPolicy hoặc DiscardPolicy, dự đoán stdout và task count thay đổi ra sao?
+    3. Bạn sửa thử core, max hoặc queueCapacity như thế nào để tìm task đầu tiên bị từ chối mà vẫn giữ điều kiện test lặp lại?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán acceptance | Lập bảng nhận việc theo core, max, queue và chỉ rõ task đầu tiên bị từ chối. |
+    | Viết test ổn định | Dựng hai worker bị giữ bằng latch, một queue slot, rồi assert ngoại lệ tại submit. |
+    | Đối chiếu metric | Xác nhận `active=2`, `queued=1`, một task rejected và ba task completed ở thí nghiệm Java 17. |
+    | Chuyển sang Spring | Ánh xạ kịch bản JDK sang bean `ThreadPoolTaskExecutor` và loại `TaskRejectedException` phù hợp. |
+    | Kiểm tra edge case | Thay đổi từng thông số và giải thích queue=0, queue lớn hoặc handler khác làm phép thử đổi kết quả. |

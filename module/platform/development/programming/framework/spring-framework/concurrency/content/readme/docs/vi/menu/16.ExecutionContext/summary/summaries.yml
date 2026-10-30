@@ -1,0 +1,369 @@
+summaries:
+- id: execution-context-001
+  title: ThreadLocal không tự theo công việc sang nhóm luồng khác
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ThreadLocal không tự theo công việc sang nhóm luồng khác**
+
+    ThreadLocal gắn dữ liệu với thread, trong khi một request có thể giao nhiều task sang worker khác. Bài giải thích vì sao một giá trị chỉ tồn tại trên caller, vì sao pooled worker có thể còn giá trị cũ, và cách chụp dữ liệu tối thiểu khi submit. Qua ví dụ Java 17, người học biết chuyển ngữ cảnh phi bảo mật sang worker và khôi phục trong finally.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất
+
+    1. Vì sao cùng một ThreadLocal object nhưng caller và worker lại đọc ra hai giá trị khác nhau?
+    2. InheritableThreadLocal có truyền theo từng lần submit không, và điều gì xảy ra khi pool tái sử dụng worker?
+    3. Khi nào một async executor chạy inline làm kết quả thử nghiệm bị hiểu nhầm?
+
+    ### Thiết kế và kiểm chứng
+
+    1. Bạn sẽ snapshot requestId ở đâu và restore trên thread nào để không làm nhiễm task tiếp theo?
+    2. Vì sao nên đưa các business ID vào DTO thay vì copy ServletRequest, transaction hoặc SecurityContext?
+    3. Cần thử nghiệm hai tác vụ trên cùng worker và một tác vụ không có context như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ranh giới ThreadLocal | Dự đoán context trên caller, worker mới và worker tái sử dụng. |
+    | Propagation tối thiểu | Viết wrapper capture tại submit và restore/remove trong finally. |
+    | Chọn dữ liệu | Tạo DTO bất biến chỉ gồm các ID đã được xác thực. |
+    | Thử nghiệm | Dùng single-thread executor để kiểm tra worker không đọc ID của task trước. |
+- id: execution-context-002
+  title: Nguy cơ dữ liệu ngữ cảnh của tác vụ trước bị dùng lại
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Nguy cơ dữ liệu ngữ cảnh của tác vụ trước bị dùng lại**
+
+    Worker của thread pool sống lâu hơn từng task; một ThreadLocal hay MDC chưa được dọn có thể biến request B thành tác vụ mang tenant của A. Bài học tái hiện stale context trên một worker và giải thích các hậu quả audit, logging và cross-tenant. Nó nhấn mạnh cleanup trên chính worker, xử lý snapshot null và fail-closed authorization.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguyên nhân rò rỉ
+
+    1. Vì sao task B thiếu tenant lại có thể đọc được tenant-A còn sót trong worker?
+    2. Tại sao gọi MDC.clear trên servlet caller không dọn MDC của thread pool?
+    3. Điều gì nguy hiểm hơn giữa context null và context non-null nhưng thuộc task khác?
+
+    ### Cleanup và bảo mật
+
+    1. Vì sao phải install hoặc clear ngay khi vào task, rồi restore previous trong finally?
+    2. Vì sao chỉ kiểm tra tenant khác null không đủ cho quyết định quyền truy cập?
+    3. Bạn kiểm thử worker reuse và task ném exception bằng single-thread executor như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tái hiện lỗi | Cho task A/B chạy tuần tự và quan sát stale tenant từ A. |
+    | Sửa cleanup | Clear snapshot vắng mặt, restore previous trong finally trên worker. |
+    | Fail closed | So khớp tenant của job đã xác thực trước thao tác dữ liệu. |
+    | Regression test | Xác nhận task không có context và task sau exception không nhìn thấy A. |
+- id: execution-context-003
+  title: TaskDecorator bao tác vụ để thiết lập và dọn ngữ cảnh
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **TaskDecorator bao tác vụ để thiết lập và dọn ngữ cảnh**
+
+    TaskDecorator bọc callback thực thi trên Spring ThreadPoolTaskExecutor, là điểm thích hợp để capture metadata tại submit, cài trên worker và khôi phục sau task. Bài học hướng dẫn viết một TaskDecorator, gắn vào @Async đúng executor và kiểm tra ngoại lệ qua Future. Người học phân biệt wrapper runtime với annotation và hiểu phạm vi giới hạn của decorator.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng decorator
+
+    1. decorate(Runnable) nhận đối tượng nào và trả về Runnable có nhiệm vụ gì?
+    2. Captured context và previous worker context phải được chụp ở hai thời điểm nào?
+    3. Vì sao catch quanh callback.run không nhất thiết thấy lỗi của FutureTask?
+
+    ### Tích hợp và thử nghiệm
+
+    1. Làm thế nào gắn TaskDecorator vào bean executor mà @Async lựa chọn?
+    2. Self-invocation hoặc CompletableFuture dùng commonPool có đi qua decorator đó không?
+    3. Bạn sẽ dùng ba task và một exception để kiểm tra context worker được dọn như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Triển khai API | Viết TaskDecorator với capture tại decorate và restore trong finally. |
+    | Cấu hình Spring | Chọn đúng ThreadPoolTaskExecutor và gọi @Async qua proxy. |
+    | Quan sát lỗi | Dùng Future.get và ExecutionException để phát hiện lỗi business. |
+    | Isolation | Kiểm tra A, B, null trên một worker được tái sử dụng. |
+- id: execution-context-004
+  title: Chụp ngữ cảnh ở bên gửi rồi khôi phục trạng thái cũ bằng try-finally
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chụp ngữ cảnh ở bên gửi rồi khôi phục trạng thái cũ bằng try-finally**
+
+    Việc chụp context tại submit tạo snapshot đúng cho một task, còn khôi phục previous tại execution thread giúp giữ trạng thái của outer scope. Bài học đào sâu thứ tự capture → install → run → restore trong finally, kể cả CallerRunsPolicy, nested decorator, task lỗi và caller thay đổi context trước lúc worker chạy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thời điểm và dữ liệu
+
+    1. Vì sao capture bên trong run lại đọc nhầm context của worker thay vì caller?
+    2. Caller đổi requestId sau submit; worker phải thấy ID nào và vì sao?
+    3. Vì sao giữ tham chiếu HashMap mutable không phải snapshot độc lập?
+
+    ### Khôi phục scope
+
+    1. Vì sao chỉ remove ở cuối task có thể phá scope ngoài khi callback chạy inline?
+    2. previous phải được lấy trên thread nào và xử lý ra sao nếu nó null?
+    3. CallerRunsPolicy làm thay đổi giả định về thread thực thi như thế nào?
+
+    ### Thử nghiệm
+
+    1. Bạn dùng CountDownLatch để khóa worker trước khi đổi context trên caller như thế nào?
+    2. Khi FutureTask ghi lỗi vào Future, vì sao finally của wrapper vẫn cần chạy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Snapshot thời điểm submit | Dùng latch để chứng minh worker thấy giá trị đã chụp dù caller thay đổi. |
+    | Nested restoration | Khôi phục context trước callback trên direct executor. |
+    | Sao chép phòng vệ | Chọn String bất biến hoặc bản copy của map cần truyền. |
+    | Test lỗi | Xác nhận worker trở lại baseline khi task ném exception. |
+- id: execution-context-005
+  title: Truyền mã liên kết yêu cầu và ngữ cảnh ghi nhật ký
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Truyền mã liên kết yêu cầu và ngữ cảnh ghi nhật ký**
+
+    Correlation ID nối log của HTTP request, executor và downstream service dù luồng xử lý chuyển thread. Bài học phân biệt correlation ID, request ID, job ID và distributed trace IDs, rồi trình bày servlet filter, MDC snapshot, TaskDecorator, headers và messaging metadata. Nó còn chỉ rõ validation và hạn chế đưa PII, token hay ID do client kiểm soát vào phân quyền.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định danh và tin cậy
+
+    1. Correlation ID khác request ID, job ID, trace ID, span ID và idempotency key thế nào?
+    2. Vì sao X-Correlation-ID không tự tạo một W3C trace hợp lệ?
+    3. Những vấn đề gì phát sinh khi nhận header dài hoặc chứa ký tự điều khiển từ client?
+
+    ### Đường truyền context
+
+    1. MDC phải được capture và restore qua ThreadPoolTaskExecutor như thế nào?
+    2. Khi CompletableFuture chuyển sang commonPool, mã correlation có tự đi theo không?
+    3. Muốn Service B có cùng correlation ID, Service A phải truyền gì qua HTTP hoặc message headers?
+
+    ### Kiểm chứng
+
+    1. Bạn kiểm tra filter, response header và worker MDC trên hai request khác nhau ra sao?
+    2. Vì sao không nên dùng correlation ID làm authorization hoặc high-cardinality metrics label?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định nghĩa ID | Phân biệt các loại ID và xác thực/chuẩn hóa header tại ingress. |
+    | Truyền MDC | Cấu hình decorator copy/restore MDC và xác minh log worker. |
+    | Liên kết downstream | Đưa correlation ID vào HTTP/message metadata và kiểm tra bên nhận. |
+    | Hạn chế dữ liệu | Giữ token/PII khỏi log và không dùng correlation ID cấp quyền. |
+- id: execution-context-006
+  title: ContextPropagatingTaskDecorator và điều kiện tích hợp thư viện ngữ cảnh
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ContextPropagatingTaskDecorator và điều kiện tích hợp thư viện ngữ cảnh**
+
+    Spring 6.1+ cung cấp ContextPropagatingTaskDecorator dựa trên Micrometer Context Propagation. Bài học nhấn mạnh điều kiện cần: dependency runtime, ContextRegistry và ThreadLocalAccessor cho đúng loại dữ liệu, cùng executor được cấu hình thực sự nhận task. Ví dụ custom tenant trong @Async giúp phân biệt decorator, accessor, registry và các giới hạn với MDC, tracing, Reactor, SecurityContext, transaction.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thành phần Micrometer
+
+    1. Cần phiên bản Spring nào và dependency runtime nào để khởi tạo ContextPropagatingTaskDecorator?
+    2. ContextRegistry, ThreadLocalAccessor, ContextSnapshotFactory và Scope khác trách nhiệm ra sao?
+    3. Vì sao custom ThreadLocal vẫn null nếu không có accessor đã đăng ký?
+
+    ### Cấu hình và giới hạn
+
+    1. Khi nào cần ContextRegistry riêng và làm sao đảm bảo decorator dùng đúng factory?
+    2. @Async phải chọn bean và đi qua proxy nào để thực sự chạy decorator?
+    3. Vì sao một decorator không tự truyền transaction hoặc mọi CompletableFuture stage?
+
+    ### Xác minh tích hợp
+
+    1. Bạn phân biệt lỗi thiếu jar, thiếu accessor, sai registry và sai executor bằng các kiểm tra nào?
+    2. Cần kiểm thử worker reuse, context vắng mặt và mutable object ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra dependencies | Xác minh spring-core và io.micrometer:context-propagation trong runtime. |
+    | Tạo accessor | Đăng ký getter/setter/reset cho custom ThreadLocal trong registry tương ứng. |
+    | Cấu hình executor | Gắn ContextPropagatingTaskDecorator cho @Async đúng bean. |
+    | Kiểm chứng | Thử task có/không accessor, task sau clear và exception cleanup. |
+- id: execution-context-007
+  title: Đánh giá chi phí trang trí với số lượng tác vụ rất nhỏ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đánh giá chi phí trang trí với số lượng tác vụ rất nhỏ**
+
+    TaskDecorator thêm wrapper, snapshot, ThreadLocal operations và allocation cho mỗi task; với workload cực ngắn chi phí có thể đáng kể. Bài học phân biệt số lượng task ít với nhiều tiny tasks, cách tách overhead decorator khỏi scheduling/queue/JIT/GC, và khi nào dùng JMH. Người học biết thiết kế benchmark công bằng, diễn giải nhiễu và tối ưu mà vẫn giữ context đúng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân tích chi phí
+
+    1. Những thao tác nào xảy ra trên submitter, worker và executor khi bọc task?
+    2. Vì sao elapsed của một batch không thể coi là riêng chi phí TaskDecorator?
+    3. Tại sao đo 5 hoặc 20 task chưa đủ đưa ra kết luận phần trăm ổn định?
+
+    ### Thiết kế benchmark
+
+    1. Bạn cần cố định executor, task body, warm-up và logging như thế nào khi so ba mode?
+    2. JMH giúp tránh những lỗi microbenchmark nào so với một vòng đo nanoTime?
+    3. Làm sao kiểm chứng đủ task được hoàn thành trước khi phân tích throughput?
+
+    ### Lựa chọn tối ưu
+
+    1. Khi nào batching, context tối thiểu hoặc chạy trực tiếp phù hợp với tiny tasks?
+    2. Vì sao bỏ propagation có thể làm tracing sai dù throughput cải thiện?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân rã overhead | Tách chi phí capture/wrapper khỏi queue và execution. |
+    | Đo có đối chứng | Tổ chức warm-up, nhiều lượt, nhiều cỡ batch và đối chiếu dao động. |
+    | Công cụ đo | Đề xuất JMH, JFR, allocation profiler và p95/p99. |
+    | Giữ semantics | Chứng minh context vẫn đúng trước khi tối ưu hoặc gom task. |
+- id: execution-context-008
+  title: Không giữ toàn bộ đối tượng request sau khi yêu cầu đã kết thúc
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không giữ toàn bộ đối tượng request sau khi yêu cầu đã kết thúc**
+
+    HttpServletRequest thuộc vòng đời Servlet; đưa request hoặc ServletRequestAttributes vào lambda, Future, queue có thể kéo dài tham chiếu và làm worker truy cập object sau khi hết hiệu lực. Bài học phân biệt controller return với Servlet async completion, minh họa retention của object graph và thay raw request bằng DTO bất biến, job ID hoặc storage key cho file upload.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lifecycle và tham chiếu
+
+    1. Trong request đồng bộ và Servlet async do MVC quản lý, thời điểm hoàn tất khác nhau thế nào?
+    2. Vì sao giữ reference tới request trong lambda có thể giữ cả object graph dù request đã kết thúc?
+    3. RequestContextHolder hoặc request-scoped proxy có thể hoạt động sau response không?
+
+    ### Thiết kế snapshot
+
+    1. Bạn xác thực và trích xuất những ID nào trước khi giao việc cho worker?
+    2. Vì sao record có byte array hoặc mutable collection chưa bất biến sâu?
+    3. Khi xử lý upload lâu, vì sao nên lưu file ở storage rồi enqueue storage key?
+
+    ### Vận hành và kiểm thử
+
+    1. Làm thế nào dùng fake request và latch để bắt lỗi đọc sau lifecycle?
+    2. Khi trả 202 rồi ứng dụng crash, cần gì để theo dõi và retry job?
+    3. Tại sao WeakReference và System.gc không đủ làm assertion chống giữ reference?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt lifecycle | Giải thích controller return và Servlet async completion. |
+    | Rà soát retention | Tìm capture request trực tiếp hoặc gián tiếp trong task/callback/queue. |
+    | Tạo input an toàn | Xây immutable DTO và storage key thay cho request/upload stream. |
+    | Kiểm chứng bằng test | Dùng latch cho worker chạy sau khi request mô phỏng đã đóng. |
+- id: execution-context-009
+  title: Phân biệt ngữ cảnh bảo mật cần bộ hỗ trợ riêng với ThreadLocal tùy ý
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt ngữ cảnh bảo mật cần bộ hỗ trợ riêng với ThreadLocal tùy ý**
+
+    SecurityContextHolder quản lý SecurityContext/Authentication có ý nghĩa identity, quyền và lifecycle; đây không phải ThreadLocal user ID tùy ý dùng làm log metadata. Bài học dùng các wrapper DelegatingSecurityContext cho Runnable, ExecutorService và Spring @Async; so sánh fixed context với capture per submit, thử Alice/Bob trên cùng worker và phân biệt propagation với authorization.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khác biệt của security
+
+    1. SecurityContextHolder, Authentication và ThreadLocal userId khác nhau ở vai trò nào?
+    2. Vì sao worker đọc principal cũ nguy hiểm hơn việc đọc null?
+    3. MODE_GLOBAL và MODE_INHERITABLETHREADLOCAL gây nguy cơ gì trong server đa người dùng?
+
+    ### Wrapper chuyên dụng
+
+    1. Các DelegatingSecurityContext wrapper tương ứng với Runnable, ExecutorService và AsyncTaskExecutor nào?
+    2. Constructor có SecurityContext cố định khác việc capture context khi submit ra sao?
+    3. Vì sao cùng một SecurityContext mutable không phải snapshot sâu giữa các thread?
+
+    ### Kiểm thử và quyền
+
+    1. Làm sao chứng minh Alice rồi Bob có đúng principal trên cùng worker và raw task sau đó sạch?
+    2. Một @Async được bảo vệ có làm thenApplyAsync trên commonPool tự được bảo vệ không?
+    3. Tại sao quyền resource phải kiểm tra tại thời điểm thực thi thay vì chỉ dựa auth.getName?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn API Security | Dùng đúng DelegatingSecurityContext wrapper theo loại executor. |
+    | Phân biệt chế độ | Không tạo singleton executor gắn context cố định của một user. |
+    | Kiểm tra isolation | Test Alice/Bob trên một worker rồi xác minh raw task không thấy user cũ. |
+    | Kiểm tra phân quyền | Tách audit ID khỏi authorization hiện hành và policy tài nguyên. |
+- id: execution-context-010
+  title: Không dùng InheritableThreadLocal như giải pháp chung cho nhóm luồng tái sử dụng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không dùng InheritableThreadLocal như giải pháp chung cho nhóm luồng tái sử dụng**
+
+    InheritableThreadLocal sao chép giá trị khi tạo child thread, không mỗi lần nộp task. Bài học tái hiện worker kế thừa tenant-A rồi vẫn đọc A khi request B submit, giải thích ảnh hưởng của lazy worker, prestart, pool expansion và childValue chia sẻ mutable reference. Người học chuyển sang immutable parameters hoặc wrapper per-task và biết giới hạn của Spring Security inheritance mode.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thời điểm kế thừa
+
+    1. InheritableThreadLocal.childValue được chạy khi nào và mặc định trả loại tham chiếu gì?
+    2. Vì sao caller đổi sang tenant-B không cập nhật worker đã được tạo dưới tenant-A?
+    3. Prestart worker và pool resize làm kết quả đọc context có thể thay đổi ra sao?
+
+    ### Rủi ro
+
+    1. Vì sao clone trong childValue không giải quyết propagation theo lần submit?
+    2. ThreadLocal.remove ở caller có thể xóa context worker hay không?
+    3. Tại sao không được truyền transaction, request hoặc SecurityContext bằng inheritance mù quáng?
+
+    ### Thay thế và kiểm chứng
+
+    1. Bạn sẽ tái hiện stale value bằng single-thread executor như thế nào?
+    2. Wrapper per-task phải capture, install, restore trong finally theo thứ tự nào?
+    3. Khi nào nên truyền tenantId bằng tham số thay vì TaskDecorator?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích inheritance | Mô tả thời điểm tạo child thread và giá trị mutable được kế thừa. |
+    | Tái hiện sai lệch | Chứng minh task B còn thấy tenant-A trên một worker được dùng lại. |
+    | Sửa theo task | Dùng immutable parameter hoặc wrapper capture/restore tại submit. |
+    | Chọn tích hợp Spring | Nêu ranh giới TaskDecorator và wrapper SecurityContext chuyên dụng. |

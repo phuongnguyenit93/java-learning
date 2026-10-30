@@ -1,0 +1,397 @@
+summaries:
+- id: scheduled-tasks-001
+  title: Bật @EnableScheduling và điều kiện bean được phát hiện
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bật @EnableScheduling và điều kiện bean được phát hiện**
+
+    Kích hoạt đúng hạ tầng scheduling của Spring và biết tại sao @Scheduled chỉ có hiệu lực với bean thực sự được container xử lý.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bật cơ chế và phát hiện bean
+
+    1. @EnableScheduling đăng ký hạ tầng gì và vì sao chỉ có @Scheduled trong source chưa đủ để job tự chạy?
+    2. Một class có @Component nhưng không nằm trong component scan sẽ được xử lý scheduling như thế nào?
+    3. @Bean trả về một instance được Spring quản lý khác gì với việc tự new một object ngoài context?
+
+    ### Vòng đời, cấu hình và chẩn đoán
+
+    1. Bean bị loại bởi @Profile hoặc điều kiện cấu hình khiến lịch thay đổi thế nào?
+    2. Bạn sẽ dùng ApplicationContext và ScheduledAnnotationBeanPostProcessor để xác minh registration đúng cách ra sao?
+    3. Khi job không xuất hiện trong log, bạn phân biệt missing bean, scheduler bận và cron disabled bằng những dấu hiệu nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kích hoạt hạ tầng | Tạo @Configuration có @EnableScheduling trong đúng ApplicationContext và nêu vai trò post-processor. |
+    | Đăng ký job | Đặt @Scheduled trên bean do Spring quản lý, xác minh component scanning và lifecycle. |
+    | Kiểm tra cấu hình | Phân tích @Profile, conditional bean và CRON_DISABLED ảnh hưởng đến registration. |
+    | Chẩn đoán runtime | Viết integration test đếm scheduled tasks, kiểm tra thread và điều kiện startup. |
+- id: scheduled-tasks-002
+  title: Phương thức lập lịch không nhận đối số
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phương thức lập lịch không nhận đối số**
+
+    Giữ hợp đồng zero-argument của @Scheduled và chọn đúng đường truyền dữ liệu vào công việc theo lịch mà không tạo method signature không hợp lệ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng method
+
+    1. Tại sao @Scheduled method không nhận đối số dù bean có thể inject dependency?
+    2. Những chữ ký method nào hợp lệ và Spring xử lý return value của method đồng bộ thế nào?
+    3. Reactive @Scheduled từ Spring 6.1 có được phép nhận tham số như một HTTP handler không?
+
+    ### Thiết kế nguồn input
+
+    1. Bạn truyền repository, service hoặc thông số cấu hình vào scheduled bean qua constructor injection như thế nào?
+    2. Khi mỗi execution cần job ID khác nhau do request tạo, bạn dùng TaskScheduler programmatic khác @Scheduled ở đâu?
+    3. Vì sao không nên tạo method @Scheduled nhận tham số kiểu Long ID rồi mong Spring tự cung cấp?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế chữ ký đúng | Viết no-arg scheduled method hợp lệ và nhận diện ví dụ method có đối số bị từ chối. |
+    | Tiêm dependency | Dùng constructor injection cung cấp dữ liệu/config cho scheduled bean mà không đổi method signature. |
+    | Chọn registration API | Lập lịch một Runnable/lambda có input cụ thể qua TaskScheduler khi job cần tham số runtime. |
+    | Kiểm chứng lỗi | Phân tích lỗi đăng ký nếu method có tham số và sửa thành service được gọi từ scheduled entry point. |
+- id: scheduled-tasks-003
+  title: fixedDelay đo khoảng cách từ lần chạy trước hoàn tất
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **fixedDelay đo khoảng cách từ lần chạy trước hoàn tất**
+
+    Dự đoán lần chạy tiếp theo theo thời điểm hoàn tất của callback trước, phân biệt fixedDelay với fixedRate và biết khi nào callback không đại diện business completion.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Công thức và ví dụ timeline
+
+    1. fixedDelay được tính từ mốc bắt đầu hay mốc kết thúc của execution trước đó?
+    2. Bạn tính các lần start cho job chạy 3 giây với fixedDelay 5 giây ra sao?
+    3. Vì sao một scheduler worker đang bị job khác giữ có thể làm actual start trễ hơn finish cộng delay?
+
+    ### Hạn chế khi vận hành
+
+    1. Nếu scheduled callback chỉ submit @Async rồi return, fixedDelay dựa trên completion của phần nào?
+    2. Trong Spring 6.1, fixedDelay của reactive Publisher khác gì với callback void chỉ tạo Future?
+    3. Bạn kiểm thử finish-to-next-start bằng latch và monotonic clock mà không dựa vào Thread.sleep thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính nhịp fixed-delay | Viết timeline và giải thích finish-to-next-start thay vì start-to-start. |
+    | So sánh lựa chọn | Chọn fixedDelay thay fixedRate khi nghiệp vụ bắt buộc nghỉ sau completion. |
+    | Đánh giá ranh giới | Phân tích scheduled callback/async handoff/reactive subscription completion. |
+    | Kiểm thử scheduling | Đo hoàn tất từng run và mốc khởi động tiếp theo trong test có timeout. |
+- id: scheduled-tasks-004
+  title: fixedRate theo nhịp lịch và hành vi khi công việc chạy lâu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **fixedRate theo nhịp lịch và hành vi khi công việc chạy lâu**
+
+    Hiểu nhịp bắt đầu dự kiến của fixedRate, hiện tượng lag/catch-up khi tác vụ chậm và phạm vi non-overlap của một periodic registration.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhịp và non-overlap
+
+    1. fixedRate lập mốc planned start khác fixedDelay theo completion như thế nào?
+    2. Với period một giây và một run dài 2.5 giây, tại sao run sau trễ nhưng không tự overlap cùng periodic registration?
+    3. Bạn tính planned, actual, finish và start lag cho nhiều run với duration biến đổi ra sao?
+
+    ### Backlog và kiến trúc
+
+    1. Vì sao tăng scheduler pool size không tạo thêm concurrent invocations cho cùng một ScheduledThreadPoolExecutor periodic task?
+    2. Điều gì thay đổi khi có hai registrations độc lập, nhiều pod hoặc callback bàn giao qua @Async?
+    3. Bạn chọn skip, coalesce, durable catch-up và metric lịch chậm theo các yêu cầu nghiệp vụ khác nhau thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng fixed-rate | Tính lịch planned/actual và lag từ period cùng run durations bằng Java thuần. |
+    | Giải thích non-overlap | Kiểm chứng cùng một JDK periodic registration không overlap bằng CountDownLatch. |
+    | Phân biệt callback và work | Tìm tình huống async delegation/multiple registrations có thể tạo business work chồng lấp. |
+    | Thiết kế policy | Lựa chọn skip/coalesce/catch-up, job keys và metric lag dựa trên SLO. |
+- id: scheduled-tasks-005
+  title: initialDelay và đơn vị timeUnit
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **initialDelay và đơn vị timeUnit**
+
+    Dùng initialDelay và timeUnit đúng đơn vị để dự đoán lần đầu chạy, tránh nhầm millisecond với second và không coi delay là readiness hay timeout.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thuộc tính và đơn vị
+
+    1. initialDelay ảnh hưởng lần chạy đầu hay mọi lần trong fixedDelay và fixedRate?
+    2. Thời gian mặc định của @Scheduled numeric fields là gì và thay timeUnit có tác động ra sao?
+    3. Vì sao chuỗi ISO-8601 hoặc 750ms không bị timeUnit=MINUTES diễn giải lại?
+
+    ### Cấu hình hợp lệ
+
+    1. Những tổ hợp initialDelay cùng initialDelayString hoặc cron cùng initialDelay có rủi ro gì?
+    2. Bạn giải thích khác biệt giữa initialDelay=0 và mốc ApplicationReadyEvent thế nào?
+    3. Bạn kiểm tra elapsed time, scheduler lateness và đơn vị thực tế trong integration test ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc đơn vị thời gian | Chuyển các khai báo numerical/Duration strings thành số giây-millisecond chính xác. |
+    | Kiểm tra lịch đầu | Tính mốc khởi đầu và những start tiếp theo của fixed-rate/fixed-delay khi có initial delay. |
+    | Phát hiện cấu hình sai | Nhận biết cron+initialDelay, hai biến thể initialDelay và numeric timeUnit không mong muốn. |
+    | Kiểm chứng runtime | Test initial delay bằng scheduler thực, CountDownLatch và monotonic timer. |
+- id: scheduled-tasks-006
+  title: Chạy một lần bằng initialDelay trên phiên bản Spring hỗ trợ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chạy một lần bằng initialDelay trên phiên bản Spring hỗ trợ**
+
+    Dùng khả năng one-time @Scheduled chỉ khai báo initialDelay trên Spring 6.1+ đúng phạm vi context và biết lúc nào cần lịch bền vững hoặc startup hook khác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phiên bản và registration
+
+    1. Tại sao annotation initialDelay đã tồn tại trước 6.1 nhưng chỉ từ 6.1 mới hỗ trợ one-shot không có trigger lặp?
+    2. OneTimeTask khác FixedRateTask/FixedDelayTask về số lần đăng ký thực hiện như thế nào?
+    3. initialDelay-only chạy một lần trong phạm vi nào và vì sao restart/replica có thể tạo lượt khác?
+
+    ### Kiểm chứng và lựa chọn
+
+    1. Bạn kiểm chứng một registration OneTimeTask bằng post-processor thay vì ngủ đoán số lần như thế nào?
+    2. Khi phải chạy vào Instant do user chọn, vì sao TaskScheduler.schedule(Runnable, Instant) có thể rõ hơn?
+    3. Vì sao một one-time timer không bảo đảm job hoàn tất trước readiness hoặc phục hồi sau crash?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra version | Phân biệt hỗ trợ one-time trên Spring 6.1+ với 6.0 và các bản cũ. |
+    | Đăng ký tác vụ một lần | Viết @Scheduled(initialDelay=..., timeUnit=...) không kèm fixed-rate/delay/cron. |
+    | Chứng minh cấu trúc | Kiểm tra OneTimeTask từ ScheduledAnnotationBeanPostProcessor và quan sát callback qua latch. |
+    | Đánh giá giới hạn | Chọn startup event, TaskScheduler API hay job store tùy yêu cầu timing/durability. |
+- id: scheduled-tasks-007
+  title: cron và zone cho lịch theo thời gian địa phương
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **cron và zone cho lịch theo thời gian địa phương**
+
+    Biểu đạt đúng mốc giờ địa phương bằng cron sáu trường và IANA zone, rồi kiểm chứng các Instant thực tế kể cả ngày DST gap/overlap.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cron và zone
+
+    1. Vì sao Spring cron có sáu trường bắt đầu từ giây thay vì năm trường Unix?
+    2. cron=0 30 9 * * MON-FRI với zone Asia/Ho_Chi_Minh chọn thời điểm nào trong UTC?
+    3. Vì sao dùng ZoneId vùng như America/New_York khác dùng một offset cố định?
+
+    ### DST và lịch nghiệp vụ
+
+    1. Điều gì xảy ra khi local 02:30 không tồn tại trong DST spring-forward hoặc 01:30 có hai offsets khi fall-back?
+    2. Bạn tính next execution bằng CronExpression.next(ZonedDateTime) với Instant cố định như thế nào?
+    3. Khi phải chốt sổ một lần trên mỗi business date hoặc nhiều tenant có zone riêng, vì sao cần job key/idempotency?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết cron Spring | Tạo và giải thích biểu thức sáu trường với day-of-week, zone và macro hợp lệ. |
+    | Quy đổi thời điểm | Chuyển ZonedDateTime/Instant và so sánh kết quả giữa UTC, Việt Nam, New York. |
+    | Kiểm thử DST | Dự đoán missing/duplicate local time qua CronExpression trên dates cố định. |
+    | Thiết kế lịch địa phương | Đặt business date, ZoneId, job identity và catch-up policy rõ ràng. |
+- id: scheduled-tasks-008
+  title: Giá trị trả về thông thường bị bỏ qua và khác biệt với phương thức reactive
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giá trị trả về thông thường bị bỏ qua và khác biệt với phương thức reactive**
+
+    Phân biệt return value bị bỏ của @Scheduled đồng bộ với deferred reactive Publisher được subscribe mỗi tick trong Spring 6.1+.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng return
+
+    1. Vì sao một @Scheduled synchronous method trả String không đưa chuỗi đó về caller dù body vẫn chạy?
+    2. Với reactive @Scheduled, Spring gọi method factory khi nào và subscribe Publisher bao nhiêu lần?
+    3. Tại sao tín hiệu onNext bị bỏ nhưng side effect nằm trong lazy pipeline vẫn thực hiện?
+
+    ### Deferred subscription, lỗi và delay
+
+    1. Vì sao Mono.just(blockingFetch()) và Mono.defer hoặc Mono.fromCallable có behavior khác nhau khi schedule lặp?
+    2. CompletableFuture có phù hợp làm direct reactive scheduled return khi adapter không deferred không?
+    3. Reactive fixedDelay đợi completion của subscription nào, còn onError được quan sát thế nào so với synchronous ErrorHandler?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn return contract | Viết scheduled void method hoặc deferred Mono<Void> phù hợp mục tiêu. |
+    | Thiết kế lazy pipeline | Thay eager remote call/Mono.cache không mong muốn bằng deferred work mỗi subscription. |
+    | Phân tích semantics | So sánh sync return discarded, reactive factory once, resubscribe và onNext discarded. |
+    | Kiểm chứng reactive | Dùng latch/atomic counters kiểm tra số method invocations, subscriptions và onError/finish. |
+- id: scheduled-tasks-009
+  title: Annotation lặp lại tạo nhiều lịch độc lập trên cùng phương thức
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Annotation lặp lại tạo nhiều lịch độc lập trên cùng phương thức**
+
+    Phân biệt một method với một registration: nhiều @Scheduled declarations trên cùng method tạo các triggers độc lập có thể overlap hoặc tạo side effect trùng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cú pháp và registration
+
+    1. Vì sao @Scheduled là repeatable annotation và Java getAnnotationsByType có thể trả nhiều declarations?
+    2. Hai cron trên cùng method có được Spring gộp thành một mốc hay trở thành hai registrations riêng?
+    3. fixedDelay trên hai annotations khác nhau có chia sẻ thời điểm completion và mutex chung không?
+
+    ### Concurrency và an toàn
+
+    1. Bạn dùng hai @Scheduled giống nhau và CountDownLatch thế nào để chứng minh hai callbacks có thể chạy đồng thời?
+    2. Vì sao pool size 1 chỉ có thể làm tuần tự callbacks chứ không deduplicate logical business effects?
+    3. Bạn phân biệt duplicate do repeatable annotations với duplicate do hai bean instances và nhiều pods bằng bằng chứng nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện repeatable | Đếm annotations trực tiếp/meta, giải thích mỗi declaration thành một registration. |
+    | Dự đoán overlap | Phân tích hai cron giao nhau hoặc hai fixed-delay schedules trong một bean. |
+    | Kiểm thử concurrency | Dựng context hai scheduler threads và latch chứng minh peakConcurrent=2. |
+    | Thiết kế an toàn | Chọn business idempotency key/claim hoặc tách entry points theo identity của mỗi lịch. |
+- id: scheduled-tasks-010
+  title: Nhiều thể hiện bean có thể đăng ký nhiều lịch
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Nhiều thể hiện bean có thể đăng ký nhiều lịch**
+
+    Phát hiện nhiều scheduled registrations do nhiều bean instances, scopes, cấu hình trùng hay nhiều contexts thay vì chỉ nhìn một class @Scheduled.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định danh và nguồn nhân bản
+
+    1. Sự khác biệt giữa một class, một bean definition, một object instance và một scheduled registration là gì?
+    2. Vì sao vừa @Component vừa tạo thêm new object bằng @Bean có thể khiến cùng job được lập lịch hai lần?
+    3. Prototype scope và @Configurable/AspectJ double initialization có thể làm số lịch tăng trong những điều kiện nào?
+
+    ### Chẩn đoán và coordination
+
+    1. Bạn tách repeatable annotations, nhiều instances, nhiều contexts và nhiều pods khi thấy log trùng bằng chứng nào?
+    2. Vì sao @Primary, synchronized hoặc scheduler poolSize=1 không tự loại bỏ duplicate registrations?
+    3. Bạn kiểm tra bean identities/ScheduledTaskHolder và thiết kế idempotency/claim cho một business job toàn cluster thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đếm bean instances | Dùng ApplicationContext/getBeansOfType và reference identity để phân biệt nhiều definitions/objects. |
+    | Tìm double registration | Chẩn đoán @Component+@Bean, prototype, @Configurable và root/child contexts. |
+    | Phân loại lỗi | Tách nhiều scheduled registrations với nhiều executions hợp lệ của một lịch. |
+    | Bảo vệ business effect | Thiết kế single-owner coordinator hoặc partition/unique job key khi ứng dụng scale nhiều replicas. |
+- id: scheduled-tasks-011
+  title: Đưa chu kỳ ra cấu hình và dùng giá trị cron vô hiệu hóa
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đưa chu kỳ ra cấu hình và dùng giá trị cron vô hiệu hóa**
+
+    Tách chu kỳ @Scheduled khỏi mã nguồn, bật/tắt cron an toàn bằng CRON_DISABLED và hiểu vì sao thay property không tự đổi registration đang chạy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Property và sentinel
+
+    1. @Scheduled(cron="${app.jobs.cleanup.cron:-}") dùng default gì nếu thiếu property?
+    2. Vì sao Scheduled.CRON_DISABLED có giá trị dấu trừ ASCII và không được parse như một cron expression?
+    3. Dấu trừ có thể dùng tắt fixedRateString/fixedDelayString giống cron không?
+
+    ### Deploy, runtime và kiểm thử
+
+    1. Bạn phân biệt disable cron trigger với không tạo bean bằng @ConditionalOnProperty ra sao?
+    2. Vì sao sửa application.yml lúc JVM đang chạy không tự bảo đảm cron được reschedule?
+    3. Bạn sẽ test enabled, disabled, missing, invalid cron bằng cách đếm registrations trong các ApplicationContext cô lập thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Externalize lịch | Đưa cron, zone, fixedDelayString/fixedRateString và initialDelayString vào property có đơn vị đúng. |
+    | Vô hiệu hóa cron | Dùng CRON_DISABLED và placeholder fallback '-', không nhầm với giá trị Duration. |
+    | Quản lý runtime | Chọn restart hoặc TaskScheduler cancel/re-register khi cần đổi lịch động. |
+    | Kiểm thử vận hành | Viết test 4 trạng thái cấu hình bằng ScheduledAnnotationBeanPostProcessor và quan sát active schedule. |
+- id: scheduled-tasks-012
+  title: Phối hợp @Scheduled với @Async làm thay đổi thời điểm được coi là đã hoàn tất
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phối hợp @Scheduled với @Async làm thay đổi thời điểm được coi là đã hoàn tất**
+
+    Định nghĩa rõ sự khác nhau giữa scheduled callback return, async handoff, worker completion và durable business commit để fixedDelay không bị hiểu sai.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mốc hoàn thành
+
+    1. Khi @Scheduled method gọi worker @Async rồi return, scheduler coi invocation hoàn tất tại thời điểm nào?
+    2. Tại sao fixedDelay sau dispatch không còn là khoảng nghỉ tính từ khi business work thật kết thúc?
+    3. Async future hoàn thành có đồng nghĩa database commit hoặc external side effect durable không?
+
+    ### Overlap và điều phối
+
+    1. Bạn dùng CountDownLatch thế nào để chứng minh tick thứ hai đến khi worker của tick đầu vẫn đang chờ?
+    2. Giữa blocking join, programmatic completion-aware rescheduling và durable queue, bạn chọn gì theo yêu cầu nghiệp vụ?
+    3. Vì sao submit rejection, worker exception, self-invocation và cancellation phải được theo dõi ở các ranh giới khác nhau?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ completion timeline | Phân biệt TRIGGERED, SUBMITTED, WORKER_STARTED, BUSINESS_COMMITTED và FUTURE_COMPLETED. |
+    | Chẩn đoán fixedDelay | Giải thích vì sao tick mới xuất hiện dù worker cũ còn chạy trong mô hình scheduler bridge. |
+    | Kiểm soát overlap | Triển khai guard giữ tới completion thật hoặc lên lịch lại sau Future khi phù hợp. |
+    | Thiết kế quan sát | Xử lý lỗi dispatch và worker riêng, test latch, queue/rejection, transaction và shutdown. |

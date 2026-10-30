@@ -1,0 +1,69 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Tích hợp Quartz
+roadmapHeading: Từ lựa chọn persistent scheduler đến vận hành Quartz an toàn
+roadmap:
+- id: quartz-integration-001
+  order: 1
+  title: Khi nào lịch cần lưu trữ, khôi phục và quản lý bên ngoài tiến trình
+  description: 'Xác định khi nào lịch phải bền vững và quản lý ngoài tiến trình: phân biệt schedule, trigger, execution và business outcome để chọn Spring scheduling, Quartz RAM hoặc Quartz JDBC.'
+  transition:
+    to: quartz-integration-002
+    description: Biết khi nào cần Quartz rồi, tiếp theo phải nắm ba thành phần mà Scheduler dùng để mô tả công việc và thời điểm chạy.
+- id: quartz-integration-002
+  order: 2
+  title: Vai trò JobDetail, Trigger và Scheduler trong Quartz
+  description: Thiết lập mô hình JobDetail, Trigger và Scheduler; nhận diện JobKey/TriggerKey, merged JobDataMap và điều kiện một firing thực sự gọi Job.execute.
+  transition:
+    to: quartz-integration-003
+    description: Sau mô hình JobDetail–Trigger–Scheduler, xem Spring sở hữu và điều phối vòng đời của Quartz runtime như thế nào.
+- id: quartz-integration-003
+  order: 3
+  title: SchedulerFactoryBean tích hợp vòng đời Quartz với Spring
+  description: 'Đưa Quartz vào Spring lifecycle bằng SchedulerFactoryBean: FactoryBean product, startup, registration, shutdown và ownership rõ ràng.'
+  transition:
+    to: quartz-integration-004
+    description: Khi đã có Scheduler Spring-managed, học cách khai báo JobDetail và nhiều trigger bằng các convenience FactoryBeans.
+- id: quartz-integration-004
+  order: 4
+  title: JobDetailFactoryBean và các loại trigger được Spring hỗ trợ
+  description: Khai báo JobDetailFactoryBean, SimpleTriggerFactoryBean và CronTriggerFactoryBean; tính repeat count, start delay, timezone và đăng ký nhiều triggers cho một JobDetail.
+  transition:
+    to: quartz-integration-005
+    description: Cấu hình JobDetail/Trigger xong, kiểm tra ai tạo Job instance và cách service Spring được truyền vào đúng chỗ.
+- id: quartz-integration-005
+  order: 5
+  title: Tiêm phụ thuộc vào job theo cơ chế phù hợp
+  description: Kết nối Quartz JobFactory với dependency injection của Spring, tách service dependency khỏi JobDataMap và chọn pattern theo JobStore.
+  transition:
+    to: quartz-integration-006
+    description: Sau DI của Quartz Job, phân biệt cron của Spring và Quartz để không đăng ký sai engine hay chuyển lịch sai giờ.
+- id: quartz-integration-006
+  order: 6
+  title: Phân biệt CronTrigger của Spring với CronTrigger của Quartz
+  description: Phân biệt Spring CronTrigger và Quartz CronTrigger khi import, dùng cron, so sánh timezone/weekday và missed execution semantics.
+  transition:
+    to: quartz-integration-007
+    description: Khi đã chọn đúng cron engine, quyết định tường minh cách xử lý những firing không diễn ra đúng hạn.
+- id: quartz-integration-007
+  order: 7
+  title: Misfire và chính sách chạy bù cần quyết định tường minh
+  description: Chọn misfire instruction đúng cho Cron/SimpleTrigger, phân biệt fire-once với backfill đủ từng business period.
+  transition:
+    to: quartz-integration-008
+    description: Cuối cùng, kết hợp misfire với thread limits, JDBC persistence và cluster coordination để vận hành an toàn khi restart/failover.
+- id: quartz-integration-008
+  order: 8
+  title: Giới hạn chạy đồng thời, lưu trữ và cụm phụ thuộc cấu hình Quartz
+  description: Đánh giá worker limit, JobKey concurrency, JDBC JobStore, clustering và recovery với các bài thử failover/idempotency.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh vai trò các bài học
+
+  | Tiêu chí | Bài 1: Lựa chọn Quartz | Bài 2: Quartz roles | Bài 3: Spring lifecycle | Bài 4: Trigger FactoryBeans | Bài 5: Quartz Job DI | Bài 6: Hai CronTrigger | Bài 7: Misfire/backfill | Bài 8: Concurrency/cluster |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Câu hỏi chính | Lịch có cần lưu? | Ai làm gì/khi nào? | Ai sở hữu runtime? | Khai báo trigger ra sao? | Ai tạo Job/service? | Chọn engine cron nào? | Bỏ hay bù lượt? | Nút nào chạy job? |
+  | Đối tượng trung tâm | @Scheduled, JobStore | JobDetail, Trigger, Scheduler | SchedulerFactoryBean | JobDetailFactoryBean, Simple/Cron | JobFactory, JobDataMap | Spring CronTrigger, Quartz CronTrigger | Misfire instruction, checkpoint | JobKey, threadCount, JDBC cluster |
+  | Năng lực kiểm chứng | Test restart và admin | Test JobKey/TriggerKey | Test start và destroy | Test repeatCount + cron | Test constructor injection | So parser và next-fire-times | Test outage, backfill | Test pool, failover hai node |
+  | Rủi ro cốt lõi | Nhầm lịch với outcome | Metadata không phải execution | Hai scheduler hoặc shutdown lỗi | Nhầm product/trigger type | Service null, serialize bean | Sai weekday, timezone | Fire once không bù mọi kỳ | Đồng thời, dữ liệu trùng |
+  | Mối nối với vận hành | RBAC/audit/recovery | JobDataMap, state | Ready/shutdown budget | Một JobDetail nhiều trigger | Transaction service | DST/lenient/fixed | Backlog/idempotency | Locks, check-in, DB recovery |

@@ -1,0 +1,70 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Lỗi của lịch chạy
+roadmapHeading: Lộ trình từ chính sách lỗi scheduler tới giám sát, retry và an toàn tác dụng phụ
+roadmap:
+- id: scheduling-failures-001
+  order: 1
+  title: Lỗi tác vụ chạy một lần khác lỗi tác vụ lặp lại
+  description: 'Đặt nền bằng khác biệt one-shot và repeating: Spring mặc định propagate cho one-shot, suppress cho recurring, và Future có semantics khác nhau.'
+  transition:
+    to: scheduling-failures-002
+    description: Khi đã biết chính sách mặc định, cần xác định chính xác ErrorHandler nằm ở tầng nào, áp dụng lên scheduler bean nào và bỏ sót loại lỗi nào.
+- id: scheduling-failures-002
+  order: 2
+  title: ErrorHandler trong hạ tầng scheduler
+  description: Phân tích ErrorHandler của Spring, lớp bọc Runnable, chọn scheduler bean và các đường lỗi không đi qua handler đồng bộ.
+  transition:
+    to: scheduling-failures-003
+    description: Sau khi hiểu cơ chế handler, cần quyết định khi nào ghi nhận rồi tiếp tục và khi nào cho exception lan ra để dừng một đăng ký nguy hiểm.
+- id: scheduling-failures-003
+  order: 3
+  title: Phân biệt chính sách ghi nhận rồi tiếp tục với cho lỗi lan ra
+  description: So sánh record-and-suppress với record-and-propagate theo hợp đồng nghiệp vụ, Future và rủi ro bỏ lỡ các tick tương lai.
+  transition:
+    to: scheduling-failures-004
+    description: 'Chọn policy vẫn chưa đủ: cần phát hiện khi lịch không được đăng ký, bị kẹt, ngừng ngầm hoặc vẫn tick nhưng chưa bao giờ tạo kết quả thành công.'
+- id: scheduling-failures-004
+  order: 4
+  title: Không để công việc mất lịch mà không có tín hiệu quan sát
+  description: Phát hiện job không được đăng ký, bị chặn hay lỗi liên tục bằng registration, last success, lag, Actuator và external absence alerts.
+  transition:
+    to: scheduling-failures-005
+    description: 'Các tín hiệu đó cần gắn với đúng trạng thái: lịch mong muốn, đăng ký runtime, occurrence của từng kỳ và execution attempt.'
+- id: scheduling-failures-005
+  order: 5
+  title: Phân biệt thất bại từng lần với trạng thái của cả lịch
+  description: Tách trạng thái của schedule, registration, occurrence và attempt; lưu ledger để phân biệt lỗi từng kỳ với lịch còn sống và hỗ trợ backfill.
+  transition:
+    to: scheduling-failures-006
+    description: Khi đã có định danh occurrence/attempt, cần quy định cách thử lại một occurrence với backoff, deadline và số lần hữu hạn.
+- id: scheduling-failures-006
+  order: 6
+  title: Thử lại có khoảng nghỉ và giới hạn thời gian
+  description: 'Lập retry hữu hạn của cùng logical job: transient classification, backoff/jitter, per-attempt timeout, deadline và delayed one-shot scheduling.'
+  transition:
+    to: scheduling-failures-007
+    description: Retry cùng một công việc làm tăng nguy cơ lặp side effect; cần thiết kế idempotency ở transaction và hệ thống bên ngoài.
+- id: scheduling-failures-007
+  order: 7
+  title: Thiết kế tác vụ có thể chạy lại mà không lặp tác dụng phụ
+  description: 'Thiết kế at-least-once attempts mà không lặp effect: key ổn định, UNIQUE+transaction, outbox, provider idempotency, lease và fencing.'
+  transition:
+    to: scheduling-failures-008
+    description: Kết thúc bằng việc đối chiếu đúng semantics giữa Spring TaskScheduler và JDK ScheduledExecutorService để chọn API và error/lifecycle policy phù hợp.
+- id: scheduling-failures-008
+  order: 8
+  title: Đối chiếu hành vi scheduler Spring với ScheduledExecutorService trực tiếp
+  description: So sánh API và behavior Spring với JDK trực tiếp qua delay/Instant/Trigger, periodic exception, Future, cancellation và lifecycle.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài học trong chương
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên bài | Lỗi tác vụ chạy một lần khác lỗi tác vụ lặp lại | ErrorHandler trong hạ tầng scheduler | Phân biệt chính sách ghi nhận rồi tiếp tục với cho lỗi lan ra | Không để công việc mất lịch mà không có tín hiệu quan sát | Phân biệt thất bại từng lần với trạng thái của cả lịch | Thử lại có khoảng nghỉ và giới hạn thời gian | Thiết kế tác vụ có thể chạy lại mà không lặp tác dụng phụ | Đối chiếu hành vi scheduler Spring với ScheduledExecutorService trực tiếp |
+  | Vai trò | Nhận biết one-shot khác recurring | Biên ErrorHandler và scheduler bean | Quyết định dừng/tiếp tục | Không mất lịch im lặng | Tách trạng thái schedule/attempt | Retry có giới hạn và backoff | Ngăn lặp business side effect | Đối chiếu API Spring với JDK |
+  | Khái niệm trung tâm | TaskUtils defaults và ScheduledFuture | DelegatingErrorHandlingRunnable và handler | Suppress, propagate, Future terminal | Actuator, lastSuccess, absence alert | Registration, occurrence, execution attempt | maxAttempts, jitter, overallDeadline | Idempotency key, transaction, outbox | Instant/Duration/Trigger vs delay/TimeUnit |
+  | Quyết định khi triển khai | Một lần/lặp cần policy nào | Handler nằm ở bean và error boundary nào | Lỗi nào tiếp tục, lỗi nào dừng | Phát hiện mất tick hoặc mất thành công ra sao | Kỳ lỗi nào cần retry/backfill | Khi nào retry, khi nào terminal | Effect nào phải chống duplicate và ở đâu | Chọn implementation và lifecycle nào |
+  | Bằng chứng thực hành | Latch chứng minh tick sau lỗi | Integration test handler đúng bean | Năm tình huống suppress/propagate | Job status, test latch và PromQL | Ledger occurrence/attempt và Future | Delayed one-shot retries và deadline test | Java concurrency và H2 rollback | JDK failed Future vs Spring next-tick latch |
+  | Ngộ nhận cần tránh | `get()` periodic trả sau mỗi tick | ErrorHandler nhận mọi lỗi async/reactive | Suppress nghĩa là job thành công | Scheduledtasks chứng minh nghiệp vụ khỏe | Một attempt lỗi nghĩa cả lịch chết | Tick mới là retry đúng event cũ | Local lock hoặc DB rollback undo HTTP | Cùng JDK executor nên mặc định lỗi giống nhau |

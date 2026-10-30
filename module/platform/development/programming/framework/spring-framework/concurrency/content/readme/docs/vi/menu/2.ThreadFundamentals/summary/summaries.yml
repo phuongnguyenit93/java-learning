@@ -1,0 +1,312 @@
+summaries:
+- id: thread-fundamentals-001
+  title: Runnable, Callable, Executor và ExecutorService
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Runnable, Callable, Executor và ExecutorService**
+
+    Phân biệt phần công việc với luồng thực thi để chọn đúng `Runnable`, `Callable`, `Executor` và `ExecutorService`. Bài học dẫn người học từ gửi tác vụ tới nhận kết quả hoặc lỗi bằng `Future`, hủy hợp tác và đóng thread pool; nhờ đó tránh tạo một thread cho mỗi request hoặc bỏ quên vòng đời của executor trong ứng dụng Spring.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình tác vụ và bộ thực thi
+
+    1. Vì sao `Runnable` và `Callable` mô tả task nhưng không phải thread, và hai giao diện khác nhau ở kết quả/lỗi ra sao?
+    2. `run()` khác `Thread.start()` như thế nào, và vì sao `Executor.execute()` không luôn tạo luồng mới?
+    3. Khi nào dùng `execute`, các overload `submit` hoặc `invokeAll` và kết quả `Future.get()` nhận được là gì?
+
+    ### Theo dõi kết quả và vòng đời
+
+    1. Phân biệt `Future.isDone()`, `get(timeout)`, `ExecutionException` và `CancellationException` như thế nào?
+    2. `cancel(true)` có buộc task dừng không, và khi nhận `InterruptedException` nên xử lý ra sao?
+    3. `shutdown`, `shutdownNow` và `awaitTermination` khác nhau ra sao về tác vụ đã nhận và việc chờ kết thúc?
+
+    ### Giới hạn tài nguyên
+
+    1. Vì sao queue không giới hạn của fixed pool có thể làm tăng bộ nhớ và độ trễ khi quá tải?
+    2. Vì sao một task trên single-thread pool gọi `get()` để chờ task con cùng pool có thể deadlock?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn abstraction | Viết `Runnable` và `Callable`, giải thích rõ phần việc và phần điều phối thực thi. |
+    | Dùng ExecutorService | Gửi task bằng `submit`, xử lý giá trị hoặc lỗi thông qua `Future.get()`. |
+    | Chủ động hủy và đóng | Xây tác vụ phản hồi interruption, có `shutdown`/`awaitTermination` trong vòng đời owner. |
+    | Điều phối nhiều việc | Dùng `invokeAll` và giải thích thứ tự Future nhận về dù các task hoàn tất khác thứ tự. |
+    | Nhận diện rủi ro pool | Phân tích queue saturation và chờ task con trên cùng pool một worker. |
+- id: thread-fundamentals-002
+  title: Luồng nền tảng, nhóm luồng và luồng ảo
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Luồng nền tảng, nhóm luồng và luồng ảo**
+
+    Đặt platform thread, virtual thread (Java 21+) và `ThreadGroup` vào đúng vai trò: luồng OS, virtual thread được JVM mount lên carrier, và nhóm lịch sử không phải scheduler. Từ hành vi `start/join/interrupt` đến pinning theo phiên bản JDK, bài học giúp chọn mô hình có lợi cho blocking I/O mà vẫn tôn trọng CPU, kết nối DB và vòng đời ứng dụng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng đời và cấu trúc
+
+    1. `ThreadGroup` khác platform/virtual thread ở bản chất nào và vì sao `activeCount` không đếm virtual threads?
+    2. Vì sao `Thread.State.RUNNABLE` không chứng minh thread đang sử dụng CPU?
+    3. `start`, `join` và `interrupt` cho bảo đảm gì, và vì sao `sleep` không nên dùng để đồng bộ?
+
+    ### Carrier và giới hạn
+
+    1. Mount/unmount giúp carrier chạy task khác khi virtual thread chờ I/O như thế nào?
+    2. Virtual thread có giúp CPU-bound code nhanh hơn hoặc tạo nhiều DB connections hơn giới hạn pool không?
+    3. Pinning ở Java 21–23 khác Java 24+ ra sao và khi nào cần JFR để điều tra?
+
+    ### Liên hệ Spring
+
+    1. Vì sao bật `spring.threads.virtual.enabled` vẫn phải kiểm tra executor được `@Async` sử dụng?
+    2. Đặc tính daemon của virtual thread ảnh hưởng việc chờ task và giữ JVM sống thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận biết luồng | Chạy ví dụ `isVirtual`, dùng `join` và dự đoán thứ tự stdout. |
+    | Giải thích scheduling | Vẽ carrier mount/unmount và phân biệt JVM scheduling với OS scheduling. |
+    | Đánh giá nhóm luồng | Nêu giới hạn `ThreadGroup` và lựa chọn executor/quota ở tầng tài nguyên. |
+    | Chọn virtual thread | So sánh công việc CPU-bound/I/O-bound cùng giới hạn downstream và phiên bản JDK. |
+    | Kiểm chứng Spring | Xác nhận cấu hình Boot/executor và cách theo dõi pinning trước khi tối ưu. |
+- id: thread-fundamentals-003
+  title: Future và CompletableFuture biểu diễn công việc chưa hoàn tất
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Future và CompletableFuture biểu diễn công việc chưa hoàn tất**
+
+    Hiểu `Future` là tay cầm đại diện cho kết quả có thể thành công, thất bại hoặc bị hủy, rồi dùng `CompletableFuture` để nối biến đổi và ghép các bước phụ thuộc. Bài học làm rõ việc chặn bằng `get/join`, thực thi callback non-Async/Async, xử lý ngoại lệ, deadline và ranh giới giữa Spring `@Async` với Java executor.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Future và trạng thái
+
+    1. Vì sao `Future` không phải task hay thread, và `isDone` vẫn true khi task lỗi/hủy?
+    2. `get()`, `get(timeout)` và `join()` khác nhau ra sao về ngoại lệ/chờ?
+    3. `completedFuture` khác `supplyAsync` như thế nào về việc có khởi động công việc mới hay không?
+
+    ### Ghép kết quả và lỗi
+
+    1. Khi nào dùng `thenApply`, `thenCompose`, `thenCombine`, `allOf` và `anyOf`?
+    2. Vì sao callback không có hậu tố Async có thể chạy ngay trên thread hoàn tất/đăng ký, và khi nào nên chọn executor riêng?
+    3. `exceptionally`, `handle` và `whenComplete` khác nhau ở việc phục hồi hay chỉ quan sát lỗi?
+
+    ### Hủy và Spring
+
+    1. Vì sao `orTimeout` và `CompletableFuture.cancel(true)` không bảo đảm ngắt I/O đang chạy?
+    2. Khi method Spring `@Async` trả CompletableFuture, vì sao phải đi qua bean proxy và tránh gọi `join` sớm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Theo dõi kết quả | Phân biệt trạng thái Future và ba dạng kết thúc qua `get()`. |
+    | Xây pipeline | Ghép hai kết quả độc lập bằng `thenCombine` và nối tác vụ phụ thuộc bằng `thenCompose`. |
+    | Xử lý lỗi | Dự đoán stage mới sau `exceptionally`, `handle` hoặc `whenComplete`. |
+    | Chọn executor | Chỉ định executor cho callback Async và giải thích lúc nào callback có thể chạy inline. |
+    | Thiết kế timeout | Phân biệt deadline của future, hủy task và timeout thật tại I/O client. |
+- id: thread-fundamentals-004
+  title: Tranh chấp dữ liệu, tính nguyên tử và khả năng nhìn thấy thay đổi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tranh chấp dữ liệu, tính nguyên tử và khả năng nhìn thấy thay đổi**
+
+    Dùng ví dụ lost update để phân biệt data race với race condition và tách rõ atomicity, visibility, ordering trong Java Memory Model. Bài học xác định bất biến của shared mutable state, chỉ ra `volatile` không giải quyết `count++`, và áp dụng atomic, lock hoặc snapshot bất biến cho singleton Spring cũng như ranh giới nhiều JVM.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Data race và JMM
+
+    1. Hai thread đọc cùng giá trị rồi ghi `count++` dẫn tới lost update thế nào?
+    2. Data race khác race condition ra sao, và `volatile` bảo đảm gì nhưng không làm thao tác tổng hợp atomic?
+    3. Các cạnh happens-before từ monitor, volatile, `Thread.start` và `join` có ý nghĩa gì?
+
+    ### Bảo vệ bất biến
+
+    1. Vì sao `AtomicInteger` chỉ bảo vệ thao tác trên một biến chứ không bảo vệ nhiều trường số dư?
+    2. Khi nào ưu tiên dữ liệu bất biến/`volatile` snapshot, `synchronized` hoặc CAS cho trạng thái chia sẻ?
+    3. `ConcurrentHashMap.compute` và `LongAdder.sum` có những giới hạn nào về atomicity/snapshot?
+
+    ### Spring nhiều request
+
+    1. Tại sao `@Service` singleton có mutable field không tự thread-safe dù Spring quản lý bean?
+    2. Vì sao `AtomicLong` trong ba replica không cấp ID duy nhất toàn hệ thống?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tái hiện race | Dùng `CountDownLatch` tái tạo lost update và giải thích interleaving. |
+    | Giải thích correctness | Phân biệt atomicity, visibility, ordering, data race và bất biến nghiệp vụ. |
+    | Chọn bảo vệ | Chọn `volatile` cho cờ, atomic cho counter, khóa cho invariant nhiều trường. |
+    | Đánh giá singleton | Tìm shared mutable field trong HTTP/`@Async` và đề xuất stateless service. |
+    | Xác định phạm vi | Phân biệt khóa một JVM với transaction/conditional update trên dữ liệu nhiều replica. |
+- id: thread-fundamentals-005
+  title: Quan hệ happens-before khi gửi tác vụ và nhận kết quả
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Quan hệ happens-before khi gửi tác vụ và nhận kết quả**
+
+    Tập trung vào hợp đồng công bố bộ nhớ khi nộp task và tiêu thụ kết quả: ghi trước `execute/submit` happens-before thực thi task; ghi trong task happens-before hành động sau `Future.get`. Người học phải biết nối hai cạnh theo tính bắc cầu, đồng thời không nhầm hoàn tất một future với an toàn của những task còn cạnh tranh dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai cạnh happens-before
+
+    1. Ghi input trước `Executor.execute/ExecutorService.submit` được task quan sát nhờ quan hệ nào?
+    2. `submit` trả về có chứng minh task xong chưa, và vì sao `Future.get` là mốc tiêu thụ kết quả?
+    3. Nếu task B được submit sau `writer.get`, làm sao chứng minh B nhìn thấy output của task A?
+
+    ### Giới hạn và lỗi
+
+    1. Ghi mutable input sau submit hoặc đọc output ngay sau `execute` có thể sai ra sao?
+    2. Vì sao gọi `get` cho mọi Future không làm hai thao tác `counter++` chạy đồng thời trở thành atomic?
+    3. Khi timeout, `ExecutionException` hoặc cancellation xảy ra, caller có thể kết luận điều gì về kết quả?
+
+    ### Ứng dụng Spring
+
+    1. Spring `AsyncTaskExecutor.submit` và `@Async` đi qua proxy áp dụng ranh giới submit/nhận future thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chứng minh công bố | Vẽ hai cạnh submit→task và task→`Future.get` trên timeline. |
+    | Dự đoán kết quả | Giải thích ví dụ `SharedState` trả 42 không cần volatile khi các cạnh HB đầy đủ. |
+    | Nhận diện đọc sớm | Sửa đoạn `execute` rồi đọc field ngay bằng cơ chế lấy kết quả/chờ đúng. |
+    | Phân tích đồng thời | Chứng minh `Future.get` không thay thế atomic update giữa hai worker. |
+    | Áp dụng Spring | Xác định vị trí proxy, executor, future và exception trong luồng `@Async`. |
+- id: thread-fundamentals-006
+  title: Khóa, biến atomic và cấu trúc dữ liệu đồng thời
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khóa, biến atomic và cấu trúc dữ liệu đồng thời**
+
+    Chọn cơ chế cụ thể để bảo vệ invariant và tiến triển: monitor `synchronized`, `ReentrantLock`/`Condition`, read-write/optimistic locks, atomic CAS và concurrent collections. Bài học chứng minh thread-safe ở một thao tác hoặc một key không tương đương transaction nhiều trường/nhiều JVM, đồng thời thực hành bounded `BlockingQueue` để có backpressure.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khóa và điều kiện
+
+    1. `synchronized` khác `ReentrantLock` ở timeout/interruption và yêu cầu `unlock` trong `finally` như thế nào?
+    2. Vì sao `Condition.await` phải ở vòng `while` và nhả lock khi chờ?
+    3. `ReadWriteLock` và `StampedLock` optimistic read có lợi trong workload nào và `validate` bảo vệ điều gì?
+
+    ### Atomic và collection
+
+    1. CAS cập nhật thế nào, khi nào cần `AtomicStampedReference` để nhận biết ABA?
+    2. Vì sao `LongAdder.sum()` không phải snapshot atomic dưới tải ghi liên tục?
+    3. Tại sao `ConcurrentHashMap.get` rồi `put` vẫn race, còn `merge/compute` bảo đảm điều gì?
+    4. Khi nào chọn `CopyOnWriteArrayList`, `BlockingQueue` hoặc `synchronizedList`?
+
+    ### Ranh giới Spring
+
+    1. Vì sao lock của một singleton JVM không đủ khi nhiều replica cùng cập nhật database?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Bảo vệ invariant | Viết `ReentrantLock` có `try/finally` bảo vệ check-then-act. |
+    | Xây CAS | Giải thích vòng CAS giữ số chỗ không âm và giới hạn atomic một biến. |
+    | Sửa collection | Đổi chuỗi map `get/put` sang `merge`; nêu semantics theo key. |
+    | Điều tiết hàng đợi | Dùng `ArrayBlockingQueue` cho producer/consumer và dừng bằng sentinel. |
+    | Chọn công cụ | So sánh `LongAdder`, read-write lock và DB transaction theo ranh giới nhất quán. |
+- id: thread-fundamentals-007
+  title: Chờ tài nguyên khác với sử dụng CPU
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chờ tài nguyên khác với sử dụng CPU**
+
+    Đọc đúng số liệu hiệu năng: request lâu không nhất thiết CPU bận; thread có thể chờ DB, network, lock hoặc queue. Thông qua wall-clock/CPU time, `Thread.State`, `ThreadMXBean`, ví dụ Spring MVC/WebFlux và virtual threads, bài học giúp chẩn đoán bottleneck trước khi tuning executor, thay vì tăng số luồng theo trực giác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### CPU time, wall time và trạng thái
+
+    1. Vì sao request 420 ms có thể chỉ sử dụng khoảng 40 ms CPU?
+    2. `RUNNABLE` khác `BLOCKED`/`WAITING` ở ý nghĩa gì và vì sao thread dump đơn lẻ chưa đủ kết luận?
+    3. Thí nghiệm `ThreadMXBean` giữa busy loop và `sleep` cho thấy điều gì, đâu là giới hạn đo đạc?
+
+    ### Mô hình I/O trong Spring
+
+    1. Trong Spring MVC và `@Async`, blocking JDBC/HTTP giữ thread nào, và chuyển executor có làm I/O nonblocking không?
+    2. WebFlux event loop, `boundedElastic` và virtual threads phân biệt ra sao khi xử lý blocking I/O?
+    3. Vì sao virtual threads không bỏ qua giới hạn kết nối DB hoặc tăng lõi CPU?
+
+    ### Đo và dự toán tải
+
+    1. Từ `L=λ×W`, làm sao suy ra số request trung bình đang chờ với 200 req/s và 250 ms latency?
+    2. Khi CPU thấp nhưng p99 tăng, bạn sẽ thu thập thread dumps, tracing và pool metrics theo thứ tự nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân rã thời gian | So sánh CPU time và wall-clock để xác định pha tính/chờ. |
+    | Đọc thread dump | Diễn giải thread state kèm stack và lock owner trước khi chẩn đoán. |
+    | Chọn mô hình I/O | Phân biệt MVC blocking, Reactor nonblocking, boundedElastic và virtual-thread execution. |
+    | Ước lượng concurrency | Áp dụng Little's Law cho thời gian chờ và nêu giả định trạng thái ổn định. |
+    | Thiết kế kiểm chứng | Đo p95/p99, queue, connection pool, timeout và CPU quota trước/sau thay đổi. |
+- id: thread-fundamentals-008
+  title: Deadlock, cạn luồng và giới hạn của việc tăng số luồng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Deadlock, cạn luồng và giới hạn của việc tăng số luồng**
+
+    Kết hợp kiến thức lock, Future, queue và CPU/I/O để phân biệt monitor deadlock, thread-pool starvation, pool saturation và thiếu connection. Bài học dùng `ThreadMXBean`, ví dụ hai khóa, single-thread pool chờ task con, thread dumps và metrics để tìm nguyên nhân; từ đó sửa phụ thuộc vòng, đặt timeout/backpressure và chỉ tăng worker khi downstream đủ năng lực.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Deadlock và starvation
+
+    1. Bốn điều kiện Coffman tạo vòng deadlock thế nào, và thống nhất lock order phá điều kiện nào?
+    2. Vì sao `findMonitorDeadlockedThreads` không nhất thiết phát hiện task chờ child task trên một worker pool?
+    3. Trong `PoolStarvationDemo`, vì sao `inner` đã submit nhưng không thể chạy trước khi `outer` hết chờ?
+
+    ### Pool và tài nguyên
+
+    1. Dựa vào active workers, queue và stack, làm sao phân biệt saturation, resource starvation và CPU contention?
+    2. Vì sao `ThreadPoolTaskExecutor` có thứ tự core→queue→max→rejection?
+    3. DB có 10 connections và mỗi query giữ 200 ms thì tăng thread lên 200 có vượt được mức lý tưởng 50 query/s không?
+
+    ### Vận hành
+
+    1. Dùng nhiều thread dumps và JFR/metrics thế nào để phân biệt monitor deadlock, pool starvation và chờ I/O hợp lệ?
+    2. Khi nào bounded queue, rejection, timeout hoặc tách pool phù hợp hơn tăng worker?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện deadlock | Tạo hai monitor ngược thứ tự và đọc `ThreadMXBean` để chứng minh vòng chờ. |
+    | Sửa dependency | Đặt lock order và loại bỏ `Future.get` chéo trên single-worker pool. |
+    | Phân tích cấu hình | Giải thích core/queue/max/rejection của `ThreadPoolTaskExecutor`. |
+    | Ước lượng capacity | Tính bottleneck DB pool và chỉ ra vì sao tăng worker không tự tăng throughput. |
+    | Điều tra ứng dụng | Lập checklist thread dump, active queue, p99, CPU, connection pool và timeout. |

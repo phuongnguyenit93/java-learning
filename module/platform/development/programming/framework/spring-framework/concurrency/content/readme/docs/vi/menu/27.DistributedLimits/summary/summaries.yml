@@ -1,0 +1,265 @@
+summaries:
+- id: distributed-limits-001
+  title: '@Scheduled đăng ký lịch riêng trên từng thể hiện ứng dụng'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **@Scheduled đăng ký lịch riêng trên từng thể hiện ứng dụng**
+
+    `@Scheduled` không đăng ký một đồng hồ dùng chung cho toàn deployment: mỗi Spring `ApplicationContext` có thể sở hữu một registration, và mỗi pod có context riêng. Bài học giúp phát hiện tại sao một cron expression vẫn tạo nhiều invocation, khi nào mỗi replica chạy là đúng và vì sao cần thêm ownership/idempotency khi công việc có hiệu ứng toàn cụm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phạm vi đăng ký và thời điểm chạy
+
+    1. Vì sao hai Spring ApplicationContexts trong cùng một JVM vẫn có thể tạo hai registrations cho một phương thức `@Scheduled`?
+    2. Trong deployment ba pods, cron expression và `zone` giống nhau có bảo đảm chỉ một pod chạy không?
+    3. Ngoài số replicas, repeatable `@Scheduled`, bean scope và manual schedule có thể tạo thêm registrations ra sao?
+
+    ### Chọn đúng cách điều phối
+
+    1. Khi nào để mọi replica dọn cache cục bộ lại đúng hơn dùng global distributed lock?
+    2. Một scheduler owner riêng khác gì distributed lease, unique business-window claim và Quartz JDBC cluster về thứ chúng bảo vệ?
+    3. Tại sao một trigger owner duy nhất vẫn cần kiểm soát retry, durable intent và idempotent business effect?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện registration thực tế | Vẽ timeline hai contexts và nhiều pods; dự đoán số lời gọi `@Scheduled` mà không đồng nhất nó với số business commits. |
+    | Chẩn đoán chạy trùng | Kiểm tra bean instances, annotations, cron zone, lifecycle và các nguồn schedule động trước khi kết luận lỗi cluster. |
+    | Lựa chọn phạm vi trigger | Chọn per-instance schedule cho local state hoặc shared claim/job ledger cho một business window toàn cụm, giải thích điều kiện. |
+    | Thiết kế phép thử | Mô phỏng nhiều contexts, rolling deployment và duplicate trigger; assert business effect theo key chứ không chỉ đếm log. |
+- id: distributed-limits-002
+  title: Khóa trong JVM không ngăn công việc ở máy khác
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khóa trong JVM không ngăn công việc ở máy khác**
+
+    `synchronized`, `ReentrantLock`, `AtomicBoolean` và `static` chỉ điều phối trạng thái ở một JVM hay một classloader, không phải giữa hai processes. Bài học dùng demo hai JVM và ví dụ PostgreSQL advisory transaction lock để xác định ranh giới khóa, lý do cần shared coordination và nguy cơ stale owner sau khi lease hết hạn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khóa local và phạm vi bảo vệ
+
+    1. Vì sao hai JVM cùng có `static synchronized` hoặc `ReentrantLock` vẫn có thể vào critical section đồng thời?
+    2. Demo hai processes chứng minh điều gì mà test hai threads trong một JVM không chứng minh được?
+    3. Vì sao scheduler pool size một worker hoặc `@Transactional` tự nó không trở thành distributed mutex?
+
+    ### Shared lock, lease và an toàn hiệu ứng
+
+    1. `pg_try_advisory_xact_lock` giữ khóa đến mốc nào và vì sao protected DB work phải nằm cùng transaction/connection?
+    2. Distributed lock ngăn overlap khác unique `(job_name,slot)` chống hai executions nối tiếp cùng kỳ như thế nào?
+    3. Vì sao Redis/ShedLock lease hết hạn có thể cho phép stale owner ghi, và fencing cần được kiểm ở đâu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt hai phạm vi khóa | Thực thi hoặc giải thích Java demo hai JVM và chỉ ra monitor của mỗi process là độc lập. |
+    | Thiết kế shared coordination | Chọn advisory DB lock, lease hoặc atomic row claim theo logical key và định nghĩa lúc acquisition/release. |
+    | Bảo vệ business window | Dùng unique key/idempotency bên cạnh mutual exclusion để ngăn hai runs nối tiếp tạo effect trùng. |
+    | Đánh giá failure mode | Lập test lease expiry, process pause và stale writes; yêu cầu fencing/owner check tại protected resource. |
+- id: distributed-limits-003
+  title: Chọn một nơi kích hoạt hoặc cơ chế phối hợp có phạm vi phù hợp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn một nơi kích hoạt hoặc cơ chế phối hợp có phạm vi phù hợp**
+
+    Khi nhiều Spring replicas có thể phát lịch, quyết định đầu tiên là **ai sở hữu trigger** và **phạm vi công việc** cần loại trừ trùng, chứ không phải chọn library theo tên. Bài học so sánh một trigger owner với nhiều pods cùng tick và shared claim, phân biệt chính sách skip/wait/queue/catch-up và cách chọn key theo tenant, partition và business window.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lựa chọn mô hình phát lịch và claim
+
+    1. Một trigger owner và nhiều trigger owners dùng shared claim khác nhau ở đường failover và missed windows như thế nào?
+    2. Vì sao phải tách trigger, claim và business commit thành ba ranh giới khi thiết kế job toàn cụm?
+    3. Khóa theo toàn job, theo tenant hay theo `(tenant,job,window)` tạo những rủi ro contention hoặc duplicate nào?
+
+    ### Policy và lựa chọn công cụ
+
+    1. Trong trường hợp nào ShedLock có thể skip tick, còn Quartz JDBC hoặc durable job table phù hợp với lịch phải catch-up?
+    2. Chính sách SKIP, WAIT, QUEUE và CATCH-UP sẽ cho kết quả khác nhau khi owner đang bận như thế nào?
+    3. Làm sao xử lý một owner mất lease hoặc hai vùng active-active khi các coordination stores không thật sự chia sẻ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập sơ đồ trách nhiệm | Vẽ flow trigger → shared claim → business outcome và chỉ rõ thành phần nào phục hồi missed windows. |
+    | Đề xuất kiến trúc theo SLO | So sánh role scheduler, ShedLock, Quartz JDBC, leader lease và durable queue cho một bài toán thực tế. |
+    | Thiết kế granularity | Định nghĩa execution key và lock key khác nhau khi nhiều tenants hoặc partitions có thể chạy song song. |
+    | Kiểm thử failover | Lập kịch bản hai triggers cạnh tranh một key, owner chết và claim lại mà không làm duplicate effect. |
+- id: distributed-limits-004
+  title: Tính lặp an toàn bằng mã công việc và dấu mốc xử lý
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tính lặp an toàn bằng mã công việc và dấu mốc xử lý**
+
+    Trong hệ thống có at-least-once delivery, cùng một ý định nghiệp vụ có thể được gửi lại nhiều lần. Bài học chỉ cách tạo `operationId` ổn định, phân biệt `attemptId` và `messageId`, lưu marker có fingerprint, đồng thời đưa marker, business mutation và result vào một transaction khi cùng database. Nó cũng nêu giới hạn khi có payment/email hoặc các hệ thống ngoài.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định danh và marker
+
+    1. Vì sao retry phải giữ nguyên `operationId` nhưng được phép tạo `attemptId` mới?
+    2. Điều gì xảy ra khi hai requests dùng cùng key nhưng payload khác, và fingerprint phải dựa trên dữ liệu nào?
+    3. Tại sao `SELECT exists` trước khi cập nhật rồi mới insert marker tạo race dù bảng có unique constraint?
+
+    ### Transaction và phục hồi
+
+    1. Vì sao marker DONE commit trước hoặc sau business mutation trong transaction khác đều có crash window nguy hiểm?
+    2. Với wallet và marker cùng PostgreSQL, cơ chế `INSERT ... ON CONFLICT DO NOTHING` trong cùng transaction chống double credit ra sao?
+    3. Khi bên ngoài database đã nhận HTTP/payment nhưng response mất, outbox, inbox, provider idempotency và reconciliation bảo vệ các bước nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế idempotency key | Phân biệt stable business operation, event, attempt và tenant scope; xác định conflict khi key/payload lệch. |
+    | Áp dụng atomic marker | Giải thích schema unique constraint và Spring `@Transactional` bao trùm marker, wallet mutation và stored result. |
+    | Kiểm tra duplicate/replay | Thiết kế concurrency test hai callers cùng key, rollback trước commit và retry sau broker ACK thất lạc. |
+    | Bảo vệ external effects | Lựa chọn outbox/inbox, downstream idempotency, lease generation và UNKNOWN reconciliation theo từng boundary. |
+- id: distributed-limits-005
+  title: Không coi nhận tác vụ trong bộ nhớ là đã lưu công việc bền vững
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không coi nhận tác vụ trong bộ nhớ là đã lưu công việc bền vững**
+
+    `ThreadPoolTaskExecutor.execute`, `@Async`, `Future` và `TaskScheduler.schedule` đều có thể nhận task vào RAM mà chưa tạo bất cứ bản ghi công việc bền vững nào. Bài học phân biệt accepted-in-memory, durably recorded và business-completed; từ đó định nghĩa HTTP 202 đúng, tạo durable job table hoặc broker confirmation, và kiểm chứng khôi phục qua restart.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới nhận công việc
+
+    1. Vì sao `execute()` trả bình thường và tăng queueCapacity không chứng minh pending job sẽ sống qua SIGKILL?
+    2. Một response HTTP 202 nên được gửi sau mốc commit/confirm nào nếu API cam kết durable acceptance?
+    3. `Future` hoặc `ScheduledFuture` của JVM cũ có thể được dùng để recover một job sau restart không?
+
+    ### Outbox, broker và vận hành
+
+    1. Demo queue in-memory bị `shutdownNow()` khác demo H2 file lưu PENDING qua hai JVM ở khía cạnh nào?
+    2. Transactional outbox giải quyết khoảng DB commit → broker publish nào, và vì sao relay vẫn có thể phát lại message?
+    3. Publisher confirmation khác consumer ACK và việc business effect thật đã hoàn tất như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt ba mốc | Vẽ timeline accepted in RAM, DB/broker durable confirm và business completion; không đồng nhất HTTP 202 với DONE. |
+    | Thiết kế durable intake | Chọn stable job ID, persisted PENDING, status endpoint, poller/claim và chính sách trả lỗi khi commit thất bại. |
+    | Kiểm chứng qua restart | Giải thích/chạy Java `InMemoryAcceptanceDemo` và H2 file demo để so sánh job mất và PENDING còn tồn tại. |
+    | Xử lý dual-write | Thiết kế outbox relay và consumer dedup, chỉ ra những thời điểm crash tạo replay. |
+- id: distributed-limits-006
+  title: Xử lý mất tiến trình, khởi động lại và công việc bị bỏ dở
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Xử lý mất tiến trình, khởi động lại và công việc bị bỏ dở**
+
+    Ngay cả khi job đã được lưu bền, worker có thể chết sau claim, sau side effect hoặc trước acknowledgement. Bài học giải thích cách phát hiện `RUNNING` bỏ dở bằng lease/heartbeat, claim lại nguyên tử với generation mới, từ chối stale owner, quản lý checkpoint và retry/DEAD. Trọng tâm là **phục hồi sau crash** chứ không chỉ nhận việc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phát hiện công việc bỏ dở
+
+    1. Vì sao graceful shutdown, SIGTERM và SIGKILL có mức đảm bảo callback/finally khác nhau?
+    2. Vì sao row RUNNING không chứng minh worker còn sống và không được reset mọi RUNNING lúc startup?
+    3. Lease, heartbeat, owner ID và fencing token phối hợp ra sao khi một worker mất quyền nhưng vẫn tiếp tục chạy?
+
+    ### Khôi phục đúng trạng thái
+
+    1. Job đã commit external effect nhưng crash trước ACK sẽ cần idempotency hoặc UNKNOWN reconciliation như thế nào?
+    2. Điều gì có thể sai nếu task bị claim trước khi chờ quá lâu trong executor queue so với lease TTL?
+    3. Spring Batch checkpoint/JobRepository và Quartz JDBC recovery giải quyết những loại khôi phục nào, và đâu vẫn cần business idempotency?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế lifecycle recovery | Vẽ state machine PENDING/RUNNING/RETRY_WAIT/SUCCEEDED/DEAD và transition cho expired lease. |
+    | Bảo vệ attempt ownership | Mô tả atomic claim, heartbeat và conditional ACK theo owner + generation; dự đoán stale completion bị reject. |
+    | Kiểm chứng restart | Dùng Java LeaseRecoveryDemo/FileRestartDemo để minh họa token và persisted checkpoint, nêu rõ giới hạn local file. |
+    | Lập ma trận crash | Thiết kế fault injection sau claim, sau side effect trước ACK, sau commit trước response và lựa chọn retry/reconciliation. |
+- id: distributed-limits-007
+  title: Phân biệt điều phối tác vụ cục bộ với hàng đợi, workflow hoặc lịch phân tán
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt điều phối tác vụ cục bộ với hàng đợi, workflow hoặc lịch phân tán**
+
+    Một thread pool cục bộ giải quyết concurrency; một broker giải quyết lưu/chuyển việc; workflow engine giữ tiến trình nhiều bước qua downtime; clustered scheduler phối hợp lịch. Bài học so sánh bốn kiến trúc và những tổ hợp tối thiểu theo use case, tránh coi Queue, Quartz, Spring Batch và Temporal là bốn tên gọi của cùng một cơ chế.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân biệt bốn lớp kiến trúc
+
+    1. Local `TaskExecutor` khác broker durable về nơi giữ state và khả năng chuyển attempt sang JVM khác như thế nào?
+    2. Queue consumer ack/redelivery khác workflow history với timer, signal và compensation ở điểm nào?
+    3. Quartz JDBC cluster, Kubernetes CronJob và Spring Batch JobRepository chịu trách nhiệm loại trigger/batch state nào?
+
+    ### Chọn tổ hợp và biên giới bảo đảm
+
+    1. Với báo cáo một bước và quy trình chờ phê duyệt nhiều ngày, khi nào dùng queue và khi nào cần workflow state?
+    2. Vì sao một scheduler có trigger bền vững vẫn không tự cho external side effects exactly-once?
+    3. Ở kiến trúc scheduler → queue → worker/workflow, ai sở hữu idempotency key, retry budget và việc phục hồi khi ACK mất?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn đúng abstraction | Phân loại local executor, message broker, durable workflow và distributed scheduler bằng scope, state và failure model. |
+    | Lập bảng lựa chọn | So sánh yêu cầu queue/retry, multi-step signals, cron misfire và batch checkpoint rồi chọn bộ công cụ tối thiểu. |
+    | Thiết kế hybrid flow | Vẽ scheduler tạo durable run, broker giao job và worker thực hiện idempotent effects, chỉ rõ những ACK boundary. |
+    | Đánh giá trade-off | Phân tích ordering, backpressure, replay, maintenance, Quartz schema và workflow activity retry cho từng lựa chọn. |
+- id: distributed-limits-008
+  title: Ghi rõ kỳ vọng về chạy trùng, bỏ lỡ và thứ tự
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ghi rõ kỳ vọng về chạy trùng, bỏ lỡ và thứ tự**
+
+    Một hệ thống có thể cho retry invocation nhưng không cho duplicate business effect; có thể bỏ tick cache nhưng không bỏ kỳ billing; và có thể yêu cầu ordering theo một account chứ không theo toàn cluster. Bài cuối biến ba lựa chọn này thành **execution contract** có logical key, SLO, retention, backfill, sequence/version và phép thử chứng minh.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định nghĩa ba hợp đồng
+
+    1. Đâu là khác biệt giữa duplicate trigger, duplicate attempt và duplicate business effect trong một billing job?
+    2. Khi nào missed tick có thể coalesce latest, và khi nào phải replay từng business period còn thiếu?
+    3. Ordering theo nhận message, bắt đầu execution và commit business state có phải cùng một thứ tự không?
+
+    ### Thứ tự, retry và bằng chứng
+
+    1. Vì sao event `account#4` phải đợi `account#3` khi contract đòi per-key strict order, và xử lý gap/duplicate bằng gì?
+    2. Kafka order theo partition và SQL `SKIP LOCKED` có giới hạn gì đối với commit ordering của nhiều workers?
+    3. Cần những metric và test nào cho duplicate effects, missing periods, sequence gaps, retry sau ACK thất lạc và stale lease?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết contract kiểm chứng được | Đặc tả key, duplicate attempts/effects, missed-work policy, per-key ordering, retention, SLO và cách phục hồi. |
+    | Thiết kế sequence handling | Mô phỏng DeliveryContractDemo: buffer gap, apply #1 trước #2 và bỏ duplicate/stale event. |
+    | Triển khai backfill hợp lý | Phân biệt skip/coalesce/replay all theo cache, billing; tính expected windows trừ committed SUCCEEDED. |
+    | Kiểm thử ba chiều | Lập test matrix duplicate/missed/out-of-order, đo effect commits và last-applied-sequence thay vì chỉ đo tick. |

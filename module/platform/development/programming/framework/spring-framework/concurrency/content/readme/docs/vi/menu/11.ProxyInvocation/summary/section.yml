@@ -1,0 +1,76 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Proxy và lời gọi
+roadmapHeading: Từ đường đi Spring proxy đến lựa chọn AspectJ
+roadmap:
+- id: proxy-invocation-001
+  order: 1
+  title: Đường đi lời gọi từ bên gọi qua proxy tới tác vụ bất đồng bộ
+  description: Theo dõi đường đi caller, proxy, interceptor, executor và worker; phân biệt thời điểm submit với kết quả Future.
+  transition:
+    to: proxy-invocation-002
+    description: Dựa vào proxy boundary để giải thích lời gọi nội bộ tự bỏ qua advice.
+- id: proxy-invocation-002
+  order: 2
+  title: Vì sao phương thức tự gọi trong cùng bean không kích hoạt @Async ở chế độ proxy
+  description: Phân tích self-invocation, khác biệt exception/Future và kiểm chứng external/cross-bean call bằng thread identity.
+  transition:
+    to: proxy-invocation-003
+    description: Phân biệt lỗi self-call với trường hợp object chưa từng được Spring quản lý.
+- id: proxy-invocation-003
+  order: 3
+  title: Phân biệt đối tượng tự tạo bằng new với bean được tiêm
+  description: Xác định owner của instance từ new, bean definition, injection và scope; nhận diện proxy và mutable singleton state.
+  transition:
+    to: proxy-invocation-004
+    description: Sau khi nắm nguồn gốc bean reference, khảo sát kiểu proxy có thể được cung cấp.
+- id: proxy-invocation-004
+  order: 4
+  title: Proxy theo interface và proxy theo lớp
+  description: So sánh interface proxy và class proxy, casting, injection, các method được advice và cấu hình thực tế.
+  transition:
+    to: proxy-invocation-005
+    description: Từ kiểu proxy đi sâu vào giới hạn Java private và final đối với interception.
+- id: proxy-invocation-005
+  order: 5
+  title: Ảnh hưởng của private, final và khả năng chặn lời gọi
+  description: Phân tích private/final/class/interface constraints và ví dụ chạy kiểm chứng method eligibility.
+  transition:
+    to: proxy-invocation-006
+    description: Áp dụng hiểu biết proxy boundary để tách async work sang bean cộng tác.
+- id: proxy-invocation-006
+  order: 6
+  title: Tách phương thức bất đồng bộ sang bean cộng tác
+  description: Thực hành coordinator inject worker và quản lý Future/error, transaction/context cùng độ bền job.
+  transition:
+    to: proxy-invocation-007
+    description: Đi từ lời gọi runtime sang câu hỏi khi nào có thể dispatch tác vụ trong lifecycle.
+- id: proxy-invocation-007
+  order: 7
+  title: Không trông cậy @Async trên callback @PostConstruct của chính bean
+  description: Phân biệt callback PostConstruct với runner/ready event, đặt điều kiện readiness và startup timeout.
+  transition:
+    to: proxy-invocation-008
+    description: Tiếp tục đến rủi ro bootstrap của hạ tầng cấu hình async.
+- id: proxy-invocation-008
+  order: 8
+  title: Giới hạn khởi tạo sớm khi dùng AsyncConfigurer
+  description: Đánh giá early initialization của AsyncConfigurer, lazy resolution, named executor và dependency cycle.
+  transition:
+    to: proxy-invocation-009
+    description: Khi hạn chế proxy không thể giải quyết bằng refactor, xem xét AspectJ như mode advice khác.
+- id: proxy-invocation-009
+  order: 9
+  title: Nhận diện chế độ AspectJ và yêu cầu weaving khi cần lựa chọn khác
+  description: Phân biệt AspectJ weaving với proxy, điều kiện CTW/LTW, phụ thuộc runtime và phép thử chứng minh self-invocation.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài trong chương
+
+  | Tiêu chí | Bài 1: Đường đi lời gọi từ bên gọi qua proxy tới tác vụ bất đồng bộ | Bài 2: Vì sao phương thức tự gọi trong cùng bean không kích hoạt @Async ở chế độ proxy | Bài 3: Phân biệt đối tượng tự tạo bằng new với bean được tiêm | Bài 4: Proxy theo interface và proxy theo lớp | Bài 5: Ảnh hưởng của private, final và khả năng chặn lời gọi | Bài 6: Tách phương thức bất đồng bộ sang bean cộng tác | Bài 7: Không trông cậy @Async trên callback @PostConstruct của chính bean | Bài 8: Giới hạn khởi tạo sớm khi dùng AsyncConfigurer | Bài 9: Nhận diện chế độ AspectJ và yêu cầu weaving khi cần lựa chọn khác |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | Call path và Future | Self-invocation | new và DI | JDK/CGLIB | private/final | Coordinator–worker | PostConstruct | AsyncConfigurer | AspectJ weaving |
+  | Ca nghiên cứu | @Async qua proxy | this.asyncMethod() | new Worker vs injected | Cast và interface | final method/class | Tách xử lý nền | Startup warm-up | Configurer dependency | Self-call cần interception |
+  | Evidence | Thread prefix, Future | Ba đường gọi | AopUtils, sáu boolean | ProxyFactory output | JDK Proxy counter | Bốn đối chứng | Runner và readiness | Lazy lookup, BPP log | Weave-info, integration test |
+  | Giới hạn | Submit không bằng hoàn tất | Đổi CGLIB không sửa self-call | Bean không luôn là proxy | JDK không là concrete type | CGLIB không override final | Thread/transaction không tự truyền | Ready không đảm bảo warm-up | Lazy không chữa vòng thật | ASPECTJ flag không tự weave |
+  | Năng lực | Vẽ invocation trace | Chẩn đoán advice bypass | Quản lý instance/scope | Chọn proxy/injection | Đánh giá eligibility | Refactor service boundary | Thiết kế trigger lifecycle | Tách infrastructure | Đánh giá CTW/LTW |

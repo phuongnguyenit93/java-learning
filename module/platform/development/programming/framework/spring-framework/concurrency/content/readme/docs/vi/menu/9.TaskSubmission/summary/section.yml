@@ -1,0 +1,69 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Gửi và nhận tác vụ
+roadmapHeading: Từ thực thi Runnable tới kiểm chứng nghiệp vụ đã hoàn thành
+roadmap:
+- id: task-submission-001
+  order: 1
+  title: Gửi Runnable không có kết quả bằng execute()
+  description: Phân biệt Runnable và Executor, thực thi trực tiếp hoặc qua Spring TaskExecutor, kiểm tra rejection và giới hạn của lệnh execute không có kết quả.
+  transition:
+    to: task-submission-002
+    description: Khi cần theo dõi hoàn tất hoặc nhận dữ liệu, tiếp tục với submit và các dạng Runnable hoặc Callable.
+- id: task-submission-002
+  order: 2
+  title: Gửi Runnable hoặc Callable qua submit()
+  description: Chọn submit Runnable hoặc Callable qua AsyncTaskExecutor và dùng Future để đọc kết quả hoặc nguyên nhân lỗi.
+  transition:
+    to: task-submission-003
+    description: Có Future rồi cần hiểu chính xác trạng thái done, failed và cancelled của từng phép tính.
+- id: task-submission-003
+  order: 3
+  title: Nhận kết quả, kiểm tra hoàn tất và nhận biết hủy qua Future
+  description: Nhận kết quả, kiểm tra isDone và isCancelled, phân biệt cancel với dừng worker hoặc rollback tác dụng phụ.
+  transition:
+    to: task-submission-004
+    description: Khi đã biết các trạng thái, đặt thời hạn chờ kết quả để tránh chặn caller quá lâu.
+- id: task-submission-004
+  order: 4
+  title: get() có giới hạn thời gian chờ
+  description: Dùng get có timeout, xử lý kết quả đến muộn, deadline chung và giới hạn của các phép hủy hoặc timeout I/O.
+  transition:
+    to: task-submission-005
+    description: Timeout chỉ là một phần của outcome; cần hiểu đường truyền exception lúc gửi và lúc task chạy.
+- id: task-submission-005
+  order: 5
+  title: Khác biệt đường truyền ngoại lệ giữa execute() và submit()
+  description: Phân tích lỗi nộp việc, execute với Runnable thô, FutureTask qua submit và các cơ chế quan sát lỗi trong Spring.
+  transition:
+    to: task-submission-006
+    description: Sau khi hiểu lỗi, tách cả thời điểm submit và thời điểm worker bắt đầu để tìm nguồn độ trễ.
+- id: task-submission-006
+  order: 6
+  title: Thời điểm gửi tác vụ khác với thời điểm bắt đầu chạy
+  description: Đo mốc submit, accept, start, finish và queue wait với pool, latch và TaskDecorator.
+  transition:
+    to: task-submission-007
+    description: Vì worker có thể chạy trễ, dữ liệu đầu vào phải được chụp đúng trước khi giao việc.
+- id: task-submission-007
+  order: 7
+  title: Chụp dữ liệu đầu vào phù hợp trước khi chuyển sang luồng khác
+  description: Tạo snapshot immutable vừa đủ, xử lý alias mutable, request context, dữ liệu nhạy cảm và version.
+  transition:
+    to: task-submission-008
+    description: Input đúng chưa có nghĩa task hoàn tất; cuối cùng cần định nghĩa outcome và trạng thái job bền vững.
+- id: task-submission-008
+  order: 8
+  title: Không đồng nhất tác vụ đã được nhận với nghiệp vụ đã hoàn thành
+  description: Phân biệt task accepted với nghiệp vụ completed, xây job status, outbox, idempotency và quy tắc cập nhật sau commit.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài học trong chương
+
+  | Tiêu chí | Bài 1: execute Runnable | Bài 2: submit Runnable/Callable | Bài 3: Future và hủy | Bài 4: get có timeout | Bài 5: Ngoại lệ execute/submit | Bài 6: Thời điểm submit/start | Bài 7: Input snapshot | Bài 8: Accepted và business completed |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Câu hỏi trung tâm | Giao tác vụ ra sao? | Nhận handle và kết quả thế nào? | Task đã xong hay bị hủy? | Caller được chờ bao lâu? | Lỗi tới đâu? | Vì sao gửi rồi mà chưa chạy? | Worker sẽ đọc dữ liệu phiên bản nào? | Khi nào nghiệp vụ thật sự thành công? |
+  | API và cơ chế chính | Executor.execute, TaskExecutor | AsyncTaskExecutor.submit, Callable | Future.isDone, get, cancel | get(timeout), deadline, orTimeout | FutureTask, TaskDecorator, afterExecute, AsyncUncaughtExceptionHandler | ThreadPoolTaskExecutor, nanoTime, latch | List.copyOf, immutable record, @Async | 202, jobId, status, outbox, idempotency |
+  | Ngộ nhận cần tránh | execute trả void là đã xử lý | submit trả Future là có kết quả | isDone đồng nghĩa success | Timeout hủy task | afterExecute null là không lỗi | submit đồng nghĩa start | final reference là immutable | Accepted đồng nghĩa completed |
+  | Kỹ năng thực hành | Chạy trực tiếp, qua pool và xử lý rejection | Lấy giá trị từ Callable và null từ Runnable | Test task queued bị cancel | Latch để timeout rồi lấy kết quả | Đọc cause từ Future và observer đúng | Đo queue wait và execution time | Copy input rồi sửa nguồn, kiểm tra snapshot | Thiết kế job-status API và kiểm chứng sau commit |
+  | Vai trò đối với chương | Nền tảng gửi việc | Kênh theo dõi kết quả | Diễn giải trạng thái task | Quản lý ngân sách chờ | Phát hiện và xử lý lỗi | Hiểu lịch chạy và tải | Bảo đảm đầu vào có nghĩa | Bảo đảm thông báo outcome có chứng cứ |

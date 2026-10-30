@@ -1,0 +1,19 @@
+sections:
+  cron-timezones-001:
+    difficulty: BASIC
+  cron-timezones-002:
+    difficulty: INTERMEDIATE
+  cron-timezones-003:
+    difficulty: INTERMEDIATE
+  cron-timezones-004:
+    difficulty: INTERMEDIATE
+  cron-timezones-005:
+    difficulty: BASIC
+  cron-timezones-006:
+    difficulty: INTERMEDIATE
+  cron-timezones-007:
+    difficulty: ADVANCED
+  cron-timezones-008:
+    difficulty: INTERMEDIATE
+  cron-timezones-009:
+    difficulty: ADVANCED

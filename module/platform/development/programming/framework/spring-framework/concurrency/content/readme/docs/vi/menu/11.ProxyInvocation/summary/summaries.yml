@@ -1,0 +1,307 @@
+summaries:
+- id: proxy-invocation-001
+  title: Đường đi lời gọi từ bên gọi qua proxy tới tác vụ bất đồng bộ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đường đi lời gọi từ bên gọi qua proxy tới tác vụ bất đồng bộ**
+
+    Trong Spring, một lời gọi được đánh dấu `@Async` cần đi qua interceptor trước khi executor nhận task. Bài học giúp theo dõi từ caller đến proxy, queue, worker và target, nhờ đó phân biệt được thời điểm submit, thời điểm chạy, Future hoàn tất và lỗi xuất hiện ở mỗi giai đoạn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đường đi và thành phần
+
+    1. Caller, bean proxy, async interceptor, executor và target giữ vai trò gì trong một lần gọi `@Async`?
+    2. Những thao tác nào xảy ra ở caller thread và những thao tác nào diễn ra trên worker?
+    3. Vì sao proxy trả `CompletableFuture` sớm không có nghĩa công việc đã hoàn tất?
+
+    ### Điều kiện, lỗi và quan sát
+
+    1. Cần những điều kiện nào về `@EnableAsync`, bean, call path và executor để lời gọi được advice?
+    2. Bạn sẽ phân biệt lỗi submit, lỗi trong worker và việc caller tự chặn bằng `get()` bằng cách nào?
+    3. Làm sao dùng thread prefix, trạng thái Future và thời gian queue để dựng lại tiến trình thực thi?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ call path | Chú thích đúng caller → proxy → interceptor → executor → worker → target và vị trí hoàn tất Future. |
+    | Giải thích thời điểm thực thi | Nêu được vì sao worker có thể bắt đầu trước khi caller nhận Future và vì sao queue wait ảnh hưởng latency. |
+    | Chạy demo Spring | Dự đoán và đối chiếu output `value=42`, worker prefix và thread khác caller trong ví dụ có context. |
+    | Phân loại lỗi | Xác định nơi bắt/quan sát `TaskRejectedException`, `@Async void` exception và Future exceptional completion. |
+    | Đề xuất phép đo | Chọn số đo submit latency, queue wait, execution time cho một yêu cầu cần chẩn đoán. |
+- id: proxy-invocation-002
+  title: Vì sao phương thức tự gọi trong cùng bean không kích hoạt @Async ở chế độ proxy
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vì sao phương thức tự gọi trong cùng bean không kích hoạt @Async ở chế độ proxy**
+
+    Lời gọi `this.method()` nằm trong target bean không quay lại Spring AOP proxy, nên có thể bỏ qua `@Async` trong `AdviceMode.PROXY`. Bài này đào sâu nguyên nhân, sự khác nhau giữa self-call và external/cross-bean call, hệ quả với exception/Future và cách chứng minh bằng test điều phối.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế self-invocation
+
+    1. Vì sao một bean đã được Spring proxy vẫn có thể thực thi `this.sendAsync()` đồng bộ?
+    2. Tại sao `proxyTargetClass=true` không làm self-invocation được advice?
+    3. Một `@Async outer()` chạy trên worker rồi gọi `this.innerAsync()` có tạo thêm lượt submit không, và kiểm chứng thế nào?
+
+    ### Sửa thiết kế và kiểm thử
+
+    1. Chuyển phương thức sang bean cộng tác thay đổi proxy boundary như thế nào?
+    2. Lỗi ném trực tiếp từ self-call khác exceptional completion từ lời gọi qua proxy ra sao?
+    3. Vì sao `isDone()` hoặc kết quả bằng nhau không chứng minh đã có async interception?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chỉ ra self-call | Đánh dấu các đường gọi nội bộ bỏ qua advice, kể cả lời gọi không viết rõ `this`. |
+    | Đối chiếu ba đường gọi | Giải thích output self/external/cross-bean trong demo Spring có thread prefix. |
+    | Refactor có căn cứ | Tách service hoặc chọn explicit executor và giải thích tác động lên dependency. |
+    | Chẩn đoán exception | Dự đoán hình thức lỗi của Future và thời điểm runtime exception xuất hiện. |
+    | Thiết kế kiểm thử | Dùng latch/thread identity để phân biệt invocation trực tiếp với task thực sự được gửi. |
+- id: proxy-invocation-003
+  title: Phân biệt đối tượng tự tạo bằng new với bean được tiêm
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt đối tượng tự tạo bằng new với bean được tiêm**
+
+    Từ khóa `new` tạo object Java, còn Spring DI cung cấp reference theo bean definition và có thể qua proxy/post-processing. Bài này phân loại object tạo ngoài container, object trả từ `@Bean`, bean injected và scope, rồi giải thích ảnh hưởng của chúng tới `@Async` và shared state.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn tạo và quản lý bean
+
+    1. Vì sao `new Worker()` từ business code không tự có `@Async` advice dù class gắn `@Service`?
+    2. Tại sao `return new Worker()` bên trong phương thức `@Bean` lại có thể cho ra managed bean?
+    3. Constructor injection, `getBean` và `ObjectProvider` đưa bean reference tới caller như thế nào?
+
+    ### Proxy và concurrency
+
+    1. Một injected bean có luôn là proxy không, và `AopUtils.isAopProxy` chứng minh được điều gì?
+    2. Vì sao prototype được inject một lần vào singleton không tự được tạo lại mỗi invocation?
+    3. Mutable field trên singleton worker có thể gây race/lẫn dữ liệu giữa request ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại đối tượng | So sánh object từ `new`, `@Bean`, `getBean`, DI về owner, lifecycle và khả năng advice. |
+    | Thực hiện đối chứng | Giải thích sáu kết quả boolean của demo raw/managed/injected/self-call. |
+    | Sửa injection | Chuyển chỗ tự `new` service hoặc field injection dễ null sang constructor injection đúng. |
+    | Giải thích scope | Nhận xét tác động singleton/prototype và trường hợp cần `ObjectProvider`. |
+    | Loại race condition | Thay mutable request field trên singleton bằng tham số hoặc immutable DTO. |
+- id: proxy-invocation-004
+  title: Proxy theo interface và proxy theo lớp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Proxy theo interface và proxy theo lớp**
+
+    Spring có thể dùng JDK dynamic proxy triển khai interface hoặc class-based proxy tạo subclass. Bài học này tập trung vào hình dạng proxy, kiểu bean có thể inject, phạm vi method có thể advice và cách xác định proxy thực thay vì đoán từ tên class hay annotation.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểu và khả năng gọi
+
+    1. JDK dynamic proxy được tạo từ interface thế nào, và khác CGLIB subclass ở điểm nào?
+    2. Vì sao JDK proxy thường không thể cast/inject theo implementation class, còn class proxy thường làm được?
+    3. Phương thức chỉ có ở implementation có thể đi qua mỗi kiểu proxy trong điều kiện nào?
+
+    ### Cấu hình và hiệu lực
+
+    1. Spring Boot hoặc cấu hình `proxyTargetClass` có thể thay đổi loại proxy như thế nào?
+    2. Tại sao chuyển JDK proxy sang CGLIB không làm `this.asyncMethod()` được intercept?
+    3. Làm sao kiểm chứng kiểu runtime và đối chiếu advice thực thi trong demo `ProxyFactory`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh hình dạng proxy | Dự đoán `instanceof`, cast và kiểu DI hợp lệ cho JDK/CGLIB. |
+    | Phân tích API bề mặt | Chỉ ra method có thể gọi qua interface và method chỉ có ở class proxy. |
+    | Đọc evidence | Diễn giải stdout `jdkProxy/cglibProxy`, `advice:outside` và self-call không có advice. |
+    | Kiểm tra runtime | Dùng `AopUtils.isJdkDynamicProxy/isCglibProxy` để xác định proxy của bean. |
+    | Chọn thiết kế injection | Nêu lý do inject interface hoặc concrete type theo cấu hình và business contract. |
+- id: proxy-invocation-005
+  title: Ảnh hưởng của private, final và khả năng chặn lời gọi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ảnh hưởng của private, final và khả năng chặn lời gọi**
+
+    Khả năng proxy chặn lời gọi bị giới hạn bởi modifier Java và bề mặt API. Bài này chuyên giải thích `private`, `final method`, `final class`, và ngoại lệ quan trọng: JDK interface proxy có thể intercept một lời gọi dù implementation final, còn CGLIB không thể override final method.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hạn chế theo modifier
+
+    1. Vì sao `private` method không thể được subclass proxy override để advice, nhưng helper private vẫn có thể chạy trên worker?
+    2. Tại sao `final` class và `final` method hạn chế CGLIB theo hai cách khác nhau?
+    3. Khi nào JDK interface proxy vẫn có thể intercept lời gọi đến final implementation?
+
+    ### Tình huống và chứng minh
+
+    1. Field `final` có cấm public non-final `@Async` method bị proxy không?
+    2. Làm sao đối chiếu public external, self-call, private helper và final method bằng thread identity?
+    3. Vì sao không được suy rằng visibility của `@Transactional` áp dụng y hệt cho `@Async` trong mọi phiên bản?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại eligibility | Đánh giá từng tình huống private/final/interface proxy/class proxy kèm nguyên nhân. |
+    | Chạy JDK proxy demo | Giải thích counter `run()` tăng khi gọi qua proxy và không tăng khi target tự gọi. |
+    | Đọc Spring class-proxy demo | Dự đoán bốn kết quả public/self/private/final dựa trên nơi advice chạy. |
+    | Đề xuất sửa | Lựa chọn public non-final entry point hoặc interface-based API phù hợp. |
+    | Phân biệt hai cơ chế | Giải thích helper chạy trong worker không đồng nghĩa helper có interception riêng. |
+- id: proxy-invocation-006
+  title: Tách phương thức bất đồng bộ sang bean cộng tác
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tách phương thức bất đồng bộ sang bean cộng tác**
+
+    Tách điều phối nghiệp vụ và công việc chạy nền thành hai Spring beans cho phép caller gọi worker qua proxy được inject. Bài này thực hành refactor self-invocation, giữ rõ Future/error contract và xem tác động tới transaction, context, overload và độ bền tác vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế coordinator–worker
+
+    1. Vì sao tách ra một class rồi dùng `new Worker()` vẫn không sửa được `@Async`?
+    2. Coordinator và worker nên sở hữu phần việc nào, và ranh giới proxy xuất hiện ở đâu?
+    3. Khi nào có thể dùng `TaskExecutor.submitCompletable` thay vì cần một method `@Async`?
+
+    ### Ranh giới dữ liệu và vận hành
+
+    1. Tại sao `get()` ngay sau khi dispatch khiến caller vẫn chờ, dù worker chạy khác thread?
+    2. Khi refactor sang worker, transaction caller, MDC và mutable request state có nguy cơ gì?
+    3. Nếu worker bị reject/thất bại hoặc job phải survive restart, bạn sẽ chọn cơ chế phản hồi và lưu trạng thái gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Refactor hai bean | Chuyển `ReportService` tự gọi thành `ReportCoordinator` inject `ReportWorker`. |
+    | Chạy demo và giải thích | Đối chiếu self-call, collaborator trên executor, manual `new` và report ID đúng. |
+    | Thiết kế Future contract | Nêu cách báo submit rejection, exceptional completion và timeout cho caller. |
+    | Đảm bảo consistency | Dùng immutable input và chọn after-commit/outbox khi cần. |
+    | Test proxy boundary | Đo thread identity bằng Spring context và tránh test chỉ dựa timing. |
+- id: proxy-invocation-007
+  title: Không trông cậy @Async trên callback @PostConstruct của chính bean
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không trông cậy @Async trên callback @PostConstruct của chính bean**
+
+    `@PostConstruct` là callback do container gọi lúc khởi tạo bean, không phải điểm gọi ứng dụng qua async proxy. Bài học giúp tránh hai anti-pattern kết hợp callback với `@Async`, chọn hook khởi động hợp lý và xác lập điều kiện readiness, lỗi và timeout cho warm-up.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lifecycle và interception
+
+    1. Vì sao Spring gọi `@PostConstruct` trước khi nên dựa vào async proxy của chính bean?
+    2. Gắn `@Async` lên chính callback và callback gọi `this.asyncWork()` có khác nhau thế nào?
+    3. Bean trigger riêng gọi worker đã được inject có lợi gì, nhưng rủi ro nào còn ở pha khởi tạo singleton?
+
+    ### Startup và readiness
+
+    1. Khi nào dùng `ApplicationRunner`, `ApplicationReadyEvent` hoặc một init callback đồng bộ?
+    2. Nếu listener chỉ submit warm-up rồi trả về, readiness có chứng minh dữ liệu đã hoàn tất không?
+    3. Timeout và cancellation giúp gì, và vì sao nhiều pod vẫn cần idempotency/coordination?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chẩn đoán lifecycle | Nhận ra hai anti-pattern `@PostConstruct @Async` và self-call trong callback. |
+    | Phân tích Spring Boot demo | Giải thích bốn dòng callback/self-call/runner/cross-bean thread. |
+    | Chọn startup hook | Thiết kế trigger tương ứng yêu cầu trước hoặc sau readiness. |
+    | Phân biệt lỗi | Đối chiếu exception bean initialization, `@Async void` handler và Future failure. |
+    | Thiết kế đa instance | Chọn idempotency hoặc phối hợp cluster cho warm-up chạy chung. |
+- id: proxy-invocation-008
+  title: Giới hạn khởi tạo sớm khi dùng AsyncConfigurer
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn khởi tạo sớm khi dùng AsyncConfigurer**
+
+    Spring có thể khởi tạo configuration class triển khai `AsyncConfigurer` sớm để dựng async infrastructure. Bài này phân tích nguy cơ kéo service phụ thuộc vào giai đoạn thiếu post-processing, và hướng cấu hình executor/exception handler bằng `@Lazy`, `ObjectProvider` hay named bean có vòng đời rõ ràng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Rủi ro bootstrap
+
+    1. Vì sao `AsyncConfigurer` cần được truy cập trong pha cấu hình sớm?
+    2. Khi nào eager inject service có advice khiến tham chiếu bị tạo quá sớm hoặc gặp vòng dependency?
+    3. Tại sao log `not eligible for getting processed by all BeanPostProcessors` chỉ là tín hiệu cần xác minh?
+
+    ### Chọn giải pháp
+
+    1. `@Lazy` trên bean definition khác `@Lazy` tại injection point thế nào?
+    2. Nếu gọi `ObjectProvider.getObject()` trong constructor, có còn trì hoãn resolve target không?
+    3. Tại sao `@Bean` executor và `@Async("name")` thường đủ mà không cần `AsyncConfigurer`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ dependency graph | Chỉ ra vòng configurer → service → executor và các thời điểm resolve. |
+    | So sánh lazy lookup | Phân biệt eager injection, lazy proxy và `ObjectProvider`. |
+    | Phân tích ví dụ Java | Giải thích `early=work` và `lazy=advised(work)` trong mô hình reference. |
+    | Thiết kế executor/handler | Tách business service khỏi cấu hình infrastructure để tránh phụ thuộc vòng. |
+    | Lập test startup | Đề xuất kiểm tra context refresh, proxy behavior, rejection và shutdown. |
+- id: proxy-invocation-009
+  title: Nhận diện chế độ AspectJ và yêu cầu weaving khi cần lựa chọn khác
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Nhận diện chế độ AspectJ và yêu cầu weaving khi cần lựa chọn khác**
+
+    AspectJ có thể đưa advice vào method execution join point sau khi class đã được weave, bao gồm self-invocation trong điều kiện phù hợp. Bài này làm rõ khác biệt giữa proxy và `AdviceMode.ASPECTJ`, yêu cầu thực sự của `spring-aspects`, CTW/LTW, và tiêu chí quyết định trước khi đưa weaving vào build/deployment.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế weaving
+
+    1. Vì sao `@EnableAspectJAutoProxy` và `proxyTargetClass=true` vẫn là proxy-based AOP, chưa phải weaving?
+    2. Advice tại execution join point được weave có thể chặn self-call mà proxy boundary bỏ qua như thế nào?
+    3. Compile-time, post-compile và load-time weaving khác nhau ở thời điểm biến đổi bytecode ra sao?
+
+    ### Điều kiện và kiểm chứng
+
+    1. Chỉ thêm `mode=ASPECTJ`, `spring-aspects` hoặc `aspectjweaver` đã đủ chưa?
+    2. Bằng chứng nào từ weave-info, class artifact và integration test chứng minh self-call thật sự được advice?
+    3. Vì sao tương thích JDK, classloader, bytecode agents và deployment khiến bạn phải đánh giá rủi ro trước khi chọn AspectJ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt công cụ | Giải thích vai trò `spring-aspects`, `ajc`, `aspectjweaver` và `META-INF/aop.xml`. |
+    | So sánh interception | Vẽ external proxy call và execution join point được weave của self-call. |
+    | Thiết kế phép thử | Nêu kiểm thử riêng PROXY mode và ASPECTJ mode với latch/thread identity. |
+    | Đánh giá vận hành | Liệt kê điều kiện CTW/LTW về artifact, agent, classloader và khả năng rollback. |
+    | Ra quyết định | Chọn refactor/explicit executor hoặc AspectJ theo yêu cầu interception thật. |

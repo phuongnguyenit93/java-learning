@@ -1,0 +1,337 @@
+summaries:
+- id: virtual-threads-001
+  title: Luồng ảo giải quyết chi phí chờ của luồng mà không làm CPU nhanh hơn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Luồng ảo giải quyết chi phí chờ của luồng mà không làm CPU nhanh hơn**
+
+    Virtual threads cho phép một ứng dụng giữ nhiều tác vụ blocking I/O đang chờ với chi phí thread thấp hơn, nhưng không làm CPU tính toán nhanh hơn. Bài nền tảng này giúp phân biệt concurrency, parallelism, throughput và latency trước khi chọn execution model.
+
+    Người học quan sát virtual thread được JVM mount/unmount trên carrier, đọc ví dụ Java 21 thread-per-task và lý giải vì sao connection pool, bộ nhớ hay quota API vẫn là các ranh giới năng lực cần kiểm soát.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và lợi ích
+
+    1. Virtual thread, platform thread và carrier khác nhau thế nào khi một tác vụ blocking I/O phải đợi?
+    2. Vì sao unmount virtual thread có thể cải thiện throughput nhưng không tăng số CPU cores hoặc giảm thời gian một SQL query?
+    3. Little's Law liên hệ số request đồng thời, throughput và thời gian chờ như thế nào?
+
+    ### Thực hành và giới hạn
+
+    1. Trong Java 21, `Thread.ofVirtual()` và `newVirtualThreadPerTaskExecutor()` tạo task ra sao?
+    2. Vì sao không nên tạo fixed virtual-thread pool để thay thế nguyên xi platform-thread pool?
+    3. Với DB chỉ có 10 connections, làm sao giới hạn đúng tài nguyên và kiểm tra hiệu quả trước khi mở nhiều virtual threads?
+    4. Vì sao cần phân biệt pinning ở JDK 21–23 với các cải tiến của JDK 24?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế | Vẽ luồng mount, unmount, remount và so sánh công việc chờ I/O với CPU-bound. |
+    | Phân tích thông lượng | Dùng ví dụ Little's Law và CPU-seconds để dự đoán giới hạn tăng concurrency. |
+    | Tạo virtual threads | Đọc hoặc chạy ví dụ Java 21 và kiểm chứng `Thread.currentThread().isVirtual()` trong task. |
+    | Giới hạn tài nguyên | Chọn connection pool, semaphore, deadline hoặc admission control theo đúng điểm nghẽn. |
+    | Đánh giá phù hợp | Phân loại workload đáng thử virtual threads và nêu metric cần theo dõi trước/sau. |
+- id: virtual-threads-002
+  title: Yêu cầu JDK và phiên bản Spring hỗ trợ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Yêu cầu JDK và phiên bản Spring hỗ trợ**
+
+    Khả năng bật virtual threads trong Spring phụ thuộc đồng thời vào JDK thực thi, phiên bản Spring Framework và Spring Boot, cùng executor/scheduler bean thật sự được lựa chọn. Bài này hướng dẫn xác minh đường tương thích thay vì tin chỉ một cấu hình YAML.
+
+    Người học sẽ đối chiếu Java 19/20 preview với Java 21 chuẩn, phân biệt Spring Framework 6.1+ và Boot 3.2+, kiểm tra compiler/runtime/container, rồi xác nhận loại thread ngay trong callback async hoặc scheduled.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ma trận phiên bản và công cụ build
+
+    1. Vì sao Spring Framework 6.x chạy được trên Java 17 nhưng virtual-thread API chính thức vẫn đòi JDK 21+?
+    2. Các mốc Java 19/20 preview, Java 21, Spring Framework 6.1 và Boot 3.2 khác nhau ở điểm nào?
+    3. Compiler target `--release 21`, Maven/Gradle toolchain và runtime Docker khác nhau ra sao khi chẩn đoán `UnsupportedClassVersionError`?
+
+    ### Đường cấu hình Spring
+
+    1. Chọn `VirtualThreadTaskExecutor` hoặc `SimpleAsyncTaskExecutor#setVirtualThreads` cần điều kiện gì?
+    2. Tại sao `spring.threads.virtual.enabled=true` không tự đổi mọi custom executor và mọi `CompletableFuture.supplyAsync`?
+    3. Vì sao `SimpleAsyncTaskScheduler` cần lưu ý riêng với fixed-delay, daemon threads và keep-alive?
+    4. Phải kiểm chứng những gì trong ApplicationContext và callback để kết luận ứng dụng thật chạy trên virtual threads?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập ma trận compatibility | Nêu yêu cầu JDK và Spring/Boot đúng với các virtual-thread APIs được học. |
+    | Kiểm tra toolchain | Dùng `java -version`, compiler, build tool, container để xác định JVM và bytecode runtime thực. |
+    | Viết smoke test | Biên dịch Java 21, kiểm tra `Thread.isVirtual()` trong task. |
+    | Xác minh bean Spring | Lựa chọn executor/scheduler theo qualifier, proxy và loại thread quan sát được. |
+    | Chẩn đoán triển khai | Giải thích lỗi API/bytecode, auto-config back-off và khác biệt giữa môi trường build/runtime. |
+- id: virtual-threads-003
+  title: Bật virtualThreads cho SimpleAsyncTaskExecutor
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bật virtualThreads cho SimpleAsyncTaskExecutor**
+
+    `SimpleAsyncTaskExecutor` có thể tạo một virtual thread mới cho mỗi task trên Spring Framework 6.1+ và Java 21+. Bài này dạy cách bật `setVirtualThreads(true)`, kết nối với `@Async` hoặc gọi `submit` trực tiếp, đồng thời kiểm tra đường routing bằng kết quả quan sát được.
+
+    Trọng tâm tiếp theo là hiểu executor này không tái sử dụng worker pool; `setConcurrencyLimit` có thể block caller hoặc reject theo phiên bản, và việc bật virtual threads không thay đổi exception, transaction, ThreadLocal hay trách nhiệm shutdown.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu hình executor và proxy
+
+    1. Đường direct submit và đường `@Async` qua Spring proxy khác nhau ở đâu?
+    2. Vì sao `setVirtualThreads(true)` không bảo đảm một method chạy virtual nếu qualifier chọn bean khác hoặc có self-invocation?
+    3. Trong test, cần gọi `Thread.currentThread().isVirtual()` ở đâu để có bằng chứng executor được chọn đúng?
+
+    ### Concurrency, lỗi và lifecycle
+
+    1. Vì sao `SimpleAsyncTaskExecutor` không phải pool và không có `corePoolSize`/`queueCapacity` giống `ThreadPoolTaskExecutor`?
+    2. `setConcurrencyLimit` mặc định block submitter thế nào, và khi nào Spring 6.2.6+ có thể fail-fast bằng `setRejectTasksWhenLimitReached`?
+    3. Phân biệt lỗi reject khi submit, exception của `@Async void` và lỗi của `CompletableFuture` ra sao?
+    4. Những điểm nào về context propagation, shutdown và downstream limits phải giữ nguyên sau khi bật virtual threads?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình virtual executor | Viết bean `SimpleAsyncTaskExecutor` có `setVirtualThreads(true)` và chọn qua `@Async`. |
+    | Xác minh loại thread | Dùng `Future.get(timeout)` lấy kết quả `isVirtual()` từ đúng worker. |
+    | Kiểm thử admission | Dàn dựng concurrency limit bằng latch và phân biệt block/reject theo cấu hình. |
+    | Đọc exception path | Chọn handler cho `@Async void`, Future cho result và bắt rejection ở submit. |
+    | Giám sát và dừng task | Đề xuất timeout, lifecycle close, giới hạn downstream và test quá tải. |
+- id: virtual-threads-004
+  title: SimpleAsyncTaskScheduler và cách thực thi tương thích luồng ảo
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **SimpleAsyncTaskScheduler và cách thực thi tương thích luồng ảo**
+
+    Khác với `ThreadPoolTaskScheduler`, `SimpleAsyncTaskScheduler` dùng một scheduler thread để theo dõi trigger rồi bàn giao nhiều lượt fixed-rate/cron sang execution thread riêng. Bài này tập trung vào ngoại lệ fixed-delay: callback chạy trực tiếp trên scheduler thread, nên một job chờ lâu có thể làm những lịch khác trễ.
+
+    Người học phải nhận biết sự khác nhau giữa schedule dispatch và business completion, kiểm tra overlap của fixed-rate bằng latch, rồi thiết kế policy chống trùng, hạn chế tài nguyên, xử lý shutdown và daemon lifetime.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Execution model của scheduler
+
+    1. `SimpleAsyncTaskScheduler` khác `ThreadPoolTaskScheduler` về scheduler thread, worker pool và virtual-thread-per-execution thế nào?
+    2. Vì sao fixed-rate hoặc cron có thể overlap trong khi fixed-delay thực thi trên cùng một scheduler thread?
+    3. Vì sao `ScheduledFuture.isDone()` có thể chỉ phản ánh hand-off thay vì side effect đã hoàn tất?
+
+    ### Thiết kế lịch và kiểm thử
+
+    1. Nếu hai fixed-delay registrations cùng blocking, tại sao job B có thể bị chậm vì job A?
+    2. Khi callback chỉ submit `@Async` rồi return, fixed-delay được tính từ thời điểm nào?
+    3. Làm sao dùng latch chứng minh fixed-rate overlap và fixed-delay serialization, không cần phụ thuộc timestamp?
+    4. Với nhiều pod, tại sao cần thêm lease/idempotency và job state để bảo vệ lịch có tác dụng phụ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại trigger | So sánh fixed-rate, fixed-delay và cron theo lúc kích hoạt, overlap và completion. |
+    | Chọn scheduler | Đề xuất `SimpleAsyncTaskScheduler` hoặc `ThreadPoolTaskScheduler` có lý do. |
+    | Thiết kế test xác định | Dùng latch và `Thread.isVirtual()` để quan sát thread của từng lần thực thi. |
+    | Quản lý job | Phân biệt dispatch Future với trạng thái xử lý nghiệp vụ và cancellation. |
+    | Kiểm soát vận hành | Thiết kế concurrency limit, timeout, idempotency, keep-alive và giám sát scheduler lag. |
+- id: virtual-threads-005
+  title: Không tạo nhóm luồng ảo chỉ để mô phỏng nhóm luồng nền tảng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không tạo nhóm luồng ảo chỉ để mô phỏng nhóm luồng nền tảng**
+
+    Platform thread pools ra đời một phần để tái sử dụng OS threads đắt đỏ. Virtual threads được thiết kế cho một task một thread, nên sao chép mô hình fixed pool cũ sẽ làm mất lợi ích khi nhiều tác vụ I/O đang chờ. Bài này làm rõ vì sao không pool virtual threads chỉ để giống platform threads.
+
+    Người học sử dụng `newVirtualThreadPerTaskExecutor` hoặc Spring `SimpleAsyncTaskExecutor` virtual, rồi áp semaphore/connection pool đúng vùng tài nguyên hữu hạn, có timeout và admission control để số task chờ không tăng vô hạn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thread-per-task và phản ví dụ pooling
+
+    1. Vì sao `newFixedThreadPool(8, Thread.ofVirtual().factory())` hợp lệ về Java nhưng không phù hợp mục tiêu thread-per-task cho tác vụ I/O?
+    2. Khác biệt giữa một executor object được dùng chung và một fixed pool tái sử dụng virtual workers là gì?
+    3. JVM carriers có phải một nhóm virtual workers mà ứng dụng cần tự định kích thước không?
+
+    ### Bảo vệ tài nguyên và vận hành
+
+    1. Semaphore giới hạn số lời gọi tới dịch vụ đích khác gì giới hạn số virtual threads?
+    2. Trong demo bốn virtual threads và hai permits, vì sao số thread là bốn nhưng peak trong vùng bảo vệ chỉ là hai?
+    3. Vì sao connection pool có thể đã đủ giới hạn DB và việc thêm nhiều tầng semaphore không luôn có ích?
+    4. Làm sao giới hạn số request được nhận/chờ, thời gian chờ và resource concurrency để tránh unbounded backlog?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích anti-pattern | Giải thích vì sao fixed virtual-thread pool tái tạo queue/worker reuse cũ. |
+    | Chọn API phù hợp | Viết `newVirtualThreadPerTaskExecutor` hoặc `setVirtualThreads(true)` theo contract. |
+    | Áp dụng bulkhead | Dùng `Semaphore.acquire/tryAcquire` và `finally` release quanh dependency hữu hạn. |
+    | Đọc số liệu concurrency | Dự đoán và giải thích số task, virtual threads, peak permits trong demo latch. |
+    | Thiết kế admission | Phân biệt giới hạn in-flight resource với số request được chấp nhận và backlog. |
+- id: virtual-threads-006
+  title: Vẫn giới hạn truy cập tài nguyên hữu hạn như kết nối và dịch vụ đích
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vẫn giới hạn truy cập tài nguyên hữu hạn như kết nối và dịch vụ đích**
+
+    Virtual threads giảm chi phí chờ của JVM nhưng không tạo thêm JDBC connections, tốc độ xử lý SQL, HTTP quota hay CPU. Bài này đưa việc giới hạn tải đến đúng downstream, nơi các giới hạn connection, concurrency, RPS và quota phải được tách biệt.
+
+    Người học sẽ xem cơ chế HikariCP, semaphore, bulkhead, rate limiter, deadline chung và retry budget; đặc biệt phải giữ permit tới lúc network operation thực sự kết thúc và tính tổng capacity khi có nhiều replicas.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giới hạn database và remote services
+
+    1. Vì sao HikariCP `maximumPoolSize` và `connectionTimeout` không thay đổi khi Java dùng virtual threads?
+    2. Concurrency limit, rate limit, connection limit và quota khác nhau như thế nào?
+    3. Với năm pods và semaphore 20 permits/pod, vì sao không thể kết luận cluster chỉ có 20 requests in-flight?
+
+    ### Backpressure và vòng đời permit
+
+    1. Vì sao một semaphore không tự giới hạn số virtual threads đang chờ lấy permit?
+    2. Nhả permit ngay sau `httpClient.sendAsync` trả Future sai với lifetime resource như thế nào?
+    3. Trong tình huống 429/503, làm sao phối hợp deadline, backoff, jitter, admission và circuit breaker?
+    4. Khi có connection pool sẵn, trong trường hợp nào thêm semaphore độc lập là có lý do?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính capacity | Phân tích giới hạn connections theo pod/cluster và quota API theo concurrency/RPS. |
+    | Chọn limiter | Chọn connection pool, semaphore, rate limiter, bulkhead hoặc admission gate cho từng ranh giới. |
+    | Bảo vệ permit | Viết try/finally cho blocking operation hoặc completion callback đúng lifetime của async I/O. |
+    | Thiết kế timeout | Phân bổ request deadline qua acquire, HTTP/SQL, retry và phản hồi quá tải. |
+    | Chẩn đoán nghẽn | Đọc Hikari active/pending, downstream 429/503 và p99 để tránh chuyển bottleneck sang DB. |
+- id: virtual-threads-007
+  title: ThreadLocal, ngắt và vòng đời vẫn cần được quản lý
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ThreadLocal, ngắt và vòng đời vẫn cần được quản lý**
+
+    Virtual thread vẫn là một Java Thread thực sự, có `ThreadLocal`, interrupt status, exception và lifetime riêng. Bài này dạy quản lý context ở phạm vi task, không giữ request/session sau response và phân biệt cancellation của Future với cleanup cùng side effect thực.
+
+    Đặc biệt trong Spring `@Async`, caller transaction, SecurityContext và MDC không tự chuyển sang worker mới; người học cần dùng snapshot dữ liệu nhỏ, restore context và interruption hợp tác, đồng thời quản lý daemon threads, shutdown và durable status cho job quan trọng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Context và ThreadLocal
+
+    1. ThreadLocal thuộc virtual thread hay carrier, và vì sao đổi carrier không làm mất ThreadLocal?
+    2. `InheritableThreadLocal` khác regular ThreadLocal ra sao; việc thừa kế object mutable có nguy cơ gì?
+    3. Vì sao ThreadLocal cache tạo object đắt có thể gây tăng allocation khi mỗi task có virtual thread mới?
+    4. Vì sao không nên chuyển nguyên `HttpServletRequest`, EntityManager hay transaction context sang worker?
+
+    ### Interrupt, Future và lifecycle
+
+    1. `Thread.interrupted()` khác `isInterrupted()` về thao tác trên interrupt status như thế nào?
+    2. `Future.cancel(true)` và `Future.get(timeout)` có những giới hạn gì về ngắt, cleanup và rollback?
+    3. Vì sao virtual threads daemon không giữ JVM sống và khi nào cần join, executor close hoặc durable job store?
+    4. Dùng latch và Future như thế nào để phân biệt Future cancelled với worker đã thật sự cleanup?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quản lý ThreadLocal | Viết set/get/remove hoặc restore trong try/finally và kiểm thử isolation/inheritance. |
+    | Thiết kế DTO cho async task | Truyền dữ liệu nhỏ đã xác thực thay vì raw request/transaction resources. |
+    | Xử lý interrupt | Propagate hoặc restore interrupt flag và dừng công việc hợp tác. |
+    | Kiểm soát hủy và shutdown | Dùng Future/latch xác minh cancel và cleanup, phân biệt daemon lifetime với job durability. |
+    | Đặt ranh giới Spring | Giải thích @Async proxy, context propagation và transaction mở trên worker. |
+- id: virtual-threads-008
+  title: Nhận diện tình huống giữ luồng nền tảng và khác biệt theo phiên bản JDK
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Nhận diện tình huống giữ luồng nền tảng và khác biệt theo phiên bản JDK**
+
+    Pinning xảy ra khi virtual thread cần chờ nhưng không thể nhường carrier, có thể làm giảm khả năng mở rộng dưới tải. Bài này chuyên sâu vào cách phân biệt pinning với CPU saturation, lock contention và việc chờ connection pool, rồi đọc đúng khác biệt JDK 21–23 so với JDK 24+.
+
+    Người học sẽ phân tích `synchronized` và JEP 491, nhận diện native/foreign/VM blocking, dùng JFR và thread dump để tìm stack/threshold trước khi quyết định đổi khóa, nâng JDK hay xử lý bottleneck downstream.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế pinning theo JDK
+
+    1. Pinning khác một virtual thread đang dùng CPU hoặc đang chờ I/O nhưng đã unmount ra sao?
+    2. Vì sao blocking trong monitor `synchronized` có thể pin ở JDK 21–23, còn JDK 24/JEP 491 đã thay đổi điều gì?
+    3. Native/foreign frames và class initialization còn có thể ảnh hưởng carrier thế nào trên JDK mới?
+    4. Vì sao không nên thay mọi `synchronized` bằng `ReentrantLock` chỉ dựa vào tên API?
+
+    ### Chẩn đoán bằng bằng chứng
+
+    1. Ba dòng output của `VirtualPinningDemo` chứng minh gì, và vì sao không đủ chứng minh carrier đã pin?
+    2. `jdk.VirtualThreadPinned`, JFR threshold và thread dumps cung cấp loại bằng chứng nào?
+    3. Nếu p99 cao nhưng pinning events ít, cần đối chiếu những metric DB, HTTP, CPU và lock nào?
+    4. Quy trình so sánh JDK 21 với 24+ phải giữ cố định những gì trước khi kết luận?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt khái niệm | Giải thích mount/unmount, pinning, CPU work và monitor contention từ stack/timeline. |
+    | Đọc compatibility | So sánh JDK 21–23 và JDK 24+ theo JEP 491 và native/VM cases. |
+    | Thu diagnostic | Diễn giải `jdk.VirtualThreadPinned` trong JFR cùng runtime version/threshold. |
+    | Ưu tiên sửa đúng chỗ | Chỉ đề xuất thu hẹp monitor, đổi lock hoặc nâng JDK khi có số liệu phù hợp. |
+    | Kiểm chứng hiệu năng | Đối chiếu JFR frequency/duration với p99, throughput, carriers và downstream metrics. |
+- id: virtual-threads-009
+  title: Đo tải thực tế trước khi thay cách thực thi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đo tải thực tế trước khi thay cách thực thi**
+
+    Thay executor sang virtual threads là một giả thuyết hiệu năng cần đo, không phải bảo đảm tốc độ. Bài cuối chương cho người học phương pháp xây baseline, xác định bottleneck và so A/B công bằng với cùng JDK, Spring, workload, data và tài nguyên.
+
+    Qua ví dụ Java 21 đo queue wait, permit wait và latency, người học nhận ra virtual threads có thể chuyển điểm nghẽn sang downstream. Bài hướng dẫn thêm open-loop/closed-loop load, coordinated omission, JFR, tiêu chí SLO/cost, canary và rollback.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế benchmark
+
+    1. Các tín hiệu nào cho thấy hệ thống đang bị thiếu platform workers thay vì bão hòa CPU hoặc DB?
+    2. Vì sao cần so cả baseline pool hiện tại, platform pool đã tuning và virtual per-task trên cùng JDK?
+    3. Open-loop và closed-loop khác nhau ra sao, và coordinated omission có thể che tail latency thế nào?
+    4. Vì sao không nên dùng vài chục task `Thread.sleep` làm benchmark đại diện production?
+
+    ### Đọc kết quả và quyết định rollout
+
+    1. Queue wait executor giảm nhưng permit wait DB tăng thì nên kết luận bottleneck thay đổi ra sao?
+    2. Để quyết định migration, cần đo completed RPS, p95/p99, error, CPU/RSS/GC và cost thế nào?
+    3. Khi JDK 21 và 24 khác nhau về pinning, phải tách hiệu ứng nâng JDK với hiệu ứng thay thread model ra sao?
+    4. Canary/rollback cần những ngưỡng SLO, downstream health và cleanup/shutdown nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại bottleneck | Dựa trên CPU, worker queue, resource wait và p99 để nêu giả thuyết cần thử. |
+    | Thiết kế A/B hợp lệ | Giữ JDK, resource limits, request mix, arrival model và warm-up đồng nhất. |
+    | Đọc số liệu mô phỏng | Phân tích queue wait, permit wait, completed tasks và peak concurrency của các variants. |
+    | Lập báo cáo hiệu năng | Ghi throughput thành công, latency distribution, errors, resource utilization và biến thiên qua nhiều runs. |
+    | Ra quyết định triển khai | Đặt điều kiện canary/rollback theo SLO, correctness, cost và hiệu quả đo được. |

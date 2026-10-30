@@ -1,0 +1,25 @@
+{
+  "runId": "STEP8-OOP-G1-20261030-PILOT",
+  "phase": 1,
+  "groupID": 1,
+  "caseIndex": 12,
+  "status": "GENERATED",
+  "sourceCodeSha256": "235483357b79ae2cb3baec22ece5b0c7654e138cb17377b46824baa3465cfe57",
+  "mainPackage": "com.example.learning.casestudy.temp.g1.c12",
+  "controllerClass": "Case12Controller",
+  "serviceClass": "Case12Service",
+  "route": "POST /api/v1/java/case-studies/groups/1/cases/12/execute",
+  "files": [
+    "src/main/java/com/example/learning/casestudy/temp/g1/c12/Case12Controller.java",
+    "src/main/java/com/example/learning/casestudy/temp/g1/c12/Case12Service.java",
+    "src/test/java/com/example/learning/casestudy/temp/g1/c12/Case12ServiceTest.java"
+  ],
+  "buildStatus": "BUILD_DEFERRED",
+  "testEvidence": [
+    "Case12ServiceTest: four unexecuted JUnit/MockMvc methods with exact CSV escaping, CRLF, original null-customer error, empty rows, null data, and HTTP assertions."
+  ],
+  "limitations": [
+    "CSV field escaping preserves the source semantics. Spreadsheet formula injection protection and export encoding are not provided by the original case.",
+    "Gradle compile and test deferred until Prime establishes a safe checkpoint after concurrent worker writes."
+  ]
+}

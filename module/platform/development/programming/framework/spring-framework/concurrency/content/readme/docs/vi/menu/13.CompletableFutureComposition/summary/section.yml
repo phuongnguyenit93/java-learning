@@ -1,0 +1,83 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Kết hợp CompletableFuture
+roadmapHeading: Từ composition và fan-in tới kiểm soát executor và tránh starvation
+roadmap:
+- id: completable-future-composition-001
+  order: 1
+  title: thenApply() biến đổi kết quả và thenCompose() nối công việc phụ thuộc
+  description: Biến đổi giá trị bằng thenApply, nối công việc phụ thuộc bằng thenCompose và theo dõi Future cuối không lồng nhau.
+  transition:
+    to: completable-future-composition-002
+    description: Từ dependency tuần tự, chuyển sang phối hợp hai nguồn độc lập để tối ưu cách bắt đầu công việc.
+- id: completable-future-composition-002
+  order: 2
+  title: thenCombine() kết hợp hai kết quả độc lập
+  description: Kết hợp hai nguồn độc lập bằng thenCombine sau khi cả hai hoàn thành bình thường, giữ DTO có kiểu.
+  transition:
+    to: completable-future-composition-003
+    description: Từ hai nguồn, mở rộng tới nhiều kết quả mà vẫn bảo toàn type-safety và trạng thái lỗi.
+- id: completable-future-composition-003
+  order: 3
+  title: allOf() chờ nhiều công việc và cách thu kết quả có kiểu
+  description: Chờ đủ N nguồn bằng allOf và thu List<T> hoặc DTO nhiều kiểu, chọn all-or-nothing hay partial success.
+  transition:
+    to: completable-future-composition-004
+    description: Sau chiến lược đợi đủ, so sánh với chiến lược lấy completion đầu tiên và xử lý nhánh thua.
+- id: completable-future-composition-004
+  order: 4
+  title: anyOf() hoàn tất theo một công việc và giới hạn hủy các công việc còn lại
+  description: Lấy completion đầu tiên bằng anyOf và nhận diện giới hạn hủy những task/side effect còn lại.
+  transition:
+    to: completable-future-composition-005
+    description: Sau khi hiểu completion và cancellation, học cách gắn hành động kết thúc không tạo dữ liệu mới.
+- id: completable-future-composition-005
+  order: 5
+  title: thenAccept() và thenRun() cho bước không có kết quả
+  description: Sử dụng thenAccept và thenRun cho continuation không trả giá trị, theo dõi lỗi của Future Void.
+  transition:
+    to: completable-future-composition-006
+    description: Hiểu callback rồi, tiếp tục chọn executor nào chạy từng callback và tác vụ gốc.
+- id: completable-future-composition-006
+  order: 6
+  title: Biến thể Async và lựa chọn bộ thực thi tường minh
+  description: Chọn Async variants và executor tường minh cho từng stage và phân biệt với Spring @Async proxy.
+  transition:
+    to: completable-future-composition-007
+    description: Sau explicit Async scheduling, kiểm tra non-Async callback có thể chạy trên thread hoàn tất.
+- id: completable-future-composition-007
+  order: 7
+  title: Các bước không có hậu tố Async có thể chạy trên luồng hoàn tất
+  description: Hiểu continuation non-Async có thể chạy trên completion hoặc registration thread theo timing.
+  transition:
+    to: completable-future-composition-008
+    description: Từ thread không cố định, đi sâu vào pool mặc định khi dùng supplyAsync mà thiếu Executor.
+- id: completable-future-composition-008
+  order: 8
+  title: supplyAsync() không chỉ định executor và nguy cơ dùng chung common pool
+  description: Nhận diện supplyAsync không chỉ định Executor dùng common pool chung JVM và kiểm soát contention.
+  transition:
+    to: completable-future-composition-009
+    description: Đã biết common pool và Spring pool, phân tích rủi ro nộp cùng việc qua cả @Async và supplyAsync.
+- id: completable-future-composition-009
+  order: 9
+  title: Tránh gửi tác vụ hai lần khi vừa dùng @Async vừa dùng supplyAsync()
+  description: Tránh @Async và supplyAsync tạo hai tầng dispatch cùng một việc và điểm chờ Future ngầm.
+  transition:
+    to: completable-future-composition-010
+    description: Từ double dispatch, tổng quát hóa thành starvation do parent giữ worker đợi child trong cùng pool.
+- id: completable-future-composition-010
+  order: 10
+  title: Tránh chờ tác vụ con trên chính nhóm luồng đã cạn
+  description: Sửa starvation khi worker cha chờ task con cùng pool bằng completion graph không blocking.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh vai trò các bài học
+
+  | Tiêu chí | Bài 1: thenApply/thenCompose | Bài 2: thenCombine | Bài 3: allOf | Bài 4: anyOf | Bài 5: thenAccept/thenRun | Bài 6: Async + Executor | Bài 7: Non-Async | Bài 8: supplyAsync commonPool | Bài 9: @Async + supplyAsync | Bài 10: Pool starvation |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Mô hình | Stage phụ thuộc | Hai nhánh độc lập | N nhánh đợi đủ | N nhánh lấy một | Callback Void | Stage được phân pool | Thread phụ thuộc timing | Supplier không pool rõ | Hai tầng scheduling | Parent chờ child |
+  | Kết quả | Future phẳng U | Future giá trị V | Barrier Void | Future Object | Future Void | Future chạy đúng pool | Dependent stage | Future từ common pool | Future hai tầng | Future có thể kẹt |
+  | Quyết định | Map hay compose | Ghép sau cả hai | List<T> hay DTO | Completion hay success | Accept hay run | CPU hay I/O pool | Inline hay offload | Dùng common hay riêng | Một owner dispatch | Wait hay compose |
+  | Rủi ro | Nested Future và join | Join sớm hoặc combiner lỗi | Nhầm Void là List | Task thua vẫn chạy | Lỗi callback bị bỏ rơi | Pool sai và rejection | Blocking completion thread | Common pool tranh chấp | Worker ngoài đợi inner | Child thiếu worker |
+  | Bằng chứng | Test inner pending | Test đảo thứ tự | Test sequence generic | Test cancel/side effect | Test callback ordering | Test thread và overload | Latch ba timeline | Test shared contention | Đếm hai submissions | Test pool nhỏ timeout |

@@ -1,0 +1,19 @@
+sections:
+  async-enablement-001:
+    difficulty: BASIC
+  async-enablement-002:
+    difficulty: BASIC
+  async-enablement-003:
+    difficulty: INTERMEDIATE
+  async-enablement-004:
+    difficulty: INTERMEDIATE
+  async-enablement-005:
+    difficulty: INTERMEDIATE
+  async-enablement-006:
+    difficulty: INTERMEDIATE
+  async-enablement-007:
+    difficulty: ADVANCED
+  async-enablement-008:
+    difficulty: INTERMEDIATE
+  async-enablement-009:
+    difficulty: ADVANCED

@@ -1,0 +1,69 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Nền tảng luồng
+roadmapHeading: Từ tác vụ Java tới an toàn dữ liệu và vận hành luồng
+roadmap:
+- id: thread-fundamentals-001
+  order: 1
+  title: Runnable, Callable, Executor và ExecutorService
+  description: 'Từ Runnable/Callable tới ExecutorService, Future, shutdown, invokeAll và giới hạn pool: xác lập ngôn ngữ chung về task.'
+  transition:
+    to: thread-fundamentals-002
+    description: Sau khi biết gửi task vào executor, cần hiểu platform thread, virtual thread và ThreadGroup thực sự là những đối tượng gì.
+- id: thread-fundamentals-002
+  order: 2
+  title: Luồng nền tảng, nhóm luồng và luồng ảo
+  description: Giải thích platform/virtual threads và nhóm luồng, carrier, interruption, daemon, pinning và quota.
+  transition:
+    to: thread-fundamentals-003
+    description: Tiếp theo dùng Future/CompletableFuture để đại diện cho kết quả chưa có và phối hợp task thay vì suy đoán thứ tự thread.
+- id: thread-fundamentals-003
+  order: 3
+  title: Future và CompletableFuture biểu diễn công việc chưa hoàn tất
+  description: Từ Future.get đến CompletableFuture composition, callback, failure và cancellation.
+  transition:
+    to: thread-fundamentals-004
+    description: Khi nhiều task chạy đồng thời, cần nhận diện data race và lý do atomicity/visibility không tự xuất hiện.
+- id: thread-fundamentals-004
+  order: 4
+  title: Tranh chấp dữ liệu, tính nguyên tử và khả năng nhìn thấy thay đổi
+  description: Tái hiện lost update; phân biệt atomicity, visibility và happens-before trong trạng thái chia sẻ.
+  transition:
+    to: thread-fundamentals-005
+    description: Từ JMM tổng quát, học hai quan hệ happens-before đặc thù giữa submit, task và Future.get.
+- id: thread-fundamentals-005
+  order: 5
+  title: Quan hệ happens-before khi gửi tác vụ và nhận kết quả
+  description: Chứng minh giá trị được công bố từ caller sang worker và từ worker sang caller bằng submit/get.
+  transition:
+    to: thread-fundamentals-006
+    description: Dùng kết quả JMM để chọn khóa, atomics và concurrent collections khi nhiều task sửa trạng thái chung.
+- id: thread-fundamentals-006
+  order: 6
+  title: Khóa, biến atomic và cấu trúc dữ liệu đồng thời
+  description: Áp dụng monitor, Lock/Condition, CAS và concurrent collections để bảo vệ invariant từng phạm vi.
+  transition:
+    to: thread-fundamentals-007
+    description: Sau tính đúng của dữ liệu, đánh giá CPU time và wait time để chọn mức đồng thời và mô hình I/O.
+- id: thread-fundamentals-007
+  order: 7
+  title: Chờ tài nguyên khác với sử dụng CPU
+  description: Đo CPU/wall time, phân biệt trạng thái Java và điểm chờ trong MVC/WebFlux/virtual threads.
+  transition:
+    to: thread-fundamentals-008
+    description: Từ các giới hạn CPU/I/O và queue, chuyển sang deadlock, starvation và việc tăng pool không giải quyết đúng nguyên nhân.
+- id: thread-fundamentals-008
+  order: 8
+  title: Deadlock, cạn luồng và giới hạn của việc tăng số luồng
+  description: Chẩn đoán deadlock, starvation, saturation; sửa lock order/dependency và thiết kế timeout/backpressure.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài học
+
+  | Tiêu chí | Bài 1: Runnable, Callable, Executor và ExecutorService | Bài 2: Luồng nền tảng, nhóm luồng và luồng ảo | Bài 3: Future và CompletableFuture biểu diễn công việc chưa hoàn tất | Bài 4: Tranh chấp dữ liệu, tính nguyên tử và khả năng nhìn thấy thay đổi | Bài 5: Quan hệ happens-before khi gửi tác vụ và nhận kết quả | Bài 6: Khóa, biến atomic và cấu trúc dữ liệu đồng thời | Bài 7: Chờ tài nguyên khác với sử dụng CPU | Bài 8: Deadlock, cạn luồng và giới hạn của việc tăng số luồng |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | Tác vụ và executor | Loại luồng và carrier | Kết quả bất đồng bộ | Tranh chấp dữ liệu | Công bố bộ nhớ qua task | Bảo vệ invariant | CPU và thời gian chờ | Deadlock và cạn luồng |
+  | API/cơ chế | Runnable/Callable/ExecutorService | Thread, ThreadGroup, Virtual Threads | Future, CompletionStage, CompletableFuture | volatile, AtomicInteger, JMM | ExecutorService submit/get | Lock, CAS, concurrent map/queue | ThreadMXBean, Thread.State, Little's Law | ThreadMXBean, Executor pool |
+  | Thực hành | Submit task và đọc Future | isVirtual và ThreadGroup demo | thenCompose, thenCombine, recover | LostUpdateDemo | Dự đoán output 42 theo HB | LockAtomicDemo, QueueMapDemo | Busy loop so với sleep | DeadlockDemo, PoolStarvationDemo |
+  | Giới hạn cần tránh | Executor không hứa chạy ở thread mới | Nhiều virtual threads không tăng CPU | Future timeout không dừng I/O | Atomic một biến không bảo vệ nhiều trường | HB không làm counter++ atomic | Atomic mỗi key không là transaction toàn cục | CPU thấp không có nghĩa app khỏe | Nhiều thread không phá vòng khóa |
+  | Giá trị với Spring | Nền cho Spring TaskExecutor | Chọn executor theo tải I/O | Nhận kết quả từ @Async | Singleton không mặc nhiên thread-safe | Công bố kết quả từ TaskExecutor | Bảo vệ mutable bean trong JVM | Chọn executor dựa trên bottleneck | Chẩn đoán và vận hành có bằng chứng |

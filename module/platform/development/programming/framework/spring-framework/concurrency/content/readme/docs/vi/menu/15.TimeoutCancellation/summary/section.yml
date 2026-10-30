@@ -1,0 +1,77 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Hết hạn và hủy trong Spring concurrency
+roadmapHeading: Lộ trình từ đo thời gian đến cancellation an toàn
+roadmap:
+- id: timeout-cancellation-001
+  order: 1
+  title: Phân biệt thời gian chờ trong hàng đợi, thời gian chạy và thời gian bên gọi chờ
+  description: Phân định thời gian xếp hàng, thực thi và caller chờ bằng các timestamp và metric riêng.
+  transition:
+    to: timeout-cancellation-002
+    description: Nắm được các khoảng thời gian rồi mới đọc đúng ý nghĩa timeout khi caller chờ Future.
+- id: timeout-cancellation-002
+  order: 2
+  title: Future.get(timeout) không tự dừng công việc nền
+  description: Hiểu Future.get(timeout) chỉ hạn chế một lần đợi, trong khi task và side effect có thể tiếp tục.
+  transition:
+    to: timeout-cancellation-003
+    description: Từ timeout của lần đợi, chuyển sang timeout làm thay đổi trạng thái CompletableFuture.
+- id: timeout-cancellation-003
+  order: 3
+  title: orTimeout() và completeOnTimeout() không mặc nhiên dừng thao tác đang chạy
+  description: Phân biệt orTimeout, completeOnTimeout và kết quả đến muộn khi future đã hoàn tất.
+  transition:
+    to: timeout-cancellation-004
+    description: Sau khi tách kết quả khỏi worker, học cancel(true) như một yêu cầu ngắt hợp tác.
+- id: timeout-cancellation-004
+  order: 4
+  title: Future.cancel(true) và cơ chế ngắt có tính hợp tác
+  description: Làm rõ FutureTask.cancel(true), interrupt, các trường hợp queued và running, và cleanup.
+  transition:
+    to: timeout-cancellation-005
+    description: So sánh cơ chế này với CompletableFuture.cancel vốn không tự ngắt computation.
+- id: timeout-cancellation-005
+  order: 5
+  title: CompletableFuture.cancel() không bảo đảm ngắt luồng xử lý
+  description: Nắm đặc thù CompletableFuture.cancel và cách truyền yêu cầu dừng qua token riêng.
+  transition:
+    to: timeout-cancellation-006
+    description: Để worker hợp tác đúng, cần xử lý InterruptedException và cờ ngắt trong code chặn.
+- id: timeout-cancellation-006
+  order: 6
+  title: Xử lý InterruptedException và bảo toàn tín hiệu ngắt phù hợp
+  description: Lựa chọn truyền InterruptedException, khôi phục cờ rồi thoát và dọn tài nguyên an toàn.
+  transition:
+    to: timeout-cancellation-007
+    description: Kết hợp xử lý ngắt với timeout thật của JDBC, connection pool và lời gọi mạng.
+- id: timeout-cancellation-007
+  order: 7
+  title: Đặt timeout riêng cho truy cập cơ sở dữ liệu hoặc lời gọi mạng
+  description: Thiết lập timeout theo từng tầng DB/HTTP và deadline tổng của workflow.
+  transition:
+    to: timeout-cancellation-008
+    description: Timeout đúng tầng vẫn chưa ngăn được công việc cũ ghi side effect; cần kiểm soát hiệu lực tại commit.
+- id: timeout-cancellation-008
+  order: 8
+  title: Ngăn công việc hết giá trị tiếp tục tạo tác dụng phụ
+  description: Bảo vệ side effect bằng deadline, token, fencing/version và thao tác commit có điều kiện.
+  transition:
+    to: timeout-cancellation-009
+    description: Hoàn thiện chương bằng kiểm thử thời điểm hủy trước start, khi running và race giữa hai pha.
+- id: timeout-cancellation-009
+  order: 9
+  title: Kiểm tra hủy trước khi bắt đầu và hủy khi tác vụ đang chạy
+  description: Kiểm chứng queued-versus-running cancellation, Future handle, token và Spring executor bằng test xác định.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên bài | Phân biệt thời gian chờ trong hàng đợi, thời gian chạy và thời gian bên gọi chờ | Future.get(timeout) không tự dừng công việc nền | orTimeout() và completeOnTimeout() không mặc nhiên dừng thao tác đang chạy | Future.cancel(true) và cơ chế ngắt có tính hợp tác | CompletableFuture.cancel() không bảo đảm ngắt luồng xử lý | Xử lý InterruptedException và bảo toàn tín hiệu ngắt phù hợp | Đặt timeout riêng cho truy cập cơ sở dữ liệu hoặc lời gọi mạng | Ngăn công việc hết giá trị tiếp tục tạo tác dụng phụ | Kiểm tra hủy trước khi bắt đầu và hủy khi tác vụ đang chạy |
+  | Vấn đề cần hiểu | Ba khoảng thời gian dễ bị cộng trùng | Caller timeout có dừng task không? | Timeout làm Future đổi trạng thái ra sao? | cancel(true) gửi interrupt đến đâu? | Vì sao CF cancel không ngắt supplier? | InterruptedException làm gì với cờ ngắt? | Timeout I/O nằm ở tầng nào? | Công việc hết hiệu lực vẫn ghi được không? | Hủy lúc queued và running khác nhau thế nào? |
+  | Giá trị đối với module | Đo và chẩn đoán executor latency | Trả trạng thái chờ trung thực | Chọn timeout lỗi hay fallback | Hủy hợp tác, không ngộ nhận side effect | Tách cancellation state khỏi worker | Không nuốt interrupt và giữ thread | Giới hạn chờ DB/HTTP thật | Chặn ghi lỗi của worker cũ | Thiết kế handle và pha hủy an toàn |
+  | Tư duy hình thành | Phân tách timeline và budget | Tách thời gian đợi khỏi vòng đời job | First completion wins và upstream/copy | Signal, cooperate, cleanup | Future completion không là worker termination | Propagate hoặc restore-then-exit | End-to-end deadline và downstream dependency | Atomicity, fencing, idempotency | State machine và race ở handoff |
+  | Minh chứng tự kiểm tra | Tính queue/runtime/get bằng t0–t4 | Demo latch timeout rồi get kết quả | Demo orTimeout/fallback khi worker còn chờ | Demo FutureTask và interruptible task | Demo CF cancelled nhưng supplier chưa xong | Thử flag sau InterruptedException và cleanup | HTTP slow server, JDBC configuration | Latch check-then-act và conditional commit | Test queued cancel và running cancel |
+  | Ranh giới phải nhớ | Queue size không đo tuổi task | TimeoutException không là CANCELLED | Fallback không hủy I/O thật | cancel true không rollback side effect | Boolean true không điều khiển interrupt | Interrupt không bắt mọi I/O phải dừng | Query timeout phụ thuộc driver/protocol | Check-then-act còn race nếu thiếu atomicity | isDone không xác nhận worker stopped |

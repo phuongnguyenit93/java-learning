@@ -1,0 +1,76 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Cron và múi giờ
+roadmapHeading: Từ đọc cron Spring đến kiểm chứng lịch qua múi giờ và ranh giới thời gian
+roadmap:
+- id: cron-timezones-001
+  order: 1
+  title: Sáu trường của biểu thức cron trong Spring
+  description: Nhận diện chính xác sáu trường Spring cron và dùng parser/seed để phân biệt tần suất theo giây, phút, tháng, thứ.
+  transition:
+    to: cron-timezones-002
+    description: Từ cấu trúc sáu trường, học phép chọn giá trị bằng các toán tử cơ bản trong từng trường.
+- id: cron-timezones-002
+  order: 2
+  title: Dấu *, ?, phạm vi, danh sách và bước nhảy
+  description: Áp dụng dấu sao, dấu hỏi, phạm vi, danh sách và bước nhảy; kiểm tra tính AND của hai trường ngày và reset ở biên trường.
+  transition:
+    to: cron-timezones-003
+    description: Từ các phép chọn cơ bản, học lịch chọn ngày cuối tháng, ngày gần nhất và weekday thứ n.
+- id: cron-timezones-003
+  order: 3
+  title: 'Các ký hiệu L, W và # khi cần lịch theo ngày'
+  description: Suy luận L, LW, nW, dL và d#n theo các tháng khác nhau, phân biệt weekday calendar với business calendar.
+  transition:
+    to: cron-timezones-004
+    description: Khi đã viết được lịch phức tạp, chuyển sang API chính thức để parse và tính các lần kế tiếp.
+- id: cron-timezones-004
+  order: 4
+  title: CronExpression để phân tích và tìm lần chạy kế tiếp
+  description: Dùng CronExpression parse/isValidExpression/next với ZonedDateTime, giới hạn preview, kiểm tra null, DST và phân biệt preview với scheduler runtime.
+  transition:
+    to: cron-timezones-005
+    description: Sau khả năng preview tổng quát, học cách đọc các macro Spring cho lịch phổ biến ngắn gọn.
+- id: cron-timezones-005
+  order: 5
+  title: Macro cron và cách đọc lịch rõ nghĩa
+  description: Đọc đúng @yearly/@monthly/@weekly/@daily/@hourly cùng alias, đối chiếu duration-based schedules và macro theo zone.
+  transition:
+    to: cron-timezones-006
+    description: Macro và cron đều là lịch theo giờ địa phương; cần ghim zone thay vì phụ thuộc server clock.
+- id: cron-timezones-006
+  order: 6
+  title: Chỉ định múi giờ thay cho phụ thuộc môi trường máy chủ
+  description: Chỉ định zone bằng @Scheduled hoặc CronTrigger và chứng minh cùng mốc UTC khi thay timezone môi trường; lưu ý business date và tenant schedules.
+  transition:
+    to: cron-timezones-007
+    description: Ghim zone ổn định ý nghĩa thời gian nhưng vẫn không loại trừ giờ bị mất hay lặp lúc DST.
+- id: cron-timezones-007
+  order: 7
+  title: Giờ bị bỏ qua hoặc lặp lại khi chuyển giờ mùa hè
+  description: Phân tích ZoneRules gap/overlap, planned Instant và chính sách once-per-date/per-occurrence, idempotency, recovery.
+  transition:
+    to: cron-timezones-008
+    description: Hiểu nghĩa lịch tại Spring rồi kiểm tra rủi ro khi mang cùng chuỗi từ Unix hoặc Quartz.
+- id: cron-timezones-008
+  order: 8
+  title: Không suy rộng cú pháp cron của hệ điều hành hoặc Quartz sang Spring
+  description: Chuyển dialect Linux năm trường/Quartz có year và weekday khác sang Spring mà giữ nguyên yêu cầu về ngày, zone và policy chạy.
+  transition:
+    to: cron-timezones-009
+    description: Cuối cùng kết hợp cú pháp, zone, DST và runtime semantics thành bộ kiểm thử xuyên tháng và năm.
+- id: cron-timezones-009
+  order: 9
+  title: Kiểm chứng lịch quanh ranh giới tháng, năm và thay đổi múi giờ
+  description: Thiết kế golden test vectors cuối năm, năm nhuận, cuối tháng, DST và clock cố định; phân biệt lịch dự kiến với completion/job ledger.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài trong chương
+
+  | Tiêu chí | Bài 1: Sáu trường của biểu thức cron trong Spring | Bài 2: Dấu *, ?, phạm vi, danh sách và bước nhảy | Bài 3: Các ký hiệu L, W và # khi cần lịch theo ngày | Bài 4: CronExpression để phân tích và tìm lần chạy kế tiếp | Bài 5: Macro cron và cách đọc lịch rõ nghĩa | Bài 6: Chỉ định múi giờ thay cho phụ thuộc môi trường máy chủ | Bài 7: Giờ bị bỏ qua hoặc lặp lại khi chuyển giờ mùa hè | Bài 8: Không suy rộng cú pháp cron của hệ điều hành hoặc Quartz sang Spring | Bài 9: Kiểm chứng lịch quanh ranh giới tháng, năm và thay đổi múi giờ |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Chủ điểm | Định dạng 6 trường | Toán tử cơ bản | Ngày theo vị trí | API preview | Macro chuẩn | Zone explicit | DST gap/overlap | Chuyển dialect | Kiểm thử biên |
+  | Vấn đề ngộ nhận | Nhầm giây với phút | Bước nhảy là delay | 31W bằng LW | Preview là execution | Weekly là thứ Hai | Server timezone luôn đúng | Giờ địa phương duy nhất | Sáu trường đều đồng nghĩa | Parse pass là đủ |
+  | Công cụ chứng minh | CronSixFieldsDemo | CronSymbolsApplication | YearMonth và next | CronExpression.next | MacroDemo | Clock và CronTrigger | ZoneRules và CronExpression | FieldCount và parser | Clock.fixed và JUnit |
+  | Dữ liệu thời gian | 6 trường và DOW | Range/list/step | Ngày của tháng | ZonedDateTime | Macro + zone | ZoneId và Instant | Offset và businessDate | Year + numeric DOW | Planned/actual/period |
+  | Năng lực đầu ra | Đọc đúng mốc | Kết hợp trường | Chọn L/W/# | Sinh N mốc tiếp | Đọc alias | Ghim zone | Chọn gap/fold policy | Port cron an toàn | Lập regression suite |

@@ -1,0 +1,76 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'Luồng ảo trong Spring: điều kiện, thực thi và đánh giá'
+roadmapHeading: Lộ trình học virtual threads
+roadmap:
+- id: virtual-threads-001
+  order: 1
+  title: Luồng ảo giải quyết chi phí chờ của luồng mà không làm CPU nhanh hơn
+  description: Hiểu virtual threads giảm chi phí chờ I/O mà không tăng CPU; nhận biết carrier, throughput và giới hạn DB/heap.
+  transition:
+    to: virtual-threads-002
+    description: Tiếp theo kiểm tra điều kiện phiên bản và đường executor thực để dùng virtual threads trong Spring.
+- id: virtual-threads-002
+  order: 2
+  title: Yêu cầu JDK và phiên bản Spring hỗ trợ
+  description: Xác định Java 21, Spring Framework 6.1 và Boot 3.2 cùng toolchain/runtime/bean selection để bật virtual threads đúng.
+  transition:
+    to: virtual-threads-003
+    description: Khi JDK và Spring đã sẵn sàng, học cấu hình một executor tạo virtual thread thực sự cho mỗi task.
+- id: virtual-threads-003
+  order: 3
+  title: Bật virtualThreads cho SimpleAsyncTaskExecutor
+  description: Bật `SimpleAsyncTaskExecutor.setVirtualThreads(true)`, chọn executor cho `@Async`, kiểm tra `isVirtual()` và overload policy.
+  transition:
+    to: virtual-threads-004
+    description: Sau executor, hiểu scheduler vì fixed-delay có ngữ nghĩa thực thi khác fixed-rate/cron.
+- id: virtual-threads-004
+  order: 4
+  title: SimpleAsyncTaskScheduler và cách thực thi tương thích luồng ảo
+  description: Phân biệt SimpleAsyncTaskScheduler fixed-rate/cron hand-off với fixed-delay trên scheduler thread, đo overlap/completion.
+  transition:
+    to: virtual-threads-005
+    description: Từ scheduler thread-per-execution, cần bỏ tư duy pool worker ảo và tách resource concurrency.
+- id: virtual-threads-005
+  order: 5
+  title: Không tạo nhóm luồng ảo chỉ để mô phỏng nhóm luồng nền tảng
+  description: Loại bỏ ý tưởng tái sử dụng fixed virtual workers; dùng thread-per-task và giới hạn tài nguyên bằng permits/admission.
+  transition:
+    to: virtual-threads-006
+    description: Không pool virtual threads rồi phải giới hạn đúng DB, HTTP, quota và admission theo downstream.
+- id: virtual-threads-006
+  order: 6
+  title: Vẫn giới hạn truy cập tài nguyên hữu hạn như kết nối và dịch vụ đích
+  description: Giữ đúng HikariCP connections, HTTP concurrency/RPS/quota, per-pod vs cluster budgets, permit lifetime và deadlines.
+  transition:
+    to: virtual-threads-007
+    description: Sau resource limits, xem xét context và vòng đời thread để việc hủy và shutdown không tạo lỗi nghiệp vụ.
+- id: virtual-threads-007
+  order: 7
+  title: ThreadLocal, ngắt và vòng đời vẫn cần được quản lý
+  description: Quản lý ThreadLocal, context propagation, interrupt, Future cancellation, daemon lifetime và durable work.
+  transition:
+    to: virtual-threads-008
+    description: Khi dùng virtual threads ổn định, chẩn đoán những chờ vẫn giữ carrier theo đúng JDK runtime.
+- id: virtual-threads-008
+  order: 8
+  title: Nhận diện tình huống giữ luồng nền tảng và khác biệt theo phiên bản JDK
+  description: Phân tích pinning theo JDK 21–23 so với JDK 24+, xác nhận bằng JFR và phân biệt với CPU/DB contention.
+  transition:
+    to: virtual-threads-009
+    description: Cuối cùng dùng phép thử tải có đối chứng để kiểm tra virtual threads có thật sự cải thiện SLO.
+- id: virtual-threads-009
+  order: 9
+  title: Đo tải thực tế trước khi thay cách thực thi
+  description: Thiết kế benchmark A/B công bằng, đọc queue/permit wait, SLO, JFR, canary và điều kiện rollback.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh chín bài trong chương Luồng ảo
+
+  | Tiêu chí | Bài 1: Luồng ảo giải quyết chi phí chờ của luồng mà không làm CPU nhanh hơn | Bài 2: Yêu cầu JDK và phiên bản Spring hỗ trợ | Bài 3: Bật virtualThreads cho SimpleAsyncTaskExecutor | Bài 4: SimpleAsyncTaskScheduler và cách thực thi tương thích luồng ảo | Bài 5: Không tạo nhóm luồng ảo chỉ để mô phỏng nhóm luồng nền tảng | Bài 6: Vẫn giới hạn truy cập tài nguyên hữu hạn như kết nối và dịch vụ đích | Bài 7: ThreadLocal, ngắt và vòng đời vẫn cần được quản lý | Bài 8: Nhận diện tình huống giữ luồng nền tảng và khác biệt theo phiên bản JDK | Bài 9: Đo tải thực tế trước khi thay cách thực thi |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Vấn đề chính | Scale I/O chờ, không tăng CPU | Điều kiện JDK/Spring/Boot | Bật executor và định tuyến @Async | Trigger/overlap/fixed-delay | Tránh fixed pool virtual workers | Giới hạn DB/HTTP/quota | Context, cancel, lifecycle | Carrier pinning theo JDK | Benchmark, quyết định rollout |
+  | API và công cụ | Thread.ofVirtual, per-task executor | Java --release, Spring 6.1, Boot 3.2 | SimpleAsyncTaskExecutor, @Async | SimpleAsyncTaskScheduler, @Scheduled | newVirtualThreadPerTaskExecutor, Semaphore | HikariCP, Semaphore, RateLimiter | ThreadLocal, Future.cancel, close | JEP 491, JFR, jcmd | Load driver, p99, A/B, canary |
+  | Nhầm lẫn cần tránh | Virtual không làm một query nhanh hơn | Build JDK mới không đồng nghĩa runtime đúng | @Async không tự chọn executor virtual | ScheduledFuture không phải business completion | Giới hạn worker khác quota tài nguyên | Connection limit không phải RPS | Cancel không tự rollback hay giữ JVM sống | WAITING/CPU không đủ chứng minh pinning | Queue giảm không đồng nghĩa end-to-end tốt hơn |
+  | Thực hành kiểm chứng | isVirtual và semaphore | Version probe, Spring context | @Async trực tiếp và rejection latch | Fixed-rate overlap, fixed-delay serialization | Bốn virtual tasks, hai permits | Hikari, partner bulkhead, timeout | Context scope, interrupt và latch | JFR event so JDK 21 với 24+ | So platform-4/platform-8/virtual và permit wait |
+  | Năng lực đạt được | Phân tích throughput/capacity | Chẩn đoán compatibility | Cấu hình executor và quan sát result | Chọn scheduling strategy an toàn | Tách virtual lifecycle khỏi resource quotas | Thiết kế admission và downstream policy | Quản lý bảo mật, hủy và shutdown | Tìm nguyên nhân carrier starvation có bằng chứng | Quyết định migration dựa trên SLO và chi phí |

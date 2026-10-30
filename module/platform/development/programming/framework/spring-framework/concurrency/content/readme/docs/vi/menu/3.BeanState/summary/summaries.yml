@@ -1,0 +1,321 @@
+summaries:
+- id: bean-state-001
+  title: Bean singleton được nhiều luồng sử dụng và không tự trở nên an toàn luồng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bean singleton được nhiều luồng sử dụng và không tự trở nên an toàn luồng**
+
+    Spring thường chia sẻ một singleton bean giữa nhiều controller, request và worker. Bài học giúp nhận diện khi các lần gọi cùng chạm vào field mutable, giải thích lost update và chọn cơ chế bảo vệ phù hợp với một JVM hoặc nguồn dữ liệu dùng chung.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất của singleton
+
+    1. Singleton của Spring có phạm vi nào: một class, JVM hay một bean definition trong một container?
+    2. Vì sao có cùng tham chiếu bean không đồng nghĩa mọi lời gọi method được tuần tự hóa?
+    3. Những đường gọi từ MVC, @Async hoặc @Scheduled có thể tiếp cận cùng state ra sao?
+
+    ### Race condition và hướng xử lý
+
+    1. Hai luồng cùng thực hiện count++ trên field singleton có thể làm mất cập nhật theo lịch xen kẽ nào?
+    2. Vì sao volatile không biến read-modify-write thành một phép tăng nguyên tử?
+    3. Khi nào dùng AtomicInteger, lock hoặc thao tác transaction tại DB thay cho đồng bộ trên bean?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định phạm vi singleton | Phân biệt một bean definition trong ApplicationContext với toàn JVM hoặc nhiều replica, và chỉ ra các caller chia sẻ instance. |
+    | Tái hiện lỗi cập nhật | Giải thích lịch interleaving và kết quả demo barrier: hai lần tăng không được đồng bộ chỉ còn một. |
+    | Chọn biện pháp bảo vệ | Đề xuất stateless bean, atomic counter hoặc lock theo state và invariant thật sự được chia sẻ. |
+    | Đánh giá phạm vi bảo đảm | Nêu vì sao lock trong một singleton không phối hợp được các replica cùng sửa một bản ghi DB. |
+- id: bean-state-002
+  title: Biến cục bộ, trường đối tượng và dữ liệu dùng chung
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Biến cục bộ, trường đối tượng và dữ liệu dùng chung**
+
+    Một biến cục bộ riêng không đồng nghĩa đối tượng mà nó trỏ tới cũng riêng. Bài học xây dựng cách nhận diện local, instance field, static state và tài nguyên ngoài JVM, từ đó viết controller/service tránh lẫn dữ liệu request và chọn cách lưu bộ đếm, cấu hình đúng nơi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện quyền sở hữu dữ liệu
+
+    1. Tham số, local variable, field singleton và static field khác nhau thế nào về vị trí và khả năng chia sẻ?
+    2. Khi local variable trỏ tới List lấy từ cache, vì sao dữ liệu vẫn có thể bị thread khác thay đổi?
+    3. Tại sao private, final hoặc volatile riêng lẻ chưa đủ bảo đảm một mutable collection an toàn?
+
+    ### Thiết kế và quan sát
+
+    1. Trong ví dụ Spring Boot, field unsafeTotal và AtomicLong safeTotal khác nhau ở phép cập nhật nào?
+    2. Khi nào @RequestScope phù hợp để giữ request state và vì sao nó không tự tồn tại ở worker @Async?
+    3. Làm sao phân biệt counter RAM chỉ đúng trong một instance với counter toàn cụm cần DB?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại state | Lập bảng local/instance/static/shared object cho một service và ghi rõ đối tượng có thể bị nhiều thread truy cập. |
+    | Tái hiện lost update | Chạy hoặc giải thích demo CountDownLatch tạo Expected=2, Actual=1 và nguyên nhân. |
+    | Thiết kế service | Thay field currentUser bằng tham số/local; chỉ ra phương án request-scoped proxy khi cần state theo HTTP request. |
+    | Chọn nơi lưu dữ liệu | Đánh giá AtomicLong, immutable snapshot và transaction DB theo nhu cầu chia sẻ và độ bền. |
+- id: bean-state-003
+  title: Đối tượng bất biến và công bố dữ liệu an toàn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đối tượng bất biến và công bố dữ liệu an toàn**
+
+    Dữ liệu không bị sửa sau khởi tạo vẫn cần được xây dựng và công bố đúng để các reader thấy trạng thái hợp lệ. Bài học đi vào Java Memory Model, final-field semantics, defensive copy, volatile publication và CAS để quản lý snapshot bất biến trong Spring singleton.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế immutable object
+
+    1. Khi nào record có trường List hoặc Map vẫn chưa thực sự bất biến sâu?
+    2. Defensive copy và Collections.unmodifiableList khác nhau thế nào khi nguồn còn bị sửa?
+
+    ### Công bố và Java Memory Model
+
+    1. Happens-before bảo đảm điều gì cho các thread nhận tham chiếu đến object?
+    2. Vì sao không được để this thoát ra trong constructor khi dựa vào final-field semantics?
+    3. Khi thay volatile snapshot, reader nhìn thấy điều gì và hai writer có thể ghi đè nhau ra sao?
+
+    ### Cập nhật nhiều writer
+
+    1. AtomicReference.updateAndGet giải quyết mất cập nhật bằng cách thử lại CAS như thế nào?
+    2. Vì sao lambda chạy trong CAS không nên gửi email, gọi mạng hoặc ghi DB?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Rà soát tính bất biến | Phân tích record chứa Map/List lồng nhau và đề xuất defensive copy đúng độ sâu. |
+    | Lập luận về publication | Giải thích quan hệ happens-before của volatile, monitor hoặc Future và giới hạn của final-field semantics. |
+    | Xây snapshot nhất quán | Thiết kế một state immutable chứa version và values, được thay nguyên tử qua AtomicReference. |
+    | Kiểm chứng CAS | Giải thích tại sao 4 worker tăng 100 lần cho version/count=400 mà snapshot ban đầu không thay đổi. |
+    | Đánh giá chi phí | So sánh đường đọc nhanh và chi phí copy/CAS retry khi ứng dụng đọc nhiều, ghi ít. |
+- id: bean-state-004
+  title: Giữ dữ liệu của từng yêu cầu tách khỏi trạng thái bean
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giữ dữ liệu của từng yêu cầu tách khỏi trạng thái bean**
+
+    Lưu user, request ID hay payload của một HTTP request trong field singleton có thể làm trộn dữ liệu giữa các request. Bài học tái hiện sự cố, thiết kế controller/service stateless, dùng DTO và @RequestScope đúng vòng đời, đồng thời xử lý ranh giới @Async và WebFlux.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tái hiện và loại bỏ rò dữ liệu
+
+    1. Hai request An và Bình có thể đọc nhầm currentUser trên cùng singleton qua lịch xen kẽ nào?
+    2. Vì sao AtomicReference hay synchronized trên một field currentUser chung vẫn không tạo state riêng theo request?
+
+    ### Các lựa chọn scope
+
+    1. Khi nào tham số, local hoặc immutable RequestSnapshot đủ dùng thay cho @RequestScope?
+    2. Scoped proxy giải quyết target theo HTTP request thế nào, và lúc nào request context không active?
+    3. ThreadLocal không tự tương đương request scope vì sao, đặc biệt với thread pool tái sử dụng?
+
+    ### Qua ranh giới bất đồng bộ
+
+    1. Task @Async cần requestId sau response nên nhận dữ liệu bằng cách nào?
+    2. Ở WebFlux, Reactor Context khác ThreadLocal ở điều gì khi pipeline thay đổi thread?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện lẫn request | Giải thích demo latch khiến request An đọc dữ liệu Bình và đề xuất API không lưu currentUser. |
+    | Thiết kế request DTO | Dựng RequestSnapshot chỉ chứa dữ liệu cần thiết và truyền qua controller, service, worker. |
+    | Đánh giá request scope | Giải thích proxy target và trường hợp @Async không có request context hợp lệ. |
+    | Kiểm thử ranh giới | Lập test hai request đồng thời và kiểm tra không rò dữ liệu hoặc ThreadLocal giữa các lần xử lý. |
+- id: bean-state-005
+  title: Phép kiểm tra rồi cập nhật và thao tác nhiều bước cần bảo vệ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phép kiểm tra rồi cập nhật và thao tác nhiều bước cần bảo vệ**
+
+    Một quyết định nghiệp vụ như giữ suất hay trừ tồn kho bao gồm kiểm tra và thay đổi trạng thái; các lệnh atomic riêng lẻ không tự làm cả workflow nguyên tử. Bài học xác định invariant, dựng interleaving xác định và chọn CAS, lock hay conditional UPDATE tại DB.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất thao tác nhiều bước
+
+    1. Vì sao hai request cùng thấy available=1 có thể đều báo đặt thành công?
+    2. Vì sao get() rồi getAndDecrement() trên AtomicInteger vẫn cho remaining=-1?
+    3. Một invariant gồm available và reserved đòi hỏi cả reader lẫn writer được bảo vệ thế nào?
+
+    ### Chọn phạm vi cập nhật nguyên tử
+
+    1. Khi nào vòng compareAndSet đủ cho một biến và khi nào cần cùng lock cho nhiều trường?
+    2. Vì sao @Transactional với SELECT rồi UPDATE chưa chắc loại được race ở mức isolation thông dụng?
+    3. Cập nhật SQL có điều kiện, unique constraint và affected rows giúp chặn lỗi nghiệp vụ nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện check-then-act | Vẽ được lịch hai luồng vượt qua bước kiểm tra trước khi cập nhật và chỉ rõ invariant bị vi phạm. |
+    | Thực hành CAS | Giải thích vòng CAS chỉ một request trừ thành công từ remaining=1. |
+    | Bảo vệ nhiều trường | Dùng cùng monitor để giữ available + reserved bất biến và trả snapshot nhất quán. |
+    | Thiết kế thao tác DB | Chọn UPDATE có điều kiện và kiểm tra số hàng cập nhật; nêu giới hạn của transaction đơn thuần. |
+    | Kiểm thử lỗi và retry | Đề xuất test concurrent, xung đột DB, idempotency key và rollback khi INSERT thất bại. |
+- id: bean-state-006
+  title: Chọn synchronized, Lock hoặc atomic theo phạm vi bất biến
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn synchronized, Lock hoặc atomic theo phạm vi bất biến**
+
+    Sau khi nhận diện trạng thái cần bảo vệ, developer phải chọn primitive phù hợp với phạm vi invariant và hành vi chờ khóa. Bài học so sánh atomic/CAS cho một giá trị, synchronized cho nhóm trường, ReentrantLock khi cần timeout/interrupt, và AtomicReference cho snapshot bất biến.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân loại invariant
+
+    1. Quy tắc nào cho phép dùng AtomicInteger, quy tắc nào bắt buộc bảo vệ một cặp available/reserved?
+    2. Vì sao hai AtomicInteger độc lập không cung cấp snapshot nguyên tử của hai trường?
+
+    ### Khóa và hành vi chờ
+
+    1. Khi nào synchronized đơn giản hơn ReentrantLock và khi nào cần tryLock, lockInterruptibly hoặc Condition?
+    2. Vì sao unlock của ReentrantLock phải nằm trong finally sau khi lấy khóa thành công?
+
+    ### Giới hạn và đo lường
+
+    1. Snapshot qua AtomicReference + CAS có đánh đổi gì khi nhiều writer tranh chấp?
+    2. Khi cùng một bản ghi được cập nhật từ ba replica, cơ chế đồng bộ cần nằm ở đâu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn primitive | Lập bảng ánh xạ invariant một giá trị, nhiều trường, snapshot immutable và dữ liệu phân tán đến cơ chế phù hợp. |
+    | Dùng CAS có điều kiện | Giải thích compareAndSet tránh kiểm tra-rồi-trừ sai với quota một biến. |
+    | Tạo vùng khóa đúng | Viết getter và updater cùng dùng một monitor/lock, luôn nhả ReentrantLock trong finally. |
+    | Đánh giá tùy chọn khóa | Chọn tryLock timeout hoặc lockInterruptibly khi có yêu cầu từ chối chờ/hủy. |
+    | Kiểm chứng kết quả | Dự đoán và giải thích output 10 lượt thành công trong 100 lần tranh chấp của atomic/monitor/lock. |
+- id: bean-state-007
+  title: Không giữ khóa khi chờ nhập xuất hoặc chờ tác vụ phụ thuộc
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Không giữ khóa khi chờ nhập xuất hoặc chờ tác vụ phụ thuộc**
+
+    Giữ monitor hoặc ReentrantLock trong lúc chờ HTTP, DB hay Future có thể làm mọi request khác đợi lâu hoặc tạo deadlock. Bài học định vị vùng khóa ngắn, tái hiện vòng chờ và dùng snapshot/version guard để tránh kết quả cũ ghi đè trạng thái mới sau khi bỏ khóa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chờ và deadlock
+
+    1. Tại sao một lời gọi HTTP trong synchronized khiến cả thao tác nhanh trên cùng guard bị nghẽn?
+    2. Vòng chờ nào xuất hiện nếu thread A giữ guard rồi Future.get chờ B cũng cần guard?
+    3. Vì sao executor một worker có thể deadlock khi task A submit B rồi tự chờ kết quả?
+
+    ### Tách I/O khỏi critical section
+
+    1. Vì sao phải kiểm tra phiên bản sau khi làm việc ngoài khóa trước khi commit kết quả?
+    2. Khi nào có thể hợp nhất kết quả, khi nào nên retry hoặc báo conflict?
+
+    ### Xử lý sự cố
+
+    1. Object.wait hoặc Condition.await khác Thread.sleep/Future.get về việc nhả khóa thế nào?
+    2. Khi timeout/cancel, cần kiểm tra interrupt, cleanup và side effect bên ngoài ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích nghẽn khóa | Chỉ ra chính xác monitor/worker mà các thread chờ và phân biệt contention với circular wait. |
+    | Thiết kế vùng khóa ngắn | Vẽ luồng snapshot dưới khóa, I/O ở ngoài, rồi kiểm tra và ghi kết quả dưới khóa. |
+    | Tái hiện qua latch | Giải thích output [quick] rồi [quick, slow] của bài thực hành LockBoundaryDemo. |
+    | Ngăn ghi đè state mới | Áp dụng version guard để từ chối kết quả dựa trên snapshot đã hết hiệu lực và kiểm chứng trạng thái cuối. |
+- id: bean-state-008
+  title: Phân biệt phạm vi bean với cơ chế đồng bộ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt phạm vi bean với cơ chế đồng bộ**
+
+    Bean scope quyết định vòng đời và cách lấy instance, còn synchronization bảo vệ truy cập đồng thời. Bài học đối chiếu singleton/prototype/request/session, thử ObjectProvider và race condition để tránh quyết định đổi scope như một phương án chữa lỗi thread safety thiếu căn cứ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### So sánh scope
+
+    1. Singleton trong Spring được định nghĩa theo bean definition và container như thế nào?
+    2. Inject prototype vào constructor singleton có tạo instance mới ở mỗi method call không?
+    3. ObjectProvider lấy prototype mới khi nào, và request/session scope khác gì về vòng đời?
+
+    ### Thiết kế an toàn theo state
+
+    1. Vì sao hai prototype vẫn có thể tranh cùng static field hoặc database record?
+    2. Vì sao @Async, @Scheduled hoặc @Transactional không tự biến mutable state thành an toàn luồng?
+    3. Khi nào nên đổi scope và khi nào cần stateless design, atomic, lock hoặc cơ chế DB?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích scope | Phân biệt singleton, prototype, request, session và giới hạn sharing của từng scope. |
+    | Kiểm chứng lifecycle | Giải thích output demo: hai getBean prototype khác nhau nhưng prototype inject một lần vào singleton được giữ lại. |
+    | Phân loại rủi ro concurrency | Xác định state chung trong field, static, dependency, DB dù các instance bean khác nhau. |
+    | Chọn giải pháp đúng | Lập luận khi nào ObjectProvider, request scope hoặc lock/atomic giải quyết đúng nhu cầu. |
+- id: bean-state-009
+  title: Theo dõi trạng thái bị chia sẻ qua đối số và giá trị trả về
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Theo dõi trạng thái bị chia sẻ qua đối số và giá trị trả về**
+
+    Một bean stateless bề ngoài vẫn có thể mutate hoặc phát tán object do caller truyền vào, và giá trị trả về có thể lộ backing collection. Bài học lần theo alias, ownership và escape qua parameter, field, return và task async; thực hành defensive copy và kiểm thử thời điểm đọc/ghi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Reference và ownership
+
+    1. Java pass-by-value có nghĩa gì khi tham số chứa giá trị tham chiếu đến mutable object?
+    2. Theo sơ đồ caller → parameter → field → return, thao tác nào giữ lại hoặc tiết lộ cùng object?
+
+    ### Snapshot và giá trị trả về
+
+    1. Collections.unmodifiableList khác List.copyOf thế nào khi list nguồn thay đổi?
+    2. Vì sao shallow snapshot không đủ nếu phần tử là MutableItem và caller còn nắm alias?
+    3. Đối số local trong service có chắc độc lập với dữ liệu từ cache hoặc session không?
+
+    ### Bất đồng bộ và kiểm chứng
+
+    1. Sau submit ExecutorService, vì sao caller còn có thể thay đổi Payload trước khi worker đọc?
+    2. Quan hệ happens-before từ latch và Future.get bảo đảm điều gì, và không bảo đảm điều gì về object mutable?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lần theo alias | Vẽ object graph cụ thể và phân biệt reference equality với value equality. |
+    | Thiết kế API an toàn | Xác định chỗ cần defensive copy cho input, return và các phần tử mutable lồng nhau. |
+    | Kiểm chứng snapshot | Giải thích output khác nhau của unmodifiable view và List.copyOf snapshot. |
+    | Tái hiện race async | Dự đoán worker đọc after thay vì before khi caller đổi cùng Payload trước lúc mở latch. |
+    | Xây quy tắc ownership | Viết contract không giữ mutable input, trả immutable result, hoặc chuyển quyền sở hữu task rõ ràng. |

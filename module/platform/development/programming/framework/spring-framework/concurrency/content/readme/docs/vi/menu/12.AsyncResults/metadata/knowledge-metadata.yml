@@ -1,0 +1,17 @@
+sections:
+  async-results-001:
+    difficulty: BASIC
+  async-results-002:
+    difficulty: BASIC
+  async-results-003:
+    difficulty: INTERMEDIATE
+  async-results-004:
+    difficulty: ADVANCED
+  async-results-005:
+    difficulty: INTERMEDIATE
+  async-results-006:
+    difficulty: BASIC
+  async-results-007:
+    difficulty: ADVANCED
+  async-results-008:
+    difficulty: INTERMEDIATE

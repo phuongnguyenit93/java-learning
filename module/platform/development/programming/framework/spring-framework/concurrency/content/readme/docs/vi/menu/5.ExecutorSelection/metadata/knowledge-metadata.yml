@@ -1,0 +1,17 @@
+sections:
+  executor-selection-001:
+    difficulty: BASIC
+  executor-selection-002:
+    difficulty: INTERMEDIATE
+  executor-selection-003:
+    difficulty: INTERMEDIATE
+  executor-selection-004:
+    difficulty: INTERMEDIATE
+  executor-selection-005:
+    difficulty: INTERMEDIATE
+  executor-selection-006:
+    difficulty: INTERMEDIATE
+  executor-selection-007:
+    difficulty: ADVANCED
+  executor-selection-008:
+    difficulty: ADVANCED

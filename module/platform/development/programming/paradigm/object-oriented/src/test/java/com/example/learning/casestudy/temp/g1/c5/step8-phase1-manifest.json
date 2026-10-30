@@ -1,0 +1,25 @@
+{
+  "runId": "STEP8-OOP-G1-20261030-PILOT",
+  "phase": 1,
+  "groupID": 1,
+  "caseIndex": 5,
+  "status": "GENERATED",
+  "sourceCodeSha256": "7f0a8e0ac2154a09d1dd20a55531435de7d09dbec262f09599464a9bf03bd892",
+  "mainPackage": "com.example.learning.casestudy.temp.g1.c5",
+  "controllerClass": "Case5Controller",
+  "serviceClass": "Case5Service",
+  "route": "POST /api/v1/java/case-studies/groups/1/cases/5/execute",
+  "files": [
+    "/java-learning/module/platform/development/programming/paradigm/object-oriented/src/main/java/com/example/learning/casestudy/temp/g1/c5/Case5Controller.java",
+    "/java-learning/module/platform/development/programming/paradigm/object-oriented/src/main/java/com/example/learning/casestudy/temp/g1/c5/Case5Service.java",
+    "/java-learning/module/platform/development/programming/paradigm/object-oriented/src/test/java/com/example/learning/casestudy/temp/g1/c5/Case5ServiceTest.java",
+    "/java-learning/module/platform/development/programming/paradigm/object-oriented/src/test/java/com/example/learning/casestudy/temp/g1/c5/Case5ControllerTest.java"
+  ],
+  "buildStatus": "BUILD_DEFERRED",
+  "testEvidence": [],
+  "limitations": [
+    "REST endpoint uses request-scoped in-memory sales repository and simulated email delivery; no database or SMTP connection is made.",
+    "The original CSV formatter does not escape commas or quotes. The REST boundary rejects sale IDs containing CSV delimiters; this is not a production CSV exporter.",
+    "Gradle compile and tests are deferred until concurrent STEP 8 workers have completed their source changes."
+  ]
+}

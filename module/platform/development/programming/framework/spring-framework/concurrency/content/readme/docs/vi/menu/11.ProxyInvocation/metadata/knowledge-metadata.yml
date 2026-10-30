@@ -1,0 +1,19 @@
+sections:
+  proxy-invocation-001:
+    difficulty: BASIC
+  proxy-invocation-002:
+    difficulty: INTERMEDIATE
+  proxy-invocation-003:
+    difficulty: BASIC
+  proxy-invocation-004:
+    difficulty: INTERMEDIATE
+  proxy-invocation-005:
+    difficulty: ADVANCED
+  proxy-invocation-006:
+    difficulty: INTERMEDIATE
+  proxy-invocation-007:
+    difficulty: INTERMEDIATE
+  proxy-invocation-008:
+    difficulty: ADVANCED
+  proxy-invocation-009:
+    difficulty: ADVANCED

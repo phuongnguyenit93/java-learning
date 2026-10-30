@@ -1,0 +1,21 @@
+sections:
+  thread-pool-001:
+    difficulty: BASIC
+  thread-pool-002:
+    difficulty: BASIC
+  thread-pool-003:
+    difficulty: INTERMEDIATE
+  thread-pool-004:
+    difficulty: INTERMEDIATE
+  thread-pool-005:
+    difficulty: INTERMEDIATE
+  thread-pool-006:
+    difficulty: INTERMEDIATE
+  thread-pool-007:
+    difficulty: INTERMEDIATE
+  thread-pool-008:
+    difficulty: INTERMEDIATE
+  thread-pool-009:
+    difficulty: INTERMEDIATE
+  thread-pool-010:
+    difficulty: ADVANCED

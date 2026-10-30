@@ -1,0 +1,298 @@
+summaries:
+- id: async-enablement-001
+  title: Khai báo @EnableAsync trong lớp cấu hình
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khai báo @EnableAsync trong lớp cấu hình**
+
+    Bật annotation-driven async đúng ApplicationContext và xác minh @EnableAsync thực sự làm proxy xử lý lời gọi qua executor.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khai báo và phạm vi
+
+    1. Trong Spring Framework, @EnableAsync phải được đặt ở đâu và tại sao nó cần được nạp vào đúng ApplicationContext?
+    2. Việc bật @EnableAsync khác gì so với khai báo một ThreadPoolTaskExecutor bean hoặc tự gắn @Async lên service?
+    3. Khi có root context và servlet child context, bạn kiểm tra phạm vi hiệu lực của cấu hình async như thế nào?
+
+    ### Chạy và kiểm chứng
+
+    1. Bạn sẽ cấu hình một executor có giới hạn và viết lời gọi qua proxy thế nào để chứng minh task thực sự chạy trên worker?
+    2. Trong những trường hợp nào có @EnableAsync nhưng method vẫn chạy đồng bộ, và bạn phân biệt thiếu proxy với lỗi executor ra sao?
+    3. Nếu Spring Boot đã auto-configure executor, những dữ liệu runtime nào cần kiểm tra trước khi kết luận @Async đang dùng pool nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kích hoạt async trong Spring | Viết lớp @Configuration có @EnableAsync, đăng ký vào context và giải thích tác dụng của mỗi annotation. |
+    | Tách cấu hình với thực thi | Dùng ThreadPoolTaskExecutor bean và @Async với qualifier, chỉ ra nơi bật interceptor và nơi chạy công việc. |
+    | Xác minh đúng đường gọi | Tạo bài test gọi service qua Spring proxy, so sánh caller/worker và quan sát completion có thời hạn. |
+    | Chẩn đoán cấu hình | Phân biệt lỗi context không nạp, self-invocation, bean không managed, executor lookup và rejection. |
+- id: async-enablement-002
+  title: Bean phải được container quản lý để annotation được xử lý
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bean phải được container quản lý để annotation được xử lý**
+
+    Tránh hiểu nhầm @Async là phép màu của Java annotation: container phải quản lý instance và lời gọi phải đi qua proxy thì advice mới có cơ hội chạy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bean và vòng đời
+
+    1. Điều gì khác nhau giữa một object new trong controller và một object new được trả về từ @Bean về quyền quản lý của Spring?
+    2. Một class đã có @Service nhưng chưa được component scan thì vì sao @Async vẫn chưa có hiệu lực?
+    3. Bạn xác nhận bean đang được lấy từ đúng context và đã qua BeanPostProcessor bằng những cách nào?
+
+    ### Đường gọi proxy
+
+    1. Tại sao this.asyncMethod() vẫn có thể chạy đồng bộ dù instance là Spring bean?
+    2. Ranh giới nào khiến private/final methods và @PostConstruct không thích hợp với proxy-based @Async?
+    3. Bạn sẽ tách một self-invocation thành hai bean thế nào và kiểm chứng thread thực thi ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt managed và unmanaged | Dựng cùng một service bằng new và qua ApplicationContext, giải thích khác biệt khi @Async chạy. |
+    | Thiết kế ranh giới proxy | Tách caller và worker thành hai bean inject qua constructor, tránh lời gọi nội bộ. |
+    | Chẩn đoán lifecycle | Nhận ra lỗi scope/context, constructor, @PostConstruct và hạn chế của proxy. |
+    | Kiểm thử thực thi | Kiểm tra proxy và tên thread theo executor có prefix đặc trưng, dùng Future timeout thay vì sleep. |
+- id: async-enablement-003
+  title: Đặt @Async trên phương thức hoặc lớp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đặt @Async trên phương thức hoặc lớp**
+
+    Chọn phạm vi áp dụng @Async đủ chính xác để tác vụ nền chạy đúng executor mà các API đồng bộ của service không bị thay đổi hợp đồng bất ngờ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vị trí annotation
+
+    1. Khi nào nên đặt @Async ở từng method thay vì trên toàn bộ class service?
+    2. Nếu class khai báo @Async với một executor và method có @Async với executor khác, cái nào được dùng và vì sao?
+    3. Điều gì xảy ra nếu người khác thêm method trả String vào class được gắn @Async?
+
+    ### Kiểm chứng hành vi
+
+    1. Làm sao kiểm chứng method không gắn annotation vẫn thực thi đồng bộ trong cùng service?
+    2. Bạn phân biệt lời gọi tới method qua proxy với lời gọi this.method() trong bài test placement như thế nào?
+    3. Khi một API vừa có query đồng bộ vừa có command chạy nền, bạn tổ chức class và return type thế nào để giữ contract rõ ràng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đặt annotation có chủ đích | Thiết kế một service method-level async và một service class-level async theo nhu cầu. |
+    | Xác định override | Dự đoán và kiểm chứng executor được chọn khi method-level và class-level qualifier cùng tồn tại. |
+    | Bảo vệ return contract | Phát hiện method đồng bộ trả String/DTO có nguy cơ bị class-level async phủ lên. |
+    | Kiểm chứng phạm vi | Viết test quan sát thread của method async, method thường và lời gọi self-invocation. |
+- id: async-enablement-004
+  title: Kiểu trả về void, Future và CompletableFuture
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểu trả về void, Future và CompletableFuture**
+
+    Lựa chọn void, Future hay CompletableFuture theo nhu cầu nhận kết quả, quan sát lỗi, phối hợp nhiều task và giới hạn thời gian chờ của caller.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng kết quả
+
+    1. Vì sao method @Async không được trả trực tiếp String dù phần xử lý chỉ tạo một chuỗi?
+    2. Method @Async void khác Future và CompletableFuture thế nào về kênh quan sát lỗi và completion?
+    3. Vì sao target method có thể trả CompletableFuture.completedFuture mà handle caller nhận vẫn chưa hoàn thành?
+
+    ### Composition, timeout và lỗi
+
+    1. Khi bước sau cũng trả CompletableFuture, tại sao dùng thenCompose thay vì thenApply?
+    2. Bạn phân biệt ExecutionException, CompletionException, timeout của caller và lỗi rejection khi submit như thế nào?
+    3. Vì sao get(timeout), orTimeout và cancel của CompletableFuture không bảo đảm dừng I/O đang chạy hoặc rollback side effect?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn return type | Giải thích/thiết kế API async dùng void, Future và CompletableFuture cho ba nhu cầu cụ thể. |
+    | Phối hợp completion | Ghép nhiều stage với thenApply, thenCompose, thenCombine/allOf và quan sát lỗi đúng chỗ. |
+    | Xử lý exception | Viết code kiểm tra cause từ Future/get, CompletionException, và handler dành cho void. |
+    | Thiết kế deadline | Phân biệt thời gian caller chờ với timeout I/O, cancellation hợp tác và task rejection. |
+- id: async-enablement-005
+  title: Giới hạn dùng @Async trên phương thức trong lớp @Configuration
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn dùng @Async trên phương thức trong lớp @Configuration**
+
+    Giữ @Configuration làm nơi bật hạ tầng và tạo bean, đồng thời tránh đặt @Async vào chính method khai báo trong lớp cấu hình vốn không thuộc phạm vi được Spring hỗ trợ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giới hạn API
+
+    1. Vì sao @EnableAsync đặt trên @Configuration là hợp lệ nhưng @Async đặt trên method trong @Configuration lại không được hỗ trợ?
+    2. Khác biệt giữa một factory method @Bean và business method @Async của service do factory trả về là gì?
+    3. Vì sao đổi proxyBeanMethods hoặc proxyTargetClass không khiến @Async trên config method trở thành API được hỗ trợ?
+
+    ### Refactor an toàn
+
+    1. Bạn sẽ chuyển một sendInvoice() đang nằm trong @Configuration thành service riêng theo những bước nào?
+    2. Trong bài refactor, caller phải thay đổi cách nhận bean và gọi qua proxy ra sao để task thực chạy nền?
+    3. Nếu cần warm-up khi startup, vì sao bạn không gắn @Async trực tiếp vào @PostConstruct, và sẽ điều phối thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện giới hạn | Chỉ ra vị trí @Async không được hỗ trợ trong lớp cấu hình theo Spring Javadoc. |
+    | Tách trách nhiệm | Giữ cấu hình @EnableAsync/@Bean trong config, chuyển logic nền sang service bean. |
+    | Sửa đường gọi | Inject service đúng context và gọi qua proxy thay vì business method trong config. |
+    | Kiểm chứng kết quả | Chạy test kiểm tra executor thread và kết quả Future sau khi tách class. |
+- id: async-enablement-006
+  title: Chọn bộ thực thi mặc định bằng AsyncConfigurer
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn bộ thực thi mặc định bằng AsyncConfigurer**
+
+    Kiểm soát executor mặc định cho nhiều method @Async không qualifier, cùng kênh nhận lỗi void và vòng đời pool trong lúc bootstrap Spring.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chọn mặc định
+
+    1. AsyncConfigurer.getAsyncExecutor() phục vụ những lời gọi nào và nó có thay được @Async với qualifier tường minh không?
+    2. Nếu context có nhiều executor, bạn định nghĩa một default cụ thể thay vì dựa vào lookup thế nào?
+    3. Tại sao @EnableAsync và AsyncConfigurer là hai trách nhiệm cấu hình khác nhau?
+
+    ### Lifecycle và xử lý lỗi
+
+    1. Điều gì khác nhau về initialize/shutdown khi executor được new thủ công trong getAsyncExecutor và khi nó là Spring @Bean?
+    2. Vì sao AsyncConfigurer có thể gặp dependency khởi tạo sớm và ObjectProvider giúp tránh trường hợp nào?
+    3. Bạn dùng getAsyncUncaughtExceptionHandler() để kiểm tra lỗi @Async void thế nào và vì sao Future error không đi qua kênh đó?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết lập executor mặc định | Implement AsyncConfigurer trả đúng executor cho @Async không chỉ định pool. |
+    | Phân biệt override | Chứng minh một method @Async có qualifier vẫn dùng pool riêng khi default đã được cấu hình. |
+    | Quản lý vòng đời | Chọn Spring-managed ThreadPoolTaskExecutor và giải thích rủi ro khởi tạo sớm. |
+    | Quan sát lỗi void | Cài AsyncUncaughtExceptionHandler, xác minh exception void và Future đi theo hai kênh khác nhau. |
+- id: async-enablement-007
+  title: Cơ chế tìm TaskExecutor hoặc bean taskExecutor khi không cấu hình tường minh
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Cơ chế tìm TaskExecutor hoặc bean taskExecutor khi không cấu hình tường minh**
+
+    Hiểu chính xác thứ tự Spring Framework chọn executor khi không có lựa chọn tường minh, để tránh fallback không giới hạn và chẩn đoán đúng ứng dụng Spring Boot.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thuật toán lookup
+
+    1. Spring tìm TaskExecutor theo kiểu, bean Executor tên taskExecutor và SimpleAsyncTaskExecutor theo thứ tự nào?
+    2. Nếu có nhiều TaskExecutor và không có ứng viên chọn được, tên taskExecutor có vai trò ra sao?
+    3. Vì sao một ExecutorService bean mang tên bất kỳ không tự được chọn như default cho @Async?
+
+    ### Đối chiếu runtime
+
+    1. Spring Boot auto-configure applicationTaskExecutor có thể làm kết quả lookup khác Spring Framework thuần thế nào?
+    2. Bạn sẽ dùng các context độc lập và thread-prefix để kiểm chứng từng nhánh lookup ra sao?
+    3. Rủi ro tài nguyên của SimpleAsyncTaskExecutor fallback là gì và khi nào cần chuyển sang lựa chọn tường minh?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng lookup mặc định | Dự đoán executor cho các tổ hợp bean theo type/name và giải thích vì sao. |
+    | Nhận diện fallback | Chỉ ra khi nào SimpleAsyncTaskExecutor được dùng và hệ quả nếu workload tăng cao. |
+    | Phân biệt Boot và Framework | Đối chiếu applicationTaskExecutor do Boot tạo với lookup taskExecutor của Framework. |
+    | Kiểm chứng hành vi | Dựng test với nhiều ApplicationContext, xác nhận đúng worker hoặc fallback mà không dựa vào suy đoán. |
+- id: async-enablement-008
+  title: Chỉ định bộ thực thi theo tên hoặc qualifier trong @Async
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chỉ định bộ thực thi theo tên hoặc qualifier trong @Async**
+
+    Định tuyến từng loại tác vụ @Async vào đúng executor theo bean name hoặc qualifier, nhằm kiểm soát contention, hàng đợi và SLA giữa các nhóm công việc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bean name và qualifier
+
+    1. @Async("ioExecutor") tìm bean nào và khác gì so với threadNamePrefix của executor?
+    2. Một bean tên computeExecutor được gắn @Qualifier("computeLane") có thể được chọn bằng annotation thế nào?
+    3. Vì sao @Qualifier trên constructor injection không tự quyết định executor mà @Async dùng?
+
+    ### Ưu tiên và cấu hình động
+
+    1. Nếu class có @Async("ioExecutor") nhưng method có @Async("computeLane"), Spring chọn pool nào?
+    2. Khi dùng property placeholder hoặc SpEL trong Async.value, điều kiện nào cần đúng để tên executor được resolve an toàn?
+    3. Bạn sẽ thiết kế và kiểm chứng hai pool I/O và CPU để tránh định tuyến sai khi rename bean/qualifier ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định tuyến qua tên bean | Khai báo @Bean("ioExecutor") và gọi method @Async("ioExecutor") qua proxy để xác minh pool. |
+    | Định tuyến qua qualifier | Gắn @Qualifier("computeLane") lên executor bean, chứng minh @Async chọn đúng bean. |
+    | Đánh giá priority | Phân biệt lựa chọn ở class, method và default/context executor. |
+    | Kiểm thử vận hành | Dùng hai thread-prefix và thử rename/thiếu bean để xác nhận wiring, rejection và context hợp lệ. |
+- id: async-enablement-009
+  title: Vai trò của AsyncAnnotationBeanPostProcessor
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vai trò của AsyncAnnotationBeanPostProcessor**
+
+    Quan sát hạ tầng tạo proxy cho @Async ở giai đoạn bean initialization, rồi tách nó khỏi bước interceptor gửi task khi invocation xảy ra.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hạ tầng post-processing
+
+    1. @EnableAsync trong proxy mode đưa AsyncAnnotationBeanPostProcessor vào context bằng đường cấu hình nào?
+    2. Processor dùng AsyncAnnotationAdvisor và pointcut/advice để làm gì trong lúc bean được khởi tạo?
+    3. Tại sao AsyncAnnotationBeanPostProcessor không phải là thread pool và không chạy công việc ngay lúc startup?
+
+    ### Invocation và chẩn đoán
+
+    1. AnnotationAsyncExecutionInterceptor chọn executor và trả kết quả ở giai đoạn nào của lời gọi qua proxy?
+    2. Bạn kiểm chứng riêng ba dữ kiện processor được đăng ký, service được proxy và worker thực chạy bằng cách nào?
+    3. AsyncAnnotationBeanPostProcessor khác ScheduledAnnotationBeanPostProcessor ở nguồn kích hoạt và vai trò scheduler thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết hạ tầng async | Mô tả luồng EnableAsync đến processor, advisor/proxy rồi interceptor và executor. |
+    | Phân biệt lifecycle và invocation | Chỉ ra việc nào xảy ra khi tạo bean và việc nào chỉ xảy ra khi caller gọi method. |
+    | Chẩn đoán infrastructure | Kiểm tra bean processor, AopUtils.isAopProxy và thread của method trong cùng test. |
+    | So sánh cơ chế | Giải thích AsyncAnnotationBeanPostProcessor khác ScheduledAnnotationBeanPostProcessor và giới hạn proxy mode. |

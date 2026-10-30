@@ -1,0 +1,70 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Chọn bộ thực thi
+roadmapHeading: Lộ trình lựa chọn TaskExecutor trong Spring
+roadmap:
+- id: executor-selection-001
+  order: 1
+  title: SyncTaskExecutor chạy ngay trên luồng gọi
+  description: 'Nhận diện `TaskExecutor` đồng bộ: `SyncTaskExecutor` chạy `Runnable` ngay trên caller, làm rõ thứ tự hoàn tất, ngoại lệ và context cùng luồng.'
+  transition:
+    to: executor-selection-002
+    description: Từ cơ chế chạy ngay trên caller, chuyển sang mô hình tạo một thread mới cho từng tác vụ để nhận diện lợi ích và chi phí của bất đồng bộ.
+- id: executor-selection-002
+  order: 2
+  title: SimpleAsyncTaskExecutor tạo luồng cho từng tác vụ và không tái sử dụng luồng
+  description: Phân biệt mô hình thread-per-task của `SimpleAsyncTaskExecutor` với pool tái sử dụng; dự đoán chi phí platform threads và tùy chọn virtual threads.
+  transition:
+    to: executor-selection-003
+    description: Khi đã biết rủi ro per-task thread không giới hạn, học cách chặn hoặc từ chối submission tại ngưỡng đồng thời.
+- id: executor-selection-003
+  order: 3
+  title: Giới hạn đồng thời của SimpleAsyncTaskExecutor
+  description: 'Áp dụng `setConcurrencyLimit` của `SimpleAsyncTaskExecutor`: mặc định chặn submitter, có thể từ chối ở Spring hỗ trợ và không hề tạo queue worker.'
+  transition:
+    to: executor-selection-004
+    description: Từ giới hạn kiểu throttling không có queue, chuyển sang pool có worker tái sử dụng và queue/rejection được cấu hình tường minh.
+- id: executor-selection-004
+  order: 4
+  title: ThreadPoolTaskExecutor quản lý nhóm luồng tái sử dụng
+  description: Mô hình hóa `ThreadPoolTaskExecutor` với thuật toán core–queue–max–rejection, phân vùng tải, đo metrics và quản lý shutdown trong Spring.
+  transition:
+    to: executor-selection-005
+    description: Khi đã hiểu Spring-managed pool, xem cách tích hợp một executor do hệ thống khác tạo mà không làm phát sinh pool mới.
+- id: executor-selection-005
+  order: 5
+  title: ConcurrentTaskExecutor thích nghi Executor có sẵn
+  description: Dùng `ConcurrentTaskExecutor` để kết nối một `Executor` có sẵn vào API Spring mà giữ nguyên delegate, ownership và chính sách thực thi.
+  transition:
+    to: executor-selection-006
+    description: Từ adapter `ConcurrentTaskExecutor` có khả năng tích hợp rộng, xét adapter tối giản để hiểu rõ `submit`, `Future` và `TaskDecorator`.
+- id: executor-selection-006
+  order: 6
+  title: TaskExecutorAdapter thích nghi hợp đồng Executor của JDK
+  description: 'Đi sâu `TaskExecutorAdapter`: nhánh `submit`/`FutureTask`, `TaskDecorator`, chuyển lỗi rejection và trách nhiệm đóng delegate.'
+  transition:
+    to: executor-selection-007
+    description: Từ việc tự sở hữu delegate JDK, mở rộng sang tài nguyên executor thuộc quyền quản lý của application server Jakarta EE.
+- id: executor-selection-007
+  order: 7
+  title: DefaultManagedTaskExecutor trong môi trường Jakarta EE
+  description: Áp dụng `DefaultManagedTaskExecutor` với managed executor qua JNDI trong Jakarta EE, phân biệt container context, transaction và lifecycle.
+  transition:
+    to: executor-selection-008
+    description: Tập hợp cơ chế, ownership và giới hạn từng môi trường thành quyết định kiến trúc theo workload, deadline và durability.
+- id: executor-selection-008
+  order: 8
+  title: Chọn cách thực thi theo tải, môi trường và yêu cầu vòng đời
+  description: Tổng hợp theo ba trục tải–môi trường–vòng đời; thiết kế pool/virtual threads/scheduler/Reactor/durable queue và xác minh bằng load/failure test.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài học
+
+  | Tiêu chí | Bài 1: SyncTaskExecutor chạy ngay trên luồng gọi | Bài 2: SimpleAsyncTaskExecutor tạo luồng cho từng tác vụ và không tái sử dụng luồng | Bài 3: Giới hạn đồng thời của SimpleAsyncTaskExecutor | Bài 4: ThreadPoolTaskExecutor quản lý nhóm luồng tái sử dụng | Bài 5: ConcurrentTaskExecutor thích nghi Executor có sẵn | Bài 6: TaskExecutorAdapter thích nghi hợp đồng Executor của JDK | Bài 7: DefaultManagedTaskExecutor trong môi trường Jakarta EE | Bài 8: Chọn cách thực thi theo tải, môi trường và yêu cầu vòng đời |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Câu hỏi trọng tâm | Có chạy ngay trên caller không? | Mỗi task có thread mới không? | Đầy suất thì chờ hay reject? | Worker và queue được cấp phát ra sao? | Có tận dụng đúng executor sẵn có? | Adapter xử lý submit/decorator thế nào? | Container quản lý worker bằng cách nào? | Chiến lược nào khớp workload và SLA? |
+  | Mô hình thực thi | `Runnable.run()` trên caller | Thread mới từng task; không reuse | Thread-per-task có throttle | Pool worker tái sử dụng | Adapter → delegate JDK | Adapter `Executor` → `AsyncTaskExecutor` | JNDI → managed executor | So sánh sync, pool, virtual, Reactor, scheduler, durable worker |
+  | Ranh giới tải | Caller tự chịu thời gian task | Dễ tạo nhiều platform threads | `concurrencyLimit`, block/reject | Core, max, queue, rejection | Theo khả năng delegate | Theo khả năng delegate | Theo quota/chính sách server | CPU, I/O, connection, deadline, nhiều replica |
+  | Kết quả và lỗi | Lỗi trực tiếp ở `execute` | Lỗi worker, Future và submit | `TaskRejectedException` khi bật reject | Rejection khác failure trong worker | `Future`/proxy tùy delegate | `FutureTask`, decorator và lỗi submit | Lookup lỗi trước khi submit; Future sau đó | Thiết kế timeout, retry, cancel và contract API |
+  | Vòng đời và ngữ cảnh | Cùng thread/caller context | Thread mới, `close` có điều kiện | Throttling không thay task timeout | Spring bean quản lý pool/shutdown | Bên sở hữu delegate shutdown | Bên sở hữu delegate shutdown | Server sở hữu managed pool, context riêng | Xác định ownership, grace period và durability |
+  | Ứng dụng điển hình | Test tuần tự hoặc xử lý đồng bộ ngắn | Task-per-thread có kiểm soát | Bảo vệ số task active ở cổng submit | Nền có workload đều và queue hữu hạn | Tích hợp pool JDK từ hạ tầng khác | API Spring cần Future từ JDK Executor | Spring trong Jakarta EE server | Quyết định thực thi theo dữ liệu đo và yêu cầu nghiệp vụ |

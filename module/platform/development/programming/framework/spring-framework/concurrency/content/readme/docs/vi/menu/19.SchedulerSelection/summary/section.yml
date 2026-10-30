@@ -1,0 +1,78 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Chọn scheduler trong Spring Framework
+roadmapHeading: Lộ trình lựa chọn scheduler theo tài nguyên và hợp đồng hoàn tất
+roadmap:
+- id: scheduler-selection-001
+  order: 1
+  title: ThreadPoolTaskScheduler dựa trên ScheduledExecutorService
+  description: Phân biệt scheduled executor và các API scheduling trước khi tính đến sizing khi công việc chậm.
+  transition:
+    to: scheduler-selection-002
+    description: Hiểu loại scheduler đã chọn rồi xem một worker mặc định có thể làm lịch khác trễ thế nào.
+- id: scheduler-selection-002
+  order: 2
+  title: poolSize mặc định và ảnh hưởng của công việc chạy lâu
+  description: Phân tích poolSize mặc định, head-of-line blocking và cách tăng/cô lập năng lực thực thi.
+  transition:
+    to: scheduler-selection-003
+    description: Sau sizing, cần biết chính callback đang chạy trên thread nào để chọn cách tách công việc.
+- id: scheduler-selection-003
+  order: 3
+  title: Công việc thông thường chạy trên luồng của ThreadPoolTaskScheduler
+  description: Xác định callback của ThreadPoolTaskScheduler chạy trên scheduler worker và hoàn tất nghĩa gì.
+  transition:
+    to: scheduler-selection-004
+    description: Khi đã hiểu worker thực thi, chuyển sang adapter tận dụng ScheduledExecutorService có sẵn.
+- id: scheduler-selection-004
+  order: 4
+  title: ConcurrentTaskScheduler thích nghi bộ lập lịch JDK
+  description: Thích nghi ScheduledExecutorService thành TaskScheduler và quản lý delegate/lifecycle rõ ràng.
+  transition:
+    to: scheduler-selection-005
+    description: Từ tài nguyên JDK do ứng dụng sở hữu, xét tình huống scheduler thuộc về Jakarta EE server.
+- id: scheduler-selection-005
+  order: 5
+  title: DefaultManagedTaskScheduler trong môi trường Jakarta EE
+  description: Sử dụng DefaultManagedTaskScheduler với JNDI và đúng quyền quản trị của Jakarta EE container.
+  transition:
+    to: scheduler-selection-006
+    description: Sau lựa chọn managed runtime, xem mô hình scheduler mới tách trigger khỏi execution.
+- id: scheduler-selection-006
+  order: 6
+  title: SimpleAsyncTaskScheduler tách cơ chế kích hoạt với cách chạy tác vụ
+  description: Phân tích SimpleAsyncTaskScheduler, virtual threads và target executor cùng ngoại lệ fixed-delay.
+  transition:
+    to: scheduler-selection-007
+    description: Đi sâu vào fixed-delay để không nhầm handoff của các kiểu lịch khác với callback chạy trực tiếp.
+- id: scheduler-selection-007
+  order: 7
+  title: Giới hạn fixed-delay chạy trên luồng scheduler của SimpleAsyncTaskScheduler
+  description: Tái hiện fixed-delay blocking trên scheduler thread và lựa chọn phương án giữ đúng completion semantics.
+  transition:
+    to: scheduler-selection-008
+    description: Khi job cần tách tải, xây dựng ranh giới rõ giữa timer và worker executor.
+- id: scheduler-selection-008
+  order: 8
+  title: Tách bộ lập lịch khỏi nhóm luồng xử lý khi cần kiểm soát hai loại tải
+  description: Tách scheduler và worker pool, thiết kế bounded dispatch/backpressure và đo cả hai loại tải.
+  transition:
+    to: scheduler-selection-009
+    description: Kết thúc bằng xác nhận completion ở đúng scheduler và ở đúng công việc nghiệp vụ.
+- id: scheduler-selection-009
+  order: 9
+  title: Chọn cách theo dõi hoàn tất theo hợp đồng của từng scheduler
+  description: Chọn tín hiệu hoàn tất theo hợp đồng ScheduledFuture, từng tick, handoff và worker thực.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Bài học trung tâm | ThreadPoolTaskScheduler dựa trên ScheduledExecutorService | poolSize mặc định và ảnh hưởng của công việc chạy lâu | Công việc thông thường chạy trên luồng của ThreadPoolTaskScheduler | ConcurrentTaskScheduler thích nghi bộ lập lịch JDK | DefaultManagedTaskScheduler trong môi trường Jakarta EE | SimpleAsyncTaskScheduler tách cơ chế kích hoạt với cách chạy tác vụ | Giới hạn fixed-delay chạy trên luồng scheduler của SimpleAsyncTaskScheduler | Tách bộ lập lịch khỏi nhóm luồng xử lý khi cần kiểm soát hai loại tải | Chọn cách theo dõi hoàn tất theo hợp đồng của từng scheduler |
+  | Vấn đề cần giải quyết | Lập lịch JDK qua Spring và callback ở đâu | Một job dài giữ bao nhiêu scheduler workers | Callback chạy trên chính scheduler thread | Tái sử dụng ScheduledExecutorService JDK | Managed scheduler trong Jakarta EE container | Một trigger thread và callback handoff | Fixed-delay chiếm scheduler thread chung | Timer và worker tranh hai loại tải | Đã schedule khác callback/job hoàn tất |
+  | Cơ chế hoặc API chính | ThreadPoolTaskScheduler, ScheduledThreadPoolExecutor | setPoolSize, fixedDelay/fixedRate/cron, metrics | TaskScheduler, ScheduledFuture, @Scheduled | ConcurrentTaskScheduler, Trigger, delegate | DefaultManagedTaskScheduler, JNDI | SimpleAsyncTaskScheduler, virtual threads, target executor | SimpleAsyncTaskScheduler fixed-delay, latch | ThreadPoolTaskScheduler + ThreadPoolTaskExecutor | ScheduledFuture, TriggerContext, job status |
+  | Giá trị đối với module | Chọn scheduler có API và lifecycle rõ ràng | Giảm trễ các job độc lập | Không nhầm scheduling với offload mặc định | Tích hợp backend JDK đang có | Tuân ownership của Jakarta EE runtime | Chọn thread-per-task/virtual thread đúng nhu cầu | Tránh head-of-line blocking | Cô lập và hạn chế tải nghiệp vụ | Quan sát kết quả thật theo từng lượt |
+  | Tư duy hình thành | Kiến trúc wrapper và hợp đồng lịch | Resource sizing và scheduler starvation | Execution boundary và đơn vị được theo dõi | Adapter pattern và ownership | Container-managed resource và JNDI lookup | Trigger, handoff, execution time | Semantics completion và concurrency pitfall | Backpressure, single-flight, isolation | Phân tầng completion contract |
+  | Minh chứng thực hành | ScheduledFuture, native pool và error policy | Latches so sánh pool=1 và pool=2 | Hai callbacks tranh một scheduler worker | Spring bean bọc JDK executor và CronTrigger | Kiểm thử JNDI/server và resource type | VirtualThread demo, setTargetTaskExecutor | Hai fixed-delay tasks dùng chung scheduler thread | Hai pool và latch đo dispatch | One-shot, periodic, handoff, per-tick results |
+  | Giới hạn quan trọng | In-memory scheduler không phải durable queue | Tăng pool không tối ưu downstream vô hạn | ScheduledFuture không theo dõi child task | Adapter không tự tạo concurrency | Managed không tự bảo đảm exactly-once | Virtual threads không sửa fixed-delay callback | Đổi fixedRate có thể đổi nghĩa nghiệp vụ | Offload có thể tạo backlog/overlap | isDone không chứng minh business success |

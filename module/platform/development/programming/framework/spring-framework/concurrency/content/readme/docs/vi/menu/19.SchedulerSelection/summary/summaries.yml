@@ -1,0 +1,322 @@
+summaries:
+- id: scheduler-selection-001
+  title: ThreadPoolTaskScheduler dựa trên ScheduledExecutorService
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ThreadPoolTaskScheduler dựa trên ScheduledExecutorService**
+
+    Lựa chọn `ThreadPoolTaskScheduler` chỉ đúng khi hiểu nó triển khai `TaskScheduler` trên `ScheduledThreadPoolExecutor` và thực thi callback ngay trên scheduler worker. Bài học cung cấp kiến trúc, API hẹn một lần/định kỳ/trigger, cơ chế lỗi, cancellation và lifecycle để lập lịch có thể quan sát và không đánh đồng với một worker pool độc lập.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc scheduler và các kiểu lịch
+
+    1. `ThreadPoolTaskScheduler`, `TaskScheduler`, `ScheduledExecutorService` và `ScheduledThreadPoolExecutor` liên hệ với nhau như thế nào?
+    2. Vì sao một callback blocking có thể làm trễ lịch khác dù thời điểm kích hoạt đã tới?
+    3. Các API `schedule`, `scheduleAtFixedRate`, `scheduleWithFixedDelay` và `CronTrigger` xác định mốc chạy kế tiếp khác nhau ra sao?
+
+    ### Future, lỗi và vận hành
+
+    1. `ScheduledFuture` của one-shot khác handle của lịch lặp ở khả năng dùng `get()` như thế nào?
+    2. Vì sao một lỗi trong periodic Runnable thuần JDK có thể dừng các lượt tiếp theo nhưng Spring `ErrorHandler` lại có thể cho lịch tiếp tục?
+    3. Khi cấu hình pool size, shutdown và remove-on-cancel, cần quan sát những giới hạn nào về thread, delayed queue và độ bền lịch?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc kiến trúc scheduling | Vẽ đường đi Spring TaskScheduler tới ScheduledThreadPoolExecutor và chỉ ra thread chạy Runnable. |
+    | Lựa chọn loại lịch | Giải thích và viết lịch một lần, fixed rate, fixed delay hoặc cron theo mục đích nghiệp vụ. |
+    | Kiểm chứng scheduler | Dùng ScheduledFuture và CountDownLatch quan sát callback đã chạy, không nhầm với lần lặp tiếp theo. |
+    | Thiết kế lỗi và vòng đời | So sánh xử lý exception của JDK/Spring và chọn error handler, hủy, shutdown có kiểm soát. |
+- id: scheduler-selection-002
+  title: poolSize mặc định và ảnh hưởng của công việc chạy lâu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **poolSize mặc định và ảnh hưởng của công việc chạy lâu**
+
+    `poolSize=1` là cấu hình mặc định của `ThreadPoolTaskScheduler`, nhưng scheduler được Spring chọn trong từng môi trường có thể khác. Bài học phân tích hiện tượng job dài giữ scheduler worker, đo scheduling delay và quyết định khi nào tăng pool, tách lịch quan trọng hoặc offload sang executor để giảm ảnh hưởng giữa các công việc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mặc định và phân tích nghẽn
+
+    1. `poolSize` mặc định bằng bao nhiêu đối với `ThreadPoolTaskScheduler`, và vì sao không được áp giá trị này cho mọi scheduler của Spring Boot hoặc Jakarta EE?
+    2. Khi job A chiếm scheduler một thread, job B đến hạn bị trễ theo cơ chế nào, và dữ liệu nào chứng minh đây là scheduler starvation?
+    3. `fixedDelay`, `fixedRate` và cron phản ứng khác nhau ra sao khi runtime dài hơn khoảng lịch?
+
+    ### Cấu hình và điều chỉnh dựa trên dữ liệu
+
+    1. Tại sao `spring.task.scheduling.pool.size` có thể không tác động lên bean scheduler tự định nghĩa hoặc khi Boot dùng virtual threads?
+    2. Trong demo so sánh pool 1 và pool 2 bằng latch, điều gì chứng minh task nhanh có thể bắt đầu trong lúc task chậm còn bị chặn?
+    3. Khi nào tăng `poolSize`, tách scheduler, hoặc chuyển job nặng sang `TaskExecutor`, và cần kiểm soát overlap/backpressure gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích pool mặc định | Phân biệt cấu hình bean Spring, fallback `@EnableScheduling` và scheduler do Boot auto-configure. |
+    | Tái hiện starvation | Dùng latch giữ một callback, theo dõi callback thứ hai ở pool 1 so với pool 2. |
+    | Chẩn đoán schedule lateness | Đề xuất phép đo thời điểm dự kiến, actual start, runtime và resource contention. |
+    | Chọn chiến lược sizing | Lập quyết định tăng pool hoặc cô lập job dựa vào CPU, I/O, tần suất và SLO. |
+- id: scheduler-selection-003
+  title: Công việc thông thường chạy trên luồng của ThreadPoolTaskScheduler
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Công việc thông thường chạy trên luồng của ThreadPoolTaskScheduler**
+
+    Với `ThreadPoolTaskScheduler`, một callback đồng bộ thông thường được chạy trên chính scheduler thread. Bài này làm rõ vị trí thực thi thay vì chỉ bàn về số worker: từ API `TaskScheduler` tới `@Scheduled`, `ScheduledFuture` và thí nghiệm hai task tranh cùng một thread, để tránh tưởng rằng scheduler tự offload công việc nặng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Luồng thực thi và ScheduledFuture
+
+    1. Vì sao `ThreadPoolTaskScheduler` không tự chuyển thân `Runnable` sang một `ThreadPoolTaskExecutor` khác?
+    2. Khi `poolSize=1`, task B đến hạn trong lúc task A chặn worker sẽ diễn ra thế nào?
+    3. `ScheduledFuture.get(timeout)` của one-shot xác nhận điều gì, và vì sao không dùng nó để chờ một lần tick của periodic schedule?
+
+    ### Tích hợp và giới hạn
+
+    1. Trong Spring, `@EnableScheduling` và `@EnableAsync` khác nhau ở hạ tầng nào được bật?
+    2. Làm thế nào sử dụng latch và tên thread có prefix để kiểm tra hai callback dùng một scheduler worker?
+    3. Nếu callback chỉ `execute` một job khác rồi return, việc hoàn tất callback khác hoàn tất nghiệp vụ ở điểm nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định thread chạy | Vẽ execution path của ThreadPoolTaskScheduler và nhận diện worker giữ callback. |
+    | Kiểm thử pool một thread | Giữ task đầu bằng CountDownLatch, chứng minh task hai không chạy trước khi release rồi hoàn tất đúng. |
+    | Dùng handle đúng | Phân biệt `get` của one-shot và trạng thái của một ScheduledFuture định kỳ. |
+    | Thiết kế offload | Chỉ rõ khi nào cần submit sang TaskExecutor và cách theo dõi task nghiệp vụ được bàn giao. |
+- id: scheduler-selection-004
+  title: ConcurrentTaskScheduler thích nghi bộ lập lịch JDK
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ConcurrentTaskScheduler thích nghi bộ lập lịch JDK**
+
+    Khi đã có một `ScheduledExecutorService` JDK, `ConcurrentTaskScheduler` cho phép sử dụng nó qua API Spring `TaskScheduler`, bao gồm `Instant`, `Duration` và `Trigger`. Bài này dành cho tình huống tích hợp scheduler sẵn có: phân biệt adapter với pool mới, chọn constructor/delegate đúng và làm rõ ai chịu trách nhiệm shutdown, error handling, cancellation.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế adapter và delegate
+
+    1. `ConcurrentTaskScheduler` chuyển lời gọi Spring `TaskScheduler` tới `ScheduledExecutorService` như thế nào?
+    2. Constructor nhận một delegate khác constructor hai delegate ở đường `execute` và đường `schedule` ra sao?
+    3. Vì sao tên `ConcurrentTaskScheduler` không bảo đảm có nhiều worker hay lịch bền vững?
+
+    ### Trigger, cấu hình và vòng đời
+
+    1. `schedule(Runnable, Trigger)` bổ sung khả năng gì mà JDK ScheduledExecutorService không cung cấp trực tiếp?
+    2. Spring chọn bean scheduler nào cho `@Scheduled` khi có nhiều scheduler, và làm thế nào tránh đăng ký một lịch hai lần?
+    3. Ai phải gọi `shutdown` khi backend do ứng dụng tạo, và vì sao không được tự đóng scheduler do container quản lý?
+    4. Khác biệt nào giữa exception của periodic task thuần JDK và adapter có Spring error handler?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ánh xạ API | Đối chiếu `schedule`/fixed rate/fixed delay của JDK với `TaskScheduler` Spring. |
+    | Tạo adapter đúng ownership | Mô tả cấu hình JDK backend + ConcurrentTaskScheduler, dùng constructor và lifecycle tương ứng. |
+    | Phân tích Trigger | Giải thích cách Spring tính và reschedule lần kích hoạt tiếp theo, gồm cron/zone. |
+    | Kiểm tra lỗi và hủy | Xác minh ScheduledFuture, rejection và shutdown tại đúng delegate thay vì suy từ tên adapter. |
+- id: scheduler-selection-005
+  title: DefaultManagedTaskScheduler trong môi trường Jakarta EE
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **DefaultManagedTaskScheduler trong môi trường Jakarta EE**
+
+    `DefaultManagedTaskScheduler` là lựa chọn chuyên biệt khi triển khai vào Jakarta EE application server có `ManagedScheduledExecutorService` qua JNDI. Bài học hướng dẫn phân định trách nhiệm Spring và container, kiểm tra resource và namespace Jakarta, cấu hình lịch cũng như kiểm thử thực trên server; nó không phải scheduler mặc định cho ứng dụng Spring Boot standalone.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Runtime và resource được quản lý
+
+    1. Vì sao ứng dụng chạy trong Jakarta EE server có thể cần managed scheduler thay cho một thread pool tự tạo?
+    2. `DefaultManagedTaskScheduler` tìm resource JNDI mặc định nào, và nó khác `DefaultManagedTaskExecutor` như thế nào?
+    3. Spring 6 và namespace `jakarta.enterprise.concurrent` đặt ra yêu cầu tương thích gì với server còn dùng `javax`?
+
+    ### Cấu hình và quản lý lifecycle
+
+    1. Khi nào `afterPropertiesSet()` thực hiện lookup JNDI, và tại sao không gọi tay trong `@Bean` Spring-managed?
+    2. Nếu server dùng tên JNDI tùy chỉnh, cần cấu hình `setJndiName` và chứng minh type resource được trả về ra sao?
+    3. Ai sở hữu thread, context và quyền shutdown của ManagedScheduledExecutorService, và vì sao app không tự gọi shutdown?
+
+    ### Kiểm chứng và giới hạn đảm bảo
+
+    1. Vì sao một unit test chỉ dùng JDK ScheduledExecutorService không chứng minh integration của DefaultManagedTaskScheduler?
+    2. Cần quan sát JNDI, naming/classloader/security context, lỗi và lịch kích hoạt nào trong integration test trên server thật?
+    3. Vì sao managed scheduling vẫn không tự cung cấp durable execution hoặc chạy đúng một lần trên toàn cụm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn theo môi trường deploy | Phân biệt Jakarta managed scheduler với local ThreadPoolTaskScheduler bằng quyền sở hữu runtime. |
+    | Cấu hình JNDI | Thiết kế bean TaskScheduler dùng tên mặc định hoặc resource riêng, phát hiện lỗi lookup. |
+    | Lập kế hoạch integration test | Liệt kê bằng chứng resource type, context propagation, policy shutdown và lịch thực chạy trên server. |
+    | Đánh giá độ bền | Phân biệt managed executor với job store/cluster coordination và nêu yêu cầu bổ sung cho retry/idempotency. |
+- id: scheduler-selection-006
+  title: SimpleAsyncTaskScheduler tách cơ chế kích hoạt với cách chạy tác vụ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **SimpleAsyncTaskScheduler tách cơ chế kích hoạt với cách chạy tác vụ**
+
+    `SimpleAsyncTaskScheduler` tách thread lập lịch khỏi nơi chạy callback cho các kiểu kích hoạt phù hợp, đặc biệt khi dùng virtual threads Java 21+. Bài này giúp lựa chọn đúng mô hình thread-per-task hoặc target executor, phân biệt scheduled time, dispatch và completion, đồng thời nhận diện ngoại lệ fixed-delay vốn chạy trực tiếp trên scheduler thread.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế điều phối và execution
+
+    1. Một scheduler thread và các execution threads trong `SimpleAsyncTaskScheduler` chia sẻ trách nhiệm ra sao?
+    2. fixed rate, cron, one-shot và fixed delay dùng đường thực thi nào, đặc biệt với Java 21 virtual threads?
+    3. Tại sao `ScheduledFuture` của handoff không đủ xác nhận business task thực sự hoàn tất?
+
+    ### Cấu hình virtual threads và executor đích
+
+    1. `setVirtualThreads(true)` đòi hỏi điều kiện JDK nào và tác động gì lên callback được handoff?
+    2. Khi dùng `setTargetTaskExecutor`, ai chịu trách nhiệm giới hạn worker, queue, rejection và lifecycle?
+    3. Một task fixed-delay lâu có thể ảnh hưởng scheduler chung như thế nào dù đã bật virtual threads?
+
+    ### Thiết kế tải và quan sát
+
+    1. Khi nào chọn SimpleAsyncTaskScheduler thay vì ThreadPoolTaskScheduler hoặc scheduler bền vững?
+    2. Vì sao số virtual threads nhiều không đồng nghĩa có đủ DB connections và không cần overlap control?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tách ba mốc | Vẽ timeline scheduled trigger, handoff accepted và actual completion của callback. |
+    | Cấu hình phù hợp | Giải thích setVirtualThreads và setTargetTaskExecutor, kiểm tra worker thật bằng ví dụ Spring. |
+    | Phân tích ngoại lệ fixed-delay | Dự đoán hành vi blocking fixed-delay trên scheduler thread và hậu quả với lịch khác. |
+    | Thiết kế monitoring | Chọn completion signal, metric tài nguyên và backpressure khi callback được bàn giao. |
+- id: scheduler-selection-007
+  title: Giới hạn fixed-delay chạy trên luồng scheduler của SimpleAsyncTaskScheduler
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn fixed-delay chạy trên luồng scheduler của SimpleAsyncTaskScheduler**
+
+    Fixed-delay trên `SimpleAsyncTaskScheduler` là ngoại lệ quan trọng: callback chạy ở scheduler thread chung, vì thế một công việc chậm có thể cản các lịch fixed-delay khác. Bài học chứng minh giới hạn bằng latch, phân tích ảnh hưởng tới fixed-rate/cron tùy phiên bản, và lựa chọn hướng giảm nghẽn mà vẫn giữ đúng yêu cầu 'hoàn tất rồi nghỉ'.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Semantics và head-of-line blocking
+
+    1. Fixed-delay tính lần chạy tiếp theo từ thời điểm nào, và khác fixed-rate/cron ra sao?
+    2. Tại sao hai fixed-delay callbacks trên cùng một SimpleAsyncTaskScheduler không chạy song song dù bật virtual threads?
+    3. Một callback chờ HTTP 45 giây ảnh hưởng các fixed-delay jobs khác như thế nào?
+
+    ### Chứng minh và chọn giải pháp
+
+    1. Trong demo hai lịch fixed-delay, các latch enteredA, releaseA và enteredB chứng minh thứ tự nào mà không cần sleep?
+    2. Vì sao đổi trực tiếp `fixedDelay` sang `fixedRate` có thể gây overlap và vi phạm nghĩa nghiệp vụ?
+    3. Khi chọn ThreadPoolTaskScheduler, scheduler riêng hoặc offload sang executor, cần theo dõi completion nào để không vô tình thay đổi fixed-delay?
+    4. Làm sao kiểm thử tác động của fixed-delay tới fixed-rate/cron đúng theo phiên bản Spring triển khai thay vì suy rộng từ một lỗi lịch sử?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chẩn đoán fixed-delay bottleneck | Giải thích timeline duration + delay và lý do scheduler thread bị giữ. |
+    | Thực nghiệm với latch | Giữ callback A, xác minh B chỉ chạy sau release trên cùng scheduler rồi cleanup. |
+    | Đánh giá phương án thay thế | So sánh nhiều scheduler workers, tách pool, điều phối theo Future completion và fixed-rate/cron có guard. |
+    | Giữ invariant nghiệp vụ | Đề xuất chống overlap/idempotency và bài test xác nhận khoảng nghỉ tính từ hoàn tất thật. |
+- id: scheduler-selection-008
+  title: Tách bộ lập lịch khỏi nhóm luồng xử lý khi cần kiểm soát hai loại tải
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tách bộ lập lịch khỏi nhóm luồng xử lý khi cần kiểm soát hai loại tải**
+
+    Khi timer và tác vụ nghiệp vụ có yêu cầu tài nguyên khác nhau, tách `ThreadPoolTaskScheduler` và `ThreadPoolTaskExecutor` giúp đo scheduling latency, queue wait và worker runtime riêng. Bài học thực hành dispatch ngắn, bounded queue, rejection, single-flight, idempotency và trạng thái job để scheduler không bị việc dài làm nghẽn nhưng vẫn kiểm soát backlog.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế hai tầng và thời gian
+
+    1. ThreadPoolTaskScheduler và ThreadPoolTaskExecutor nhận trách nhiệm khác nhau ra sao trong mô hình trigger rồi dispatch?
+    2. Scheduled time, dispatch time, worker start và business completion dùng để đo bốn độ trễ nào?
+    3. Vì sao callback `@Scheduled(fixedDelay=...)` trả ngay sau `execute` khiến lần sau có thể nộp công việc trước khi job trước xong?
+
+    ### Backpressure và chống overlap
+
+    1. Khi worker pool/queue đã đầy, scheduler cần xử lý `TaskRejectedException` hay CallerRunsPolicy như thế nào?
+    2. Vì sao single-flight guard cần được đặt ở thời điểm nhận việc và giải phóng theo completion thực?
+    3. Trong demo với timerPool một thread và workPool một worker, latch xác nhận điều gì về dispatch thứ hai khi task đầu còn chạy?
+
+    ### Vận hành hệ thống
+
+    1. Tại sao tách pool không bảo đảm job sống qua restart hoặc không bị lặp trên nhiều replica?
+    2. Cần đo metric nào để phân biệt timer trễ, queue worker dài và business runtime cao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phác thảo kiến trúc | Vẽ scheduler callback ngắn -> bounded TaskExecutor -> worker với các failure boundary. |
+    | Giới hạn tải | Chọn core/max/queue/rejection, mô tả hành vi khi backend quá tải và chống trùng job. |
+    | Kiểm thử dispatch | Dùng latch xác nhận task thứ hai đã được gửi trong khi worker thứ nhất chưa hoàn tất. |
+    | Thiết kế observability | Lập metric riêng cho schedule lateness, queue wait, business completion và rejection. |
+- id: scheduler-selection-009
+  title: Chọn cách theo dõi hoàn tất theo hợp đồng của từng scheduler
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn cách theo dõi hoàn tất theo hợp đồng của từng scheduler**
+
+    Một `ScheduledFuture` không có một ý nghĩa completion chung cho lịch một lần, lịch lặp, `SimpleAsyncTaskScheduler` handoff hay callback gửi job con. Bài học xác định đúng ranh giới 'đã đăng ký', 'đã kích hoạt', 'callback hoàn tất' và 'nghiệp vụ thành công', để chọn future, event, listener và job-status store thay vì đọc `isDone()` sai.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Completion của one-shot và repeating
+
+    1. Với one-shot ScheduledFuture, `get(timeout)` xác nhận điều gì và có các kết quả lỗi/hủy nào?
+    2. Vì sao `isDone()` của periodic Future có thể vẫn false dù nhiều tick đã chạy thành công?
+    3. Một exception trong periodic task thuần JDK khác chính sách suppress lỗi của Spring ở điểm nào?
+
+    ### Hợp đồng của từng scheduler
+
+    1. `ThreadPoolTaskScheduler`, `ConcurrentTaskScheduler`, Jakarta managed scheduler và `SimpleAsyncTaskScheduler` khác gì ở ranh giới callback/handoff?
+    2. Khi `@Scheduled` gọi `@Async` hoặc chuyển task sang executor, vì sao Future của scheduler không còn xác nhận job nghiệp vụ đã xong?
+    3. `TriggerContext.lastCompletion` có thể bị hiểu nhầm thế nào khi scheduled callback chỉ submit việc nền?
+
+    ### Theo dõi outcome và kiểm thử
+
+    1. Muốn xác nhận từng lần cron chạy lúc 10:00 có thành công, cần lưu những định danh/trạng thái nào?
+    2. Dùng latch, future, completion callback và job store thế nào để test riêng one-shot, periodic tick và child worker?
+    3. Khi cancellation, timeout, shutdown hoặc multi-replica xảy ra, tại sao một tín hiệu isDone không đủ chứng minh side effect đã được dọn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định nghĩa completion boundary | Phân biệt registration, fire, callback end và business commit trong một pipeline. |
+    | Lựa chọn handle | Chọn ScheduledFuture.get cho one-shot, per-tick signal cho periodic, Future/status riêng cho worker. |
+    | Thiết kế trạng thái từng lần chạy | Gắn invocation ID, planned/actual timestamps, outcome và correlation ID vào metric/job record. |
+    | Kiểm thử lỗi và lifecycle | Chứng minh sự khác nhau của periodic JDK exception, Spring error handler, cancellation và delayed business completion. |

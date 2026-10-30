@@ -1,0 +1,314 @@
+summaries:
+- id: timeout-cancellation-001
+  title: Phân biệt thời gian chờ trong hàng đợi, thời gian chạy và thời gian bên gọi chờ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt thời gian chờ trong hàng đợi, thời gian chạy và thời gian bên gọi chờ**
+
+    Khi một tác vụ được giao cho ThreadPoolTaskExecutor, độ trễ không đến từ một nơi duy nhất. Bài học xây dựng ba phép đo queue wait, execution time và caller wait trên các mốc thời gian khác nhau, giúp tìm đúng nút thắt, đặt deadline và đọc metric mà không đếm trùng thời gian.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân định vòng đời tác vụ và bên gọi
+
+    1. Queue wait, execution time và caller wait bắt đầu và kết thúc ở những mốc nào, và vì sao không cộng cả ba để tính submit-to-finish?
+    2. Vì sao caller gọi get muộn có thể chờ gần 0 ms dù task mất hàng trăm mili giây?
+    3. Trường hợp task bị reject hoặc bị hủy trước start phải được phân loại ra sao trong thống kê?
+
+    ### Đo lường, deadline và điều tra nghẽn
+
+    1. Khi queue wait cao nhưng runtime thấp, em sẽ kiểm tra những yếu tố executor nào trước?
+    2. Vì sao queue size bằng 0 không chứng minh hệ thống không quá tải?
+    3. Dùng System.nanoTime và một deadline chung như thế nào để không vô tình đặt lại timeout ở mỗi bước?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích timeline | Vẽ t0–t4, tính riêng queue wait, runtime và caller wait cho một kịch bản có lần get gọi muộn. |
+    | Thiết kế instrumentation | Chỉ rõ điểm capture timestamp tại submit, worker start/end và caller get; phân loại accepted/rejected/cancelled. |
+    | Chẩn đoán độ trễ | Giải thích nguyên nhân khác nhau của queue wait cao và runtime cao, lựa chọn số liệu cần kiểm tra. |
+    | Phân bổ deadline | Tính remaining budget từ một mốc chung và dự đoán hành vi khi get timeout mà task còn ở queue. |
+- id: timeout-cancellation-002
+  title: Future.get(timeout) không tự dừng công việc nền
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Future.get(timeout) không tự dừng công việc nền**
+
+    Future.get(timeout) là cơ chế chờ có hạn của caller, không phải cơ chế dừng worker. Bài giúp tránh báo hủy sai, tránh retry tạo tác dụng phụ trùng và lựa chọn giao thức theo dõi job khi thời gian xử lý vượt thời gian chờ HTTP.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa của phép chờ có hạn
+
+    1. Khi get(timeout) ném TimeoutException, trạng thái Future và worker có thể là những trạng thái nào?
+    2. ExecutionException, InterruptedException và CancellationException từ Future khác TimeoutException về ý nghĩa gì?
+    3. Vì sao kiểm tra isDone ngay sau timeout có thể thấy true mà không mâu thuẫn?
+
+    ### Ứng xử sau khi caller hết chờ
+
+    1. Trong demo CountDownLatch, làm sao chứng minh task tiếp tục rồi trả kết quả sau khi get đã timeout?
+    2. Khi nào nên chờ lại, yêu cầu hủy hay trả HTTP 202 kèm jobId?
+    3. Nếu tác vụ có side effect bên ngoài, vì sao retry ngay sau timeout là rủi ro và cần thông tin gì để đối soát?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích hợp đồng Future | Phân biệt kết thúc lần chờ với kết thúc thực thi và lập bảng kết quả/ngoại lệ của get. |
+    | Kiểm chứng hành vi | Dùng latch chạy ví dụ timeout trước rồi giải phóng worker để lấy lại kết quả thật. |
+    | Chọn phản hồi API | Chọn thông điệp và trạng thái job phù hợp khi HTTP caller timeout nhưng task còn chạy. |
+    | Giảm rủi ro retry | Thiết kế jobId và idempotency key để ngăn hai side effect từ một yêu cầu logic. |
+- id: timeout-cancellation-003
+  title: orTimeout() và completeOnTimeout() không mặc nhiên dừng thao tác đang chạy
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **orTimeout() và completeOnTimeout() không mặc nhiên dừng thao tác đang chạy**
+
+    orTimeout và completeOnTimeout thay đổi chính trạng thái CompletableFuture, trong khi supplier hoặc I/O có thể tiếp tục chạy. Bài giúp chọn timeout lỗi hay fallback đúng mục đích, quan sát kết quả đến muộn và giữ một future gốc riêng nếu cần theo dõi thao tác thật.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Completion semantics và lỗi timeout
+
+    1. orTimeout và completeOnTimeout trả về Future mới hay chính đối tượng đang gọi, và điều đó ảnh hưởng gì khi cấu hình nhiều deadline?
+    2. get(timeout), orTimeout và completeOnTimeout khác nhau ra sao khi hết hạn?
+    3. Khi timeout thắng, join, get, isDone và isCompletedExceptionally phản ánh trạng thái nào?
+
+    ### Kết quả muộn và điều phối tài nguyên
+
+    1. Vì sao future đã trả fallback không còn nhận giá trị thật đến sau, dù worker vẫn chạy?
+    2. Có thể dùng copy của CompletableFuture như thế nào để tách future phản hồi khỏi future theo dõi operation?
+    3. Bài test dùng latch kiểm chứng điều gì về worker chưa hoàn tất và vì sao phải đặt timeout HTTP/JDBC riêng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn API timeout | Giải thích và áp dụng đúng get(timeout), orTimeout, completeOnTimeout trong ba nhu cầu phản hồi khác nhau. |
+    | Kiểm chứng completion race | Tạo hai kịch bản latch để chứng minh fallback/lỗi timeout thắng nhưng supplier còn chạy. |
+    | Thiết kế hai luồng quan sát | Tách response future và upstream future, gắn metric cho operation thật thay vì chỉ cho future phản hồi. |
+    | Phòng lỗi production | Xác định retry trùng, tài nguyên còn bị giữ và thời điểm cần timeout của client I/O. |
+- id: timeout-cancellation-004
+  title: Future.cancel(true) và cơ chế ngắt có tính hợp tác
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Future.cancel(true) và cơ chế ngắt có tính hợp tác**
+
+    Hủy Future không đồng nghĩa giết Java thread. Bài tập trung vào FutureTask và cancel(true), giải thích interrupt hợp tác, trường hợp task còn trong queue hoặc chạy CPU và cách kiểm thử riêng trạng thái Future, việc dừng code và cleanup.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng FutureTask và interrupt
+
+    1. cancel(false) và cancel(true) khác nhau thế nào khi task chưa bắt đầu và khi đang chạy?
+    2. Tại sao isCancelled và isDone không đủ chứng minh worker đã rời phương thức hay side effect đã rollback?
+    3. Vòng lặp CPU phải kiểm tra tín hiệu gì nếu muốn hỗ trợ cancel(true)?
+
+    ### Dừng hợp tác, cleanup và test
+
+    1. Khi CountDownLatch.await bị interrupt, worker phải xử lý InterruptedException và tài nguyên trong finally như thế nào?
+    2. Vì sao task có thể vẫn chạy sau khi cancel(true) trả true, và demo không hợp tác chứng minh điểm nào?
+    3. Cần các latch nào để xác minh task queued bị hủy trước khi body chạy và task running đã nhận interrupt?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cancellation | Diễn giải khác biệt giữa trạng thái Future, yêu cầu interrupt và worker termination với các race có thể xảy ra. |
+    | Viết code hợp tác | Bổ sung kiểm tra cờ ngắt và finally cleanup vào một Runnable hoặc Callable. |
+    | Kiểm thử hủy | Dùng CountDownLatch và Future.get để xác nhận hủy trước start, hủy khi running và CancellationException. |
+    | Lựa chọn ranh giới nghiệp vụ | Xác định side effect nào không được coi là đã hoàn tác chỉ vì cancel. |
+- id: timeout-cancellation-005
+  title: CompletableFuture.cancel() không bảo đảm ngắt luồng xử lý
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CompletableFuture.cancel() không bảo đảm ngắt luồng xử lý**
+
+    CompletableFuture.cancel(true) không điều khiển interrupt của supplier theo cách FutureTask.cancel(true) có thể làm. Bài giúp đọc đúng completion state, theo dõi worker thật, hiểu dependent stages và thiết kế token hủy khi cần dừng công việc trong Spring.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đặc thù hủy CompletableFuture
+
+    1. Vì sao tham số mayInterruptIfRunning không có tác dụng điều khiển worker trong CompletableFuture chuẩn?
+    2. Sau cancel, join và isCancelled nói gì về future, và vì sao không chứng minh Supplier đã thoát?
+    3. Dependent stage sẽ được thông báo hủy/lỗi như thế nào so với operation bên dưới?
+
+    ### Thiết kế cancellation hợp tác
+
+    1. Làm thế nào dùng latch chứng minh CompletableFuture đã cancelled nhưng supplier chưa quan sát interrupt?
+    2. Một cancellation token dùng chung giữa dispatcher và worker cần bảo đảm thuộc tính thread-safety nào?
+    3. Trong Spring @Async hoặc nhiều replica, cần lưu yêu cầu hủy và quan sát worker dừng ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt Future implementations | So sánh cancel(true) của CompletableFuture và FutureTask ở mức trạng thái kết quả và interrupt. |
+    | Kiểm chứng bằng thử nghiệm | Dùng latch đo độc lập trạng thái Future và thời điểm worker rời finally. |
+    | Thiết kế token hủy | Phác thảo flag atomic/volatile và các checkpoint ở các bước xử lý. |
+    | Đánh giá giới hạn | Giải thích vì sao token không tự hủy I/O hay hoàn tác side effect, đề xuất timeout và trạng thái job phù hợp. |
+- id: timeout-cancellation-006
+  title: Xử lý InterruptedException và bảo toàn tín hiệu ngắt phù hợp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Xử lý InterruptedException và bảo toàn tín hiệu ngắt phù hợp**
+
+    InterruptedException là tín hiệu điều khiển quan trọng khi worker chờ trên API blocking. Bài giúp phân biệt truyền tiếp exception, khôi phục interrupt flag rồi thoát và biểu diễn hủy nghiệp vụ, tránh làm mất tín hiệu dẫn đến task tiếp tục giữ pool hoặc thực hiện bước đã không còn hợp lệ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cờ ngắt và hợp đồng của API blocking
+
+    1. Thread.currentThread().isInterrupted và Thread.interrupted khác nhau ở tác động lên interrupt flag thế nào?
+    2. Vì sao sleep hoặc await thường xóa cờ interrupt khi ném InterruptedException?
+    3. Future.cancel(true), caller bị interrupt khi get và worker nhận InterruptedException là ba sự kiện khác nhau ở điểm nào?
+
+    ### Xử lý lỗi ở ranh giới phương thức
+
+    1. Khi nào nên khai báo throws InterruptedException và khi nào phải khôi phục cờ rồi rời Runnable?
+    2. Vì sao catch rồi nuốt exception hoặc restore flag xong lại lặp blocking vô hạn là sai?
+    3. Trong Spring @Async, shutdown và task I/O, cần quan sát cleanup và transaction sau interrupt như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc trạng thái ngắt | Dự đoán giá trị cờ interrupt trước/sau blocking method và hai API kiểm tra cờ. |
+    | Chọn chiến lược propagation | Viết nhánh catch truyền tiếp hoặc restore-then-exit phù hợp hợp đồng của từng method. |
+    | Sửa lỗi worker | Nhận diện code nuốt InterruptedException và chỉnh để dọn tài nguyên, trả lại quyền kiểm soát. |
+    | Kiểm thử interrupt | Dùng latch chờ worker bắt đầu và xác nhận tín hiệu ngắt, cleanup và trạng thái Future riêng. |
+- id: timeout-cancellation-007
+  title: Đặt timeout riêng cho truy cập cơ sở dữ liệu hoặc lời gọi mạng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đặt timeout riêng cho truy cập cơ sở dữ liệu hoặc lời gọi mạng**
+
+    Timeout của Future hoặc HTTP response không thay thế timeout ở nơi đang chờ database, connection pool hay remote HTTP server. Bài học thiết kế ngân sách deadline đi qua nhiều tầng, cấu hình Hikari/JDBC/JdbcTemplate/HTTP client và phân tích trường hợp provider đã xử lý nhưng client không nhận được phản hồi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Timeout của kết nối và truy vấn database
+
+    1. Timeout chờ lấy connection trong pool khác với Statement.setQueryTimeout và transaction timeout thế nào?
+    2. JdbcTemplate và Spring @Transactional có thể giới hạn điều gì, và điều gì vẫn tùy database/driver?
+    3. Lỗi timeout ở JDBC có đồng nghĩa chắc chắn transaction bên ngoài hoặc remote side effect chưa xảy ra không?
+
+    ### HTTP timeout và ngân sách end-to-end
+
+    1. Connect timeout khác request/response timeout như thế nào trong Java HttpClient?
+    2. Vì sao Future.orTimeout không làm một HTTP call đồng bộ đang chạy tự động kết thúc?
+    3. Cách tính thời gian còn lại từ một deadline chung giúp phân bổ budget cho kết nối, query, retry ra sao?
+
+    ### Kiểm thử và vận hành
+
+    1. Bài demo HTTP server trả chậm cần assert kết quả nào mà không dựa trên số mili giây chính xác?
+    2. Cần quan sát những số liệu nào để biết timeout đang giữ worker/connection và tạo retry storm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại timeout đa tầng | Lập sơ đồ connect, pool-acquire, SQL query, HTTP request và transaction timeout với hậu quả riêng. |
+    | Cấu hình dependency | Chỉ ra API và nơi đặt timeout cho Hikari, JdbcTemplate và java.net.http.HttpClient theo bài. |
+    | Tính timeout budget | Chia deadline tổng cho nhiều bước mà không reset thời gian mỗi lần retry. |
+    | Thiết kế phục hồi | Xử lý trạng thái kết quả không chắc chắn bằng idempotency, query status và reconciliation. |
+- id: timeout-cancellation-008
+  title: Ngăn công việc hết giá trị tiếp tục tạo tác dụng phụ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ngăn công việc hết giá trị tiếp tục tạo tác dụng phụ**
+
+    Kết quả đã hết giá trị không đồng nghĩa thao tác cũ đã ngừng tác động tới hệ thống. Bài tiến từ cancellation token đến race check-then-act, fencing token và conditional commit, để ngăn một worker cũ ghi đè dữ liệu mới hoặc phát side effect sau khi quyền thực thi không còn hợp lệ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giá trị nghiệp vụ và race
+
+    1. Làm sao phân biệt caller timeout, job cancelled, deadline expired và quyền tạo side effect còn hợp lệ?
+    2. Vì sao kiểm tra cờ cancelled ngay trước ghi không bảo đảm an toàn nếu có interleaving giữa check và act?
+    3. Kịch bản latch chứng minh lỗ hổng check-then-act bằng thứ tự sự kiện nào?
+
+    ### Fencing và ranh giới commit
+
+    1. Fencing token hoặc generation được kiểm tra nguyên tử tại nơi commit giúp chống worker cũ như thế nào?
+    2. Khi ghi database, optimistic locking, conditional update hoặc outbox bảo vệ những thuộc tính nào?
+    3. Khi side effect ở dịch vụ ngoài đã gửi, vì sao local cancel/interrupt không đủ và cần idempotency/reconciliation?
+
+    ### Kiểm chứng thiết kế
+
+    1. Nên quan sát side-effect count, version và trạng thái job nào để phân biệt future cancelled với hiệu lực nghiệp vụ?
+    2. Khi nào chính sách chỉ chấp nhận phiên bản mới nhất không thích hợp cho các nghiệp vụ bắt buộc hoàn thành?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích race condition | Dùng timeline và latch chỉ ra cửa sổ lỗi giữa kiểm tra tính hợp lệ và ghi side effect. |
+    | Thiết kế commit có điều kiện | Mô tả điều kiện version/fencing token ở thao tác update nguyên tử và dự đoán kết quả worker cũ. |
+    | Đảm bảo tính đúng nghiệp vụ | Chọn idempotency key, outbox hoặc reconciliation cho hệ thống có remote side effects. |
+    | Đánh giá chính sách cancel | Phân biệt quyền ngừng response với quyền hủy tác động đã commit và mô hình trạng thái phù hợp. |
+- id: timeout-cancellation-009
+  title: Kiểm tra hủy trước khi bắt đầu và hủy khi tác vụ đang chạy
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra hủy trước khi bắt đầu và hủy khi tác vụ đang chạy**
+
+    Một yêu cầu hủy có thể đến khi task còn nằm trong queue, vừa được worker nhận hoặc đã đi sâu vào phần xử lý. Bài thiết kế và kiểm thử riêng các pha này, so sánh FutureTask với CompletableFuture, đồng thời làm rõ race, cancellation token và handle của dispatcher trong Spring.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới QUEUED và RUNNING
+
+    1. Nếu cancel xảy ra trước lúc task bắt đầu, body có được chạy không và task đã hủy có tự rời queue ngay không?
+    2. cancel(false) và cancel(true) tác động ra sao khi task đã running?
+    3. Ở ranh giới chuyển QUEUED sang RUNNING, vì sao kết quả cancel có thể cạnh tranh với thời điểm worker được chọn?
+
+    ### Quan sát kết quả thực thi
+
+    1. Tại sao isCancelled hoặc isDone chỉ xác nhận trạng thái Future, không chứng minh side effect đã dừng?
+    2. Dùng token và handle của dispatcher như thế nào để tách cancellation requested khỏi worker stopped?
+    3. Khác biệt giữa CompletableFuture.cancel và FutureTask.cancel ảnh hưởng lựa chọn handle trong Spring ra sao?
+
+    ### Kiểm thử các pha
+
+    1. Dùng một single-thread executor, latch giữ task đầu và barrier sau task bị cancel thế nào để chứng minh task queued không chạy?
+    2. Dùng tín hiệu started/finished nào để kiểm chứng task running đã xử lý interrupt?
+    3. Trong integration test Spring, làm sao cô lập executor, tránh self-invocation và không phụ thuộc Thread.sleep để đoán lịch chạy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích state machine | Mô tả các pha SUBMITTED, QUEUED, RUNNING và tác động của yêu cầu hủy ở từng pha. |
+    | Thiết kế job handle | Kết hợp Future, cancellation token và trạng thái job để quan sát cancellation request so với xác nhận dừng. |
+    | Kiểm thử deterministic | Viết hai kịch bản hủy trước start và hủy khi đang chạy bằng latch, barrier, future.get và timeout. |
+    | Xử lý race và side effects | Chỉ ra điểm cần kiểm tra trước tác động nghiệp vụ và giới hạn của cancel khi ghi đã commit. |

@@ -1,0 +1,19 @@
+sections:
+  timeout-cancellation-001:
+    difficulty: INTERMEDIATE
+  timeout-cancellation-002:
+    difficulty: BASIC
+  timeout-cancellation-003:
+    difficulty: INTERMEDIATE
+  timeout-cancellation-004:
+    difficulty: INTERMEDIATE
+  timeout-cancellation-005:
+    difficulty: INTERMEDIATE
+  timeout-cancellation-006:
+    difficulty: INTERMEDIATE
+  timeout-cancellation-007:
+    difficulty: ADVANCED
+  timeout-cancellation-008:
+    difficulty: ADVANCED
+  timeout-cancellation-009:
+    difficulty: ADVANCED

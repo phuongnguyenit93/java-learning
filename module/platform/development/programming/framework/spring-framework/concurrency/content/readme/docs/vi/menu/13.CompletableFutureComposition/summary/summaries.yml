@@ -1,0 +1,381 @@
+summaries:
+- id: completable-future-composition-001
+  title: thenApply() biến đổi kết quả và thenCompose() nối công việc phụ thuộc
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **thenApply() biến đổi kết quả và thenCompose() nối công việc phụ thuộc**
+
+    Một pipeline phụ thuộc cần phân biệt bước chuyển giá trị với bước khởi tạo một `CompletionStage` mới. Bài này học cách chọn `thenApply` hoặc `thenCompose`, giữ một Future phẳng, lan truyền lỗi đúng và tránh chặn worker bằng `join()` trong callback.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểu dữ liệu và completion
+
+    1. Callback trả giá trị `U` và callback trả `CompletionStage<U>` khác nhau ở kiểu future cuối như thế nào?
+    2. Tại sao `thenApply(user -> fetchOrdersAsync(user.id()))` có thể tạo future lồng nhau, còn `thenCompose` cho kết quả phẳng?
+    3. Điều gì xảy ra khi upstream thất bại, callback ném lỗi hoặc inner stage hoàn tất ngoại lệ?
+
+    ### Ứng dụng vào pipeline
+
+    1. Bạn viết chuỗi lấy user rồi lấy orders theo ID thế nào để không đợi đồng bộ giữa hai bước?
+    2. Khi nào `thenComposeAsync(..., executor)` cần thiết và vì sao `thenCompose` thường không tự tạo worker mới?
+    3. Bạn sẽ chờ kết quả bằng `get(timeout)` ở ranh giới nào thay vì trong continuation?
+
+    ### Kiểm thử và giới hạn
+
+    1. Dùng một inner future chưa hoàn tất, làm sao chứng minh future được compose cũng chưa hoàn tất?
+    2. Vì sao timeout của Future không chứng minh HTTP hoặc side effect phía trong đã dừng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn API theo callback | Nêu chính xác kiểu `CompletableFuture<U>` khi callback trả U hoặc trả stage U. |
+    | Nối dependency không blocking | Triển khai `thenCompose` cho tác vụ phụ thuộc và tránh `join` trong callback. |
+    | Phân tích lỗi | Dự đoán trạng thái của future cuối khi stage đầu hoặc stage trong lỗi. |
+    | Kiểm thử flatten | Tạo future thủ công và kiểm tra completion trước và sau `complete` mà không dùng sleep. |
+- id: completable-future-composition-002
+  title: thenCombine() kết hợp hai kết quả độc lập
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **thenCombine() kết hợp hai kết quả độc lập**
+
+    `thenCombine` giúp hợp nhất hai nguồn không phụ thuộc dữ liệu với một hàm hai đối số; đây là công cụ fan-in cho hai Future có kiểu. Cần hiểu nó không tự chạy hai tác vụ song song và combiner chỉ có đủ dữ liệu khi cả hai upstream thành công.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Semantics của thenCombine
+
+    1. Điều kiện nào phải đạt để `BiFunction` của `thenCombine` chạy và tạo giá trị V?
+    2. Nếu Future giá hoàn tất trước Future tên, tại sao thứ tự tham số combiner vẫn giữ nguyên?
+    3. Độc lập về dữ liệu khác song song vật lý trên hai worker như thế nào?
+
+    ### Lỗi và lựa chọn API
+
+    1. Nếu một upstream lỗi hoặc combiner ném exception, stage kết hợp có kết quả gì?
+    2. Bạn đặt fallback riêng cho nguồn giá ở đâu để không che lỗi thiếu sản phẩm?
+    3. Khi nào dùng `thenCompose`, `allOf` hay `thenCombineAsync(..., executor)` hợp lý hơn?
+
+    ### Kiểm chứng trong Spring
+
+    1. Orchestrator gọi hai Spring `@Async` service theo thứ tự nào để cả hai được nộp trước khi chờ?
+    2. Bạn dùng hai Future hoàn tất thủ công thế nào để kiểm tra điều kiện chờ đủ và tham số không đảo?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định hai nguồn độc lập | Phân tích đúng lúc có thể khởi động A và B mà không phụ thuộc kết quả nhau. |
+    | Tổ hợp có kiểu | Tạo DTO từ hai `CompletableFuture<T>` và `CompletableFuture<U>` với `thenCombine`. |
+    | Xử lý failure | Kiểm thử lỗi ở nguồn và trong combiner, tránh báo thành công giả. |
+    | Đánh giá scheduling | Giải thích non-Async combiner có thể inline và chọn executor khi cần. |
+- id: completable-future-composition-003
+  title: allOf() chờ nhiều công việc và cách thu kết quả có kiểu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **allOf() chờ nhiều công việc và cách thu kết quả có kiểu**
+
+    `allOf` là barrier chờ nhiều Future, không phải container kết quả. Bài học giữ danh sách Future có generic type, thu `List<T>` theo thứ tự đầu vào, tạo record cho nhiều kiểu khác nhau và quyết định hợp đồng all-or-nothing hay partial success.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Barrier và kiểu dữ liệu
+
+    1. Vì sao `allOf` trả `CompletableFuture<Void>` và giá trị từng công việc nằm ở đâu?
+    2. Vì sao sau barrier thành công có thể gọi `join()` từng input mà không còn đợi thêm?
+    3. Nếu B hoàn tất trước A, `sequence(List.of(A, B))` nên trả danh sách theo thứ tự nào?
+
+    ### Các dạng đầu vào
+
+    1. Với nhiều Future cùng kiểu, bạn hiện thực `sequence(List<CompletableFuture<T>>)` có type-safety ra sao?
+    2. Nếu Future trả User, Balance và Inventory khác kiểu, cách tạo `Dashboard` nào tránh `Object[]` cast?
+    3. Đầu vào rỗng, có null, một nguồn lỗi hoặc không bao giờ hoàn tất gây những hậu quả nào?
+
+    ### Chính sách hệ thống
+
+    1. Khi muốn trả kết quả từng phần thay vì fail toàn bộ, bạn dùng `handle` trên từng nguồn trước `allOf` thế nào?
+    2. Điều gì giới hạn fan-out và queue khi một request tạo hàng chục Future?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích barrier | Phân biệt tín hiệu hoàn tất `Void` và các kết quả được lưu trong Future nguồn. |
+    | Thu giá trị có kiểu | Viết hàm sequence generic hoặc tạo DTO từ các Future khác kiểu. |
+    | Chọn chính sách lỗi | Mô hình hóa nguồn thành công/lỗi riêng khi được phép trả partial result. |
+    | Giới hạn tài nguyên | Đề xuất deadline, rejection handling và bounded fan-out khi sử dụng Spring executor. |
+- id: completable-future-composition-004
+  title: anyOf() hoàn tất theo một công việc và giới hạn hủy các công việc còn lại
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **anyOf() hoàn tất theo một công việc và giới hạn hủy các công việc còn lại**
+
+    `anyOf` chọn completion đầu tiên, kể cả exception, và không bảo đảm giải phóng công việc của các nhánh thua. Bài học tách trạng thái Future khỏi worker và remote side effect, sau đó chọn cancellation strategy đúng tầng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nghĩa của winner
+
+    1. `anyOf` nhận completion thành công hay lỗi, và kiểu trả về có đặc điểm gì?
+    2. Vì sao `anyOf()` rỗng khác `allOf()` rỗng, và cách chọn first-success khác first-completion như thế nào?
+    3. Nếu hai nguồn hoàn tất gần nhau, bạn có thể giả định nguồn nào thắng dựa trên vị trí mảng không?
+
+    ### Cancellation và tài nguyên
+
+    1. Tại sao `anyOf` hoàn tất không làm hai nhánh thua tự hủy?
+    2. Vì sao `CompletableFuture.cancel(true)` có thể đánh dấu canceled trong khi supplier vẫn gây side effect?
+    3. Bạn cần cancellation handle và timeout gì để thật sự dừng HTTP hoặc DB work?
+
+    ### Tình huống vận hành
+
+    1. Khi nào race nhiều replica read-only là hợp lý, còn race các thao tác thanh toán là nguy hiểm?
+    2. Làm sao dùng latch chứng minh Future bị hủy không nhất thiết làm worker dừng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt kết quả race | Dự đoán first completion trong đường thành công, lỗi và input rỗng. |
+    | Tách ba vòng đời | Giải thích sự khác nhau giữa Future completion, executor task và remote side effect. |
+    | Thiết kế hủy hợp tác | Chọn token, client cancellation và deadline theo khả năng thật của dependency. |
+    | Kiểm chứng resource cleanup | Dùng latch, quan sát side effect và kiểm tra nhánh thua sau khi aggregate xong. |
+- id: completable-future-composition-005
+  title: thenAccept() và thenRun() cho bước không có kết quả
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **thenAccept() và thenRun() cho bước không có kết quả**
+
+    Bước cuối của một pipeline có thể chỉ nhận dữ liệu để audit hoặc báo completion mà không tạo U. `thenAccept` nhận T còn `thenRun` không nhận T; cả hai sinh `CompletableFuture<Void>` vẫn có nghĩa vụ theo dõi success hoặc exception.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế Consumer và Runnable
+
+    1. Callback của `thenAccept` nhận T khác callback `thenRun` thế nào?
+    2. Vì sao `CompletableFuture<Void>` vẫn chứa trạng thái lỗi và cần theo dõi?
+    3. Nếu cần biến Order thành ID để xử lý tiếp, bạn phải dùng `thenApply` hay `thenAccept`?
+
+    ### Dependency và side effect
+
+    1. Hai callback sibling từ cùng source có bảo đảm audit xong trước notification không?
+    2. Bạn nối `thenAccept(...).thenRun(...)` thế nào để giữ thứ tự và bỏ qua bước sau khi audit lỗi?
+    3. Vì sao `thenAccept(x -> auditAsync(x))` có thể bỏ rơi inner Future, còn `thenCompose` không?
+
+    ### Kiểm thử và Spring
+
+    1. Khi nguồn thành công nhưng audit ném lỗi, Future nào biểu diễn lỗi nghiệp vụ cần kiểm tra?
+    2. Khi nào cần `thenAcceptAsync(..., executor)` và ranh giới transaction/idempotency riêng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn Consumer hay Runnable | Sử dụng `thenAccept` với T và `thenRun` khi chỉ cần tín hiệu completion. |
+    | Giữ future cuối | Trả hoặc quan sát stage Void để không bỏ qua lỗi của audit/notification. |
+    | Diễn đạt thứ tự | Phân biệt sibling branches với chain `thenAccept(...).thenRun(...)`. |
+    | Test side effect | Dùng latch và deadline xác minh lỗi hoặc trình tự callback thực tế. |
+- id: completable-future-composition-006
+  title: Biến thể Async và lựa chọn bộ thực thi tường minh
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Biến thể Async và lựa chọn bộ thực thi tường minh**
+
+    Một pipeline có thể chuyển công việc qua nhiều executor; chọn pool phải quyết định ở từng stage. Bài này phân biệt Async mặc định của JDK với Spring `@Async` proxy, hiểu executor của hàm tạo future không tự điều khiển future con và xử lý rejection/context có ý thức.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Async variants
+
+    1. `thenApply`, `thenApplyAsync(fn)` và `thenApplyAsync(fn, executor)` khác nhau ở scheduling thế nào?
+    2. `thenComposeAsync(fn, cpuExecutor)` có chạy luôn supplier bên trong stage mà fn trả về trên cpuExecutor không?
+    3. Vì sao `@Async("ioExecutor")` của Spring không tự khiến `thenApplyAsync(fn)` sau đó chạy ở cùng pool?
+
+    ### Lựa chọn và sizing
+
+    1. Bạn phân chia callback CPU-bound, blocking I/O và mapping rất nhẹ thế nào giữa các executor?
+    2. Khi có direct executor hoặc `CallerRunsPolicy`, tại sao Async callback vẫn có thể chạy ngay trên caller?
+    3. Bạn cần metric queue, active worker và rejected tasks nào để kiểm tra policy?
+
+    ### An toàn và lỗi
+
+    1. Executor từ chối một dependent stage có thể xuất hiện ở đâu và nên kiểm tra thế nào?
+    2. Bạn làm gì với MDC, SecurityContext và transaction khi chuyển từ ioExecutor sang cpuExecutor?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Gắn executor đúng stage | Giải thích mỗi overload Async và không Async định tuyến callback ra sao. |
+    | Tách Spring proxy và JDK | Phân biệt `@Async` dispatch method với executor truyền vào CompletableFuture. |
+    | Đánh giá tài nguyên | Chọn pool CPU/I/O hữu hạn theo giới hạn downstream và policy rejection. |
+    | Kiểm chứng hệ thống | Thử thread identity, exceptional completion và context boundary bằng executor đặt tên. |
+- id: completable-future-composition-007
+  title: Các bước không có hậu tố Async có thể chạy trên luồng hoàn tất
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Các bước không có hậu tố Async có thể chạy trên luồng hoàn tất**
+
+    Một dependent callback non-Async không bảo đảm dùng đúng thread đăng ký hoặc executor của source. Hiểu completion timing giúp giải thích tại sao callback đôi khi chạy inline trên HTTP caller và đôi khi chạy trên worker hoàn tất Future.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế thread
+
+    1. Javadoc CompletableFuture cho phép những thread nào thực thi dependent non-Async callback?
+    2. Khi nguồn đã hoàn tất trước lúc đăng ký, callback khác gì trường hợp worker hoàn tất nguồn sau đó?
+    3. Vì sao cùng một đoạn `thenApply` không có thread affinity cố định?
+
+    ### Tác động lên application
+
+    1. Callback blocking trong `thenApply` có thể giữ request hoặc completion thread ở thời điểm nào?
+    2. Spring `@Async` trên source có khiến callback `thenApply` luôn dùng executor đã đặt tên không?
+    3. Vì sao transaction, MDC và security context không nên dựa vào thời điểm completion tình cờ?
+
+    ### Lựa chọn và test
+
+    1. Bạn dùng latch và một completedFuture để chứng minh ba tình huống thread thực thi khác nhau thế nào?
+    2. Khi nào chọn non-Async cho mapping nhẹ và `thenApplyAsync(..., cpuExecutor)` cho CPU nặng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích thread execution | Mô tả đúng chính sách callback non-Async không gắn thread cố định. |
+    | Dự đoán timeline | Dự đoán nơi có thể chạy callback khi nguồn chưa hoặc đã completed. |
+    | Phát hiện blocking nguy hiểm | Nhận diện callback CPU/I/O giữ completion hoặc registration thread. |
+    | Kiểm chứng ranh giới | Dùng latch, executor có ThreadFactory và không dựa vào sleep. |
+- id: completable-future-composition-008
+  title: supplyAsync() không chỉ định executor và nguy cơ dùng chung common pool
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **supplyAsync() không chỉ định executor và nguy cơ dùng chung common pool**
+
+    Overload `supplyAsync(supplier)` thường dùng ForkJoinPool.commonPool của JVM, không tự nhìn thấy bean ThreadPoolTaskExecutor do Spring tạo. Bài này phân tích tranh chấp tài nguyên khi đưa blocking I/O vào pool chung và cách chọn executor có giới hạn, metrics và lifecycle rõ ràng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Pool mặc định
+
+    1. `supplyAsync(supplier)` khác overload truyền Executor ở lựa chọn nơi thực thi thế nào?
+    2. Common pool chia sẻ ở cấp JVM ra sao và khi mức parallelism nhỏ có ngoại lệ nào?
+    3. Vì sao Spring `@Async` hoặc bean `TaskExecutor` không tự được dùng bởi lời gọi static JDK?
+
+    ### Giới hạn tài nguyên
+
+    1. Blocking HTTP/JDBC trên common pool có thể ảnh hưởng task CPU của module khác thế nào?
+    2. Làm sao dùng một shared executor một worker và latch để chứng minh task ngắn đợi task dài?
+    3. Khi `supplyAsync(..., ioExecutor)` bị từ chối trước khi trả Future, `exceptionally` có bắt được không?
+
+    ### Chọn giải pháp
+
+    1. Bạn cấu hình Spring ThreadPoolTaskExecutor rồi inject nó vào `supplyAsync` thế nào?
+    2. Vì sao future timeout hoặc cancel chưa chứng minh I/O bên dưới đã dừng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích common pool | Giải thích default async facility, ngoại lệ và việc không tự chọn Spring executor. |
+    | Chọn executor phù hợp | Viết overload có explicit executor cho blocking workload. |
+    | Bảo vệ quá tải | Phân loại lỗi supplier và rejection ngay lúc submit. |
+    | Đánh giá contention | Giải thích tác động lên latency/queue từ các task dùng chung pool. |
+- id: completable-future-composition-009
+  title: Tránh gửi tác vụ hai lần khi vừa dùng @Async vừa dùng supplyAsync()
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tránh gửi tác vụ hai lần khi vừa dùng @Async vừa dùng supplyAsync()**
+
+    Một lời gọi Spring `@Async` được proxy gửi vào executor nhưng body lại gọi `supplyAsync`: có thể tạo hai task submissions và một lần worker ngoài chờ Future trong. Bài này phân biệt hai lần scheduling với hai lần chạy business, rồi sửa đúng nơi sở hữu dispatch.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai tầng task
+
+    1. `@Async` proxy và `CompletableFuture.supplyAsync` tạo hai submission tại những điểm nào?
+    2. Tại sao có hai task wrapper nhưng business method chỉ có thể chạy một lần?
+    3. Ở Spring 6.x, vì sao việc interceptor chờ target Future bằng `get()` có thể giữ worker ngoài?
+
+    ### Refactor an toàn
+
+    1. Với một worker và queue, inner task cùng pool bị kẹt theo đồ thị chờ nào?
+    2. Trong trường hợp nào nên giữ `@Async` với `completedFuture`, khi nào bỏ annotation và dùng `supplyAsync(..., executor)`?
+    3. Nếu hai client đã trả Future, vì sao orchestrator chỉ cần `thenCombine` mà không tạo outer worker?
+
+    ### Kiểm chứng production
+
+    1. Bạn đếm submissions, business executions và outer/inner thread nào để phát hiện double scheduling?
+    2. Vì sao timeout/cancel ở caller không bảo đảm giải phóng worker hoặc remote I/O bên trong?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ call graph dispatch | Chỉ rõ hai điểm submit và khả năng chờ Future ngầm trong Spring interceptor. |
+    | Loại bỏ tầng thừa | Chọn một owner thực thi thay vì wrapper worker đợi inner worker. |
+    | Phân biệt số lần chạy | Đo submissions và business side effects riêng bằng counting executor. |
+    | Kiểm thử saturation | Tái hiện nguy cơ same-pool bằng executor nhỏ và timeout hữu hạn. |
+- id: completable-future-composition-010
+  title: Tránh chờ tác vụ con trên chính nhóm luồng đã cạn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tránh chờ tác vụ con trên chính nhóm luồng đã cạn**
+
+    Pool starvation deadlock xảy ra khi parent giữ mọi worker để chờ các child đang xếp hàng đợi chính worker ấy. Bài học phân tích quan hệ worker–queue–Future, sửa blocking bằng composition, và chẩn đoán trường hợp Spring @Async tạo chờ ngầm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đồ thị chờ
+
+    1. Vì sao parent submit child vào pool một worker rồi gọi `get()` có thể không bao giờ tiến triển?
+    2. Khi N parent giữ N worker chờ N child, tình huống khác CPU saturation và lock deadlock ra sao?
+    3. Vì sao `maxPoolSize` cao vẫn vô ích nếu queue rộng nhận task trước khi mở worker mới?
+
+    ### Sửa đúng cấu trúc
+
+    1. `thenCompose` làm phẳng quan hệ child như thế nào để worker không phải `join()` chờ?
+    2. Khi nào `allOf(...).thenApply` đọc các Future đã hoàn tất mà không gây worker starvation?
+    3. Spring async interceptor có thể tạo điểm chờ ẩn nào nếu method `@Async` trả future con chạy cùng executor?
+
+    ### Test và vận hành
+
+    1. Bạn tái hiện starvation bằng pool nhỏ và timeout hữu hạn mà không làm suite treo ra sao?
+    2. Thread dump và metric queue/active worker cần cho thấy những gì để xác định deadlock?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ dependency graph | Nêu chính xác chu trình parent chờ child và child chờ worker của parent. |
+    | Hiểu cấu hình pool | Giải thích core, max, queue và rejection tác động đến tiến triển ra sao. |
+    | Viết nonblocking chain | Sửa `thenApply(...join())` thành `thenCompose` phù hợp. |
+    | Chẩn đoán và kiểm thử | Dùng deadline, latch, thread dump và executor metrics để chứng minh lỗi rồi kiểm tra cách sửa. |

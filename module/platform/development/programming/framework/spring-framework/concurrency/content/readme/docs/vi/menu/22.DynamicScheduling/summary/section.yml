@@ -1,0 +1,76 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Lịch động và Trigger
+roadmapHeading: Lộ trình học lịch động và Trigger trong Spring Framework
+roadmap:
+- id: dynamic-scheduling-001
+  order: 1
+  title: Trigger chọn thời điểm kế tiếp từ ngữ cảnh thực thi
+  description: Tính nextExecution theo ba mốc history, xử lý first-run null và dừng lịch bằng null.
+  transition:
+    to: dynamic-scheduling-002
+    description: Tiếp tục đọc đúng ba timestamp mà TriggerContext đưa vào cho Trigger.
+- id: dynamic-scheduling-002
+  order: 2
+  title: TriggerContext theo dõi lần dự kiến, thực tế và hoàn tất
+  description: Đo lag và duration; tách completion callback khỏi kết quả của business job được offload.
+  transition:
+    to: dynamic-scheduling-003
+    description: Từ timeline của callback chuyển sang lịch cron theo calendar/zone.
+- id: dynamic-scheduling-003
+  order: 3
+  title: CronTrigger cho lịch theo biểu thức cron
+  description: Giải mã cron sáu trường, chọn lenient/fixed, dùng CronExpression, ZoneId và DST.
+  transition:
+    to: dynamic-scheduling-004
+    description: So sánh cron calendar với PeriodicTrigger theo Duration và initialDelay.
+- id: dynamic-scheduling-004
+  order: 4
+  title: PeriodicTrigger cho lịch chu kỳ
+  description: Cấu hình fixed delay/rate, initialDelay và kiểm thử chu kỳ bằng clock và latch.
+  transition:
+    to: dynamic-scheduling-005
+    description: Học nơi Spring đăng ký nhiều task definitions vào scheduler khi khởi tạo.
+- id: dynamic-scheduling-005
+  order: 5
+  title: SchedulingConfigurer và ScheduledTaskRegistrar
+  description: Dùng SchedulingConfigurer, registrar, add...Task và custom adaptive Trigger trong lifecycle Spring.
+  transition:
+    to: dynamic-scheduling-006
+    description: Từ cấu hình khởi tạo sang quản lý handle của các lịch tạo bằng mã.
+- id: dynamic-scheduling-006
+  order: 6
+  title: Đăng ký, giữ ScheduledFuture và hủy lịch bằng mã
+  description: Giữ ScheduledFuture theo job ID, phân biệt cancel với kết thúc callback và dọn registry.
+  transition:
+    to: dynamic-scheduling-007
+    description: Hiểu vì sao cập nhật YAML/SpEL không tự cập nhật lịch @Scheduled đang active.
+- id: dynamic-scheduling-007
+  order: 7
+  title: Cập nhật cấu hình không tự thay đổi lịch annotation đã đăng ký
+  description: Phân biệt config mong muốn với active schedule; dùng explicit reschedule hoặc dynamic Trigger.
+  transition:
+    to: dynamic-scheduling-008
+    description: Khi reschedule theo config event, cần tránh đăng ký trùng cùng logical job.
+- id: dynamic-scheduling-008
+  order: 8
+  title: Tránh đăng ký chồng lịch khi thay đổi cấu hình
+  description: Bỏ qua event trùng, quản lý generation và chặn callback stale với single-flight.
+  transition:
+    to: dynamic-scheduling-009
+    description: Chuyển từ một updater tuần tự sang nhiều writers cần expected revision/CAS.
+- id: dynamic-scheduling-009
+  order: 9
+  title: Kiểm soát tính nhất quán khi nhiều luồng cùng cập nhật lịch
+  description: Áp expected revision, version-aware cancel, DB fencing và reconcile sau restart.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh chín bài
+
+  | Tiêu chí | Bài 1: Trigger chọn thời điểm kế tiếp từ ngữ cảnh thực thi | Bài 2: TriggerContext theo dõi lần dự kiến, thực tế và hoàn tất | Bài 3: CronTrigger cho lịch theo biểu thức cron | Bài 4: PeriodicTrigger cho lịch chu kỳ | Bài 5: SchedulingConfigurer và ScheduledTaskRegistrar | Bài 6: Đăng ký, giữ ScheduledFuture và hủy lịch bằng mã | Bài 7: Cập nhật cấu hình không tự thay đổi lịch annotation đã đăng ký | Bài 8: Tránh đăng ký chồng lịch khi thay đổi cấu hình | Bài 9: Kiểm soát tính nhất quán khi nhiều luồng cùng cập nhật lịch |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | Trigger và thời điểm | Ba mốc của callback | Cron theo calendar | Chu kỳ theo Duration | Registrar lúc startup | ScheduledFuture và cancel | Annotation config đã resolve | Chống duplicate registration | Concurrent update consistency |
+  | API chính | Trigger.nextExecution | TriggerContext và Clock | CronExpression, CronTrigger | PeriodicTrigger | SchedulingConfigurer | TaskScheduler.schedule | @Scheduled, FixedRateTask | Generation và single-flight | Revision/CAS/fencing |
+  | Thực hành | Custom completion Trigger | Tính lag và duration | Cron theo ZoneId/DST | Fixed rate vs delay | Đăng ký TriggerTask | Giữ và hủy handle | Thay period thật | Event trùng và callback stale | Hai admin cùng revision |
+  | Giới hạn | Không chứa business outcome | Completion chỉ theo callback | Không có durability | Không đảm bảo SLA thực | Không hot reload tự động | Cancel không rollback | Sửa property không reschedule | Một JVM không là cluster | Lock JVM không thay DB CAS |
+  | Bằng chứng học | Assert next Instant | Assert ba timestamp | Kiểm tra next cron | Test clock và latch | Registrar tạo đúng task | Cancel đúng registration | Metadata cũ không tự đổi | No-op event và stale skip | Một success, một conflict |

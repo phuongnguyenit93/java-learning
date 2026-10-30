@@ -1,0 +1,358 @@
+summaries:
+- id: dynamic-scheduling-001
+  title: Trigger chọn thời điểm kế tiếp từ ngữ cảnh thực thi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Trigger chọn thời điểm kế tiếp từ ngữ cảnh thực thi**
+
+    Spring Trigger chọn Instant kế tiếp bằng TriggerContext; TaskScheduler mới đăng ký và chạy Runnable. Bài giải thích cách chọn lastScheduled, lastActual hoặc lastCompletion tùy mục tiêu nhịp lịch hay khoảng nghỉ, xử lý null lần đầu, sử dụng Clock để kiểm thử và trả null khi dừng. Người học áp dụng các quy tắc đó vào custom Trigger completion-based hoặc adaptive mà không nhầm tính lịch với kết quả nghiệp vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và mốc thời gian
+
+    1. Trigger.nextExecution và TaskScheduler.schedule khác nhau ở trách nhiệm nào?
+    2. Vì sao scheduled, actual và completion có thể cho ba mốc kế tiếp khác nhau khi cộng một Duration?
+    3. Custom Trigger cần xử lý ba timestamps null ở lượt đầu và Clock của context như thế nào?
+
+    ### Chính sách và giới hạn
+
+    1. Completion-based khác schedule-based ở khoảng nghỉ và khả năng chạy bù ra sao?
+    2. TriggerContext có biết lượt trước ném exception hay business transaction đã commit không?
+    3. Trả null dừng registration đến đâu, và khi muốn chạy lại phải làm gì?
+
+    ### Kiểm chứng
+
+    1. Dùng SimpleTriggerContext và Clock.fixed để assert các Instant và điểm dừng như thế nào?
+    2. Vì sao I/O chặn trong nextExecution và trạng thái Trigger dùng chung không đồng bộ đều nguy hiểm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tách trách nhiệm | Vẽ luồng Trigger → scheduler → Runnable và xác định nơi tính mốc, nơi chạy task. |
+    | Tính thời điểm | Tính từ scheduled, actual và completion trên cùng timeline rồi chọn chính sách có lý do. |
+    | Viết Trigger | Cài một completion/adaptive Trigger có nhánh first-run và null. |
+    | Kiểm thử thời gian | Dùng SimpleTriggerContext với Clock.fixed để kiểm tra lịch không cần ngủ thật. |
+- id: dynamic-scheduling-002
+  title: TriggerContext theo dõi lần dự kiến, thực tế và hoàn tất
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **TriggerContext theo dõi lần dự kiến, thực tế và hoàn tất**
+
+    TriggerContext chứa ba Instant của lần thực thi callback gần nhất: đã hẹn, bắt đầu thực tế và kết thúc, cộng Clock cho phép tính. Bài học giúp tính scheduler lag, callback duration, fixed-rate/fixed-delay và cron lenient/fixed từ cùng timeline. Điểm quan trọng là lastCompletion chỉ theo dõi callback của scheduler, không mặc nhiên đợi một Future nghiệp vụ mà callback đã gửi sang executor.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đọc context
+
+    1. Ba mốc lastScheduledExecution, lastActualExecution và lastCompletion khác nhau ra sao?
+    2. Khi context mới được tạo, ba method có thể trả về gì?
+    3. getClock().instant() khác lastCompletion ở ý nghĩa nào?
+
+    ### Phân tích lịch
+
+    1. Với scheduled 10:00:00, actual 10:00:03 và completion 10:00:15, lag và duration là bao nhiêu?
+    2. PeriodicTrigger fixed rate và fixed delay cộng period vào những mốc nào?
+    3. Cron lenient và fixed dùng mốc nào khi callback kéo dài qua các phút dự kiến?
+
+    ### Giới hạn và test
+
+    1. Vì sao callback submit @Async rồi trả về không làm lastCompletion chờ business Future?
+    2. Bạn kiểm thử calculation bằng SimpleTriggerContext.update và Clock.fixed như thế nào?
+    3. Vì sao timestamp completion không đủ suy ra thành công nghiệp vụ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích timestamps | Phân biệt planned, actual và completion kể cả khi callback bắt đầu muộn. |
+    | Tính metric | Tính scheduler lag và execution duration từ lịch sử giả lập. |
+    | So sánh trigger | Dự đoán mốc tiếp theo của fixed delay, fixed rate và cron hai mode. |
+    | Phân biệt callback | Giải thích vì sao work offload có completion và error riêng ngoài TriggerContext. |
+- id: dynamic-scheduling-003
+  title: CronTrigger cho lịch theo biểu thức cron
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CronTrigger cho lịch theo biểu thức cron**
+
+    CronTrigger diễn giải cron sáu trường của Spring trong một múi giờ, rồi chọn thời điểm tiếp theo từ lịch sử callback. Bài học tập trung vào CronExpression, ký hiệu L/W/#, macro, chính sách lenient bỏ mốc và fixed chạy bù, timezone và DST. Người học kiểm tra biểu thức cùng những lần fire sắp tới, đăng ký CronTrigger, thay cron bằng handle mới và hiểu vì sao local scheduler không tự lưu job qua restart.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biểu thức cron
+
+    1. Sáu trường Spring cron theo thứ tự nào và khác Unix crontab hoặc Quartz thế nào?
+    2. Các ký hiệu *, /, ?, L, W, # và macro @daily được parser diễn giải ra sao?
+    3. CronExpression.parse và CronTrigger.nextExecution khác với TaskScheduler chạy Runnable như thế nào?
+
+    ### Mốc bị lỡ và múi giờ
+
+    1. CronTrigger lenient và forFixedExecution chọn base timestamp nào sau một callback dài?
+    2. Fixed catch-up có thể tạo backlog còn lenient có thể bỏ mốc business nào?
+    3. Vì sao ZoneId và DST cần được kiểm thử riêng với cron theo giờ địa phương?
+
+    ### Thay lịch và bảo đảm
+
+    1. Khi admin thay cron, tại sao phải validate expression, zone rồi thay registration handle?
+    2. resumeFixedExecution và resumeLenientExecution có tự lưu checkpoint hay đảm bảo exactly-once không?
+    3. Bạn dùng Clock.fixed và SimpleTriggerContext để test lịch thứ Sáu sang thứ Hai và lenient/fixed ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích cron | Giải nghĩa cú pháp sáu trường và phân biệt Spring với Quartz. |
+    | Tính lịch theo zone | Dùng CronExpression/CronTrigger dự đoán mốc khớp theo ZoneId. |
+    | Quản lý mốc bị lỡ | So sánh lenient skip với fixed catch-up trên timeline thực tế. |
+    | Kiểm chứng và reschedule | Validate cron/zone, tính mốc tiếp theo và quản lý handle khi thay cấu hình. |
+- id: dynamic-scheduling-004
+  title: PeriodicTrigger cho lịch chu kỳ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **PeriodicTrigger cho lịch chu kỳ**
+
+    PeriodicTrigger mô tả lịch lặp theo Duration, với fixed delay mặc định, fixed rate khi setFixedRate(true) và initial delay chỉ áp dụng lần đầu. Bài học dùng TriggerContext để tính mốc của hai chế độ, kiểm tra bằng Clock.fixed và quan sát scheduler gọi lặp qua CountDownLatch. Người học cũng so sánh với TaskScheduler.scheduleAtFixedRate/scheduleWithFixedDelay trực tiếp và biết rủi ro khi callback offload nghiệp vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chu kỳ và cách tính
+
+    1. PeriodicTrigger(Duration) mặc định mode nào và setFixedRate(true) thay đổi ra sao?
+    2. InitialDelay được cộng khi nào và có lặp lại ở mỗi tick không?
+    3. Fixed rate và fixed delay lấy lastScheduled hay lastCompletion làm base?
+
+    ### Thực thi
+
+    1. Khi nào dùng trực tiếp scheduleAtFixedRate/scheduleWithFixedDelay sẽ rõ hơn một PeriodicTrigger?
+    2. Mốc fixed-rate đã quá hạn có tạo nhiều bản sao cùng registration chạy đồng thời không?
+    3. Nếu callback chỉ gọi executor.execute rồi return, fixed delay chờ completion của việc nào?
+
+    ### Test và hủy
+
+    1. Bạn dùng Clock.fixed để assert lượt đầu và mốc tiếp theo như thế nào?
+    2. CountDownLatch đếm ba lượt có chứng minh chính xác chỉ ba lượt chạy không?
+    3. Vì sao ScheduledFuture.get không phù hợp để đợi một lượt recurring và cancel(false) không rollback side effect?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình chu kỳ | Tạo PeriodicTrigger với period, initialDelay và mode đúng ý định. |
+    | Tính next execution | Đối chiếu scheduled/completion để tính fixed rate và fixed delay. |
+    | Chọn API | Lựa chọn PeriodicTrigger cho Trigger abstraction hay API trực tiếp cho chu kỳ đơn giản. |
+    | Kiểm tra và hủy | Dùng Clock.fixed và CountDownLatch để test, lưu ScheduledFuture rồi cancel đúng lúc. |
+- id: dynamic-scheduling-005
+  title: SchedulingConfigurer và ScheduledTaskRegistrar
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **SchedulingConfigurer và ScheduledTaskRegistrar**
+
+    SchedulingConfigurer là callback cấu hình scheduling khi Spring khởi tạo, còn ScheduledTaskRegistrar tập hợp task definitions rồi đăng ký trên TaskScheduler. Bài học giới thiệu @EnableScheduling, chọn scheduler bean, addTriggerTask, addCronTask, addFixedRateTask, addFixedDelayTask và addOneTimeTask. Người học dựng demo đăng ký one-time/Trigger và trigger đổi khoảng nghỉ, đồng thời phân biệt hook startup với một manager reschedule ngay trong runtime.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hạ tầng Spring
+
+    1. SchedulingConfigurer, ScheduledTaskRegistrar và TaskScheduler khác nhau ở trách nhiệm gì?
+    2. configureTasks chạy theo lifecycle nào và vì sao không được gọi lại trên mỗi tick?
+    3. Vì sao không nên tự invoke lifecycle methods của registrar managed bởi Spring?
+
+    ### API đăng ký
+
+    1. Trong tình huống nào chọn addTriggerTask, addCronTask, addFixedRateTask hay addOneTimeTask?
+    2. add...Task của registrar khác schedule...Task và TaskScheduler.schedule ở chỗ nào?
+    3. Vì sao @Configuration(proxyBeanMethods=false) nên inject bean scheduler qua tham số thay vì tự gọi @Bean method?
+
+    ### Runtime và test
+
+    1. Trigger đọc AtomicReference chứa delay mới có đổi pending future ngay lập tức không?
+    2. Nếu một method vừa có @Scheduled vừa được registrar đăng ký, chuyện gì xảy ra?
+    3. Bạn dùng CountDownLatch để kiểm chứng một Trigger kết thúc bằng null và một one-time task như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích lifecycle | Mô tả đường đi @EnableScheduling → SchedulingConfigurer → registrar → scheduler. |
+    | Đăng ký nhiều kiểu task | Chọn và dùng các add...Task API với Duration hoặc Trigger. |
+    | Tạo Spring config đúng | Inject bean scheduler và tránh duplicate registration hoặc tạo scheduler ngoài lifecycle. |
+    | Thử adaptive trigger | Dùng state thread-safe và null termination trong một demo có latch. |
+- id: dynamic-scheduling-006
+  title: Đăng ký, giữ ScheduledFuture và hủy lịch bằng mã
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đăng ký, giữ ScheduledFuture và hủy lịch bằng mã**
+
+    Đăng ký lịch bằng mã cần lưu ScheduledFuture theo job ID để tạo, hủy và thay thế đúng registration. Bài học phân biệt future của chuỗi lịch với kết quả từng run, làm rõ cancel(false), cancel(true), isDone và vì sao một callback đang chạy vẫn có thể hoàn tất sau cancel. Các ví dụ registry và latch giúp kiểm tra duplicate start, one-shot cancellation, replace-first trade-off, null Trigger, scheduler rejection và cleanup handles.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Registry và handle
+
+    1. ScheduledFuture của TaskScheduler biểu diễn một registration hay một lần business run?
+    2. Vì sao chuỗi kiểm tra ID rồi schedule và put cần đồng bộ dù map là ConcurrentHashMap?
+    3. Khi Trigger trả null hoặc scheduler reject, registry cần phản hồi và lưu trạng thái gì?
+
+    ### Hủy và thay thế
+
+    1. cancel(false) khác cancel(true), isCancelled và isDone thế nào khi callback còn đang chạy?
+    2. Vì sao get trên recurring ScheduledFuture có thể chặn vô hạn dù đã qua nhiều tick?
+    3. Schedule-first và cancel-first khác nhau ở khả năng mất lịch và overlap ra sao?
+
+    ### Lifecycle và test
+
+    1. Cần ba latch started/release/exited để chứng minh cancel không đồng nghĩa worker đã kết thúc như thế nào?
+    2. One-shot future đã hoàn tất được dọn khỏi registry ra sao mà không xóa handle của version mới?
+    3. Khi có nhiều pods hoặc restart, vì sao một ScheduledFuture trong JVM không đủ để quản lý job bền vững?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Sở hữu đăng ký | Thiết kế registry ánh xạ job ID tới handle, chống duplicate start. |
+    | Phân biệt cancellation | Diễn giải cancel(false), cancel(true), isDone và lifecycle của worker. |
+    | Thay lịch có kiểm soát | Nêu rủi ro của schedule-first/cancel-first và xử lý null/rejection. |
+    | Kiểm chứng bằng latch | Xác nhận lần run bắt đầu, handle bị hủy và callback chỉ thoát sau release. |
+- id: dynamic-scheduling-007
+  title: Cập nhật cấu hình không tự thay đổi lịch annotation đã đăng ký
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Cập nhật cấu hình không tự thay đổi lịch annotation đã đăng ký**
+
+    @Scheduled thường resolve placeholder hoặc SpEL khi Spring tạo registration, nên sửa config source hoặc Environment sau startup không tự đổi cron/period đang active. Bài học phân biệt desired config với applied schedule, dùng metadata FixedRateTask để xác minh điều này, rồi so sánh explicit cancel/reschedule với Trigger động đọc cấu hình ở nextExecution. Người học cần xử lý pending tick, disabled cron, version và scheduler rejection.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Annotation và config
+
+    1. Spring resolve @Scheduled(fixedRateString) hoặc cron placeholder vào thời điểm nào?
+    2. Vì sao Environment đọc được property mới nhưng FixedRateTask đang active vẫn giữ period cũ?
+    3. Đổi property cron thành dấu trừ sau startup có tự cancel registration đã tạo không?
+
+    ### Hai chiến lược runtime
+
+    1. Cancel và đăng ký future mới khác custom Trigger đọc AtomicReference như thế nào?
+    2. Vì sao cập nhật AtomicReference không tự tính lại một tick đã nằm trong scheduler queue?
+    3. Làm sao chọn schedule-first/cancel-first khi job đang chạy hoặc registration mới bị từ chối?
+
+    ### Kiểm chứng và consistency
+
+    1. Dùng ScheduledAnnotationBeanPostProcessor và FixedRateTask metadata để chứng minh đăng ký không refresh thế nào?
+    2. DesiredVersion và appliedVersion nên biểu thị khác nhau điều gì khi reschedule thất bại?
+    3. Reactive @Scheduled subscribe lại publisher có làm annotation cron tự resolve lại mỗi tick không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc metadata | Xác định annotation cron/period được resolve lúc startup. |
+    | Phân biệt trạng thái | Đối chiếu Environment mới với FixedRateTask/registration cũ. |
+    | Thực hiện thay lịch | Chọn cancel/reschedule để đổi tick ngay hoặc Trigger đọc config ở lần tính sau. |
+    | Kiểm tra lỗi | Theo dõi revision, handle, disabled và rejection khi áp dụng config mới. |
+- id: dynamic-scheduling-008
+  title: Tránh đăng ký chồng lịch khi thay đổi cấu hình
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tránh đăng ký chồng lịch khi thay đổi cấu hình**
+
+    Listener cấu hình có thể nhận cùng event nhiều lần hoặc hai cập nhật chạy song song, khiến một logical job có nhiều registrations. Bài học tách registration overlap khỏi business overlap; kiểm tra effective spec gồm cron, zone, enabled, áp dụng idempotent no-op, rồi dùng schedule candidate → publish generation → cancel old và single-flight. Qua fake scheduler gọi callback đã bị hủy, người học chứng minh stale callbacks bị bỏ qua và hiểu giới hạn của in-memory fencing.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện duplicate
+
+    1. Vì sao một listener nhận event trùng có thể tạo hai active registrations dù chỉ có một business method?
+    2. Registration overlap và execution overlap khác nhau như thế nào?
+    3. Khi hai cron giống nhau nhưng ZoneId khác nhau, có thể coi là cùng effective spec không?
+
+    ### Thay generation
+
+    1. Schedule-first rồi publish/cancel giúp giữ lịch cũ khi bị rejection nhưng tạo cửa sổ overlap gì?
+    2. Generation guard chặn callback stale đến muộn ra sao và vì sao vẫn có thể có business work cũ đang chạy?
+    3. Single-flight tryAcquire bỏ tick khác với queue và serialize theo job như thế nào?
+
+    ### Test và cluster
+
+    1. Bạn dùng RecordingScheduler và fireEvenIfCancelled để kiểm tra no-op, replace và disable ra sao?
+    2. Vì sao forFixedExecution khác forLenientExecution nhưng không sửa được duplicate registration?
+    3. Một handle duy nhất trên mỗi JVM có ngăn ba pods cùng gọi business action không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt overlap | Chỉ ra registration duplicate và concurrent business execution là hai lỗi khác nhau. |
+    | Cập nhật idempotent | Bỏ qua event có cùng cron/zone/enabled thay vì tạo thêm handle. |
+    | Fencing local | Publish generation mới và kiểm tra token trong callback trước khi chạy. |
+    | Test stale callback | Dùng fake scheduler ép callback cũ chạy sau cancel để kiểm chứng skip. |
+    | Chống business overlap | Chọn single-flight/queue/idempotency theo hợp đồng không được mất tick. |
+- id: dynamic-scheduling-009
+  title: Kiểm soát tính nhất quán khi nhiều luồng cùng cập nhật lịch
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm soát tính nhất quán khi nhiều luồng cùng cập nhật lịch**
+
+    Hai admin threads cùng đổi một lịch có thể làm mất update, tạo ghost timer hoặc stop nhầm handle mới. Bài học đặt ra invariant về expected revision, CAS, synchronized và generation guard cho replace, stop, onComplete, bao gồm chống ABA và scheduler rejection. Khi mở rộng qua nhiều nodes, người học phân biệt configuration revision với owner epoch, dùng DB authoritative state/fencing khi commit side effect và reconciliation để dựng lại schedule sau crash.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Race và invariant
+
+    1. Hai writers cùng đọc oldFuture rồi schedule/put có thể để lại ghost schedule thế nào?
+    2. Vì sao ConcurrentHashMap hay volatile handle không biến các side effects của scheduler thành một transaction?
+    3. Reset revision khi stop rồi tạo lại có thể gây ABA và lỗi callback stale ra sao?
+
+    ### Tuyến tính hóa
+
+    1. expectedRevision khiến hai admin cùng update từ revision 0 cho một kết quả thành công và một conflict bằng cách nào?
+    2. Tại sao register candidate trước rồi publish/cancel cũ dưới lock giúp bảo vệ state khi scheduler reject?
+    3. Vì sao callback one-shot cũ phải completeIfCurrent thay vì remove theo ID không kiểm tra version?
+
+    ### Fencing và đa node
+
+    1. Vì sao cancel(false) và generation check đầu callback không ngăn task cũ commit DB sau replace?
+    2. Configuration revision và owner epoch khác nhau ở các tình huống nào?
+    3. Desired schedule được lưu DB nhưng JVM crash trước register cần reconciliation như thế nào?
+
+    ### Kiểm thử concurrency
+
+    1. Cách dùng CountDownLatch/barrier để kiểm tra đúng một update và một conflict là gì?
+    2. Bạn sẽ test stale stop, null trigger, late callback, version ABA và multi-instance fencing như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích interleaving | Vẽ race của hai writers và xác định ghost timer/lost update. |
+    | Triển khai optimistic concurrency | Định nghĩa replaceIfVersion và cancelIfVersion với conflict rõ. |
+    | Bảo vệ slot | Chỉ cleanup callback cũ khi revision và identity còn là current. |
+    | Kiểm thử cạnh tranh | Dùng hai editors cùng expectedRevision, assert một thành công và một conflict. |
+    | Thiết kế phân tán | Kết hợp DB revision, owner epoch, fencing/idempotency và reconciliation. |

@@ -1,0 +1,21 @@
+sections:
+  execution-context-001:
+    difficulty: BASIC
+  execution-context-002:
+    difficulty: INTERMEDIATE
+  execution-context-003:
+    difficulty: INTERMEDIATE
+  execution-context-004:
+    difficulty: INTERMEDIATE
+  execution-context-005:
+    difficulty: INTERMEDIATE
+  execution-context-006:
+    difficulty: ADVANCED
+  execution-context-007:
+    difficulty: ADVANCED
+  execution-context-008:
+    difficulty: INTERMEDIATE
+  execution-context-009:
+    difficulty: ADVANCED
+  execution-context-010:
+    difficulty: INTERMEDIATE

@@ -1,0 +1,364 @@
+summaries:
+- id: testing-001
+  title: Phân biệt kiểm thử logic tác vụ với kiểm thử thực thi bất đồng bộ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt kiểm thử logic tác vụ với kiểm thử thực thi bất đồng bộ**
+
+    Một kết quả nghiệp vụ đúng không chứng minh tác vụ đã chạy bất đồng bộ, cũng như một worker chạy đúng luồng không chứng minh logic đúng. Bài này tách unit test của xử lý dữ liệu khỏi integration test của Spring proxy và executor để mỗi phép thử có bằng chứng rõ ràng, dễ chẩn đoán khi thất bại.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân ranh giới bằng chứng
+
+    1. Kết quả từ một CompletableFuture đã hoàn thành có đủ chứng minh task chạy trên worker khác caller không, vì sao?
+    2. Những assertion nào thuộc logic nghiệp vụ và những assertion nào thuộc đường dispatch bất đồng bộ?
+    3. Tại sao cần lấy service từ Spring ApplicationContext để kiểm tra cơ chế @Async thay vì tự new đối tượng?
+
+    ### Thiết kế bài test ít flaky
+
+    1. Hai CountDownLatch started và release chứng minh caller nhận future trước khi worker hoàn tất bằng cách nào?
+    2. Khi worker ném exception, kiểm tra Future.get và root cause khác gì kiểm tra lỗi trực tiếp của logic thuần?
+    3. Vì sao một test dùng SyncTaskExecutor hoặc sleep không thể tự chứng minh thực thi đa luồng đúng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tách hai hợp đồng | Viết unit test logic dữ liệu/lỗi và integration test riêng cho proxy, worker và completion. |
+    | Kiểm soát dispatch | Dùng started/release latch chứng minh task đang chạy trong khi caller đã nhận future. |
+    | Kiểm tra kết quả và lỗi | Dùng Future.get(timeout) để đối chiếu giá trị và nguyên nhân exception của worker. |
+    | Chẩn đoán test xanh giả | Phát hiện self-invocation, executor đồng bộ và assertion trên completedFuture không đủ bằng chứng. |
+- id: testing-002
+  title: Dùng SyncTaskExecutor cho kiểm thử phù hợp và nhận biết điều nó không chứng minh
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dùng SyncTaskExecutor cho kiểm thử phù hợp và nhận biết điều nó không chứng minh**
+
+    SyncTaskExecutor giúp thực thi Runnable ngay trên caller thread để unit test gửi tác vụ có kết quả xác định. Bài này dạy cách dùng test double đồng bộ đúng mục đích, đồng thời giới hạn kết luận về non-blocking, race, queue, transaction và context vốn chỉ thấy trên executor thật.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hành vi đồng bộ
+
+    1. SyncTaskExecutor.execute chạy Runnable ở thread nào, và thứ tự trước/sau lời gọi được xác định ra sao?
+    2. Vì sao exception không được bắt từ Runnable có thể quay lại caller khi gọi execute trực tiếp?
+    3. Nếu hai caller khác nhau cùng gọi SyncTaskExecutor, có chắc mọi task được serialize trên một thread duy nhất không?
+
+    ### Phạm vi test và giới hạn
+
+    1. Với SyncTaskExecutor, tại sao ThreadLocal hoặc transaction test thread có thể tạo dương tính giả về context propagation?
+    2. Một test dùng SyncTaskExecutor chứng minh side effect đúng nhưng chưa kiểm tra được rejection hoặc concurrency như thế nào?
+    3. Bạn thiết kế thêm integration test dùng ThreadPoolTaskExecutor và latch ra sao khi yêu cầu caller không bị chặn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dùng executor test đồng bộ | Inject SyncTaskExecutor để kiểm tra tác vụ gửi đúng và side effect hoàn tất trước khi execute trả về. |
+    | Mô tả đúng phạm vi bằng chứng | Phân biệt assertion về logic/ordering trên caller với yêu cầu async/concurrency. |
+    | Kiểm tra ngoại lệ | Đối chiếu exception của execute trực tiếp với exception qua @Async void hoặc Future. |
+    | Bổ sung test đa luồng | Chuyển các claim về worker, queue hoặc context sang integration test có executor thật và timeout. |
+- id: testing-003
+  title: CountDownLatch, Semaphore hoặc hàng đợi để phối hợp kiểm thử xác định
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **CountDownLatch, Semaphore hoặc hàng đợi để phối hợp kiểm thử xác định**
+
+    Các test concurrency ổn định cần điều khiển điểm bắt đầu, mốc đã tới và lúc được phép hoàn thành thay vì đoán lịch thread. Bài này so sánh CountDownLatch, Semaphore và BlockingQueue theo tính chất tín hiệu, giới hạn đồng thời, payload và happens-before; đồng thời hướng dẫn cleanup.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chọn primitive đúng sự kiện
+
+    1. CountDownLatch ready/release/done có vai trò khác nhau nào, và vì sao một latch không tự đặt lại cho lượt test kế tiếp?
+    2. Semaphore giới hạn số tác vụ ở trong vùng có permit bằng cách nào và vì sao chỉ release khi đã acquire thành công?
+    3. BlockingQueue.poll(timeout) có lợi gì khi cần đợi đúng một event có payload thay vì nhìn queue size?
+
+    ### Tính xác định và an toàn
+
+    1. Làm thế nào dùng latch giữ worker ở checkpoint để khẳng định trạng thái trước và sau xử lý?
+    2. Điều gì xảy ra nếu executor chỉ có một worker nhưng barrier đòi hai task cùng tới mốc?
+    3. Tín hiệu countDown hay Future.get thiết lập happens-before cho những hành động nào và chưa chứng minh được điều gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Điều phối các pha | Tổ chức ready/release/done bằng latch và timeout hữu hạn, không dựa vào sleep. |
+    | Kiểm chứng giới hạn tài nguyên | Dùng Semaphore và hai worker giữ permit để chứng minh lượt vào thứ ba không nhận permit. |
+    | Nhận đúng event | Dùng BlockingQueue.poll(timeout) và xác minh payload/correlation ID của worker. |
+    | Dọn dẹp và công bố an toàn | Bảo đảm finally nhả gate/permit, Future.get quan sát lỗi và hiểu ranh giới happens-before. |
+- id: testing-004
+  title: Chờ điều kiện với giới hạn thời gian thay cho ngủ cố định
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chờ điều kiện với giới hạn thời gian thay cho ngủ cố định**
+
+    Ngủ cố định chỉ trì hoãn assertion, không chứng minh bất kỳ trạng thái nào. Bài này chuyển kiểm thử Spring async sang chờ đúng điều kiện nghiệp vụ bằng Awaitility, CountDownLatch hoặc Future với deadline, và giải thích polling thread-safe, kiểm tra tình huống lỗi và cleanup.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chờ điều kiện thay vì thời lượng
+
+    1. Tại sao Thread.sleep(1000) vừa làm test chậm vừa gây flaky khi CI đổi tốc độ?
+    2. Awaitility.untilAsserted, latch.await(timeout) và Future.get(timeout) nên được chọn theo từng loại tín hiệu nào?
+    3. Tại sao cần kích hoạt job một lần bên ngoài lambda polling thay vì submit lại mỗi lần kiểm tra?
+
+    ### Timeout và tính đúng đắn
+
+    1. Điều kiện chờ cần được công bố an toàn giữa thread như thế nào để polling không bỏ sót cập nhật?
+    2. Một Future hoàn tất có nhất thiết đồng nghĩa search index hoặc consumer tiếp theo đã cập nhật trạng thái cuối không?
+    3. Khi Awaitility timeout, bạn phân biệt lỗi worker, sai proxy, dữ liệu transaction chưa commit và timeout chờ như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thay anti-pattern sleep | Biến test ngủ cố định thành phép chờ điều kiện/handle có deadline hữu hạn. |
+    | Dùng Awaitility | Viết untilAsserted với atMost, pollInterval và điều kiện trạng thái nghiệp vụ thực. |
+    | Dùng đồng bộ hóa | Chọn latch hoặc Future có timeout khi có tín hiệu completion trực tiếp. |
+    | Chẩn đoán thất bại | Kiểm tra thread safety, trạng thái FAILED, context/proxy và cleanup thay vì tăng sleep. |
+- id: testing-005
+  title: Kiểm tra lời gọi thật sự đi qua proxy @Async
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra lời gọi thật sự đi qua proxy @Async**
+
+    Bean có annotation @Async hoặc thậm chí được proxy hóa chưa chứng minh chính lời gọi đang đi qua async advice. Bài này dạy test kết hợp AopUtils, external invocation, thread identity và latch để phân biệt proxy đúng với self-invocation, mock, executor đồng bộ hoặc qualifier sai.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Proxy và lời gọi
+
+    1. Tại sao AopUtils.isAopProxy(bean) đúng vẫn chưa chứng minh mọi lời gọi @Async đều được intercept?
+    2. Self-invocation qua this.executeAsync() khác gì external call qua bean proxy được inject?
+    3. Phương thức final/private và proxy JDK so với class-based proxy đặt ra các giới hạn kiểm thử nào?
+
+    ### Bằng chứng runtime
+
+    1. Khi worker bị chặn ở release latch, vì sao caller đã nhận future nhưng future.isDone còn false là bằng chứng hữu ích?
+    2. Làm thế nào so Thread object và prefix của executor để xác minh đúng worker chạy method?
+    3. Với lỗi self-invocation trong facade, bạn tách worker sang bean khác và kiểm thử entrypoint nghiệp vụ thật ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra đối tượng proxy | Lấy Spring-managed bean và xác minh nó có proxy với AopUtils. |
+    | Chứng minh chạy bất đồng bộ | Phối hợp latch, future và Thread identity để kiểm tra đúng external call qua advice. |
+    | Bắt self-invocation | Xây dựng ca âm cho this.asyncMethod() và chỉ ra lý do không dispatch. |
+    | Sửa ranh giới gọi | Tách async worker sang bean được inject, kiểm tra lại qualifier và caller production. |
+- id: testing-006
+  title: Kiểm thử nhận kết quả và cả đường lỗi của phương thức void hoặc Future
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm thử nhận kết quả và cả đường lỗi của phương thức void hoặc Future**
+
+    Bài này đi theo hai thời điểm submit và completion để kiểm thử @Async void, Future và CompletableFuture. Với void cần tín hiệu thành công và AsyncUncaughtExceptionHandler; với future cần kiểm tra value, wrapper exception, cause, timeout và lỗi không bị che bởi test kết thúc quá sớm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng kiểu trả về
+
+    1. Vì sao @Async void không thể được kiểm thử lỗi worker bằng assertThrows bọc trực tiếp lời gọi proxy?
+    2. Future.get(timeout) và CompletableFuture.join() bọc exception theo cách khác nhau như thế nào?
+    3. Lỗi submit bị từ chối khác đường lỗi sau khi worker đã nhận task ra sao?
+
+    ### Thiết kế kênh quan sát
+
+    1. Làm thế nào đặt signal success ở cuối phương thức void và thu lỗi qua AsyncUncaughtExceptionHandler?
+    2. Khi void method tạo nested CompletableFuture.runAsync rồi return, vì sao handler của method void không tự nhận lỗi nested future?
+    3. Vì sao Future.isDone() hoặc một queue lỗi rỗng ngay sau submit chưa đủ chứng minh thành công?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra đường thành công | Dùng Future.get(timeout) hoặc event/latch đúng sau side effect để assert kết quả. |
+    | Kiểm tra lỗi Future | Assert ExecutionException/CompletionException và nguyên nhân lỗi gốc, không bắt Exception chung chung. |
+    | Kiểm tra lỗi void | Cấu hình AsyncUncaughtExceptionHandler test và xác minh method, argument, cause nhận được. |
+    | Tách các đường lỗi | Phân biệt rejection tại submit, exception worker và lỗi của nested future. |
+- id: testing-007
+  title: Kiểm thử quá tải, từ chối, timeout và hủy
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm thử quá tải, từ chối, timeout và hủy**
+
+    Ứng dụng bất đồng bộ phải có test cho bão hòa pool, rejection, timeout và cancellation chứ không chỉ happy path. Bài này dựng fixture A chạy, B chờ, C bị reject rồi phân biệt thời gian caller đợi với việc task thật sự bị hủy hoặc worker đã quan sát interruption.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Overload và rejection
+
+    1. Với pool core=max=1 queue=1, làm thế nào giữ task A, xếp B và chứng minh C bị từ chối theo AbortPolicy?
+    2. Khi chuyển sang CallerRunsPolicy, vì sao task C có thể chạy trên thread nộp thay vì ném TaskRejectedException?
+    3. Bạn cần xác nhận exception của Spring TaskExecutor khác gì với RejectedExecutionException của JDK?
+
+    ### Timeout và cancellation
+
+    1. Vì sao Future.get(timeout) ném TimeoutException nhưng task có thể vẫn tiếp tục chạy và cuối cùng trả kết quả?
+    2. Future.cancel(true) và CompletableFuture.cancel(true) khác nhau về khả năng interrupt supplier theo contract nào?
+    3. Sau khi isCancelled() đúng, vì sao phải có thêm tín hiệu chứng minh worker đã thực sự nhận interruption/cleanup?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo saturation xác định | Điều khiển A/B/C bằng CountDownLatch để kiểm thử full queue và rejection. |
+    | Kiểm tra chính sách overflow | Assert AbortPolicy ném TaskRejectedException và CallerRuns chạy trên caller. |
+    | Tách timeout khỏi hủy | Chứng minh get(timeout) không tự cancel task và thử orTimeout trên CompletableFuture. |
+    | Kiểm tra cancellation | Dùng Future state cùng latch báo interrupt để phân biệt yêu cầu hủy và kết thúc công việc. |
+- id: testing-008
+  title: Kiểm tra truyền rồi dọn ngữ cảnh qua nhiều tác vụ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra truyền rồi dọn ngữ cảnh qua nhiều tác vụ**
+
+    TaskDecorator phải chụp context tại lúc submit, đặt đúng lúc worker chạy và khôi phục trạng thái trong finally khi worker được tái sử dụng. Bài tập kiểm tra A/B/rỗng/lỗi/mutation, raw probe sau mỗi task và sự khác nhau giữa traceId riêng, MDC, Spring Security và Micrometer.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Snapshot và khôi phục
+
+    1. ThreadLocal của caller có tự truyền sang worker cũ trong ThreadPoolTaskExecutor không, vì sao?
+    2. Một TaskDecorator nên chụp traceId lúc nào, và vì sao phải khôi phục previous worker state thay vì chỉ remove()?
+    3. Tại sao kiểm tra ID bên trong task B vẫn có thể che lỗi rò context từ task A?
+
+    ### Kiểm thử leak và thư viện
+
+    1. Làm thế nào dùng raw probe trên underlying ThreadPoolExecutor sau task thành công và task ném lỗi để kiểm tra cleanup thật?
+    2. Khi submit A rồi sửa ThreadLocal trên caller trước khi A chạy, test nào chứng minh snapshot không bị thay đổi?
+    3. MDC, SecurityContext và ContextPropagatingTaskDecorator cần những cơ chế propagation/accessor riêng nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Triển khai decorator có phạm vi | Chụp lúc submit, set lúc run, restore/remove previous trong finally kể cả exception. |
+    | Chứng minh không leak | Chạy nhiều tác vụ trên một worker, dùng raw probe kiểm tra ThreadLocal sau mỗi task. |
+    | Kiểm chứng submit snapshot | Chặn worker, đổi context caller trong lúc task chờ và kiểm tra đúng snapshot. |
+    | Đánh giá cơ chế context | Phân biệt TraceContext thủ công với MDC, Spring Security và Micrometer accessors. |
+- id: testing-009
+  title: Kiểm thử cron, múi giờ và lịch chạy với nguồn thời gian có thể kiểm soát
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm thử cron, múi giờ và lịch chạy với nguồn thời gian có thể kiểm soát**
+
+    Lịch @Scheduled cần kiểm thử quy tắc cron, zone, các mốc qua cuối tuần/DST và tình huống job chạy chậm mà không chờ đồng hồ thật. Bài này tách Clock của logic nghiệp vụ khỏi CronExpression/CronTrigger và khỏi integration test đăng ký scheduler thực.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cron và múi giờ
+
+    1. Spring cron sáu trường khác crontab năm trường ở chỗ nào và vì sao cú pháp hợp lệ chưa đủ để bảo đảm lịch đúng?
+    2. Cùng lịch 09:00, vì sao Asia/Ho_Chi_Minh và UTC tạo hai Instant khác nhau?
+    3. Khi DST tạo giờ không tồn tại hoặc xuất hiện hai lần, cần kiểm tra ZoneRules và mốc next như thế nào?
+
+    ### Kiểm soát thời gian và trigger
+
+    1. Clock.fixed trong business service có làm @Scheduled tự chạy theo đồng hồ giả không, và phải test trigger bằng API nào?
+    2. CronTrigger lenient và fixed execution tính mốc kế tiếp khác nhau thế nào khi job hoàn thành muộn?
+    3. Tại sao test lịch ở một JVM chưa đủ chứng minh job chỉ chạy một lần trên nhiều instance?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính đúng mốc cron | Dùng CronExpression.next với seed và ZoneId cố định để so sánh Instant mong đợi. |
+    | Kiểm tra DST | Lập ca gap/overlap New York và kiểm tra giờ địa phương cùng offset thực. |
+    | Điều khiển thời gian nghiệp vụ | Inject Clock.fixed/offset để thử đổi ngày mà không sleep. |
+    | Đánh giá trigger và cluster | Phân biệt lenient/fixed; bổ sung test wiring, idempotency và multi-instance theo nhu cầu. |
+- id: testing-010
+  title: Kiểm tra dừng context và giải phóng executor trong kiểm thử
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra dừng context và giải phóng executor trong kiểm thử**
+
+    Bài phân biệt context đóng, executor nhận shutdown và worker đã terminated. Người học kiểm chứng chính sách graceful/immediate, tránh deadlock khi close đợi latch và hiểu Spring TestContext có thể cache ApplicationContext nên test method kết thúc chưa đồng nghĩa mọi pool được hủy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng đời và ownership
+
+    1. context.isActive false, pool.isShutdown true và pool.isTerminated true chứng minh ba sự kiện khác nhau nào?
+    2. Khi executor là Spring bean hoặc do test tự tạo, ai sở hữu việc shutdown và awaitTermination?
+    3. Spring TestContext cache ảnh hưởng thế nào tới giả định đóng context trong @AfterEach?
+
+    ### Kiểm thử shutdown an toàn
+
+    1. Tại sao cần gọi context.close trên thread khác nếu worker đang chờ latch do test thread giữ?
+    2. setWaitForTasksToCompleteOnShutdown và setAwaitTerminationSeconds có thể và không thể bảo đảm điều gì?
+    3. Làm sao kết hợp taskStarted, mayFinish, closeReturned và awaitPoolShutdown để chứng minh graceful shutdown đúng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm tra ba trạng thái shutdown | Đối chiếu context.isActive, isShutdown và isTerminated của đúng native pool. |
+    | Dựng test đóng context | Dùng closer thread và latch để xác minh close chờ task đang chạy mà không deadlock. |
+    | Tách ownership | Đóng đúng executor ngoài context; không đóng bừa context đang được Spring Test cache. |
+    | Kiểm tra policy | Giải thích graceful versus interruption và giới hạn của thời gian await. |
+- id: testing-011
+  title: Kiểm tra tranh chấp bằng phối hợp luồng thay vì chỉ tăng số lần chạy
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra tranh chấp bằng phối hợp luồng thay vì chỉ tăng số lần chạy**
+
+    Lặp test thật nhiều lần vẫn có thể không chạm đúng interleaving gây lỗi check-then-act. Bài này chủ động đặt CyclicBarrier sau lần đọc và trước cập nhật, tái hiện lost update, sau đó kiểm chứng CAS, lock hoặc ràng buộc database bằng bất biến và số kết quả thành công.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Race window và checkpoint
+
+    1. Vì sao AtomicInteger.get rồi decrementAndGet riêng lẻ vẫn có thể làm tồn kho 1 thành -1?
+    2. CountDownLatch ready/start và CyclicBarrier đặt sau lần đọc tạo interleaving có thể lặp lại thế nào?
+    3. Vì sao đặt CyclicBarrier hai parties bên trong một critical section đã khóa đúng sẽ tạo timeout giả?
+
+    ### Red-green và Spring
+
+    1. Khi hai worker cùng đọc tồn kho 1, compareAndSet giúp chỉ một worker thành công thế nào?
+    2. Nếu nghiệp vụ dùng hai transaction/database connections, vì sao test thread @Transactional không bao trùm worker và cần kiểm tra dữ liệu sau commit?
+    3. Một bài race test chạy xanh ở một JVM có chứng minh dữ liệu an toàn trên nhiều pod không, và cần biện pháp gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế race checkpoint | Dùng barrier sau đọc để tái hiện lỗi check-then-act một cách xác định. |
+    | Đánh giá fix CAS | Chạy mô phỏng unsafe/safe, assert approved count và remaining không âm. |
+    | Kiểm thử Spring bean thật | Gọi bean qua thread pool hai worker, lấy từng Future và assert invariant. |
+    | Nhận diện giới hạn phân tán | Đề xuất atomic SQL/optimistic locking/constraint cho concurrency qua nhiều JVM. |

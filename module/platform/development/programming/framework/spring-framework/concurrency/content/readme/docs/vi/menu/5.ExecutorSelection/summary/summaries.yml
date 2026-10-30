@@ -1,0 +1,314 @@
+summaries:
+- id: executor-selection-001
+  title: SyncTaskExecutor chạy ngay trên luồng gọi
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **SyncTaskExecutor chạy ngay trên luồng gọi**
+
+    `SyncTaskExecutor` làm rõ điểm nền tảng của hợp đồng `TaskExecutor`: việc gửi một `Runnable` không tự bảo đảm tác vụ chạy trên thread mới. Hiểu việc thực thi ngay trên caller giúp chọn cách xử lý đồng bộ có chủ đích, đọc đúng thứ tự log, ngữ cảnh transaction và ngoại lệ, đồng thời tránh kết luận sai từ test chỉ dùng executor đồng bộ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế thực thi và tính đồng thời
+
+    1. `execute(task)` gọi `Runnable.run()` trên thread nào và trả về cho caller tại thời điểm nào?
+    2. Vì sao hai request khác nhau vẫn có thể chạy hai task đồng thời trên cùng một `SyncTaskExecutor`?
+    3. Một `SyncTaskExecutor` khác gì executor có đúng một worker thread riêng và một queue?
+
+    ### Ảnh hưởng ngữ cảnh và lỗi
+
+    1. Điều gì xảy ra với `ThreadLocal`, MDC và transaction gắn với caller trong lúc task chạy trực tiếp?
+    2. Lỗi unchecked của `Runnable` gọi trực tiếp qua `execute` đi đâu, và việc đi qua proxy `@Async` làm đường báo lỗi khác thế nào?
+    3. Vì sao test dùng executor đồng bộ có thể che khuất race hoặc lỗi lan truyền context khi chuyển sang executor nền?
+
+    ### Lựa chọn theo tình huống
+
+    1. Khi endpoint phải trả ngay và xử lý báo cáo lâu, vì sao `SyncTaskExecutor` không đạt mục tiêu?
+    2. Trong trường hợp nào dùng `SyncTaskExecutor` để kiểm thử logic có tính quyết định là lựa chọn phù hợp?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán luồng thực thi | Vẽ trace `before → execute → task.run → after` và chứng minh caller chỉ tiếp tục khi task hoàn tất. |
+    | Phân tích cạnh tranh giữa caller | Giải thích bằng ví dụ hai HTTP threads vì sao executor đồng bộ không tuần tự hóa toàn JVM. |
+    | Xử lý lỗi và ngữ cảnh | Phân biệt unchecked exception của direct `execute` với lỗi từ proxy `@Async`; chỉ ra cách dọn `ThreadLocal`. |
+    | Chọn môi trường test | Dùng `SyncTaskExecutor` cho phép thử tuần tự và thiết kế test riêng cho race/visibility của production pool. |
+    | Đánh giá độ phù hợp | Bác bỏ việc dùng executor đồng bộ để trả job ID cho tác vụ dài và nêu hướng chuyển sang executor nền có giới hạn. |
+- id: executor-selection-002
+  title: SimpleAsyncTaskExecutor tạo luồng cho từng tác vụ và không tái sử dụng luồng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **SimpleAsyncTaskExecutor tạo luồng cho từng tác vụ và không tái sử dụng luồng**
+
+    `SimpleAsyncTaskExecutor` là chiến lược mỗi tác vụ một thread mới, khác với cả thực thi trực tiếp lẫn pool worker được tái sử dụng. Bài này giúp người học nhìn thấy thread identity thật, dự báo chi phí tạo platform thread, cân nhắc virtual thread trên JDK 21+ và hiểu các hệ quả vận hành khi chọn chiến lược per-task.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thread-per-task và nhận diện luồng
+
+    1. Điều gì xảy ra với thread sau khi một `Runnable` hoàn tất trên `SimpleAsyncTaskExecutor`?
+    2. Dùng `Thread.currentThread()` và latch thế nào để chứng minh hai tác vụ tuần tự không tái sử dụng cùng thread?
+    3. Vì sao không thể coi executor này là một thread pool có worker và hàng đợi tái sử dụng?
+
+    ### Tài nguyên và phiên bản runtime
+
+    1. Ở platform-thread mode, điều gì có thể xảy ra nếu gửi hàng nghìn tác vụ blocking I/O mà không có giới hạn?
+    2. Bật `setVirtualThreads(true)` yêu cầu JDK/Spring nào, và điều gì vẫn phải giới hạn dù dùng virtual threads?
+    3. Concurrency limit thay đổi khả năng tiếp nhận thế nào mà không biến executor thành pool?
+
+    ### Tích hợp và vòng đời
+
+    1. Khi gọi qua `@Async` proxy, lỗi self-invocation và dữ liệu `ThreadLocal` ảnh hưởng đến kết quả ra sao?
+    2. Ai gọi `close()`, và `setTaskTerminationTimeout` khác với timeout xử lý từng tác vụ như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện chiến lược thực thi | Mô phỏng hai lần `execute` và chứng minh mỗi task nhận một Thread mới, không có worker reuse. |
+    | Ước lượng rủi ro tài nguyên | Phân tích chi phí stack, scheduling, blocking I/O của platform threads khi số task tăng. |
+    | Lựa chọn virtual threads | Giải thích đúng vai trò `setVirtualThreads(true)` và đề xuất giới hạn downstream cho workload I/O. |
+    | Cấu hình tích hợp Spring | Chỉ định đúng `@Async` executor bean, nhận biết self-invocation và việc thiếu context propagation. |
+    | Quản lý vòng đời | Phân biệt đóng executor với timeout của API, xác định cách chờ task khi ứng dụng dừng. |
+- id: executor-selection-003
+  title: Giới hạn đồng thời của SimpleAsyncTaskExecutor
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn đồng thời của SimpleAsyncTaskExecutor**
+
+    Giới hạn đồng thời của `SimpleAsyncTaskExecutor` là cơ chế chặn tại cổng gửi việc hoặc từ chối khi đủ suất; nó không tạo queue hay tái sử dụng worker. Bài này giúp thiết kế backpressure đúng với loại caller, lựa chọn blocking/rejection theo phiên bản Spring và kiểm thử saturation bằng latch, tránh deadlock do nộp việc lồng nhau.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế throttle và giá trị biên
+
+    1. Vì sao `setConcurrencyLimit(1)` cho phép một task hoạt động nhưng vẫn tạo thread mới cho lần tiếp theo?
+    2. Phân biệt `UNBOUNDED_CONCURRENCY = -1`, giới hạn dương và `NO_CONCURRENCY = 0` như thế nào?
+    3. Vì sao `isThrottleActive()` không có nghĩa executor hiện đã hết suất?
+
+    ### Chờ hay từ chối ở biên submit
+
+    1. Khi limit đầy, chính sách mặc định tác động thế nào tới HTTP request thread đang gọi `execute`?
+    2. Từ Spring 6.2.6, `setRejectTasksWhenLimitReached(true)` đổi đường đi của tác vụ và loại exception ra sao?
+    3. Một task đang giữ suất lại nộp và chờ task con vào cùng executor có thể deadlock thế nào?
+
+    ### Kiểm thử và vận hành
+
+    1. Dùng `CountDownLatch` và một submitter thread riêng thế nào để kiểm thử cả nhánh block lẫn reject?
+    2. Vì sao concurrency limit không phải request timeout, queue capacity hay giới hạn trên nhiều pod?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Diễn giải admission control | Vẽ trạng thái A/B/C với limit=2, xác định bên nào chờ và khi nào task được bắt đầu. |
+    | Chọn chính sách quá tải | Lập luận khi nên block và khi nên reject, kèm cách phản hồi lỗi ở biên ứng dụng. |
+    | Thiết kế thử nghiệm ổn định | Xây fixture latch chứng minh `TaskRejectedException` và tránh test deadlock do caller giữ latch. |
+    | Phát hiện lỗi cấu hình | Giải thích tại sao limit=0 không phải tuần tự, throttle-active không phải metric saturation. |
+    | Bảo vệ tài nguyên | Xác định trần đồng thời theo downstream và phân biệt timeout của task với shutdown termination timeout. |
+- id: executor-selection-004
+  title: ThreadPoolTaskExecutor quản lý nhóm luồng tái sử dụng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ThreadPoolTaskExecutor quản lý nhóm luồng tái sử dụng**
+
+    `ThreadPoolTaskExecutor` giúp Spring vận hành một pool worker có thể tái sử dụng với core/max threads, queue hữu hạn, rejection và lifecycle rõ ràng. Người học cần đọc đúng thứ tự core → queue → max → reject và nối cấu hình đó với latency, isolation, `@Async`, context và shutdown thay vì chỉ đặt một con số thread.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế pool và hàng đợi
+
+    1. Với `core=2`, `max=4`, `queue=2`, vì sao task thứ ba, thứ năm và thứ bảy có thể được xử lý khác nhau?
+    2. Vì sao tăng `maxPoolSize` không giúp khi queue còn rất lớn hoặc không giới hạn?
+    3. Điểm khác nhau giữa `queueCapacity=0` và queue có dung lượng dương là gì?
+
+    ### Quan sát lỗi và ngữ cảnh
+
+    1. Làm thế nào phân biệt task bị rejection với task đã được nhận rồi lỗi hoặc timeout?
+    2. Khi dùng worker tái sử dụng, `TaskDecorator` phải chụp và khôi phục MDC trong giai đoạn nào?
+    3. Vì sao thread pool an toàn nội bộ không làm field mutable trong singleton bean trở nên thread-safe?
+
+    ### Lựa chọn và vòng đời
+
+    1. Tách pool CPU-bound và I/O-bound có thể bảo vệ SLA ra sao, và chi phí đi kèm là gì?
+    2. Khi đóng Spring context, sự khác nhau giữa đợi task đã nhận và bảo đảm job bền vững sau crash là gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán thuật toán nhận việc | Mô phỏng core/queue/max/rejection với trạng thái task được khóa bằng latch. |
+    | Cấu hình pool | Chọn bộ tham số core, max, queue, tên thread và rejection cùng một chính sách, không chọn rời rạc. |
+    | Giải thích metric | Đọc activeCount, poolSize, queueSize cùng queue-wait và tránh coi snapshot là số liệu nguyên tử. |
+    | Bảo vệ dữ liệu và context | Thiết kế cleanup MDC/ThreadLocal giữa các tác vụ và chỉ ra race trên singleton service. |
+    | Thiết kế shutdown và isolation | Giải thích thời điểm Spring đóng pool, tách nhóm tải và khi phải đưa công việc sang durable queue. |
+- id: executor-selection-005
+  title: ConcurrentTaskExecutor thích nghi Executor có sẵn
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **ConcurrentTaskExecutor thích nghi Executor có sẵn**
+
+    `ConcurrentTaskExecutor` đưa một `Executor`/`ExecutorService` đã tồn tại vào API task execution của Spring mà không tạo pool mới. Trọng tâm là ranh giới adapter–delegate: Spring dùng interface/bean, còn delegate quyết định thread, queue, rejection và shutdown. Phân biệt rõ với adapter tối giản và scheduler giúp tránh cấu hình trùng tài nguyên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Adapter và quyền điều phối
+
+    1. Vì sao `getConcurrentExecutor() == existingExecutor` có thể đúng trong cấu hình sử dụng `ConcurrentTaskExecutor`?
+    2. Nếu delegate là `Runnable::run`, vì sao adapter vẫn chạy trên caller thread?
+    3. Khi delegate là một `ExecutorService`, ai quyết định worker count, queue và rejection?
+
+    ### Tích hợp Spring và các lựa chọn gần kề
+
+    1. Khi nào một thành phần cần bọc `Executor` bằng `ConcurrentTaskExecutor` thay vì inject JDK `Executor` trực tiếp?
+    2. Phân biệt `ConcurrentTaskExecutor`, `TaskExecutorAdapter`, `ConcurrentTaskScheduler` theo hợp đồng mà consumer cần như thế nào?
+    3. Lời gọi `@Async` qua bean adapter và callback `thenApplyAsync` không truyền executor có thể dùng các thread nào?
+
+    ### Vòng đời và kết quả
+
+    1. Bên tạo delegate phải tổ chức shutdown thế nào để không đóng nhầm pool đang được nhiều consumer chia sẻ?
+    2. Vì sao Future từ `submit` không tự chứng minh task đã thực hiện hoặc job sẽ bền vững qua restart?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chứng minh không nhân đôi pool | Mô tả sơ đồ adapter → delegate và kiểm tra object identity của executor gốc. |
+    | Ánh xạ API thực thi | Chọn adapter hay dùng trực tiếp `Executor` tùy kiểu consumer Spring và yêu cầu Future. |
+    | Xác định ownership | Phân quyền tạo, cấu hình và shutdown delegate một cách nhất quán với bean lifecycle. |
+    | Phân tích thread và lỗi | Giải thích delegate inline, pool JDK, rejection và callback không truyền executor. |
+    | Chọn đúng loại adapter | So sánh `ConcurrentTaskExecutor` với adapter tối giản và scheduler theo yêu cầu thực thi/lập lịch. |
+- id: executor-selection-006
+  title: TaskExecutorAdapter thích nghi hợp đồng Executor của JDK
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **TaskExecutorAdapter thích nghi hợp đồng Executor của JDK**
+
+    `TaskExecutorAdapter` là cầu nối JDK `Executor` sang `AsyncTaskExecutor` Spring, đặc biệt khi cần `submit` và `Future` trên một delegate chỉ có `execute`. Người học sẽ phân tích các nhánh ủy quyền, `FutureTask`, `TaskDecorator`, cách chuyển `RejectedExecutionException` và lỗi vòng đời thay vì nhầm adapter với một thread pool.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giao diện và đường đi của submit
+
+    1. Một `Executor` chỉ có `execute(Runnable)` được adapter cung cấp `submit(Callable)` bằng cơ chế nào?
+    2. Khi delegate là `ExecutorService`, sự có mặt của `TaskDecorator` ảnh hưởng đến nhánh thực thi `submit` ra sao?
+    3. Vì sao `Future` hoàn tất không bảo đảm lời gọi đã chạy trên worker thread khác?
+
+    ### Decorator và lỗi
+
+    1. Vì sao wrapper `catch` quanh `FutureTask.run()` có thể không thấy exception mà `Future.get()` vẫn báo?
+    2. Khi JDK delegate ném `RejectedExecutionException` tại submit, adapter phản ánh bằng contract nào của Spring?
+    3. Vì sao `CallerRunsPolicy` có thể không ném exception nhưng vẫn làm caller bị chặn?
+
+    ### Ownership và tích hợp
+
+    1. Dùng `TaskExecutorAdapter` với một pool dùng chung đòi hỏi ai quản lý shutdown và queue?
+    2. Khi nào nên dùng `ThreadPoolTaskExecutor` hoặc `ConcurrentTaskExecutor` thay vì một `TaskExecutorAdapter` đơn giản?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích `FutureTask` | Vẽ hai nhánh của `submit` và dự đoán cách nhận kết quả hoặc `ExecutionException`. |
+    | Viết decorator đúng phạm vi | Thiết kế capture/restore `ThreadLocal` trong `finally` và chỉ ra giới hạn quan sát lỗi của wrapper. |
+    | Chẩn đoán rejection | Phân biệt từ chối tại submit với failure bên trong task và phương án xử lý tương ứng. |
+    | Giữ quyền quản trị pool | Xác định nơi đóng delegate, tránh tạo/đóng pool riêng theo request. |
+    | Lựa chọn interface phù hợp | Chỉ ra tình huống cần adapter từ `Executor` sang `AsyncTaskExecutor` và khi Spring pool native hợp lý hơn. |
+- id: executor-selection-007
+  title: DefaultManagedTaskExecutor trong môi trường Jakarta EE
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **DefaultManagedTaskExecutor trong môi trường Jakarta EE**
+
+    Khi Spring triển khai trong Jakarta EE application server, thread, naming, security và tài nguyên executor thường thuộc quyền quản trị của container. `DefaultManagedTaskExecutor` lấy executor qua JNDI và nối nó với `TaskExecutor` Spring. Bài này giúp tránh dùng sai môi trường, shutdown managed resource trái hợp đồng hoặc giả định transaction và `ThreadLocal` tự theo sang task nền.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### JNDI và ngữ cảnh ứng dụng
+
+    1. Tên JNDI chuẩn `java:comp/DefaultManagedExecutorService` trỏ tới tài nguyên nào và ai cấp phát worker?
+    2. Trong quá trình khởi tạo bean, `afterPropertiesSet()` làm gì khi lookup JNDI thất bại?
+    3. Default managed executor có thể mang những context Jakarta EE nào, và vì sao không tự mang mọi `ThreadLocal`?
+
+    ### Vòng đời và transaction
+
+    1. Vì sao ứng dụng không được gọi `shutdown()` trên `ManagedExecutorService` do application server sở hữu?
+    2. Tác vụ `@Async` có tự tham gia transaction đang mở ở request thread hay không, và cần phối hợp sau commit khi nào?
+    3. Một Spring Boot JAR standalone thiếu JNDI binding sẽ gặp vấn đề gì nếu cấu hình `DefaultManagedTaskExecutor`?
+
+    ### Chọn cơ chế tích hợp
+
+    1. Khi nào `DefaultManagedTaskExecutor` phù hợp hơn `ThreadPoolTaskExecutor` hoặc `ConcurrentTaskExecutor`?
+    2. Vì sao `DefaultManagedTaskExecutor` khác `DefaultManagedTaskScheduler` dù cả hai dùng tài nguyên Jakarta EE?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện môi trường Jakarta EE | Xác minh JNDI resource và phân biệt một managed executor thật với JDK pool tự tạo. |
+    | Cấu hình Spring adapter | Mô tả bean và đường `@Async` tới managed executor, cùng lỗi startup khi lookup không thành công. |
+    | Bảo vệ vòng đời container | Giải thích vì sao lifecycle của `ManagedExecutorService` thuộc server và cách kiểm tra redeploy. |
+    | Phân tích context/transaction | Phân biệt naming/classloader/security context được container quản lý với request ThreadLocal và transaction. |
+    | Chọn runtime phù hợp | Lập phương án executor cho Jakarta EE production và Java SE/local test mà không giả định fallback JNDI. |
+- id: executor-selection-008
+  title: Chọn cách thực thi theo tải, môi trường và yêu cầu vòng đời
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chọn cách thực thi theo tải, môi trường và yêu cầu vòng đời**
+
+    Bài tổng hợp kết nối các executor đã học thành quy trình ra quyết định dựa trên ba trục: đặc tính tải, mô hình runtime và hợp đồng vòng đời. Người học phải chọn giữa đồng bộ, bounded pool, virtual threads, scheduler, Reactor hoặc durable worker bằng dữ liệu về deadline, quota, latency và khả năng phục hồi, rồi chứng minh lựa chọn qua kiểm thử.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân tích tải và capacity
+
+    1. CPU-bound, blocking I/O và non-blocking I/O đặt ra các giới hạn khác nhau đối với worker, event-loop và downstream như thế nào?
+    2. Dùng `L = λ × W` để ước lượng công việc đang hiện diện ra sao, và vì sao công thức đó không tự tính ra số CPU threads?
+    3. Vì sao queue vô hạn có thể chuyển overload thành latency và memory pressure?
+
+    ### Môi trường và kiến trúc
+
+    1. Khi nào chọn `SyncTaskExecutor`, `ThreadPoolTaskExecutor`, virtual-thread-per-task, `TaskScheduler` hay Reactor `boundedElastic`?
+    2. Trong Jakarta EE, WebFlux và ứng dụng nhiều replica, quy tắc ownership/thread/scheduler khác Spring MVC standalone ra sao?
+    3. Khi nào phải chuyển công việc sang durable queue với job ID, retry và idempotency thay vì chỉ dùng `@Async`?
+
+    ### Lỗi, vòng đời và kiểm chứng
+
+    1. Một chính sách shutdown hợp lý xử lý admission, in-flight task, timeout, cancellation và restart thế nào?
+    2. Các phép thử steady-state, burst, saturation, downstream failure và rolling restart chứng minh điều gì về lựa chọn executor?
+    3. Nếu HTTP caller hết thời hạn chờ, làm sao phân biệt trạng thái Future với tác động nghiệp vụ còn tiếp diễn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập ma trận quyết định | So sánh các chiến lược theo CPU/I/O, request deadline, platform, quota và durability. |
+    | Ước lượng capacity | Sử dụng Little's Law đúng phạm vi và tính ngân sách queue/downstream từ dữ liệu đo. |
+    | Thiết kế isolation | Chọn pool/queue theo nhóm công việc hoặc offload Reactor/Jakarta EE phù hợp để tránh starvation. |
+    | Xử lý lifecycle | Đề xuất shutdown có thời hạn, cancellation hợp tác và durable job khi task không được phép mất. |
+    | Thiết kế validation | Xây kế hoạch load/failure test và metric p95/p99, rejection, queue wait, active workers và restart. |

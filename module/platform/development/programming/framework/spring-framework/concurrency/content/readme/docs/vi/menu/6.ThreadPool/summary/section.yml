@@ -1,0 +1,82 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Nhóm luồng
+roadmapHeading: Lộ trình học và thực hành ThreadPoolTaskExecutor
+roadmap:
+- id: thread-pool-001
+  order: 1
+  title: Khai báo ThreadPoolTaskExecutor thành bean do container quản lý
+  description: Xây dựng Spring bean ThreadPoolTaskExecutor với vòng đời khởi tạo, inject và shutdown do container quản lý, tránh lỗi sở hữu pool trong service.
+  transition:
+    to: thread-pool-002
+    description: Hiểu vòng đời bean trước, sau đó cần chọn hai ngưỡng worker làm cơ sở cho khả năng chạy song song.
+- id: thread-pool-002
+  order: 2
+  title: corePoolSize và maxPoolSize
+  description: Phân biệt corePoolSize và maxPoolSize để dự đoán worker tạo ra theo queueCapacity, giới hạn CPU/I/O và mô phỏng tải.
+  transition:
+    to: thread-pool-003
+    description: 'Biết core/max vẫn chưa đủ: cần biết loại và giới hạn hàng đợi nơi task chờ.'
+- id: thread-pool-003
+  order: 3
+  title: queueCapacity và lựa chọn hàng đợi nội bộ
+  description: Khảo sát LinkedBlockingQueue và SynchronousQueue, chọn queueCapacity theo backlog, độ trễ chờ và giới hạn nguồn lực.
+  transition:
+    to: thread-pool-004
+    description: Từ cấu trúc queue, bước tiếp theo là phân tích đầy đủ thứ tự quyết định nhận task.
+- id: thread-pool-004
+  order: 4
+  title: 'Thứ tự nhận tác vụ: tạo luồng cơ bản, xếp hàng, mở rộng rồi từ chối'
+  description: Theo dõi thứ tự nhận task core, queue, mở rộng và từ chối, bao gồm các nhánh shutdown và tác vụ đến sau chạy trước.
+  transition:
+    to: thread-pool-005
+    description: Nắm thuật toán nhận việc để giải thích hiện tượng queue gần vô hạn làm max worker hiếm được tạo.
+- id: thread-pool-005
+  order: 5
+  title: Vì sao hàng đợi không giới hạn làm maxPoolSize khó phát huy tác dụng
+  description: Giải thích vì sao hàng đợi rất lớn làm maxPoolSize ít được dùng và phát hiện backlog qua số worker, queue và p99 latency.
+  transition:
+    to: thread-pool-006
+    description: Khi nhận biết backlog không giới hạn, xem phương án direct handoff không chứa task chờ.
+- id: thread-pool-006
+  order: 6
+  title: queueCapacity bằng 0 và chuyển giao trực tiếp
+  description: Thực hành direct handoff với queueCapacity=0, worker reuse, saturation và rejection khi không có buffer chờ.
+  transition:
+    to: thread-pool-007
+    description: Sau khi xét admission, học cách worker được thu hồi khi lưu lượng giảm.
+- id: thread-pool-007
+  order: 7
+  title: keepAliveSeconds và allowCoreThreadTimeOut
+  description: Thiết kế co giãn số worker qua keepAliveSeconds và allowCoreThreadTimeOut, đánh đổi tài nguyên idle với chi phí tạo thread.
+  transition:
+    to: thread-pool-008
+    description: Đã hiểu pool co lại, cần đánh giá có nên chủ động tạo sẵn core worker ở startup.
+- id: thread-pool-008
+  order: 8
+  title: Khởi động trước luồng cơ bản bằng prestartAllCoreThreads
+  description: Khởi động sẵn core workers bằng prestartAllCoreThreads và phân biệt prestart với warm-up nghiệp vụ và readiness.
+  transition:
+    to: thread-pool-009
+    description: Đã thiết kế lifecycle và startup, cần khả năng nhận diện đúng pool qua tên thread và factory.
+- id: thread-pool-009
+  order: 9
+  title: Đặt tên luồng bằng threadNamePrefix hoặc ThreadFactory
+  description: Đặt tên worker bằng threadNamePrefix hoặc ThreadFactory; ghép thread/log với executor đúng và giữ context sạch.
+  transition:
+    to: thread-pool-010
+    description: Cuối cùng cần xác định default thực tế đến từ Framework, Boot hay cấu hình ứng dụng.
+- id: thread-pool-010
+  order: 10
+  title: Phân biệt giá trị mặc định của Framework với cấu hình do ứng dụng cung cấp
+  description: Phân biệt mặc định Spring Framework, lựa chọn @Async/@Scheduled, Spring Boot auto-configuration và giá trị cấu hình runtime.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh vai trò của 10 bài học
+
+  | Tiêu chí | Bài 1: Khai báo ThreadPoolTaskExecutor thành bean do container quản lý | Bài 2: corePoolSize và maxPoolSize | Bài 3: queueCapacity và lựa chọn hàng đợi nội bộ | Bài 4: Thứ tự nhận tác vụ: tạo luồng cơ bản, xếp hàng, mở rộng rồi từ chối | Bài 5: Vì sao hàng đợi không giới hạn làm maxPoolSize khó phát huy tác dụng | Bài 6: queueCapacity bằng 0 và chuyển giao trực tiếp | Bài 7: keepAliveSeconds và allowCoreThreadTimeOut | Bài 8: Khởi động trước luồng cơ bản bằng prestartAllCoreThreads | Bài 9: Đặt tên luồng bằng threadNamePrefix hoặc ThreadFactory | Bài 10: Phân biệt giá trị mặc định của Framework với cấu hình do ứng dụng cung cấp |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | Bean và lifecycle | Hai ngưỡng worker | Queue internals | Admission algorithm | Queue gần vô hạn | Direct handoff | Idle timeout | Prestart core | Thread naming | Nguồn default |
+  | Vấn đề giải quyết | Ai sở hữu executor? | Pool tạo bao nhiêu worker? | Task chờ ở đâu? | Vì sao task bị reject? | Vì sao max không tăng? | Queue=0 nhận task ra sao? | Khi nào worker hết hạn? | Prestart có ý nghĩa gì? | Thread nào chạy task? | Cấu hình nào hiệu lực? |
+  | Thao tác thực hành | Bean và DI | Lập bảng 7 task | Thử hai loại queue | Theo dõi 4 bước | So sánh ba queue | Latch thử saturation | Đo core timeout | Kiểm giá trị prestart | Thử tên 4 pool | Đọc getter Boot |
+  | Rủi ro cần tránh | Initialize hai lần | Nhầm max và throughput | Queue dài và latency | Nhầm FIFO completion | Backlog che quá tải | Thread quá nhiều | Nhầm idle với task timeout | Nhầm prestart/warm-up | Rò ngữ cảnh qua thread name | Nhầm class default với Boot |

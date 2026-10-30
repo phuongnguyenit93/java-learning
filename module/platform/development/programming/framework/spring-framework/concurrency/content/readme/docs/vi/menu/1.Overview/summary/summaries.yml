@@ -1,0 +1,281 @@
+summaries:
+- id: overview-001
+  title: 'Đồng thời trong Spring: mục đích và các tình huống sử dụng'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đồng thời trong Spring: mục đích và các tình huống sử dụng**
+
+    Concurrency trong Spring xuất hiện vì nhiều request, thao tác I/O, job nền và việc định kỳ có thể cùng tồn tại. Bài học giúp đánh giá nhu cầu thực trước khi thêm thread hay annotation: lúc nào việc chồng lấp I/O hữu ích, khi nào tác vụ nền phải có độ bền, và giới hạn pool, hàng đợi, downstream ảnh hưởng hiệu quả ra sao.
+
+    Đây là bức tranh định hướng toàn chương; các công cụ Spring được giới thiệu theo nhu cầu sử dụng để tránh đồng nhất `@Async` với non-blocking I/O hoặc xem nhiều thread là cách tăng tốc mặc định.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và động cơ concurrency
+
+    1. Concurrency khác parallelism, asynchrony và non-blocking ở những khía cạnh nào?
+    2. Vì sao hai cuộc gọi I/O độc lập có thể được chồng lấp thời gian chờ nhưng latency không nhất thiết giảm đúng như phép cộng lý tưởng?
+    3. Khi nào chuyển một việc ngắn sang task nền chỉ làm tăng chi phí điều phối?
+
+    ### Lựa chọn cơ chế và giới hạn
+
+    1. Trong các tình huống gửi thông báo, xuất báo cáo và đồng bộ theo lịch, yêu cầu độ bền và thời điểm nhận kết quả làm thay đổi thiết kế ra sao?
+    2. Trước khi tăng số worker, cần đo những giới hạn nào ở executor, database và dịch vụ phụ thuộc?
+    3. Vì sao `@Async` thường không làm lệnh JDBC blocking trở thành non-blocking?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại nhu cầu đồng thời | Gắn từng tình huống I/O, CPU, job nền và lịch định kỳ với mục tiêu thực thi phù hợp, giải thích lý do. |
+    | Chọn công cụ ở mức kiến trúc | Đề xuất executor, `@Async`, `@Scheduled` hoặc queue bền vững theo nhu cầu và mức bảo đảm. |
+    | Đánh giá tải và rủi ro | Nêu được queue saturation, shared state, lỗi, shutdown, transaction và metric cần đo trước khi triển khai. |
+- id: overview-002
+  title: Phân biệt đồng bộ, bất đồng bộ, song song và lập lịch
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt đồng bộ, bất đồng bộ, song song và lập lịch**
+
+    Các thuật ngữ đồng bộ, bất đồng bộ, song song và lập lịch mô tả các trục khác nhau của việc thực thi. Bài này đào sâu quan hệ chờ của caller, thời điểm kích hoạt, mức song song thực tế và blocking I/O; từ đó giải thích vì sao một `CompletableFuture` có thể vẫn khiến caller chờ và một `@Scheduled` không tự chạy trên nhiều thread.
+
+    Người học kiểm chứng bằng ví dụ Java có một worker và ứng dụng Spring kết hợp `@Async` với `@Scheduled`, rồi đối chiếu `fixedDelay`, `fixedRate`, cron và vòng đời HTTP response.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các trục khái niệm
+
+    1. Điều gì xác định một lời gọi đồng bộ hay bất đồng bộ từ góc nhìn caller?
+    2. Vì sao một phép tính song song có thể vẫn là lời gọi đồng bộ, và một executor một worker vẫn hỗ trợ API bất đồng bộ?
+    3. Blocking I/O khác non-blocking I/O ra sao khi được đặt trong phương thức `@Async`?
+
+    ### Thời gian và tổ hợp cơ chế
+
+    1. `@Scheduled` xác định điều gì mà `@Async` hoặc executor không xác định?
+    2. Nếu scheduled method chỉ gửi việc nền rồi return, `fixedDelay` bắt đầu đếm từ mốc hoàn tất nào?
+    3. Vì sao controller trả `CompletableFuture` chưa đồng nghĩa client nhận ngay kết quả HTTP?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích thời điểm chờ | Phân tích đoạn mã dùng `Future.join()` và chỉ rõ khi nào caller thực sự bị chặn. |
+    | Đọc lịch và thời điểm kích hoạt | So sánh `fixedDelay`, `fixedRate`, cron và dự đoán mốc chạy trong ví dụ có thời gian xử lý hữu hạn. |
+    | Phân tích tổ hợp thực thi | Phân biệt async HTTP response, async service, parallel stream và job định kỳ bằng luồng thực thi cụ thể. |
+- id: overview-003
+  title: Tác vụ, luồng gọi, luồng xử lý và kết quả
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tác vụ, luồng gọi, luồng xử lý và kết quả**
+
+    Một task không phải một thread và một `Future` không phải kết quả đã sẵn sàng. Bài này xây dựng mô hình bốn thành phần: tác vụ được yêu cầu, luồng gửi việc, luồng thực thi và nơi kết quả hoặc exception trở về. Nhờ vậy, người học có thể lần theo đường đi từ controller qua Spring proxy, executor, worker đến `CompletableFuture`.
+
+    Trọng tâm là cơ chế quan sát: `execute()`, `@Async`, `supplyAsync`, `get()/join()`, callback và thread-local context; bài có ví dụ Spring Framework tự in bằng chứng caller/worker khác thread.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đường đi của công việc và kết quả
+
+    1. Task, caller thread, worker thread và result trả lời bốn câu hỏi độc lập nào?
+    2. Spring proxy giao một lời gọi `@Async` cho executor và đưa value hoặc exception về caller theo đường nào?
+    3. Vì sao một `CompletableFuture` đã hoàn thành không chứng minh lời gọi ban đầu chạy đồng bộ?
+
+    ### Chờ, lỗi và ngữ cảnh
+
+    1. `get()` và `join()` khác nhau thế nào về hành vi chờ và dạng lỗi?
+    2. Vì sao `this.asyncMethod()` có thể bỏ qua executor trong proxy mode mặc định?
+    3. Những dữ liệu nào thuộc `ThreadLocal` hoặc transaction cần xem xét khi chuyển sang worker?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ trace thực thi | Vẽ được đường caller → proxy → executor → worker → Future cho một ví dụ trong bài. |
+    | Kiểm chứng thread boundary | Giải thích output `differentThread=true` và cách ghi nhận caller/worker mà không phụ thuộc thứ tự log. |
+    | Theo dõi kết quả và lỗi | Dùng `thenApply`/`whenComplete` hoặc `get()/join()` đúng mục đích và nêu giới hạn timeout/cancel. |
+    | Nhận diện mất context | Chỉ rõ dữ liệu mutable, MDC, security context và transaction không tự chuyển giữa thread. |
+- id: overview-004
+  title: Mối liên hệ giữa TaskExecutor, @Async, TaskScheduler và @Scheduled
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Mối liên hệ giữa TaskExecutor, @Async, TaskScheduler và @Scheduled**
+
+    Spring phân tách nơi thực thi công việc và thời điểm kích hoạt bằng hai cặp API: `TaskExecutor`/`@Async` và `TaskScheduler`/`@Scheduled`. Bài học diễn giải quan hệ giữa interface, annotation, proxy, hai pool riêng, lập lịch `fixedDelay`/`fixedRate`/cron và điều gì xảy ra khi một scheduled method chỉ giao task nền rồi trả về.
+
+    Qua cấu hình Spring Boot có `ReportSchedule` và `ReportWorker`, người học luyện phân chia trách nhiệm, kiểm soát pool/queue, xử lý Future, chồng lấn và shutdown.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vai trò của bốn thành phần
+
+    1. `TaskExecutor` và `@Async` khác nhau ở tầng abstraction và cách phát lệnh thực thi thế nào?
+    2. `TaskScheduler` và `@Scheduled` giải quyết câu hỏi gì mà executor không giải quyết?
+    3. Vì sao scheduler thread và worker thread nên được quan sát, giới hạn riêng khi phần việc định kỳ tốn thời gian?
+
+    ### Ghép lịch với xử lý nền
+
+    1. Khi `@Scheduled(fixedDelay)` gọi bean `@Async` rồi return, khoảng delay gắn với thời điểm nào?
+    2. Self-invocation làm `@Async` thay đổi hành vi ra sao và cách tách hai bean giúp điều gì?
+    3. Khi queue đầy hoặc worker lâu hơn nhịp lịch, cần dự đoán chồng lấn, rejection và error handler như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình hai pool Spring | Đề xuất `ThreadPoolTaskExecutor` và `ThreadPoolTaskScheduler` với tên bean, giới hạn và trách nhiệm riêng. |
+    | Phân tích chu kỳ chạy | Dự đoán các lần TICK và WORK trong ví dụ, phân biệt callback của scheduler với completion của worker. |
+    | Xử lý tình huống quá tải | Chỉ ra ảnh hưởng của `corePoolSize`, `maxPoolSize`, queue và kế hoạch chống chạy chồng. |
+    | Đọc giới hạn annotation | Nhận ra điều kiện proxy, `@EnableAsync`/`@EnableScheduling` và cơ chế xử lý lỗi riêng của từng nhóm. |
+- id: overview-005
+  title: Tách thời điểm nhận yêu cầu khỏi thời điểm hoàn thành công việc
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tách thời điểm nhận yêu cầu khỏi thời điểm hoàn thành công việc**
+
+    Một phản hồi HTTP nhanh không có nghĩa nghiệp vụ đã hoàn tất. Bài học tách ba mốc accept, execute, complete rồi thiết kế `POST /jobs` trả `202 Accepted`, `Location` và mã job, còn `GET /jobs/{id}` tra cứu trạng thái độc lập. Ví dụ Spring Boot dùng `@Async` và `ConcurrentHashMap` để làm rõ cơ chế, đồng thời chỉ ra vì sao RAM không đủ cho công việc cần phục hồi sau restart.
+
+    Người học phải phân biệt async Servlet response vẫn giữ một yêu cầu HTTP đang chờ với async business job, đồng thời xác định backpressure, status, quyền tra cứu và mức bền vững khi nhận việc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng nhận việc và vòng đời
+
+    1. Accept, execute và complete có thể xảy ra ở những mốc thời gian nào?
+    2. `202 Accepted` có cam kết xử lý thành công không, và client lấy kết quả cuối qua giao thức nào?
+    3. Vì sao GET trả HTTP 200 mà status trong body vẫn có thể là `RUNNING` hoặc `FAILED`?
+
+    ### Ranh giới kỹ thuật và độ bền
+
+    1. Spring MVC `Callable`/`DeferredResult` khác job trả 202 về vòng đời HTTP ra sao?
+    2. Khi executor từ chối task, API nên phản ánh tình trạng nào thay vì trả nhầm accepted?
+    3. Để job tồn tại qua restart và retry mà không tạo trùng, cần bổ sung những thành phần và ràng buộc nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế API trạng thái job | Mô tả POST/GET, `Location`, job ID và các trạng thái `QUEUED/RUNNING/SUCCEEDED/FAILED`. |
+    | Chỉ ra ranh giới đáp ứng | Phân biệt request HTTP trả ngay với Servlet async request vẫn chờ kết quả. |
+    | Đánh giá cơ chế chấp nhận | Giải thích rejection, queue trong RAM, lưu job DB, outbox và idempotency bằng tình huống crash. |
+- id: overview-006
+  title: Những bảo đảm Spring cung cấp và trách nhiệm của mã nghiệp vụ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Những bảo đảm Spring cung cấp và trách nhiệm của mã nghiệp vụ**
+
+    Spring quản lý bean, proxy, executor, scheduler và transaction interceptor, nhưng không biết bất biến như tồn kho không được âm hay một yêu cầu không được xử lý trùng. Bài này phân ranh giới bảo đảm của framework với trách nhiệm về shared mutable state, atomicity, race, DB isolation, idempotency và failure recovery.
+
+    Qua ví dụ `AtomicInteger` và SQL `UPDATE ... WHERE available >= quantity` chạy trong worker có transaction riêng, người học nhận ra khi nào cơ chế bảo vệ chỉ có hiệu lực trong một JVM và khi nào bắt buộc phải đặt ràng buộc tại database hoặc hệ thống phân tán.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bảo đảm của framework và vùng bảo vệ
+
+    1. Singleton bean của Spring cung cấp điều gì và vì sao không bảo đảm field mutable được nhiều thread cập nhật an toàn?
+    2. `@Async`, `@Scheduled` và `@Transactional` không tự cam kết những tính chất nào về thứ tự, bền vững, dữ liệu và exactly-once?
+    3. Vì sao `synchronized` hoặc `AtomicInteger` ở một JVM không bảo vệ invariant khi có nhiều replica?
+
+    ### Transaction, context và failure
+
+    1. Transaction imperative của caller đi sang worker `@Async` hay không, và cần mở ranh giới commit ở đâu?
+    2. Một statement SQL cập nhật tồn kho có điều kiện khác `read → modify → write` ở Java thế nào?
+    3. Vì sao outbox, idempotency key và consumer deduplication vẫn cần thiết ngay cả khi DB transaction thành công?
+    4. Những loại `ThreadLocal`/security/MDC nào có thể bị mất hoặc rò giữa các worker thread?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Bảo vệ invariant đúng phạm vi | Chọn immutable/atomic/lock cho state JVM và constraint/conditional update/transaction cho DB chia sẻ. |
+    | Thiết kế ranh giới giao dịch | Đặt `@Transactional` tại service được worker gọi qua proxy, nhận diện read-before-commit và rollback. |
+    | Đánh giá giao việc bền vững | Giải thích đường outbox → broker → consumer và lý do phải có idempotency khi retry/redelivery. |
+    | Kiểm thử correctness | Xây tình huống tranh chấp bằng latch/barrier và nêu phép kiểm tra invariant, rejection, rollback và crash. |
+- id: overview-007
+  title: 'Ví dụ xuyên suốt: xử lý báo cáo và cập nhật dữ liệu định kỳ'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ví dụ xuyên suốt: xử lý báo cáo và cập nhật dữ liệu định kỳ**
+
+    Bài này nối các khái niệm thành một tình huống end-to-end: API nhận yêu cầu tạo báo cáo, worker `@Async` xử lý báo cáo và một `@Scheduled` job cập nhật bộ đếm trong H2. Các thành phần `ReportController`, `ReportWorker`, `ReportStore`, `MetricJob` và hai pool cho thấy tại sao từng trách nhiệm phải tách rõ khi ứng dụng cùng phục vụ HTTP và job định kỳ.
+
+    Người học kiểm tra luồng POST → 202 → GET status, ảnh chụp dữ liệu tại thời điểm worker SELECT, lịch `fixedDelay` và giới hạn của trạng thái chỉ lưu trong RAM; từ đó đề xuất cách chuyển demo thành hệ thống bền vững và tránh cập nhật trùng trong cluster.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dòng chảy báo cáo và cập nhật lịch
+
+    1. Khi POST /reports được gọi, `ReportController`, `ReportStore` và `ReportWorker` thực hiện các bước nào theo thứ tự logic?
+    2. `@Scheduled(fixedDelay)` cập nhật `metrics.total` khi nào, và báo cáo có thể thấy giá trị cũ trong tình huống nào?
+    3. Vì sao phải tách `reportExecutor` khỏi `taskScheduler` dù hai cơ chế vẫn tranh tài nguyên DB?
+
+    ### Giới hạn demo và cải tiến
+
+    1. Điều gì mất sau restart khi dùng H2 in-memory và `ConcurrentHashMap` để lưu status?
+    2. Khi ba instance cùng chạy `MetricJob`, câu SQL tăng bộ đếm có thể làm sai kết quả nghiệp vụ theo cách nào?
+    3. Để tránh report trùng và khôi phục job, cần thêm trường trạng thái, idempotency, claim/lease hay cơ chế điều phối nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích luồng tích hợp | Vẽ trình tự POST/GET, worker, scheduler và truy cập H2 theo các class trong bài. |
+    | Tự chạy và đối chiếu kết quả | Dùng HTTP POST/GET và endpoint /metrics để kiểm chứng 202, status cuối, dữ liệu snapshot và lịch 30 giây. |
+    | Nhận diện điểm chưa đủ production | Chỉ ra việc mất trạng thái RAM, retry trùng, scheduler nhiều pod và đề xuất DB/job queue/lock phù hợp. |
+- id: overview-008
+  title: Lộ trình học và kiến thức Java concurrency cần có
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lộ trình học và kiến thức Java concurrency cần có**
+
+    Concurrency trong Spring dựa trên các nguyên lý Java: thread, heap chia sẻ, Java Memory Model, atomicity, visibility, happens-before, phối hợp, executor, future, timeout và interruption. Bài này cung cấp lộ trình từ mô hình thực thi đến tính đúng đắn và kỹ thuật vận hành, dùng các ví dụ Java 17 độc lập để kiểm tra từng kỹ năng trước khi chuyển sang abstraction của Spring.
+
+    Nội dung còn phân biệt virtual threads Java 21 với platform threads, nhấn mạnh giới hạn CPU, connection pool và idempotency không mất đi khi đổi loại thread.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình bộ nhớ và phối hợp
+
+    1. `Thread.start()` khác gọi trực tiếp `run()` ở điểm nào, và `join()` bảo đảm điều gì?
+    2. Vì sao `counter++` không atomic và `volatile` chưa đủ để sửa thao tác read-modify-write?
+    3. Quan hệ happens-before được thiết lập thế nào nhờ monitor, volatile và `CountDownLatch`?
+    4. Khi nào chọn `AtomicInteger`, `synchronized`, lock hoặc concurrent collections theo invariant?
+
+    ### Quản lý tác vụ và học tiếp Spring
+
+    1. ExecutorService, Future và CompletableFuture khác nhau thế nào về submit, xử lý lỗi và ghép kết quả?
+    2. `shutdownNow()`, `cancel(true)` và timeout có những giới hạn gì đối với việc dừng worker?
+    3. Virtual threads Java 21 phù hợp với workload nào và vì sao không giải quyết bottleneck CPU/DB?
+    4. Cần hoàn thành những chặng và bài thực hành nào trước khi dùng `TaskExecutor`, `@Async` và `TaskScheduler`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Kiểm chứng Java Memory Model | Giải thích output của AtomicCounterDemo và LatchDemo bằng atomicity và happens-before. |
+    | Tổ chức executor an toàn | Thiết kế producer/consumer, submit nhiều task, thu Future, giới hạn concurrency và shutdown theo thời hạn. |
+    | Xử lý thất bại và hủy | Áp dụng timeout/interruption có hợp tác, phân biệt chờ kết quả với dừng công việc thật. |
+    | Liên hệ Java với Spring | Ánh xạ `ExecutorService`/`CompletableFuture`/`ThreadLocal` sang executor, async service, transaction và context của Spring. |
+    | Đánh giá virtual threads | Phân loại workload I/O/CPU và giải thích giới hạn tài nguyên vẫn cần giới hạn riêng. |

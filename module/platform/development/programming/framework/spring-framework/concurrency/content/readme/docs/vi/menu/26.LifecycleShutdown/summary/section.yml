@@ -1,0 +1,83 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Vòng đời và dừng
+roadmapHeading: Từ quyền sở hữu executor đến kiểm chứng đóng context khi còn backlog
+roadmap:
+- id: lifecycle-shutdown-001
+  order: 1
+  title: Để container khởi tạo và đóng executor hoặc scheduler được khai báo thành bean
+  description: Nắm Spring bean ownership của TaskExecutor và TaskScheduler; phân biệt khởi tạo/đóng bean với sự hoàn tất của từng task.
+  transition:
+    to: lifecycle-shutdown-002
+    description: Có owner rồi cần tách ngừng nhận việc mới khỏi chờ các tác vụ đã chấp nhận.
+- id: lifecycle-shutdown-002
+  order: 2
+  title: Phân biệt dừng nhận tác vụ mới với chờ tác vụ đang chạy
+  description: Phân biệt stop admission, shutdown, drain, await và termination bằng ví dụ pool đang chạy và có queue.
+  transition:
+    to: lifecycle-shutdown-003
+    description: Muốn dừng producer, worker và resource đúng thứ tự cần cơ chế lifecycle theo phase.
+- id: lifecycle-shutdown-003
+  order: 3
+  title: SmartLifecycle và phối hợp thứ tự dừng các thành phần
+  description: Dùng SmartLifecycle, phase và stop callback để điều phối việc ngừng producer trước worker rồi resource.
+  transition:
+    to: lifecycle-shutdown-004
+    description: Sau khi có thứ tự dừng, chọn rõ policy xử lý queue và thời gian Spring đợi ở executor shutdown.
+- id: lifecycle-shutdown-004
+  order: 4
+  title: waitForTasksToCompleteOnShutdown và thời gian chờ kết thúc
+  description: Phân biệt waitForTasksToCompleteOnShutdown với awaitTerminationSeconds và phân tích graceful/immediate modes.
+  transition:
+    to: lifecycle-shutdown-005
+    description: Một khoảng chờ cấu hình vẫn không tạo bảo đảm kết thúc vô hạn; cần hiểu outcome và global deadline.
+- id: lifecycle-shutdown-005
+  order: 5
+  title: awaitTermination không tạo bảo đảm hoàn tất vô hạn
+  description: Đọc đúng kết quả awaitTermination, xử lý interrupt, task không hợp tác và deadline chung nhiều pools.
+  transition:
+    to: lifecycle-shutdown-006
+    description: Các flag còn phụ thuộc Spring version và loại scheduler, cần xem precedence để tránh thay đổi hành vi ngoài ý muốn.
+- id: lifecycle-shutdown-006
+  order: 6
+  title: Tương tác của các tùy chọn shutdown và khác biệt theo phiên bản
+  description: Đối chiếu accept-after-close, strict early, wait/await, phase và delayed/periodic scheduler policies theo version.
+  transition:
+    to: lifecycle-shutdown-007
+    description: Khi không thể drain kịp, phải xử lý riêng worker đang chạy và task chưa từng bắt đầu.
+- id: lifecycle-shutdown-007
+  order: 7
+  title: Ngắt tác vụ đang chạy và hủy công việc chưa bắt đầu
+  description: Dùng cooperative interrupt và cancel queued Future, phân biệt raw shutdownNow với Spring-managed queued-task cleanup.
+  transition:
+    to: lifecycle-shutdown-008
+    description: Không phải lần bảo trì nào cũng là shutdown; scheduler có thể tạm pause rồi resume theo implementation.
+- id: lifecycle-shutdown-008
+  order: 8
+  title: Pause, resume và giới hạn theo loại triển khai, phiên bản
+  description: Phân biệt stop/start để pause/resume Spring scheduler với shutdown/cancel, kiểm soát missed triggers và job đã offload.
+  transition:
+    to: lifecycle-shutdown-009
+    description: Dù pause hay shutdown, work in-flight vẫn cần DB/HTTP/broker resources cho tới khi bước cuối hoàn tất.
+- id: lifecycle-shutdown-009
+  order: 9
+  title: Giữ tài nguyên phụ thuộc còn hoạt động tới khi tác vụ cần dùng kết thúc
+  description: Thiết kế dependency order và resource lifetime qua DependsOn, SmartLifecycle và awaited executor termination.
+  transition:
+    to: lifecycle-shutdown-010
+    description: Kết thúc bằng bài test context thật với queued tasks để xác nhận toàn bộ chính sách shutdown thay vì suy đoán.
+- id: lifecycle-shutdown-010
+  order: 10
+  title: Kiểm chứng khi context đóng trong lúc hàng đợi còn công việc
+  description: Dùng Spring ApplicationContext close integration test kiểm chứng running/queued tasks trong graceful và immediate destruction.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài học trong chương
+
+  | Tiêu chí | Bài 1: Bean ownership | Bài 2: Admission và drain | Bài 3: SmartLifecycle | Bài 4: Wait/await config | Bài 5: Giới hạn await | Bài 6: Shutdown và version | Bài 7: Interrupt và cancel | Bài 8: Pause và resume | Bài 9: Resource lifetime | Bài 10: Context-close QA |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Câu hỏi chính | Ai quản lý khởi tạo và đóng pool? | Khi nào ngừng nhận và khi nào thật sự dừng? | Thành phần nào stop trước? | Chọn chính sách queue và thời gian chờ nào? | Await có bảo đảm gì? | Flag tương tác theo Spring version ra sao? | Dừng running và queued tasks thế nào? | Tạm ngừng nhưng có thể resume ra sao? | Giữ DB/HTTP/broker đến khi nào? | Context close tác động queued job thế nào? |
+  | API/cơ chế nổi bật | Bean lifecycle, initialize, destroy | shutdown, shutdownNow, awaitTermination | phase, stop(Runnable), DependsOn | waitForTasksToCompleteOnShutdown, awaitTerminationSeconds | isShutdown, isTerminated, nanoTime | strictEarlyShutdown, acceptTasksAfterContextClose, scheduler policies | interrupt, Future.cancel, FutureTask | TaskScheduler stop/start, ScheduledFuture | DependsOn, DataSource, lifecycle stop/destroy | ContextClosedEvent, AnnotationConfigApplicationContext |
+  | Ngộ nhận cần tránh | Bean-managed đồng nghĩa job luôn hoàn tất | Shutdown đồng nghĩa terminated | Callback được gọi ngay khi bắt đầu drain | Bật wait tự động chờ vô hạn | Await true đồng nghĩa mọi nghiệp vụ thành công | Flags cộng dồn độc lập mọi phiên bản | Cancel tương đương rollback hoặc hard kill | Pause tương đương shutdown có thể đảo ngược | Đúng destroy order là đủ khi resource stop sớm | Queue còn tại event đồng nghĩa sẽ bị hủy |
+  | Kiểm chứng trọng tâm | Context init và shutdown scheduler/executor | Một running, một queued task dùng latch | Assert phase và callback sau drain | So sánh three shutdown modes | Test true/false/interrupted và global deadline | Spring 6.1.3 và delayed/periodic policy demos | Raw shutdownNow, pending Future và interruption | Pending task chờ pause, resume rồi callback | Close context khi worker sắp dùng resource | Hai contexts graceful vs immediate, assert Future |
+  | Giá trị trong chương | Owner rõ, không leak threads | Tách admission khỏi hoàn tất | Dependency order có thể kiểm chứng | Chính sách chờ phù hợp workload | Dừng có hạn và báo outcome trung thực | Tương thích runtime và lịch | Hủy an toàn, không mất handle/job state | Bảo trì cục bộ có kiểm soát | Tránh đóng dependency trong lúc worker cần dùng | QA toàn chu trình trước rolling deployment |

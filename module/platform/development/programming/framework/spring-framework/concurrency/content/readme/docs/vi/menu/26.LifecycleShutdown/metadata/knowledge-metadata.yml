@@ -1,0 +1,21 @@
+sections:
+  lifecycle-shutdown-001:
+    difficulty: BASIC
+  lifecycle-shutdown-002:
+    difficulty: INTERMEDIATE
+  lifecycle-shutdown-003:
+    difficulty: ADVANCED
+  lifecycle-shutdown-004:
+    difficulty: INTERMEDIATE
+  lifecycle-shutdown-005:
+    difficulty: INTERMEDIATE
+  lifecycle-shutdown-006:
+    difficulty: ADVANCED
+  lifecycle-shutdown-007:
+    difficulty: ADVANCED
+  lifecycle-shutdown-008:
+    difficulty: ADVANCED
+  lifecycle-shutdown-009:
+    difficulty: ADVANCED
+  lifecycle-shutdown-010:
+    difficulty: ADVANCED

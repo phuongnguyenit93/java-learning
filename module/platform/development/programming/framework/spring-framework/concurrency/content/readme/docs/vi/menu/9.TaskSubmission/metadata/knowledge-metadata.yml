@@ -1,0 +1,17 @@
+sections:
+  task-submission-001:
+    difficulty: BASIC
+  task-submission-002:
+    difficulty: INTERMEDIATE
+  task-submission-003:
+    difficulty: INTERMEDIATE
+  task-submission-004:
+    difficulty: INTERMEDIATE
+  task-submission-005:
+    difficulty: ADVANCED
+  task-submission-006:
+    difficulty: INTERMEDIATE
+  task-submission-007:
+    difficulty: ADVANCED
+  task-submission-008:
+    difficulty: ADVANCED

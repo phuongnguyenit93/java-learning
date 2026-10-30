@@ -1,0 +1,76 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Quan sát và điều chỉnh
+roadmapHeading: Lộ trình từ dấu vết thực thi đến điều chỉnh và bảo toàn kết quả
+roadmap:
+- id: monitoring-tuning-001
+  order: 1
+  title: Đặt tên luồng để lần theo đường đi tác vụ
+  description: Bắt đầu từ tên thread, ThreadFactory và prefix của executor/scheduler; phối hợp với correlation ID và MDC khi tác vụ đổi thread.
+  transition:
+    to: monitoring-tuning-002
+    description: Tên thread chỉ cho biết nơi thực thi; bài tiếp theo ghi mã công việc và các mốc gửi, bắt đầu, hoàn tất để theo dõi từng lượt riêng.
+- id: monitoring-tuning-002
+  order: 2
+  title: Ghi nhận thời điểm gửi, bắt đầu, hoàn tất và mã công việc
+  description: Thiết lập taskId và submitted/started/completed timestamps; phân biệt accepted, running, failed, rejected và sự kiện thực thi.
+  transition:
+    to: monitoring-tuning-003
+    description: Từ ba mốc của mỗi task, tách độ trễ trước khi worker chạy khỏi thời gian callback thực thi và đo chúng chính xác.
+- id: monitoring-tuning-003
+  order: 3
+  title: Đo thời gian chờ hàng đợi khác thời gian thực thi
+  description: Đo chính xác độ trễ trước worker, thời gian callback và tổng thời gian tác vụ; ghép timer với queue/active/rejection.
+  transition:
+    to: monitoring-tuning-004
+    description: Sau khi có độ trễ của từng task, quan sát capacity của executor bằng pool size, activeCount, queue và rejected count.
+- id: monitoring-tuning-004
+  order: 4
+  title: Quan sát số luồng, activeCount, kích thước hàng đợi và tác vụ bị từ chối
+  description: Đọc capacity của ThreadPoolTaskExecutor qua pool size, active count, queue và reject; phân biệt saturation và lỗi trong task.
+  transition:
+    to: monitoring-tuning-005
+    description: Pool có thể khỏe nhưng các job theo lịch vẫn lỗi hoặc không chạy; tiếp theo đo success/failure và lần chạy gần nhất của scheduler.
+- id: monitoring-tuning-005
+  order: 5
+  title: Theo dõi số lần chạy lịch thành công, lỗi và lần chạy gần nhất
+  description: Giám sát @Scheduled bằng outcome counters, duration, last-run timestamps và Actuator scheduledtasks; phân biệt scheduler với kết quả.
+  transition:
+    to: monitoring-tuning-006
+    description: Từ việc xuất metrics có ích, học giới hạn cardinality để tránh đưa taskId, requestId hay dữ liệu nhạy cảm vào labels.
+- id: monitoring-tuning-006
+  order: 6
+  title: Không đưa dữ liệu riêng của yêu cầu vào nhãn số liệu có quá nhiều giá trị
+  description: Thiết kế metric labels có cardinality hữu hạn, chuẩn hóa đầu vào và tách request-specific identifiers sang log/trace.
+  transition:
+    to: monitoring-tuning-007
+    description: Khi dashboard chưa giải thích được worker đang chờ gì, cần xem trực tiếp JVM bằng thread dumps và JFR.
+- id: monitoring-tuning-007
+  order: 7
+  title: Dùng thread dump và công cụ JVM để tìm chờ khóa hoặc cạn nhóm luồng
+  description: Đọc stack và lock ownership trong nhiều thread dumps, dùng jcmd/JFR và metrics để phân biệt contention, deadlock và saturation.
+  transition:
+    to: monitoring-tuning-008
+    description: Sau khi tìm được điểm nghẽn, bài tiếp theo thiết kế phép so sánh cấu hình trước–sau trên latency, throughput và tài nguyên.
+- id: monitoring-tuning-008
+  order: 8
+  title: Đối chiếu thay đổi cấu hình với độ trễ, công suất và tài nguyên đích
+  description: Thiết kế baseline và load test có kiểm soát; so sánh cấu hình executor bằng latency, throughput, SLO và chi phí downstream.
+  transition:
+    to: monitoring-tuning-009
+    description: Cuối cùng, phân biệt telemetry về quá trình chạy với business state/result phải commit và tra cứu được sau restart.
+- id: monitoring-tuning-009
+  order: 9
+  title: Giám sát không thay thế cơ chế lưu kết quả nghiệp vụ
+  description: Tách business outcome đã commit khỏi logs/metrics; thiết kế trạng thái job, transaction worker, kết quả bền vững và phục hồi sau crash.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh năng lực trong chương
+
+  | Tiêu chí | Bài 1: Đặt tên luồng để lần theo đường đi tác vụ | Bài 2: Ghi nhận thời điểm gửi, bắt đầu, hoàn tất và mã công việc | Bài 3: Đo thời gian chờ hàng đợi khác thời gian thực thi | Bài 4: Quan sát số luồng, activeCount, kích thước hàng đợi và tác vụ bị từ chối | Bài 5: Theo dõi số lần chạy lịch thành công, lỗi và lần chạy gần nhất | Bài 6: Không đưa dữ liệu riêng của yêu cầu vào nhãn số liệu có quá nhiều giá trị | Bài 7: Dùng thread dump và công cụ JVM để tìm chờ khóa hoặc cạn nhóm luồng | Bài 8: Đối chiếu thay đổi cấu hình với độ trễ, công suất và tài nguyên đích | Bài 9: Giám sát không thay thế cơ chế lưu kết quả nghiệp vụ |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | Nhận diện worker và đường chuyển luồng | Định danh và trạng thái từng task | Phân rã latency của task | Capacity và admission control | Kết quả các lần chạy lịch | Thiết kế nhãn số liệu | Chẩn đoán lock/pool | Kiểm chứng tuning thực tế | Business outcome bền vững |
+  | API / cơ chế | ThreadFactory, threadNamePrefix, MDC | TrackedExecutor, Instant, nanoTime | TaskDecorator, Timer, nanoTime | ThreadPoolTaskExecutor, ThreadPoolExecutor | @Scheduled, Actuator, Counter/Gauge | Micrometer, MeterFilter, Observation | jcmd, jstack, JFR, ThreadMXBean | SLO, Little's Law, pool config | DB JobState, JPA, @Transactional |
+  | Bằng chứng / thực hành | Log của @Async qua hai bean | SUBMITTED→RUNNING→terminal | QueueWaitDemo với CountDownLatch | PoolPressureDemo và Actuator metrics | CleanupJob success/failure | Thử tải nhiều requestId | ThreadDumpLab lock/pool | PoolSizingLab, bảng so sánh A–D | H2 restart và GET /jobs/{id} |
+  | Giới hạn cần nhớ | Thread name không phải task ID | Log không tự là kho job bền vững | p95 các pha không cộng thành p95 tổng | Completed task khác business success | Metrics reset khi restart | Hash ID vẫn high cardinality | Một WAITING không chứng minh deadlock | Accepted rate khác throughput | Telemetry không bảo đảm result commit |
+  | Giá trị với Spring | Cơ sở cho quan sát task trong Spring | Liên kết callback, Future và trace | Đo queue wait trước khi tuning | Backpressure và rejection policy | Đặt SLA theo lịch thực | Tránh tăng series và rò dữ liệu | Tìm nguyên nhân trước tuning | Giữ cấu hình thỏa mọi guardrail | Outbox, idempotency, reconciliation |

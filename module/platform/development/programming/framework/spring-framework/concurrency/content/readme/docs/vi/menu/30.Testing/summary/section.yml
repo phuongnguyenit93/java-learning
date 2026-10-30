@@ -1,0 +1,89 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Kiểm thử
+roadmapHeading: Lộ trình kiểm thử tính đúng và thực thi Spring Concurrency
+roadmap:
+- id: testing-001
+  order: 1
+  title: Phân biệt kiểm thử logic tác vụ với kiểm thử thực thi bất đồng bộ
+  description: Phân tách kiểm thử logic nghiệp vụ và hợp đồng thực thi bất đồng bộ để tránh kết luận quá mức từ kết quả Future.
+  transition:
+    to: testing-002
+    description: Sau khi tách hai tầng test, học cách dùng executor đồng bộ để unit test logic nhanh mà không vượt phạm vi bằng chứng.
+- id: testing-002
+  order: 2
+  title: Dùng SyncTaskExecutor cho kiểm thử phù hợp và nhận biết điều nó không chứng minh
+  description: Dùng SyncTaskExecutor cho test thực thi trên caller, xác định rõ những giả định thread, queue và context nó không thể chứng minh.
+  transition:
+    to: testing-003
+    description: Để chứng minh thực thi trên worker thật, cần công cụ điều phối được các pha và sự kiện đa luồng.
+- id: testing-003
+  order: 3
+  title: CountDownLatch, Semaphore hoặc hàng đợi để phối hợp kiểm thử xác định
+  description: Điều phối worker bằng CountDownLatch, Semaphore và BlockingQueue, thiết kế checkpoint và happens-before rõ ràng.
+  transition:
+    to: testing-004
+    description: Đã có primitive tín hiệu, tiếp theo học cách chờ trạng thái nghiệp vụ có deadline thay vì sleep cố định.
+- id: testing-004
+  order: 4
+  title: Chờ điều kiện với giới hạn thời gian thay cho ngủ cố định
+  description: Thay sleep bằng condition wait với timeout qua Awaitility, latch hoặc Future; đảm bảo polling và cleanup an toàn.
+  transition:
+    to: testing-005
+    description: Điều kiện đã được chờ đúng; bây giờ cần kiểm tra lời gọi Spring thật có đi qua async advice hay không.
+- id: testing-005
+  order: 5
+  title: Kiểm tra lời gọi thật sự đi qua proxy @Async
+  description: Chứng minh lời gọi đi qua Spring @Async proxy qua external invocation, latch, thread identity và ca self-invocation.
+  transition:
+    to: testing-006
+    description: Khi xác nhận được async dispatch, cần quan sát riêng kết quả, failure và kênh lỗi cho các return type.
+- id: testing-006
+  order: 6
+  title: Kiểm thử nhận kết quả và cả đường lỗi của phương thức void hoặc Future
+  description: Kiểm chứng kết quả và lỗi @Async void/Future/CompletableFuture, phân biệt submit rejection với execution failure.
+  transition:
+    to: testing-007
+    description: Sau khi bao phủ success/error, mở rộng sang saturation, rejection và các semantics timeout/cancellation.
+- id: testing-007
+  order: 7
+  title: Kiểm thử quá tải, từ chối, timeout và hủy
+  description: Ép pool bão hòa bằng fixture A/B/C và kiểm tra rejection, caller timeout, Future cancellation và interrupt.
+  transition:
+    to: testing-008
+    description: Đã xử lý vòng đời task, kiểm tra thêm context propagation và cleanup trên worker tái sử dụng.
+- id: testing-008
+  order: 8
+  title: Kiểm tra truyền rồi dọn ngữ cảnh qua nhiều tác vụ
+  description: Chứng minh propagation/cleanup của context giữa các task trên worker tái sử dụng và khi xảy ra exception.
+  transition:
+    to: testing-009
+    description: Từ context trên worker, chuyển sang test lịch và thời gian vốn cũng dễ bị lệch do môi trường hoặc DST.
+- id: testing-009
+  order: 9
+  title: Kiểm thử cron, múi giờ và lịch chạy với nguồn thời gian có thể kiểm soát
+  description: Kiểm tra cron, ZoneId, DST và các trigger lenient/fixed với Clock/Instant kiểm soát được thay vì đợi giờ thật.
+  transition:
+    to: testing-010
+    description: Sau kiểm thử lịch, xác nhận đóng đúng context/executor và không rò tài nguyên giữa các test.
+- id: testing-010
+  order: 10
+  title: Kiểm tra dừng context và giải phóng executor trong kiểm thử
+  description: Đóng Spring context có kiểm soát, xác nhận isShutdown/isTerminated và sở hữu executor ngoài container.
+  transition:
+    to: testing-011
+    description: Cuối cùng dùng toàn bộ kỹ thuật điều phối để tái hiện race condition và kiểm chứng atomicity.
+- id: testing-011
+  order: 11
+  title: Kiểm tra tranh chấp bằng phối hợp luồng thay vì chỉ tăng số lần chạy
+  description: Ép hai worker tới race window rồi chứng minh fix bằng CAS, transaction/constraint và bất biến nghiệp vụ.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng so sánh vai trò các bài học
+
+  | Tiêu chí | Bài 1: Phân biệt kiểm thử logic tác vụ với kiểm thử thực thi bất đồng bộ | Bài 2: Dùng SyncTaskExecutor cho kiểm thử phù hợp và nhận biết điều nó không chứng minh | Bài 3: CountDownLatch, Semaphore hoặc hàng đợi để phối hợp kiểm thử xác định | Bài 4: Chờ điều kiện với giới hạn thời gian thay cho ngủ cố định | Bài 5: Kiểm tra lời gọi thật sự đi qua proxy @Async | Bài 6: Kiểm thử nhận kết quả và cả đường lỗi của phương thức void hoặc Future | Bài 7: Kiểm thử quá tải, từ chối, timeout và hủy | Bài 8: Kiểm tra truyền rồi dọn ngữ cảnh qua nhiều tác vụ | Bài 9: Kiểm thử cron, múi giờ và lịch chạy với nguồn thời gian có thể kiểm soát | Bài 10: Kiểm tra dừng context và giải phóng executor trong kiểm thử | Bài 11: Kiểm tra tranh chấp bằng phối hợp luồng thay vì chỉ tăng số lần chạy |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | Hai tầng kiểm thử | SyncTaskExecutor | Primitive đồng bộ | Condition wait | Proxy @Async | void/Future error | Overload và cancel | Context propagation | Cron và DST | Shutdown lifecycle | Race và CAS |
+  | Bằng chứng cần lấy | Logic đúng vs dispatch đúng | Run trên caller | Checkpoint/permit/event | Điều kiện đúng trước timeout | External proxy call | Success và root cause | Reject/timeout/interrupt | Snapshot/cleanup worker | Instant và mốc trigger | Terminated đúng pool | Invariant sau interleaving |
+  | Kỹ thuật minh họa | Unit + Spring integration | SyncTaskExecutor injection | Latch/Semaphore/BlockingQueue | Awaitility + Future.get | AopUtils + latch | Async handler + Future.get | A/B/C bounded pool | TaskDecorator + raw probe | Clock.fixed + CronExpression | Context closer thread | CyclicBarrier + CAS |
+  | Nguy cơ chính | False positive sync future | Nhầm test sync thành async | Barrier thiếu worker | Sleep gây flaky | Self-invocation bypass | Nuốt lỗi worker | Hủy không dừng task | Leak ThreadLocal | Sai zone/DST | Rò worker/test context | Không chạm race window |
