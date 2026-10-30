@@ -1,13 +1,9 @@
 sections:
   structural-modification:
     difficulty: BASIC
-    isImportant: false
   fail-fast-best-effort:
     difficulty: BASIC
-    isImportant: false
   concurrent-modification-exception:
     difficulty: BASIC
-    isImportant: false
   iterator-safe-mutation:
     difficulty: BASIC
-    isImportant: false

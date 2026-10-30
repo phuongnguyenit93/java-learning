@@ -1,25 +1,17 @@
 sections:
   exception-hierarchy-001:
     difficulty: BASIC
-    isImportant: false
   exception-hierarchy-002:
     difficulty: BASIC
-    isImportant: false
   exception-hierarchy-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-hierarchy-004:
     difficulty: BASIC
-    isImportant: false
   exception-hierarchy-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-hierarchy-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-hierarchy-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-hierarchy-008:
     difficulty: ADVANCED
-    isImportant: false

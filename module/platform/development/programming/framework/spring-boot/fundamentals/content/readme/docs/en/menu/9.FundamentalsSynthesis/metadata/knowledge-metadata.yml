@@ -1,16 +1,11 @@
 sections:
   end-to-end-boot-flow:
     difficulty: BASIC
-    isImportant: false
   classpath-configuration-conventions:
     difficulty: BASIC
-    isImportant: false
   common-misconceptions:
     difficulty: BASIC
-    isImportant: false
   ownership-handoff-map:
     difficulty: BASIC
-    isImportant: false
   next-learning-path:
     difficulty: BASIC
-    isImportant: false

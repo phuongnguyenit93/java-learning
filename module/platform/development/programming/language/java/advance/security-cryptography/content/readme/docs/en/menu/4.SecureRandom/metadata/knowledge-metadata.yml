@@ -1,13 +1,9 @@
 sections:
   cryptographic-randomness:
     difficulty: BASIC
-    isImportant: false
   entropy-and-seeding:
     difficulty: INTERMEDIATE
-    isImportant: false
   secure-random-selection:
     difficulty: INTERMEDIATE
-    isImportant: false
   randomness-misuse:
     difficulty: INTERMEDIATE
-    isImportant: false

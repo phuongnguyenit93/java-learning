@@ -1,31 +1,21 @@
 sections:
   caching-performance-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   caching-performance-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   caching-performance-003:
     difficulty: ADVANCED
-    isImportant: true
   caching-performance-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   caching-performance-005:
     difficulty: ADVANCED
-    isImportant: true
   caching-performance-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   caching-performance-007:
     difficulty: ADVANCED
-    isImportant: true
   caching-performance-008:
     difficulty: ADVANCED
-    isImportant: true
   caching-performance-009:
     difficulty: ADVANCED
-    isImportant: true
   caching-performance-010:
     difficulty: ADVANCED
-    isImportant: false

@@ -1,25 +1,17 @@
 sections:
   case-normalization-001:
     difficulty: BASIC
-    isImportant: false
   case-normalization-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   case-normalization-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   case-normalization-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   case-normalization-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   case-normalization-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   case-normalization-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   case-normalization-008:
     difficulty: ADVANCED
-    isImportant: false

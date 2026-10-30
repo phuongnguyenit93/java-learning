@@ -1,22 +1,15 @@
 sections:
   environment-access:
     difficulty: BASIC
-    isImportant: false
   placeholder-resolution:
     difficulty: BASIC
-    isImportant: false
   placeholder-defaults:
     difficulty: BASIC
-    isImportant: false
   value-injection:
     difficulty: BASIC
-    isImportant: false
   canonical-property-names:
     difficulty: BASIC
-    isImportant: false
   value-vs-configuration-properties:
     difficulty: BASIC
-    isImportant: false
   spel-boundary:
     difficulty: BASIC
-    isImportant: false

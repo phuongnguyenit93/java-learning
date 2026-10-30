@@ -1,10 +1,7 @@
 sections:
   custom-exception-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-context:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-hierarchy-design:
     difficulty: INTERMEDIATE
-    isImportant: false

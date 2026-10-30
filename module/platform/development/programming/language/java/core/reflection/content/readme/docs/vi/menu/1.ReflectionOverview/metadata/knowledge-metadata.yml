@@ -1,25 +1,17 @@
 sections:
   reflection-overview-001:
     difficulty: BASIC
-    isImportant: true
   reflection-overview-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   reflection-overview-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   reflection-overview-004:
     difficulty: BASIC
-    isImportant: true
   reflection-overview-005:
     difficulty: ADVANCED
-    isImportant: false
   reflection-overview-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   reflection-overview-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   reflection-overview-008:
     difficulty: BASIC
-    isImportant: false

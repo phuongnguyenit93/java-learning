@@ -1,19 +1,13 @@
 sections:
   condition-model-purpose:
     difficulty: BASIC
-    isImportant: false
   class-conditions:
     difficulty: BASIC
-    isImportant: false
   bean-conditions-and-timing:
     difficulty: BASIC
-    isImportant: false
   property-conditions:
     difficulty: BASIC
-    isImportant: false
   resource-and-web-conditions:
     difficulty: BASIC
-    isImportant: false
   optional-class-linkage:
     difficulty: BASIC
-    isImportant: false

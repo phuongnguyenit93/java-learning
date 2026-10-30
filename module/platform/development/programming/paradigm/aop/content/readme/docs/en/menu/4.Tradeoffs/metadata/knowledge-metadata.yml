@@ -1,25 +1,17 @@
 sections:
   aop-benefits:
     difficulty: BASIC
-    isImportant: false
   aop-cost:
     difficulty: BASIC
-    isImportant: false
   aop-good-fit:
     difficulty: BASIC
-    isImportant: false
   aop-bad-fit:
     difficulty: BASIC
-    isImportant: false
   aop-boundary:
     difficulty: BASIC
-    isImportant: false
   aop-pointcut-pitfalls:
     difficulty: INTERMEDIATE
-    isImportant: false
   aop-design-walkthrough:
     difficulty: INTERMEDIATE
-    isImportant: false
   aop-explicit-alternative-decision:
     difficulty: INTERMEDIATE
-    isImportant: false

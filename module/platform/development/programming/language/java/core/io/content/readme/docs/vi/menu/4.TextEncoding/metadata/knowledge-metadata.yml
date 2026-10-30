@@ -1,37 +1,25 @@
 sections:
   text-encoding-001:
     difficulty: BASIC
-    isImportant: true
   text-encoding-002:
     difficulty: BASIC
-    isImportant: true
   text-encoding-003:
     difficulty: BASIC
-    isImportant: true
   text-encoding-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   text-encoding-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   text-encoding-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   text-encoding-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   text-encoding-008:
     difficulty: ADVANCED
-    isImportant: true
   text-encoding-009:
     difficulty: ADVANCED
-    isImportant: true
   text-encoding-010:
     difficulty: ADVANCED
-    isImportant: true
   text-encoding-011:
     difficulty: ADVANCED
-    isImportant: true
   text-encoding-012:
     difficulty: INTERMEDIATE
-    isImportant: false

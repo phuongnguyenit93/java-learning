@@ -1,22 +1,15 @@
 sections:
   data-slice-purpose:
     difficulty: BASIC
-    isImportant: false
   datajpa-test-model:
     difficulty: BASIC
-    isImportant: false
   datajpa-transaction-model:
     difficulty: BASIC
-    isImportant: false
   jdbc-test-model:
     difficulty: BASIC
-    isImportant: false
   data-test-database-customization:
     difficulty: BASIC
-    isImportant: false
   data-slice-integration-handoff:
     difficulty: BASIC
-    isImportant: false
   data-testing-framework-boundary:
     difficulty: BASIC
-    isImportant: false

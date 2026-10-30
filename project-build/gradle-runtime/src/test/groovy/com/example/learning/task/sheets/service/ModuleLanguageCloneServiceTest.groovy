@@ -261,7 +261,6 @@ sections:
     difficulty: BASIC
 
 
-    isImportant: false
 '''.trim())
         write(module, 'content/roadmap/vi/roadmap.yml', '''
 roadmap:

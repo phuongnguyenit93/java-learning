@@ -1,16 +1,11 @@
 sections:
   jdbc-batch-operations:
     difficulty: INTERMEDIATE
-    isImportant: false
   jdbc-generated-keys:
     difficulty: INTERMEDIATE
-    isImportant: false
   jdbc-custom-extraction-callbacks:
     difficulty: ADVANCED
-    isImportant: false
   simple-jdbc-insert-call:
     difficulty: INTERMEDIATE
-    isImportant: false
   embedded-database-sql-initialization:
     difficulty: INTERMEDIATE
-    isImportant: false

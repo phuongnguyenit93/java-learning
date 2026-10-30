@@ -1,31 +1,21 @@
 sections:
   rsocket-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   rsocket-request-response:
     difficulty: INTERMEDIATE
-    isImportant: false
   rsocket-fire-and-forget:
     difficulty: INTERMEDIATE
-    isImportant: false
   rsocket-request-stream:
     difficulty: INTERMEDIATE
-    isImportant: false
   rsocket-request-channel:
     difficulty: INTERMEDIATE
-    isImportant: false
   rsocket-symmetry:
     difficulty: INTERMEDIATE
-    isImportant: false
   rsocket-setup-connection:
     difficulty: INTERMEDIATE
-    isImportant: false
   rsocket-routes-metadata:
     difficulty: INTERMEDIATE
-    isImportant: false
   rsocket-reactive-streams-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   rsocket-transports-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false

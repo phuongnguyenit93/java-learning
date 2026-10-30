@@ -1,28 +1,19 @@
 sections:
   design-patterns-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   design-patterns-002:
     difficulty: ADVANCED
-    isImportant: true
   design-patterns-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   design-patterns-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   design-patterns-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   design-patterns-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   design-patterns-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   design-patterns-008:
     difficulty: ADVANCED
-    isImportant: false
   design-patterns-009:
     difficulty: INTERMEDIATE
-    isImportant: true

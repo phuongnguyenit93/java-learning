@@ -1,19 +1,13 @@
 sections:
   reactive-spec-scope:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-four-roles:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-signal-sequence:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-request-n:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-protocol-failures:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-interoperability:
     difficulty: INTERMEDIATE
-    isImportant: false

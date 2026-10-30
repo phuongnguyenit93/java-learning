@@ -1,19 +1,13 @@
 sections:
   imperative-procedure-purpose:
     difficulty: BASIC
-    isImportant: false
   imperative-procedure-contract:
     difficulty: BASIC
-    isImportant: false
   imperative-procedure-local-state:
     difficulty: BASIC
-    isImportant: false
   imperative-procedure-effects:
     difficulty: BASIC
-    isImportant: false
   imperative-procedure-decomposition:
     difficulty: BASIC
-    isImportant: false
   imperative-procedure-limitations:
     difficulty: BASIC
-    isImportant: false

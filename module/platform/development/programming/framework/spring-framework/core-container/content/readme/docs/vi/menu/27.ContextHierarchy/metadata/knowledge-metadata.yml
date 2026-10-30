@@ -1,25 +1,17 @@
 sections:
   context-hierarchy-001:
     difficulty: BASIC
-    isImportant: false
   context-hierarchy-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   context-hierarchy-003:
     difficulty: ADVANCED
-    isImportant: false
   context-hierarchy-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   context-hierarchy-005:
     difficulty: ADVANCED
-    isImportant: false
   context-hierarchy-006:
     difficulty: ADVANCED
-    isImportant: false
   context-hierarchy-007:
     difficulty: ADVANCED
-    isImportant: false
   context-hierarchy-008:
     difficulty: ADVANCED
-    isImportant: false

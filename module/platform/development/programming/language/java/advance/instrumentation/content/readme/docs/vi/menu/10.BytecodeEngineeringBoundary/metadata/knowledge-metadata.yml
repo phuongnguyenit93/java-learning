@@ -1,16 +1,11 @@
 sections:
   bytecode-transformation-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   generation-vs-transformation:
     difficulty: INTERMEDIATE
-    isImportant: false
   classfile-validity:
     difficulty: INTERMEDIATE
-    isImportant: false
   bytecode-engineering-scope:
     difficulty: INTERMEDIATE
-    isImportant: false
   standard-classfile-api-version-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false

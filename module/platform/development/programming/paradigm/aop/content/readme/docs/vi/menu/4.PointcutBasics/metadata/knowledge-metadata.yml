@@ -1,37 +1,25 @@
 sections:
   pointcut-basics-001:
     difficulty: BASIC
-    isImportant: false
   pointcut-basics-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   pointcut-basics-003:
     difficulty: BASIC
-    isImportant: false
   pointcut-basics-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   pointcut-basics-005:
     difficulty: ADVANCED
-    isImportant: false
   pointcut-basics-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   pointcut-basics-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   pointcut-basics-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   pointcut-basics-009:
     difficulty: INTERMEDIATE
-    isImportant: false
   pointcut-basics-010:
     difficulty: INTERMEDIATE
-    isImportant: false
   pointcut-basics-011:
     difficulty: ADVANCED
-    isImportant: false
   pointcut-basics-012:
     difficulty: ADVANCED
-    isImportant: false

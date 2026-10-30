@@ -1,13 +1,9 @@
 sections:
   bootjar-bootwar-repackage:
     difficulty: BASIC
-    isImportant: false
   executable-vs-plain-archive:
     difficulty: BASIC
-    isImportant: false
   jar-vs-war-packaging:
     difficulty: BASIC
-    isImportant: false
   packaging-main-class:
     difficulty: BASIC
-    isImportant: false

@@ -1,28 +1,19 @@
 sections:
   string-formatting-001:
     difficulty: BASIC
-    isImportant: false
   string-formatting-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-formatting-003:
     difficulty: BASIC
-    isImportant: false
   string-formatting-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-formatting-005:
     difficulty: BASIC
-    isImportant: false
   string-formatting-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-formatting-007:
     difficulty: ADVANCED
-    isImportant: false
   string-formatting-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-formatting-009:
     difficulty: INTERMEDIATE
-    isImportant: false

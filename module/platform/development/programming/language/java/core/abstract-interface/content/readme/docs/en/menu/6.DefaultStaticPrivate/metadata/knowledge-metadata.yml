@@ -1,13 +1,9 @@
 sections:
   default-method:
     difficulty: BASIC
-    isImportant: false
   static-interface-method:
     difficulty: BASIC
-    isImportant: false
   private-interface-method:
     difficulty: BASIC
-    isImportant: false
   default-method-evolution:
     difficulty: BASIC
-    isImportant: false

@@ -1,19 +1,13 @@
 sections:
   declarative-what:
     difficulty: BASIC
-    isImportant: false
   declarative-why:
     difficulty: BASIC
-    isImportant: false
   declarative-before:
     difficulty: BASIC
-    isImportant: false
   declarative-solution:
     difficulty: BASIC
-    isImportant: false
   declarative-relations:
     difficulty: BASIC
-    isImportant: false
   declarative-learning-path:
     difficulty: BASIC
-    isImportant: false

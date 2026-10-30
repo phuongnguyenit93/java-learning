@@ -1,19 +1,13 @@
 sections:
   testcontext-framework-role:
     difficulty: BASIC
-    isImportant: false
   testcontext-core-abstractions:
     difficulty: BASIC
-    isImportant: false
   testcontext-bootstrap:
     difficulty: INTERMEDIATE
-    isImportant: false
   smart-context-loading:
     difficulty: INTERMEDIATE
-    isImportant: false
   test-execution-listeners:
     difficulty: INTERMEDIATE
-    isImportant: false
   test-framework-integration:
     difficulty: INTERMEDIATE
-    isImportant: false

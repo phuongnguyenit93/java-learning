@@ -1,25 +1,17 @@
 sections:
   environment-abstraction:
     difficulty: BASIC
-    isImportant: false
   property-sources-and-precedence:
     difficulty: INTERMEDIATE
-    isImportant: false
   property-placeholders:
     difficulty: INTERMEDIATE
-    isImportant: false
   profiles:
     difficulty: INTERMEDIATE
-    isImportant: false
   spel-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   spel-evaluation-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   spel-in-bean-definitions:
     difficulty: INTERMEDIATE
-    isImportant: false
   boot-config-boundary:
     difficulty: BASIC
-    isImportant: false

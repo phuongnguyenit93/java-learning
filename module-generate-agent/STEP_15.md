@@ -30,9 +30,8 @@ than being pushed into Sheet cells.
 2. Verify VI tab `I3` exact module root-relative path, `CURRENT_STEP.VALUE = "14"` in module `master.json`; verify STEP 12 offline VI Excel has exactly one worksheet,
    correct `I3` and final VI menu row mapping.
 3. Validate the Google-native `Template`: 700+ rows, **at least A:AC (29 columns)** (extra legacy columns are preserved), Difficulty
-   dropdown BASIC/INTERMEDIATE/ADVANCED at O20/O21/O700, isImportant
-   dropdown TRUE/FALSE at AB20/AB700, and three conditional coloring rules
-   for BASIC/INTERMEDIATE/ADVANCED on O20:O700.
+   dropdown BASIC/INTERMEDIATE/ADVANCED at O20/O21/O700, and three
+   conditional coloring rules for BASIC/INTERMEDIATE/ADVANCED on O20:O700.
 4. Ensure no concurrent writer. Read any existing persistent EN gid mapping;
    check conflicts with actual Google tabs. Check service account API scopes.
 
@@ -79,7 +78,7 @@ All default to `DRY_RUN`; only `APPLY` mutates Sheets or local files.
    `ModuleContentExcelSyncService` **forced to use VI snapshot as baseline**,
    never stale EN Excel.
 2. Map introduction B17, Roadmap F:H, Menu A/B, Knowledge C:N, difficulty O,
-   Interview P:S, Quiz T:W, Importance AB. **Bỏ qua Video X:AA trong publish bắt buộc.** Use source VI row
+   Interview P:S, Quiz T:W và Summary AC. **Bỏ qua Video X:AA trong publish bắt buộc.** Use source VI row
    identities; fail on lost chapter ownership, mismatched section count, long
    text or invalid YAML.
    Đọc `menu/<chapter>/knowledge/<file>.md`, metadata tại

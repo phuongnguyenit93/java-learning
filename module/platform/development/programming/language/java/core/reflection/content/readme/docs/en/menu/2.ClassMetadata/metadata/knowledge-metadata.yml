@@ -1,28 +1,19 @@
 sections:
   class-object-entrypoints:
     difficulty: BASIC
-    isImportant: false
   class-names:
     difficulty: BASIC
-    isImportant: false
   class-kind:
     difficulty: BASIC
-    isImportant: false
   specialized-type-metadata:
     difficulty: INTERMEDIATE
-    isImportant: false
   runtime-annotation-metadata:
     difficulty: INTERMEDIATE
-    isImportant: false
   modifiers:
     difficulty: BASIC
-    isImportant: false
   superclass-interfaces:
     difficulty: BASIC
-    isImportant: false
   member-abstraction-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   declared-vs-public-members:
     difficulty: BASIC
-    isImportant: false

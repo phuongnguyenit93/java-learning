@@ -1,28 +1,19 @@
 sections:
   test-lifecycle-callbacks:
     difficulty: INTERMEDIATE
-    isImportant: false
   testexecutionlistener-ordering:
     difficulty: ADVANCED
-    isImportant: false
   test-execution-events:
     difficulty: INTERMEDIATE
-    isImportant: false
   application-event-recording:
     difficulty: INTERMEDIATE
-    isImportant: false
   support-classes-and-composed-annotations:
     difficulty: INTERMEDIATE
-    isImportant: false
   aot-test-support:
     difficulty: ADVANCED
-    isImportant: false
   execution-mode-constraints:
     difficulty: ADVANCED
-    isImportant: false
   test-scope-decision:
     difficulty: INTERMEDIATE
-    isImportant: false
   testing-strategy-synthesis:
     difficulty: INTERMEDIATE
-    isImportant: false

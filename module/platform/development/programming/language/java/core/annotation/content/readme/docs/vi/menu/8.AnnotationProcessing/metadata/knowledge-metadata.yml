@@ -1,19 +1,13 @@
 sections:
   processing-rounds:
     difficulty: BASIC
-    isImportant: false
   processor-contract:
     difficulty: BASIC
-    isImportant: false
   supported-types-source-version:
     difficulty: BASIC
-    isImportant: false
   generated-source:
     difficulty: BASIC
-    isImportant: false
   processing-vs-reflection:
     difficulty: BASIC
-    isImportant: false
   processor-pitfalls:
     difficulty: BASIC
-    isImportant: false

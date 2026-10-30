@@ -1,25 +1,17 @@
 sections:
   linked-hash-map-001:
     difficulty: BASIC
-    isImportant: false
   linked-hash-map-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   linked-hash-map-003:
     difficulty: ADVANCED
-    isImportant: false
   linked-hash-map-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   linked-hash-map-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   linked-hash-map-006:
     difficulty: ADVANCED
-    isImportant: false
   linked-hash-map-007:
     difficulty: ADVANCED
-    isImportant: false
   linked-hash-map-008:
     difficulty: ADVANCED
-    isImportant: false

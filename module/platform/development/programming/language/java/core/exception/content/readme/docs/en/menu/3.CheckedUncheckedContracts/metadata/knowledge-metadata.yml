@@ -1,10 +1,7 @@
 sections:
   checked-exception:
     difficulty: BASIC
-    isImportant: false
   unchecked-exception:
     difficulty: BASIC
-    isImportant: false
   checked-vs-unchecked-design:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,37 +1,25 @@
 sections:
   spring-pointcut-expressions-001:
     difficulty: BASIC
-    isImportant: false
   spring-pointcut-expressions-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   spring-pointcut-expressions-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   spring-pointcut-expressions-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   spring-pointcut-expressions-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   spring-pointcut-expressions-006:
     difficulty: ADVANCED
-    isImportant: false
   spring-pointcut-expressions-007:
     difficulty: ADVANCED
-    isImportant: false
   spring-pointcut-expressions-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   spring-pointcut-expressions-009:
     difficulty: INTERMEDIATE
-    isImportant: false
   spring-pointcut-expressions-010:
     difficulty: ADVANCED
-    isImportant: false
   spring-pointcut-expressions-011:
     difficulty: ADVANCED
-    isImportant: false
   spring-pointcut-expressions-012:
     difficulty: ADVANCED
-    isImportant: false

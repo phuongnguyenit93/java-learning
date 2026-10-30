@@ -1,31 +1,21 @@
 sections:
   service-loading-001:
     difficulty: BASIC
-    isImportant: true
   service-loading-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   service-loading-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   service-loading-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   service-loading-005:
     difficulty: ADVANCED
-    isImportant: false
   service-loading-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   service-loading-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   service-loading-008:
     difficulty: ADVANCED
-    isImportant: true
   service-loading-009:
     difficulty: ADVANCED
-    isImportant: true
   service-loading-010:
     difficulty: ADVANCED
-    isImportant: true

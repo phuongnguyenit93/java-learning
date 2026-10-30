@@ -1,19 +1,13 @@
 sections:
   info-endpoint-purpose:
     difficulty: BASIC
-    isImportant: false
   info-contributors:
     difficulty: BASIC
-    isImportant: false
   environment-facing-endpoints:
     difficulty: BASIC
-    isImportant: false
   sensitive-value-sanitization:
     difficulty: BASIC
-    isImportant: false
   info-env-access-boundary:
     difficulty: BASIC
-    isImportant: false
   externalized-config-handoff:
     difficulty: BASIC
-    isImportant: false

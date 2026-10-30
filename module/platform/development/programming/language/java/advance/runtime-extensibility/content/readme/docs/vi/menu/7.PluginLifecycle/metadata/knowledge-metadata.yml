@@ -1,19 +1,13 @@
 sections:
   plugin-lifecycle-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   discovery-to-activation:
     difficulty: INTERMEDIATE
-    isImportant: false
   initialization-and-startup:
     difficulty: INTERMEDIATE
-    isImportant: false
   deactivation-and-cleanup:
     difficulty: INTERMEDIATE
-    isImportant: false
   rediscovery-vs-reload:
     difficulty: INTERMEDIATE
-    isImportant: false
   replacement-and-upgrade:
     difficulty: ADVANCED
-    isImportant: false

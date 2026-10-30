@@ -1,13 +1,9 @@
 sections:
   abstract-class-model:
     difficulty: BASIC
-    isImportant: false
   abstract-method:
     difficulty: BASIC
-    isImportant: false
   abstract-constructor:
     difficulty: BASIC
-    isImportant: false
   abstract-class-limits:
     difficulty: BASIC
-    isImportant: false

@@ -1,16 +1,11 @@
 sections:
   context-propagation-problem:
     difficulty: BASIC
-    isImportant: false
   task-decorator:
     difficulty: ADVANCED
-    isImportant: false
   context-propagating-task-decorator:
     difficulty: BASIC
-    isImportant: false
   context-ownership-boundaries:
     difficulty: BASIC
-    isImportant: false
   spring-async-demo:
     difficulty: INTERMEDIATE
-    isImportant: false

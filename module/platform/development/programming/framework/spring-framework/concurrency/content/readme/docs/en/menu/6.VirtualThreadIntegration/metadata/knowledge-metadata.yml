@@ -1,22 +1,15 @@
 sections:
   virtual-thread-boundary:
     difficulty: BASIC
-    isImportant: false
   virtual-thread-task-executor:
     difficulty: BASIC
-    isImportant: false
   simple-async-task-executor-virtual:
     difficulty: BASIC
-    isImportant: false
   simple-async-task-scheduler:
     difficulty: BASIC
-    isImportant: false
   virtual-thread-fixed-delay:
     difficulty: BASIC
-    isImportant: false
   virtual-thread-concurrency-limits:
     difficulty: BASIC
-    isImportant: false
   virtual-thread-decision:
     difficulty: BASIC
-    isImportant: false

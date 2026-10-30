@@ -1,22 +1,15 @@
 sections:
   runtime-hints-purpose:
     difficulty: BASIC
-    isImportant: false
   runtime-hints-model:
     difficulty: BASIC
-    isImportant: false
   reflection-resource-proxy-hints:
     difficulty: BASIC
-    isImportant: false
   inferred-vs-explicit-hints:
     difficulty: BASIC
-    isImportant: false
   runtime-hints-registrar:
     difficulty: BASIC
-    isImportant: false
   reachability-metadata:
     difficulty: BASIC
-    isImportant: false
   missing-hint-diagnosis:
     difficulty: BASIC
-    isImportant: false

@@ -1,22 +1,15 @@
 sections:
   thread-diagnostics-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   thread-dump-structure:
     difficulty: INTERMEDIATE
-    isImportant: false
   thread-states-and-stack-evidence:
     difficulty: INTERMEDIATE
-    isImportant: false
   locks-deadlocks-and-contention:
     difficulty: INTERMEDIATE
-    isImportant: false
   repeated-thread-dumps:
     difficulty: INTERMEDIATE
-    isImportant: false
   platform-vs-virtual-thread-diagnostics:
     difficulty: INTERMEDIATE
-    isImportant: false
   thread-diagnostic-pitfalls:
     difficulty: INTERMEDIATE
-    isImportant: false

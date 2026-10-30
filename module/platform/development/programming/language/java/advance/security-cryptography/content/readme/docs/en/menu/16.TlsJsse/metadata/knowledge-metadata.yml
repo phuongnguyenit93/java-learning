@@ -1,16 +1,11 @@
 sections:
   jsse-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   ssl-context-managers:
     difficulty: INTERMEDIATE
-    isImportant: false
   tls-handshake-security:
     difficulty: ADVANCED
-    isImportant: false
   endpoint-identification:
     difficulty: ADVANCED
-    isImportant: false
   tls-algorithm-constraints:
     difficulty: ADVANCED
-    isImportant: false

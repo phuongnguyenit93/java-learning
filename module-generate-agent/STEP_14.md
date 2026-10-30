@@ -18,7 +18,7 @@ Trước khi kiểm tra, Prime đọc **toàn văn** `module-generate-agent/GENE
   - `content/readme/docs/{vi,en}/` (`BASE.md`, `LIST.md`, `menu/**`).
   - `content/roadmap/{vi,en}/`.
   - `src/main/resources/swagger/{vi,en}/`.
-- Kiểm tra thứ tự/chỉ số Menu Cấp 1, tên folder/filename, chapter và section Knowledge. Mỗi file Markdown EN phải có **cùng tập và thứ tự anchor ID** với VI; `menu/<chapter>/metadata/knowledge-metadata.yml` phải khớp bytes/anchor/giá trị kỹ thuật (`difficulty`, `isImportant`). `menu/<chapter>/quiz/question.yml` và `menu/<chapter>/questions/{interview,summary}.yml` thuộc cùng cây docs.
+- Kiểm tra Menu Cấp 1, folder/filename, chapter, Knowledge section và anchor ID VI/EN. `menu/<chapter>/metadata/knowledge-metadata.yml` phải khớp bytes/anchor/`difficulty` cùng mọi metadata kỹ thuật còn hiệu lực. Các file Quiz, Interview, Summary giữ nguyên cùng cây docs.
 - Vì STEP 13 chỉ clone, **nội dung EN tại thời điểm này vẫn là tiếng Việt**. Đối chiếu byte/hash VI/EN cho mọi file nằm trong scope, **ngoại trừ `LIST.md`**: ở EN, chỉ header ngôn ngữ và đích link `content/readme/docs/vi/menu/` → `content/readme/docs/en/menu/` được khác.
 - Nếu một khả năng thuộc phạm vi bắt buộc không có nguồn VI (ví dụ Quiz không được tạo), xác minh vùng EN tương ứng **không còn dữ liệu cũ**. **Video nằm ngoài ownership của STEP 13/14**; không kiểm kê, xóa, clone hay dịch Video trong bước này.
 

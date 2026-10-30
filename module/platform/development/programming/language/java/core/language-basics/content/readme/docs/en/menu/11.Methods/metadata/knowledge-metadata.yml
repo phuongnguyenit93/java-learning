@@ -1,22 +1,15 @@
 sections:
   method-signature:
     difficulty: BASIC
-    isImportant: false
   method-invocation-conversion:
     difficulty: BASIC
-    isImportant: false
   overload-resolution-phases:
     difficulty: BASIC
-    isImportant: false
   most-specific-overload:
     difficulty: BASIC
-    isImportant: false
   null-overload-ambiguity:
     difficulty: BASIC
-    isImportant: false
   method-call-evaluation:
     difficulty: BASIC
-    isImportant: false
   recursion-stack:
     difficulty: BASIC
-    isImportant: false

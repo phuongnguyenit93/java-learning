@@ -1,25 +1,17 @@
 sections:
   network-channels:
     difficulty: INTERMEDIATE
-    isImportant: false
   network-buffer-interaction:
     difficulty: INTERMEDIATE
-    isImportant: false
   selector-readiness-model:
     difficulty: ADVANCED
-    isImportant: false
   selection-key-lifecycle:
     difficulty: ADVANCED
-    isImportant: false
   asynchronous-channel-model:
     difficulty: ADVANCED
-    isImportant: false
   unix-domain-channels:
     difficulty: INTERMEDIATE
-    isImportant: false
   virtual-threads-network-io:
     difficulty: INTERMEDIATE
-    isImportant: false
   network-io-model-choice:
     difficulty: INTERMEDIATE
-    isImportant: false

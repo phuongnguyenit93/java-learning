@@ -1,13 +1,9 @@
 sections:
   digest-model:
     difficulty: BASIC
-    isImportant: false
   message-digest-workflow:
     difficulty: BASIC
-    isImportant: false
   trusted-digest-reference:
     difficulty: INTERMEDIATE
-    isImportant: false
   digest-limitations:
     difficulty: INTERMEDIATE
-    isImportant: false

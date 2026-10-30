@@ -1,22 +1,15 @@
 sections:
   native-memory-diagnostics-purpose:
     difficulty: ADVANCED
-    isImportant: false
   nmt-scope-and-limitations:
     difficulty: ADVANCED
-    isImportant: false
   enabling-nmt-and-tracking-levels:
     difficulty: ADVANCED
-    isImportant: false
   reserved-vs-committed:
     difficulty: ADVANCED
-    isImportant: false
   nmt-baseline-and-diff:
     difficulty: ADVANCED
-    isImportant: false
   native-memory-growth-analysis:
     difficulty: ADVANCED
-    isImportant: false
   nmt-overhead-and-pitfalls:
     difficulty: ADVANCED
-    isImportant: false

@@ -1,16 +1,11 @@
 sections:
   dop-flow-scenario:
     difficulty: BASIC
-    isImportant: false
   dop-flow-validate:
     difficulty: BASIC
-    isImportant: false
   dop-flow-transform:
     difficulty: BASIC
-    isImportant: false
   dop-flow-coordinate:
     difficulty: BASIC
-    isImportant: false
   dop-flow-observe:
     difficulty: BASIC
-    isImportant: false

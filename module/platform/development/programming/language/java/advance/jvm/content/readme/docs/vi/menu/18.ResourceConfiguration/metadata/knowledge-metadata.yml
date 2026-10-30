@@ -1,31 +1,21 @@
 sections:
   resource-configuration-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   resource-configuration-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   resource-configuration-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   resource-configuration-004:
     difficulty: ADVANCED
-    isImportant: false
   resource-configuration-005:
     difficulty: ADVANCED
-    isImportant: false
   resource-configuration-006:
     difficulty: ADVANCED
-    isImportant: false
   resource-configuration-007:
     difficulty: ADVANCED
-    isImportant: false
   resource-configuration-008:
     difficulty: ADVANCED
-    isImportant: false
   resource-configuration-009:
     difficulty: ADVANCED
-    isImportant: false
   resource-configuration-010:
     difficulty: ADVANCED
-    isImportant: false

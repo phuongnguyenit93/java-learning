@@ -1,16 +1,11 @@
 sections:
   bean-definition-metadata:
     difficulty: BASIC
-    isImportant: false
   bean-factory-role:
     difficulty: BASIC
-    isImportant: false
   application-context-role:
     difficulty: BASIC
-    isImportant: false
   object-graph-assembly:
     difficulty: BASIC
-    isImportant: false
   container-bootstrap-refresh:
     difficulty: INTERMEDIATE
-    isImportant: false

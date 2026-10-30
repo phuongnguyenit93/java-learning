@@ -1,19 +1,13 @@
 sections:
   transformer-contract:
     difficulty: INTERMEDIATE
-    isImportant: false
   transform-input-context:
     difficulty: INTERMEDIATE
-    isImportant: false
   transform-result-contract:
     difficulty: INTERMEDIATE
-    isImportant: false
   transform-failure-contract:
     difficulty: INTERMEDIATE
-    isImportant: false
   target-selection:
     difficulty: INTERMEDIATE
-    isImportant: false
   transformer-removal:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,22 +1,15 @@
 sections:
   autocloseable:
     difficulty: BASIC
-    isImportant: false
   resource-close-order:
     difficulty: BASIC
-    isImportant: false
   twr-vs-finally:
     difficulty: INTERMEDIATE
-    isImportant: false
   primary-vs-suppressed:
     difficulty: INTERMEDIATE
-    isImportant: false
   get-suppressed:
     difficulty: INTERMEDIATE
-    isImportant: false
   close-failure:
     difficulty: INTERMEDIATE
-    isImportant: false
   effective-final-resource:
     difficulty: INTERMEDIATE
-    isImportant: false

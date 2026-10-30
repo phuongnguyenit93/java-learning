@@ -1,13 +1,9 @@
 sections:
   classloader-contract:
     difficulty: BASIC
-    isImportant: false
   define-class:
     difficulty: BASIC
-    isImportant: false
   custom-source:
     difficulty: BASIC
-    isImportant: false
   custom-loader-safety:
     difficulty: BASIC
-    isImportant: false

@@ -1,19 +1,13 @@
 sections:
   declarative-intent-benefits:
     difficulty: BASIC
-    isImportant: false
   declarative-engine-costs:
     difficulty: BASIC
-    isImportant: false
   declarative-spec-pitfalls:
     difficulty: BASIC
-    isImportant: false
   declarative-effect-limits:
     difficulty: BASIC
-    isImportant: false
   declarative-imperative-contrast:
     difficulty: BASIC
-    isImportant: false
   declarative-paradigm-handoff:
     difficulty: BASIC
-    isImportant: false

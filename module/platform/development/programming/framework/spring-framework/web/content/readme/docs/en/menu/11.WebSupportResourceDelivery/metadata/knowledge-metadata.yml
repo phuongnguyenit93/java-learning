@@ -1,16 +1,11 @@
 sections:
   multipart-request-resolution:
     difficulty: BASIC
-    isImportant: false
   locale-resolution:
     difficulty: BASIC
-    isImportant: false
   static-resources-and-resource-chain:
     difficulty: BASIC
-    isImportant: false
   conditional-requests-and-http-caching:
     difficulty: BASIC
-    isImportant: false
   default-servlet-boundary:
     difficulty: BASIC
-    isImportant: false

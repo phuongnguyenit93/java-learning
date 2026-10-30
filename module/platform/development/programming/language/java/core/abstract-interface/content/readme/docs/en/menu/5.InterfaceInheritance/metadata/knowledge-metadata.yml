@@ -1,10 +1,7 @@
 sections:
   interface-extends-interface:
     difficulty: BASIC
-    isImportant: false
   multiple-interface-hierarchy:
     difficulty: BASIC
-    isImportant: false
   interface-redeclaration:
     difficulty: BASIC
-    isImportant: false

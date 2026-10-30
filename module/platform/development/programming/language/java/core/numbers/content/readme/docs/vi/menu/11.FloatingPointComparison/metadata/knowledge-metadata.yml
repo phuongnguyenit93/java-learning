@@ -1,34 +1,23 @@
 sections:
   floating-point-comparison-001:
     difficulty: BASIC
-    isImportant: true
   floating-point-comparison-002:
     difficulty: BASIC
-    isImportant: true
   floating-point-comparison-003:
     difficulty: BASIC
-    isImportant: true
   floating-point-comparison-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   floating-point-comparison-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   floating-point-comparison-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   floating-point-comparison-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   floating-point-comparison-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   floating-point-comparison-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   floating-point-comparison-010:
     difficulty: ADVANCED
-    isImportant: false
   floating-point-comparison-011:
     difficulty: ADVANCED
-    isImportant: true

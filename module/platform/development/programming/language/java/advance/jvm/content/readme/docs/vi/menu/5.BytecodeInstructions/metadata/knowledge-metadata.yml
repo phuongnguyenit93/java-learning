@@ -1,31 +1,21 @@
 sections:
   bytecode-instructions-001:
     difficulty: BASIC
-    isImportant: false
   bytecode-instructions-002:
     difficulty: BASIC
-    isImportant: false
   bytecode-instructions-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   bytecode-instructions-004:
     difficulty: ADVANCED
-    isImportant: false
   bytecode-instructions-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   bytecode-instructions-006:
     difficulty: ADVANCED
-    isImportant: false
   bytecode-instructions-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   bytecode-instructions-008:
     difficulty: ADVANCED
-    isImportant: false
   bytecode-instructions-009:
     difficulty: INTERMEDIATE
-    isImportant: false
   bytecode-instructions-010:
     difficulty: ADVANCED
-    isImportant: false

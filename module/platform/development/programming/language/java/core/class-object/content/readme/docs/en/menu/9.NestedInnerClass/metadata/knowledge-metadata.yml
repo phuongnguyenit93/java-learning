@@ -1,13 +1,9 @@
 sections:
   static-nested-class:
     difficulty: BASIC
-    isImportant: false
   inner-class:
     difficulty: BASIC
-    isImportant: false
   local-anonymous-class:
     difficulty: BASIC
-    isImportant: false
   capture-semantics:
     difficulty: BASIC
-    isImportant: false

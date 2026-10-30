@@ -1,22 +1,15 @@
 sections:
   data-binder-role:
     difficulty: INTERMEDIATE
-    isImportant: false
   data-binding-flow:
     difficulty: INTERMEDIATE
-    isImportant: false
   property-binding-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   constructor-binding-model:
     difficulty: ADVANCED
-    isImportant: false
   declarative-binding-61:
     difficulty: INTERMEDIATE
-    isImportant: false
   binding-field-policies:
     difficulty: INTERMEDIATE
-    isImportant: false
   data-binder-extension-points:
     difficulty: ADVANCED
-    isImportant: false

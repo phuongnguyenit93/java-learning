@@ -69,9 +69,9 @@ Ví dụ đã đối chiếu với cây module thực tế:
 12. **Prime cập nhật tiến độ đúng module sau QA:** Chỉ sau khi bước 11 và toàn bộ kiểm tra kế thừa Template/dropdown/mapping đều PASS, Prime dùng **`I3` đã exact-readback** để định vị đúng duy nhất `<I3>/master.json` dưới `java-learning/module/`. Đọc/snapshot `CURRENT_STEP.TYPE` và `CURRENT_STEP.VALUE`; `TYPE` phải là `string`. Nếu chưa có khóa, dùng **canonical module configuration sync** theo `rules/PRIME_RULES.md §2` để khởi tạo trạng thái hợp lệ, không tự thêm JSON thủ công. Đối chiếu thứ tự STEP hiện hành **theo quy tắc Prime, không so sánh chuỗi hoặc coi `"8"` lịch sử là STEP mới**: chỉ nâng `"0"` → `"1"` khi hoàn thành STEP 1 lần đầu; `"1"` thì giữ nguyên; trạng thái đã đi xa hơn (kể cả trạng thái lịch sử chưa xác minh) thì **không ghi lùi**, chỉ bảo toàn và báo trạng thái thực. Nếu sai schema, provenance mâu thuẫn, thiếu module hoặc có concurrent writer → `BLOCKER: CURRENT_STEP_UPDATE`, không đoán. Khi cần ghi, chỉ thay **`CURRENT_STEP.VALUE`** bằng JSON string `"1"`, giữ nguyên các key khác, snapshot/atomic replace hoặc rollback an toàn và **exact readback** từ `master.json`. Không ghi trạng thái vào Google Sheets/Excel `J2/J3` hay module khác; write/readback FAIL thì STEP 1 chưa COMPLETED.
 13. **Báo cáo:** Trả về tên tab, chủ đề ở `B1`, **Location tại `I3`**, `sheetId`, dòng TXT vừa thêm, tình trạng format 700 hàng × tất cả cột (60 px, CLIP) và đường dẫn mở trực tiếp tab mới `<URL_GỐC>/edit?gid=<SHEET_ID>#gid=<SHEET_ID>`. Báo thêm `CURRENT_STEP_MODULE_PATH`, `CURRENT_STEP_BEFORE`, `CURRENT_STEP_AFTER`, `CURRENT_STEP_READBACK=PASS/FAIL`, `UNCHANGED` nếu không cần ghi, hoặc blocker nếu có. Chỉ tuyên bố STEP 1 hoàn tất sau cổng trạng thái này.
 
-## Dropdown isImportant kế thừa từ Template
+## Cấu trúc Template và Summary
 
-**Bố cục authoring còn hoạt động đến AC (29 cột)**: `AB18=Importance`, `AB19=isImportant` với validation TRUE/FALSE; `AC18=Summary`, `AC19=Summary YAML` (chấp nhận nguyên cặp legacy Learning Objectives). Không tạo nội dung Practice AD:AG; các cột AD:AG đang có ở Sheet cũ được giữ nguyên để tránh mất dữ liệu, không phải yêu cầu pipeline.
+**Bố cục authoring hoạt động đến AC (29 cột):** `AC18=Summary`, `AC19=Summary YAML` (cặp Learning Objectives YAML cũ chỉ xử lý qua migration có kiểm tra). Không tạo Practice AD:AG; những cột AD:AG hiện hữu được giữ nguyên để tránh mất dữ liệu, không có producer/importer Practice.
 
 ## Dropdown Difficulty bắt buộc kế thừa từ Template
 
@@ -89,7 +89,7 @@ Quy tắc tích hợp vào quy trình STEP 1 ở trên:
 
 ## Nguyên tắc an toàn
 
-**Bố cục Template hiện hành:** A:AC gồm Interview P:S, Quiz T:W, Video X:AA, isImportant AB, Summary AC. AD:AG nếu tồn tại là vùng legacy được bảo toàn, không có producer/importer Practice. STEP 1 clone giữ nguyên header/format và không sửa dữ liệu legacy. Interview P:S vẫn dùng YAML; Quiz T:W và Video X:AA giữ contract tương ứng.
+**Bố cục Template:** A:AC gồm Interview P:S, Quiz T:W, Video X:AA và Summary AC. Các cột trung gian không được STEP 1 ghi dữ liệu. AD:AG nếu có được giữ nguyên, không có Practice importer. STEP 1 clone nguyên header/format mà không sửa dữ liệu. Interview P:S dùng YAML, Quiz T:W và Video X:AA theo contract riêng.
 
 **Quiz và Video:** `T18 = Quiz`, `T19:W19 = Quiz YAML`; `X18 = Video`, `X19:AA19 = Video Script`. **Không điền Quiz vào T20:W700 hoặc Video vào X20:AA700 khi clone**; STEP 10 worker sinh Quiz YAML vào hàng cha khi được giao; Video do STEP_OPTIONAL_VIDEO worker tạo sau STEP_FINAL. Ba spreadsheet `Module Content`, `Module Content 2`, `Module Content 3` đều đã được sắp xếp theo thứ tự này, không thay các vùng A:O.
 

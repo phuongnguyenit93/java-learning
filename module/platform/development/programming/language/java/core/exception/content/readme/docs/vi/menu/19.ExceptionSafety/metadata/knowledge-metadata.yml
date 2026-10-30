@@ -1,28 +1,19 @@
 sections:
   exception-safety-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-safety-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-safety-003:
     difficulty: ADVANCED
-    isImportant: false
   exception-safety-004:
     difficulty: ADVANCED
-    isImportant: false
   exception-safety-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-safety-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-safety-007:
     difficulty: ADVANCED
-    isImportant: false
   exception-safety-008:
     difficulty: ADVANCED
-    isImportant: false
   exception-safety-009:
     difficulty: ADVANCED
-    isImportant: false

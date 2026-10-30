@@ -1,16 +1,11 @@
 sections:
   annotated-controller-model:
     difficulty: BASIC
-    isImportant: false
   request-mapping-and-conditions:
     difficulty: BASIC
-    isImportant: false
   handler-method-inputs:
     difficulty: BASIC
-    isImportant: false
   model-and-session-state:
     difficulty: BASIC
-    isImportant: false
   handler-return-values-and-response-handling:
     difficulty: BASIC
-    isImportant: false

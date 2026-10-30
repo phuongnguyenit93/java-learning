@@ -1,28 +1,19 @@
 sections:
   optional-purpose:
     difficulty: BASIC
-    isImportant: false
   optional-creation:
     difficulty: BASIC
-    isImportant: false
   optional-null-boundary:
     difficulty: BASIC
-    isImportant: false
   optional-presence:
     difficulty: BASIC
-    isImportant: false
   optional-transform-filter:
     difficulty: INTERMEDIATE
-    isImportant: false
   optional-consumption:
     difficulty: BASIC
-    isImportant: false
   optional-fallback-and-failure:
     difficulty: INTERMEDIATE
-    isImportant: false
   optional-api-design:
     difficulty: INTERMEDIATE
-    isImportant: false
   optional-misuse:
     difficulty: INTERMEDIATE
-    isImportant: false

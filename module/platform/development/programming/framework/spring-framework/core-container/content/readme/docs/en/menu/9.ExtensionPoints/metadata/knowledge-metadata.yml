@@ -1,25 +1,17 @@
 sections:
   extension-point-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   bean-factory-post-processor:
     difficulty: ADVANCED
-    isImportant: false
   bean-post-processor:
     difficulty: ADVANCED
-    isImportant: false
   post-processor-ordering:
     difficulty: ADVANCED
-    isImportant: false
   early-bean-instantiation:
     difficulty: ADVANCED
-    isImportant: false
   factory-bean:
     difficulty: ADVANCED
-    isImportant: false
   annotation-infrastructure:
     difficulty: ADVANCED
-    isImportant: false
   container-agnostic-design:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,22 +1,15 @@
 sections:
   mvc-binding-lifecycle:
     difficulty: BASIC
-    isImportant: false
   web-data-binder-and-init-binder:
     difficulty: BASIC
-    isImportant: false
   validation-and-binding-result:
     difficulty: BASIC
-    isImportant: false
   mvc-method-validation-6-1:
     difficulty: BASIC
-    isImportant: false
   validation-exception-paths:
     difficulty: BASIC
-    isImportant: false
   validated-aop-boundary:
     difficulty: BASIC
-    isImportant: false
   safe-binding:
     difficulty: BASIC
-    isImportant: false

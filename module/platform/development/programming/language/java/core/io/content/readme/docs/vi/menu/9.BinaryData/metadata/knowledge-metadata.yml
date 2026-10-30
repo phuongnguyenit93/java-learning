@@ -1,31 +1,21 @@
 sections:
   binary-data-001:
     difficulty: BASIC
-    isImportant: true
   binary-data-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   binary-data-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   binary-data-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   binary-data-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   binary-data-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   binary-data-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   binary-data-008:
     difficulty: ADVANCED
-    isImportant: true
   binary-data-009:
     difficulty: ADVANCED
-    isImportant: true
   binary-data-010:
     difficulty: ADVANCED
-    isImportant: true

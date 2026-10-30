@@ -1,25 +1,17 @@
 sections:
   nested-types-001:
     difficulty: BASIC
-    isImportant: true
   nested-types-002:
     difficulty: BASIC
-    isImportant: true
   nested-types-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   nested-types-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   nested-types-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   nested-types-006:
     difficulty: ADVANCED
-    isImportant: true
   nested-types-007:
     difficulty: ADVANCED
-    isImportant: true
   nested-types-008:
     difficulty: INTERMEDIATE
-    isImportant: true

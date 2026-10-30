@@ -1,22 +1,15 @@
 sections:
   security-boundaries-001:
     difficulty: ADVANCED
-    isImportant: true
   security-boundaries-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   security-boundaries-003:
     difficulty: ADVANCED
-    isImportant: true
   security-boundaries-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   security-boundaries-005:
     difficulty: ADVANCED
-    isImportant: true
   security-boundaries-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   security-boundaries-007:
     difficulty: ADVANCED
-    isImportant: true

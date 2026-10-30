@@ -1,22 +1,15 @@
 sections:
   spring-config-import:
     difficulty: BASIC
-    isImportant: false
   import-precedence:
     difficulty: BASIC
-    isImportant: false
   fixed-vs-relative-imports:
     difficulty: BASIC
-    isImportant: false
   optional-imports:
     difficulty: BASIC
-    isImportant: false
   extension-hints:
     difficulty: BASIC
-    isImportant: false
   configtree-imports:
     difficulty: BASIC
-    isImportant: false
   import-failure-model:
     difficulty: BASIC
-    isImportant: false

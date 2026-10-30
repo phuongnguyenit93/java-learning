@@ -1,37 +1,25 @@
 sections:
   common-numeric-mistakes-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   common-numeric-mistakes-002:
     difficulty: BASIC
-    isImportant: true
   common-numeric-mistakes-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   common-numeric-mistakes-004:
     difficulty: BASIC
-    isImportant: true
   common-numeric-mistakes-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   common-numeric-mistakes-006:
     difficulty: ADVANCED
-    isImportant: true
   common-numeric-mistakes-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   common-numeric-mistakes-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   common-numeric-mistakes-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   common-numeric-mistakes-010:
     difficulty: ADVANCED
-    isImportant: true
   common-numeric-mistakes-011:
     difficulty: INTERMEDIATE
-    isImportant: false
   common-numeric-mistakes-012:
     difficulty: INTERMEDIATE
-    isImportant: true

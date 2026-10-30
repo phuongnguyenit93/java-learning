@@ -1,22 +1,15 @@
 sections:
   agent-trust-security:
     difficulty: ADVANCED
-    isImportant: false
   startup-runtime-overhead:
     difficulty: ADVANCED
-    isImportant: false
   classloader-module-visibility:
     difficulty: ADVANCED
-    isImportant: false
   dynamic-attach-policy:
     difficulty: ADVANCED
-    isImportant: false
   remove-transformer-race:
     difficulty: ADVANCED
-    isImportant: false
   rollback-strategy:
     difficulty: ADVANCED
-    isImportant: false
   compatibility-testing:
     difficulty: ADVANCED
-    isImportant: false

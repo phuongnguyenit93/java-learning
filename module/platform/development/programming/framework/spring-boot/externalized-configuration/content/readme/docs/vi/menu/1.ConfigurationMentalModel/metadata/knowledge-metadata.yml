@@ -1,19 +1,13 @@
 sections:
   externalized-configuration-purpose:
     difficulty: BASIC
-    isImportant: false
   configuration-vs-application-code:
     difficulty: BASIC
-    isImportant: false
   environment-resolved-view:
     difficulty: BASIC
-    isImportant: false
   configuration-source-categories:
     difficulty: BASIC
-    isImportant: false
   configuration-resolution-pipeline:
     difficulty: BASIC
-    isImportant: false
   module-ownership-boundary:
     difficulty: BASIC
-    isImportant: false

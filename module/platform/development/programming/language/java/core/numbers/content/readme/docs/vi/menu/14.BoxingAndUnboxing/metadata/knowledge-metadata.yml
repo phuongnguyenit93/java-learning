@@ -1,34 +1,23 @@
 sections:
   boxing-and-unboxing-001:
     difficulty: BASIC
-    isImportant: true
   boxing-and-unboxing-002:
     difficulty: BASIC
-    isImportant: true
   boxing-and-unboxing-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   boxing-and-unboxing-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   boxing-and-unboxing-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   boxing-and-unboxing-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   boxing-and-unboxing-007:
     difficulty: ADVANCED
-    isImportant: false
   boxing-and-unboxing-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   boxing-and-unboxing-009:
     difficulty: ADVANCED
-    isImportant: true
   boxing-and-unboxing-010:
     difficulty: ADVANCED
-    isImportant: true
   boxing-and-unboxing-011:
     difficulty: INTERMEDIATE
-    isImportant: true

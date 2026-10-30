@@ -1,19 +1,13 @@
 sections:
   starter-server-defaults:
     difficulty: BASIC
-    isImportant: false
   supported-server-choices:
     difficulty: BASIC
-    isImportant: false
   replacing-default-server:
     difficulty: BASIC
-    isImportant: false
   web-server-factory-role:
     difficulty: BASIC
-    isImportant: false
   web-server-context-startup:
     difficulty: BASIC
-    isImportant: false
   server-selection-boundary:
     difficulty: BASIC
-    isImportant: false

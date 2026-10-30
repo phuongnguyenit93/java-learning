@@ -1,16 +1,11 @@
 sections:
   runtime-end-to-end-flow:
     difficulty: BASIC
-    isImportant: false
   runtime-hook-selection:
     difficulty: BASIC
-    isImportant: false
   runtime-state-and-services:
     difficulty: BASIC
-    isImportant: false
   runtime-problem-classification:
     difficulty: BASIC
-    isImportant: false
   runtime-module-handoffs:
     difficulty: BASIC
-    isImportant: false

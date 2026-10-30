@@ -1,22 +1,15 @@
 sections:
   cache-error-handler:
     difficulty: ADVANCED
-    isImportant: false
   cache-vs-business-failure:
     difficulty: ADVANCED
-    isImportant: false
   transaction-aware-cache:
     difficulty: ADVANCED
-    isImportant: false
   after-commit-cache-mutation:
     difficulty: ADVANCED
-    isImportant: false
   immediate-cache-operations:
     difficulty: ADVANCED
-    isImportant: false
   no-active-transaction:
     difficulty: ADVANCED
-    isImportant: false
   transaction-module-boundary:
     difficulty: ADVANCED
-    isImportant: false

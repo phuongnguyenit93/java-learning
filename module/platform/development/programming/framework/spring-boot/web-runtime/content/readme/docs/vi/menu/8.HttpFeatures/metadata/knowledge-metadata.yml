@@ -1,19 +1,13 @@
 sections:
   http-response-compression:
     difficulty: BASIC
-    isImportant: false
   http2-support:
     difficulty: BASIC
-    isImportant: false
   request-header-limits:
     difficulty: BASIC
-    isImportant: false
   connection-server-settings:
     difficulty: BASIC
-    isImportant: false
   access-logging:
     difficulty: BASIC
-    isImportant: false
   http-feature-portability:
     difficulty: BASIC
-    isImportant: false

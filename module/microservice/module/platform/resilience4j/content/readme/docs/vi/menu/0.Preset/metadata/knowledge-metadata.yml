@@ -1,22 +1,15 @@
 sections:
   resilience-4j:
     difficulty: BASIC
-    isImportant: false
   resilience-4j-config:
     difficulty: BASIC
-    isImportant: false
   semaphore-and-resilience-4j:
     difficulty: BASIC
-    isImportant: false
   ignore-noretry-and-fallback:
     difficulty: BASIC
-    isImportant: false
   3-state-of-circuit-breaker:
     difficulty: BASIC
-    isImportant: false
   time-limiter-resilience-4j:
     difficulty: BASIC
-    isImportant: false
   time-limiter-with-async:
     difficulty: BASIC
-    isImportant: false

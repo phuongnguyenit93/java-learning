@@ -1,19 +1,13 @@
 sections:
   type-initialization-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   type-initialization-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   type-initialization-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   type-initialization-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   type-initialization-005:
     difficulty: ADVANCED
-    isImportant: true
   type-initialization-006:
     difficulty: INTERMEDIATE
-    isImportant: false

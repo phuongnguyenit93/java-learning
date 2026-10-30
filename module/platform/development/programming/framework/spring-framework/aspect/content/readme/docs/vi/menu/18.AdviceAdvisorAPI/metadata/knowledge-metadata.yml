@@ -1,28 +1,19 @@
 sections:
   advice-advisor-api-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   advice-advisor-api-002:
     difficulty: ADVANCED
-    isImportant: false
   advice-advisor-api-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   advice-advisor-api-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   advice-advisor-api-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   advice-advisor-api-006:
     difficulty: ADVANCED
-    isImportant: false
   advice-advisor-api-007:
     difficulty: ADVANCED
-    isImportant: false
   advice-advisor-api-008:
     difficulty: ADVANCED
-    isImportant: false
   advice-advisor-api-009:
     difficulty: ADVANCED
-    isImportant: false

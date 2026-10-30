@@ -1,19 +1,13 @@
 sections:
   jackson-what:
     difficulty: BASIC
-    isImportant: false
   jackson-why:
     difficulty: BASIC
-    isImportant: false
   jackson-before:
     difficulty: BASIC
-    isImportant: false
   jackson-model:
     difficulty: BASIC
-    isImportant: false
   jackson-object-mapping-boundary:
     difficulty: BASIC
-    isImportant: false
   jackson-spring-boundary:
     difficulty: BASIC
-    isImportant: false

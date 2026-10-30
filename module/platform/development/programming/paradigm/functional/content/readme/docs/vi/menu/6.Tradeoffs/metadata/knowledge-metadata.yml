@@ -1,16 +1,11 @@
 sections:
   functional-use-cases:
     difficulty: BASIC
-    isImportant: false
   functional-costs:
     difficulty: BASIC
-    isImportant: false
   functional-vs-other-styles:
     difficulty: BASIC
-    isImportant: false
   functional-end-to-end:
     difficulty: BASIC
-    isImportant: false
   functional-boundaries:
     difficulty: BASIC
-    isImportant: false

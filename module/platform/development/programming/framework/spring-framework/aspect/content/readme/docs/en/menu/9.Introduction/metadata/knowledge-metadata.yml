@@ -1,13 +1,9 @@
 sections:
   introduction-mental-model:
     difficulty: BASIC
-    isImportant: false
   declare-parents:
     difficulty: BASIC
-    isImportant: false
   introduction-demo:
     difficulty: BASIC
-    isImportant: false
   introduction-conclusion:
     difficulty: BASIC
-    isImportant: false

@@ -238,7 +238,6 @@ class ContentSkeletonPathsTest {
     difficulty: ADVANCED
 
 
-    isImportant: true
 ''', 'UTF-8')
         File advanced = new File(
                 moduleDir, 'content/readme/docs/vi/menu/2.Advanced/knowledge/Advanced.md'
@@ -279,7 +278,7 @@ class ContentSkeletonPathsTest {
 
         // ProjectBuilder's synthetic hierarchy can differ from a real multi-project
         // Gradle settings evaluation. Exercise each chapter-local metadata plan
-        // and the safe writer directly to verify persisted location and flags.
+        // and the safe writer directly to verify persisted location and Difficulty.
         def service = new ReadmeMetadataSyncService(rootProject.logger)
         def planMethod = ReadmeMetadataSyncService.declaredMethods.find {
             it.name == 'buildChapterWritePlans'
@@ -293,10 +292,7 @@ class ContentSkeletonPathsTest {
         )
         writer.accessible = true
         for (def plan in plans) {
-            if (plan.outputFile == existingMetadata) {
-                assertTrue('Existing authored flags must be retained',
-                        plan.content.contains(''))
-            }
+
             assertTrue(writer.invoke(null, plan.outputFile, plan.content))
         }
 
@@ -316,9 +312,9 @@ class ContentSkeletonPathsTest {
         assertEquals(['sections'] as Set, second.keySet())
         assertEquals(['basic-001', 'basic-002'] as Set, first.sections.keySet())
         assertEquals(['advanced-001'] as Set, second.sections.keySet())
-        assertEquals([difficulty: 'ADVANCED', isImportant: true], first.sections['basic-001'])
-        assertEquals([difficulty: 'BASIC', isImportant: false], first.sections['basic-002'])
-        assertEquals([difficulty: 'BASIC', isImportant: false], second.sections['advanced-001'])
+        assertEquals([difficulty: 'ADVANCED'], first.sections['basic-001'])
+        assertEquals([difficulty: 'BASIC'], first.sections['basic-002'])
+        assertEquals([difficulty: 'BASIC'], second.sections['advanced-001'])
         assertFalse(new File(
                 moduleDir, 'content/readme/metadata/vi/knowledge-metadata.yml'
         ).exists())
@@ -326,24 +322,5 @@ class ContentSkeletonPathsTest {
                 moduleDir, 'src/main/resources/readme/vi/knowledge-metadata.yml'
         ).exists())
 
-        // Quoted booleans must fail strict metadata validation; they must not
-        // be silently coerced or replace existing human-edited review flags.
-        for (String flag in ['isImportant']) {
-            Map invalid = new LinkedHashMap(first)
-            invalid.sections = new LinkedHashMap(first.sections)
-            invalid.sections['basic-001'] = new LinkedHashMap(first.sections['basic-001'])
-            invalid.sections['basic-001'][flag] = 'true'
-            metadata.setText(new Yaml().dump(invalid), 'UTF-8')
-            try {
-                planMethod.invoke(service, moduleProject, languages.first())
-                fail('String flag ' + flag + ' must be rejected')
-            }
-            catch (java.lang.reflect.InvocationTargetException expected) {
-                assertTrue(expected.cause instanceof org.gradle.api.GradleException)
-                assertTrue(expected.cause.message,
-                        expected.cause.message.contains(
-                                'Expected YAML boolean true or false'))
-            }
-        }
     }
 }

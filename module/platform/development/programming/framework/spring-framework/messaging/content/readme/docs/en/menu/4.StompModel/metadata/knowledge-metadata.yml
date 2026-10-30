@@ -1,28 +1,19 @@
 sections:
   stomp-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   stomp-frames-commands:
     difficulty: INTERMEDIATE
-    isImportant: false
   stomp-destinations-subscriptions:
     difficulty: INTERMEDIATE
-    isImportant: false
   stomp-headers-content:
     difficulty: INTERMEDIATE
-    isImportant: false
   stomp-heartbeats-receipts:
     difficulty: INTERMEDIATE
-    isImportant: false
   stomp-ack-transactions:
     difficulty: INTERMEDIATE
-    isImportant: false
   stomp-over-websocket:
     difficulty: INTERMEDIATE
-    isImportant: false
   simp-message-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   stomp-spring-message:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,16 +1,11 @@
 sections:
   lifecycle-what:
     difficulty: BASIC
-    isImportant: false
   lifecycle-why:
     difficulty: BASIC
-    isImportant: false
   lifecycle-before:
     difficulty: BASIC
-    isImportant: false
   lifecycle-model:
     difficulty: BASIC
-    isImportant: false
   lifecycle-relations:
     difficulty: BASIC
-    isImportant: false

@@ -1,19 +1,13 @@
 sections:
   reactive-server-auto-config-trigger:
     difficulty: BASIC
-    isImportant: false
   reactor-netty-default:
     difficulty: BASIC
-    isImportant: false
   reactive-server-factories:
     difficulty: BASIC
-    isImportant: false
   reactive-server-configuration-relation:
     difficulty: BASIC
-    isImportant: false
   reactive-server-backoff:
     difficulty: BASIC
-    isImportant: false
   reactive-server-webflux-boundary:
     difficulty: BASIC
-    isImportant: false

@@ -1,37 +1,25 @@
 sections:
   jdk-cglib-proxies-001:
     difficulty: BASIC
-    isImportant: false
   jdk-cglib-proxies-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   jdk-cglib-proxies-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   jdk-cglib-proxies-004:
     difficulty: ADVANCED
-    isImportant: false
   jdk-cglib-proxies-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   jdk-cglib-proxies-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   jdk-cglib-proxies-007:
     difficulty: ADVANCED
-    isImportant: false
   jdk-cglib-proxies-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   jdk-cglib-proxies-009:
     difficulty: ADVANCED
-    isImportant: false
   jdk-cglib-proxies-010:
     difficulty: ADVANCED
-    isImportant: false
   jdk-cglib-proxies-011:
     difficulty: ADVANCED
-    isImportant: false
   jdk-cglib-proxies-012:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,22 +1,15 @@
 sections:
   binding-security-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   safe-input-models:
     difficulty: BASIC
-    isImportant: false
   safe-binding-controls:
     difficulty: INTERMEDIATE
-    isImportant: false
   binding-validation-separation:
     difficulty: INTERMEDIATE
-    isImportant: false
   mechanism-selection:
     difficulty: BASIC
-    isImportant: false
   validation-binding-end-to-end:
     difficulty: INTERMEDIATE
-    isImportant: false
   validation-binding-handoffs:
     difficulty: BASIC
-    isImportant: false

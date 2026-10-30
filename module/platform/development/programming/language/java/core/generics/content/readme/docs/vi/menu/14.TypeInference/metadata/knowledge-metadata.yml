@@ -1,28 +1,19 @@
 sections:
   type-inference-001:
     difficulty: BASIC
-    isImportant: false
   type-inference-002:
     difficulty: BASIC
-    isImportant: false
   type-inference-003:
     difficulty: BASIC
-    isImportant: false
   type-inference-004:
     difficulty: BASIC
-    isImportant: false
   type-inference-005:
     difficulty: BASIC
-    isImportant: false
   type-inference-006:
     difficulty: BASIC
-    isImportant: false
   type-inference-007:
     difficulty: BASIC
-    isImportant: false
   type-inference-008:
     difficulty: BASIC
-    isImportant: false
   type-inference-009:
     difficulty: BASIC
-    isImportant: false

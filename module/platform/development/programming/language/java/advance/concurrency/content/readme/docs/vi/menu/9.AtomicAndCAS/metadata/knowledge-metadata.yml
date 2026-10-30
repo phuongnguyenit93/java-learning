@@ -1,43 +1,29 @@
 sections:
   atomic-and-cas-001:
     difficulty: BASIC
-    isImportant: true
   atomic-and-cas-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   atomic-and-cas-003:
     difficulty: BASIC
-    isImportant: true
   atomic-and-cas-004:
     difficulty: ADVANCED
-    isImportant: true
   atomic-and-cas-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   atomic-and-cas-006:
     difficulty: ADVANCED
-    isImportant: true
   atomic-and-cas-007:
     difficulty: ADVANCED
-    isImportant: false
   atomic-and-cas-008:
     difficulty: ADVANCED
-    isImportant: true
   atomic-and-cas-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   atomic-and-cas-010:
     difficulty: ADVANCED
-    isImportant: true
   atomic-and-cas-011:
     difficulty: ADVANCED
-    isImportant: true
   atomic-and-cas-012:
     difficulty: INTERMEDIATE
-    isImportant: true
   atomic-and-cas-013:
     difficulty: INTERMEDIATE
-    isImportant: false
   atomic-and-cas-014:
     difficulty: ADVANCED
-    isImportant: true

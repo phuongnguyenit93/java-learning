@@ -1,28 +1,19 @@
 sections:
   bean-definition-001:
     difficulty: BASIC
-    isImportant: false
   bean-definition-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   bean-definition-003:
     difficulty: BASIC
-    isImportant: false
   bean-definition-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   bean-definition-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   bean-definition-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   bean-definition-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   bean-definition-008:
     difficulty: ADVANCED
-    isImportant: false
   bean-definition-009:
     difficulty: ADVANCED
-    isImportant: false

@@ -1,37 +1,25 @@
 sections:
   string-builder-001:
     difficulty: BASIC
-    isImportant: false
   string-builder-002:
     difficulty: BASIC
-    isImportant: false
   string-builder-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-builder-004:
     difficulty: ADVANCED
-    isImportant: false
   string-builder-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-builder-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-builder-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-builder-008:
     difficulty: ADVANCED
-    isImportant: false
   string-builder-009:
     difficulty: ADVANCED
-    isImportant: false
   string-builder-010:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-builder-011:
     difficulty: BASIC
-    isImportant: false
   string-builder-012:
     difficulty: ADVANCED
-    isImportant: false

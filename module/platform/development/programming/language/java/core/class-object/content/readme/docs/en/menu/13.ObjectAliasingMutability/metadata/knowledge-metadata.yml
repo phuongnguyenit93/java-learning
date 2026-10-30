@@ -1,10 +1,7 @@
 sections:
   aliasing-model:
     difficulty: BASIC
-    isImportant: false
   shared-mutable-state:
     difficulty: BASIC
-    isImportant: false
   aliasing-in-collections:
     difficulty: BASIC
-    isImportant: false

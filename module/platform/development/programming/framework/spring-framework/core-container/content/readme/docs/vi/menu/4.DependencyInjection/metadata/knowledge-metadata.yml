@@ -1,25 +1,17 @@
 sections:
   dependency-injection-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   dependency-injection-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   dependency-injection-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   dependency-injection-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   dependency-injection-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   dependency-injection-006:
     difficulty: ADVANCED
-    isImportant: false
   dependency-injection-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   dependency-injection-008:
     difficulty: ADVANCED
-    isImportant: false

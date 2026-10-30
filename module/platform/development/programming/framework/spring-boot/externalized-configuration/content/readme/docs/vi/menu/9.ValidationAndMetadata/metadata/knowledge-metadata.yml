@@ -1,22 +1,15 @@
 sections:
   configuration-validation-purpose:
     difficulty: BASIC
-    isImportant: false
   validated-configuration-properties:
     difficulty: BASIC
-    isImportant: false
   nested-validation:
     difficulty: BASIC
-    isImportant: false
   binding-vs-validation-failure:
     difficulty: BASIC
-    isImportant: false
   configuration-metadata-purpose:
     difficulty: BASIC
-    isImportant: false
   configuration-processor:
     difficulty: BASIC
-    isImportant: false
   metadata-tooling-boundary:
     difficulty: BASIC
-    isImportant: false

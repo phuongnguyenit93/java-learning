@@ -1,25 +1,17 @@
 sections:
   string-creation-001:
     difficulty: BASIC
-    isImportant: false
   string-creation-002:
     difficulty: BASIC
-    isImportant: false
   string-creation-003:
     difficulty: ADVANCED
-    isImportant: false
   string-creation-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-creation-005:
     difficulty: ADVANCED
-    isImportant: false
   string-creation-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-creation-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-creation-008:
     difficulty: INTERMEDIATE
-    isImportant: false

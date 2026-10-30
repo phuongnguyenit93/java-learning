@@ -1,19 +1,13 @@
 sections:
   mockbean-purpose:
     difficulty: BASIC
-    isImportant: false
   spybean-purpose:
     difficulty: BASIC
-    isImportant: false
   mock-replacement-context-boundary:
     difficulty: BASIC
-    isImportant: false
   mock-refresh-time-limit:
     difficulty: BASIC
-    isImportant: false
   mock-spy-cache-impact:
     difficulty: BASIC
-    isImportant: false
   mockito-testing-boundary:
     difficulty: BASIC
-    isImportant: false

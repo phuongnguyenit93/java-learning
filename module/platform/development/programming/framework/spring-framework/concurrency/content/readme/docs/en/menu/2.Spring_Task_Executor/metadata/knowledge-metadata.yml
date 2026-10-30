@@ -1,22 +1,15 @@
 sections:
   task-executor:
     difficulty: BASIC
-    isImportant: false
   task-executor-strategies:
     difficulty: BASIC
-    isImportant: false
   spring-executor-config:
     difficulty: INTERMEDIATE
-    isImportant: false
   async-annotation:
     difficulty: INTERMEDIATE
-    isImportant: false
   async-executor-selection:
     difficulty: BASIC
-    isImportant: false
   async-return-type:
     difficulty: INTERMEDIATE
-    isImportant: false
   spring-executor-experiments:
     difficulty: INTERMEDIATE
-    isImportant: false

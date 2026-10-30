@@ -1,37 +1,25 @@
 sections:
   practical-exercises-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   practical-exercises-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   practical-exercises-003:
     difficulty: ADVANCED
-    isImportant: true
   practical-exercises-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   practical-exercises-005:
     difficulty: ADVANCED
-    isImportant: false
   practical-exercises-006:
     difficulty: ADVANCED
-    isImportant: true
   practical-exercises-007:
     difficulty: ADVANCED
-    isImportant: false
   practical-exercises-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   practical-exercises-009:
     difficulty: ADVANCED
-    isImportant: true
   practical-exercises-010:
     difficulty: INTERMEDIATE
-    isImportant: true
   practical-exercises-011:
     difficulty: ADVANCED
-    isImportant: true
   practical-exercises-012:
     difficulty: INTERMEDIATE
-    isImportant: true

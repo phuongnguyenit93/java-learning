@@ -1,31 +1,21 @@
 sections:
   controller-inputs-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   controller-inputs-002:
     difficulty: BASIC
-    isImportant: false
   controller-inputs-003:
     difficulty: BASIC
-    isImportant: false
   controller-inputs-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   controller-inputs-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   controller-inputs-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   controller-inputs-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   controller-inputs-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   controller-inputs-009:
     difficulty: ADVANCED
-    isImportant: false
   controller-inputs-010:
     difficulty: ADVANCED
-    isImportant: false

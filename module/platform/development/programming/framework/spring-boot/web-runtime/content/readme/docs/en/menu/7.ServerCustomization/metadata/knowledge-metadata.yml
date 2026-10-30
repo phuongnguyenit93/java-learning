@@ -1,19 +1,13 @@
 sections:
   server-customization-decision-order:
     difficulty: BASIC
-    isImportant: false
   web-server-factory-customizer:
     difficulty: BASIC
-    isImportant: false
   generic-vs-specific-factory-targets:
     difficulty: BASIC
-    isImportant: false
   customizer-ordering:
     difficulty: BASIC
-    isImportant: false
   custom-web-server-factory:
     difficulty: BASIC
-    isImportant: false
   advanced-server-topology:
     difficulty: BASIC
-    isImportant: false

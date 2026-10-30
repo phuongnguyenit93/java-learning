@@ -1,13 +1,9 @@
 sections:
   reproducible-packaging-purpose:
     difficulty: BASIC
-    isImportant: false
   archive-order-and-timestamps:
     difficulty: BASIC
-    isImportant: false
   reproducibility-expectation:
     difficulty: BASIC
-    isImportant: false
   reproducibility-boundary:
     difficulty: BASIC
-    isImportant: false

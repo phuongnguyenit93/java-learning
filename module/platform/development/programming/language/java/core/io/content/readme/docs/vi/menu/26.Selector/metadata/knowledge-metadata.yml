@@ -1,31 +1,21 @@
 sections:
   selector-001:
     difficulty: BASIC
-    isImportant: true
   selector-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   selector-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   selector-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   selector-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   selector-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   selector-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   selector-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   selector-009:
     difficulty: ADVANCED
-    isImportant: true
   selector-010:
     difficulty: ADVANCED
-    isImportant: true

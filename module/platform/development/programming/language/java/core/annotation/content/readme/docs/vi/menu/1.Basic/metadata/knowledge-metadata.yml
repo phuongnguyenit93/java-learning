@@ -1,7 +1,5 @@
 sections:
   annotation-model:
     difficulty: BASIC
-    isImportant: false
   annotation-syntax:
     difficulty: BASIC
-    isImportant: false

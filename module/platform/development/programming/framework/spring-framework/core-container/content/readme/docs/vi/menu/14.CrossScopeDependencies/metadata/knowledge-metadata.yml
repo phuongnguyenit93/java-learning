@@ -1,28 +1,19 @@
 sections:
   cross-scope-dependencies-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   cross-scope-dependencies-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   cross-scope-dependencies-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   cross-scope-dependencies-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   cross-scope-dependencies-005:
     difficulty: ADVANCED
-    isImportant: false
   cross-scope-dependencies-006:
     difficulty: ADVANCED
-    isImportant: false
   cross-scope-dependencies-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   cross-scope-dependencies-008:
     difficulty: ADVANCED
-    isImportant: false
   cross-scope-dependencies-009:
     difficulty: ADVANCED
-    isImportant: false

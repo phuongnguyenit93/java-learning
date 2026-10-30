@@ -1,13 +1,9 @@
 sections:
   array-type-model:
     difficulty: BASIC
-    isImportant: false
   array-initialization:
     difficulty: BASIC
-    isImportant: false
   array-covariance-risk:
     difficulty: BASIC
-    isImportant: false
   multidimensional-arrays:
     difficulty: BASIC
-    isImportant: false

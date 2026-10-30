@@ -1,13 +1,9 @@
 sections:
   encoding-purpose:
     difficulty: BASIC
-    isImportant: false
   hashing-purpose:
     difficulty: BASIC
-    isImportant: false
   encryption-purpose:
     difficulty: BASIC
-    isImportant: false
   authentication-purpose:
     difficulty: BASIC
-    isImportant: false

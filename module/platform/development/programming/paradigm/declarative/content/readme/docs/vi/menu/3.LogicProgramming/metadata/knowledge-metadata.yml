@@ -1,19 +1,13 @@
 sections:
   declarative-logic-model:
     difficulty: BASIC
-    isImportant: false
   declarative-facts-relations:
     difficulty: BASIC
-    isImportant: false
   declarative-inference-rules:
     difficulty: BASIC
-    isImportant: false
   declarative-goal-queries:
     difficulty: BASIC
-    isImportant: false
   declarative-search-boundary:
     difficulty: BASIC
-    isImportant: false
   declarative-prolog-boundary:
     difficulty: BASIC
-    isImportant: false

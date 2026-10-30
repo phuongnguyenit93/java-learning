@@ -1,28 +1,19 @@
 sections:
   interface-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   interface-002:
     difficulty: BASIC
-    isImportant: true
   interface-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   interface-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   interface-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   interface-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   interface-007:
     difficulty: ADVANCED
-    isImportant: true
   interface-008:
     difficulty: ADVANCED
-    isImportant: true
   interface-009:
     difficulty: ADVANCED
-    isImportant: false

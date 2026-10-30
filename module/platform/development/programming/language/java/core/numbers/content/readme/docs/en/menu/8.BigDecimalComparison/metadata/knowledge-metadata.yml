@@ -1,10 +1,7 @@
 sections:
   big-decimal-equals:
     difficulty: BASIC
-    isImportant: false
   big-decimal-compareto:
     difficulty: BASIC
-    isImportant: false
   big-decimal-collections:
     difficulty: BASIC
-    isImportant: false

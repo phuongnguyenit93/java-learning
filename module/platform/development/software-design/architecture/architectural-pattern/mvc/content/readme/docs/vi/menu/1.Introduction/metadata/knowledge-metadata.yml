@@ -1,13 +1,9 @@
 sections:
   mvc-what:
     difficulty: BASIC
-    isImportant: false
   mvc-why:
     difficulty: BASIC
-    isImportant: false
   mvc-roles:
     difficulty: BASIC
-    isImportant: false
   mvc-boundary:
     difficulty: BASIC
-    isImportant: false

@@ -1,25 +1,17 @@
 sections:
   aop-what:
     difficulty: BASIC
-    isImportant: false
   aop-why:
     difficulty: BASIC
-    isImportant: false
   aop-without:
     difficulty: BASIC
-    isImportant: false
   aop-limit:
     difficulty: BASIC
-    isImportant: false
   aop-solution:
     difficulty: BASIC
-    isImportant: false
   aop-when:
     difficulty: BASIC
-    isImportant: false
   aop-object-responsibility-bridge:
     difficulty: BASIC
-    isImportant: false
   aop-learning-journey:
     difficulty: BASIC
-    isImportant: false

@@ -1,34 +1,23 @@
 sections:
   webflux-reactive-body-model:
     difficulty: BASIC
-    isImportant: false
   webflux-message-readers-writers:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-content-negotiation:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-streaming-vs-aggregation:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-data-buffer-lifecycle:
     difficulty: ADVANCED
-    isImportant: false
   webflux-form-data:
     difficulty: BASIC
-    isImportant: false
   webflux-multipart-data:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-multipart-streaming:
     difficulty: ADVANCED
-    isImportant: false
   webflux-binding-validation-integration:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-http-cache-conditional:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-http-data-failures:
     difficulty: INTERMEDIATE
-    isImportant: false

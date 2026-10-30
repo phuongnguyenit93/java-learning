@@ -1,25 +1,17 @@
 sections:
   proxy-inspection-001:
     difficulty: BASIC
-    isImportant: false
   proxy-inspection-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   proxy-inspection-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   proxy-inspection-004:
     difficulty: ADVANCED
-    isImportant: false
   proxy-inspection-005:
     difficulty: ADVANCED
-    isImportant: false
   proxy-inspection-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   proxy-inspection-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   proxy-inspection-008:
     difficulty: ADVANCED
-    isImportant: false

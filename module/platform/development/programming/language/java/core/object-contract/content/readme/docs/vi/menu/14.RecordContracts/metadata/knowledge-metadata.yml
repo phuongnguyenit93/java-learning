@@ -1,28 +1,19 @@
 sections:
   record-contracts-001:
     difficulty: BASIC
-    isImportant: true
   record-contracts-002:
     difficulty: BASIC
-    isImportant: true
   record-contracts-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   record-contracts-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   record-contracts-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   record-contracts-006:
     difficulty: BASIC
-    isImportant: true
   record-contracts-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   record-contracts-008:
     difficulty: ADVANCED
-    isImportant: true
   record-contracts-009:
     difficulty: INTERMEDIATE
-    isImportant: true

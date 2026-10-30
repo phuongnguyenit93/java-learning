@@ -1,19 +1,13 @@
 sections:
   profiling-use-case:
     difficulty: INTERMEDIATE
-    isImportant: false
   coverage-use-case:
     difficulty: INTERMEDIATE
-    isImportant: false
   monitoring-event-logging-use-case:
     difficulty: INTERMEDIATE
-    isImportant: false
   tracing-probe-use-case:
     difficulty: INTERMEDIATE
-    isImportant: false
   framework-agent-use-case:
     difficulty: INTERMEDIATE
-    isImportant: false
   diagnostic-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false

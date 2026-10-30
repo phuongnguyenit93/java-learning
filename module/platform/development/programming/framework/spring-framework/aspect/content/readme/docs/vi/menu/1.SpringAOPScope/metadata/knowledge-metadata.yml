@@ -1,25 +1,17 @@
 sections:
   spring-aop-scope-001:
     difficulty: BASIC
-    isImportant: false
   spring-aop-scope-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   spring-aop-scope-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   spring-aop-scope-004:
     difficulty: BASIC
-    isImportant: false
   spring-aop-scope-005:
     difficulty: ADVANCED
-    isImportant: false
   spring-aop-scope-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   spring-aop-scope-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   spring-aop-scope-008:
     difficulty: INTERMEDIATE
-    isImportant: false

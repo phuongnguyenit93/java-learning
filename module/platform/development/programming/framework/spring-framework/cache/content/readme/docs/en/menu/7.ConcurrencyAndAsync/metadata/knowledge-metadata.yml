@@ -1,28 +1,19 @@
 sections:
   concurrent-cache-miss:
     difficulty: ADVANCED
-    isImportant: false
   cacheable-sync:
     difficulty: ADVANCED
-    isImportant: false
   cacheable-sync-restrictions:
     difficulty: ADVANCED
-    isImportant: false
   cache-async-retrieve:
     difficulty: ADVANCED
-    isImportant: false
   completable-future-caching:
     difficulty: ADVANCED
-    isImportant: false
   reactive-return-types:
     difficulty: ADVANCED
-    isImportant: false
   async-provider-capability:
     difficulty: ADVANCED
-    isImportant: false
   multi-cache-late-miss:
     difficulty: ADVANCED
-    isImportant: false
   reactive-cache-boundary:
     difficulty: ADVANCED
-    isImportant: false

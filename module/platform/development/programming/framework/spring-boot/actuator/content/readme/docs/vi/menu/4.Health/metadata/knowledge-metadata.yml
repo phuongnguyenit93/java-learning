@@ -1,19 +1,13 @@
 sections:
   health-endpoint-purpose:
     difficulty: BASIC
-    isImportant: false
   health-contributor-model:
     difficulty: BASIC
-    isImportant: false
   composite-health-contributors:
     difficulty: BASIC
-    isImportant: false
   health-status-aggregation:
     difficulty: BASIC
-    isImportant: false
   health-detail-visibility:
     difficulty: BASIC
-    isImportant: false
   custom-health-indicators:
     difficulty: BASIC
-    isImportant: false

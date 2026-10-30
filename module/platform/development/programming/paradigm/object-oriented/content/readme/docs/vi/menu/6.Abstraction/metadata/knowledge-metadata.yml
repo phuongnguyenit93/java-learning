@@ -1,25 +1,17 @@
 sections:
   abstraction-001:
     difficulty: BASIC
-    isImportant: true
   abstraction-002:
     difficulty: BASIC
-    isImportant: true
   abstraction-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   abstraction-004:
     difficulty: ADVANCED
-    isImportant: true
   abstraction-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   abstraction-006:
     difficulty: BASIC
-    isImportant: true
   abstraction-007:
     difficulty: ADVANCED
-    isImportant: false
   abstraction-008:
     difficulty: ADVANCED
-    isImportant: true

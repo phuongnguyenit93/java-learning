@@ -1,16 +1,11 @@
 sections:
   lazy-initialization-purpose:
     difficulty: BASIC
-    isImportant: false
   lazy-initialization-tradeoffs:
     difficulty: BASIC
-    isImportant: false
   startup-measurement:
     difficulty: BASIC
-    isImportant: false
   application-startup-tracking:
     difficulty: BASIC
-    isImportant: false
   startup-observability-boundary:
     difficulty: BASIC
-    isImportant: false

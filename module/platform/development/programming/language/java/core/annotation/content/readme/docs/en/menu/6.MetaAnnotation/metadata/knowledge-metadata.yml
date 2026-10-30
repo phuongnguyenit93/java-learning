@@ -1,16 +1,11 @@
 sections:
   retention-meta:
     difficulty: BASIC
-    isImportant: false
   target-meta:
     difficulty: BASIC
-    isImportant: false
   documented-meta:
     difficulty: BASIC
-    isImportant: false
   inherited-meta:
     difficulty: BASIC
-    isImportant: false
   repeatable-meta:
     difficulty: BASIC
-    isImportant: false

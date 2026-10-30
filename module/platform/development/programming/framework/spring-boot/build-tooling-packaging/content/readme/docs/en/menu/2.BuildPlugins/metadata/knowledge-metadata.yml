@@ -1,13 +1,9 @@
 sections:
   boot-build-plugins:
     difficulty: BASIC
-    isImportant: false
   plugin-responsibilities:
     difficulty: BASIC
-    isImportant: false
   plugin-vs-build-tool:
     difficulty: BASIC
-    isImportant: false
   plugin-choice-boundary:
     difficulty: BASIC
-    isImportant: false

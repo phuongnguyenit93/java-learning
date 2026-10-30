@@ -1,19 +1,13 @@
 sections:
   set-semantics:
     difficulty: BASIC
-    isImportant: false
   set-algebra:
     difficulty: BASIC
-    isImportant: false
   set-equality:
     difficulty: BASIC
-    isImportant: false
   hashset-model:
     difficulty: BASIC
-    isImportant: false
   linkedhashset-order:
     difficulty: BASIC
-    isImportant: false
   treeset-order:
     difficulty: BASIC
-    isImportant: false

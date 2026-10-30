@@ -1,22 +1,15 @@
 sections:
   native-build-workflow:
     difficulty: BASIC
-    isImportant: false
   graalvm-native-build-tools:
     difficulty: BASIC
-    isImportant: false
   aot-to-native-compile:
     difficulty: BASIC
-    isImportant: false
   native-executable-output:
     difficulty: BASIC
-    isImportant: false
   native-buildpack-image:
     difficulty: BASIC
-    isImportant: false
   native-run-comparison:
     difficulty: BASIC
-    isImportant: false
   native-build-tooling-boundary:
     difficulty: BASIC
-    isImportant: false

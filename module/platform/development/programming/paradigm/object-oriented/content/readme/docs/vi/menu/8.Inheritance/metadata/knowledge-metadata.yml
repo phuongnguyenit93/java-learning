@@ -1,31 +1,21 @@
 sections:
   inheritance-001:
     difficulty: BASIC
-    isImportant: true
   inheritance-002:
     difficulty: BASIC
-    isImportant: true
   inheritance-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   inheritance-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   inheritance-005:
     difficulty: ADVANCED
-    isImportant: true
   inheritance-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   inheritance-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   inheritance-008:
     difficulty: ADVANCED
-    isImportant: true
   inheritance-009:
     difficulty: ADVANCED
-    isImportant: false
   inheritance-010:
     difficulty: ADVANCED
-    isImportant: true

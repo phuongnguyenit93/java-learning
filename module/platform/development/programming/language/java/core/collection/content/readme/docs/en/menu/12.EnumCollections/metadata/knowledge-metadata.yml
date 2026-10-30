@@ -1,10 +1,7 @@
 sections:
   enumset-model:
     difficulty: BASIC
-    isImportant: false
   enummap-model:
     difficulty: BASIC
-    isImportant: false
   enum-collection-benefits:
     difficulty: BASIC
-    isImportant: false

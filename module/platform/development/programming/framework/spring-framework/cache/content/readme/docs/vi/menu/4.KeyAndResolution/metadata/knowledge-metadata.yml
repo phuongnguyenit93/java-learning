@@ -1,25 +1,17 @@
 sections:
   default-key-generation:
     difficulty: INTERMEDIATE
-    isImportant: false
   custom-key-generator:
     difficulty: INTERMEDIATE
-    isImportant: false
   spel-key-context:
     difficulty: INTERMEDIATE
-    isImportant: false
   condition-vs-unless:
     difficulty: INTERMEDIATE
-    isImportant: false
   cache-manager-resolution:
     difficulty: INTERMEDIATE
-    isImportant: false
   cache-resolver:
     difficulty: INTERMEDIATE
-    isImportant: false
   multiple-cache-names:
     difficulty: INTERMEDIATE
-    isImportant: false
   cache-key-design-pitfalls:
     difficulty: INTERMEDIATE
-    isImportant: false

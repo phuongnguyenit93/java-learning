@@ -1,25 +1,17 @@
 sections:
   relaxed-binding:
     difficulty: BASIC
-    isImportant: false
   environment-variable-mapping:
     difficulty: BASIC
-    isImportant: false
   nested-object-binding:
     difficulty: BASIC
-    isImportant: false
   list-set-binding:
     difficulty: BASIC
-    isImportant: false
   map-binding:
     difficulty: BASIC
-    isImportant: false
   list-replacement:
     difficulty: BASIC
-    isImportant: false
   type-conversion:
     difficulty: BASIC
-    isImportant: false
   duration-datasize-types:
     difficulty: BASIC
-    isImportant: false

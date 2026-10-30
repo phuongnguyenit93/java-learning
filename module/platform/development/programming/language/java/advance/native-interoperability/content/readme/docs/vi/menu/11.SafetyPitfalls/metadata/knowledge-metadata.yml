@@ -1,28 +1,19 @@
 sections:
   native-resource-ownership:
     difficulty: ADVANCED
-    isImportant: false
   native-loading-failures:
     difficulty: ADVANCED
-    isImportant: false
   jni-reference-failures:
     difficulty: ADVANCED
-    isImportant: false
   native-access-control:
     difficulty: ADVANCED
-    isImportant: false
   layout-descriptor-mismatch:
     difficulty: ADVANCED
-    isImportant: false
   lifetime-failures:
     difficulty: ADVANCED
-    isImportant: false
   native-error-boundary:
     difficulty: ADVANCED
-    isImportant: false
   native-thread-safety:
     difficulty: ADVANCED
-    isImportant: false
   native-crash-corruption:
     difficulty: ADVANCED
-    isImportant: false

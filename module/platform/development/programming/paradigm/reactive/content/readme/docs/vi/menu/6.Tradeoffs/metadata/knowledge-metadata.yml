@@ -1,19 +1,13 @@
 sections:
   reactive-end-to-end-example:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-compare-callback:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-async-parallel-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-debug-complexity:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-framework-handoff:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-final-decision:
     difficulty: INTERMEDIATE
-    isImportant: false

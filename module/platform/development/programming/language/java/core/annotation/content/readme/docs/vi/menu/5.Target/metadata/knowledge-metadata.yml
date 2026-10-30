@@ -1,13 +1,9 @@
 sections:
   annotation-use-sites:
     difficulty: BASIC
-    isImportant: false
   elementtype-targets:
     difficulty: BASIC
-    isImportant: false
   type-use-annotation:
     difficulty: BASIC
-    isImportant: false
   target-design:
     difficulty: BASIC
-    isImportant: false

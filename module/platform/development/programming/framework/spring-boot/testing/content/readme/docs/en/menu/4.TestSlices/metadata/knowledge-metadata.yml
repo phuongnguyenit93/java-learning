@@ -1,19 +1,13 @@
 sections:
   test-slice-purpose:
     difficulty: BASIC
-    isImportant: false
   test-slice-context-boundary:
     difficulty: BASIC
-    isImportant: false
   test-slice-auto-configuration-model:
     difficulty: BASIC
-    isImportant: false
   single-slice-rule:
     difficulty: BASIC
-    isImportant: false
   smallest-slice-decision:
     difficulty: BASIC
-    isImportant: false
   slice-full-context-handoff:
     difficulty: BASIC
-    isImportant: false

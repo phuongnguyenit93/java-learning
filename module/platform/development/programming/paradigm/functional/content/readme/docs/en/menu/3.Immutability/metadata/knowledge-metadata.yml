@@ -1,16 +1,11 @@
 sections:
   immutable-values:
     difficulty: BASIC
-    isImportant: false
   value-vs-state:
     difficulty: BASIC
-    isImportant: false
   immutable-updates:
     difficulty: BASIC
-    isImportant: false
   sharing-and-cost:
     difficulty: BASIC
-    isImportant: false
   immutability-limits:
     difficulty: BASIC
-    isImportant: false

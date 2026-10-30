@@ -1,19 +1,13 @@
 sections:
   jdbc-datasource-workflow:
     difficulty: BASIC
-    isImportant: false
   jdbc-client-template-stack:
     difficulty: INTERMEDIATE
-    isImportant: false
   jdbc-parameter-binding:
     difficulty: INTERMEDIATE
-    isImportant: false
   jdbc-query-update-execution:
     difficulty: INTERMEDIATE
-    isImportant: false
   jdbc-row-mapping-cardinality:
     difficulty: INTERMEDIATE
-    isImportant: false
   jdbc-client-vs-template:
     difficulty: INTERMEDIATE
-    isImportant: false

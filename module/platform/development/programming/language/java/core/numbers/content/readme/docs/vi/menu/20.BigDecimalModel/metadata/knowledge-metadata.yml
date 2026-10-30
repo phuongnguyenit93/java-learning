@@ -1,31 +1,21 @@
 sections:
   big-decimal-model-001:
     difficulty: BASIC
-    isImportant: true
   big-decimal-model-002:
     difficulty: BASIC
-    isImportant: true
   big-decimal-model-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   big-decimal-model-004:
     difficulty: BASIC
-    isImportant: true
   big-decimal-model-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   big-decimal-model-006:
     difficulty: ADVANCED
-    isImportant: true
   big-decimal-model-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   big-decimal-model-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   big-decimal-model-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   big-decimal-model-010:
     difficulty: INTERMEDIATE
-    isImportant: true

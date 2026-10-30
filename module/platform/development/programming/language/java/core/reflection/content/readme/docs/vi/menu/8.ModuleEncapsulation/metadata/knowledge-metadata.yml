@@ -1,31 +1,21 @@
 sections:
   module-encapsulation-001:
     difficulty: BASIC
-    isImportant: true
   module-encapsulation-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   module-encapsulation-003:
     difficulty: BASIC
-    isImportant: true
   module-encapsulation-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   module-encapsulation-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   module-encapsulation-006:
     difficulty: ADVANCED
-    isImportant: false
   module-encapsulation-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   module-encapsulation-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   module-encapsulation-009:
     difficulty: INTERMEDIATE
-    isImportant: false
   module-encapsulation-010:
     difficulty: ADVANCED
-    isImportant: true

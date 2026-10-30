@@ -1,28 +1,19 @@
 sections:
   natural-ordering-001:
     difficulty: BASIC
-    isImportant: true
   natural-ordering-002:
     difficulty: BASIC
-    isImportant: true
   natural-ordering-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   natural-ordering-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   natural-ordering-005:
     difficulty: ADVANCED
-    isImportant: true
   natural-ordering-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   natural-ordering-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   natural-ordering-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   natural-ordering-009:
     difficulty: ADVANCED
-    isImportant: false

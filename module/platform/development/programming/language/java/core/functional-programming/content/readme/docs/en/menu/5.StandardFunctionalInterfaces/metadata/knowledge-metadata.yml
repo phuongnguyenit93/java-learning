@@ -1,34 +1,23 @@
 sections:
   java-util-function-overview:
     difficulty: BASIC
-    isImportant: false
   function-contract:
     difficulty: BASIC
-    isImportant: false
   predicate-contract:
     difficulty: BASIC
-    isImportant: false
   consumer-contract:
     difficulty: BASIC
-    isImportant: false
   supplier-contract:
     difficulty: BASIC
-    isImportant: false
   operator-contracts:
     difficulty: INTERMEDIATE
-    isImportant: false
   bi-functional-interfaces:
     difficulty: INTERMEDIATE
-    isImportant: false
   primitive-specializations:
     difficulty: INTERMEDIATE
-    isImportant: false
   generic-input-output-flow:
     difficulty: INTERMEDIATE
-    isImportant: false
   functional-interfaces-outside-java-util-function:
     difficulty: INTERMEDIATE
-    isImportant: false
   standard-vs-custom-functional-interface:
     difficulty: INTERMEDIATE
-    isImportant: false

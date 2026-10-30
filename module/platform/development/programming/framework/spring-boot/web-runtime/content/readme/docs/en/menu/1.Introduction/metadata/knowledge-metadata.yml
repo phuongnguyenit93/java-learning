@@ -1,19 +1,13 @@
 sections:
   web-runtime-role:
     difficulty: BASIC
-    isImportant: false
   web-runtime-problem:
     difficulty: BASIC
-    isImportant: false
   boot-to-server-flow:
     difficulty: BASIC
-    isImportant: false
   servlet-reactive-runtime-model:
     difficulty: BASIC
-    isImportant: false
   web-runtime-boundaries:
     difficulty: BASIC
-    isImportant: false
   web-runtime-learning-path:
     difficulty: BASIC
-    isImportant: false

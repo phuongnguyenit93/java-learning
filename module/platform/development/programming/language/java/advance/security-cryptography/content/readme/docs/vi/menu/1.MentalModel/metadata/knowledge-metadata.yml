@@ -1,13 +1,9 @@
 sections:
   security-goals:
     difficulty: BASIC
-    isImportant: false
   cryptography-role:
     difficulty: BASIC
-    isImportant: false
   threat-model-boundary:
     difficulty: BASIC
-    isImportant: false
   primitive-by-goal:
     difficulty: BASIC
-    isImportant: false

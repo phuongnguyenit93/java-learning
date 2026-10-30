@@ -1,96 +1,66 @@
 01_SourceManagementFoundations.md:
   source-management-definition:
     difficulty: BASIC
-    isImportant: false
   why-manage-shared-source:
     difficulty: BASIC
-    isImportant: false
   unmanaged-source-problems:
     difficulty: BASIC
-    isImportant: false
   manual-file-sharing-scenario:
     difficulty: BASIC
-    isImportant: false
   foundational-source-terms:
     difficulty: BASIC
-    isImportant: false
   shared-source-and-accountability:
     difficulty: BASIC
-    isImportant: false
 02_VersionControlAndHistory.md:
   version-control-purpose:
     difficulty: BASIC
-    isImportant: false
   saving-backups-and-version-history:
     difficulty: BASIC
-    isImportant: false
   change-provenance:
     difficulty: BASIC
-    isImportant: false
   compare-inspect-and-restore:
     difficulty: BASIC
-    isImportant: false
 03_CentralizedAndDistributedModels.md:
   centralized-vcs-model:
     difficulty: BASIC
-    isImportant: false
   distributed-vcs-model:
     difficulty: BASIC
-    isImportant: false
   centralized-distributed-tradeoffs:
     difficulty: BASIC
-    isImportant: false
   history-availability-and-governance:
     difficulty: BASIC
-    isImportant: false
   offline-history-availability-scenario:
     difficulty: BASIC
-    isImportant: false
 04_LocalAndSharedSource.md:
   working-files-vs-versioned-history:
     difficulty: BASIC
-    isImportant: false
   local-and-remote-repositories:
     difficulty: BASIC
-    isImportant: false
   synchronization-and-divergence:
     difficulty: BASIC
-    isImportant: false
   accepted-source-of-truth:
     difficulty: BASIC
-    isImportant: false
 05_CollaborationAndStrategyLayers.md:
   vcs-vs-hosted-platform:
     difficulty: BASIC
-    isImportant: false
   proposing-and-reviewing-changes:
     difficulty: BASIC
-    isImportant: false
   access-and-change-acceptance:
     difficulty: BASIC
-    isImportant: false
   branching-policy-vs-git-mechanics:
     difficulty: BASIC
-    isImportant: false
   repository-topology-strategy:
     difficulty: BASIC
-    isImportant: false
 06_GovernedSourceLifecycle.md:
   individual-to-shared-change-flow:
     difficulty: BASIC
-    isImportant: false
   recorded-shared-reviewed-accepted:
     difficulty: BASIC
-    isImportant: false
   shared-but-not-accepted-scenario:
     difficulty: BASIC
-    isImportant: false
   source-collaboration-failure-modes:
     difficulty: BASIC
-    isImportant: false
   evidence-of-a-governed-change:
     difficulty: BASIC
-    isImportant: false
   source-to-delivery-boundary:
     difficulty: BASIC
-    isImportant: false

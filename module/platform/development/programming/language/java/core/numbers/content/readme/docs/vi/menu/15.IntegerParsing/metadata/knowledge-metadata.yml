@@ -1,34 +1,23 @@
 sections:
   integer-parsing-001:
     difficulty: BASIC
-    isImportant: true
   integer-parsing-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   integer-parsing-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   integer-parsing-004:
     difficulty: ADVANCED
-    isImportant: true
   integer-parsing-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   integer-parsing-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   integer-parsing-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   integer-parsing-008:
     difficulty: ADVANCED
-    isImportant: false
   integer-parsing-009:
     difficulty: INTERMEDIATE
-    isImportant: false
   integer-parsing-010:
     difficulty: INTERMEDIATE
-    isImportant: true
   integer-parsing-011:
     difficulty: ADVANCED
-    isImportant: true

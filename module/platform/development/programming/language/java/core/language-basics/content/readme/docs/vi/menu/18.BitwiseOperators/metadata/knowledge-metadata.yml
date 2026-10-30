@@ -1,25 +1,17 @@
 sections:
   bitwise-operators-001:
     difficulty: BASIC
-    isImportant: false
   bitwise-operators-002:
     difficulty: BASIC
-    isImportant: false
   bitwise-operators-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   bitwise-operators-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   bitwise-operators-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   bitwise-operators-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   bitwise-operators-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   bitwise-operators-008:
     difficulty: INTERMEDIATE
-    isImportant: false

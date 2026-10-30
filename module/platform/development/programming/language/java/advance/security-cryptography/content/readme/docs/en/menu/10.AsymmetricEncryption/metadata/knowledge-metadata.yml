@@ -1,13 +1,9 @@
 sections:
   asymmetric-encryption-model:
     difficulty: BASIC
-    isImportant: false
   public-private-key-roles:
     difficulty: INTERMEDIATE
-    isImportant: false
   asymmetric-encryption-limits:
     difficulty: INTERMEDIATE
-    isImportant: false
   hybrid-encryption-model:
     difficulty: ADVANCED
-    isImportant: false

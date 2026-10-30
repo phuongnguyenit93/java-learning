@@ -1,16 +1,11 @@
 sections:
   jdbc-what:
     difficulty: BASIC
-    isImportant: false
   jdbc-why:
     difficulty: BASIC
-    isImportant: false
   jdbc-before:
     difficulty: BASIC
-    isImportant: false
   jdbc-model:
     difficulty: BASIC
-    isImportant: false
   jdbc-boundary:
     difficulty: BASIC
-    isImportant: false

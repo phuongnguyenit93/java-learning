@@ -1,25 +1,17 @@
 sections:
   string-extraction-001:
     difficulty: BASIC
-    isImportant: false
   string-extraction-002:
     difficulty: BASIC
-    isImportant: false
   string-extraction-003:
     difficulty: BASIC
-    isImportant: false
   string-extraction-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-extraction-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-extraction-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-extraction-007:
     difficulty: ADVANCED
-    isImportant: false
   string-extraction-008:
     difficulty: ADVANCED
-    isImportant: false

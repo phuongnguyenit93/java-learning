@@ -1,7 +1,5 @@
 sections:
   reader-writer:
     difficulty: BASIC
-    isImportant: false
   charset-bridge:
     difficulty: BASIC
-    isImportant: false

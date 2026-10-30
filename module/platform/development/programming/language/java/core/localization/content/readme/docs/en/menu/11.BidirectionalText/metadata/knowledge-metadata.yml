@@ -1,13 +1,9 @@
 sections:
   bidi-model:
     difficulty: BASIC
-    isImportant: false
   ltr-rtl-runs:
     difficulty: BASIC
-    isImportant: false
   java-bidi:
     difficulty: BASIC
-    isImportant: false
   bidi-boundary:
     difficulty: BASIC
-    isImportant: false

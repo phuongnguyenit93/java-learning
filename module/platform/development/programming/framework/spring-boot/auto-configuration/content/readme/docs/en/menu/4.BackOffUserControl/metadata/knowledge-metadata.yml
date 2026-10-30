@@ -1,16 +1,11 @@
 sections:
   back-off-as-design-contract:
     difficulty: BASIC
-    isImportant: false
   user-defined-beans-win:
     difficulty: BASIC
-    isImportant: false
   bean-type-specificity:
     difficulty: BASIC
-    isImportant: false
   defaults-vs-forced-policy:
     difficulty: BASIC
-    isImportant: false
   back-off-failure-patterns:
     difficulty: BASIC
-    isImportant: false

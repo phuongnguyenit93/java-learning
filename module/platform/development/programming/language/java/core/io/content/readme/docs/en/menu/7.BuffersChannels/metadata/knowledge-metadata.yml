@@ -1,19 +1,13 @@
 sections:
   buffer-state:
     difficulty: BASIC
-    isImportant: false
   flip-clear-compact:
     difficulty: BASIC
-    isImportant: false
   byte-order-structured-binary:
     difficulty: BASIC
-    isImportant: false
   channel-model:
     difficulty: BASIC
-    isImportant: false
   scatter-gather-boundary:
     difficulty: BASIC
-    isImportant: false
   bytebuffer-types:
     difficulty: BASIC
-    isImportant: false

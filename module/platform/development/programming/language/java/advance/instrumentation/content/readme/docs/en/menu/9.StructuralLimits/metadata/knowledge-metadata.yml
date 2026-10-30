@@ -1,19 +1,13 @@
 sections:
   modification-boundary:
     difficulty: ADVANCED
-    isImportant: false
   schema-change-limits:
     difficulty: ADVANCED
-    isImportant: false
   structural-attribute-limits:
     difficulty: ADVANCED
-    isImportant: false
   unmodifiable-classes:
     difficulty: ADVANCED
-    isImportant: false
   verification-linkage-constraints:
     difficulty: ADVANCED
-    isImportant: false
   version-compatibility:
     difficulty: ADVANCED
-    isImportant: false

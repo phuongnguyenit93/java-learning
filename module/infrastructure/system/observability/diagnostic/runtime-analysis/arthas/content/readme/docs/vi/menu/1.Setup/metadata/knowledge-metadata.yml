@@ -1,16 +1,11 @@
 sections:
   docker-arthas:
     difficulty: BASIC
-    isImportant: false
   arthas-spring-boot-starter:
     difficulty: BASIC
-    isImportant: false
   arthas-local:
     difficulty: BASIC
-    isImportant: false
   arthas-web-console:
     difficulty: BASIC
-    isImportant: false
   shutdown-arthas:
     difficulty: BASIC
-    isImportant: false

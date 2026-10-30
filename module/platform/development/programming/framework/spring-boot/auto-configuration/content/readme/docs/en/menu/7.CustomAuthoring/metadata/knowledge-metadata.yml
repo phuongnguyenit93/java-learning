@@ -1,19 +1,13 @@
 sections:
   auto-configuration-class-contract:
     difficulty: BASIC
-    isImportant: false
   registration-and-package-boundaries:
     difficulty: BASIC
-    isImportant: false
   configuration-properties-integration:
     difficulty: BASIC
-    isImportant: false
   optional-dependency-design:
     difficulty: BASIC
-    isImportant: false
   auto-configure-metadata:
     difficulty: BASIC
-    isImportant: false
   stable-auto-configuration-identities:
     difficulty: BASIC
-    isImportant: false

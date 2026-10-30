@@ -1,13 +1,9 @@
 sections:
   repeatable-container:
     difficulty: BASIC
-    isImportant: false
   get-annotations-by-type:
     difficulty: BASIC
-    isImportant: false
   inherited-class-only:
     difficulty: BASIC
-    isImportant: false
   annotation-inheritance-boundaries:
     difficulty: BASIC
-    isImportant: false

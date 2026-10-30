@@ -1,37 +1,25 @@
 sections:
   modules-and-layers-001:
     difficulty: BASIC
-    isImportant: true
   modules-and-layers-002:
     difficulty: BASIC
-    isImportant: true
   modules-and-layers-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   modules-and-layers-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   modules-and-layers-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   modules-and-layers-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   modules-and-layers-007:
     difficulty: ADVANCED
-    isImportant: true
   modules-and-layers-008:
     difficulty: ADVANCED
-    isImportant: true
   modules-and-layers-009:
     difficulty: INTERMEDIATE
-    isImportant: false
   modules-and-layers-010:
     difficulty: ADVANCED
-    isImportant: true
   modules-and-layers-011:
     difficulty: INTERMEDIATE
-    isImportant: true
   modules-and-layers-012:
     difficulty: INTERMEDIATE
-    isImportant: true

@@ -1,25 +1,17 @@
 sections:
   liveness-readiness-model:
     difficulty: BASIC
-    isImportant: false
   availability-state-transitions:
     difficulty: BASIC
-    isImportant: false
   availability-shutdown-transition:
     difficulty: BASIC
-    isImportant: false
   availability-api:
     difficulty: BASIC
-    isImportant: false
   startup-failure-analysis:
     difficulty: BASIC
-    isImportant: false
   shutdown-hook:
     difficulty: BASIC
-    isImportant: false
   application-exit-codes:
     difficulty: BASIC
-    isImportant: false
   shutdown-boundaries:
     difficulty: BASIC
-    isImportant: false

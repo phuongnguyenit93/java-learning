@@ -1,28 +1,19 @@
 sections:
   profile-purpose:
     difficulty: BASIC
-    isImportant: false
   active-default-profiles:
     difficulty: BASIC
-    isImportant: false
   profile-specific-files:
     difficulty: BASIC
-    isImportant: false
   profile-specific-documents:
     difficulty: BASIC
-    isImportant: false
   on-profile-activation:
     difficulty: BASIC
-    isImportant: false
   profile-includes-groups:
     difficulty: BASIC
-    isImportant: false
   profile-declaration-restrictions:
     difficulty: BASIC
-    isImportant: false
   multiple-profile-precedence:
     difficulty: BASIC
-    isImportant: false
   profile-boundary:
     difficulty: BASIC
-    isImportant: false

@@ -1,25 +1,17 @@
 sections:
   string-concatenation-001:
     difficulty: BASIC
-    isImportant: false
   string-concatenation-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-concatenation-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-concatenation-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-concatenation-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-concatenation-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-concatenation-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-concatenation-008:
     difficulty: ADVANCED
-    isImportant: false

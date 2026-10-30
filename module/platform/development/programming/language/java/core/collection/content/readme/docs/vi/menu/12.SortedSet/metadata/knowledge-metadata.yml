@@ -1,25 +1,17 @@
 sections:
   sorted-set-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   sorted-set-002:
     difficulty: ADVANCED
-    isImportant: false
   sorted-set-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   sorted-set-004:
     difficulty: ADVANCED
-    isImportant: false
   sorted-set-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   sorted-set-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   sorted-set-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   sorted-set-008:
     difficulty: ADVANCED
-    isImportant: false

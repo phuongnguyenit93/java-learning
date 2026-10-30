@@ -1,28 +1,19 @@
 sections:
   finally-001:
     difficulty: BASIC
-    isImportant: false
   finally-002:
     difficulty: BASIC
-    isImportant: false
   finally-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   finally-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   finally-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   finally-006:
     difficulty: ADVANCED
-    isImportant: false
   finally-007:
     difficulty: ADVANCED
-    isImportant: false
   finally-008:
     difficulty: ADVANCED
-    isImportant: false
   finally-009:
     difficulty: INTERMEDIATE
-    isImportant: false

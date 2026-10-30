@@ -1,25 +1,17 @@
 sections:
   startup-to-execution-flow:
     difficulty: INTERMEDIATE
-    isImportant: false
   classfile-to-runtime-state-flow:
     difficulty: INTERMEDIATE
-    isImportant: false
   method-execution-flow:
     difficulty: INTERMEDIATE
-    isImportant: false
   allocation-to-reclamation-flow:
     difficulty: INTERMEDIATE
-    isImportant: false
   interpreted-to-optimized-flow:
     difficulty: ADVANCED
-    isImportant: false
   whole-process-memory-view:
     difficulty: ADVANCED
-    isImportant: false
   jvm-problem-boundary-map:
     difficulty: ADVANCED
-    isImportant: false
   jvm-mental-model-checkpoint:
     difficulty: ADVANCED
-    isImportant: false

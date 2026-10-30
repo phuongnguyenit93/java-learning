@@ -1,31 +1,21 @@
 sections:
   map-semantics:
     difficulty: BASIC
-    isImportant: false
   map-basic-contract:
     difficulty: BASIC
-    isImportant: false
   map-entry-model:
     difficulty: BASIC
-    isImportant: false
   map-views:
     difficulty: BASIC
-    isImportant: false
   map-default-operations:
     difficulty: BASIC
-    isImportant: false
   map-equality:
     difficulty: BASIC
-    isImportant: false
   hashmap-model:
     difficulty: BASIC
-    isImportant: false
   linkedhashmap-order:
     difficulty: BASIC
-    isImportant: false
   treemap-order:
     difficulty: BASIC
-    isImportant: false
   map-compute-merge:
     difficulty: BASIC
-    isImportant: false

@@ -1,22 +1,15 @@
 sections:
   internationalization-001:
     difficulty: BASIC
-    isImportant: false
   internationalization-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   internationalization-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   internationalization-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   internationalization-005:
     difficulty: ADVANCED
-    isImportant: false
   internationalization-006:
     difficulty: ADVANCED
-    isImportant: false
   internationalization-007:
     difficulty: ADVANCED
-    isImportant: false

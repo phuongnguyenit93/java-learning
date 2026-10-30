@@ -1,34 +1,23 @@
 sections:
   numeric-promotion-001:
     difficulty: BASIC
-    isImportant: true
   numeric-promotion-002:
     difficulty: BASIC
-    isImportant: true
   numeric-promotion-003:
     difficulty: BASIC
-    isImportant: true
   numeric-promotion-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   numeric-promotion-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   numeric-promotion-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   numeric-promotion-007:
     difficulty: ADVANCED
-    isImportant: true
   numeric-promotion-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   numeric-promotion-009:
     difficulty: ADVANCED
-    isImportant: true
   numeric-promotion-010:
     difficulty: INTERMEDIATE
-    isImportant: false
   numeric-promotion-011:
     difficulty: ADVANCED
-    isImportant: false

@@ -1,16 +1,11 @@
 sections:
   jpa-what:
     difficulty: BASIC
-    isImportant: false
   jpa-why:
     difficulty: BASIC
-    isImportant: false
   jpa-model:
     difficulty: BASIC
-    isImportant: false
   jpa-provider:
     difficulty: BASIC
-    isImportant: false
   jpa-boundary:
     difficulty: BASIC
-    isImportant: false

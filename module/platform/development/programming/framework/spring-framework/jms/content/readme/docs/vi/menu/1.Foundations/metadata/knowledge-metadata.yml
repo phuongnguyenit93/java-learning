@@ -1,16 +1,11 @@
 sections:
   jms-purpose:
     difficulty: BASIC
-    isImportant: false
   jms-producer-consumer-model:
     difficulty: BASIC
-    isImportant: false
   jms-sync-async-consumption:
     difficulty: BASIC
-    isImportant: false
   jms-framework-spec-provider-boundary:
     difficulty: BASIC
-    isImportant: false
   jms-61-api-baseline:
     difficulty: BASIC
-    isImportant: false

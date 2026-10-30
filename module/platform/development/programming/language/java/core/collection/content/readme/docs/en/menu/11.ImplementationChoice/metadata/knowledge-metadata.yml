@@ -1,19 +1,13 @@
 sections:
   list-choice:
     difficulty: BASIC
-    isImportant: false
   set-choice:
     difficulty: BASIC
-    isImportant: false
   map-choice:
     difficulty: BASIC
-    isImportant: false
   queue-choice:
     difficulty: BASIC
-    isImportant: false
   null-policy-matrix:
     difficulty: BASIC
-    isImportant: false
   choice-by-characteristics:
     difficulty: BASIC
-    isImportant: false

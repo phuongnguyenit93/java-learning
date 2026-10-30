@@ -1,19 +1,13 @@
 sections:
   messaging-purpose:
     difficulty: BASIC
-    isImportant: false
   direct-coupling-limits:
     difficulty: BASIC
-    isImportant: false
   spring-messaging-foundation:
     difficulty: BASIC
-    isImportant: false
   messaging-programming-models:
     difficulty: BASIC
-    isImportant: false
   neighboring-module-boundaries:
     difficulty: BASIC
-    isImportant: false
   messaging-learning-path:
     difficulty: BASIC
-    isImportant: false

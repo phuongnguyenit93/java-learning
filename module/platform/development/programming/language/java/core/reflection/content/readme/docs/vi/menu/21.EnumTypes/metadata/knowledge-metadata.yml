@@ -1,22 +1,15 @@
 sections:
   enum-types-001:
     difficulty: BASIC
-    isImportant: true
   enum-types-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   enum-types-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   enum-types-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   enum-types-005:
     difficulty: ADVANCED
-    isImportant: true
   enum-types-006:
     difficulty: ADVANCED
-    isImportant: true
   enum-types-007:
     difficulty: ADVANCED
-    isImportant: false

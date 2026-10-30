@@ -1,25 +1,17 @@
 sections:
   sequenced-collections-001:
     difficulty: BASIC
-    isImportant: false
   sequenced-collections-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   sequenced-collections-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   sequenced-collections-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   sequenced-collections-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   sequenced-collections-006:
     difficulty: ADVANCED
-    isImportant: false
   sequenced-collections-007:
     difficulty: ADVANCED
-    isImportant: false
   sequenced-collections-008:
     difficulty: ADVANCED
-    isImportant: false

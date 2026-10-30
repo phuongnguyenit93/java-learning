@@ -1,13 +1,9 @@
 sections:
   branching-model:
     difficulty: BASIC
-    isImportant: false
   loop-control:
     difficulty: BASIC
-    isImportant: false
   switch-expression:
     difficulty: BASIC
-    isImportant: false
   control-flow-pitfalls:
     difficulty: BASIC
-    isImportant: false

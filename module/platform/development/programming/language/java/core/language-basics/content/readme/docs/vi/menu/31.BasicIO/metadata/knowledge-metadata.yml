@@ -1,28 +1,19 @@
 sections:
   basic-io-001:
     difficulty: BASIC
-    isImportant: false
   basic-io-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   basic-io-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   basic-io-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   basic-io-005:
     difficulty: BASIC
-    isImportant: false
   basic-io-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   basic-io-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   basic-io-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   basic-io-009:
     difficulty: ADVANCED
-    isImportant: false

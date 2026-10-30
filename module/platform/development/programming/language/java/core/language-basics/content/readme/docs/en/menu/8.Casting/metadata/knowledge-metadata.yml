@@ -1,7 +1,5 @@
 sections:
   primitive-casting:
     difficulty: BASIC
-    isImportant: false
   reference-upcast-downcast:
     difficulty: BASIC
-    isImportant: false

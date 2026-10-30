@@ -1,28 +1,19 @@
 sections:
   object-reachability-001:
     difficulty: ADVANCED
-    isImportant: false
   object-reachability-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   object-reachability-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   object-reachability-004:
     difficulty: ADVANCED
-    isImportant: false
   object-reachability-005:
     difficulty: ADVANCED
-    isImportant: false
   object-reachability-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   object-reachability-007:
     difficulty: ADVANCED
-    isImportant: false
   object-reachability-008:
     difficulty: ADVANCED
-    isImportant: false
   object-reachability-009:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,13 +1,9 @@
 sections:
   bootstrap-loader:
     difficulty: BASIC
-    isImportant: false
   platform-loader:
     difficulty: BASIC
-    isImportant: false
   application-loader:
     difficulty: BASIC
-    isImportant: false
   loader-chain:
     difficulty: BASIC
-    isImportant: false

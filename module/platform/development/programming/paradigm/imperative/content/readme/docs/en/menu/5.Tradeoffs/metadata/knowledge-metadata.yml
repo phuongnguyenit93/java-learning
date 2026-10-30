@@ -1,19 +1,13 @@
 sections:
   imperative-correctness:
     difficulty: BASIC
-    isImportant: false
   imperative-state-risks:
     difficulty: BASIC
-    isImportant: false
   imperative-debug-tracing:
     difficulty: BASIC
-    isImportant: false
   imperative-control-tradeoffs:
     difficulty: BASIC
-    isImportant: false
   imperative-declarative-contrast:
     difficulty: BASIC
-    isImportant: false
   imperative-paradigm-bridges:
     difficulty: BASIC
-    isImportant: false

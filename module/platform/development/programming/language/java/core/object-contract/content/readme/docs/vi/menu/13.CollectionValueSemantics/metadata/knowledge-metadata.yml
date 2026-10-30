@@ -1,25 +1,17 @@
 sections:
   collection-value-semantics-001:
     difficulty: BASIC
-    isImportant: true
   collection-value-semantics-002:
     difficulty: BASIC
-    isImportant: true
   collection-value-semantics-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   collection-value-semantics-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   collection-value-semantics-005:
     difficulty: ADVANCED
-    isImportant: true
   collection-value-semantics-006:
     difficulty: ADVANCED
-    isImportant: true
   collection-value-semantics-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   collection-value-semantics-008:
     difficulty: ADVANCED
-    isImportant: true

@@ -300,11 +300,7 @@ class ModuleContentExcelSyncService {
                 if (!(difficulty in ['BASIC', 'INTERMEDIATE', 'ADVANCED'])) {
                     throw new GradleException('Invalid EN difficulty for ' + expected)
                 }
-                if (!(detail.isImportant instanceof Boolean)) {
-                    throw new GradleException('Invalid EN isImportant for ' + expected)
-                }
                 set(sheet, row, 15, difficulty, report)
-                set(sheet, row, 28, detail.isImportant, report)
                 report.items++
             }
         }

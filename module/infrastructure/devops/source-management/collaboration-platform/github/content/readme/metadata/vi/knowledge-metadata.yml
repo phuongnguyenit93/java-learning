@@ -1,131 +1,90 @@
 01-github-foundations.md:
   github-as-hosting-platform:
     difficulty: BASIC
-    isImportant: false
   unmanaged-change-collaboration-risks:
     difficulty: BASIC
-    isImportant: false
   git-versus-github:
     difficulty: BASIC
-    isImportant: false
   repository-and-history:
     difficulty: BASIC
-    isImportant: false
   accounts-organizations-and-repository-context:
     difficulty: BASIC
-    isImportant: false
   participants-and-contribution:
     difficulty: BASIC
-    isImportant: false
   pull-request-basics:
     difficulty: BASIC
-    isImportant: false
   github-collaboration-map:
     difficulty: BASIC
-    isImportant: false
 02-repository-hosting.md:
   personal-vs-organization-repos:
     difficulty: BASIC
-    isImportant: false
   repository-visibility-and-plans:
     difficulty: BASIC
-    isImportant: false
   repository-settings-and-default-branch:
     difficulty: BASIC
-    isImportant: false
   repository-access-and-discovery:
     difficulty: BASIC
-    isImportant: false
 03-contribution-paths.md:
   shared-repository-contribution:
     difficulty: BASIC
-    isImportant: false
   fork-and-upstream:
     difficulty: BASIC
-    isImportant: false
   pr-head-base:
     difficulty: BASIC
-    isImportant: false
   draft-vs-ready:
     difficulty: BASIC
-    isImportant: false
   pr-lifecycle:
     difficulty: BASIC
-    isImportant: false
 04-pull-request-reviews.md:
   pr-context-diffs-and-checks:
     difficulty: INTERMEDIATE
-    isImportant: false
   review-comments-decisions:
     difficulty: INTERMEDIATE
-    isImportant: false
   change-request-rework:
     difficulty: INTERMEDIATE
-    isImportant: false
   reviewer-requests-codeowners:
     difficulty: INTERMEDIATE
-    isImportant: false
   code-owner-approval-vs-request:
     difficulty: INTERMEDIATE
-    isImportant: false
 05-repository-access.md:
   orgs-teams-and-outside-collaborators:
     difficulty: INTERMEDIATE
-    isImportant: false
   repo-roles:
     difficulty: INTERMEDIATE
-    isImportant: false
   review-and-maintenance-permissions:
     difficulty: INTERMEDIATE
-    isImportant: false
   least-privilege-pitfalls:
     difficulty: INTERMEDIATE
-    isImportant: false
 06-branch-protection.md:
   branch-protection-rules:
     difficulty: ADVANCED
-    isImportant: false
   rulesets-and-overlap:
     difficulty: ADVANCED
-    isImportant: false
   required-pr-review-and-approval:
     difficulty: ADVANCED
-    isImportant: false
   checks-and-merge-eligibility:
     difficulty: ADVANCED
-    isImportant: false
   push-bypass-and-troubleshooting:
     difficulty: ADVANCED
-    isImportant: false
 07-issues-and-releases.md:
   issues-as-work-items:
     difficulty: INTERMEDIATE
-    isImportant: false
   issue-assignees-labels-milestones:
     difficulty: INTERMEDIATE
-    isImportant: false
   linking-issues-prs:
     difficulty: INTERMEDIATE
-    isImportant: false
   git-tags-vs-github-releases:
     difficulty: INTERMEDIATE
-    isImportant: false
   release-notes-and-assets:
     difficulty: INTERMEDIATE
-    isImportant: false
 08-team-workflow.md:
   issue-to-pr-to-merge:
     difficulty: INTERMEDIATE
-    isImportant: false
   review-and-access-blockers:
     difficulty: INTERMEDIATE
-    isImportant: false
   protection-and-check-blockers:
     difficulty: INTERMEDIATE
-    isImportant: false
   verify-accepted-change-and-release:
     difficulty: INTERMEDIATE
-    isImportant: false
   handoffs-to-git-policy-ci:
     difficulty: INTERMEDIATE
-    isImportant: false

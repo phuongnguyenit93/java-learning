@@ -1,10 +1,7 @@
 sections:
   secure-random-purpose:
     difficulty: BASIC
-    isImportant: false
   entropy-seeding:
     difficulty: BASIC
-    isImportant: false
   security-boundary:
     difficulty: BASIC
-    isImportant: false

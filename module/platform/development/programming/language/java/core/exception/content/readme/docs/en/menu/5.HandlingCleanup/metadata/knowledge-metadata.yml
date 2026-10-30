@@ -1,13 +1,9 @@
 sections:
   try-catch-flow:
     difficulty: BASIC
-    isImportant: false
   multi-catch:
     difficulty: BASIC
-    isImportant: false
   finally-semantics:
     difficulty: BASIC
-    isImportant: false
   return-finally:
     difficulty: INTERMEDIATE
-    isImportant: false

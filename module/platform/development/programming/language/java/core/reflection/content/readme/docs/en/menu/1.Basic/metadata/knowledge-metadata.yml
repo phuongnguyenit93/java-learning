@@ -1,7 +1,5 @@
 sections:
   reflection-model:
     difficulty: BASIC
-    isImportant: false
   reflection-use-cases:
     difficulty: BASIC
-    isImportant: false

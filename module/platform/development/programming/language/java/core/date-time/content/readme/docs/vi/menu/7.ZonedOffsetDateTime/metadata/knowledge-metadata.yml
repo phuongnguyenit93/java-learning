@@ -1,13 +1,9 @@
 sections:
   zoned-date-time:
     difficulty: BASIC
-    isImportant: false
   offset-date-time:
     difficulty: BASIC
-    isImportant: false
   same-instant-vs-same-local:
     difficulty: BASIC
-    isImportant: false
   zone-conversion:
     difficulty: BASIC
-    isImportant: false

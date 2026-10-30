@@ -1,31 +1,21 @@
 sections:
   class-objects-001:
     difficulty: BASIC
-    isImportant: true
   class-objects-002:
     difficulty: BASIC
-    isImportant: true
   class-objects-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   class-objects-004:
     difficulty: ADVANCED
-    isImportant: true
   class-objects-005:
     difficulty: ADVANCED
-    isImportant: true
   class-objects-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   class-objects-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   class-objects-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   class-objects-009:
     difficulty: BASIC
-    isImportant: true
   class-objects-010:
     difficulty: BASIC
-    isImportant: true

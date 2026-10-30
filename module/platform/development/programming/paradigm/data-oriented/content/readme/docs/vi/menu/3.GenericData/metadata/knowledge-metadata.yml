@@ -1,16 +1,11 @@
 sections:
   generic-concept:
     difficulty: BASIC
-    isImportant: false
   generic-domain-example:
     difficulty: BASIC
-    isImportant: false
   generic-operations:
     difficulty: BASIC
-    isImportant: false
   generic-failure-modes:
     difficulty: BASIC
-    isImportant: false
   generic-contracts:
     difficulty: BASIC
-    isImportant: false

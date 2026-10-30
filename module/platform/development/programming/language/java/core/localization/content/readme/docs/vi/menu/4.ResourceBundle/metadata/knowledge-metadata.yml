@@ -1,13 +1,9 @@
 sections:
   resourcebundle-model:
     difficulty: BASIC
-    isImportant: false
   bundle-naming:
     difficulty: BASIC
-    isImportant: false
   properties-vs-class-bundle:
     difficulty: BASIC
-    isImportant: false
   bundle-cache:
     difficulty: BASIC
-    isImportant: false

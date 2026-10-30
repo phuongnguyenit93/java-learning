@@ -1,25 +1,17 @@
 sections:
   webflux-controllers-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-controllers-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-controllers-003:
     difficulty: ADVANCED
-    isImportant: false
   webflux-controllers-004:
     difficulty: ADVANCED
-    isImportant: false
   webflux-controllers-005:
     difficulty: ADVANCED
-    isImportant: false
   webflux-controllers-006:
     difficulty: ADVANCED
-    isImportant: false
   webflux-controllers-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-controllers-008:
     difficulty: ADVANCED
-    isImportant: false

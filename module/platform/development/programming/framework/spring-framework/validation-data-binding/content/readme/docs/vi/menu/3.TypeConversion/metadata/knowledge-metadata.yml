@@ -1,25 +1,17 @@
 sections:
   conversion-service-role:
     difficulty: BASIC
-    isImportant: false
   converter-registry:
     difficulty: INTERMEDIATE
-    isImportant: false
   converter-contract:
     difficulty: BASIC
-    isImportant: false
   converter-factory-contract:
     difficulty: INTERMEDIATE
-    isImportant: false
   generic-conditional-conversion:
     difficulty: ADVANCED
-    isImportant: false
   type-descriptor-context:
     difficulty: ADVANCED
-    isImportant: false
   conversion-failure-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   property-editor-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false

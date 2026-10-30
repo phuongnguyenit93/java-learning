@@ -1,28 +1,19 @@
 sections:
   url-class-loader-001:
     difficulty: BASIC
-    isImportant: true
   url-class-loader-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   url-class-loader-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   url-class-loader-004:
     difficulty: BASIC
-    isImportant: true
   url-class-loader-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   url-class-loader-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   url-class-loader-007:
     difficulty: ADVANCED
-    isImportant: true
   url-class-loader-008:
     difficulty: ADVANCED
-    isImportant: true
   url-class-loader-009:
     difficulty: ADVANCED
-    isImportant: true

@@ -1,25 +1,17 @@
 sections:
   string-pool-intern-001:
     difficulty: BASIC
-    isImportant: false
   string-pool-intern-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-pool-intern-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-pool-intern-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-pool-intern-005:
     difficulty: ADVANCED
-    isImportant: false
   string-pool-intern-006:
     difficulty: ADVANCED
-    isImportant: false
   string-pool-intern-007:
     difficulty: BASIC
-    isImportant: false
   string-pool-intern-008:
     difficulty: ADVANCED
-    isImportant: false

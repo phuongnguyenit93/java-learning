@@ -1,16 +1,11 @@
 sections:
   springapplication-role:
     difficulty: BASIC
-    isImportant: false
   main-to-context:
     difficulty: BASIC
-    isImportant: false
   bootstrap-flow:
     difficulty: BASIC
-    isImportant: false
   high-level-lifecycle:
     difficulty: BASIC
-    isImportant: false
   runtime-handoff:
     difficulty: BASIC
-    isImportant: false

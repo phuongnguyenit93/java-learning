@@ -1,31 +1,21 @@
 sections:
   map-001:
     difficulty: BASIC
-    isImportant: false
   map-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   map-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   map-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   map-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   map-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   map-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   map-008:
     difficulty: ADVANCED
-    isImportant: false
   map-009:
     difficulty: ADVANCED
-    isImportant: false
   map-010:
     difficulty: ADVANCED
-    isImportant: false

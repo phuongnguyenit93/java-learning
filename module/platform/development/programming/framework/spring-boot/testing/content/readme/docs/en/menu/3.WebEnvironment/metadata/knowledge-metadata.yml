@@ -1,22 +1,15 @@
 sections:
   web-environment-model:
     difficulty: BASIC
-    isImportant: false
   web-environment-mock:
     difficulty: BASIC
-    isImportant: false
   web-environment-real-server:
     difficulty: BASIC
-    isImportant: false
   web-environment-none:
     difficulty: BASIC
-    isImportant: false
   real-server-test-clients:
     difficulty: BASIC
-    isImportant: false
   real-server-transaction-boundary:
     difficulty: BASIC
-    isImportant: false
   web-runtime-testing-handoff:
     difficulty: BASIC
-    isImportant: false

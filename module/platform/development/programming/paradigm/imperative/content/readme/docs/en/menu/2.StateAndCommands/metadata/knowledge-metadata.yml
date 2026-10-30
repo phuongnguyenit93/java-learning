@@ -1,19 +1,13 @@
 sections:
   imperative-state-model:
     difficulty: BASIC
-    isImportant: false
   imperative-commands-values:
     difficulty: BASIC
-    isImportant: false
   imperative-assignment:
     difficulty: BASIC
-    isImportant: false
   imperative-sequencing:
     difficulty: BASIC
-    isImportant: false
   imperative-state-tracing:
     difficulty: BASIC
-    isImportant: false
   imperative-unexpected-mutation:
     difficulty: BASIC
-    isImportant: false

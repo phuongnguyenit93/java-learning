@@ -1,25 +1,17 @@
 sections:
   jni-invocation-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   jni-vm-init-args:
     difficulty: ADVANCED
-    isImportant: false
   jni-create-jvm:
     difficulty: INTERMEDIATE
-    isImportant: false
   jni-get-created-vms:
     difficulty: INTERMEDIATE
-    isImportant: false
   jni-attach-detach-thread:
     difficulty: ADVANCED
-    isImportant: false
   jni-destroy-jvm:
     difficulty: ADVANCED
-    isImportant: false
   jni-library-lifecycle:
     difficulty: ADVANCED
-    isImportant: false
   jni-invocation-lifecycle:
     difficulty: ADVANCED
-    isImportant: false

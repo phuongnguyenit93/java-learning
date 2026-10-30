@@ -1,31 +1,21 @@
 sections:
   collection-purpose:
     difficulty: BASIC
-    isImportant: false
   collection-vs-collections:
     difficulty: BASIC
-    isImportant: false
   collection-hierarchy:
     difficulty: BASIC
-    isImportant: false
   sorted-navigable-contracts:
     difficulty: BASIC
-    isImportant: false
   collection-api-contract:
     difficulty: BASIC
-    isImportant: false
   functional-syntax-boundary:
     difficulty: BASIC
-    isImportant: false
   map-separate-hierarchy:
     difficulty: BASIC
-    isImportant: false
   interface-vs-implementation:
     difficulty: BASIC
-    isImportant: false
   collection-characteristics:
     difficulty: BASIC
-    isImportant: false
   complexity-mental-model:
     difficulty: BASIC
-    isImportant: false

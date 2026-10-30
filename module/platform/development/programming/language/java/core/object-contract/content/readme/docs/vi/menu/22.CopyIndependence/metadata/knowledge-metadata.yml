@@ -1,28 +1,19 @@
 sections:
   copy-independence-001:
     difficulty: BASIC
-    isImportant: true
   copy-independence-002:
     difficulty: BASIC
-    isImportant: true
   copy-independence-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   copy-independence-004:
     difficulty: ADVANCED
-    isImportant: true
   copy-independence-005:
     difficulty: ADVANCED
-    isImportant: true
   copy-independence-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   copy-independence-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   copy-independence-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   copy-independence-009:
     difficulty: ADVANCED
-    isImportant: true

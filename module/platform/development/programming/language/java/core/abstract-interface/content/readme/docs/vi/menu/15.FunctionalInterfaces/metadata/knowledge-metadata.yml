@@ -1,31 +1,21 @@
 sections:
   functional-interfaces-001:
     difficulty: BASIC
-    isImportant: true
   functional-interfaces-002:
     difficulty: BASIC
-    isImportant: true
   functional-interfaces-003:
     difficulty: ADVANCED
-    isImportant: true
   functional-interfaces-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   functional-interfaces-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   functional-interfaces-006:
     difficulty: BASIC
-    isImportant: true
   functional-interfaces-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   functional-interfaces-008:
     difficulty: ADVANCED
-    isImportant: true
   functional-interfaces-009:
     difficulty: ADVANCED
-    isImportant: false
   functional-interfaces-010:
     difficulty: INTERMEDIATE
-    isImportant: true

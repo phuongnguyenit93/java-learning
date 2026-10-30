@@ -1,31 +1,21 @@
 sections:
   webflux-annotated-controller-model:
     difficulty: BASIC
-    isImportant: false
   webflux-request-mapping:
     difficulty: BASIC
-    isImportant: false
   webflux-controller-arguments:
     difficulty: BASIC
-    isImportant: false
   webflux-reactive-request-body:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-controller-binding-validation:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-reactive-return-values:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-response-entity-streaming:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-controller-view-rendering:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-controller-error-handling:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-annotation-mvc-contrast:
     difficulty: BASIC
-    isImportant: false

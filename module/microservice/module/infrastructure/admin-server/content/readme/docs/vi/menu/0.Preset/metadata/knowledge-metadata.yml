@@ -1,7 +1,5 @@
 sections:
   spring-boot-admin:
     difficulty: BASIC
-    isImportant: false
   admin-server-config:
     difficulty: BASIC
-    isImportant: false

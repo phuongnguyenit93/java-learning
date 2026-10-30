@@ -1,13 +1,9 @@
 sections:
   abstraction-mechanism-purpose:
     difficulty: BASIC
-    isImportant: false
   abstraction-mechanism-roles:
     difficulty: BASIC
-    isImportant: false
   abstraction-running-example:
     difficulty: BASIC
-    isImportant: false
   abstraction-learning-roadmap:
     difficulty: BASIC
-    isImportant: false

@@ -1,13 +1,9 @@
 sections:
   string-purpose:
     difficulty: BASIC
-    isImportant: false
   string-immutability:
     difficulty: BASIC
-    isImportant: false
   immutability-consequences:
     difficulty: BASIC
-    isImportant: false
   string-operation-new-value:
     difficulty: BASIC
-    isImportant: false

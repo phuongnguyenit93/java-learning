@@ -1,16 +1,11 @@
 sections:
   java-serialization-model:
     difficulty: BASIC
-    isImportant: false
   serializable-graph:
     difficulty: BASIC
-    isImportant: false
   serialversionuid:
     difficulty: BASIC
-    isImportant: false
   transient-field:
     difficulty: BASIC
-    isImportant: false
   serialization-security-risk:
     difficulty: BASIC
-    isImportant: false

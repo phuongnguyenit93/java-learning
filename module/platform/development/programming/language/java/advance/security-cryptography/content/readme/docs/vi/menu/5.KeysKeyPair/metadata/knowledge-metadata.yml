@@ -1,13 +1,9 @@
 sections:
   key-models:
     difficulty: BASIC
-    isImportant: false
   key-generation:
     difficulty: BASIC
-    isImportant: false
   key-factory-specification:
     difficulty: INTERMEDIATE
-    isImportant: false
   key-material-boundary:
     difficulty: ADVANCED
-    isImportant: false

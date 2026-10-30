@@ -1,19 +1,13 @@
 sections:
   jms-mdp-model:
     difficulty: BASIC
-    isImportant: false
   jms-listener-container-responsibilities:
     difficulty: BASIC
-    isImportant: false
   jms-dmlc-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   jms-listener-container-choices:
     difficulty: INTERMEDIATE
-    isImportant: false
   jms-message-listener-adapter:
     difficulty: INTERMEDIATE
-    isImportant: false
   jms-jca-endpoint-boundary:
     difficulty: ADVANCED
-    isImportant: false

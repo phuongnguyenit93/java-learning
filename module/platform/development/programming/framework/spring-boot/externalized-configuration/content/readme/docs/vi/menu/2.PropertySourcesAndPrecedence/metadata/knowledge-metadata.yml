@@ -1,19 +1,13 @@
 sections:
   property-source-order:
     difficulty: BASIC
-    isImportant: false
   default-and-config-data-position:
     difficulty: BASIC
-    isImportant: false
   environment-system-json-cli:
     difficulty: BASIC
-    isImportant: false
   propertysource-timing:
     difficulty: BASIC
-    isImportant: false
   precedence-reasoning:
     difficulty: BASIC
-    isImportant: false
   test-precedence-boundary:
     difficulty: BASIC
-    isImportant: false

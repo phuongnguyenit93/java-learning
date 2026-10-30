@@ -1,16 +1,11 @@
 sections:
   practical-patterns:
     difficulty: BASIC
-    isImportant: false
   aop-design-tradeoffs:
     difficulty: BASIC
-    isImportant: false
   practical-demo:
     difficulty: BASIC
-    isImportant: false
   aop-pitfalls:
     difficulty: BASIC
-    isImportant: false
   practical-conclusion:
     difficulty: BASIC
-    isImportant: false

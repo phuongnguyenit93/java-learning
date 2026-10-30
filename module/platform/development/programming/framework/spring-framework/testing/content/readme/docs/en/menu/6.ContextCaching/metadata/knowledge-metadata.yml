@@ -1,22 +1,15 @@
 sections:
   context-cache-purpose:
     difficulty: BASIC
-    isImportant: false
   context-cache-key:
     difficulty: ADVANCED
-    isImportant: false
   context-cache-process-boundary:
     difficulty: BASIC
-    isImportant: false
   cache-size-and-eviction:
     difficulty: INTERMEDIATE
-    isImportant: false
   dirties-context:
     difficulty: INTERMEDIATE
-    isImportant: false
   context-failure-threshold:
     difficulty: INTERMEDIATE
-    isImportant: false
   parallel-test-execution:
     difficulty: ADVANCED
-    isImportant: false

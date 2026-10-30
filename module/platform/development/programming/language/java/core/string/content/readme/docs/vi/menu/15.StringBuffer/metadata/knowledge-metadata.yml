@@ -1,22 +1,15 @@
 sections:
   string-buffer-001:
     difficulty: BASIC
-    isImportant: false
   string-buffer-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-buffer-003:
     difficulty: ADVANCED
-    isImportant: false
   string-buffer-004:
     difficulty: ADVANCED
-    isImportant: false
   string-buffer-005:
     difficulty: ADVANCED
-    isImportant: false
   string-buffer-006:
     difficulty: BASIC
-    isImportant: false
   string-buffer-007:
     difficulty: INTERMEDIATE
-    isImportant: false

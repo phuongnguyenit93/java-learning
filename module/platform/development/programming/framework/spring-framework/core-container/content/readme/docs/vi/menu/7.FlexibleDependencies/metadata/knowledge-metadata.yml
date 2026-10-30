@@ -1,28 +1,19 @@
 sections:
   flexible-dependencies-001:
     difficulty: BASIC
-    isImportant: false
   flexible-dependencies-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   flexible-dependencies-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   flexible-dependencies-004:
     difficulty: BASIC
-    isImportant: false
   flexible-dependencies-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   flexible-dependencies-006:
     difficulty: ADVANCED
-    isImportant: false
   flexible-dependencies-007:
     difficulty: ADVANCED
-    isImportant: false
   flexible-dependencies-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   flexible-dependencies-009:
     difficulty: ADVANCED
-    isImportant: false

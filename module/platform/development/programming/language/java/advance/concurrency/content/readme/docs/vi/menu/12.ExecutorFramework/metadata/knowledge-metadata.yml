@@ -1,55 +1,37 @@
 sections:
   executor-framework-001:
     difficulty: BASIC
-    isImportant: true
   executor-framework-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   executor-framework-003:
     difficulty: BASIC
-    isImportant: true
   executor-framework-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   executor-framework-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   executor-framework-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   executor-framework-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   executor-framework-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   executor-framework-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   executor-framework-010:
     difficulty: INTERMEDIATE
-    isImportant: true
   executor-framework-011:
     difficulty: INTERMEDIATE
-    isImportant: true
   executor-framework-012:
     difficulty: INTERMEDIATE
-    isImportant: true
   executor-framework-013:
     difficulty: ADVANCED
-    isImportant: true
   executor-framework-014:
     difficulty: INTERMEDIATE
-    isImportant: true
   executor-framework-015:
     difficulty: ADVANCED
-    isImportant: true
   executor-framework-016:
     difficulty: ADVANCED
-    isImportant: true
   executor-framework-017:
     difficulty: ADVANCED
-    isImportant: false
   executor-framework-018:
     difficulty: ADVANCED
-    isImportant: true

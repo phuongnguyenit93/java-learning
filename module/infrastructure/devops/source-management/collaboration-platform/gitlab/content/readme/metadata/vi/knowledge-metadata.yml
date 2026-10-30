@@ -1,149 +1,102 @@
 01-gitlab-foundations.md:
   gitlab-hosting-purpose:
     difficulty: BASIC
-    isImportant: false
   unstructured-collaboration-risks:
     difficulty: BASIC
-    isImportant: false
   git-versus-gitlab:
     difficulty: BASIC
-    isImportant: false
   gitlab-project-repository:
     difficulty: BASIC
-    isImportant: false
   gitlab-namespace-basics:
     difficulty: BASIC
-    isImportant: false
   gitlab-participants:
     difficulty: BASIC
-    isImportant: false
   gitlab-mr-introduction:
     difficulty: BASIC
-    isImportant: false
   gitlab-workflow-concepts:
     difficulty: BASIC
-    isImportant: false
 02-projects-and-groups.md:
   project-namespace-ownership:
     difficulty: BASIC
-    isImportant: false
   groups-and-subgroups:
     difficulty: BASIC
-    isImportant: false
   project-repository-settings:
     difficulty: BASIC
-    isImportant: false
   project-visibility-offerings:
     difficulty: BASIC
-    isImportant: false
   projects-group-collaboration-boundary:
     difficulty: BASIC
-    isImportant: false
 03-members-and-access.md:
   access-roles-overview:
     difficulty: BASIC
-    isImportant: false
   direct-inherited-shared-membership:
     difficulty: BASIC
-    isImportant: false
   effective-project-permissions:
     difficulty: BASIC
-    isImportant: false
   access-for-mr-contribution:
     difficulty: BASIC
-    isImportant: false
   permission-troubleshooting:
     difficulty: BASIC
-    isImportant: false
 04-merge-request-proposals.md:
   shared-project-contribution:
     difficulty: INTERMEDIATE
-    isImportant: false
   forked-project-contribution:
     difficulty: INTERMEDIATE
-    isImportant: false
   source-target-project-branches:
     difficulty: INTERMEDIATE
-    isImportant: false
   mr-description-assignee-draft:
     difficulty: INTERMEDIATE
-    isImportant: false
   mr-lifecycle-states:
     difficulty: INTERMEDIATE
-    isImportant: false
 05-reviews-and-approvals.md:
   review-context-diff-discussions:
     difficulty: INTERMEDIATE
-    isImportant: false
   mr-reviewers-vs-assignees:
     difficulty: INTERMEDIATE
-    isImportant: false
   review-comments-vs-approvals:
     difficulty: INTERMEDIATE
-    isImportant: false
   request-changes-tier-gate:
     difficulty: INTERMEDIATE
-    isImportant: false
   approval-rules-required-approvers:
     difficulty: INTERMEDIATE
-    isImportant: false
   code-owners-vs-approval-rules:
     difficulty: INTERMEDIATE
-    isImportant: false
   follow-up-reviews:
     difficulty: INTERMEDIATE
-    isImportant: false
 06-protected-branches.md:
   protected-branches-purpose:
     difficulty: ADVANCED
-    isImportant: false
   allowed-to-merge-vs-push:
     difficulty: ADVANCED
-    isImportant: false
   project-group-branch-rules:
     difficulty: ADVANCED
-    isImportant: false
   overlapping-rule-precedence:
     difficulty: ADVANCED
-    isImportant: false
   code-owner-approval-protected-target:
     difficulty: ADVANCED
-    isImportant: false
   merge-checks-and-pipeline-boundary:
     difficulty: ADVANCED
-    isImportant: false
   blocked-merge-diagnosis:
     difficulty: ADVANCED
-    isImportant: false
 07-issues-and-releases.md:
   gitlab-issue-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   issue-assignees-labels-milestones:
     difficulty: INTERMEDIATE
-    isImportant: false
   issues-linked-to-merge-requests:
     difficulty: INTERMEDIATE
-    isImportant: false
   git-tag-vs-gitlab-release:
     difficulty: INTERMEDIATE
-    isImportant: false
   release-notes-assets-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
 08-team-workflow.md:
   issue-to-mr-approval-merge:
     difficulty: INTERMEDIATE
-    isImportant: false
   roles-access-review-blockers:
     difficulty: INTERMEDIATE
-    isImportant: false
   protected-branch-approval-blockers:
     difficulty: INTERMEDIATE
-    isImportant: false
   merge-to-release-metadata:
     difficulty: INTERMEDIATE
-    isImportant: false
   handoff-to-git-strategy-ci:
     difficulty: INTERMEDIATE
-    isImportant: false

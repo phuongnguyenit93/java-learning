@@ -1,16 +1,11 @@
 sections:
   parent-delegation:
     difficulty: BASIC
-    isImportant: false
   initiating-vs-defining-loader:
     difficulty: BASIC
-    isImportant: false
   delegation-purpose:
     difficulty: BASIC
-    isImportant: false
   child-first-boundary:
     difficulty: BASIC
-    isImportant: false
   protected-packages-boundary:
     difficulty: BASIC
-    isImportant: false

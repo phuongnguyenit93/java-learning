@@ -1,25 +1,17 @@
 sections:
   lambda-expression-model:
     difficulty: BASIC
-    isImportant: false
   lambda-syntax-forms:
     difficulty: BASIC
-    isImportant: false
   target-typing:
     difficulty: INTERMEDIATE
-    isImportant: false
   lambda-parameter-typing:
     difficulty: BASIC
-    isImportant: false
   lambda-body-result-compatibility:
     difficulty: INTERMEDIATE
-    isImportant: false
   lambda-target-contexts:
     difficulty: INTERMEDIATE
-    isImportant: false
   lambda-execution-timing:
     difficulty: BASIC
-    isImportant: false
   lambda-overload-ambiguity:
     difficulty: ADVANCED
-    isImportant: false

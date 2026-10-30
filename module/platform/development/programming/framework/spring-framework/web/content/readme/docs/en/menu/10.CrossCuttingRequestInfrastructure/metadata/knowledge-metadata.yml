@@ -1,16 +1,11 @@
 sections:
   filters-interceptors-and-placement:
     difficulty: BASIC
-    isImportant: false
   cors-processing:
     difficulty: BASIC
-    isImportant: false
   forwarded-headers:
     difficulty: BASIC
-    isImportant: false
   async-dispatch-cross-cutting:
     difficulty: BASIC
-    isImportant: false
   security-boundary:
     difficulty: BASIC
-    isImportant: false

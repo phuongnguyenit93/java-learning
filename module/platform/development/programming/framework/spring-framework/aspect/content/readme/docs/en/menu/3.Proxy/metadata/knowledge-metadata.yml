@@ -1,16 +1,11 @@
 sections:
   proxy-mental-model:
     difficulty: BASIC
-    isImportant: false
   proxy-demo:
     difficulty: BASIC
-    isImportant: false
   managed-vs-new-demo:
     difficulty: BASIC
-    isImportant: false
   proxy-strategies:
     difficulty: BASIC
-    isImportant: false
   proxy-conclusion:
     difficulty: BASIC
-    isImportant: false

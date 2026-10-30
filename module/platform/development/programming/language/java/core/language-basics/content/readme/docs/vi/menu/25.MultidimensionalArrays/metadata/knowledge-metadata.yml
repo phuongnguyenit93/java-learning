@@ -1,28 +1,19 @@
 sections:
   multidimensional-arrays-001:
     difficulty: BASIC
-    isImportant: false
   multidimensional-arrays-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   multidimensional-arrays-003:
     difficulty: BASIC
-    isImportant: false
   multidimensional-arrays-004:
     difficulty: BASIC
-    isImportant: false
   multidimensional-arrays-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   multidimensional-arrays-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   multidimensional-arrays-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   multidimensional-arrays-008:
     difficulty: ADVANCED
-    isImportant: false
   multidimensional-arrays-009:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,13 +1,9 @@
 sections:
   annotation-contract:
     difficulty: BASIC
-    isImportant: false
   annotation-demo:
     difficulty: BASIC
-    isImportant: false
   annotation-vs-expression:
     difficulty: BASIC
-    isImportant: false
   annotation-conclusion:
     difficulty: BASIC
-    isImportant: false

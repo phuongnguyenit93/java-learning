@@ -1,31 +1,21 @@
 sections:
   managed-heap-purpose:
     difficulty: BASIC
-    isImportant: false
   object-allocation-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   object-layout-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   reachability-and-liveness:
     difficulty: INTERMEDIATE
-    isImportant: false
   automatic-memory-reclamation:
     difficulty: INTERMEDIATE
-    isImportant: false
   garbage-collection-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   collector-strategies:
     difficulty: ADVANCED
-    isImportant: false
   gc-goals-and-tradeoffs:
     difficulty: INTERMEDIATE
-    isImportant: false
   reference-strengths:
     difficulty: ADVANCED
-    isImportant: false
   gc-mechanism-vs-diagnostics:
     difficulty: INTERMEDIATE
-    isImportant: false

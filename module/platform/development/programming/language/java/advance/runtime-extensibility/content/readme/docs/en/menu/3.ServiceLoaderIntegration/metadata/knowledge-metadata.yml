@@ -1,19 +1,13 @@
 sections:
   serviceloader-discovery-model:
     difficulty: BASIC
-    isImportant: false
   lazy-discovery-and-cache:
     difficulty: INTERMEDIATE
-    isImportant: false
   iterator-vs-provider-stream:
     difficulty: INTERMEDIATE
-    isImportant: false
   discovery-classloader-context:
     difficulty: INTERMEDIATE
-    isImportant: false
   reload-and-concurrency:
     difficulty: INTERMEDIATE
-    isImportant: false
   serviceconfigurationerror:
     difficulty: INTERMEDIATE
-    isImportant: false

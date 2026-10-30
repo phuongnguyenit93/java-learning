@@ -1,13 +1,9 @@
 sections:
   language-vs-reflective-access:
     difficulty: BASIC
-    isImportant: false
   try-set-accessible:
     difficulty: INTERMEDIATE
-    isImportant: false
   strong-encapsulation-boundary:
     difficulty: ADVANCED
-    isImportant: false
   accessible-object-risk:
     difficulty: INTERMEDIATE
-    isImportant: false

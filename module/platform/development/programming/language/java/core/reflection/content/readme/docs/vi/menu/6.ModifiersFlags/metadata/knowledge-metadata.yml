@@ -1,28 +1,19 @@
 sections:
   modifiers-flags-001:
     difficulty: BASIC
-    isImportant: true
   modifiers-flags-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   modifiers-flags-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   modifiers-flags-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   modifiers-flags-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   modifiers-flags-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   modifiers-flags-007:
     difficulty: ADVANCED
-    isImportant: true
   modifiers-flags-008:
     difficulty: ADVANCED
-    isImportant: false
   modifiers-flags-009:
     difficulty: ADVANCED
-    isImportant: true

@@ -1,22 +1,15 @@
 sections:
   formatting-purpose:
     difficulty: BASIC
-    isImportant: false
   printer-parser-contract:
     difficulty: BASIC
-    isImportant: false
   formatter-contract:
     difficulty: BASIC
-    isImportant: false
   formatter-registry:
     difficulty: INTERMEDIATE
-    isImportant: false
   annotation-formatting:
     difficulty: INTERMEDIATE
-    isImportant: false
   formatting-conversion-service:
     difficulty: INTERMEDIATE
-    isImportant: false
   formatting-locale-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false

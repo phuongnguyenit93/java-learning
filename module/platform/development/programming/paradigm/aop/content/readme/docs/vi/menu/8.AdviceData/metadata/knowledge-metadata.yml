@@ -1,28 +1,19 @@
 sections:
   advice-data-001:
     difficulty: BASIC
-    isImportant: false
   advice-data-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   advice-data-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   advice-data-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   advice-data-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   advice-data-006:
     difficulty: ADVANCED
-    isImportant: false
   advice-data-007:
     difficulty: ADVANCED
-    isImportant: false
   advice-data-008:
     difficulty: ADVANCED
-    isImportant: false
   advice-data-009:
     difficulty: ADVANCED
-    isImportant: false

@@ -1,13 +1,9 @@
 sections:
   bundle-candidate-chain:
     difficulty: BASIC
-    isImportant: false
   default-locale-fallback:
     difficulty: BASIC
-    isImportant: false
   base-bundle:
     difficulty: BASIC
-    isImportant: false
   missing-resource:
     difficulty: BASIC
-    isImportant: false

@@ -1,13 +1,9 @@
 sections:
   data-access-purpose:
     difficulty: BASIC
-    isImportant: false
   data-access-problem-without-spring:
     difficulty: BASIC
-    isImportant: false
   data-access-responsibility-boundary:
     difficulty: BASIC
-    isImportant: false
   jdbc-vs-r2dbc-paths:
     difficulty: BASIC
-    isImportant: false

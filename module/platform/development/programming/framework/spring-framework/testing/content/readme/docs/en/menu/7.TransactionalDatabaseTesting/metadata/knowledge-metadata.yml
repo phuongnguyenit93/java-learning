@@ -1,28 +1,19 @@
 sections:
   test-managed-transactions:
     difficulty: BASIC
-    isImportant: false
   transaction-manager-resolution:
     difficulty: INTERMEDIATE
-    isImportant: false
   transactional-test-semantics:
     difficulty: INTERMEDIATE
-    isImportant: false
   rollback-and-commit:
     difficulty: BASIC
-    isImportant: false
   testtransaction-programmatic-control:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-lifecycle-callbacks:
     difficulty: INTERMEDIATE
-    isImportant: false
   sql-test-fixtures:
     difficulty: INTERMEDIATE
-    isImportant: false
   jdbc-test-utilities:
     difficulty: BASIC
-    isImportant: false
   transaction-testing-pitfalls:
     difficulty: ADVANCED
-    isImportant: false

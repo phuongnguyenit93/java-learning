@@ -1,22 +1,15 @@
 sections:
   around-mental-model:
     difficulty: BASIC
-    isImportant: false
   around-timing-demo:
     difficulty: BASIC
-    isImportant: false
   around-transform-demo:
     difficulty: BASIC
-    isImportant: false
   around-skip-demo:
     difficulty: BASIC
-    isImportant: false
   around-arguments-demo:
     difficulty: BASIC
-    isImportant: false
   around-exception-demo:
     difficulty: BASIC
-    isImportant: false
   around-conclusion:
     difficulty: BASIC
-    isImportant: false

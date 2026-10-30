@@ -1,28 +1,19 @@
 sections:
   equals-inheritance-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   equals-inheritance-002:
     difficulty: ADVANCED
-    isImportant: true
   equals-inheritance-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   equals-inheritance-004:
     difficulty: ADVANCED
-    isImportant: true
   equals-inheritance-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   equals-inheritance-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   equals-inheritance-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   equals-inheritance-008:
     difficulty: ADVANCED
-    isImportant: false
   equals-inheritance-009:
     difficulty: ADVANCED
-    isImportant: true

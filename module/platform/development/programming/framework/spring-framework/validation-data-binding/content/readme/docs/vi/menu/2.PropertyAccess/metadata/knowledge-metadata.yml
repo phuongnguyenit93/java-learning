@@ -1,16 +1,11 @@
 sections:
   property-path-model:
     difficulty: BASIC
-    isImportant: false
   bean-wrapper-role:
     difficulty: INTERMEDIATE
-    isImportant: false
   binding-result-model:
     difficulty: BASIC
-    isImportant: false
   object-field-error-model:
     difficulty: BASIC
-    isImportant: false
   binding-error-policy:
     difficulty: INTERMEDIATE
-    isImportant: false

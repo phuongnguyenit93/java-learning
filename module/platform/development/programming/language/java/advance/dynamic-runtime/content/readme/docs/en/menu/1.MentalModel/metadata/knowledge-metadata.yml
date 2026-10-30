@@ -1,13 +1,9 @@
 sections:
   dynamic-runtime-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   dynamic-runtime-problem-space:
     difficulty: INTERMEDIATE
-    isImportant: false
   direct-reflection-invoke-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   dynamic-runtime-boundaries:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,13 +1,9 @@
 sections:
   concat-semantics:
     difficulty: BASIC
-    isImportant: false
   compile-time-concat:
     difficulty: BASIC
-    isImportant: false
   runtime-concat:
     difficulty: BASIC
-    isImportant: false
   loop-concat-cost:
     difficulty: BASIC
-    isImportant: false

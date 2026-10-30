@@ -1,16 +1,11 @@
 sections:
   nested-archive-model:
     difficulty: BASIC
-    isImportant: false
   boot-archive-layout:
     difficulty: BASIC
-    isImportant: false
   spring-boot-loader-purpose:
     difficulty: BASIC
-    isImportant: false
   archive-indexes:
     difficulty: BASIC
-    isImportant: false
   archive-extraction-boundary:
     difficulty: BASIC
-    isImportant: false

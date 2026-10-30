@@ -1,22 +1,15 @@
 sections:
   validator-contract:
     difficulty: BASIC
-    isImportant: false
   errors-contract:
     difficulty: BASIC
-    isImportant: false
   nested-validation:
     difficulty: INTERMEDIATE
-    isImportant: false
   validation-utils:
     difficulty: BASIC
-    isImportant: false
   smart-validator-hints:
     difficulty: INTERMEDIATE
-    isImportant: false
   message-code-resolution:
     difficulty: INTERMEDIATE
-    isImportant: false
   validation-i18n-boundary:
     difficulty: BASIC
-    isImportant: false

@@ -1,25 +1,17 @@
 sections:
   enable-caching:
     difficulty: BASIC
-    isImportant: false
   cacheable:
     difficulty: BASIC
-    isImportant: false
   cache-put:
     difficulty: BASIC
-    isImportant: false
   cache-evict:
     difficulty: BASIC
-    isImportant: false
   caching-composition:
     difficulty: BASIC
-    isImportant: false
   cache-config:
     difficulty: BASIC
-    isImportant: false
   caching-configurer:
     difficulty: BASIC
-    isImportant: false
   cache-operation-configuration-precedence:
     difficulty: BASIC
-    isImportant: false

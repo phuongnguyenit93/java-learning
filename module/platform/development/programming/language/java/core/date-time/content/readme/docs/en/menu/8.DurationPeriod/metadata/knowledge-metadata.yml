@@ -1,10 +1,7 @@
 sections:
   duration-time-based:
     difficulty: BASIC
-    isImportant: false
   period-date-based:
     difficulty: BASIC
-    isImportant: false
   duration-vs-period:
     difficulty: BASIC
-    isImportant: false

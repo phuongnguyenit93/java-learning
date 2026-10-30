@@ -1,13 +1,9 @@
 sections:
   tccl-purpose:
     difficulty: BASIC
-    isImportant: false
   tccl-discovery:
     difficulty: BASIC
-    isImportant: false
   tccl-lifecycle:
     difficulty: BASIC
-    isImportant: false
   tccl-leak-risk:
     difficulty: BASIC
-    isImportant: false

@@ -1,25 +1,17 @@
 sections:
   oop-basic-001:
     difficulty: BASIC
-    isImportant: true
   oop-basic-002:
     difficulty: BASIC
-    isImportant: true
   oop-basic-003:
     difficulty: BASIC
-    isImportant: true
   oop-basic-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   oop-basic-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   oop-basic-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   oop-basic-007:
     difficulty: ADVANCED
-    isImportant: false
   oop-basic-008:
     difficulty: INTERMEDIATE
-    isImportant: true

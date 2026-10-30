@@ -1,25 +1,17 @@
 sections:
   compose-development-purpose:
     difficulty: BASIC
-    isImportant: false
   compose-discovery-lifecycle:
     difficulty: BASIC
-    isImportant: false
   compose-service-connections:
     difficulty: BASIC
-    isImportant: false
   compose-mapped-ports-precedence:
     difficulty: BASIC
-    isImportant: false
   compose-readiness:
     difficulty: BASIC
-    isImportant: false
   compose-runtime-controls:
     difficulty: BASIC
-    isImportant: false
   compose-testing-boundary:
     difficulty: BASIC
-    isImportant: false
   compose-docker-boundary:
     difficulty: BASIC
-    isImportant: false

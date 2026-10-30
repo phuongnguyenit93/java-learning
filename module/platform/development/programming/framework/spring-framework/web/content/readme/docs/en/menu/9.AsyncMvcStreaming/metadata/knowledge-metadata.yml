@@ -1,19 +1,13 @@
 sections:
   servlet-async-lifecycle:
     difficulty: BASIC
-    isImportant: false
   deferred-single-result:
     difficulty: BASIC
-    isImportant: false
   servlet-streaming:
     difficulty: BASIC
-    isImportant: false
   reactive-return-values-in-mvc:
     difficulty: BASIC
-    isImportant: false
   async-timeouts-executor-and-dispatch:
     difficulty: BASIC
-    isImportant: false
   async-mvc-vs-webflux:
     difficulty: BASIC
-    isImportant: false

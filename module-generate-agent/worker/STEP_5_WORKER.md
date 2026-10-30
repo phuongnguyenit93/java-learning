@@ -1,34 +1,27 @@
-# STEP 5 — WORKER ONLY: Chapter Review, Summary, Liên kết bài học và Package Skeleton
+# STEP 5 — WORKER ONLY: Chapter Review, Difficulty và Summary
 
 **STEP status:** This worker must never read or update progress in Google Sheets/Excel or `master.json`. Prime alone records `CURRENT_STEP.VALUE` after whole-STEP QA.
 
 
 > **CURRENT Summary contract:** Worker fills B filename and C base ID at parent, AC Markdown at children and authored-only YAML at AC parent. Prime fills A child IDs after QA. Summary importer joins AC entries to child A/B by index, materializes full section.yml with derived id/order/title/to. AC parent never contains those technical fields.
 
-> Chỉ dành cho worker. Prime dùng STEP_5.md để điều phối; bạn bắt buộc tự đọc TOÀN VĂN đúng file worker/STEP_5_WORKER.md này trước khi làm, đọc lại nếu mất context. Không đọc STEP_5.md, STEP khác, file rules/TXT hoặc dùng lịch sử hội thoại làm tiêu chuẩn. Prime đã **chuyển MODULE_TYPE=SERVLET, bật BUILD_SWAGGER, sync Gradle và provision AC18/19 trước khi giao**. Tin giao chỉ có bốn dòng: link tab; A/B hàng cha + C:N/O/AB/AC hàng con + **AC hàng cha + AC18/19 + Special Note**; **vùng ghi B cha, C:N/O/AB/AC của từng hàng con, AC hàng cha và HAI đường dẫn tuyệt đối package Java main/test**; đường dẫn file này. Không gửi tóm tắt tiêu chí refactor, filename gợi ý hay Java code mẫu.
+> Worker phải đọc toàn văn file này. Prime đã setup SERVLET, bật BUILD_SWAGGER, sync Gradle và provision AC18/19. Handoff bốn dòng gồm tab URL, READ A/B/C cha + B/C:N/O/AC con + AC cha/header/Special Note, WRITE B/C cha + C:N/O/AC con + AC cha, và file worker-only. Không dùng lịch sử chat hoặc tài liệu STEP khác thay contract.
 
 > **STEP 5 ID and AC contract (current):** Worker writes the chapter base ID to C parent (derived from B parent filename: OOPBasic.md -> oop-basic), on top of all existing chapter work. Prime fills A child IDs by code after all workers and filename QA. AC parent must contain authored-only YAML: each roadmap item has only description and transition (description or final null); no id/order/title/to. The Summary importer materializes the full YAML using the A/B child rows. No AI in importers.
 
 ## W1. Một chương, một lượt, một owner
 
-1. **Lượt STEP 5 thông thường** chỉ có MỘT Menu Cấp 1 và TOÀN BỘ Menu Cấp 2 thuộc chương đó. Trong **cùng một lượt**, tự đọc trọn chương → preflight hai package main/test được giao → **tạo skeleton package của chương** → lập bản đồ → review/refactor đầy đủ Knowledge → QA bản Knowledge cuối → phân loại Difficulty/isImportant từng bài → đặt/ghi filename tiếng Anh vào B cha → **soạn Summary Markdown 0/1/2/3 cho từng AC hàng con từ Knowledge ĐÃ REVIEW** → **soạn toàn bộ YAML `section.yml` cho AC hàng cha từ toàn chương** → snapshot/preflight → ghi đúng ownership → exact readback → chapter QA **cả Sheet và skeleton** → báo cáo → SLEEPING. Có thể xử lý các bài dài theo từng chunk/lượt đọc nhưng phải giữ bản đồ cả chương và kiểm tra 100% trước khi ghi. Không chia chương cho worker khác hoặc yêu cầu Prime tạo skeleton hộ. **Ngoại lệ duy nhất là lượt sửa trùng filename sau QA toàn tab, giới hạn B cha như W2.5.4: KHÔNG đụng source/skeleton, không chạy lại review hoặc AC.**
-2. Trên đúng tab/gid Prime giao, chỉ đọc nguồn A1, B1, **A<PARENT_ROW>, B<PARENT_ROW>**, dải B<CHILD_ROWS>, **toàn bộ C:N, O, AB và AC trên chính các hàng con**, cùng **AC<PARENT_ROW>, AC18, AC19**. Các hàng B được Prime chỉ định cụ thể, không tự dò chương/bài khác hoặc đọc câu trả lời ngoài phạm vi; không bắt buộc đọc tên filename của các chương khác.
-3. Worker may write B/C parent, C:N/O/AB/AC each child, and authored-only AC parent YAML within exact chapter ownership; A-child ID fill belongs ONLY to Prime. Skeleton paths remain restricted to the granted main/test directories. Preserve cell capacities, formats, other modules and CURRENT_STEP.VALUE.
-4. Kiểm tra ownership **cả Sheet lẫn hai package**; chapter thiếu Knowledge, source sai, chưa được cấp hai đường dẫn main/test, package conflict, module chưa sync hoặc đang có worker khác sở hữu → báo BLOCKER, không viết nửa chừng và không nhận chương thay thế. Không spawn worker, không chạy STEP tiếp theo, không commit/push.
+1. Một lượt xử lý toàn bộ Menu Cấp 1: đọc trọn chương → lập bản đồ → review/refactor Knowledge → QA nội dung → gán Difficulty → ghi filename B cha/base ID C cha → tạo Summary AC con và authored-only YAML AC cha → snapshot/preflight → ghi đúng ownership → exact readback → chapter QA → báo cáo → SLEEPING. Lượt sửa trùng filename chỉ ghi B/C cha trước Prime fill A-child IDs.
+2. Chỉ đọc A1, B1, A/B/C cha, B con, C:N/O/AC hàng con, AC cha, AC18/19 và Special Note đúng chương Prime giao.
+3. Worker writes B/C parent, C:N/O/AC child and authored-only AC-parent YAML; Prime alone fills A-child IDs. Preserve formats, limits, other modules and progress.
+4. Kiểm tra module setup và quyền sở hữu Sheet; thiếu Knowledge, dữ liệu sai hay ownership xung đột → BLOCKER. Không spawn, chạy STEP khác hoặc commit/push.
 
-## W1.1. BẮT BUỘC tạo package skeleton trong lượt review STEP 5 thường
-
-1. Prime đã thực hiện **module setup + Gradle configuration sync** trước lúc giao; Worker **chỉ kiểm tra read-only** module đang là `SERVLET`, `BUILD_SWAGGER=TRUE`, đã có `*Application.java` duy nhất do generator/setup quản lý. Không tự sửa `master.json`, `properties.json`, Gradle hoặc tạo Application. Thiếu điều kiện → `BLOCKER: MODULE_SETUP_NOT_READY`, báo Prime xử lý, không tạo skeleton trên cấu hình sai.
-2. Dòng thứ ba handoff gồm **hai đường dẫn tuyệt đối**: `<module>/src/main/java/<module-package-root>/<english-chapter-package>/` và `<module>/src/test/java/<module-package-root>/<english-chapter-package>/`. Kiểm tra cùng module, cùng chương, canonical path nằm dưới `src/main/java` / `src/test/java`, package là **TÊN TIẾNG ANH có nghĩa của Menu Cấp 1**, không phải phiên âm tiếng Việt. **Lấy chuẩn đặt tên từ filename Markdown tiếng Anh ở B cha:** bỏ `.md`, đổi PascalCase/acronym sang lowercase snake_case (ví dụ `GenericsOverview.md → generics_overview`, `Class.md → class_chapter` vì `class` là Java keyword); nếu B còn trống, tên English chapter được Prime xác định trước từ nghĩa chương và worker phải tự chọn filename tương ứng khi điền B cha. Kiểm tra tên hợp lệ `[a-z][a-z0-9_]*`, không trùng package/owner khác, không path traversal/symlink. **Không tự tạo tên package bằng cách bỏ dấu/phiên âm tiếng Việt** (ví dụ `dong_goi` là SAI, `encapsulation` mới đúng). **Dùng chính xác package Prime giao**, không tự tìm path khác; nếu tên filename và package không khớp/ngữ nghĩa mâu thuẫn thì báo `BLOCKER: PACKAGE_FILENAME_MISMATCH` cho Prime điều phối ownership, không tự đổi tên B đã có hoặc tạo một package khác.
-3. Khi đã xác minh đầy đủ Sheet/Knowledge, config và ownership, **chính worker** tạo các thư mục skeleton dưới `<MAIN_CHAPTER_PACKAGE_PATH>`: `controller/`, `dto/`, `service/`, `model/`, `exception/`, `repository/`; đồng thời tạo **root `<TEST_CHAPTER_PACKAGE_PATH>/`** tương ứng. **Git không theo dõi thư mục rỗng**, nên worker đặt **duy nhất file marker rỗng `.gitkeep` trong từng thư mục mới tạo còn trống** (cả test root) để skeleton tồn tại qua branch/worktree. Không tạo `.java`, `package-info.java` hoặc bất kỳ class/test/source/placeholder có logic nào ở STEP 5. Marker không được chứa nội dung và không được ghi đè marker hiện hữu có thay đổi; Đừng phụ thuộc STEP 6 để dọn marker hoặc package không dùng.
-4. Nếu package path đã tồn tại, **kiểm tra từng thư mục con/file hiện có**. Chỉ bổ sung những **thư mục thiếu** trong vùng được cấp; không xóa, di chuyển, overwrite hoặc refactor source đã tồn tại. Có file/owner khác, tên package conflict, path unsafe → blocker trước khi ghi. Không tạo skeleton ở chapter khác. Skeleton là output filesystem độc lập với nội dung Google Sheets và không được thay đổi quyền ghi Sheet.
-5. Sau khi tạo, đọc lại/cross-check đúng **6 thư mục main và 1 root test**, marker `.gitkeep` khi thư mục trống, không tạo nguồn Java hay chỉnh file có sẵn; bảo đảm ngoài package cấp quyền không phát sinh file/thư mục nào. Ghi `SKELETON_STATUS=PASS/UNCHANGED/BLOCKER`, `MAIN_PACKAGE_PATH`, `TEST_PACKAGE_PATH`, danh sách thư mục/marker `CREATED/EXISTING` và xung đột để Prime nghiệm thu. **Chỉ khi cả chapter QA và skeleton QA đều PASS/UNCHANGED mới `COMPLETED`**.
 
 ## W2. Đọc trọn chương, đánh giá và refactor
 
 ### W2.1. Preflight: đọc đầy đủ, không vội viết
 
-1. **Đọc hết file worker/STEP_5_WORKER.md**, xác nhận đúng link tab/gid và **chỉ** những ô `A1`, `B1`, `A<PARENT>`, `B<PARENT>`, `CHILD_CELLS`, `C:N/O/AB/AC` hàng con, **AC hàng cha, AC18/AC19 và Special Note** mà Prime đã định vị. Kiểm tra `O19=Difficulty`, **`AC18=Summary`, `AC19=Summary YAML`** hoặc **nguyên cặp legacy `Learning Objectives` / `Learning Objectives YAML`** đã được Prime xác minh; nhãn `Summary Markdown` cũ không chứng minh AC cha là YAML, phải báo `BLOCKER: STEP_5_AC_SCHEMA_CONFLICT` cho Prime. Worker không tự provision, sửa header hoặc đọc ngoài phạm vi.
+1. Đọc toàn văn file worker; xác minh URL/gid và READ/WRITE, `O19=Difficulty`, `AC18=Summary`, `AC19=Summary YAML` hoặc cặp legacy đã được Prime xác minh. Schema khác → BLOCKER: STEP_5_AC_SCHEMA_CONFLICT.
 2. **Đọc TOÀN BỘ bài học của TẤT CẢ mục cấp 2** trong chương được giao, không review chỉ từ tiêu đề, độ dài, vài đoạn đầu/cuối. Nếu nhiều nội dung, đọc theo các lượt/chunk liên tiếp; nối chính xác C:N của từng bài. Có thể đọc lại để giữ context khi chương dài. Không tuyên bố review đầy đủ nếu chưa đọc đủ từng bài.
 3. **Lập bản đồ nội dung nội bộ trước khi sửa:** mục cấp 2 nào là nơi dạy chính của từng khái niệm, ví dụ, thao tác, giới hạn và bài tập; mục nào chỉ cần nhắc lại vắn tắt để dẫn sang kiến thức khác; đâu là nội dung được yêu cầu riêng bởi từng tiêu đề. Không đảo thứ tự Menu, không chuyển toàn bộ trách nhiệm một bài sang bài khác.
 4. Nếu thiếu câu trả lời `C<R>`, có dữ liệu bị đứt đoạn/đè lên ngoài C:N, sai chương, nội dung có dấu hiệu chưa tải hết, hoặc không đọc đủ, **báo blocker** và không tự tạo bài mới để lấp chỗ trống. Không sửa chương một phần rồi báo `COMPLETED` toàn chương.
@@ -51,7 +44,7 @@
 1. Sau khi đã đọc **toàn bộ chương**, tự đề xuất những sửa đổi có căn cứ, giữ một **nơi giải thích chính (primary teaching home)** cho mỗi ý quan trọng nhưng các bài khác được phép nhắc lại ngắn hoặc áp dụng ở ngữ cảnh mới. Không chỉ xóa câu chữ: nếu chuyển/bỏ nội dung phải bảo toàn khái niệm và khả năng hiểu bài.
 2. **Mỗi bài sau refactor phải đứng được một mình ở phạm vi hợp lý** và đồng thời đóng góp cho chương; không yêu cầu người đọc phải mò sang bài khác mới hiểu câu hỏi chính. Với phần lặp, có thể rút về 1–2 câu định vị rồi đi sâu vào nội dung riêng, dùng ví dụ mới, bảng phân biệt, thao tác, code trace hoặc tình huống kiểm tra phù hợp.
 3. Tránh refactor biến mọi bài thành cùng một template WHAT/WHY/HOW; độ dài tùy trọng tâm. Giữ hoặc cải thiện ví dụ chạy được, giải thích causal flow, tính chính xác và Markdown nguyên vẹn. Nếu bài hiện tốt, **giữ nguyên**, không đổi chỉ để có thay đổi.
-4. **Giữ nguyên vị trí hàng, A cha và B của tất cả hàng con.** Worker chỉ sửa câu trả lời trong `C:N`, Difficulty `O` và isImportant `AB` hàng con, **tạo Summary Markdown trong AC hàng con sau review/refactor**, **điền B hàng cha nếu chưa có filename và tạo YAML `section.yml` trong AC hàng cha**, đồng thời **chỉ tạo folder skeleton rỗng trong hai package đã giao**. Không đụng chương khác, code/config, không ghi file tạm trong repository, không commit/push.
+4. Giữ nguyên hàng, A cha, B con; chỉ refactor C:N, gán Difficulty O, soạn AC cha/con và điền B/C cha trong ownership. Không sửa Java source/config, module khác, không ghi file tạm hoặc commit/push.
 
 ### W2.4. Phân loại Difficulty cho TỪNG bài sau review
 
@@ -59,12 +52,6 @@
 2. Mỗi hàng Menu Cấp 2 nhận một giá trị `O<R>`; **không có Difficulty ở hàng Menu Cấp 1**. Nếu giá trị O hiện tại trống thì thêm; nếu đã là một trong ba nhãn thì giữ khi đánh giá vẫn đúng hoặc cập nhật nếu có căn cứ rõ ràng. Giá trị khác danh sách hoặc formula/note lạ: `BLOCKER: INVALID DIFFICULTY CELL`, không tự chữa.
 3. **Giữ nguyên Data Validation dropdown và Conditional Formatting** của Google Sheets; chỉ cập nhật `userEnteredValue`, tuyệt đối không thay màu/validation/notes bằng API. Nếu dropdown không được thiết lập trên tab cũ, vẫn chỉ dùng ba nhãn hợp lệ; nêu cảnh báo cấu hình trong báo cáo để Prime xử lý, **không tự chỉnh Template hoặc validation**.
 
-### W2.4.1. Đánh giá và ghi isImportant tại AB của từng bài
-
-1. Trong **cùng lượt review cả chương**, đọc đầy đủ từng bài `C:N` và quyết định isImportant TRUE/FALSE độc lập với Difficulty O. Gắn TRUE khi đó là prerequisite trọng yếu để hiểu chương, kiến thức bắt buộc để sử dụng cơ chế/API đúng, hoặc vấn đề bảo đảm an toàn/độ chính xác cần tránh. Không gắn TRUE chỉ vì ADVANCED hay dài; không ấn định tỷ lệ TRUE cố định.
-2. Chỉ đọc và ghi `AB<R>` của **các hàng Menu Cấp 2 trong chương được Prime giao**, không chạm AB hàng cha hay bất kỳ chương khác. Kiểm tra `AB19=isImportant` nếu Prime đã xác minh. Ô AB có sẵn TRUE/FALSE thì giữ nếu đánh giá vẫn đúng; chỉ đổi với lý do rõ ràng. Nếu formula/notes/giá trị không phải TRUE/FALSE, báo BLOCKER, không xóa metadata tự tiện.
-3. Snapshot và preflight toàn bộ AB trước khi ghi. Dùng userEnteredValue.stringValue = TRUE/FALSE tương thích dropdown ONE_OF_LIST, không đổi validation/format. Ghi AB trong cùng batch với C:N, O, B cha khi khả thi. Đọc lại từng ô AB chính xác. Với hàng hiện có TRUE, tuyệt đối không reset thành FALSE chỉ để khớp default.
-4. IMPORTANCE report covers each child O/AB; filename collision correction touches only B/C parent, not AB.
 
 
 ### W2.5. Chính worker tự chọn và GHI filename vào B hàng cha
@@ -72,7 +59,7 @@
 1. Sau khi đọc đầy đủ chương và biết trọng tâm Knowledge, tự chọn một tên `.md` tiếng Anh ngắn, **có nghĩa với toàn chương** (không chỉ dịch một bài con). Tên phải theo regex chính xác `^[A-Za-z][A-Za-z0-9]*\.md$`, ưu tiên **PascalCase** hoặc acronym chuẩn. Ví dụ `OOPBasic.md`, `Class.md`, `Encapsulation.md`. Không dùng tên chung chung như `Chapter1.md`/`Topic.md`, tên chứa dấu/space/gạch/underscore/slash/chấm thừa hoặc basename Windows dành riêng `CON/PRN/AUX/NUL/COM1–COM9/LPT1–LPT9`.
 2. **B hàng cha trống → chính worker của chương phải tự ghi filename vào B này trong phiên STEP 5.** Nếu B đã chứa một filename hợp lệ, giữ nguyên; nếu B có tên sai định dạng, formula, note hoặc metadata ngoài quyền thì `BLOCKER: INVALID PARENT FILENAME`, không tự ghi đè. **Không bao giờ chạm B của Menu Cấp 2**.
 3. Worker kiểm tra độ hợp lý với A cha và tất cả B con **trong chương được giao**. Không được gọi Prime đặt tên hộ hoặc gửi `SUGGESTED_FILENAME` rồi kết thúc mà **không ghi B cha**. Mỗi worker chịu trách nhiệm filename của chính chương. **Prime thực hiện kiểm tra trùng tên case-insensitive và trùng kebab-case prefix trên toàn tab SAU KHI tất cả worker hoàn thành**; vì vậy việc một worker chưa biết tên của chương khác không phải lý do trì hoãn ghi B cha.
-4. Filename collision correction is a separate same-worker handoff, with read scope A/B/C parent and B children, write scope ONLY B/C parent before A child IDs exist. Update B filename and C base ID together, snapshot and exact-readback both. Do not touch Knowledge/AC/metadata/skeleton or other chapters. If A child IDs already exist, refuse automatic filename/base rename pending explicit ID migration. Report COLLISION_FIXED.
+4. Filename collision fix chỉ ghi B/C cha trước khi có A-child IDs, sau snapshot và exact readback; không sửa Knowledge, AC hoặc các chương khác.
 
 ### W2.5.5. Chapter base ID in C parent
 
@@ -168,20 +155,20 @@ Existing full-schema AC parent YAML (with id/order/title/to) is NOT authored-onl
 BLOCKER: LEGACY_AC_SCHEMA rather than overwrite/migrate it without explicit authorization.
 The module section.yml output retains full schema, generated deterministically by code.
 
-## W3. Ghi an toàn Knowledge C:N, Difficulty O, isImportant AB, filename B cha, AC con và AC cha
+## W3. Ghi an toàn Knowledge C:N, Difficulty O, filename B/C cha và Summary AC
 
-**W3/W4 correction exception:** For an authorized filename collision fix, update ONLY B and C parent together (before A-child ID fill), after snapshot/preflight and exact readback. Do not repeat Knowledge review or touch child C:N/O/AB/AC or filesystem. If A-child IDs already exist, BLOCKER pending explicit migration.
+**W3/W4 correction:** Fix trùng filename chỉ sửa B/C cha trước khi A-child IDs được gán, snapshot và readback đầy đủ; không sửa hàng con.
 
-1. Before writing, snapshot B AND C parent, AC parent and every child C:N/O/AB/AC value including formulas/notes/validation. Prepare all Knowledge, metadata, filename/base ID and authored-only Summary changes from final reviewed Knowledge. Preflight all original cells and ownership; do not replace human-owned/stale AC blindly.
-2. In ordinary chapter review, worker may refactor existing STEP 4 Knowledge C:N children; set O/AB; fill B parent filename and C parent base ID; author AC-child Markdown and authored-only AC-parent YAML, subject to snapshot/ownership rules. Do not write A children. Do not overwrite existing AC human edits without explicit provenance/authorization.
+1. Snapshot B/C cha, AC cha, các ô C:N/O/AC con gồm formula/note/validation; preflight ownership, không ghi đè AC human-owned/stale.
+2. Review/refactor C:N, gán O, B/C cha, AC Markdown con và YAML cha; A-child IDs thuộc Prime.
 3. Soạn bản README refactor hoàn chỉnh trước khi ghi. Nếu quá **360.000 ký tự**, báo `BLOCKER: CONTENT EXCEEDS C:N CAPACITY`, không cắt bỏ nội dung. Nếu vừa giới hạn, chia tuần tự **C, D, E, ... , N**, mỗi ô tối đa **30.000 ký tự**; bảo toàn chính xác mọi ký tự Unicode/newline/fence khi nối.
 4. **Khi bản mới ngắn hơn bản cũ**, bắt buộc **xóa chỉ những ô đuôi cũ trong C:N của hàng đó** không còn dùng đến; nếu giữ đoạn D/E cũ thì người đọc sẽ ghép nhầm bài mới + bài cũ. Phần ô thay đổi và ô đuôi cần dọn **phải được cập nhật cùng một giao dịch/batch khi công cụ hỗ trợ**. Không ghi nguyên văn một phần khi còn lỗi dữ liệu/công cụ.
-5. Write only owned cells: B/C parent, C:N/O/AB/AC each child and AC parent, value-only. Exact-readback all. AC parent validates authored-only roadmap: N entries with description/transition only, final null and one complete GFM comparison table. C parent must be kebab-case of B parent filename. A child IDs remain exclusively Prime-owned.
+5. Ghi đúng B/C cha, C:N/O/AC con và AC cha; exact-readback toàn bộ, kiểm tra N roadmap item, final transition null, bảng GFM và C base ID từ B filename.
 6. Nếu phát sinh lỗi khi ghi/read-back hoặc đã lỡ ghi một phần, **không báo PASS**. Nêu hàng bị ảnh hưởng, snapshot gốc và trạng thái cuối cùng; chỉ phục hồi từ snapshot nếu quyền sở hữu còn hợp lệ và chắc chắn không chạm thay đổi của người khác.
 
 ## W4. Kiểm tra sau refactor theo cả chương
 
-After refactor, QA all Knowledge/Difficulty/isImportant/AC-child Markdown, parent B/C identity and AC-parent authored-only YAML, including exactly N description/transition entries, N-1 transitions, last null and one N+1-column GFM comparison table. Also QA main/test skeleton and protect human-owned content.
+After refactor, QA Knowledge/Difficulty/AC child Markdown, B/C identity, AC YAML, N roadmap entries, N-1 transitions, final null và bảng GFM N+1 cột.
 
 **Không đánh dấu chương CLEAN nếu mới chỉ đọc từng bài độc lập nhưng chưa kiểm tra lại toàn chương.**
 
@@ -197,7 +184,6 @@ Worker trả kết quả đủ để Prime kiểm chứng, không thay thế b�
 - `FILENAME`: `A<PARENT> → B<PARENT>` với tên `.md` cuối cùng, `NEW/UNCHANGED/COLLISION_FIX`, lý do đặt tên, regex/Windows-name PASS và xác nhận **chính worker đã ghi B cha** nếu trước đó trống.
 - `LEARNING_OBJECTIVES`: **từng hàng con** `B<R> → AC<R> → NEW_FILL/UNCHANGED/BLOCKER`, số nhóm/câu hỏi mở/số năng lực thực, độ dài ≤30.000, đủ bốn mục 0/1/2/3, tên bài khớp B, câu hỏi/năng lực đúng Knowledge sau refactor, Markdown/bảng hai cột `PASS`, exact readback `PASS`; nêu blocker và owner của mọi AC cũ stale/human-edited. Lượt chỉ sửa filename báo `NOT_TOUCHED`.
 - CHAPTER_LINK: AC parent authored-only YAML parse/schema PASS, exactly N description/transition entries, last null, full comparison table, CONTENT_GROUNDED_QA and exact readback. Do not require derived IDs/order/titles/to in AC.
-- `SKELETON`: `MAIN_PACKAGE_PATH`, `TEST_PACKAGE_PATH`, `SKELETON_STATUS=PASS/UNCHANGED/BLOCKER`; danh sách `CREATED/EXISTING` (6 thư mục main + 1 root test và marker `.gitkeep` cần thiết), preflight ownership, xác nhận không Java/source/placeholder có logic hoặc config phát sinh và không ghi ngoài vùng. Lượt chỉ sửa filename báo `SKELETON=NOT_TOUCHED`.
-- READBACK: PASS/FAIL B and C parent values, authored-only AC-parent YAML, and every C:N/O/AB/AC child; no unexpected edits to A children, parent A/B titles, headers or outside ownership. Check Knowledge fragments joined exactly and all cell capacity limits.
+- READBACK: PASS/FAIL B/C parent, AC parent, từng C:N/O/AC child, không sửa ngoài ownership; kiểm tra giới hạn ô và Markdown sau ghép.
 - `CHAPTER_QA`: PASS/FAIL kiểm tra lại toàn chương sau refactor, số lỗi trùng lặp/độ chính xác/format còn lại và `BLOCKERS` theo tọa độ (nếu có).
-**STEP 5 chapter completion:** requires full Knowledge QA, B parent filename, C parent base ID, Difficulty/isImportant, AC-child Markdown, authored-only AC-parent YAML, exact readback, chapter QA and skeleton QA PASS. Prime exclusively handles global collisions and A-child ID fill after workers release ownership.
+**STEP 5 chapter completion:** Knowledge QA, B/C identity, Difficulty O, AC child/parent authored content và exact readback PASS; Prime xử lý global collisions và A-child ID fill.

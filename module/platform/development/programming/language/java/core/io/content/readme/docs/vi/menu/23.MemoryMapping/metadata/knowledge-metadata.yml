@@ -1,31 +1,21 @@
 sections:
   memory-mapping-001:
     difficulty: BASIC
-    isImportant: true
   memory-mapping-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   memory-mapping-003:
     difficulty: ADVANCED
-    isImportant: true
   memory-mapping-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   memory-mapping-005:
     difficulty: ADVANCED
-    isImportant: true
   memory-mapping-006:
     difficulty: ADVANCED
-    isImportant: true
   memory-mapping-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   memory-mapping-008:
     difficulty: ADVANCED
-    isImportant: false
   memory-mapping-009:
     difficulty: ADVANCED
-    isImportant: true
   memory-mapping-010:
     difficulty: ADVANCED
-    isImportant: true

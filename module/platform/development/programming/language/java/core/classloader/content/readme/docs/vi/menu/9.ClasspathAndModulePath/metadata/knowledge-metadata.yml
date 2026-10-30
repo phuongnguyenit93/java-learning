@@ -1,31 +1,21 @@
 sections:
   classpath-and-module-path-001:
     difficulty: BASIC
-    isImportant: true
   classpath-and-module-path-002:
     difficulty: BASIC
-    isImportant: true
   classpath-and-module-path-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   classpath-and-module-path-004:
     difficulty: ADVANCED
-    isImportant: true
   classpath-and-module-path-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   classpath-and-module-path-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   classpath-and-module-path-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   classpath-and-module-path-008:
     difficulty: ADVANCED
-    isImportant: false
   classpath-and-module-path-009:
     difficulty: ADVANCED
-    isImportant: true
   classpath-and-module-path-010:
     difficulty: INTERMEDIATE
-    isImportant: true

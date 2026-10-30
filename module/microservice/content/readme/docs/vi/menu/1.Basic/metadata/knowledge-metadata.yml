@@ -1,7 +1,5 @@
 sections:
   static-config-and-dynamic-config:
     difficulty: BASIC
-    isImportant: false
   spring-cloud-server-shutdown:
     difficulty: BASIC
-    isImportant: false

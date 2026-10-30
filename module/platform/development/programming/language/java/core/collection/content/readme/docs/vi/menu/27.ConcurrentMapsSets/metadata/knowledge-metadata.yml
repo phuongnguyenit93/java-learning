@@ -1,25 +1,17 @@
 sections:
   concurrent-maps-sets-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   concurrent-maps-sets-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   concurrent-maps-sets-003:
     difficulty: ADVANCED
-    isImportant: false
   concurrent-maps-sets-004:
     difficulty: ADVANCED
-    isImportant: false
   concurrent-maps-sets-005:
     difficulty: ADVANCED
-    isImportant: false
   concurrent-maps-sets-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   concurrent-maps-sets-007:
     difficulty: ADVANCED
-    isImportant: false
   concurrent-maps-sets-008:
     difficulty: INTERMEDIATE
-    isImportant: false

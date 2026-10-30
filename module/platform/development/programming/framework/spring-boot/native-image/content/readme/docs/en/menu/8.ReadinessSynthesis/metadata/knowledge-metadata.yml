@@ -1,19 +1,13 @@
 sections:
   native-readiness-flow:
     difficulty: BASIC
-    isImportant: false
   native-readiness-checklist:
     difficulty: BASIC
-    isImportant: false
   native-failure-location:
     difficulty: BASIC
-    isImportant: false
   native-delivery-choice:
     difficulty: BASIC
-    isImportant: false
   native-evidence-loop:
     difficulty: BASIC
-    isImportant: false
   native-module-handoffs:
     difficulty: BASIC
-    isImportant: false

@@ -1,19 +1,13 @@
 sections:
   udp-datagram-model:
     difficulty: BASIC
-    isImportant: false
   datagram-packet-addressing:
     difficulty: BASIC
-    isImportant: false
   udp-delivery-semantics:
     difficulty: BASIC
-    isImportant: false
   datagram-connect-semantics:
     difficulty: INTERMEDIATE
-    isImportant: false
   udp-broadcast-multicast:
     difficulty: INTERMEDIATE
-    isImportant: false
   datagram-channel-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false

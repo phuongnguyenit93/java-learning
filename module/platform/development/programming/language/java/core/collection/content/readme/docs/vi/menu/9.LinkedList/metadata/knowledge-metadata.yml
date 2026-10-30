@@ -1,22 +1,15 @@
 sections:
   linked-list-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   linked-list-002:
     difficulty: BASIC
-    isImportant: false
   linked-list-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   linked-list-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   linked-list-005:
     difficulty: ADVANCED
-    isImportant: false
   linked-list-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   linked-list-007:
     difficulty: INTERMEDIATE
-    isImportant: false

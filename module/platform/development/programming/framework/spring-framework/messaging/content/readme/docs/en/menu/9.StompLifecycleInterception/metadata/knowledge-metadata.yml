@@ -1,31 +1,21 @@
 sections:
   stomp-application-events:
     difficulty: ADVANCED
-    isImportant: false
   channel-interceptor:
     difficulty: ADVANCED
-    isImportant: false
   executor-channel-interceptor:
     difficulty: ADVANCED
-    isImportant: false
   message-ordering:
     difficulty: ADVANCED
-    isImportant: false
   preserve-receive-order:
     difficulty: ADVANCED
-    isImportant: false
   preserve-publish-order:
     difficulty: ADVANCED
-    isImportant: false
   websocket-authentication-identity:
     difficulty: ADVANCED
-    isImportant: false
   message-authorization-boundary:
     difficulty: ADVANCED
-    isImportant: false
   spring-session-boundary:
     difficulty: ADVANCED
-    isImportant: false
   websocket-scope:
     difficulty: ADVANCED
-    isImportant: false

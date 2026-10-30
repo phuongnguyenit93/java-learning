@@ -1,22 +1,15 @@
 sections:
   injection-styles:
     difficulty: BASIC
-    isImportant: false
   type-based-autowiring:
     difficulty: BASIC
-    isImportant: false
   candidate-selection:
     difficulty: INTERMEDIATE
-    isImportant: false
   primary-and-qualifier:
     difficulty: INTERMEDIATE
-    isImportant: false
   collection-and-optional-dependencies:
     difficulty: INTERMEDIATE
-    isImportant: false
   service-locator-vs-di:
     difficulty: BASIC
-    isImportant: false
   dependency-resolution-failures:
     difficulty: INTERMEDIATE
-    isImportant: false

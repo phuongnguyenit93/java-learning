@@ -1,13 +1,9 @@
 sections:
   spring-boot-dependencies:
     difficulty: BASIC
-    isImportant: false
   maven-parent-vs-bom:
     difficulty: BASIC
-    isImportant: false
   gradle-dependency-alignment:
     difficulty: BASIC
-    isImportant: false
   managed-version-override:
     difficulty: BASIC
-    isImportant: false

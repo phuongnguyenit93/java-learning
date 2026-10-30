@@ -1,22 +1,15 @@
 sections:
   testing-strategy-spectrum:
     difficulty: BASIC
-    isImportant: false
   smallest-context-strategy:
     difficulty: BASIC
-    isImportant: false
   real-server-strategy:
     difficulty: BASIC
-    isImportant: false
   real-service-strategy:
     difficulty: BASIC
-    isImportant: false
   context-cache-strategy:
     difficulty: BASIC
-    isImportant: false
   testing-failure-classification:
     difficulty: BASIC
-    isImportant: false
   testing-module-handoffs:
     difficulty: BASIC
-    isImportant: false

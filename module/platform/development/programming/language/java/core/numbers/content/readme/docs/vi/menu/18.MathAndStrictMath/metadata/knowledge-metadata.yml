@@ -1,34 +1,23 @@
 sections:
   math-and-strict-math-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   math-and-strict-math-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   math-and-strict-math-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   math-and-strict-math-004:
     difficulty: BASIC
-    isImportant: true
   math-and-strict-math-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   math-and-strict-math-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   math-and-strict-math-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   math-and-strict-math-008:
     difficulty: ADVANCED
-    isImportant: false
   math-and-strict-math-009:
     difficulty: ADVANCED
-    isImportant: false
   math-and-strict-math-010:
     difficulty: ADVANCED
-    isImportant: false
   math-and-strict-math-011:
     difficulty: ADVANCED
-    isImportant: true

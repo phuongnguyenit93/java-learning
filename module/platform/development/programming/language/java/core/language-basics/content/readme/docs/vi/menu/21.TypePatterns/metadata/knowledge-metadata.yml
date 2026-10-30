@@ -1,28 +1,19 @@
 sections:
   type-patterns-001:
     difficulty: BASIC
-    isImportant: false
   type-patterns-002:
     difficulty: BASIC
-    isImportant: false
   type-patterns-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   type-patterns-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   type-patterns-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   type-patterns-006:
     difficulty: ADVANCED
-    isImportant: false
   type-patterns-007:
     difficulty: ADVANCED
-    isImportant: false
   type-patterns-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   type-patterns-009:
     difficulty: ADVANCED
-    isImportant: false

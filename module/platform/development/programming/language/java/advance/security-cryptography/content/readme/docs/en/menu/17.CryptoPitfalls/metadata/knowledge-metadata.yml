@@ -1,16 +1,11 @@
 sections:
   security-goal-before-api:
     difficulty: INTERMEDIATE
-    isImportant: false
   algorithm-provider-portability:
     difficulty: ADVANCED
-    isImportant: false
   secret-key-nonce-handling:
     difficulty: ADVANCED
-    isImportant: false
   crypto-failure-handling:
     difficulty: ADVANCED
-    isImportant: false
   end-to-end-crypto-review:
     difficulty: ADVANCED
-    isImportant: false

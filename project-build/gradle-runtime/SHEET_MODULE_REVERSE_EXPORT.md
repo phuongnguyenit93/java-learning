@@ -33,7 +33,7 @@ modify VI Excel, or write to Google Sheets.
 | Task | Source | Target worksheet range |
 | --- | --- | --- |
 | `syncModuleIntroductionToExcel` | `content/readme/docs/en/BASE.md` | `B17` |
-| `syncModuleReadmeToExcel` | `content/readme/docs/en/menu/` and `readme/metadata/en/knowledge-metadata.yml` | `A/B` chapter/lesson titles, `C:N` Knowledge, `O` difficulty, `AB` isImportant |
+| `syncModuleReadmeToExcel` | `content/readme/docs/en/menu/` and `readme/metadata/en/knowledge-metadata.yml` | `A/B` chapter/lesson titles, `C:N` Knowledge, `O` difficulty |
 | `syncModuleRoadmapToExcel` | `content/roadmap/en/roadmap.yml` | `F3:H` milestone title, purpose, objectives |
 | `syncModuleInterviewToExcel` | `content/interview/en/question.yml` | `P:S` at its original chapter parent row |
 | `syncModuleQuizToExcel` | `content/quiz/en/question.yml` | `T:W` at its original chapter parent row |

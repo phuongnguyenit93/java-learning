@@ -1,31 +1,21 @@
 sections:
   aspect-testing-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   aspect-testing-002:
     difficulty: ADVANCED
-    isImportant: false
   aspect-testing-003:
     difficulty: ADVANCED
-    isImportant: false
   aspect-testing-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   aspect-testing-005:
     difficulty: ADVANCED
-    isImportant: false
   aspect-testing-006:
     difficulty: ADVANCED
-    isImportant: false
   aspect-testing-007:
     difficulty: ADVANCED
-    isImportant: false
   aspect-testing-008:
     difficulty: ADVANCED
-    isImportant: false
   aspect-testing-009:
     difficulty: ADVANCED
-    isImportant: false
   aspect-testing-010:
     difficulty: INTERMEDIATE
-    isImportant: false

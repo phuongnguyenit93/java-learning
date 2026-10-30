@@ -1,10 +1,7 @@
 sections:
   abstract-vs-interface-state:
     difficulty: BASIC
-    isImportant: false
   abstract-vs-interface-inheritance:
     difficulty: BASIC
-    isImportant: false
   selection-guidance:
     difficulty: BASIC
-    isImportant: false

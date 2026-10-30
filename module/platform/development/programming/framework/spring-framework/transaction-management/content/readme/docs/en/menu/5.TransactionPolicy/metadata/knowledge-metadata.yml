@@ -1,16 +1,11 @@
 sections:
   transaction-policy-model:
     difficulty: BASIC
-    isImportant: false
   transaction-defaults:
     difficulty: BASIC
-    isImportant: false
   transaction-isolation:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-policy-hints:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-boundary-placement:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -23,9 +23,6 @@ class ReadmeMetadataSyncService {
             'BASIC'
 
 
-    static final boolean DEFAULT_IS_IMPORTANT =
-            false
-
 
     static final Set<String> ALLOWED_DIFFICULTIES = [
             'BASIC',
@@ -167,8 +164,7 @@ ${moduleRoot.absolutePath}
      */
     String prepareImportedMetadata(File moduleDirectory,
                                    Map<String, String> documents,
-                                   Map<String, List<String>> difficulties,
-                                   Map<String, List<Boolean>> importances = [:]) {
+                                   Map<String, List<String>> difficulties) {
         Map next = new LinkedHashMap()
         Set<String> allIds = new LinkedHashSet<>()
         File menuDirectory = new File(moduleDirectory, 'content/readme/docs/vi/menu')
@@ -186,12 +182,8 @@ ${moduleRoot.absolutePath}
             List<ReadmeKnowledgeParser.SectionCandidate> sections = parser.parse(virtualFile, markdown)
                     .findAll { it.valid }
             List<String> levels = difficulties[sourcePath] ?: []
-            List<Boolean> flags = importances[sourcePath] ?: Collections.nCopies(sections.size(), null)
             if (levels.size() != sections.size()) {
                 throw new GradleException("Knowledge Difficulty/ID count mismatch: ${sourcePath}")
-            }
-            if (flags.size() != sections.size()) {
-                throw new GradleException("Knowledge isImportant/ID count mismatch: ${sourcePath}")
             }
             sections.eachWithIndex { ReadmeKnowledgeParser.SectionCandidate section, int i ->
                 if (!allIds.add(section.id)) {
@@ -204,10 +196,6 @@ ${moduleRoot.absolutePath}
                         throw new GradleException("Invalid Sheet Knowledge Difficulty at ${sourcePath}: ${fromSheet}")
                     }
                     item.difficulty = fromSheet
-                }
-                // A blank AB cell uses the defined default false.
-                if (flags[i] != null) {
-                    item.isImportant = flags[i]
                 }
                 // Blank O always uses the defined BASIC default.
                 ensureRequiredFields(item, moduleDirectory.absolutePath, 'vi',
@@ -430,69 +418,7 @@ Existing human-owned values are not overwritten automatically.
         }
 
 
-        if (!section.containsKey('isImportant') || section['isImportant'] == null) {
-            section['isImportant'] = DEFAULT_IS_IMPORTANT
-        }
-
-
-        validateBooleanField(
-                section,
-                'isImportant',
-                modulePath,
-                language,
-                sourcePath,
-                sectionId
-        )
     }
-
-
-    private static void validateBooleanField(
-            Map<String, Object> section,
-            String field,
-            String modulePath,
-            String language,
-            String sourcePath,
-            String sectionId
-    ) {
-
-        Object value =
-                section[
-                        field
-                ]
-
-
-        if (value instanceof Boolean) {
-            return
-        }
-
-
-        throw new GradleException(
-                """
-Invalid README knowledge boolean metadata.
-
-Module:
-${modulePath}
-
-Language:
-${language}
-
-README file:
-${sourcePath}
-
-Section id:
-${sectionId}
-
-Field:
-${field}
-
-Value:
-${value}
-
-Expected YAML boolean true or false.
-""".stripIndent()
-        )
-    }
-
 
     private Map<String, Object> loadMap(
             File file

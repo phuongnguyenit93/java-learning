@@ -1,13 +1,9 @@
 sections:
   retention-source:
     difficulty: BASIC
-    isImportant: false
   retention-class:
     difficulty: BASIC
-    isImportant: false
   retention-runtime:
     difficulty: BASIC
-    isImportant: false
   retention-use-case:
     difficulty: BASIC
-    isImportant: false

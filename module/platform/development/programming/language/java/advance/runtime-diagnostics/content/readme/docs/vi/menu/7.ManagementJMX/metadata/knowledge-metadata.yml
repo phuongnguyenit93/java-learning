@@ -1,25 +1,17 @@
 sections:
   java-management-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   management-factory-and-platform-mxbeans:
     difficulty: INTERMEDIATE
-    isImportant: false
   platform-management-surfaces:
     difficulty: INTERMEDIATE
-    isImportant: false
   mbean-and-object-name-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   platform-mbean-server:
     difficulty: INTERMEDIATE
-    isImportant: false
   local-vs-remote-jmx:
     difficulty: INTERMEDIATE
-    isImportant: false
   jconsole-and-management-clients:
     difficulty: INTERMEDIATE
-    isImportant: false
   remote-jmx-security:
     difficulty: INTERMEDIATE
-    isImportant: false

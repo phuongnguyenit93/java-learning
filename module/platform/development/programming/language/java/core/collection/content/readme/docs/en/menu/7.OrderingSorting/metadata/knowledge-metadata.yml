@@ -1,22 +1,15 @@
 sections:
   encounter-order:
     difficulty: BASIC
-    isImportant: false
   natural-ordering:
     difficulty: BASIC
-    isImportant: false
   comparison-result-contract:
     difficulty: BASIC
-    isImportant: false
   comparator-ordering:
     difficulty: BASIC
-    isImportant: false
   navigable-range-operations:
     difficulty: BASIC
-    isImportant: false
   stable-sort:
     difficulty: BASIC
-    isImportant: false
   collections-utility-algorithms:
     difficulty: BASIC
-    isImportant: false

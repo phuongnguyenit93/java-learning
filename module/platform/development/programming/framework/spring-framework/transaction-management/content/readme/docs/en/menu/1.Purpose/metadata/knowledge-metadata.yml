@@ -1,16 +1,11 @@
 sections:
   transaction-purpose:
     difficulty: BASIC
-    isImportant: false
   transaction-unit-of-work:
     difficulty: BASIC
-    isImportant: false
   transaction-service-boundary:
     difficulty: BASIC
-    isImportant: false
   transaction-framework-value:
     difficulty: BASIC
-    isImportant: false
   transaction-local-boundary:
     difficulty: BASIC
-    isImportant: false

@@ -1,25 +1,17 @@
 sections:
   troubleshooting-workflow-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   classify-symptom:
     difficulty: INTERMEDIATE
-    isImportant: false
   build-evidence-plan:
     difficulty: INTERMEDIATE
-    isImportant: false
   collect-low-impact-first:
     difficulty: INTERMEDIATE
-    isImportant: false
   correlate-multiple-signals:
     difficulty: INTERMEDIATE
-    isImportant: false
   preserve-before-restart:
     difficulty: INTERMEDIATE
-    isImportant: false
   common-diagnostic-pitfalls:
     difficulty: INTERMEDIATE
-    isImportant: false
   escalation-and-handoff:
     difficulty: INTERMEDIATE
-    isImportant: false

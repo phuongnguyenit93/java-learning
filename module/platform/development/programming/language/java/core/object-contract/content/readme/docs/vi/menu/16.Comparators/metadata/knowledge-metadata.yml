@@ -1,31 +1,21 @@
 sections:
   comparators-001:
     difficulty: BASIC
-    isImportant: true
   comparators-002:
     difficulty: ADVANCED
-    isImportant: true
   comparators-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   comparators-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   comparators-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   comparators-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   comparators-007:
     difficulty: ADVANCED
-    isImportant: true
   comparators-008:
     difficulty: ADVANCED
-    isImportant: true
   comparators-009:
     difficulty: ADVANCED
-    isImportant: true
   comparators-010:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,37 +1,25 @@
 sections:
   messaging-executor-capacity:
     difficulty: ADVANCED
-    isImportant: false
   messaging-send-limits:
     difficulty: ADVANCED
-    isImportant: false
   messaging-message-size-limits:
     difficulty: ADVANCED
-    isImportant: false
   broker-availability-recovery:
     difficulty: ADVANCED
-    isImportant: false
   slow-client-boundary:
     difficulty: ADVANCED
-    isImportant: false
   websocket-broker-stats:
     difficulty: ADVANCED
-    isImportant: false
   stomp-testing:
     difficulty: ADVANCED
-    isImportant: false
   rsocket-testing:
     difficulty: ADVANCED
-    isImportant: false
   choose-messaging-model:
     difficulty: ADVANCED
-    isImportant: false
   choose-stomp-broker:
     difficulty: ADVANCED
-    isImportant: false
   spring-integration-handoff:
     difficulty: ADVANCED
-    isImportant: false
   messaging-production-checklist:
     difficulty: ADVANCED
-    isImportant: false

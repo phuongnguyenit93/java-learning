@@ -1,13 +1,9 @@
 sections:
   auto-configuration-what-why:
     difficulty: BASIC
-    isImportant: false
   boot-vs-framework-configuration:
     difficulty: BASIC
-    isImportant: false
   defaults-and-back-off-contract:
     difficulty: BASIC
-    isImportant: false
   auto-configuration-end-to-end-flow:
     difficulty: BASIC
-    isImportant: false

@@ -1,13 +1,9 @@
 sections:
   immutable-object-design:
     difficulty: BASIC
-    isImportant: false
   defensive-copy-input:
     difficulty: BASIC
-    isImportant: false
   defensive-copy-output:
     difficulty: BASIC
-    isImportant: false
   deep-immutability:
     difficulty: BASIC
-    isImportant: false

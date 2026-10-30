@@ -1,10 +1,7 @@
 sections:
   throwable-hierarchy:
     difficulty: BASIC
-    isImportant: false
   error-vs-exception:
     difficulty: BASIC
-    isImportant: false
   stack-trace-cause:
     difficulty: BASIC
-    isImportant: false

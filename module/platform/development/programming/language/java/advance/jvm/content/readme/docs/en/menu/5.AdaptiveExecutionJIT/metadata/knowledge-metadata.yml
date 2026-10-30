@@ -1,31 +1,21 @@
 sections:
   execution-engine-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   interpreter-role:
     difficulty: INTERMEDIATE
-    isImportant: false
   profiling-and-hot-code:
     difficulty: INTERMEDIATE
-    isImportant: false
   jit-compilation-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   tiered-and-adaptive-compilation:
     difficulty: ADVANCED
-    isImportant: false
   compiled-code-and-code-cache:
     difficulty: ADVANCED
-    isImportant: false
   inlining-and-runtime-optimization:
     difficulty: ADVANCED
-    isImportant: false
   escape-analysis-and-scalar-replacement:
     difficulty: ADVANCED
-    isImportant: false
   speculation-and-deoptimization:
     difficulty: ADVANCED
-    isImportant: false
   optimization-semantics-boundary:
     difficulty: ADVANCED
-    isImportant: false

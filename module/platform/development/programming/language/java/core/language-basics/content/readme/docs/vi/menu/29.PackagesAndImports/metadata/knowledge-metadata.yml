@@ -1,28 +1,19 @@
 sections:
   packages-and-imports-001:
     difficulty: BASIC
-    isImportant: false
   packages-and-imports-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   packages-and-imports-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   packages-and-imports-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   packages-and-imports-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   packages-and-imports-006:
     difficulty: BASIC
-    isImportant: false
   packages-and-imports-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   packages-and-imports-008:
     difficulty: ADVANCED
-    isImportant: false
   packages-and-imports-009:
     difficulty: ADVANCED
-    isImportant: false

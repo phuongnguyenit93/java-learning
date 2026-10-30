@@ -1,16 +1,11 @@
 sections:
   runtime-diagnostics-purpose:
     difficulty: BASIC
-    isImportant: false
   diagnostic-reasoning-loop:
     difficulty: BASIC
-    isImportant: false
   evidence-quality-and-cost:
     difficulty: BASIC
-    isImportant: false
   diagnostic-readiness-principle:
     difficulty: BASIC
-    isImportant: false
   diagnostic-scope-boundaries:
     difficulty: BASIC
-    isImportant: false

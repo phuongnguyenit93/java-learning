@@ -1,16 +1,11 @@
 sections:
   configuration-order-vs-bean-order:
     difficulty: BASIC
-    isImportant: false
   before-after-ordering:
     difficulty: BASIC
-    isImportant: false
   auto-configure-order:
     difficulty: BASIC
-    isImportant: false
   conditional-composition:
     difficulty: BASIC
-    isImportant: false
   optional-technology-isolation:
     difficulty: BASIC
-    isImportant: false

@@ -1,19 +1,13 @@
 sections:
   extensibility-end-to-end-flow:
     difficulty: INTERMEDIATE
-    isImportant: false
   mechanism-selection:
     difficulty: INTERMEDIATE
-    isImportant: false
   common-design-pitfalls:
     difficulty: INTERMEDIATE
-    isImportant: false
   failure-containment-checklist:
     difficulty: ADVANCED
-    isImportant: false
   boundary-handoffs:
     difficulty: INTERMEDIATE
-    isImportant: false
   runtime-extensibility-synthesis:
     difficulty: INTERMEDIATE
-    isImportant: false

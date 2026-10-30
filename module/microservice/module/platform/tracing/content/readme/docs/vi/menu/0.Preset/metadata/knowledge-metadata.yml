@@ -1,13 +1,9 @@
 sections:
   distributed-tracing:
     difficulty: BASIC
-    isImportant: false
   datadog-tracing:
     difficulty: BASIC
-    isImportant: false
   trace-id-and-span-id:
     difficulty: BASIC
-    isImportant: false
   custom-span:
     difficulty: BASIC
-    isImportant: false

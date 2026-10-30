@@ -1,10 +1,7 @@
 sections:
   clock-abstraction:
     difficulty: BASIC
-    isImportant: false
   fixed-clock-testing:
     difficulty: BASIC
-    isImportant: false
   clock-injection:
     difficulty: BASIC
-    isImportant: false

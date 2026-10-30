@@ -1,19 +1,13 @@
 sections:
   modulelayer-purpose:
     difficulty: ADVANCED
-    isImportant: false
   configuration-and-resolution:
     difficulty: ADVANCED
-    isImportant: false
   resolve-vs-resolveandbind:
     difficulty: ADVANCED
-    isImportant: false
   layer-loader-strategies:
     difficulty: ADVANCED
-    isImportant: false
   serviceloader-layer-discovery:
     difficulty: ADVANCED
-    isImportant: false
   layer-replacement-model:
     difficulty: ADVANCED
-    isImportant: false

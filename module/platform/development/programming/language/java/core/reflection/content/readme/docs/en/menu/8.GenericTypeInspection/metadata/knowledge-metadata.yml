@@ -1,16 +1,11 @@
 sections:
   type-interface:
     difficulty: INTERMEDIATE
-    isImportant: false
   parameterized-type:
     difficulty: INTERMEDIATE
-    isImportant: false
   type-variable-bounds:
     difficulty: INTERMEDIATE
-    isImportant: false
   wildcard-reflection:
     difficulty: INTERMEDIATE
-    isImportant: false
   erasure-vs-signature-metadata:
     difficulty: INTERMEDIATE
-    isImportant: false

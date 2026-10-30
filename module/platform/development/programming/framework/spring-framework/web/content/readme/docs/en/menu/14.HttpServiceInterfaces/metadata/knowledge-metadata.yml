@@ -1,19 +1,13 @@
 sections:
   http-exchange-contract:
     difficulty: BASIC
-    isImportant: false
   http-service-proxy-factory:
     difficulty: BASIC
-    isImportant: false
   http-exchange-adapter-model:
     difficulty: BASIC
-    isImportant: false
   synchronous-http-client-adapters:
     difficulty: BASIC
-    isImportant: false
   service-method-arguments-and-return-values:
     difficulty: BASIC
-    isImportant: false
   reactive-adapter-boundary:
     difficulty: BASIC
-    isImportant: false

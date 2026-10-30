@@ -1,16 +1,11 @@
 sections:
   generic-invariance-intro:
     difficulty: BASIC
-    isImportant: false
   generic-declaration-subtyping:
     difficulty: INTERMEDIATE
-    isImportant: false
   generic-invariance:
     difficulty: INTERMEDIATE
-    isImportant: false
   variance-vs-arrays:
     difficulty: INTERMEDIATE
-    isImportant: false
   variance-safety:
     difficulty: INTERMEDIATE
-    isImportant: false

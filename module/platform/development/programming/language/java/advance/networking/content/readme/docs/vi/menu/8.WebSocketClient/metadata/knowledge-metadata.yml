@@ -1,25 +1,17 @@
 sections:
   websocket-client-model:
     difficulty: BASIC
-    isImportant: false
   websocket-opening-handshake:
     difficulty: INTERMEDIATE
-    isImportant: false
   websocket-listener-lifecycle:
     difficulty: INTERMEDIATE
-    isImportant: false
   websocket-demand-control:
     difficulty: ADVANCED
-    isImportant: false
   websocket-message-fragmentation:
     difficulty: INTERMEDIATE
-    isImportant: false
   websocket-send-completion:
     difficulty: ADVANCED
-    isImportant: false
   websocket-close-error:
     difficulty: ADVANCED
-    isImportant: false
   websocket-integration-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false

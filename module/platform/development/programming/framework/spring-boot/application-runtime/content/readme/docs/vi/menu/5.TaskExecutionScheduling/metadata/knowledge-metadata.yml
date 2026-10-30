@@ -1,22 +1,15 @@
 sections:
   boot-task-execution-purpose:
     difficulty: BASIC
-    isImportant: false
   application-task-executor:
     difficulty: BASIC
-    isImportant: false
   task-execution-properties:
     difficulty: BASIC
-    isImportant: false
   boot-task-scheduler:
     difficulty: BASIC
-    isImportant: false
   task-scheduling-properties:
     difficulty: BASIC
-    isImportant: false
   custom-executor-scheduler-boundary:
     difficulty: BASIC
-    isImportant: false
   framework-concurrency-handoff:
     difficulty: BASIC
-    isImportant: false

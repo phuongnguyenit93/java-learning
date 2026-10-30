@@ -1,28 +1,19 @@
 sections:
   string-splitting-001:
     difficulty: BASIC
-    isImportant: false
   string-splitting-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-splitting-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-splitting-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-splitting-005:
     difficulty: ADVANCED
-    isImportant: false
   string-splitting-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-splitting-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-splitting-008:
     difficulty: ADVANCED
-    isImportant: false
   string-splitting-009:
     difficulty: ADVANCED
-    isImportant: false

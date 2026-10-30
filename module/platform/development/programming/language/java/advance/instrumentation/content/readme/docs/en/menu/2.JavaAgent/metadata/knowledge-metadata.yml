@@ -1,16 +1,11 @@
 sections:
   java-agent-model:
     difficulty: BASIC
-    isImportant: false
   agent-class-contract:
     difficulty: BASIC
-    isImportant: false
   instrumentation-service-handoff:
     difficulty: BASIC
-    isImportant: false
   agent-startup-shapes:
     difficulty: BASIC
-    isImportant: false
   agent-trust-boundary:
     difficulty: BASIC
-    isImportant: false

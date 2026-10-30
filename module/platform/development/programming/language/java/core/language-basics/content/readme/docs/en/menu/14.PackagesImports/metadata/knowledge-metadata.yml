@@ -1,13 +1,9 @@
 sections:
   package-namespace:
     difficulty: BASIC
-    isImportant: false
   import-resolution:
     difficulty: BASIC
-    isImportant: false
   static-import:
     difficulty: BASIC
-    isImportant: false
   package-access:
     difficulty: BASIC
-    isImportant: false

@@ -1,34 +1,23 @@
 sections:
   built-in-class-loaders-001:
     difficulty: BASIC
-    isImportant: true
   built-in-class-loaders-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   built-in-class-loaders-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   built-in-class-loaders-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   built-in-class-loaders-005:
     difficulty: BASIC
-    isImportant: true
   built-in-class-loaders-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   built-in-class-loaders-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   built-in-class-loaders-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   built-in-class-loaders-009:
     difficulty: INTERMEDIATE
-    isImportant: false
   built-in-class-loaders-010:
     difficulty: ADVANCED
-    isImportant: true
   built-in-class-loaders-011:
     difficulty: ADVANCED
-    isImportant: false

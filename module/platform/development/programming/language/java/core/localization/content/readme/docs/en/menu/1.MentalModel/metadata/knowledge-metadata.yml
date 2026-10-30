@@ -1,10 +1,7 @@
 sections:
   i18n-vs-l10n:
     difficulty: BASIC
-    isImportant: false
   locale-sensitive-data:
     difficulty: BASIC
-    isImportant: false
   localization-boundaries:
     difficulty: BASIC
-    isImportant: false

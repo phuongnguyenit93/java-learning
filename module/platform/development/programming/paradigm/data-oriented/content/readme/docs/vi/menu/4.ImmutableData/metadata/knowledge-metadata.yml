@@ -1,13 +1,9 @@
 sections:
   dop-immutable-principle:
     difficulty: BASIC
-    isImportant: false
   dop-state-update:
     difficulty: BASIC
-    isImportant: false
   dop-state-history:
     difficulty: BASIC
-    isImportant: false
   dop-state-coordination:
     difficulty: BASIC
-    isImportant: false

@@ -1,37 +1,25 @@
 sections:
   compression-and-archives-001:
     difficulty: BASIC
-    isImportant: true
   compression-and-archives-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   compression-and-archives-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   compression-and-archives-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   compression-and-archives-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   compression-and-archives-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   compression-and-archives-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   compression-and-archives-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   compression-and-archives-009:
     difficulty: ADVANCED
-    isImportant: false
   compression-and-archives-010:
     difficulty: INTERMEDIATE
-    isImportant: true
   compression-and-archives-011:
     difficulty: ADVANCED
-    isImportant: true
   compression-and-archives-012:
     difficulty: ADVANCED
-    isImportant: true

@@ -1,16 +1,11 @@
 sections:
   jca-jce-architecture:
     difficulty: INTERMEDIATE
-    isImportant: false
   engine-spi-provider:
     difficulty: INTERMEDIATE
-    isImportant: false
   algorithm-names-transformations:
     difficulty: INTERMEDIATE
-    isImportant: false
   provider-selection:
     difficulty: ADVANCED
-    isImportant: false
   security-properties-constraints:
     difficulty: ADVANCED
-    isImportant: false

@@ -1,28 +1,19 @@
 sections:
   sealed-hierarchies-001:
     difficulty: BASIC
-    isImportant: true
   sealed-hierarchies-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   sealed-hierarchies-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   sealed-hierarchies-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   sealed-hierarchies-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   sealed-hierarchies-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   sealed-hierarchies-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   sealed-hierarchies-008:
     difficulty: ADVANCED
-    isImportant: true
   sealed-hierarchies-009:
     difficulty: ADVANCED
-    isImportant: true

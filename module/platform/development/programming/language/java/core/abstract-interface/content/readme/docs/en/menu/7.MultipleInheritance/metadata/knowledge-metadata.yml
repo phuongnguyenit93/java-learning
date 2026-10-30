@@ -1,13 +1,9 @@
 sections:
   default-method-conflict:
     difficulty: BASIC
-    isImportant: false
   class-wins-rule:
     difficulty: BASIC
-    isImportant: false
   explicit-super-interface:
     difficulty: BASIC
-    isImportant: false
   diamond-interface:
     difficulty: BASIC
-    isImportant: false

@@ -1,16 +1,11 @@
 sections:
   amber-definition:
     difficulty: BASIC
-    isImportant: false
   amber-transparent-data:
     difficulty: BASIC
-    isImportant: false
   amber-valid-variants:
     difficulty: BASIC
-    isImportant: false
   amber-separate-operations:
     difficulty: BASIC
-    isImportant: false
   amber-sharvit-comparison:
     difficulty: BASIC
-    isImportant: false

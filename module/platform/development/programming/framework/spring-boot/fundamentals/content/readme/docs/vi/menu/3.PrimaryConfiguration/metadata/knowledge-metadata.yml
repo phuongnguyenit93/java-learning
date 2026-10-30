@@ -1,16 +1,11 @@
 sections:
   primary-configuration-purpose:
     difficulty: BASIC
-    isImportant: false
   springbootapplication-composition:
     difficulty: BASIC
-    isImportant: false
   root-package-boundary:
     difficulty: BASIC
-    isImportant: false
   customizing-composition:
     difficulty: BASIC
-    isImportant: false
   auto-configuration-handoff:
     difficulty: BASIC
-    isImportant: false

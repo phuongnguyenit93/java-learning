@@ -1,13 +1,9 @@
 sections:
   raw-type-compatibility:
     difficulty: BASIC
-    isImportant: false
   unchecked-warning:
     difficulty: INTERMEDIATE
-    isImportant: false
   heap-pollution:
     difficulty: ADVANCED
-    isImportant: false
   raw-type-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false

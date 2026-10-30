@@ -1,10 +1,7 @@
 sections:
   date-time-domains:
     difficulty: BASIC
-    isImportant: false
   immutable-date-time:
     difficulty: BASIC
-    isImportant: false
   choose-date-time-type:
     difficulty: BASIC
-    isImportant: false

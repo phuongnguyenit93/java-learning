@@ -1,13 +1,9 @@
 sections:
   aead-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   nonce-uniqueness:
     difficulty: ADVANCED
-    isImportant: false
   aad-and-authentication-tag:
     difficulty: INTERMEDIATE
-    isImportant: false
   aead-decryption-failure:
     difficulty: ADVANCED
-    isImportant: false

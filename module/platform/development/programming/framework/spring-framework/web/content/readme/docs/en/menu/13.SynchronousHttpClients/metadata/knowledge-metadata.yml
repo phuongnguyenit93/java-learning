@@ -1,25 +1,17 @@
 sections:
   synchronous-client-model:
     difficulty: BASIC
-    isImportant: false
   rest-client-6-1:
     difficulty: BASIC
-    isImportant: false
   rest-template:
     difficulty: BASIC
-    isImportant: false
   client-http-request-factory:
     difficulty: BASIC
-    isImportant: false
   client-request-customization:
     difficulty: BASIC
-    isImportant: false
   client-message-conversion-and-bodies:
     difficulty: BASIC
-    isImportant: false
   status-and-error-handling:
     difficulty: BASIC
-    isImportant: false
   integration-http-selection-boundary:
     difficulty: BASIC
-    isImportant: false

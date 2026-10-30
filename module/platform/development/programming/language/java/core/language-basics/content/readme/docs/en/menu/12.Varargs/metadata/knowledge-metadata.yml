@@ -1,10 +1,7 @@
 sections:
   varargs-array-model:
     difficulty: BASIC
-    isImportant: false
   varargs-overload:
     difficulty: BASIC
-    isImportant: false
   varargs-generics-warning:
     difficulty: BASIC
-    isImportant: false

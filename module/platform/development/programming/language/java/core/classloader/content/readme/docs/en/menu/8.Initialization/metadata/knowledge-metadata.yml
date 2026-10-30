@@ -1,19 +1,13 @@
 sections:
   initialization-trigger:
     difficulty: BASIC
-    isImportant: false
   constant-no-init:
     difficulty: BASIC
-    isImportant: false
   clinit-model:
     difficulty: BASIC
-    isImportant: false
   initialization-once:
     difficulty: BASIC
-    isImportant: false
   initialization-locking:
     difficulty: BASIC
-    isImportant: false
   initialization-failure:
     difficulty: BASIC
-    isImportant: false

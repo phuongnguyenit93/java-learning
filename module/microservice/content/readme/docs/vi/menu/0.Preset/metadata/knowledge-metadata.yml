@@ -1,25 +1,17 @@
 sections:
   monilith-vs-microservice:
     difficulty: BASIC
-    isImportant: false
   domain-drive-design:
     difficulty: BASIC
-    isImportant: false
   database-per-service:
     difficulty: BASIC
-    isImportant: false
   3-gold-rule-microservice:
     difficulty: BASIC
-    isImportant: false
   microservice-problem:
     difficulty: BASIC
-    isImportant: false
   centralized-logging:
     difficulty: BASIC
-    isImportant: false
   3-core-of-observability:
     difficulty: BASIC
-    isImportant: false
   microservice-roadmap:
     difficulty: BASIC
-    isImportant: false

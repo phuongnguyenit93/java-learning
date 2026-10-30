@@ -1,28 +1,19 @@
 sections:
   testing-pitfalls-001:
     difficulty: BASIC
-    isImportant: false
   testing-pitfalls-002:
     difficulty: ADVANCED
-    isImportant: false
   testing-pitfalls-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   testing-pitfalls-004:
     difficulty: ADVANCED
-    isImportant: false
   testing-pitfalls-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   testing-pitfalls-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   testing-pitfalls-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   testing-pitfalls-008:
     difficulty: ADVANCED
-    isImportant: false
   testing-pitfalls-009:
     difficulty: ADVANCED
-    isImportant: false

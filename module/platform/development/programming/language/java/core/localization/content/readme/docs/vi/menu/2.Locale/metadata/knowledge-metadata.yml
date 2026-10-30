@@ -1,10 +1,7 @@
 sections:
   locale-model:
     difficulty: BASIC
-    isImportant: false
   locale-construction:
     difficulty: BASIC
-    isImportant: false
   locale-equality:
     difficulty: BASIC
-    isImportant: false

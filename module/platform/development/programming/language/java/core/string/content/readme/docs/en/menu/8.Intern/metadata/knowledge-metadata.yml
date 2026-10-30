@@ -1,10 +1,7 @@
 sections:
   intern-semantics:
     difficulty: BASIC
-    isImportant: false
   intern-identity:
     difficulty: BASIC
-    isImportant: false
   intern-tradeoffs:
     difficulty: BASIC
-    isImportant: false

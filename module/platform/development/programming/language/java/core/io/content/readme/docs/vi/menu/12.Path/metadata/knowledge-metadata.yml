@@ -1,34 +1,23 @@
 sections:
   path-001:
     difficulty: BASIC
-    isImportant: true
   path-002:
     difficulty: BASIC
-    isImportant: true
   path-003:
     difficulty: BASIC
-    isImportant: true
   path-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   path-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   path-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   path-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   path-008:
     difficulty: ADVANCED
-    isImportant: true
   path-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   path-010:
     difficulty: INTERMEDIATE
-    isImportant: true
   path-011:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,19 +1,13 @@
 sections:
   web-server-tls-entry-points:
     difficulty: BASIC
-    isImportant: false
   server-ssl-keystore-pem:
     difficulty: BASIC
-    isImportant: false
   ssl-bundle-consumption:
     difficulty: BASIC
-    isImportant: false
   bundle-vs-discrete-ssl-properties:
     difficulty: BASIC
-    isImportant: false
   server-name-indication:
     difficulty: BASIC
-    isImportant: false
   tls-ownership-boundary:
     difficulty: BASIC
-    isImportant: false

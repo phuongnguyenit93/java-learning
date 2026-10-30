@@ -1,16 +1,11 @@
 sections:
   availability-health-handoff:
     difficulty: BASIC
-    isImportant: false
   liveness-readiness-health-groups:
     difficulty: BASIC
-    isImportant: false
   probe-endpoint-paths:
     difficulty: BASIC
-    isImportant: false
   probe-external-dependency-boundary:
     difficulty: BASIC
-    isImportant: false
   application-runtime-availability-ownership:
     difficulty: BASIC
-    isImportant: false

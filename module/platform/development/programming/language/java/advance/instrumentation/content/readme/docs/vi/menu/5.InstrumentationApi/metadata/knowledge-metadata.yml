@@ -1,19 +1,13 @@
 sections:
   instrumentation-service:
     difficulty: INTERMEDIATE
-    isImportant: false
   transformer-registration:
     difficulty: INTERMEDIATE
-    isImportant: false
   loaded-class-discovery:
     difficulty: INTERMEDIATE
-    isImportant: false
   capability-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   class-modifiability:
     difficulty: INTERMEDIATE
-    isImportant: false
   classloader-module-hooks:
     difficulty: INTERMEDIATE
-    isImportant: false

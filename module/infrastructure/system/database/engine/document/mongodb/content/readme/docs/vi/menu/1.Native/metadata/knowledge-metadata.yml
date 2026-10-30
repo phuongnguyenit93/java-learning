@@ -1,19 +1,13 @@
 sections:
   bson-in-mongodb:
     difficulty: BASIC
-    isImportant: false
   document-in-mongodb:
     difficulty: BASIC
-    isImportant: false
   objectId-in-mongodb:
     difficulty: BASIC
-    isImportant: false
   dynamic-schema:
     difficulty: BASIC
-    isImportant: false
   acid-in-mongodb:
     difficulty: BASIC
-    isImportant: false
   mongodb-with-hikaricp:
     difficulty: BASIC
-    isImportant: false

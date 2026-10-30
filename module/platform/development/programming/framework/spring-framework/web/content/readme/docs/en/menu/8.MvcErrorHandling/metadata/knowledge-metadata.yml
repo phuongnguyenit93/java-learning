@@ -1,22 +1,15 @@
 sections:
   handler-exception-resolver-chain:
     difficulty: BASIC
-    isImportant: false
   exception-handler-and-controller-advice:
     difficulty: BASIC
-    isImportant: false
   response-status-errors:
     difficulty: BASIC
-    isImportant: false
   error-response-and-problem-detail:
     difficulty: BASIC
-    isImportant: false
   response-entity-exception-handler:
     difficulty: BASIC
-    isImportant: false
   validation-error-responses:
     difficulty: BASIC
-    isImportant: false
   mvc-error-boundaries:
     difficulty: BASIC
-    isImportant: false

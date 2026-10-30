@@ -1,25 +1,17 @@
 sections:
   factory-bean-001:
     difficulty: BASIC
-    isImportant: false
   factory-bean-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   factory-bean-003:
     difficulty: ADVANCED
-    isImportant: false
   factory-bean-004:
     difficulty: ADVANCED
-    isImportant: false
   factory-bean-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   factory-bean-006:
     difficulty: ADVANCED
-    isImportant: false
   factory-bean-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   factory-bean-008:
     difficulty: ADVANCED
-    isImportant: false

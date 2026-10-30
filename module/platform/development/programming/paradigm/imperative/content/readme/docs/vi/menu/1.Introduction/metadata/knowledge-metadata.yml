@@ -1,19 +1,13 @@
 sections:
   imperative-what:
     difficulty: BASIC
-    isImportant: false
   imperative-why:
     difficulty: BASIC
-    isImportant: false
   imperative-before:
     difficulty: BASIC
-    isImportant: false
   imperative-solution:
     difficulty: BASIC
-    isImportant: false
   imperative-boundary:
     difficulty: BASIC
-    isImportant: false
   imperative-learning-path:
     difficulty: BASIC
-    isImportant: false

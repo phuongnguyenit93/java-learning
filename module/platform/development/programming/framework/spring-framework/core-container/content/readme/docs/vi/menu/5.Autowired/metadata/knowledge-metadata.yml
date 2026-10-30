@@ -1,28 +1,19 @@
 sections:
   autowired-001:
     difficulty: ADVANCED
-    isImportant: false
   autowired-002:
     difficulty: BASIC
-    isImportant: false
   autowired-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   autowired-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   autowired-005:
     difficulty: ADVANCED
-    isImportant: false
   autowired-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   autowired-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   autowired-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   autowired-009:
     difficulty: ADVANCED
-    isImportant: false

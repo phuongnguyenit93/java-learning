@@ -1,19 +1,13 @@
 sections:
   minimal-management-exposure:
     difficulty: BASIC
-    isImportant: false
   management-base-path:
     difficulty: BASIC
-    isImportant: false
   management-port-address:
     difficulty: BASIC
-    isImportant: false
   exposure-vs-authorization:
     difficulty: BASIC
-    isImportant: false
   actuator-security-auto-configuration:
     difficulty: BASIC
-    isImportant: false
   spring-security-handoff:
     difficulty: BASIC
-    isImportant: false

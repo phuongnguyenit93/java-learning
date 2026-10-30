@@ -1,16 +1,11 @@
 sections:
   override-annotation:
     difficulty: BASIC
-    isImportant: false
   deprecated-annotation:
     difficulty: BASIC
-    isImportant: false
   suppresswarnings:
     difficulty: BASIC
-    isImportant: false
   safevarargs:
     difficulty: BASIC
-    isImportant: false
   functionalinterface:
     difficulty: BASIC
-    isImportant: false

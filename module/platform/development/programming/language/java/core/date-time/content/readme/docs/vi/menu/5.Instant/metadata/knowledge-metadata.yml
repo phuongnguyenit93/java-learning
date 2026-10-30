@@ -1,10 +1,7 @@
 sections:
   instant-model:
     difficulty: BASIC
-    isImportant: false
   epoch-time:
     difficulty: BASIC
-    isImportant: false
   instant-use-cases:
     difficulty: BASIC
-    isImportant: false

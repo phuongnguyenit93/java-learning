@@ -1,22 +1,15 @@
 sections:
   ssl-bundle-purpose:
     difficulty: BASIC
-    isImportant: false
   ssl-bundle-jks-pem:
     difficulty: BASIC
-    isImportant: false
   sslbundles-catalog:
     difficulty: BASIC
-    isImportant: false
   sslbundle-material:
     difficulty: BASIC
-    isImportant: false
   ssl-bundle-consumers:
     difficulty: BASIC
-    isImportant: false
   ssl-web-runtime-handoff:
     difficulty: BASIC
-    isImportant: false
   ssl-pki-boundary:
     difficulty: BASIC
-    isImportant: false

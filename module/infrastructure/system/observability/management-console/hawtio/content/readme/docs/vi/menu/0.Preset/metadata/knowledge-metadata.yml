@@ -1,19 +1,13 @@
 sections:
   hawtio-define:
     difficulty: BASIC
-    isImportant: false
   hawtio-and-sba:
     difficulty: BASIC
-    isImportant: false
   jokolia:
     difficulty: BASIC
-    isImportant: false
   jmx-and-mbean:
     difficulty: BASIC
-    isImportant: false
   jmx-feature:
     difficulty: BASIC
-    isImportant: false
   hawtio-feature:
     difficulty: BASIC
-    isImportant: false

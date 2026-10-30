@@ -1,16 +1,11 @@
 sections:
   reactive-rate-mismatch:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-queue-overflow:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-demand-flow-control:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-overload-strategies:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-backpressure-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false

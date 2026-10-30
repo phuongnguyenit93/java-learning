@@ -1,19 +1,13 @@
 sections:
   memory-segment-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   heap-native-segments:
     difficulty: INTERMEDIATE
-    isImportant: false
   mapped-segments:
     difficulty: ADVANCED
-    isImportant: false
   segment-spatial-bounds:
     difficulty: INTERMEDIATE
-    isImportant: false
   segment-access:
     difficulty: INTERMEDIATE
-    isImportant: false
   segment-slicing:
     difficulty: INTERMEDIATE
-    isImportant: false

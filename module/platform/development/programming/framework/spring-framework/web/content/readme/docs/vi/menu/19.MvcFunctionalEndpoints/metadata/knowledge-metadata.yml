@@ -1,19 +1,13 @@
 sections:
   mvc-functional-endpoints-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   mvc-functional-endpoints-002:
     difficulty: BASIC
-    isImportant: false
   mvc-functional-endpoints-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   mvc-functional-endpoints-004:
     difficulty: ADVANCED
-    isImportant: false
   mvc-functional-endpoints-005:
     difficulty: ADVANCED
-    isImportant: false
   mvc-functional-endpoints-006:
     difficulty: ADVANCED
-    isImportant: false

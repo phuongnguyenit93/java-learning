@@ -1,22 +1,15 @@
 sections:
   population-put-eviction:
     difficulty: INTERMEDIATE
-    isImportant: false
   evict-before-invocation:
     difficulty: INTERMEDIATE
-    isImportant: false
   whole-cache-eviction:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-and-cache-mutation:
     difficulty: INTERMEDIATE
-    isImportant: false
   stale-data:
     difficulty: INTERMEDIATE
-    isImportant: false
   cache-aside-consistency:
     difficulty: INTERMEDIATE
-    isImportant: false
   cacheable-cacheput-conflict:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,34 +1,23 @@
 sections:
   field-read-write:
     difficulty: BASIC
-    isImportant: false
   method-invoke:
     difficulty: BASIC
-    isImportant: false
   invocation-exception:
     difficulty: INTERMEDIATE
-    isImportant: false
   varargs-reflection:
     difficulty: INTERMEDIATE
-    isImportant: false
   constructor-newinstance:
     difficulty: BASIC
-    isImportant: false
   constructor-reflection-failure:
     difficulty: INTERMEDIATE
-    isImportant: false
   reflective-dispatch:
     difficulty: INTERMEDIATE
-    isImportant: false
   argument-conversion:
     difficulty: INTERMEDIATE
-    isImportant: false
   dynamic-array-reflection:
     difficulty: INTERMEDIATE
-    isImportant: false
   method-handle-boundary:
     difficulty: ADVANCED
-    isImportant: false
   dynamic-invocation-design:
     difficulty: INTERMEDIATE
-    isImportant: false

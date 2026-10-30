@@ -1,25 +1,17 @@
 sections:
   jvm-data-types-001:
     difficulty: BASIC
-    isImportant: false
   jvm-data-types-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   jvm-data-types-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   jvm-data-types-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   jvm-data-types-005:
     difficulty: ADVANCED
-    isImportant: false
   jvm-data-types-006:
     difficulty: ADVANCED
-    isImportant: false
   jvm-data-types-007:
     difficulty: ADVANCED
-    isImportant: false
   jvm-data-types-008:
     difficulty: INTERMEDIATE
-    isImportant: false

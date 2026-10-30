@@ -1,16 +1,11 @@
 sections:
   effect-concept:
     difficulty: BASIC
-    isImportant: false
   pure-core-effects:
     difficulty: BASIC
-    isImportant: false
   effect-coordination:
     difficulty: BASIC
-    isImportant: false
   effect-testing:
     difficulty: BASIC
-    isImportant: false
   effects-real-world:
     difficulty: BASIC
-    isImportant: false

@@ -1,13 +1,9 @@
 sections:
   signature-model:
     difficulty: BASIC
-    isImportant: false
   sign-and-verify:
     difficulty: INTERMEDIATE
-    isImportant: false
   signature-data-contract:
     difficulty: ADVANCED
-    isImportant: false
   signature-comparison:
     difficulty: INTERMEDIATE
-    isImportant: false

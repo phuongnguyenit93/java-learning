@@ -1,28 +1,19 @@
 sections:
   reusable-pointcuts-001:
     difficulty: BASIC
-    isImportant: false
   reusable-pointcuts-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   reusable-pointcuts-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   reusable-pointcuts-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   reusable-pointcuts-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   reusable-pointcuts-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   reusable-pointcuts-007:
     difficulty: ADVANCED
-    isImportant: false
   reusable-pointcuts-008:
     difficulty: ADVANCED
-    isImportant: false
   reusable-pointcuts-009:
     difficulty: ADVANCED
-    isImportant: false

@@ -1,22 +1,15 @@
 sections:
   linker-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   symbol-lookup:
     difficulty: INTERMEDIATE
-    isImportant: false
   library-symbol-lookup:
     difficulty: ADVANCED
-    isImportant: false
   function-descriptor:
     difficulty: INTERMEDIATE
-    isImportant: false
   linker-abi-mapping:
     difficulty: ADVANCED
-    isImportant: false
   method-handle-boundary:
     difficulty: ADVANCED
-    isImportant: false
   jextract-generated-bindings:
     difficulty: INTERMEDIATE
-    isImportant: false

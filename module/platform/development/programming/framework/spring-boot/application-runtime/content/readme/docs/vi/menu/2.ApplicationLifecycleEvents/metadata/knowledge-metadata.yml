@@ -1,19 +1,13 @@
 sections:
   springapplication-event-timeline:
     difficulty: BASIC
-    isImportant: false
   pre-context-events:
     difficulty: BASIC
-    isImportant: false
   context-started-ready-events:
     difficulty: BASIC
-    isImportant: false
   failed-event-path:
     difficulty: BASIC
-    isImportant: false
   early-listener-registration:
     difficulty: BASIC
-    isImportant: false
   event-hook-selection:
     difficulty: BASIC
-    isImportant: false

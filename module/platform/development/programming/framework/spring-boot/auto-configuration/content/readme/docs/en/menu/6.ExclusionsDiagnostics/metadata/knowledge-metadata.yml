@@ -1,16 +1,11 @@
 sections:
   when-to-exclude-auto-configuration:
     difficulty: BASIC
-    isImportant: false
   exclusion-mechanisms:
     difficulty: BASIC
-    isImportant: false
   condition-evaluation-report:
     difficulty: BASIC
-    isImportant: false
   debug-diagnostics:
     difficulty: BASIC
-    isImportant: false
   condition-diagnosis-playbook:
     difficulty: BASIC
-    isImportant: false

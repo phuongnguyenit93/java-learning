@@ -1,25 +1,17 @@
 sections:
   numeric-reference-001:
     difficulty: BASIC
-    isImportant: true
   numeric-reference-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   numeric-reference-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   numeric-reference-004:
     difficulty: ADVANCED
-    isImportant: true
   numeric-reference-005:
     difficulty: BASIC
-    isImportant: true
   numeric-reference-006:
     difficulty: ADVANCED
-    isImportant: true
   numeric-reference-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   numeric-reference-008:
     difficulty: INTERMEDIATE
-    isImportant: true

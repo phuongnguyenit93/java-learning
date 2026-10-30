@@ -1,25 +1,17 @@
 sections:
   configuration-properties-purpose:
     difficulty: BASIC
-    isImportant: false
   prefix-namespace:
     difficulty: BASIC
-    isImportant: false
   properties-registration:
     difficulty: BASIC
-    isImportant: false
   javabean-binding:
     difficulty: BASIC
-    isImportant: false
   constructor-binding:
     difficulty: BASIC
-    isImportant: false
   record-binding:
     difficulty: BASIC
-    isImportant: false
   third-party-bean-binding:
     difficulty: BASIC
-    isImportant: false
   configuration-properties-lifecycle-boundary:
     difficulty: BASIC
-    isImportant: false

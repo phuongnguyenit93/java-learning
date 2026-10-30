@@ -1,13 +1,9 @@
 sections:
   access-levels:
     difficulty: BASIC
-    isImportant: false
   protected-cross-package:
     difficulty: BASIC
-    isImportant: false
   encapsulation-boundary:
     difficulty: BASIC
-    isImportant: false
   java-modifier-map:
     difficulty: BASIC
-    isImportant: false

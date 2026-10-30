@@ -1,19 +1,13 @@
 sections:
   imperative-control-purpose:
     difficulty: BASIC
-    isImportant: false
   imperative-branch-selection:
     difficulty: BASIC
-    isImportant: false
   imperative-repetition:
     difficulty: BASIC
-    isImportant: false
   imperative-loop-progress:
     difficulty: BASIC
-    isImportant: false
   imperative-termination:
     difficulty: BASIC
-    isImportant: false
   imperative-control-trace:
     difficulty: BASIC
-    isImportant: false

@@ -1,16 +1,11 @@
 sections:
   iterator-contract:
     difficulty: BASIC
-    isImportant: false
   enhanced-for:
     difficulty: BASIC
-    isImportant: false
   iterator-remove:
     difficulty: BASIC
-    isImportant: false
   listiterator-contract:
     difficulty: BASIC
-    isImportant: false
   spliterator-boundary:
     difficulty: BASIC
-    isImportant: false

@@ -1,16 +1,11 @@
 sections:
   advisor-mental-model:
     difficulty: BASIC
-    isImportant: false
   pointcut-internals:
     difficulty: BASIC
-    isImportant: false
   static-dynamic-pointcut:
     difficulty: BASIC
-    isImportant: false
   advisor-demo:
     difficulty: BASIC
-    isImportant: false
   advisor-conclusion:
     difficulty: BASIC
-    isImportant: false

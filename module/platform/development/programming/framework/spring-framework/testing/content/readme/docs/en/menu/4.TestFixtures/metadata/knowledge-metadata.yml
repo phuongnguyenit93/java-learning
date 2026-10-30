@@ -1,16 +1,11 @@
 sections:
   fixture-dependency-injection:
     difficulty: BASIC
-    isImportant: false
   test-instance-and-constructor-injection:
     difficulty: INTERMEDIATE
-    isImportant: false
   application-context-access:
     difficulty: BASIC
-    isImportant: false
   web-application-context-fixtures:
     difficulty: INTERMEDIATE
-    isImportant: false
   request-and-session-scoped-fixtures:
     difficulty: INTERMEDIATE
-    isImportant: false

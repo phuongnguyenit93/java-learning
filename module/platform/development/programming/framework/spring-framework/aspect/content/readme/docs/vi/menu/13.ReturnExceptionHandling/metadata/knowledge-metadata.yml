@@ -1,28 +1,19 @@
 sections:
   return-exception-handling-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   return-exception-handling-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   return-exception-handling-003:
     difficulty: ADVANCED
-    isImportant: false
   return-exception-handling-004:
     difficulty: ADVANCED
-    isImportant: false
   return-exception-handling-005:
     difficulty: ADVANCED
-    isImportant: false
   return-exception-handling-006:
     difficulty: ADVANCED
-    isImportant: false
   return-exception-handling-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   return-exception-handling-008:
     difficulty: ADVANCED
-    isImportant: false
   return-exception-handling-009:
     difficulty: ADVANCED
-    isImportant: false

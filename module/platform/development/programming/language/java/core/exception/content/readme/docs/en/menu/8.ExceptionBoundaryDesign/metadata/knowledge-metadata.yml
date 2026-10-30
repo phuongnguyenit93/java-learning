@@ -1,16 +1,11 @@
 sections:
   exception-boundaries:
     difficulty: INTERMEDIATE
-    isImportant: false
   do-not-swallow:
     difficulty: BASIC
-    isImportant: false
   logging-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-as-control-flow:
     difficulty: BASIC
-    isImportant: false
   cleanup-and-recovery:
     difficulty: INTERMEDIATE
-    isImportant: false

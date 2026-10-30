@@ -1,19 +1,13 @@
 sections:
   context-configuration-model:
     difficulty: BASIC
-    isImportant: false
   configuration-classes-and-locations:
     difficulty: BASIC
-    isImportant: false
   context-loader-selection:
     difficulty: INTERMEDIATE
-    isImportant: false
   configuration-inheritance:
     difficulty: INTERMEDIATE
-    isImportant: false
   context-hierarchy:
     difficulty: INTERMEDIATE
-    isImportant: false
   web-application-context-configuration:
     difficulty: INTERMEDIATE
-    isImportant: false

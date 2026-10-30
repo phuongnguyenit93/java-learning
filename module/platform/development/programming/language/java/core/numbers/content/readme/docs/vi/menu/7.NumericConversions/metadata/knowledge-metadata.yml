@@ -1,31 +1,21 @@
 sections:
   numeric-conversions-001:
     difficulty: BASIC
-    isImportant: true
   numeric-conversions-002:
     difficulty: ADVANCED
-    isImportant: true
   numeric-conversions-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   numeric-conversions-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   numeric-conversions-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   numeric-conversions-006:
     difficulty: ADVANCED
-    isImportant: true
   numeric-conversions-007:
     difficulty: ADVANCED
-    isImportant: true
   numeric-conversions-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   numeric-conversions-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   numeric-conversions-010:
     difficulty: BASIC
-    isImportant: true

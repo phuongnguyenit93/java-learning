@@ -1,22 +1,15 @@
 sections:
   cache-interceptor-infrastructure:
     difficulty: INTERMEDIATE
-    isImportant: false
   proxy-mode:
     difficulty: INTERMEDIATE
-    isImportant: false
   self-invocation:
     difficulty: INTERMEDIATE
-    isImportant: false
   public-method-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   initialization-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   cache-advice-ordering:
     difficulty: INTERMEDIATE
-    isImportant: false
   aspectj-mode:
     difficulty: INTERMEDIATE
-    isImportant: false

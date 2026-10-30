@@ -1,19 +1,13 @@
 sections:
   native-runtime-gains:
     difficulty: BASIC
-    isImportant: false
   native-build-cost:
     difficulty: BASIC
-    isImportant: false
   dependency-native-readiness:
     difficulty: BASIC
-    isImportant: false
   reachability-metadata-quality:
     difficulty: BASIC
-    isImportant: false
   native-failure-classification:
     difficulty: BASIC
-    isImportant: false
   when-not-native:
     difficulty: BASIC
-    isImportant: false

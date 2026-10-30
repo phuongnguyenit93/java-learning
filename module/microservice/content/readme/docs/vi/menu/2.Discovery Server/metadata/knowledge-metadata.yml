@@ -1,7 +1,5 @@
 sections:
   context-path-mistake:
     difficulty: BASIC
-    isImportant: false
   eureka-config-list:
     difficulty: BASIC
-    isImportant: false

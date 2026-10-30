@@ -1,25 +1,17 @@
 sections:
   bean-lifecycle-overview:
     difficulty: INTERMEDIATE
-    isImportant: false
   instantiation-and-population:
     difficulty: INTERMEDIATE
-    isImportant: false
   aware-callbacks:
     difficulty: INTERMEDIATE
-    isImportant: false
   initialization-callbacks:
     difficulty: INTERMEDIATE
-    isImportant: false
   destruction-callbacks:
     difficulty: INTERMEDIATE
-    isImportant: false
   lifecycle-smartlifecycle:
     difficulty: INTERMEDIATE
-    isImportant: false
   startup-order-depends-on:
     difficulty: INTERMEDIATE
-    isImportant: false
   lifecycle-failure-boundaries:
     difficulty: ADVANCED
-    isImportant: false

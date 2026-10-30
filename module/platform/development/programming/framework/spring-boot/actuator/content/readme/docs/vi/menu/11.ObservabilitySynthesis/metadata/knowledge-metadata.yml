@@ -1,19 +1,13 @@
 sections:
   actuator-production-flow:
     difficulty: BASIC
-    isImportant: false
   direct-management-vs-telemetry:
     difficulty: BASIC
-    isImportant: false
   health-metrics-logging-relation:
     difficulty: BASIC
-    isImportant: false
   external-observability-handoff:
     difficulty: BASIC
-    isImportant: false
   management-troubleshooting-model:
     difficulty: BASIC
-    isImportant: false
   actuator-end-to-end-boundaries:
     difficulty: BASIC
-    isImportant: false

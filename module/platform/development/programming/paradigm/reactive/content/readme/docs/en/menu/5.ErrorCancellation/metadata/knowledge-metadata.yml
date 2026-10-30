@@ -1,19 +1,13 @@
 sections:
   reactive-terminal-success:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-terminal-failure:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-cancellation:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-inflight-signals:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-resource-cleanup:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactive-lifecycle-trace:
     difficulty: INTERMEDIATE
-    isImportant: false

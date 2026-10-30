@@ -1,19 +1,13 @@
 sections:
   plugin-architecture-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   extension-point-design:
     difficulty: INTERMEDIATE
-    isImportant: false
   host-plugin-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   plugin-manager-responsibilities:
     difficulty: INTERMEDIATE
-    isImportant: false
   plugin-capability-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   plugin-dependency-policy:
     difficulty: INTERMEDIATE
-    isImportant: false

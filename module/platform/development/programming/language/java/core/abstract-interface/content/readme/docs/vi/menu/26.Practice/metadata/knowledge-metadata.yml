@@ -1,31 +1,21 @@
 sections:
   practice-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   practice-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   practice-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   practice-004:
     difficulty: ADVANCED
-    isImportant: true
   practice-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   practice-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   practice-007:
     difficulty: ADVANCED
-    isImportant: false
   practice-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   practice-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   practice-010:
     difficulty: ADVANCED
-    isImportant: true

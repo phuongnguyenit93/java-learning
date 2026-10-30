@@ -1,13 +1,9 @@
 sections:
   build-tooling-purpose:
     difficulty: BASIC
-    isImportant: false
   build-tooling-problem:
     difficulty: BASIC
-    isImportant: false
   build-time-runtime-boundary:
     difficulty: BASIC
-    isImportant: false
   build-deployment-handoff:
     difficulty: BASIC
-    isImportant: false

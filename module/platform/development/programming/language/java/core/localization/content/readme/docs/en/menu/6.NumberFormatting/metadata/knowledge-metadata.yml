@@ -1,16 +1,11 @@
 sections:
   number-format:
     difficulty: BASIC
-    isImportant: false
   decimal-format:
     difficulty: BASIC
-    isImportant: false
   compact-number-format:
     difficulty: BASIC
-    isImportant: false
   parsing-numbers:
     difficulty: BASIC
-    isImportant: false
   formatting-vs-domain-value:
     difficulty: BASIC
-    isImportant: false

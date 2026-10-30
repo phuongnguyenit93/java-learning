@@ -1,31 +1,21 @@
 sections:
   testing-001:
     difficulty: ADVANCED
-    isImportant: true
   testing-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   testing-003:
     difficulty: ADVANCED
-    isImportant: true
   testing-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   testing-005:
     difficulty: ADVANCED
-    isImportant: true
   testing-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   testing-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   testing-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   testing-009:
     difficulty: ADVANCED
-    isImportant: true
   testing-010:
     difficulty: ADVANCED
-    isImportant: true

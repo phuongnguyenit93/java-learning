@@ -1,25 +1,17 @@
 sections:
   comparison-sorting-001:
     difficulty: BASIC
-    isImportant: false
   comparison-sorting-002:
     difficulty: ADVANCED
-    isImportant: false
   comparison-sorting-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   comparison-sorting-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   comparison-sorting-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   comparison-sorting-006:
     difficulty: ADVANCED
-    isImportant: false
   comparison-sorting-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   comparison-sorting-008:
     difficulty: ADVANCED
-    isImportant: false

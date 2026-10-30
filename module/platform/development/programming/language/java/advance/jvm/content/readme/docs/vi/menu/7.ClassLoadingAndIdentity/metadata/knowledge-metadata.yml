@@ -1,25 +1,17 @@
 sections:
   class-loading-and-identity-001:
     difficulty: BASIC
-    isImportant: false
   class-loading-and-identity-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   class-loading-and-identity-003:
     difficulty: ADVANCED
-    isImportant: false
   class-loading-and-identity-004:
     difficulty: ADVANCED
-    isImportant: false
   class-loading-and-identity-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   class-loading-and-identity-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   class-loading-and-identity-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   class-loading-and-identity-008:
     difficulty: ADVANCED
-    isImportant: false

@@ -1,16 +1,11 @@
 sections:
   declare-annotation:
     difficulty: BASIC
-    isImportant: false
   annotation-restrictions:
     difficulty: BASIC
-    isImportant: false
   annotation-elements-defaults:
     difficulty: BASIC
-    isImportant: false
   marker-annotation:
     difficulty: BASIC
-    isImportant: false
   custom-annotation-design:
     difficulty: BASIC
-    isImportant: false

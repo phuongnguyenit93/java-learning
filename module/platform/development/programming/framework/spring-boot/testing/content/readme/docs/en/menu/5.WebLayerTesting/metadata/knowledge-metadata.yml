@@ -1,19 +1,13 @@
 sections:
   webmvc-test-purpose:
     difficulty: BASIC
-    isImportant: false
   webmvc-test-collaborators:
     difficulty: BASIC
-    isImportant: false
   webflux-test-purpose:
     difficulty: BASIC
-    isImportant: false
   web-slice-auto-configured-clients:
     difficulty: BASIC
-    isImportant: false
   mock-web-vs-real-server:
     difficulty: BASIC
-    isImportant: false
   web-testing-framework-boundary:
     difficulty: BASIC
-    isImportant: false

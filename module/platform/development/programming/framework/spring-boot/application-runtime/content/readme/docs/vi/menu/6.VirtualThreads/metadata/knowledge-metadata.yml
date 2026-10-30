@@ -1,16 +1,11 @@
 sections:
   virtual-thread-switch:
     difficulty: BASIC
-    isImportant: false
   virtual-executor-scheduler:
     difficulty: BASIC
-    isImportant: false
   virtual-thread-pool-properties:
     difficulty: BASIC
-    isImportant: false
   virtual-thread-daemon-keepalive:
     difficulty: BASIC
-    isImportant: false
   virtual-thread-java-boundary:
     difficulty: BASIC
-    isImportant: false

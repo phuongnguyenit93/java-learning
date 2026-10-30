@@ -1,22 +1,15 @@
 sections:
   application-bootstrap-001:
     difficulty: BASIC
-    isImportant: false
   application-bootstrap-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   application-bootstrap-003:
     difficulty: ADVANCED
-    isImportant: false
   application-bootstrap-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   application-bootstrap-005:
     difficulty: ADVANCED
-    isImportant: false
   application-bootstrap-006:
     difficulty: ADVANCED
-    isImportant: false
   application-bootstrap-007:
     difficulty: INTERMEDIATE
-    isImportant: false

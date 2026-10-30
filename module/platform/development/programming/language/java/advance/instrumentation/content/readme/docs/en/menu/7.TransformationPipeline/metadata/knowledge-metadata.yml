@@ -1,19 +1,13 @@
 sections:
   transformation-trigger-points:
     difficulty: ADVANCED
-    isImportant: false
   transformer-order:
     difficulty: ADVANCED
-    isImportant: false
   transformer-chaining:
     difficulty: ADVANCED
-    isImportant: false
   retransform-capability-groups:
     difficulty: ADVANCED
-    isImportant: false
   reentrancy-recursion:
     difficulty: ADVANCED
-    isImportant: false
   idempotent-transformation:
     difficulty: ADVANCED
-    isImportant: false

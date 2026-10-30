@@ -1,16 +1,11 @@
 sections:
   spring-mvc-purpose:
     difficulty: BASIC
-    isImportant: false
   servlet-request-response-model:
     difficulty: BASIC
-    isImportant: false
   spring-web-and-spring-webmvc:
     difficulty: BASIC
-    isImportant: false
   framework-vs-boot-web:
     difficulty: BASIC
-    isImportant: false
   spring-web-module-boundaries:
     difficulty: BASIC
-    isImportant: false

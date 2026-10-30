@@ -1,31 +1,21 @@
 sections:
   integer-overflow-001:
     difficulty: BASIC
-    isImportant: true
   integer-overflow-002:
     difficulty: BASIC
-    isImportant: true
   integer-overflow-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   integer-overflow-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   integer-overflow-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   integer-overflow-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   integer-overflow-007:
     difficulty: ADVANCED
-    isImportant: false
   integer-overflow-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   integer-overflow-009:
     difficulty: ADVANCED
-    isImportant: true
   integer-overflow-010:
     difficulty: INTERMEDIATE
-    isImportant: true

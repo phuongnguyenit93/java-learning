@@ -1,13 +1,9 @@
 sections:
   queue-semantics:
     difficulty: BASIC
-    isImportant: false
   deque-semantics:
     difficulty: BASIC
-    isImportant: false
   exception-vs-special-value:
     difficulty: BASIC
-    isImportant: false
   priority-queue:
     difficulty: BASIC
-    isImportant: false

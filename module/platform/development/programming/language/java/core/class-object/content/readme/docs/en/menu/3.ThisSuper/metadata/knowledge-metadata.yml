@@ -1,10 +1,7 @@
 sections:
   this-reference:
     difficulty: BASIC
-    isImportant: false
   super-access:
     difficulty: BASIC
-    isImportant: false
   constructor-chaining-order:
     difficulty: BASIC
-    isImportant: false

@@ -1,22 +1,15 @@
 sections:
   cache-interface:
     difficulty: BASIC
-    isImportant: false
   cache-manager:
     difficulty: BASIC
-    isImportant: false
   named-cache-region:
     difficulty: BASIC
-    isImportant: false
   cache-hit-miss:
     difficulty: BASIC
-    isImportant: false
   cached-null-value:
     difficulty: BASIC
-    isImportant: false
   native-cache-access:
     difficulty: BASIC
-    isImportant: false
   programmatic-vs-declarative:
     difficulty: BASIC
-    isImportant: false

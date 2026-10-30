@@ -1,10 +1,7 @@
 sections:
   tostring-purpose:
     difficulty: BASIC
-    isImportant: false
   tostring-design:
     difficulty: BASIC
-    isImportant: false
   tostring-sensitive-data:
     difficulty: BASIC
-    isImportant: false

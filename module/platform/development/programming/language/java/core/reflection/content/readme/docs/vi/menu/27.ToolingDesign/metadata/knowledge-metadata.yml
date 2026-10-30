@@ -1,34 +1,23 @@
 sections:
   tooling-design-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   tooling-design-002:
     difficulty: ADVANCED
-    isImportant: true
   tooling-design-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   tooling-design-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   tooling-design-005:
     difficulty: ADVANCED
-    isImportant: true
   tooling-design-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   tooling-design-007:
     difficulty: ADVANCED
-    isImportant: true
   tooling-design-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   tooling-design-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   tooling-design-010:
     difficulty: ADVANCED
-    isImportant: false
   tooling-design-011:
     difficulty: ADVANCED
-    isImportant: true

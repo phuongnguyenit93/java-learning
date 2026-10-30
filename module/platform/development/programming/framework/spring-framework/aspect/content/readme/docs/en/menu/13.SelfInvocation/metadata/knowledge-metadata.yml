@@ -1,22 +1,15 @@
 sections:
   self-invocation-mental-model:
     difficulty: BASIC
-    isImportant: false
   self-invocation-demo:
     difficulty: BASIC
-    isImportant: false
   proxy-limitations:
     difficulty: BASIC
-    isImportant: false
   self-invocation-remediation:
     difficulty: BASIC
-    isImportant: false
   final-method-demo:
     difficulty: BASIC
-    isImportant: false
   aop-debugging-checklist:
     difficulty: BASIC
-    isImportant: false
   self-invocation-conclusion:
     difficulty: BASIC
-    isImportant: false

@@ -1,13 +1,9 @@
 sections:
   legacy-date-calendar:
     difficulty: BASIC
-    isImportant: false
   legacy-conversion:
     difficulty: BASIC
-    isImportant: false
   system-default-zone-risk:
     difficulty: BASIC
-    isImportant: false
   timestamp-storage-boundary:
     difficulty: BASIC
-    isImportant: false

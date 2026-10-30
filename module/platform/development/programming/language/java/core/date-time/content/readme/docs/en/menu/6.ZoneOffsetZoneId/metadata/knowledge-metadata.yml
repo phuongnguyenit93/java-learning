@@ -1,10 +1,7 @@
 sections:
   zone-offset:
     difficulty: BASIC
-    isImportant: false
   zone-id:
     difficulty: BASIC
-    isImportant: false
   zone-rules:
     difficulty: BASIC
-    isImportant: false

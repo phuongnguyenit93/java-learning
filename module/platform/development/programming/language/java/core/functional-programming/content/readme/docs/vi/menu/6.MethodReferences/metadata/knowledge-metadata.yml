@@ -1,28 +1,19 @@
 sections:
   method-reference-model:
     difficulty: BASIC
-    isImportant: false
   static-method-reference:
     difficulty: BASIC
-    isImportant: false
   bound-instance-method-reference:
     difficulty: INTERMEDIATE
-    isImportant: false
   unbound-instance-method-reference:
     difficulty: INTERMEDIATE
-    isImportant: false
   constructor-reference:
     difficulty: INTERMEDIATE
-    isImportant: false
   method-reference-target-adaptation:
     difficulty: ADVANCED
-    isImportant: false
   method-reference-result-adaptation:
     difficulty: ADVANCED
-    isImportant: false
   overloaded-method-reference:
     difficulty: ADVANCED
-    isImportant: false
   method-reference-vs-lambda:
     difficulty: BASIC
-    isImportant: false

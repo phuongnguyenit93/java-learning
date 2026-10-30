@@ -1,10 +1,7 @@
 sections:
   add-business-bean:
     difficulty: BASIC
-    isImportant: false
   managed-bean-by-spring-and-jmx:
     difficulty: BASIC
-    isImportant: false
   path-hawtio:
     difficulty: BASIC
-    isImportant: false

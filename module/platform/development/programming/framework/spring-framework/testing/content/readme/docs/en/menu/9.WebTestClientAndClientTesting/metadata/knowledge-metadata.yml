@@ -1,22 +1,15 @@
 sections:
   webtestclient-purpose-and-model:
     difficulty: BASIC
-    isImportant: false
   webflux-binding-modes:
     difficulty: INTERMEDIATE
-    isImportant: false
   mockmvc-webtestclient-binding:
     difficulty: INTERMEDIATE
-    isImportant: false
   live-server-binding:
     difficulty: BASIC
-    isImportant: false
   webtestclient-assertions:
     difficulty: INTERMEDIATE
-    isImportant: false
   mockrestservice-server:
     difficulty: INTERMEDIATE
-    isImportant: false
   mock-server-vs-live-integration:
     difficulty: INTERMEDIATE
-    isImportant: false

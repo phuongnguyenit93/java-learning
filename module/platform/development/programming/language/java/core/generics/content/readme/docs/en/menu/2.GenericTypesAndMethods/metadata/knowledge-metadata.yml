@@ -1,22 +1,15 @@
 sections:
   generic-type-declaration:
     difficulty: BASIC
-    isImportant: false
   diamond-operator:
     difficulty: BASIC
-    isImportant: false
   generic-method-syntax:
     difficulty: BASIC
-    isImportant: false
   generic-constructor:
     difficulty: INTERMEDIATE
-    isImportant: false
   type-inference:
     difficulty: INTERMEDIATE
-    isImportant: false
   static-generic-method:
     difficulty: BASIC
-    isImportant: false
   generic-method-vs-type:
     difficulty: BASIC
-    isImportant: false

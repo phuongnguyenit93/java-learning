@@ -1,10 +1,7 @@
 sections:
   field-discovery:
     difficulty: BASIC
-    isImportant: false
   field-modifiers:
     difficulty: BASIC
-    isImportant: false
   field-type-metadata:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,19 +1,13 @@
 sections:
   functions-as-values:
     difficulty: BASIC
-    isImportant: false
   higher-order-functions:
     difficulty: BASIC
-    isImportant: false
   function-composition:
     difficulty: BASIC
-    isImportant: false
   map-filter-reduce:
     difficulty: BASIC
-    isImportant: false
   transformation-walkthrough:
     difficulty: BASIC
-    isImportant: false
   composition-limits:
     difficulty: BASIC
-    isImportant: false

@@ -1,25 +1,17 @@
 sections:
   functional-programming-purpose:
     difficulty: BASIC
-    isImportant: false
   hard-coded-behavior-problem:
     difficulty: BASIC
-    isImportant: false
   behavior-before-lambdas:
     difficulty: BASIC
-    isImportant: false
   behavior-parameterization:
     difficulty: BASIC
-    isImportant: false
   functional-interface-bridge:
     difficulty: BASIC
-    isImportant: false
   functional-multi-paradigm-boundary:
     difficulty: BASIC
-    isImportant: false
   functional-style-use-cases:
     difficulty: BASIC
-    isImportant: false
   functional-programming-module-boundary:
     difficulty: BASIC
-    isImportant: false

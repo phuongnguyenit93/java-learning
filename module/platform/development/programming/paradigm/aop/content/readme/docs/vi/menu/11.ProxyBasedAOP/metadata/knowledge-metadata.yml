@@ -1,28 +1,19 @@
 sections:
   proxy-based-aop-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   proxy-based-aop-002:
     difficulty: ADVANCED
-    isImportant: false
   proxy-based-aop-003:
     difficulty: ADVANCED
-    isImportant: false
   proxy-based-aop-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   proxy-based-aop-005:
     difficulty: ADVANCED
-    isImportant: false
   proxy-based-aop-006:
     difficulty: ADVANCED
-    isImportant: false
   proxy-based-aop-007:
     difficulty: ADVANCED
-    isImportant: false
   proxy-based-aop-008:
     difficulty: ADVANCED
-    isImportant: false
   proxy-based-aop-009:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,13 +1,9 @@
 sections:
   symmetric-encryption-model:
     difficulty: BASIC
-    isImportant: false
   cipher-transformation:
     difficulty: INTERMEDIATE
-    isImportant: false
   iv-and-parameters:
     difficulty: INTERMEDIATE
-    isImportant: false
   symmetric-encryption-workflow:
     difficulty: INTERMEDIATE
-    isImportant: false

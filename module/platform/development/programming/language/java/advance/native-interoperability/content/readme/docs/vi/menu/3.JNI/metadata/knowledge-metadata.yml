@@ -1,22 +1,15 @@
 sections:
   jni-definition-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   jni-native-method-binding:
     difficulty: INTERMEDIATE
-    isImportant: false
   jni-environment:
     difficulty: INTERMEDIATE
-    isImportant: false
   jni-types-data-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   jni-references:
     difficulty: ADVANCED
-    isImportant: false
   jni-exception-boundary:
     difficulty: ADVANCED
-    isImportant: false
   jni-thread-boundary:
     difficulty: ADVANCED
-    isImportant: false

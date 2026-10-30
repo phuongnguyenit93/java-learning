@@ -1,19 +1,13 @@
 sections:
   runtime-customization-decision:
     difficulty: BASIC
-    isImportant: false
   property-first-customization:
     difficulty: BASIC
-    isImportant: false
   springapplication-customization:
     difficulty: BASIC
-    isImportant: false
   springapplicationbuilder-customization:
     difficulty: BASIC
-    isImportant: false
   runtime-extension-point-selection:
     difficulty: BASIC
-    isImportant: false
   customization-ownership-boundaries:
     difficulty: BASIC
-    isImportant: false

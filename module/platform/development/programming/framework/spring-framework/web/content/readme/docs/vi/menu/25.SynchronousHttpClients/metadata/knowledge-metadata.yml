@@ -1,28 +1,19 @@
 sections:
   synchronous-http-clients-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   synchronous-http-clients-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   synchronous-http-clients-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   synchronous-http-clients-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   synchronous-http-clients-005:
     difficulty: ADVANCED
-    isImportant: false
   synchronous-http-clients-006:
     difficulty: ADVANCED
-    isImportant: false
   synchronous-http-clients-007:
     difficulty: ADVANCED
-    isImportant: false
   synchronous-http-clients-008:
     difficulty: ADVANCED
-    isImportant: false
   synchronous-http-clients-009:
     difficulty: ADVANCED
-    isImportant: false

@@ -1,13 +1,9 @@
 sections:
   code-data-concept:
     difficulty: BASIC
-    isImportant: false
   behavior-coupling:
     difficulty: BASIC
-    isImportant: false
   data-visibility:
     difficulty: BASIC
-    isImportant: false
   separation-tradeoffs:
     difficulty: BASIC
-    isImportant: false

@@ -1,22 +1,15 @@
 sections:
   test-auto-configuration-purpose:
     difficulty: BASIC
-    isImportant: false
   slice-imported-auto-configuration:
     difficulty: BASIC
-    isImportant: false
   auto-configure-annotations:
     difficulty: BASIC
-    isImportant: false
   exclude-test-auto-configuration:
     difficulty: BASIC
-    isImportant: false
   import-auto-configuration:
     difficulty: BASIC
-    isImportant: false
   test-context-missing-bean-diagnosis:
     difficulty: BASIC
-    isImportant: false
   test-auto-config-ownership-boundary:
     difficulty: BASIC
-    isImportant: false

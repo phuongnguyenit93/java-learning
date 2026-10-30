@@ -1,25 +1,17 @@
 sections:
   heap-gc-diagnostics-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   heap-usage-vs-allocation-pressure:
     difficulty: INTERMEDIATE
-    isImportant: false
   class-histogram:
     difficulty: INTERMEDIATE
-    isImportant: false
   heap-dump-and-oome:
     difficulty: INTERMEDIATE
-    isImportant: false
   gc-logs-and-events:
     difficulty: INTERMEDIATE
-    isImportant: false
   snapshot-vs-trend:
     difficulty: INTERMEDIATE
-    isImportant: false
   memory-leak-evidence:
     difficulty: INTERMEDIATE
-    isImportant: false
   heap-gc-diagnostic-pitfalls:
     difficulty: INTERMEDIATE
-    isImportant: false

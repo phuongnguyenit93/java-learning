@@ -1,25 +1,17 @@
 sections:
   var-type-inference-001:
     difficulty: BASIC
-    isImportant: false
   var-type-inference-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   var-type-inference-003:
     difficulty: BASIC
-    isImportant: false
   var-type-inference-004:
     difficulty: BASIC
-    isImportant: false
   var-type-inference-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   var-type-inference-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   var-type-inference-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   var-type-inference-008:
     difficulty: INTERMEDIATE
-    isImportant: false

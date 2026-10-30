@@ -1,22 +1,15 @@
 sections:
   native-testing-purpose:
     difficulty: BASIC
-    isImportant: false
   jvm-first-test-strategy:
     difficulty: BASIC
-    isImportant: false
   aot-jvm-validation:
     difficulty: BASIC
-    isImportant: false
   process-test-aot:
     difficulty: BASIC
-    isImportant: false
   native-test-execution:
     difficulty: BASIC
-    isImportant: false
   native-test-cost:
     difficulty: BASIC
-    isImportant: false
   native-testing-boundary:
     difficulty: BASIC
-    isImportant: false

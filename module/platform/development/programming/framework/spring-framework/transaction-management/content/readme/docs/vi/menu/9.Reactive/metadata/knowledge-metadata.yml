@@ -1,19 +1,13 @@
 sections:
   transaction-reactive-context-model:
     difficulty: ADVANCED
-    isImportant: false
   transaction-reactive-manager-contract:
     difficulty: ADVANCED
-    isImportant: false
   transaction-reactive-method-contract:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-reactive-participation:
     difficulty: ADVANCED
-    isImportant: false
   transaction-reactive-error-cancel:
     difficulty: ADVANCED
-    isImportant: false
   transaction-reactive-resource-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,7 +1,5 @@
 sections:
   extract-mongo-atlas:
     difficulty: BASIC
-    isImportant: false
   backup-mongo-local:
     difficulty: BASIC
-    isImportant: false

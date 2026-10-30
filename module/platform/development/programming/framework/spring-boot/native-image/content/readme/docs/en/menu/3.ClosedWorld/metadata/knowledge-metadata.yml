@@ -1,19 +1,13 @@
 sections:
   closed-world-model:
     difficulty: BASIC
-    isImportant: false
   fixed-build-time-classpath:
     difficulty: BASIC
-    isImportant: false
   aot-bean-graph:
     difficulty: BASIC
-    isImportant: false
   profile-property-build-time:
     difficulty: BASIC
-    isImportant: false
   dynamic-behavior-review:
     difficulty: BASIC
-    isImportant: false
   closed-world-runtime-boundary:
     difficulty: BASIC
-    isImportant: false

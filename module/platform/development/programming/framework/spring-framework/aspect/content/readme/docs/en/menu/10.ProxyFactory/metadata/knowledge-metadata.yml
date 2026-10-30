@@ -1,13 +1,9 @@
 sections:
   proxy-factory-mental-model:
     difficulty: BASIC
-    isImportant: false
   jdk-vs-cglib:
     difficulty: BASIC
-    isImportant: false
   proxy-factory-demo:
     difficulty: BASIC
-    isImportant: false
   proxy-factory-conclusion:
     difficulty: BASIC
-    isImportant: false

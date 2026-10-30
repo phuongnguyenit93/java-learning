@@ -1,19 +1,13 @@
 sections:
   declarative-query-result:
     difficulty: BASIC
-    isImportant: false
   declarative-query-filter:
     difficulty: BASIC
-    isImportant: false
   declarative-query-order:
     difficulty: BASIC
-    isImportant: false
   declarative-policy-config:
     difficulty: BASIC
-    isImportant: false
   declarative-query-strategy:
     difficulty: BASIC
-    isImportant: false
   declarative-dsl-limit:
     difficulty: BASIC
-    isImportant: false

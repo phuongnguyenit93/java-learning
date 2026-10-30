@@ -1,22 +1,15 @@
 sections:
   dop-concept:
     difficulty: BASIC
-    isImportant: false
   dop-motivation:
     difficulty: BASIC
-    isImportant: false
   dop-prerequisites:
     difficulty: BASIC
-    isImportant: false
   dop-context:
     difficulty: BASIC
-    isImportant: false
   dop-sharvit-model:
     difficulty: BASIC
-    isImportant: false
   dop-terminology:
     difficulty: BASIC
-    isImportant: false
   dop-learning-path:
     difficulty: BASIC
-    isImportant: false

@@ -1,25 +1,17 @@
 sections:
   ergonomics-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   hotspot-default-selection:
     difficulty: INTERMEDIATE
-    isImportant: false
   heap-sizing-concepts:
     difficulty: INTERMEDIATE
-    isImportant: false
   collector-selection-and-goals:
     difficulty: INTERMEDIATE
-    isImportant: false
   runtime-compiler-policy:
     difficulty: ADVANCED
-    isImportant: false
   vm-options-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   portable-vs-implementation-specific-controls:
     difficulty: ADVANCED
-    isImportant: false
   configuration-vs-diagnostics:
     difficulty: INTERMEDIATE
-    isImportant: false

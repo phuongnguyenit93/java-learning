@@ -1,16 +1,11 @@
 sections:
   buildpack-model:
     difficulty: BASIC
-    isImportant: false
   buildpack-lifecycle-boundary:
     difficulty: BASIC
-    isImportant: false
   buildpack-layers-and-caches:
     difficulty: BASIC
-    isImportant: false
   buildpack-customization:
     difficulty: BASIC
-    isImportant: false
   buildpack-native-boundary:
     difficulty: BASIC
-    isImportant: false

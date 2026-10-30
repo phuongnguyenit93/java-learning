@@ -1,25 +1,17 @@
 sections:
   performance-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   performance-002:
     difficulty: ADVANCED
-    isImportant: false
   performance-003:
     difficulty: ADVANCED
-    isImportant: false
   performance-004:
     difficulty: ADVANCED
-    isImportant: false
   performance-005:
     difficulty: ADVANCED
-    isImportant: false
   performance-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   performance-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   performance-008:
     difficulty: ADVANCED
-    isImportant: false

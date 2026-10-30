@@ -1,28 +1,19 @@
 sections:
   simple-broker:
     difficulty: INTERMEDIATE
-    isImportant: false
   simple-broker-limits:
     difficulty: INTERMEDIATE
-    isImportant: false
   broker-relay:
     difficulty: INTERMEDIATE
-    isImportant: false
   broker-relay-connections:
     difficulty: INTERMEDIATE
-    isImportant: false
   destination-conventions:
     difficulty: INTERMEDIATE
-    isImportant: false
   user-destinations:
     difficulty: INTERMEDIATE
-    isImportant: false
   multi-session-users:
     difficulty: INTERMEDIATE
-    isImportant: false
   unresolved-user-destinations:
     difficulty: INTERMEDIATE
-    isImportant: false
   broker-native-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false

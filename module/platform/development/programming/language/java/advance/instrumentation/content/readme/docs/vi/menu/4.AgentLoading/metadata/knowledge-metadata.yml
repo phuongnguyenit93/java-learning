@@ -1,19 +1,13 @@
 sections:
   javaagent-premain-flow:
     difficulty: INTERMEDIATE
-    isImportant: false
   launcher-agent-flow:
     difficulty: INTERMEDIATE
-    isImportant: false
   runtime-agentmain-flow:
     difficulty: INTERMEDIATE
-    isImportant: false
   attach-api-flow:
     difficulty: INTERMEDIATE
-    isImportant: false
   launch-failure-semantics:
     difficulty: INTERMEDIATE
-    isImportant: false
   jdk21-dynamic-agent-loading:
     difficulty: INTERMEDIATE
-    isImportant: false

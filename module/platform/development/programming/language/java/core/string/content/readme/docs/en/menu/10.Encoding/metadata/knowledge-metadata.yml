@@ -1,13 +1,9 @@
 sections:
   text-vs-bytes:
     difficulty: BASIC
-    isImportant: false
   charset-encode-decode:
     difficulty: BASIC
-    isImportant: false
   default-charset-risk:
     difficulty: BASIC
-    isImportant: false
   malformed-input:
     difficulty: BASIC
-    isImportant: false

@@ -1,25 +1,17 @@
 sections:
   mockmvc-purpose-and-model:
     difficulty: BASIC
-    isImportant: false
   servlet-api-mocks:
     difficulty: BASIC
-    isImportant: false
   mockmvc-setup-strategies:
     difficulty: INTERMEDIATE
-    isImportant: false
   request-building-and-dispatch:
     difficulty: BASIC
-    isImportant: false
   response-assertions:
     difficulty: BASIC
-    isImportant: false
   mvc-behavior-under-test:
     difficulty: INTERMEDIATE
-    isImportant: false
   async-request-testing:
     difficulty: INTERMEDIATE
-    isImportant: false
   mockmvc-limitations-and-live-server:
     difficulty: BASIC
-    isImportant: false

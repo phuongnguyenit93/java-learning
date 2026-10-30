@@ -1,28 +1,19 @@
 sections:
   component-scanning-001:
     difficulty: BASIC
-    isImportant: false
   component-scanning-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   component-scanning-003:
     difficulty: BASIC
-    isImportant: false
   component-scanning-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   component-scanning-005:
     difficulty: ADVANCED
-    isImportant: false
   component-scanning-006:
     difficulty: ADVANCED
-    isImportant: false
   component-scanning-007:
     difficulty: ADVANCED
-    isImportant: false
   component-scanning-008:
     difficulty: ADVANCED
-    isImportant: false
   component-scanning-009:
     difficulty: ADVANCED
-    isImportant: false

@@ -1,19 +1,13 @@
 sections:
   arena-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   arena-lifetime:
     difficulty: INTERMEDIATE
-    isImportant: false
   arena-kinds:
     difficulty: INTERMEDIATE
-    isImportant: false
   arena-allocation:
     difficulty: INTERMEDIATE
-    isImportant: false
   temporal-safety:
     difficulty: ADVANCED
-    isImportant: false
   arena-thread-access:
     difficulty: ADVANCED
-    isImportant: false

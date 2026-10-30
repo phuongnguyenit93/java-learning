@@ -1,28 +1,19 @@
 sections:
   error-and-initialization-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   error-and-initialization-002:
     difficulty: BASIC
-    isImportant: false
   error-and-initialization-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   error-and-initialization-004:
     difficulty: ADVANCED
-    isImportant: false
   error-and-initialization-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   error-and-initialization-006:
     difficulty: ADVANCED
-    isImportant: false
   error-and-initialization-007:
     difficulty: ADVANCED
-    isImportant: false
   error-and-initialization-008:
     difficulty: ADVANCED
-    isImportant: false
   error-and-initialization-009:
     difficulty: ADVANCED
-    isImportant: false

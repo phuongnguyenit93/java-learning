@@ -1,28 +1,19 @@
 sections:
   aop-component-model-001:
     difficulty: BASIC
-    isImportant: false
   aop-component-model-002:
     difficulty: BASIC
-    isImportant: false
   aop-component-model-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   aop-component-model-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   aop-component-model-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   aop-component-model-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   aop-component-model-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   aop-component-model-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   aop-component-model-009:
     difficulty: ADVANCED
-    isImportant: false

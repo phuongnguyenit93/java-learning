@@ -1,19 +1,13 @@
 sections:
   regex-purpose:
     difficulty: BASIC
-    isImportant: false
   pattern-matcher:
     difficulty: BASIC
-    isImportant: false
   regex-syntax-boundary:
     difficulty: BASIC
-    isImportant: false
   regex-groups:
     difficulty: BASIC
-    isImportant: false
   regex-quantifiers:
     difficulty: BASIC
-    isImportant: false
   regex-performance:
     difficulty: BASIC
-    isImportant: false

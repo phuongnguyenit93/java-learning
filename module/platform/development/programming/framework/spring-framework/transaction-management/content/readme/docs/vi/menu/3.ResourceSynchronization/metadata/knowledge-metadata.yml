@@ -1,16 +1,11 @@
 sections:
   transaction-bound-resources:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-synchronization:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-synchronization-manager:
     difficulty: ADVANCED
-    isImportant: false
   transaction-aware-infrastructure:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-resource-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false

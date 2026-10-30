@@ -1,28 +1,19 @@
 sections:
   select-cache-candidate:
     difficulty: INTERMEDIATE
-    isImportant: false
   cache-naming-strategy:
     difficulty: INTERMEDIATE
-    isImportant: false
   key-strategy:
     difficulty: INTERMEDIATE
-    isImportant: false
   population-invalidation-strategy:
     difficulty: INTERMEDIATE
-    isImportant: false
   freshness-consistency-tradeoff:
     difficulty: INTERMEDIATE
-    isImportant: false
   stampede-strategy:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-interaction:
     difficulty: INTERMEDIATE
-    isImportant: false
   provider-selection:
     difficulty: INTERMEDIATE
-    isImportant: false
   cache-strategy-checklist:
     difficulty: INTERMEDIATE
-    isImportant: false

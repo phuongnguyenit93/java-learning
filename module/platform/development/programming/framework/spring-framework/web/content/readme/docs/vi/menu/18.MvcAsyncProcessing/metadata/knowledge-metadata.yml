@@ -1,25 +1,17 @@
 sections:
   mvc-async-processing-001:
     difficulty: BASIC
-    isImportant: false
   mvc-async-processing-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   mvc-async-processing-003:
     difficulty: ADVANCED
-    isImportant: false
   mvc-async-processing-004:
     difficulty: ADVANCED
-    isImportant: false
   mvc-async-processing-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   mvc-async-processing-006:
     difficulty: ADVANCED
-    isImportant: false
   mvc-async-processing-007:
     difficulty: ADVANCED
-    isImportant: false
   mvc-async-processing-008:
     difficulty: ADVANCED
-    isImportant: false

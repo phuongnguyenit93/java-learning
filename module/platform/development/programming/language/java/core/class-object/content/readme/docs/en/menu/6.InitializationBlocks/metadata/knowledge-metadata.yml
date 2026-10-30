@@ -1,10 +1,7 @@
 sections:
   static-initializer:
     difficulty: BASIC
-    isImportant: false
   instance-initializer:
     difficulty: BASIC
-    isImportant: false
   initializer-use-cases:
     difficulty: BASIC
-    isImportant: false

@@ -1,19 +1,13 @@
 sections:
   declarative-result-spec:
     difficulty: BASIC
-    isImportant: false
   declarative-predicates:
     difficulty: BASIC
-    isImportant: false
   declarative-spec-completeness:
     difficulty: BASIC
-    isImportant: false
   declarative-evaluator-role:
     difficulty: BASIC
-    isImportant: false
   declarative-semantics-plan:
     difficulty: BASIC
-    isImportant: false
   declarative-execution-tradeoffs:
     difficulty: BASIC
-    isImportant: false

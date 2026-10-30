@@ -1,22 +1,15 @@
 sections:
   starter-purpose:
     difficulty: BASIC
-    isImportant: false
   starter-split-or-combine:
     difficulty: BASIC
-    isImportant: false
   starter-naming:
     difficulty: BASIC
-    isImportant: false
   configuration-key-namespace:
     difficulty: BASIC
-    isImportant: false
   starter-dependency-opinion:
     difficulty: BASIC
-    isImportant: false
   starter-end-to-end-flow:
     difficulty: BASIC
-    isImportant: false
   auto-configuration-boundaries-next:
     difficulty: BASIC
-    isImportant: false

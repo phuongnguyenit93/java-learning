@@ -1,13 +1,9 @@
 sections:
   dockerfile-vs-buildpacks:
     difficulty: BASIC
-    isImportant: false
   archive-vs-image-layering:
     difficulty: BASIC
-    isImportant: false
   control-standardization-maintenance:
     difficulty: BASIC
-    isImportant: false
   image-cache-strategy:
     difficulty: BASIC
-    isImportant: false

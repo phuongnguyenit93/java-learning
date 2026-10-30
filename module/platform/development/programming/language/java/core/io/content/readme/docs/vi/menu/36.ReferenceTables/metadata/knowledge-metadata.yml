@@ -1,25 +1,17 @@
 sections:
   reference-tables-001:
     difficulty: BASIC
-    isImportant: true
   reference-tables-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   reference-tables-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   reference-tables-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   reference-tables-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   reference-tables-006:
     difficulty: ADVANCED
-    isImportant: true
   reference-tables-007:
     difficulty: BASIC
-    isImportant: true
   reference-tables-008:
     difficulty: ADVANCED
-    isImportant: true

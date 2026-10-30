@@ -1,19 +1,13 @@
 sections:
   inputstream-outputstream:
     difficulty: BASIC
-    isImportant: false
   standard-console-io:
     difficulty: BASIC
-    isImportant: false
   read-contract:
     difficulty: BASIC
-    isImportant: false
   partial-read-write:
     difficulty: BASIC
-    isImportant: false
   typed-binary-io:
     difficulty: BASIC
-    isImportant: false
   byte-stream-use-cases:
     difficulty: BASIC
-    isImportant: false

@@ -1,7 +1,5 @@
 sections:
   open-rewrite-basic:
     difficulty: BASIC
-    isImportant: false
   open-rewrite-setup:
     difficulty: BASIC
-    isImportant: false

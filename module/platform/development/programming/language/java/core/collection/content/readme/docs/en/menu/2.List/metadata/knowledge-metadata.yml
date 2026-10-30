@@ -1,16 +1,11 @@
 sections:
   list-semantics:
     difficulty: BASIC
-    isImportant: false
   list-practical-boundaries:
     difficulty: BASIC
-    isImportant: false
   arraylist-model:
     difficulty: BASIC
-    isImportant: false
   linkedlist-model:
     difficulty: BASIC
-    isImportant: false
   list-equality:
     difficulty: BASIC
-    isImportant: false

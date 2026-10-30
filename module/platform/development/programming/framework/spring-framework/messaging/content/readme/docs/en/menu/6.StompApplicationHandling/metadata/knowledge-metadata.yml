@@ -1,28 +1,19 @@
 sections:
   message-mapping:
     difficulty: INTERMEDIATE
-    isImportant: false
   destination-variable:
     difficulty: INTERMEDIATE
-    isImportant: false
   payload-conversion:
     difficulty: INTERMEDIATE
-    isImportant: false
   payload-validation:
     difficulty: INTERMEDIATE
-    isImportant: false
   subscribe-mapping:
     difficulty: INTERMEDIATE
-    isImportant: false
   send-to:
     difficulty: INTERMEDIATE
-    isImportant: false
   send-to-user:
     difficulty: INTERMEDIATE
-    isImportant: false
   simp-messaging-template:
     difficulty: INTERMEDIATE
-    isImportant: false
   message-exception-handling:
     difficulty: INTERMEDIATE
-    isImportant: false

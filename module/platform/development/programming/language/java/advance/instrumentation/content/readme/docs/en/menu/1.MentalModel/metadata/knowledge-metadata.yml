@@ -1,16 +1,11 @@
 sections:
   instrumentation-purpose:
     difficulty: BASIC
-    isImportant: false
   instrumentation-problem:
     difficulty: BASIC
-    isImportant: false
   instrumentation-mechanism:
     difficulty: BASIC
-    isImportant: false
   instrumentation-use-case-shape:
     difficulty: BASIC
-    isImportant: false
   instrumentation-boundaries:
     difficulty: BASIC
-    isImportant: false

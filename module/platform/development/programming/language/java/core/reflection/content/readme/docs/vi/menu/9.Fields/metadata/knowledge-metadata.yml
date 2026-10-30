@@ -1,37 +1,25 @@
 sections:
   fields-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   fields-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   fields-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   fields-004:
     difficulty: BASIC
-    isImportant: true
   fields-005:
     difficulty: BASIC
-    isImportant: true
   fields-006:
     difficulty: BASIC
-    isImportant: true
   fields-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   fields-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   fields-009:
     difficulty: INTERMEDIATE
-    isImportant: false
   fields-010:
     difficulty: BASIC
-    isImportant: true
   fields-011:
     difficulty: ADVANCED
-    isImportant: true
   fields-012:
     difficulty: ADVANCED
-    isImportant: true

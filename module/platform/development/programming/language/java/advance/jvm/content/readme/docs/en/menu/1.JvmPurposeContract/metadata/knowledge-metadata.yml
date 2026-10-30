@@ -1,19 +1,13 @@
 sections:
   jvm-purpose:
     difficulty: BASIC
-    isImportant: false
   classfile-execution-contract:
     difficulty: BASIC
-    isImportant: false
   jvm-language-independence:
     difficulty: BASIC
-    isImportant: false
   jvm-portability-model:
     difficulty: BASIC
-    isImportant: false
   jvm-specification-vs-implementation:
     difficulty: INTERMEDIATE
-    isImportant: false
   jvm-runtime-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false

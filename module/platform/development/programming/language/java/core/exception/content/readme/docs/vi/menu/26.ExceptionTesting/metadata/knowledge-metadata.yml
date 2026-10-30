@@ -1,31 +1,21 @@
 sections:
   exception-testing-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-testing-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-testing-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-testing-004:
     difficulty: ADVANCED
-    isImportant: false
   exception-testing-005:
     difficulty: ADVANCED
-    isImportant: false
   exception-testing-006:
     difficulty: ADVANCED
-    isImportant: false
   exception-testing-007:
     difficulty: ADVANCED
-    isImportant: false
   exception-testing-008:
     difficulty: ADVANCED
-    isImportant: false
   exception-testing-009:
     difficulty: ADVANCED
-    isImportant: false
   exception-testing-010:
     difficulty: INTERMEDIATE
-    isImportant: false

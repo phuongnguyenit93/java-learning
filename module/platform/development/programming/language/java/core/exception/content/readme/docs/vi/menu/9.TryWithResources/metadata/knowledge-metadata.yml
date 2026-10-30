@@ -1,37 +1,25 @@
 sections:
   try-with-resources-001:
     difficulty: BASIC
-    isImportant: false
   try-with-resources-002:
     difficulty: BASIC
-    isImportant: false
   try-with-resources-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   try-with-resources-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   try-with-resources-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   try-with-resources-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   try-with-resources-007:
     difficulty: ADVANCED
-    isImportant: false
   try-with-resources-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   try-with-resources-009:
     difficulty: ADVANCED
-    isImportant: false
   try-with-resources-010:
     difficulty: INTERMEDIATE
-    isImportant: false
   try-with-resources-011:
     difficulty: ADVANCED
-    isImportant: false
   try-with-resources-012:
     difficulty: ADVANCED
-    isImportant: false

@@ -1,16 +1,11 @@
 sections:
   lookup-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   lookup-class-and-modes:
     difficulty: ADVANCED
-    isImportant: false
   lookup-context:
     difficulty: ADVANCED
-    isImportant: false
   member-handle-lookup:
     difficulty: INTERMEDIATE
-    isImportant: false
   lookup-access-failures:
     difficulty: INTERMEDIATE
-    isImportant: false

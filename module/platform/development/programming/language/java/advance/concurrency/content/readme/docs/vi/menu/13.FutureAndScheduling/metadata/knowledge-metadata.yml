@@ -1,58 +1,39 @@
 sections:
   future-and-scheduling-001:
     difficulty: BASIC
-    isImportant: true
   future-and-scheduling-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   future-and-scheduling-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   future-and-scheduling-004:
     difficulty: BASIC
-    isImportant: true
   future-and-scheduling-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   future-and-scheduling-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   future-and-scheduling-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   future-and-scheduling-008:
     difficulty: ADVANCED
-    isImportant: false
   future-and-scheduling-009:
     difficulty: BASIC
-    isImportant: true
   future-and-scheduling-010:
     difficulty: INTERMEDIATE
-    isImportant: true
   future-and-scheduling-011:
     difficulty: INTERMEDIATE
-    isImportant: true
   future-and-scheduling-012:
     difficulty: ADVANCED
-    isImportant: true
   future-and-scheduling-013:
     difficulty: INTERMEDIATE
-    isImportant: false
   future-and-scheduling-014:
     difficulty: ADVANCED
-    isImportant: false
   future-and-scheduling-015:
     difficulty: ADVANCED
-    isImportant: true
   future-and-scheduling-016:
     difficulty: ADVANCED
-    isImportant: true
   future-and-scheduling-017:
     difficulty: ADVANCED
-    isImportant: false
   future-and-scheduling-018:
     difficulty: ADVANCED
-    isImportant: true
   future-and-scheduling-019:
     difficulty: INTERMEDIATE
-    isImportant: true

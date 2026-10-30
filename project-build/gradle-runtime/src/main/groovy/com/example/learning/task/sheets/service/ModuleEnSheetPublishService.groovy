@@ -261,7 +261,7 @@ class ModuleEnSheetPublishService {
             throw new GradleException('Template/EN grid requires 700 rows and 29 columns (AC Summary).')
         }
         String name = ModuleEnSheetPublishService.quote(tab.title as String)
-        List<String> ranges = ['O20','O21','O700','AB20','AB700'].collect {
+        List<String> ranges = ['O20','O21','O700'].collect {
             name + '!' + it
         }
         Spreadsheet response = (ctx.client as Sheets).spreadsheets()
@@ -272,7 +272,7 @@ class ModuleEnSheetPublishService {
         def sheet = (response.sheets ?: []).find {
             it.properties?.sheetId?.toString() == tab.gid.toString()
         }
-        if (sheet == null || (sheet.data ?: []).size() < 5) {
+        if (sheet == null || (sheet.data ?: []).size() < 3) {
             throw new GradleException('Template/EN Google-native grid readback failed.')
         }
         sheet.data.take(3).each { item ->
@@ -282,14 +282,6 @@ class ModuleEnSheetPublishService {
                     options != ['BASIC','INTERMEDIATE','ADVANCED'] ||
                     rule.strict != true || rule.showCustomUi != true) {
                 throw new GradleException('Template Difficulty dropdown invalid.')
-            }
-        }
-        sheet.data.drop(3).take(2).each { item ->
-            def rule = item.rowData?.first()?.values?.first()?.dataValidation
-            List options = rule?.condition?.values?.collect { it.userEnteredValue }
-            if (rule?.condition?.type != 'ONE_OF_LIST' ||
-                    options != ['TRUE','FALSE'] || rule.strict != true) {
-                throw new GradleException('Template isImportant dropdown invalid.')
             }
         }
         Set<String> colors = (sheet.conditionalFormats ?: []).findResults { rule ->

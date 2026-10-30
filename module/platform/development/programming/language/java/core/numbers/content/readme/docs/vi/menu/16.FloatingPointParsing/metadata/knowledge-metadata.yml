@@ -1,28 +1,19 @@
 sections:
   floating-point-parsing-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   floating-point-parsing-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   floating-point-parsing-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   floating-point-parsing-004:
     difficulty: ADVANCED
-    isImportant: true
   floating-point-parsing-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   floating-point-parsing-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   floating-point-parsing-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   floating-point-parsing-008:
     difficulty: ADVANCED
-    isImportant: true
   floating-point-parsing-009:
     difficulty: INTERMEDIATE
-    isImportant: true

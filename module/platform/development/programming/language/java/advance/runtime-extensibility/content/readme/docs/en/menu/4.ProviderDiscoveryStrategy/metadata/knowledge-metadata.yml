@@ -1,19 +1,13 @@
 sections:
   discovery-vs-selection:
     difficulty: INTERMEDIATE
-    isImportant: false
   provider-selection-policy:
     difficulty: INTERMEDIATE
-    isImportant: false
   capability-based-selection:
     difficulty: INTERMEDIATE
-    isImportant: false
   provider-ordering-caveats:
     difficulty: INTERMEDIATE
-    isImportant: false
   no-provider-and-fallback:
     difficulty: INTERMEDIATE
-    isImportant: false
   duplicate-and-broken-providers:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,31 +1,21 @@
 sections:
   http-client-model:
     difficulty: BASIC
-    isImportant: false
   http-client-configuration:
     difficulty: BASIC
-    isImportant: false
   http-request-building:
     difficulty: BASIC
-    isImportant: false
   http-response-handling:
     difficulty: INTERMEDIATE
-    isImportant: false
   http-sync-async:
     difficulty: INTERMEDIATE
-    isImportant: false
   http-flow-streaming:
     difficulty: ADVANCED
-    isImportant: false
   http-client-policies:
     difficulty: INTERMEDIATE
-    isImportant: false
   http-client-resource-sharing:
     difficulty: INTERMEDIATE
-    isImportant: false
   http-client-lifecycle:
     difficulty: ADVANCED
-    isImportant: false
   http-integration-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false

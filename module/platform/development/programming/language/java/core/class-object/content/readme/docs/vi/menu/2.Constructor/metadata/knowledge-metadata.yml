@@ -1,13 +1,9 @@
 sections:
   constructor-purpose:
     difficulty: BASIC
-    isImportant: false
   constructor-overloading:
     difficulty: BASIC
-    isImportant: false
   default-constructor:
     difficulty: BASIC
-    isImportant: false
   constructor-exceptions:
     difficulty: BASIC
-    isImportant: false

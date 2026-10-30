@@ -1,13 +1,9 @@
 sections:
   mac-model:
     difficulty: BASIC
-    isImportant: false
   mac-shared-secret:
     difficulty: INTERMEDIATE
-    isImportant: false
   mac-workflow:
     difficulty: INTERMEDIATE
-    isImportant: false
   mac-comparison:
     difficulty: BASIC
-    isImportant: false

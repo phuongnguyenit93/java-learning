@@ -1,7 +1,5 @@
 sections:
   constructor-discovery:
     difficulty: BASIC
-    isImportant: false
   constructor-metadata:
     difficulty: INTERMEDIATE
-    isImportant: false

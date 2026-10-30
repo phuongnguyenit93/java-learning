@@ -1,22 +1,15 @@
 sections:
   bean-validation-boundary:
     difficulty: BASIC
-    isImportant: false
   spring-validator-adapter:
     difficulty: INTERMEDIATE
-    isImportant: false
   local-validator-factory-bean:
     difficulty: INTERMEDIATE
-    isImportant: false
   validation-groups-hints:
     difficulty: INTERMEDIATE
-    isImportant: false
   method-validation-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   method-validation-adapter:
     difficulty: ADVANCED
-    isImportant: false
   method-validation-post-processor:
     difficulty: ADVANCED
-    isImportant: false

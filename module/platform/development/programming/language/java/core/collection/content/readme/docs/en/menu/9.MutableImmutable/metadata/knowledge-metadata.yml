@@ -1,16 +1,11 @@
 sections:
   modifiable-vs-unmodifiable:
     difficulty: BASIC
-    isImportant: false
   immutable-factory:
     difficulty: BASIC
-    isImportant: false
   copy-of:
     difficulty: BASIC
-    isImportant: false
   backed-view-fixed-size-snapshot:
     difficulty: BASIC
-    isImportant: false
   view-vs-copy:
     difficulty: BASIC
-    isImportant: false

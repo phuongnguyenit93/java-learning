@@ -1,10 +1,7 @@
 sections:
   numeric-type-model:
     difficulty: BASIC
-    isImportant: false
   integer-vs-floating:
     difficulty: BASIC
-    isImportant: false
   numeric-conversions:
     difficulty: BASIC
-    isImportant: false

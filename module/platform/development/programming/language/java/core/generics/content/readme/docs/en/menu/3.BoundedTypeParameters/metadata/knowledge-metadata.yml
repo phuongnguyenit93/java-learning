@@ -1,13 +1,9 @@
 sections:
   upper-bounded-type:
     difficulty: BASIC
-    isImportant: false
   multiple-bounds:
     difficulty: INTERMEDIATE
-    isImportant: false
   recursive-bound:
     difficulty: ADVANCED
-    isImportant: false
   bound-api-capability:
     difficulty: BASIC
-    isImportant: false

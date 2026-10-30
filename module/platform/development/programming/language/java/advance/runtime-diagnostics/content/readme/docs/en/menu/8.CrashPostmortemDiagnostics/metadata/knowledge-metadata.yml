@@ -1,22 +1,15 @@
 sections:
   postmortem-diagnostics-purpose:
     difficulty: ADVANCED
-    isImportant: false
   fatal-error-log:
     difficulty: ADVANCED
-    isImportant: false
   core-dump-and-jhsdb:
     difficulty: ADVANCED
-    isImportant: false
   oome-heap-dump:
     difficulty: ADVANCED
-    isImportant: false
   preserve-logs-and-recordings:
     difficulty: ADVANCED
-    isImportant: false
   correlate-crash-artifacts:
     difficulty: ADVANCED
-    isImportant: false
   native-crash-handoff:
     difficulty: ADVANCED
-    isImportant: false

@@ -1,28 +1,19 @@
 sections:
   nested-types-nestmates-001:
     difficulty: BASIC
-    isImportant: true
   nested-types-nestmates-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   nested-types-nestmates-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   nested-types-nestmates-004:
     difficulty: BASIC
-    isImportant: true
   nested-types-nestmates-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   nested-types-nestmates-006:
     difficulty: ADVANCED
-    isImportant: true
   nested-types-nestmates-007:
     difficulty: ADVANCED
-    isImportant: true
   nested-types-nestmates-008:
     difficulty: ADVANCED
-    isImportant: true
   nested-types-nestmates-009:
     difficulty: ADVANCED
-    isImportant: false

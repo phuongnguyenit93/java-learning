@@ -1,25 +1,17 @@
 sections:
   jfr-diagnostics-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   recording-lifecycle:
     difficulty: INTERMEDIATE
-    isImportant: false
   recording-settings-and-overhead:
     difficulty: INTERMEDIATE
-    isImportant: false
   jfr-event-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   cpu-thread-lock-analysis:
     difficulty: INTERMEDIATE
-    isImportant: false
   memory-gc-io-analysis:
     difficulty: INTERMEDIATE
-    isImportant: false
   continuous-recording-and-postmortem:
     difficulty: INTERMEDIATE
-    isImportant: false
   jfr-cli-and-jmc-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false

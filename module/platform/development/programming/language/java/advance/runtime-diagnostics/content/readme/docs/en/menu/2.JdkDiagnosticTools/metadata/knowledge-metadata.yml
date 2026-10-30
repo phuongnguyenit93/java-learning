@@ -1,22 +1,15 @@
 sections:
   target-jvm-identification:
     difficulty: INTERMEDIATE
-    isImportant: false
   jcmd-first-diagnostics:
     difficulty: INTERMEDIATE
-    isImportant: false
   specialized-jdk-utilities:
     difficulty: INTERMEDIATE
-    isImportant: false
   diagnostic-tool-selection:
     difficulty: INTERMEDIATE
-    isImportant: false
   live-vs-offline-evidence:
     difficulty: INTERMEDIATE
-    isImportant: false
   diagnostic-artifact-readiness:
     difficulty: INTERMEDIATE
-    isImportant: false
   diagnostic-permissions-and-impact:
     difficulty: INTERMEDIATE
-    isImportant: false

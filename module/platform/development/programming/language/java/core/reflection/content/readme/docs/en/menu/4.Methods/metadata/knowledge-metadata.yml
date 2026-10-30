@@ -1,7 +1,5 @@
 sections:
   method-discovery:
     difficulty: BASIC
-    isImportant: false
   method-signature-metadata:
     difficulty: INTERMEDIATE
-    isImportant: false

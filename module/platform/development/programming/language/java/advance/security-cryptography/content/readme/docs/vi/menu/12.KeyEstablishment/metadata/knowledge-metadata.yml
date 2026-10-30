@@ -1,13 +1,9 @@
 sections:
   key-establishment-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   key-agreement-model:
     difficulty: ADVANCED
-    isImportant: false
   kem-model:
     difficulty: ADVANCED
-    isImportant: false
   agreement-vs-kem:
     difficulty: ADVANCED
-    isImportant: false

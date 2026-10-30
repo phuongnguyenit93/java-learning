@@ -1,34 +1,23 @@
 sections:
   byte-streams-001:
     difficulty: BASIC
-    isImportant: true
   byte-streams-002:
     difficulty: BASIC
-    isImportant: true
   byte-streams-003:
     difficulty: BASIC
-    isImportant: true
   byte-streams-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   byte-streams-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   byte-streams-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   byte-streams-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   byte-streams-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   byte-streams-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   byte-streams-010:
     difficulty: INTERMEDIATE
-    isImportant: true
   byte-streams-011:
     difficulty: INTERMEDIATE
-    isImportant: false

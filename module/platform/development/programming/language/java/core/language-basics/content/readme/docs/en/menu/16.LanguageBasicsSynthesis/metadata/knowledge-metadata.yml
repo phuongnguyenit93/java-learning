@@ -1,10 +1,7 @@
 sections:
   language-basics-synthesis:
     difficulty: BASIC
-    isImportant: false
   end-to-end-value-flow:
     difficulty: BASIC
-    isImportant: false
   language-basics-next-boundaries:
     difficulty: BASIC
-    isImportant: false

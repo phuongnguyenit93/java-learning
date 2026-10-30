@@ -1,34 +1,23 @@
 sections:
   web-testing-001:
     difficulty: BASIC
-    isImportant: false
   web-testing-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   web-testing-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   web-testing-004:
     difficulty: ADVANCED
-    isImportant: false
   web-testing-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   web-testing-006:
     difficulty: ADVANCED
-    isImportant: false
   web-testing-007:
     difficulty: ADVANCED
-    isImportant: false
   web-testing-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   web-testing-009:
     difficulty: ADVANCED
-    isImportant: false
   web-testing-010:
     difficulty: INTERMEDIATE
-    isImportant: false
   web-testing-011:
     difficulty: ADVANCED
-    isImportant: false

@@ -1,16 +1,11 @@
 sections:
   networking-purpose:
     difficulty: BASIC
-    isImportant: false
   network-endpoint-model:
     difficulty: BASIC
-    isImportant: false
   transport-and-data-model:
     difficulty: BASIC
-    isImportant: false
   io-completion-models:
     difficulty: INTERMEDIATE
-    isImportant: false
   networking-module-boundary:
     difficulty: BASIC
-    isImportant: false

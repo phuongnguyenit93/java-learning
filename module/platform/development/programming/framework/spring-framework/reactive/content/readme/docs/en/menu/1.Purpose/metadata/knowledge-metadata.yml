@@ -1,28 +1,19 @@
 sections:
   webflux-purpose:
     difficulty: BASIC
-    isImportant: false
   webflux-problem-with-blocking:
     difficulty: BASIC
-    isImportant: false
   webflux-nonblocking-model:
     difficulty: BASIC
-    isImportant: false
   webflux-throughput-vs-latency:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-mvc-runtime-contrast:
     difficulty: BASIC
-    isImportant: false
   webflux-blocking-dependency-impact:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-good-fit:
     difficulty: BASIC
-    isImportant: false
   webflux-poor-fit:
     difficulty: BASIC
-    isImportant: false
   webflux-programming-models:
     difficulty: BASIC
-    isImportant: false

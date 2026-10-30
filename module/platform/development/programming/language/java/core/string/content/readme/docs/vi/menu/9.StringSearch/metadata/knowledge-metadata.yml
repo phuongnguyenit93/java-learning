@@ -1,28 +1,19 @@
 sections:
   string-search-001:
     difficulty: BASIC
-    isImportant: false
   string-search-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-search-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-search-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-search-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-search-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-search-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-search-008:
     difficulty: ADVANCED
-    isImportant: false
   string-search-009:
     difficulty: INTERMEDIATE
-    isImportant: false

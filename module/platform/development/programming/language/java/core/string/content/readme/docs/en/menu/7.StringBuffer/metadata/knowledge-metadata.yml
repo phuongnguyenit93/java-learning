@@ -1,10 +1,7 @@
 sections:
   buffer-synchronization:
     difficulty: BASIC
-    isImportant: false
   builder-vs-buffer:
     difficulty: BASIC
-    isImportant: false
   thread-safety-boundary:
     difficulty: BASIC
-    isImportant: false

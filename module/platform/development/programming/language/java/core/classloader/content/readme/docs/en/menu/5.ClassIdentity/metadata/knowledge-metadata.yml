@@ -1,13 +1,9 @@
 sections:
   class-identity-rule:
     difficulty: BASIC
-    isImportant: false
   same-name-different-type:
     difficulty: BASIC
-    isImportant: false
   class-cast-loader-failure:
     difficulty: BASIC
-    isImportant: false
   loader-boundary-api:
     difficulty: BASIC
-    isImportant: false

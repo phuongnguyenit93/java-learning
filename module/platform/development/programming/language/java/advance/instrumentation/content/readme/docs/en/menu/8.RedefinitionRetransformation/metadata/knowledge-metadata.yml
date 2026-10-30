@@ -1,16 +1,11 @@
 sections:
   redefine-purpose:
     difficulty: ADVANCED
-    isImportant: false
   retransform-purpose:
     difficulty: ADVANCED
-    isImportant: false
   redefine-vs-retransform:
     difficulty: ADVANCED
-    isImportant: false
   active-frame-behavior:
     difficulty: ADVANCED
-    isImportant: false
   existing-state-behavior:
     difficulty: ADVANCED
-    isImportant: false

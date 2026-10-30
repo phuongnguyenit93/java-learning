@@ -1,34 +1,23 @@
 sections:
   file-attributes-and-permissions-001:
     difficulty: BASIC
-    isImportant: true
   file-attributes-and-permissions-002:
     difficulty: BASIC
-    isImportant: true
   file-attributes-and-permissions-003:
     difficulty: BASIC
-    isImportant: true
   file-attributes-and-permissions-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   file-attributes-and-permissions-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   file-attributes-and-permissions-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   file-attributes-and-permissions-007:
     difficulty: ADVANCED
-    isImportant: true
   file-attributes-and-permissions-008:
     difficulty: ADVANCED
-    isImportant: false
   file-attributes-and-permissions-009:
     difficulty: ADVANCED
-    isImportant: true
   file-attributes-and-permissions-010:
     difficulty: INTERMEDIATE
-    isImportant: true
   file-attributes-and-permissions-011:
     difficulty: INTERMEDIATE
-    isImportant: true

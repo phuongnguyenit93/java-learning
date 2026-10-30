@@ -1,16 +1,11 @@
 sections:
   breakiterator-model:
     difficulty: BASIC
-    isImportant: false
   character-boundary:
     difficulty: BASIC
-    isImportant: false
   word-sentence-boundary:
     difficulty: BASIC
-    isImportant: false
   line-boundary:
     difficulty: BASIC
-    isImportant: false
   breakiterator-boundary:
     difficulty: BASIC
-    isImportant: false

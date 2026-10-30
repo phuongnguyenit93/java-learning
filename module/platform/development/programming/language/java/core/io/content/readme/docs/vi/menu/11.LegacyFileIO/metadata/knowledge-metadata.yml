@@ -1,31 +1,21 @@
 sections:
   legacy-file-io-001:
     difficulty: BASIC
-    isImportant: true
   legacy-file-io-002:
     difficulty: BASIC
-    isImportant: true
   legacy-file-io-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   legacy-file-io-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   legacy-file-io-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   legacy-file-io-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   legacy-file-io-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   legacy-file-io-008:
     difficulty: ADVANCED
-    isImportant: true
   legacy-file-io-009:
     difficulty: INTERMEDIATE
-    isImportant: false
   legacy-file-io-010:
     difficulty: ADVANCED
-    isImportant: true

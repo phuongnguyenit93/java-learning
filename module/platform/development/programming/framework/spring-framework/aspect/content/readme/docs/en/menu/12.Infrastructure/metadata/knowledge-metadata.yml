@@ -1,19 +1,13 @@
 sections:
   auto-proxy-mental-model:
     difficulty: BASIC
-    isImportant: false
   framework-boot-aop-enablement-boundary:
     difficulty: BASIC
-    isImportant: false
   advised-interface:
     difficulty: BASIC
-    isImportant: false
   target-source-strategy:
     difficulty: BASIC
-    isImportant: false
   infrastructure-demo:
     difficulty: BASIC
-    isImportant: false
   infrastructure-conclusion:
     difficulty: BASIC
-    isImportant: false

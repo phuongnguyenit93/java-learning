@@ -1,13 +1,9 @@
 sections:
   reference-copy:
     difficulty: BASIC
-    isImportant: false
   shallow-copy:
     difficulty: BASIC
-    isImportant: false
   deep-copy:
     difficulty: BASIC
-    isImportant: false
   copy-strategies:
     difficulty: BASIC
-    isImportant: false

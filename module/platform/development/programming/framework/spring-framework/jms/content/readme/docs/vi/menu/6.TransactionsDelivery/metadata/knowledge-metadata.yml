@@ -1,19 +1,13 @@
 sections:
   jms-acknowledgement-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   jms-session-transacted:
     difficulty: INTERMEDIATE
-    isImportant: false
   jms-local-transaction-manager:
     difficulty: INTERMEDIATE
-    isImportant: false
   jms-thread-bound-resources:
     difficulty: ADVANCED
-    isImportant: false
   jms-jta-xa-boundary:
     difficulty: ADVANCED
-    isImportant: false
   jms-redelivery-idempotency:
     difficulty: INTERMEDIATE
-    isImportant: false

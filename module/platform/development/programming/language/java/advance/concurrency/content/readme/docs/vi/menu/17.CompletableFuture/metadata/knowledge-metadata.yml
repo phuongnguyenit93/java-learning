@@ -1,82 +1,55 @@
 sections:
   completable-future-001:
     difficulty: BASIC
-    isImportant: true
   completable-future-002:
     difficulty: BASIC
-    isImportant: true
   completable-future-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   completable-future-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   completable-future-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   completable-future-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   completable-future-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   completable-future-008:
     difficulty: ADVANCED
-    isImportant: true
   completable-future-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   completable-future-010:
     difficulty: INTERMEDIATE
-    isImportant: true
   completable-future-011:
     difficulty: INTERMEDIATE
-    isImportant: true
   completable-future-012:
     difficulty: ADVANCED
-    isImportant: true
   completable-future-013:
     difficulty: ADVANCED
-    isImportant: true
   completable-future-014:
     difficulty: ADVANCED
-    isImportant: true
   completable-future-015:
     difficulty: ADVANCED
-    isImportant: true
   completable-future-016:
     difficulty: ADVANCED
-    isImportant: true
   completable-future-017:
     difficulty: ADVANCED
-    isImportant: true
   completable-future-018:
     difficulty: INTERMEDIATE
-    isImportant: false
   completable-future-019:
     difficulty: ADVANCED
-    isImportant: false
   completable-future-020:
     difficulty: ADVANCED
-    isImportant: true
   completable-future-021:
     difficulty: ADVANCED
-    isImportant: true
   completable-future-022:
     difficulty: INTERMEDIATE
-    isImportant: false
   completable-future-023:
     difficulty: ADVANCED
-    isImportant: true
   completable-future-024:
     difficulty: INTERMEDIATE
-    isImportant: false
   completable-future-025:
     difficulty: INTERMEDIATE
-    isImportant: true
   completable-future-026:
     difficulty: ADVANCED
-    isImportant: true
   completable-future-027:
     difficulty: ADVANCED
-    isImportant: true

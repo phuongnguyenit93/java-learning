@@ -1,19 +1,13 @@
 sections:
   invokedynamic-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   bootstrap-method-contract:
     difficulty: ADVANCED
-    isImportant: false
   bootstrap-linkage-inputs:
     difficulty: ADVANCED
-    isImportant: false
   invokedynamic-linkage-lifecycle:
     difficulty: ADVANCED
-    isImportant: false
   invokedynamic-linkage-failures:
     difficulty: ADVANCED
-    isImportant: false
   invokedynamic-runtime-consumers:
     difficulty: INTERMEDIATE
-    isImportant: false

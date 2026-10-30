@@ -1,16 +1,11 @@
 sections:
   transaction-declarative-vs-programmatic:
     difficulty: BASIC
-    isImportant: false
   transaction-template:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-direct-manager:
     difficulty: ADVANCED
-    isImportant: false
   transaction-transactional-operator:
     difficulty: ADVANCED
-    isImportant: false
   transaction-programmatic-tradeoffs:
     difficulty: INTERMEDIATE
-    isImportant: false

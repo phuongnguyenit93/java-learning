@@ -1,25 +1,17 @@
 sections:
   string-access-001:
     difficulty: BASIC
-    isImportant: false
   string-access-002:
     difficulty: BASIC
-    isImportant: false
   string-access-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-access-004:
     difficulty: ADVANCED
-    isImportant: false
   string-access-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-access-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-access-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-access-008:
     difficulty: ADVANCED
-    isImportant: false

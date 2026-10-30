@@ -1,19 +1,13 @@
 sections:
   class-resource:
     difficulty: BASIC
-    isImportant: false
   loader-resource:
     difficulty: BASIC
-    isImportant: false
   resource-enumeration:
     difficulty: BASIC
-    isImportant: false
   resource-stream-lifecycle:
     difficulty: BASIC
-    isImportant: false
   classpath-vs-filesystem:
     difficulty: BASIC
-    isImportant: false
   resource-vs-class-loading:
     difficulty: BASIC
-    isImportant: false

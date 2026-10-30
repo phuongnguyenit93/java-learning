@@ -1,31 +1,21 @@
 sections:
   numerical-error-and-stability-001:
     difficulty: BASIC
-    isImportant: true
   numerical-error-and-stability-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   numerical-error-and-stability-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   numerical-error-and-stability-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   numerical-error-and-stability-005:
     difficulty: ADVANCED
-    isImportant: false
   numerical-error-and-stability-006:
     difficulty: ADVANCED
-    isImportant: true
   numerical-error-and-stability-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   numerical-error-and-stability-008:
     difficulty: BASIC
-    isImportant: true
   numerical-error-and-stability-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   numerical-error-and-stability-010:
     difficulty: ADVANCED
-    isImportant: true

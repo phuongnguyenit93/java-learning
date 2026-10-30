@@ -1,13 +1,9 @@
 sections:
   abstraction-design-synthesis:
     difficulty: BASIC
-    isImportant: false
   abstraction-design-example:
     difficulty: BASIC
-    isImportant: false
   abstraction-design-checklist:
     difficulty: BASIC
-    isImportant: false
   abstraction-final-mental-model:
     difficulty: BASIC
-    isImportant: false

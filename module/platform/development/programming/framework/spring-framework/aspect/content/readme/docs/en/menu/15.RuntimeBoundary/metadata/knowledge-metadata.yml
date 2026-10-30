@@ -1,19 +1,13 @@
 sections:
   spring-aop-runtime:
     difficulty: BASIC
-    isImportant: false
   spring-aop-vs-aspectj:
     difficulty: BASIC
-    isImportant: false
   runtime-boundary-demo:
     difficulty: BASIC
-    isImportant: false
   framework-connections:
     difficulty: BASIC
-    isImportant: false
   aop-end-to-end-synthesis:
     difficulty: BASIC
-    isImportant: false
   runtime-boundary-conclusion:
     difficulty: BASIC
-    isImportant: false

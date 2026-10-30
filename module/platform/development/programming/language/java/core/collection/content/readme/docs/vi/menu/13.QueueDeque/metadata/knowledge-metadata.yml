@@ -1,28 +1,19 @@
 sections:
   queue-deque-001:
     difficulty: BASIC
-    isImportant: false
   queue-deque-002:
     difficulty: BASIC
-    isImportant: false
   queue-deque-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   queue-deque-004:
     difficulty: BASIC
-    isImportant: false
   queue-deque-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   queue-deque-006:
     difficulty: ADVANCED
-    isImportant: false
   queue-deque-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   queue-deque-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   queue-deque-009:
     difficulty: INTERMEDIATE
-    isImportant: false

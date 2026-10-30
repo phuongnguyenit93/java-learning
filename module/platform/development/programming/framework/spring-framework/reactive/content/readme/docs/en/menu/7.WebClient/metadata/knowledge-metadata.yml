@@ -1,40 +1,27 @@
 sections:
   webclient-purpose:
     difficulty: BASIC
-    isImportant: false
   webclient-builder-immutability:
     difficulty: BASIC
-    isImportant: false
   webclient-client-connectors:
     difficulty: INTERMEDIATE
-    isImportant: false
   webclient-request-and-body:
     difficulty: BASIC
-    isImportant: false
   webclient-response-retrieval:
     difficulty: BASIC
-    isImportant: false
   webclient-exchange-control:
     difficulty: INTERMEDIATE
-    isImportant: false
   webclient-error-handling:
     difficulty: INTERMEDIATE
-    isImportant: false
   webclient-streaming-responses:
     difficulty: INTERMEDIATE
-    isImportant: false
   webclient-filters-attributes-context:
     difficulty: ADVANCED
-    isImportant: false
   webclient-codec-infrastructure:
     difficulty: ADVANCED
-    isImportant: false
   webclient-connector-resources:
     difficulty: ADVANCED
-    isImportant: false
   webclient-reactor-netty-shared-resources:
     difficulty: ADVANCED
-    isImportant: false
   webclient-in-mvc:
     difficulty: INTERMEDIATE
-    isImportant: false

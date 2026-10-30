@@ -14,13 +14,13 @@ class ReadmeMetadataSyncServiceTest {
 
     @Test
     void syncingLegacySectionsDiscardsOnlyObsoleteGovernanceMetadata() {
-        Map section = [difficulty: 'ADVANCED', isImportant: true,
+        Map section = [difficulty: 'ADVANCED',
                 aiGenerated: false, reviewed: true]
         def method = ReadmeMetadataSyncService.getDeclaredMethod(
                 'ensureRequiredFields', Map, String, String, String, String)
         method.accessible = true
         method.invoke(null, section, 'module', 'vi', '1.Basic/knowledge/Basic.md', 'basic-001')
-        assertEquals([difficulty: 'ADVANCED', isImportant: true], section)
+        assertEquals([difficulty: 'ADVANCED'], section)
     }
 
     @Test
@@ -34,7 +34,6 @@ class ReadmeMetadataSyncServiceTest {
     difficulty: ADVANCED
 
 
-    isImportant: true
     humanNote: preserve-this
 ''', 'UTF-8')
 
@@ -43,11 +42,11 @@ class ReadmeMetadataSyncServiceTest {
         String source = '2.Discovery Server/knowledge/Lesson.md'
         String markdown = '## <a id="existing-id">Existing knowledge</a>\n'
         String result = service.prepareImportedMetadata(module,
-                [(source): markdown], [(source): [null]], [(source): [null]])
+                [(source): markdown], [(source): [null]])
         Map root = new Yaml().load(result)
 
         assertEquals([source] as Set, root.keySet())
-        assertEquals([difficulty: 'BASIC', isImportant: false], root[source]['existing-id'])
+        assertEquals([difficulty: 'BASIC'], root[source]['existing-id'])
     }
 
     @Test
@@ -61,7 +60,6 @@ class ReadmeMetadataSyncServiceTest {
     difficulty: INTERMEDIATE
 
 
-    isImportant: true
 2.Spring_Task_Executor/knowledge/Lesson.md:
   stable-id:
     humanNote: newer-path
@@ -72,11 +70,11 @@ class ReadmeMetadataSyncServiceTest {
         String source = '2.Spring_Task_Executor/Lesson.md'
         String result = service.prepareImportedMetadata(module,
                 [(source): '## <a id="stable-id">Valid</a>\n'],
-                [(source): [null]], [(source): [null]])
+                [(source): [null]])
         Map root = new Yaml().load(result)
         Map section = root['2.Spring_Task_Executor/knowledge/Lesson.md']['stable-id']
         assertEquals('BASIC', section.difficulty)
-        assertEquals(false, section.isImportant)
+        assertEquals(['difficulty'] as Set, section.keySet())
         assertFalse(section.containsKey('humanNote'))
     }
 
@@ -143,14 +141,13 @@ class ReadmeMetadataSyncServiceTest {
   difficulty: ADVANCED
 
 
-  isImportant: true
 ''', 'UTF-8')
         ReadmeMetadataSyncService service = new ReadmeMetadataSyncService(
                 Logging.getLogger(ReadmeMetadataSyncServiceTest))
         String source = '1.Basic/knowledge/Basic.md'
         Map fresh = new Yaml().load(service.prepareImportedMetadata(module,
                 [(source): '## <a id="basic-001">Basic</a>\n'],
-                [(source): ['']], [(source): [null]]))
+                [(source): ['']]))
         assertEquals('BASIC', fresh[source]['basic-001'].difficulty)
         assertTrue(file.getText('UTF-8').startsWith('basic-001:'))
     }

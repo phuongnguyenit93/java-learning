@@ -1,37 +1,25 @@
 sections:
   common-class-loading-errors-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   common-class-loading-errors-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   common-class-loading-errors-003:
     difficulty: ADVANCED
-    isImportant: true
   common-class-loading-errors-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   common-class-loading-errors-005:
     difficulty: ADVANCED
-    isImportant: false
   common-class-loading-errors-006:
     difficulty: ADVANCED
-    isImportant: true
   common-class-loading-errors-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   common-class-loading-errors-008:
     difficulty: ADVANCED
-    isImportant: true
   common-class-loading-errors-009:
     difficulty: ADVANCED
-    isImportant: true
   common-class-loading-errors-010:
     difficulty: ADVANCED
-    isImportant: true
   common-class-loading-errors-011:
     difficulty: ADVANCED
-    isImportant: false
   common-class-loading-errors-012:
     difficulty: ADVANCED
-    isImportant: false

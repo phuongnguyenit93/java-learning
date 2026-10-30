@@ -1,10 +1,7 @@
 sections:
   allocation-initialization-construction:
     difficulty: BASIC
-    isImportant: false
   constructor-dynamic-dispatch-risk:
     difficulty: BASIC
-    isImportant: false
   this-escape:
     difficulty: BASIC
-    isImportant: false

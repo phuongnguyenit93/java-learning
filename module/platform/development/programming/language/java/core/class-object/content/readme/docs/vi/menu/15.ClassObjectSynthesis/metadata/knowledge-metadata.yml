@@ -1,7 +1,5 @@
 sections:
   class-object-synthesis:
     difficulty: BASIC
-    isImportant: false
   class-object-module-boundaries:
     difficulty: BASIC
-    isImportant: false

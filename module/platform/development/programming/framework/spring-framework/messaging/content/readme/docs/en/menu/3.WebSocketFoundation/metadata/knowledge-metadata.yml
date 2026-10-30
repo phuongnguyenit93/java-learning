@@ -1,28 +1,19 @@
 sections:
   websocket-use-cases:
     difficulty: BASIC
-    isImportant: false
   websocket-handshake:
     difficulty: BASIC
-    isImportant: false
   websocket-handler-session:
     difficulty: BASIC
-    isImportant: false
   websocket-client:
     difficulty: BASIC
-    isImportant: false
   websocket-message-types:
     difficulty: BASIC
-    isImportant: false
   websocket-handshake-customization:
     difficulty: BASIC
-    isImportant: false
   websocket-origin-policy:
     difficulty: BASIC
-    isImportant: false
   sockjs-fallback:
     difficulty: BASIC
-    isImportant: false
   servlet-reactive-websocket-boundary:
     difficulty: BASIC
-    isImportant: false

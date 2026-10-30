@@ -1,16 +1,11 @@
 sections:
   purity-concept:
     difficulty: BASIC
-    isImportant: false
   purity-motivation:
     difficulty: BASIC
-    isImportant: false
   purity-input-output:
     difficulty: BASIC
-    isImportant: false
   referential-transparency:
     difficulty: BASIC
-    isImportant: false
   purity-boundaries:
     difficulty: BASIC
-    isImportant: false

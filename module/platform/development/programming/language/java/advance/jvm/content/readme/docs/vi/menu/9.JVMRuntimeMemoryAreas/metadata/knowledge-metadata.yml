@@ -1,28 +1,19 @@
 sections:
   jvm-runtime-memory-areas-001:
     difficulty: BASIC
-    isImportant: false
   jvm-runtime-memory-areas-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   jvm-runtime-memory-areas-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   jvm-runtime-memory-areas-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   jvm-runtime-memory-areas-005:
     difficulty: ADVANCED
-    isImportant: false
   jvm-runtime-memory-areas-006:
     difficulty: ADVANCED
-    isImportant: false
   jvm-runtime-memory-areas-007:
     difficulty: ADVANCED
-    isImportant: false
   jvm-runtime-memory-areas-008:
     difficulty: ADVANCED
-    isImportant: false
   jvm-runtime-memory-areas-009:
     difficulty: INTERMEDIATE
-    isImportant: false

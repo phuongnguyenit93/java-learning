@@ -1,10 +1,7 @@
 sections:
   natural-order:
     difficulty: BASIC
-    isImportant: false
   compareto-contract:
     difficulty: INTERMEDIATE
-    isImportant: false
   compareto-equals-consistency:
     difficulty: INTERMEDIATE
-    isImportant: false

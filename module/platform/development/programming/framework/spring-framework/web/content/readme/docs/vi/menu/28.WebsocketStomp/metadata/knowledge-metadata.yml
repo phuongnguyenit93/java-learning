@@ -1,34 +1,23 @@
 sections:
   websocket-stomp-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   websocket-stomp-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   websocket-stomp-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   websocket-stomp-004:
     difficulty: ADVANCED
-    isImportant: false
   websocket-stomp-005:
     difficulty: ADVANCED
-    isImportant: false
   websocket-stomp-006:
     difficulty: ADVANCED
-    isImportant: false
   websocket-stomp-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   websocket-stomp-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   websocket-stomp-009:
     difficulty: ADVANCED
-    isImportant: false
   websocket-stomp-010:
     difficulty: ADVANCED
-    isImportant: false
   websocket-stomp-011:
     difficulty: ADVANCED
-    isImportant: false

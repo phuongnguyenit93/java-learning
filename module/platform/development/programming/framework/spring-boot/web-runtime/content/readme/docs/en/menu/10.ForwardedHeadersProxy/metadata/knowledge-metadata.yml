@@ -1,25 +1,17 @@
 sections:
   proxy-request-metadata:
     difficulty: BASIC
-    isImportant: false
   forward-header-strategies:
     difficulty: BASIC
-    isImportant: false
   native-forward-headers:
     difficulty: BASIC
-    isImportant: false
   framework-forward-headers:
     difficulty: BASIC
-    isImportant: false
   cloud-forward-header-defaults:
     difficulty: BASIC
-    isImportant: false
   proxy-tls-termination:
     difficulty: BASIC
-    isImportant: false
   server-specific-proxy-settings:
     difficulty: BASIC
-    isImportant: false
   forwarded-header-trust-boundary:
     difficulty: BASIC
-    isImportant: false

@@ -1,19 +1,13 @@
 sections:
   agile-what:
     difficulty: BASIC
-    isImportant: false
   agile-why:
     difficulty: BASIC
-    isImportant: false
   agile-without:
     difficulty: BASIC
-    isImportant: false
   agile-model:
     difficulty: BASIC
-    isImportant: false
   agile-methods:
     difficulty: BASIC
-    isImportant: false
   agile-boundary:
     difficulty: BASIC
-    isImportant: false

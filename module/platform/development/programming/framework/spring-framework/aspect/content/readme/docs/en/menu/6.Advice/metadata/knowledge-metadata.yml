@@ -1,16 +1,11 @@
 sections:
   advice-semantics:
     difficulty: BASIC
-    isImportant: false
   advice-success-demo:
     difficulty: BASIC
-    isImportant: false
   advice-failure-demo:
     difficulty: BASIC
-    isImportant: false
   advice-parameter-binding:
     difficulty: BASIC
-    isImportant: false
   advice-conclusion:
     difficulty: BASIC
-    isImportant: false

@@ -1,16 +1,11 @@
 sections:
   spi-contract-purpose:
     difficulty: BASIC
-    isImportant: false
   service-type-design:
     difficulty: BASIC
-    isImportant: false
   provider-type-design:
     difficulty: BASIC
-    isImportant: false
   provider-as-factory:
     difficulty: INTERMEDIATE
-    isImportant: false
   contract-stability:
     difficulty: INTERMEDIATE
-    isImportant: false

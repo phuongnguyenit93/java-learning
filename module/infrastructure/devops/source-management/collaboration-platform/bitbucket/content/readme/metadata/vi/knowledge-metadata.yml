@@ -1,124 +1,85 @@
 01_BitbucketCollaborationFoundations.md:
   bitbucket-cloud-purpose:
     difficulty: BASIC
-    isImportant: false
   why-hosted-source-collaboration:
     difficulty: BASIC
-    isImportant: false
   git-versus-bitbucket-cloud:
     difficulty: BASIC
-    isImportant: false
   workspace-project-repository-model:
     difficulty: BASIC
-    isImportant: false
   shared-source-members-and-administrators:
     difficulty: BASIC
-    isImportant: false
   pull-request-foundation:
     difficulty: BASIC
-    isImportant: false
   bitbucket-contribution-overview:
     difficulty: BASIC
-    isImportant: false
 02_AccessAndRepositoryGovernance.md:
   bitbucket-permission-scopes:
     difficulty: BASIC
-    isImportant: false
   users-groups-and-administrators:
     difficulty: BASIC
-    isImportant: false
   workspace-admin-environments:
     difficulty: BASIC
-    isImportant: false
   project-permission-inheritance:
     difficulty: BASIC
-    isImportant: false
   read-write-admin-and-visibility:
     difficulty: BASIC
-    isImportant: false
   access-governance-failure-modes:
     difficulty: BASIC
-    isImportant: false
 03_PullRequestChangeProposals.md:
   what-is-bitbucket-pull-request:
     difficulty: BASIC
-    isImportant: false
   source-destination-and-diff:
     difficulty: BASIC
-    isImportant: false
   review-context-description-and-reviewers:
     difficulty: BASIC
-    isImportant: false
   shared-versus-accepted-changes:
     difficulty: BASIC
-    isImportant: false
 04_PullRequestReviewsAndTasks.md:
   review-purpose-and-participants:
     difficulty: BASIC
-    isImportant: false
   diff-comments-and-discussions:
     difficulty: BASIC
-    isImportant: false
   feedback-versus-review-tasks:
     difficulty: BASIC
-    isImportant: false
   review-status-versus-merge-eligibility:
     difficulty: BASIC
-    isImportant: false
   revisions-and-re-review:
     difficulty: BASIC
-    isImportant: false
 05_BranchRestrictionsAndMergeChecks.md:
   why-protect-important-branches:
     difficulty: BASIC
-    isImportant: false
   branch-write-versus-merge-permissions:
     difficulty: BASIC
-    isImportant: false
   project-repository-and-branch-pattern-rules:
     difficulty: BASIC
-    isImportant: false
   merge-check-concepts-and-examples:
     difficulty: BASIC
-    isImportant: false
   advisory-versus-premium-blocking:
     difficulty: BASIC
-    isImportant: false
   merge-check-plan-scenario:
     difficulty: BASIC
-    isImportant: false
   overlapping-restrictions-and-diagnostics:
     difficulty: BASIC
-    isImportant: false
 06_JiraConfluenceAndCollaboration.md:
   jira-work-item-context:
     difficulty: BASIC
-    isImportant: false
   linking-source-changes-to-jira:
     difficulty: BASIC
-    isImportant: false
   mentions-notifications-and-review-tasks:
     difficulty: BASIC
-    isImportant: false
   bitbucket-native-issues-wiki-retirement:
     difficulty: BASIC
-    isImportant: false
   confluence-and-external-documentation:
     difficulty: BASIC
-    isImportant: false
 07_GovernedBitbucketTeamWorkflow.md:
   end-to-end-contribution-flow:
     difficulty: BASIC
-    isImportant: false
   review-tasks-and-policy-readiness:
     difficulty: BASIC
-    isImportant: false
   diagnosing-a-stalled-pull-request:
     difficulty: BASIC
-    isImportant: false
   evidence-of-accepted-source-change:
     difficulty: BASIC
-    isImportant: false
   handoff-to-git-strategy-and-pipelines:
     difficulty: BASIC
-    isImportant: false

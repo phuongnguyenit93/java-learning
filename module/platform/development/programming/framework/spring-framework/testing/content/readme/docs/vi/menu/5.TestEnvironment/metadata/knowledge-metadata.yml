@@ -1,19 +1,13 @@
 sections:
   active-profiles:
     difficulty: BASIC
-    isImportant: false
   profile-resolution-and-inheritance:
     difficulty: INTERMEDIATE
-    isImportant: false
   test-property-source:
     difficulty: BASIC
-    isImportant: false
   test-property-precedence:
     difficulty: INTERMEDIATE
-    isImportant: false
   dynamic-property-source:
     difficulty: INTERMEDIATE
-    isImportant: false
   environment-inheritance-and-cache-identity:
     difficulty: ADVANCED
-    isImportant: false

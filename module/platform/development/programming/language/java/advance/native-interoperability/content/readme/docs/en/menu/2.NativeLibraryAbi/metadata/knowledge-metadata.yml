@@ -1,19 +1,13 @@
 sections:
   native-library-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   native-library-loading:
     difficulty: INTERMEDIATE
-    isImportant: false
   system-load-vs-loadlibrary:
     difficulty: INTERMEDIATE
-    isImportant: false
   native-symbol-resolution:
     difficulty: INTERMEDIATE
-    isImportant: false
   abi-calling-convention:
     difficulty: ADVANCED
-    isImportant: false
   platform-binary-compatibility:
     difficulty: ADVANCED
-    isImportant: false

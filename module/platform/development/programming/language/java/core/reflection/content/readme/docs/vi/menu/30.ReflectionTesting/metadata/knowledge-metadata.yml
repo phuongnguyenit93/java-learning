@@ -1,34 +1,23 @@
 sections:
   reflection-testing-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   reflection-testing-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   reflection-testing-003:
     difficulty: ADVANCED
-    isImportant: true
   reflection-testing-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   reflection-testing-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   reflection-testing-006:
     difficulty: ADVANCED
-    isImportant: true
   reflection-testing-007:
     difficulty: ADVANCED
-    isImportant: false
   reflection-testing-008:
     difficulty: ADVANCED
-    isImportant: true
   reflection-testing-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   reflection-testing-010:
     difficulty: ADVANCED
-    isImportant: true
   reflection-testing-011:
     difficulty: ADVANCED
-    isImportant: true

@@ -1,16 +1,11 @@
 sections:
   dop-choose:
     difficulty: BASIC
-    isImportant: false
   dop-costs:
     difficulty: BASIC
-    isImportant: false
   dop-functional-relation:
     difficulty: BASIC
-    isImportant: false
   dop-versus-dod:
     difficulty: BASIC
-    isImportant: false
   dop-handoff:
     difficulty: BASIC
-    isImportant: false

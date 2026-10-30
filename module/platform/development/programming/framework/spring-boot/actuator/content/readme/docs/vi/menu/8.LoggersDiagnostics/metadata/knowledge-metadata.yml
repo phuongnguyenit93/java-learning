@@ -1,22 +1,15 @@
 sections:
   loggers-endpoint:
     difficulty: BASIC
-    isImportant: false
   configured-effective-log-levels:
     difficulty: BASIC
-    isImportant: false
   runtime-log-level-changes:
     difficulty: BASIC
-    isImportant: false
   threaddump-endpoint:
     difficulty: BASIC
-    isImportant: false
   heapdump-endpoint:
     difficulty: BASIC
-    isImportant: false
   diagnostic-analysis-boundary:
     difficulty: BASIC
-    isImportant: false
   diagnostic-exposure-risk:
     difficulty: BASIC
-    isImportant: false

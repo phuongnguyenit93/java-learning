@@ -1,25 +1,17 @@
 sections:
   array-list-001:
     difficulty: BASIC
-    isImportant: false
   array-list-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   array-list-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   array-list-004:
     difficulty: ADVANCED
-    isImportant: false
   array-list-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   array-list-006:
     difficulty: ADVANCED
-    isImportant: false
   array-list-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   array-list-008:
     difficulty: INTERMEDIATE
-    isImportant: false

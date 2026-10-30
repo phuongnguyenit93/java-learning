@@ -1,22 +1,15 @@
 sections:
   static-and-private-001:
     difficulty: BASIC
-    isImportant: true
   static-and-private-002:
     difficulty: BASIC
-    isImportant: true
   static-and-private-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   static-and-private-004:
     difficulty: BASIC
-    isImportant: true
   static-and-private-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   static-and-private-006:
     difficulty: ADVANCED
-    isImportant: true
   static-and-private-007:
     difficulty: ADVANCED
-    isImportant: true

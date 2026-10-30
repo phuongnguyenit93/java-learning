@@ -1,31 +1,21 @@
 sections:
   type-conversion-001:
     difficulty: BASIC
-    isImportant: false
   type-conversion-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   type-conversion-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   type-conversion-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   type-conversion-005:
     difficulty: ADVANCED
-    isImportant: false
   type-conversion-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   type-conversion-007:
     difficulty: BASIC
-    isImportant: false
   type-conversion-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   type-conversion-009:
     difficulty: INTERMEDIATE
-    isImportant: false
   type-conversion-010:
     difficulty: INTERMEDIATE
-    isImportant: false

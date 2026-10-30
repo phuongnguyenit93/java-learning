@@ -1,19 +1,13 @@
 sections:
   web-overview-001:
     difficulty: BASIC
-    isImportant: false
   web-overview-002:
     difficulty: BASIC
-    isImportant: false
   web-overview-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   web-overview-004:
     difficulty: BASIC
-    isImportant: false
   web-overview-005:
     difficulty: ADVANCED
-    isImportant: false
   web-overview-006:
     difficulty: ADVANCED
-    isImportant: false

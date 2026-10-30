@@ -1,19 +1,13 @@
 sections:
   cache-purpose:
     difficulty: BASIC
-    isImportant: false
   cache-vs-source-of-truth:
     difficulty: BASIC
-    isImportant: false
   cache-vs-buffer-and-storage:
     difficulty: BASIC
-    isImportant: false
   cache-candidate-criteria:
     difficulty: BASIC
-    isImportant: false
   spring-cache-abstraction-boundary:
     difficulty: BASIC
-    isImportant: false
   provider-owned-concerns:
     difficulty: BASIC
-    isImportant: false

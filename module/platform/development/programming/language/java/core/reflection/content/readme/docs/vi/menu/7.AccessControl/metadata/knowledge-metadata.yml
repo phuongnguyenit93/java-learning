@@ -1,28 +1,19 @@
 sections:
   access-control-001:
     difficulty: BASIC
-    isImportant: true
   access-control-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   access-control-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   access-control-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   access-control-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   access-control-006:
     difficulty: BASIC
-    isImportant: false
   access-control-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   access-control-008:
     difficulty: ADVANCED
-    isImportant: false
   access-control-009:
     difficulty: ADVANCED
-    isImportant: true

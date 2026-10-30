@@ -1,34 +1,23 @@
 sections:
   constructors-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   constructors-002:
     difficulty: BASIC
-    isImportant: true
   constructors-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   constructors-004:
     difficulty: BASIC
-    isImportant: true
   constructors-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   constructors-006:
     difficulty: BASIC
-    isImportant: true
   constructors-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   constructors-008:
     difficulty: ADVANCED
-    isImportant: false
   constructors-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   constructors-010:
     difficulty: INTERMEDIATE
-    isImportant: true
   constructors-011:
     difficulty: ADVANCED
-    isImportant: true

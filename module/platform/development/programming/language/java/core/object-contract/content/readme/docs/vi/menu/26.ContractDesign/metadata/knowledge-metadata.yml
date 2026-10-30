@@ -1,25 +1,17 @@
 sections:
   contract-design-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   contract-design-002:
     difficulty: ADVANCED
-    isImportant: true
   contract-design-003:
     difficulty: ADVANCED
-    isImportant: true
   contract-design-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   contract-design-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   contract-design-006:
     difficulty: ADVANCED
-    isImportant: true
   contract-design-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   contract-design-008:
     difficulty: INTERMEDIATE
-    isImportant: true

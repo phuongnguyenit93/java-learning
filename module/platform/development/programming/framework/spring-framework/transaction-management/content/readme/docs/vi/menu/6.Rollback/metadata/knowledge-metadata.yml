@@ -1,16 +1,11 @@
 sections:
   transaction-rollback-defaults:
     difficulty: BASIC
-    isImportant: false
   transaction-rollback-rules:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-rollback-only:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-exception-handling:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-return-value-rollback:
     difficulty: ADVANCED
-    isImportant: false

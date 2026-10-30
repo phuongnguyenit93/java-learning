@@ -1,16 +1,11 @@
 sections:
   mybatis-what:
     difficulty: BASIC
-    isImportant: false
   mybatis-why:
     difficulty: BASIC
-    isImportant: false
   mybatis-model:
     difficulty: BASIC
-    isImportant: false
   mybatis-vs-orm:
     difficulty: BASIC
-    isImportant: false
   mybatis-boundary:
     difficulty: BASIC
-    isImportant: false

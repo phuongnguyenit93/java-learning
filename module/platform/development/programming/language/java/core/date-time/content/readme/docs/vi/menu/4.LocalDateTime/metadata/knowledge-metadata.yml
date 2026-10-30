@@ -1,10 +1,7 @@
 sections:
   local-date-time-model:
     difficulty: BASIC
-    isImportant: false
   local-date-time-ambiguity:
     difficulty: BASIC
-    isImportant: false
   local-date-time-use-cases:
     difficulty: BASIC
-    isImportant: false

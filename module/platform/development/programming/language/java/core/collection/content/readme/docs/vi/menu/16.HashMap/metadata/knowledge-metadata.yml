@@ -1,28 +1,19 @@
 sections:
   hash-map-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   hash-map-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   hash-map-003:
     difficulty: ADVANCED
-    isImportant: false
   hash-map-004:
     difficulty: ADVANCED
-    isImportant: false
   hash-map-005:
     difficulty: ADVANCED
-    isImportant: false
   hash-map-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   hash-map-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   hash-map-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   hash-map-009:
     difficulty: ADVANCED
-    isImportant: false

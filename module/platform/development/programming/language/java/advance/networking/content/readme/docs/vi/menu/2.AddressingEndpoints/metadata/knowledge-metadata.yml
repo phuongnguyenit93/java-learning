@@ -1,25 +1,17 @@
 sections:
   inet-address-model:
     difficulty: BASIC
-    isImportant: false
   name-resolution:
     difficulty: INTERMEDIATE
-    isImportant: false
   name-resolution-spi:
     difficulty: ADVANCED
-    isImportant: false
   network-interface-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   socket-address-model:
     difficulty: BASIC
-    isImportant: false
   uri-url-resource-identity:
     difficulty: BASIC
-    isImportant: false
   urlconnection-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   unix-domain-addresses:
     difficulty: INTERMEDIATE
-    isImportant: false

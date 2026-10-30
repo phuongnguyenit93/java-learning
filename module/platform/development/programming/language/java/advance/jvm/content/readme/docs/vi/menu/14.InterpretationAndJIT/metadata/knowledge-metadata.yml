@@ -1,28 +1,19 @@
 sections:
   interpretation-and-jit-001:
     difficulty: BASIC
-    isImportant: false
   interpretation-and-jit-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   interpretation-and-jit-003:
     difficulty: ADVANCED
-    isImportant: false
   interpretation-and-jit-004:
     difficulty: ADVANCED
-    isImportant: false
   interpretation-and-jit-005:
     difficulty: ADVANCED
-    isImportant: false
   interpretation-and-jit-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   interpretation-and-jit-007:
     difficulty: ADVANCED
-    isImportant: false
   interpretation-and-jit-008:
     difficulty: ADVANCED
-    isImportant: false
   interpretation-and-jit-009:
     difficulty: INTERMEDIATE
-    isImportant: false

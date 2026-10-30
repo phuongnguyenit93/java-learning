@@ -1,28 +1,19 @@
 sections:
   string-comparison-001:
     difficulty: BASIC
-    isImportant: false
   string-comparison-002:
     difficulty: BASIC
-    isImportant: false
   string-comparison-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-comparison-004:
     difficulty: ADVANCED
-    isImportant: false
   string-comparison-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-comparison-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-comparison-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-comparison-008:
     difficulty: ADVANCED
-    isImportant: false
   string-comparison-009:
     difficulty: INTERMEDIATE
-    isImportant: false

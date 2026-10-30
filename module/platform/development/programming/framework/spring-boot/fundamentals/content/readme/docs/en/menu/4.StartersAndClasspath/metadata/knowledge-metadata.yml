@@ -1,16 +1,11 @@
 sections:
   starter-purpose:
     difficulty: BASIC
-    isImportant: false
   managed-dependencies:
     difficulty: BASIC
-    isImportant: false
   classpath-driven-behavior:
     difficulty: BASIC
-    isImportant: false
   starter-vs-auto-configuration:
     difficulty: BASIC
-    isImportant: false
   dependency-choice-boundary:
     difficulty: BASIC
-    isImportant: false

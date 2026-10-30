@@ -1,22 +1,15 @@
 sections:
   endpoint-enablement:
     difficulty: BASIC
-    isImportant: false
   endpoint-exposure:
     difficulty: BASIC
-    isImportant: false
   endpoint-availability:
     difficulty: BASIC
-    isImportant: false
   web-endpoint-surface:
     difficulty: BASIC
-    isImportant: false
   jmx-endpoint-surface:
     difficulty: BASIC
-    isImportant: false
   actuator-base-path:
     difficulty: BASIC
-    isImportant: false
   exposure-defaults-and-risk:
     difficulty: BASIC
-    isImportant: false

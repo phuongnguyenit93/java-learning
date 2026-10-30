@@ -1,13 +1,9 @@
 sections:
   interface-contract:
     difficulty: BASIC
-    isImportant: false
   interface-fields:
     difficulty: BASIC
-    isImportant: false
   interface-method-kinds:
     difficulty: BASIC
-    isImportant: false
   interface-implementation:
     difficulty: BASIC
-    isImportant: false

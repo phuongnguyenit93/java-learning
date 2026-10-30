@@ -1,22 +1,15 @@
 sections:
   set-001:
     difficulty: BASIC
-    isImportant: false
   set-002:
     difficulty: BASIC
-    isImportant: false
   set-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   set-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   set-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   set-006:
     difficulty: ADVANCED
-    isImportant: false
   set-007:
     difficulty: INTERMEDIATE
-    isImportant: false

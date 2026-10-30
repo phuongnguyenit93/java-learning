@@ -1,31 +1,21 @@
 sections:
   invocation-boundaries-001:
     difficulty: BASIC
-    isImportant: false
   invocation-boundaries-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   invocation-boundaries-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   invocation-boundaries-004:
     difficulty: ADVANCED
-    isImportant: false
   invocation-boundaries-005:
     difficulty: ADVANCED
-    isImportant: false
   invocation-boundaries-006:
     difficulty: ADVANCED
-    isImportant: false
   invocation-boundaries-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   invocation-boundaries-008:
     difficulty: ADVANCED
-    isImportant: false
   invocation-boundaries-009:
     difficulty: ADVANCED
-    isImportant: false
   invocation-boundaries-010:
     difficulty: ADVANCED
-    isImportant: false

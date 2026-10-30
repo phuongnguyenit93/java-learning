@@ -1,13 +1,9 @@
 sections:
   currency-model:
     difficulty: BASIC
-    isImportant: false
   currency-vs-locale:
     difficulty: BASIC
-    isImportant: false
   currency-format:
     difficulty: BASIC
-    isImportant: false
   money-boundary:
     difficulty: BASIC
-    isImportant: false

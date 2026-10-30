@@ -1,28 +1,19 @@
 sections:
   regular-expressions-001:
     difficulty: BASIC
-    isImportant: false
   regular-expressions-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   regular-expressions-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   regular-expressions-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   regular-expressions-005:
     difficulty: BASIC
-    isImportant: false
   regular-expressions-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   regular-expressions-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   regular-expressions-008:
     difficulty: ADVANCED
-    isImportant: false
   regular-expressions-009:
     difficulty: ADVANCED
-    isImportant: false

@@ -1,168 +1,115 @@
 01-strategy-foundations.md:
   why-branching-strategy:
     difficulty: BASIC
-    isImportant: false
   git-mechanics-vs-team-policy:
     difficulty: BASIC
-    isImportant: false
   parallel-work-integration-risk:
     difficulty: BASIC
-    isImportant: false
   mainline-work-release-vocabulary:
     difficulty: BASIC
-    isImportant: false
   integrated-vs-releasable:
     difficulty: BASIC
-    isImportant: false
   strategy-decisions-and-handoffs:
     difficulty: BASIC
-    isImportant: false
 02-branch-lifetime-and-cadence.md:
   short-vs-long-lived-branches:
     difficulty: BASIC
-    isImportant: false
   cadence-change-size-feedback:
     difficulty: BASIC
-    isImportant: false
   divergence-and-conflict-evidence:
     difficulty: BASIC
-    isImportant: false
   review-small-increments:
     difficulty: BASIC
-    isImportant: false
   incomplete-work-policy:
     difficulty: BASIC
-    isImportant: false
 03-trunk-based-development.md:
   tbd-definition-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   single-trunk-reliable-mainline:
     difficulty: INTERMEDIATE
-    isImportant: false
   direct-vs-short-branch:
     difficulty: INTERMEDIATE
-    isImportant: false
   frequent-integration-small-changes:
     difficulty: INTERMEDIATE
-    isImportant: false
   feature-flags-release-branches:
     difficulty: INTERMEDIATE
-    isImportant: false
   tbd-evidence-antipatterns:
     difficulty: INTERMEDIATE
-    isImportant: false
 04-github-flow.md:
   github-flow-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   default-branch-pr-cycle:
     difficulty: INTERMEDIATE
-    isImportant: false
   github-flow-review-value:
     difficulty: INTERMEDIATE
-    isImportant: false
   github-flow-vs-tbd:
     difficulty: INTERMEDIATE
-    isImportant: false
   workflow-vs-github-platform:
     difficulty: INTERMEDIATE
-    isImportant: false
 05-git-flow.md:
   git-flow-context:
     difficulty: INTERMEDIATE
-    isImportant: false
   main-develop-roles:
     difficulty: INTERMEDIATE
-    isImportant: false
   feature-release-hotfix-roles:
     difficulty: INTERMEDIATE
-    isImportant: false
   release-stabilization-handoffs:
     difficulty: INTERMEDIATE
-    isImportant: false
   multiple-maintained-versions-caveat:
     difficulty: INTERMEDIATE
-    isImportant: false
   git-flow-costs-continuous-delivery:
     difficulty: INTERMEDIATE
-    isImportant: false
 06-integration-history-policy.md:
   target-history-policy-purpose:
     difficulty: ADVANCED
-    isImportant: false
   merge-commit-result:
     difficulty: ADVANCED
-    isImportant: false
   squash-merge-result:
     difficulty: ADVANCED
-    isImportant: false
   rebase-and-merge-result:
     difficulty: ADVANCED
-    isImportant: false
   server-integration-vs-local-rebase:
     difficulty: ADVANCED
-    isImportant: false
   history-rewrite-risk:
     difficulty: ADVANCED
-    isImportant: false
   traceability-revert-diagnostics:
     difficulty: ADVANCED
-    isImportant: false
 07-release-hotfix-policy.md:
   release-from-main-vs-branch:
     difficulty: INTERMEDIATE
-    isImportant: false
   release-branch-lifecycle:
     difficulty: INTERMEDIATE
-    isImportant: false
   hotfix-targets-and-propagation:
     difficulty: INTERMEDIATE
-    isImportant: false
   backport-forwardport-policy:
     difficulty: INTERMEDIATE
-    isImportant: false
   release-branch-divergence-cost:
     difficulty: INTERMEDIATE
-    isImportant: false
 08-team-governance.md:
   branch-purpose-naming:
     difficulty: INTERMEDIATE
-    isImportant: false
   branch-lifetime-cleanup:
     difficulty: INTERMEDIATE
-    isImportant: false
   review-expectations:
     difficulty: INTERMEDIATE
-    isImportant: false
   premerge-gates-policy:
     difficulty: INTERMEDIATE
-    isImportant: false
   mainline-health-ownership:
     difficulty: INTERMEDIATE
-    isImportant: false
   vendor-enforcement-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
 09-selection-and-diagnostics.md:
   compare-three-models:
     difficulty: ADVANCED
-    isImportant: false
   selection-context:
     difficulty: ADVANCED
-    isImportant: false
   long-branch-delayed-integration:
     difficulty: ADVANCED
-    isImportant: false
   repeat-conflicts-opacity:
     difficulty: ADVANCED
-    isImportant: false
   missing-hotfix-backports:
     difficulty: ADVANCED
-    isImportant: false
   sample-team-policy-evidence:
     difficulty: ADVANCED
-    isImportant: false
   strategy-handoffs:
     difficulty: ADVANCED
-    isImportant: false

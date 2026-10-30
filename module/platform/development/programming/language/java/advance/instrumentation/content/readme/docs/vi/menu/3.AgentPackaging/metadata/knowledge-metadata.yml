@@ -1,19 +1,13 @@
 sections:
   agent-jar:
     difficulty: BASIC
-    isImportant: false
   agent-manifest:
     difficulty: BASIC
-    isImportant: false
   agent-entry-points:
     difficulty: BASIC
-    isImportant: false
   agent-arguments:
     difficulty: BASIC
-    isImportant: false
   agent-capability-declarations:
     difficulty: BASIC
-    isImportant: false
   executable-jar-agent:
     difficulty: BASIC
-    isImportant: false

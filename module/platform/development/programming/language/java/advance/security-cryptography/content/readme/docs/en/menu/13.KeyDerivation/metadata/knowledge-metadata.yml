@@ -1,16 +1,11 @@
 sections:
   key-derivation-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   password-key-material:
     difficulty: INTERMEDIATE
-    isImportant: false
   password-kdf-java-api:
     difficulty: INTERMEDIATE
-    isImportant: false
   salt-and-work-factor:
     difficulty: INTERMEDIATE
-    isImportant: false
   derived-key-usage:
     difficulty: ADVANCED
-    isImportant: false

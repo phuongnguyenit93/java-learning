@@ -1,7 +1,5 @@
 sections:
   hashcode-contract:
     difficulty: BASIC
-    isImportant: false
   hash-distribution:
     difficulty: INTERMEDIATE
-    isImportant: false

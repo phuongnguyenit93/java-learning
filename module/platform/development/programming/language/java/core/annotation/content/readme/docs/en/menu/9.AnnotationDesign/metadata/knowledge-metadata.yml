@@ -1,16 +1,11 @@
 sections:
   annotation-fit:
     difficulty: INTERMEDIATE
-    isImportant: false
   annotation-alternatives:
     difficulty: INTERMEDIATE
-    isImportant: false
   annotation-end-to-end:
     difficulty: INTERMEDIATE
-    isImportant: false
   annotation-overuse-pitfalls:
     difficulty: INTERMEDIATE
-    isImportant: false
   annotation-design-checklist:
     difficulty: INTERMEDIATE
-    isImportant: false

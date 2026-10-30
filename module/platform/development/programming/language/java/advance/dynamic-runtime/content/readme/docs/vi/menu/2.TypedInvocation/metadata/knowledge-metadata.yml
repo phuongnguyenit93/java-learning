@@ -1,16 +1,11 @@
 sections:
   method-type-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   method-handle-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   signature-polymorphism:
     difficulty: ADVANCED
-    isImportant: false
   invoke-exact-vs-invoke:
     difficulty: INTERMEDIATE
-    isImportant: false
   invocation-type-failures:
     difficulty: INTERMEDIATE
-    isImportant: false

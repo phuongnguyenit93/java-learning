@@ -1,13 +1,9 @@
 sections:
   boot-build-image:
     difficulty: BASIC
-    isImportant: false
   oci-image-output:
     difficulty: BASIC
-    isImportant: false
   image-builder-connection:
     difficulty: BASIC
-    isImportant: false
   image-publication:
     difficulty: BASIC
-    isImportant: false

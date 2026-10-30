@@ -1,28 +1,19 @@
 sections:
   functional-interface-purpose:
     difficulty: BASIC
-    isImportant: false
   sam-contract:
     difficulty: BASIC
-    isImportant: false
   functional-interface-function-type:
     difficulty: INTERMEDIATE
-    isImportant: false
   sam-object-method-rule:
     difficulty: ADVANCED
-    isImportant: false
   sam-inherited-method-rule:
     difficulty: ADVANCED
-    isImportant: false
   functional-interface-annotation:
     difficulty: BASIC
-    isImportant: false
   non-abstract-interface-methods:
     difficulty: INTERMEDIATE
-    isImportant: false
   custom-functional-interface:
     difficulty: BASIC
-    isImportant: false
   functional-interface-contract-violations:
     difficulty: INTERMEDIATE
-    isImportant: false

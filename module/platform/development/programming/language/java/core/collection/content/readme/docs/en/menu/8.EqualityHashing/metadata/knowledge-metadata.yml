@@ -1,19 +1,13 @@
 sections:
   element-equality-effects:
     difficulty: BASIC
-    isImportant: false
   hash-bucket-boundary:
     difficulty: BASIC
-    isImportant: false
   sorted-equality-boundary:
     difficulty: BASIC
-    isImportant: false
   collection-equality-boundary:
     difficulty: BASIC
-    isImportant: false
   collection-equality-contracts:
     difficulty: BASIC
-    isImportant: false
   mutable-element-risk:
     difficulty: BASIC
-    isImportant: false

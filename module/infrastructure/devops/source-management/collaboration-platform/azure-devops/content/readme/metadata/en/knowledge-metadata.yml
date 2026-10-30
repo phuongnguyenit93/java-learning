@@ -1,209 +1,142 @@
 01-azure-repos-collaboration.md:
   azure-devops-vs-azure-repos:
     difficulty: BASIC
-    isImportant: false
   why-hosted-collaboration:
     difficulty: BASIC
-    isImportant: false
   git-versus-azure-repos-ownership:
     difficulty: BASIC
-    isImportant: false
   organization-project-repo-vocabulary:
     difficulty: BASIC
-    isImportant: false
   what-is-a-pull-request:
     difficulty: BASIC
-    isImportant: false
   reviewer-policy-and-merge-relation:
     difficulty: BASIC
-    isImportant: false
   boards-and-pipelines-boundary:
     difficulty: BASIC
-    isImportant: false
   trace-collaboration-surface:
     difficulty: BASIC
-    isImportant: false
 02-organizations-projects-repositories.md:
   organization-project-hierarchy:
     difficulty: BASIC
-    isImportant: false
   project-and-repository-boundary:
     difficulty: BASIC
-    isImportant: false
   multiple-git-repositories-in-project:
     difficulty: BASIC
-    isImportant: false
   repository-owner-admin-roles:
     difficulty: BASIC
-    isImportant: false
   project-visibility-versus-repo-access:
     difficulty: BASIC
-    isImportant: false
   public-project-retirement-2026:
     difficulty: BASIC
-    isImportant: false
   enable-disable-repos-service:
     difficulty: BASIC
-    isImportant: false
   verify-project-repo-structure:
     difficulty: BASIC
-    isImportant: false
 03-membership-and-access.md:
   access-level-vs-security-permission:
     difficulty: INTERMEDIATE
-    isImportant: false
   readers-contributors-project-admins:
     difficulty: INTERMEDIATE
-    isImportant: false
   direct-and-group-membership:
     difficulty: INTERMEDIATE
-    isImportant: false
   permission-scopes-inheritance:
     difficulty: INTERMEDIATE
-    isImportant: false
   allow-deny-not-set:
     difficulty: INTERMEDIATE
-    isImportant: false
   explicit-inherited-effective-rights:
     difficulty: INTERMEDIATE
-    isImportant: false
   access-to-read-contribute-admin:
     difficulty: INTERMEDIATE
-    isImportant: false
   deny-and-specificity-exceptions:
     difficulty: INTERMEDIATE
-    isImportant: false
   contribute-to-pr-vs-code:
     difficulty: INTERMEDIATE
-    isImportant: false
   troubleshoot-effective-permissions:
     difficulty: INTERMEDIATE
-    isImportant: false
 04-branches-forks-contributions.md:
   shared-branch-versus-fork:
     difficulty: INTERMEDIATE
-    isImportant: false
   fork-origin-upstream:
     difficulty: INTERMEDIATE
-    isImportant: false
   fork-permissions-and-policies:
     difficulty: INTERMEDIATE
-    isImportant: false
   pull-request-source-target:
     difficulty: INTERMEDIATE
-    isImportant: false
   create-contribution-request:
     difficulty: INTERMEDIATE
-    isImportant: false
   draft-vs-ready-pull-request:
     difficulty: INTERMEDIATE
-    isImportant: false
   verify-contribution-path:
     difficulty: INTERMEDIATE
-    isImportant: false
 05-pull-request-review.md:
   pr-diff-and-description:
     difficulty: INTERMEDIATE
-    isImportant: false
   reviewer-assignment-and-context:
     difficulty: INTERMEDIATE
-    isImportant: false
   line-comments-discussion-threads:
     difficulty: INTERMEDIATE
-    isImportant: false
   approve-versus-approve-suggestions:
     difficulty: INTERMEDIATE
-    isImportant: false
   wait-for-author-versus-reject:
     difficulty: INTERMEDIATE
-    isImportant: false
   review-vote-vs-pr-completion:
     difficulty: INTERMEDIATE
-    isImportant: false
   author-revisions-and-re-review:
     difficulty: INTERMEDIATE
-    isImportant: false
   verify-review-state:
     difficulty: INTERMEDIATE
-    isImportant: false
 06-branch-policies-and-bypass.md:
   why-protect-target-branches:
     difficulty: INTERMEDIATE
-    isImportant: false
   branch-permissions-vs-policies:
     difficulty: INTERMEDIATE
-    isImportant: false
   required-vs-optional-policies:
     difficulty: INTERMEDIATE
-    isImportant: false
   minimum-reviewers-and-self-approval:
     difficulty: INTERMEDIATE
-    isImportant: false
   required-reviewers-and-comment-resolution:
     difficulty: INTERMEDIATE
-    isImportant: false
   build-validation-status-checks:
     difficulty: INTERMEDIATE
-    isImportant: false
   permitted-merge-types:
     difficulty: INTERMEDIATE
-    isImportant: false
   bypass-on-pr-versus-push:
     difficulty: INTERMEDIATE
-    isImportant: false
   diagnose-policy-failures:
     difficulty: INTERMEDIATE
-    isImportant: false
 07-complete-pull-requests.md:
   merge-readiness-and-conflicts:
     difficulty: INTERMEDIATE
-    isImportant: false
   complete-pr-versus-auto-complete:
     difficulty: INTERMEDIATE
-    isImportant: false
   abandon-reactivate-versus-complete:
     difficulty: INTERMEDIATE
-    isImportant: false
   pr-merge-options-and-traceability:
     difficulty: INTERMEDIATE
-    isImportant: false
   work-item-and-pr-link:
     difficulty: INTERMEDIATE
-    isImportant: false
   work-item-linking-policy:
     difficulty: INTERMEDIATE
-    isImportant: false
   completion-record-and-work-item-state:
     difficulty: INTERMEDIATE
-    isImportant: false
   target-permission-completion-scenario:
     difficulty: INTERMEDIATE
-    isImportant: false
   diagnose-uncompleted-pr:
     difficulty: INTERMEDIATE
-    isImportant: false
 08-end-to-end-azure-repos.md:
   map-org-project-repo:
     difficulty: INTERMEDIATE
-    isImportant: false
   choose-contribution-path:
     difficulty: INTERMEDIATE
-    isImportant: false
   open-draft-and-ready-pr:
     difficulty: INTERMEDIATE
-    isImportant: false
   review-and-apply-policies:
     difficulty: INTERMEDIATE
-    isImportant: false
   complete-with-work-item-trace:
     difficulty: INTERMEDIATE
-    isImportant: false
   investigate-blocked-workflow:
     difficulty: INTERMEDIATE
-    isImportant: false
   verify-end-to-end-evidence:
     difficulty: INTERMEDIATE
-    isImportant: false
   handoff-to-neighboring-modules:
     difficulty: INTERMEDIATE
-    isImportant: false

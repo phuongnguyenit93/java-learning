@@ -1,28 +1,19 @@
 sections:
   rsocket-requester-role:
     difficulty: INTERMEDIATE
-    isImportant: false
   rsocket-client-requester:
     difficulty: INTERMEDIATE
-    isImportant: false
   rsocket-server-requester:
     difficulty: INTERMEDIATE
-    isImportant: false
   rsocket-route-data-retrieve:
     difficulty: INTERMEDIATE
-    isImportant: false
   rsocket-request-metadata:
     difficulty: INTERMEDIATE
-    isImportant: false
   rsocket-requester-lifecycle:
     difficulty: INTERMEDIATE
-    isImportant: false
   rsocket-strategies:
     difficulty: INTERMEDIATE
-    isImportant: false
   rsocket-codecs-route-matching:
     difficulty: INTERMEDIATE
-    isImportant: false
   rsocket-metadata-extraction:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,28 +1,19 @@
 sections:
   higher-order-methods:
     difficulty: INTERMEDIATE
-    isImportant: false
   passing-behavior:
     difficulty: BASIC
-    isImportant: false
   returning-behavior:
     difficulty: INTERMEDIATE
-    isImportant: false
   returned-behavior-capture:
     difficulty: INTERMEDIATE
-    isImportant: false
   function-composition:
     difficulty: INTERMEDIATE
-    isImportant: false
   predicate-composition:
     difficulty: INTERMEDIATE
-    isImportant: false
   consumer-composition:
     difficulty: INTERMEDIATE
-    isImportant: false
   composition-order:
     difficulty: INTERMEDIATE
-    isImportant: false
   composition-side-effects:
     difficulty: INTERMEDIATE
-    isImportant: false

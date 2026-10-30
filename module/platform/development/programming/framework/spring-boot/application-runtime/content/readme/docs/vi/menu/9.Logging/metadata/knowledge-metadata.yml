@@ -1,19 +1,13 @@
 sections:
   early-logging-bootstrap:
     difficulty: BASIC
-    isImportant: false
   logging-system-abstraction:
     difficulty: BASIC
-    isImportant: false
   boot-logging-properties:
     difficulty: BASIC
-    isImportant: false
   spring-logging-config-files:
     difficulty: BASIC
-    isImportant: false
   logging-groups-output-rotation:
     difficulty: BASIC
-    isImportant: false
   logging-observability-handoff:
     difficulty: BASIC
-    isImportant: false

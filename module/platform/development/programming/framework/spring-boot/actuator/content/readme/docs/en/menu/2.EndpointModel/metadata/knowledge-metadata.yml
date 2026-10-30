@@ -1,16 +1,11 @@
 sections:
   actuator-endpoint-abstraction:
     difficulty: BASIC
-    isImportant: false
   endpoint-id-and-operations:
     difficulty: BASIC
-    isImportant: false
   built-in-endpoint-catalog:
     difficulty: BASIC
-    isImportant: false
   technology-agnostic-endpoints:
     difficulty: BASIC
-    isImportant: false
   endpoint-configuration-boundary:
     difficulty: BASIC
-    isImportant: false

@@ -1,22 +1,15 @@
 sections:
   string-char-sequence:
     difficulty: BASIC
-    isImportant: false
   string-inspection:
     difficulty: BASIC
-    isImportant: false
   string-search:
     difficulty: BASIC
-    isImportant: false
   string-extraction:
     difficulty: BASIC
-    isImportant: false
   string-transformation:
     difficulty: BASIC
-    isImportant: false
   string-split-join:
     difficulty: BASIC
-    isImportant: false
   string-conversion-formatting:
     difficulty: BASIC
-    isImportant: false

@@ -1,10 +1,7 @@
 sections:
   object-root-type:
     difficulty: BASIC
-    isImportant: false
   object-core-methods:
     difficulty: BASIC
-    isImportant: false
   clone-finalize-boundary:
     difficulty: BASIC
-    isImportant: false

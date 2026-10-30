@@ -1,10 +1,7 @@
 sections:
   class-object-model:
     difficulty: BASIC
-    isImportant: false
   fields-methods-state:
     difficulty: BASIC
-    isImportant: false
   object-reference-lifecycle:
     difficulty: BASIC
-    isImportant: false

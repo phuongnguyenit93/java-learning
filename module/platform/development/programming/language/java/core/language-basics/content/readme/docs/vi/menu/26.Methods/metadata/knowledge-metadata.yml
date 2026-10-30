@@ -1,34 +1,23 @@
 sections:
   methods-001:
     difficulty: BASIC
-    isImportant: false
   methods-002:
     difficulty: BASIC
-    isImportant: false
   methods-003:
     difficulty: BASIC
-    isImportant: false
   methods-004:
     difficulty: BASIC
-    isImportant: false
   methods-005:
     difficulty: BASIC
-    isImportant: false
   methods-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   methods-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   methods-008:
     difficulty: ADVANCED
-    isImportant: false
   methods-009:
     difficulty: INTERMEDIATE
-    isImportant: false
   methods-010:
     difficulty: INTERMEDIATE
-    isImportant: false
   methods-011:
     difficulty: INTERMEDIATE
-    isImportant: false

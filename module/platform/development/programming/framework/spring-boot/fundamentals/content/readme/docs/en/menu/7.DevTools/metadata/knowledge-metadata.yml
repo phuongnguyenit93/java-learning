@@ -1,19 +1,13 @@
 sections:
   devtools-purpose:
     difficulty: BASIC
-    isImportant: false
   restart-classloader-model:
     difficulty: BASIC
-    isImportant: false
   livereload-property-defaults:
     difficulty: BASIC
-    isImportant: false
   devtools-setup-restart-scope:
     difficulty: BASIC
-    isImportant: false
   remote-devtools-security:
     difficulty: BASIC
-    isImportant: false
   devtools-production-boundary:
     difficulty: BASIC
-    isImportant: false

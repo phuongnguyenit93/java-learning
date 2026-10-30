@@ -1,19 +1,13 @@
 sections:
   dispatcher-servlet-front-controller:
     difficulty: BASIC
-    isImportant: false
   dispatcher-bootstrap-and-context-hierarchy:
     difficulty: BASIC
-    isImportant: false
   handler-mapping-and-execution-chain:
     difficulty: BASIC
-    isImportant: false
   handler-invocation-and-return-value-processing:
     difficulty: BASIC
-    isImportant: false
   exception-resolution-position:
     difficulty: BASIC
-    isImportant: false
   dispatcher-strategies-overview:
     difficulty: BASIC
-    isImportant: false

@@ -1,19 +1,13 @@
 sections:
   application-runtime-role:
     difficulty: BASIC
-    isImportant: false
   application-runtime-problem:
     difficulty: BASIC
-    isImportant: false
   runtime-inputs-and-context:
     difficulty: BASIC
-    isImportant: false
   runtime-phase-model:
     difficulty: BASIC
-    isImportant: false
   steady-state-runtime:
     difficulty: BASIC
-    isImportant: false
   runtime-ownership-handoffs:
     difficulty: BASIC
-    isImportant: false

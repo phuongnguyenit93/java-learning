@@ -1,16 +1,11 @@
 sections:
   jdk-proxy-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   invocation-handler:
     difficulty: INTERMEDIATE
-    isImportant: false
   proxy-interfaces:
     difficulty: INTERMEDIATE
-    isImportant: false
   object-methods-proxy:
     difficulty: INTERMEDIATE
-    isImportant: false
   proxy-limitations:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,25 +1,17 @@
 sections:
   object-initialization-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   object-initialization-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   object-initialization-003:
     difficulty: ADVANCED
-    isImportant: true
   object-initialization-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   object-initialization-005:
     difficulty: ADVANCED
-    isImportant: true
   object-initialization-006:
     difficulty: ADVANCED
-    isImportant: true
   object-initialization-007:
     difficulty: BASIC
-    isImportant: true
   object-initialization-008:
     difficulty: INTERMEDIATE
-    isImportant: false

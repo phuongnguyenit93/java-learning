@@ -1,22 +1,15 @@
 sections:
   spring-singleton-scope:
     difficulty: INTERMEDIATE
-    isImportant: false
   prototype-scope:
     difficulty: INTERMEDIATE
-    isImportant: false
   web-aware-scopes:
     difficulty: INTERMEDIATE
-    isImportant: false
   eager-vs-lazy-initialization:
     difficulty: INTERMEDIATE
-    isImportant: false
   scoped-dependency-mismatch:
     difficulty: INTERMEDIATE
-    isImportant: false
   dynamic-dependency-lookup:
     difficulty: INTERMEDIATE
-    isImportant: false
   custom-scopes:
     difficulty: ADVANCED
-    isImportant: false

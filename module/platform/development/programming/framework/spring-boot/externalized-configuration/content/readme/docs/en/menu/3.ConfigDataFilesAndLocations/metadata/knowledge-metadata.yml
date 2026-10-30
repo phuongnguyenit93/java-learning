@@ -1,28 +1,19 @@
 sections:
   config-data-role:
     difficulty: BASIC
-    isImportant: false
   default-search-locations:
     difficulty: BASIC
-    isImportant: false
   packaged-vs-external-config:
     difficulty: BASIC
-    isImportant: false
   properties-vs-yaml:
     difficulty: BASIC
-    isImportant: false
   spring-config-name:
     difficulty: BASIC
-    isImportant: false
   spring-config-location:
     difficulty: BASIC
-    isImportant: false
   spring-config-additional-location:
     difficulty: BASIC
-    isImportant: false
   location-files-directories-groups:
     difficulty: BASIC
-    isImportant: false
   early-config-location-inputs:
     difficulty: BASIC
-    isImportant: false

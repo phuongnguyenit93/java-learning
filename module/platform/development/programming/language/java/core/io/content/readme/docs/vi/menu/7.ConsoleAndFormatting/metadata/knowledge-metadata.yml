@@ -1,31 +1,21 @@
 sections:
   console-and-formatting-001:
     difficulty: BASIC
-    isImportant: true
   console-and-formatting-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   console-and-formatting-003:
     difficulty: BASIC
-    isImportant: true
   console-and-formatting-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   console-and-formatting-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   console-and-formatting-006:
     difficulty: BASIC
-    isImportant: true
   console-and-formatting-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   console-and-formatting-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   console-and-formatting-009:
     difficulty: ADVANCED
-    isImportant: true
   console-and-formatting-010:
     difficulty: INTERMEDIATE
-    isImportant: true

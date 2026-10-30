@@ -1,16 +1,11 @@
 sections:
   layered-archive-purpose:
     difficulty: BASIC
-    isImportant: false
   default-layer-model:
     difficulty: BASIC
-    isImportant: false
   layer-order-and-cache:
     difficulty: BASIC
-    isImportant: false
   custom-layering:
     difficulty: BASIC
-    isImportant: false
   archive-layer-vs-container-runtime:
     difficulty: BASIC
-    isImportant: false

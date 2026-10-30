@@ -1,19 +1,13 @@
 sections:
   classpath-provider-configuration:
     difficulty: INTERMEDIATE
-    isImportant: false
   module-consumer-requires-uses:
     difficulty: INTERMEDIATE
-    isImportant: false
   module-provider-provides:
     difficulty: INTERMEDIATE
-    isImportant: false
   provider-instantiation-rules:
     difficulty: INTERMEDIATE
-    isImportant: false
   automatic-module-limitations:
     difficulty: INTERMEDIATE
-    isImportant: false
   host-provider-decoupling:
     difficulty: INTERMEDIATE
-    isImportant: false

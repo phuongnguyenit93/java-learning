@@ -111,7 +111,7 @@ class ModuleContentExcelSyncServiceTest {
                 assertEquals('English lesson', ModuleContentExcelSyncService.text(sheet, 21, 2))
                 assertEquals('English body', ModuleContentExcelSyncService.text(sheet, 21, 3))
                 assertEquals('ADVANCED', ModuleContentExcelSyncService.text(sheet, 21, 15))
-                assertTrue(sheet.getRow(20).getCell(27).booleanCellValue)
+                assertEquals('', ModuleContentExcelSyncService.text(sheet, 21, 28))
                 assertEquals('English roadmap', ModuleContentExcelSyncService.text(sheet, 3, 6))
                 assertEquals('Understand the example', ModuleContentExcelSyncService.text(sheet, 3, 7))
                 assertTrue(ModuleContentExcelSyncService.text(sheet, 20, 16).contains('English interview?'))
@@ -242,7 +242,7 @@ Second knowledge body
 '''.trim())
         write(module, 'content/readme/docs/en/menu/2.More/metadata/knowledge-metadata.yml', '''
 sections:
-  more-001: {difficulty: INTERMEDIATE, isImportant: false}
+  more-001: {difficulty: INTERMEDIATE}
 '''.trim())
         File secondQuiz = new File(module,
                 'content/readme/docs/en/menu/2.More/quiz/question.yml')
@@ -357,7 +357,6 @@ English body
 sections:
   basic-001:
     difficulty: ADVANCED
-    isImportant: true
 '''.trim())
         write(module, 'content/roadmap/en/roadmap.yml', '''
 roadmap:

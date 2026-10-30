@@ -1,16 +1,11 @@
 sections:
   webmvc-fn-mental-model:
     difficulty: BASIC
-    isImportant: false
   router-functions-and-request-predicates:
     difficulty: BASIC
-    isImportant: false
   handler-functions-request-response:
     difficulty: BASIC
-    isImportant: false
   handler-filter-functions:
     difficulty: BASIC
-    isImportant: false
   annotated-and-functional-coexistence:
     difficulty: BASIC
-    isImportant: false

@@ -1,37 +1,25 @@
 sections:
   random-numbers-001:
     difficulty: BASIC
-    isImportant: true
   random-numbers-002:
     difficulty: BASIC
-    isImportant: true
   random-numbers-003:
     difficulty: BASIC
-    isImportant: true
   random-numbers-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   random-numbers-005:
     difficulty: ADVANCED
-    isImportant: false
   random-numbers-006:
     difficulty: ADVANCED
-    isImportant: true
   random-numbers-007:
     difficulty: BASIC
-    isImportant: true
   random-numbers-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   random-numbers-009:
     difficulty: ADVANCED
-    isImportant: true
   random-numbers-010:
     difficulty: ADVANCED
-    isImportant: true
   random-numbers-011:
     difficulty: ADVANCED
-    isImportant: true
   random-numbers-012:
     difficulty: INTERMEDIATE
-    isImportant: true

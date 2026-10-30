@@ -1,16 +1,11 @@
 sections:
   enum-type-model:
     difficulty: BASIC
-    isImportant: false
   enum-fields-constructors:
     difficulty: BASIC
-    isImportant: false
   enum-interface:
     difficulty: BASIC
-    isImportant: false
   enum-constant-specific:
     difficulty: BASIC
-    isImportant: false
   enum-values-valueof:
     difficulty: BASIC
-    isImportant: false

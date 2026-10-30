@@ -1,25 +1,17 @@
 sections:
   resolution-pipeline-synthesis:
     difficulty: BASIC
-    isImportant: false
   loading-failures:
     difficulty: BASIC
-    isImportant: false
   activation-failures:
     difficulty: BASIC
-    isImportant: false
   binding-conversion-failures:
     difficulty: BASIC
-    isImportant: false
   validation-failures:
     difficulty: BASIC
-    isImportant: false
   effective-value-debugging:
     difficulty: BASIC
-    isImportant: false
   configuration-decision-guide:
     difficulty: BASIC
-    isImportant: false
   externalized-configuration-handoffs:
     difficulty: BASIC
-    isImportant: false

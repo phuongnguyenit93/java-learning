@@ -1,22 +1,15 @@
 sections:
   end-to-end-container-flow:
     difficulty: INTERMEDIATE
-    isImportant: false
   registration-strategy:
     difficulty: INTERMEDIATE
-    isImportant: false
   injection-strategy:
     difficulty: INTERMEDIATE
-    isImportant: false
   scope-lifecycle-design:
     difficulty: INTERMEDIATE
-    isImportant: false
   environment-context-design:
     difficulty: INTERMEDIATE
-    isImportant: false
   startup-failure-diagnosis:
     difficulty: ADVANCED
-    isImportant: false
   neighboring-module-handoffs:
     difficulty: INTERMEDIATE
-    isImportant: false

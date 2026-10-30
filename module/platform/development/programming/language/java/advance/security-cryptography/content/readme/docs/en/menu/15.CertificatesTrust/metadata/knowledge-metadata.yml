@@ -1,16 +1,11 @@
 sections:
   x509-certificate-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   certification-path:
     difficulty: INTERMEDIATE
-    isImportant: false
   trust-anchor-validation:
     difficulty: ADVANCED
-    isImportant: false
   certificate-revocation:
     difficulty: ADVANCED
-    isImportant: false
   trust-vs-identity:
     difficulty: ADVANCED
-    isImportant: false

@@ -1,16 +1,11 @@
 sections:
   spring-testing-purpose:
     difficulty: BASIC
-    isImportant: false
   testability-through-ioc:
     difficulty: BASIC
-    isImportant: false
   unit-vs-integration-tests:
     difficulty: BASIC
-    isImportant: false
   test-scope-ladder:
     difficulty: BASIC
-    isImportant: false
   testing-boundaries:
     difficulty: BASIC
-    isImportant: false

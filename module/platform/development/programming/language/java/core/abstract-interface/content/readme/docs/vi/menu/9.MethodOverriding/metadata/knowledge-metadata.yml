@@ -1,31 +1,21 @@
 sections:
   method-overriding-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   method-overriding-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   method-overriding-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   method-overriding-004:
     difficulty: ADVANCED
-    isImportant: true
   method-overriding-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   method-overriding-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   method-overriding-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   method-overriding-008:
     difficulty: BASIC
-    isImportant: true
   method-overriding-009:
     difficulty: ADVANCED
-    isImportant: false
   method-overriding-010:
     difficulty: INTERMEDIATE
-    isImportant: true

@@ -1,25 +1,17 @@
 sections:
   mvc-request-end-to-end:
     difficulty: BASIC
-    isImportant: false
   annotated-vs-functional-endpoints:
     difficulty: BASIC
-    isImportant: false
   synchronous-vs-async-servlet-processing:
     difficulty: BASIC
-    isImportant: false
   filter-interceptor-and-advice-placement:
     difficulty: BASIC
-    isImportant: false
   mvc-vs-webflux-boundary:
     difficulty: BASIC
-    isImportant: false
   inbound-vs-outbound-http-mechanics:
     difficulty: BASIC
-    isImportant: false
   neighboring-module-handoffs:
     difficulty: BASIC
-    isImportant: false
   spring-web-final-mental-model:
     difficulty: BASIC
-    isImportant: false

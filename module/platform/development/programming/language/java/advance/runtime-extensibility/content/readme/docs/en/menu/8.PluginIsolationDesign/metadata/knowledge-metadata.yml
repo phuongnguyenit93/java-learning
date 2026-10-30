@@ -1,22 +1,15 @@
 sections:
   plugin-isolation-purpose:
     difficulty: ADVANCED
-    isImportant: false
   class-identity-boundaries:
     difficulty: ADVANCED
-    isImportant: false
   shared-vs-private-dependencies:
     difficulty: ADVANCED
-    isImportant: false
   classloader-isolation-strategies:
     difficulty: ADVANCED
-    isImportant: false
   isolation-resource-boundaries:
     difficulty: ADVANCED
-    isImportant: false
   plugin-failure-boundaries:
     difficulty: ADVANCED
-    isImportant: false
   unloadability-and-leak-risks:
     difficulty: ADVANCED
-    isImportant: false

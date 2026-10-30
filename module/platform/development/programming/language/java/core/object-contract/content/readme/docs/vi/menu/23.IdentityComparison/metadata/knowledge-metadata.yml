@@ -1,22 +1,15 @@
 sections:
   identity-comparison-001:
     difficulty: BASIC
-    isImportant: true
   identity-comparison-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   identity-comparison-003:
     difficulty: ADVANCED
-    isImportant: false
   identity-comparison-004:
     difficulty: BASIC
-    isImportant: true
   identity-comparison-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   identity-comparison-006:
     difficulty: ADVANCED
-    isImportant: false
   identity-comparison-007:
     difficulty: INTERMEDIATE
-    isImportant: true

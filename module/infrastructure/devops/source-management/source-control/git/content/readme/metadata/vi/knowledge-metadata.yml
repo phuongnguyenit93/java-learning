@@ -1,194 +1,132 @@
 01-git-foundations.md:
   what-is-git:
     difficulty: BASIC
-    isImportant: false
   why-git-snapshots:
     difficulty: BASIC
-    isImportant: false
   repository-and-working-tree:
     difficulty: BASIC
-    isImportant: false
   index-and-three-areas:
     difficulty: BASIC
-    isImportant: false
   git-objects-and-commits:
     difficulty: BASIC
-    isImportant: false
   file-tracking-and-states:
     difficulty: BASIC
-    isImportant: false
   initialize-and-clone:
     difficulty: BASIC
-    isImportant: false
   trace-file-across-areas:
     difficulty: BASIC
-    isImportant: false
   git-command-reference-and-docs:
     difficulty: BASIC
-    isImportant: false
 02-recording-commits.md:
   inspect-status-before-staging:
     difficulty: BASIC
-    isImportant: false
   ignore-and-track-files:
     difficulty: BASIC
-    isImportant: false
   working-tree-vs-staged-diff:
     difficulty: BASIC
-    isImportant: false
   stage-intentional-changes:
     difficulty: BASIC
-    isImportant: false
   commit-snapshot-and-message:
     difficulty: BASIC
-    isImportant: false
   read-log-and-parents:
     difficulty: BASIC
-    isImportant: false
   compare-history-points:
     difficulty: BASIC
-    isImportant: false
   verify-a-recorded-change:
     difficulty: BASIC
-    isImportant: false
 03-branches-refs-tags.md:
   commit-graph-and-references:
     difficulty: BASIC
-    isImportant: false
   branches-and-head:
     difficulty: BASIC
-    isImportant: false
   create-inspect-delete-branches:
     difficulty: BASIC
-    isImportant: false
   switch-and-uncommitted-changes:
     difficulty: BASIC
-    isImportant: false
   detached-head:
     difficulty: BASIC
-    isImportant: false
   tags-vs-branches:
     difficulty: BASIC
-    isImportant: false
   verify-branch-tag-positions:
     difficulty: BASIC
-    isImportant: false
 04-merges-and-conflicts.md:
   why-branches-diverge:
     difficulty: INTERMEDIATE
-    isImportant: false
   fast-forward-merge:
     difficulty: INTERMEDIATE
-    isImportant: false
   merge-base-and-three-way:
     difficulty: INTERMEDIATE
-    isImportant: false
   merge-commit-and-parents:
     difficulty: INTERMEDIATE
-    isImportant: false
   recognize-merge-conflicts:
     difficulty: INTERMEDIATE
-    isImportant: false
   resolve-or-abort-merge:
     difficulty: INTERMEDIATE
-    isImportant: false
   cherry-pick-vs-merge:
     difficulty: INTERMEDIATE
-    isImportant: false
   verify-merged-outcome:
     difficulty: INTERMEDIATE
-    isImportant: false
 05-remotes-and-sync.md:
   remote-repository-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   configure-and-inspect-remotes:
     difficulty: INTERMEDIATE
-    isImportant: false
   local-remote-and-tracking-refs:
     difficulty: INTERMEDIATE
-    isImportant: false
   upstream-relationship:
     difficulty: INTERMEDIATE
-    isImportant: false
   fetch-vs-pull:
     difficulty: INTERMEDIATE
-    isImportant: false
   push-and-rejected-updates:
     difficulty: INTERMEDIATE
-    isImportant: false
   reconcile-divergent-history:
     difficulty: INTERMEDIATE
-    isImportant: false
   verify-local-and-remote-history:
     difficulty: INTERMEDIATE
-    isImportant: false
 06-rebase-and-rewrite.md:
   merge-versus-rebase-outcomes:
     difficulty: INTERMEDIATE
-    isImportant: false
   rebase-replay-and-commit-ids:
     difficulty: INTERMEDIATE
-    isImportant: false
   rebase-local-work:
     difficulty: INTERMEDIATE
-    isImportant: false
   resolve-continue-or-abort-rebase:
     difficulty: INTERMEDIATE
-    isImportant: false
   amend-a-local-commit:
     difficulty: INTERMEDIATE
-    isImportant: false
   shared-history-rewrite-risk:
     difficulty: INTERMEDIATE
-    isImportant: false
   verify-history-after-rebase:
     difficulty: INTERMEDIATE
-    isImportant: false
 07-stash-undo-recovery.md:
   classify-uncommitted-and-shared-work:
     difficulty: INTERMEDIATE
-    isImportant: false
   stash-work-in-progress:
     difficulty: INTERMEDIATE
-    isImportant: false
   stash-tracked-and-untracked:
     difficulty: INTERMEDIATE
-    isImportant: false
   restore-worktree-and-index:
     difficulty: INTERMEDIATE
-    isImportant: false
   reset-modes-and-risk:
     difficulty: INTERMEDIATE
-    isImportant: false
   revert-shared-commit:
     difficulty: INTERMEDIATE
-    isImportant: false
   reflog-and-expiration:
     difficulty: INTERMEDIATE
-    isImportant: false
   safe-recovery-decision:
     difficulty: INTERMEDIATE
-    isImportant: false
 08-end-to-end-git.md:
   trace-change-to-commit:
     difficulty: INTERMEDIATE
-    isImportant: false
   follow-branch-and-remote:
     difficulty: INTERMEDIATE
-    isImportant: false
   select-merge-or-rebase-mechanics:
     difficulty: INTERMEDIATE
-    isImportant: false
   diagnose-divergence-and-conflict:
     difficulty: INTERMEDIATE
-    isImportant: false
   choose-safe-undo-in-context:
     difficulty: INTERMEDIATE
-    isImportant: false
   verify-end-to-end-evidence:
     difficulty: INTERMEDIATE
-    isImportant: false
   handoff-to-team-collaboration:
     difficulty: INTERMEDIATE
-    isImportant: false

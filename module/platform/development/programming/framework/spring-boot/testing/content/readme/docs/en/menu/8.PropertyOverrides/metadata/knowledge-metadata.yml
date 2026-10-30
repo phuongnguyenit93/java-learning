@@ -1,19 +1,13 @@
 sections:
   test-context-customization-purpose:
     difficulty: BASIC
-    isImportant: false
   springboottest-properties:
     difficulty: BASIC
-    isImportant: false
   testconfiguration-purpose:
     difficulty: BASIC
-    isImportant: false
   testconfiguration-import:
     difficulty: BASIC
-    isImportant: false
   test-property-cache-impact:
     difficulty: BASIC
-    isImportant: false
   test-configuration-ownership-boundary:
     difficulty: BASIC
-    isImportant: false

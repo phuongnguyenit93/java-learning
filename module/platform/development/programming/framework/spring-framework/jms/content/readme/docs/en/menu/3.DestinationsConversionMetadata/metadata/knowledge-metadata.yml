@@ -1,19 +1,13 @@
 sections:
   jms-destination-model:
     difficulty: BASIC
-    isImportant: false
   jms-destination-resolver:
     difficulty: BASIC
-    isImportant: false
   jms-message-converter:
     difficulty: BASIC
-    isImportant: false
   jms-payload-conversion:
     difficulty: INTERMEDIATE
-    isImportant: false
   jms-headers-properties:
     difficulty: INTERMEDIATE
-    isImportant: false
   jms-correlation-reply-metadata:
     difficulty: INTERMEDIATE
-    isImportant: false

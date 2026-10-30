@@ -1,22 +1,15 @@
 sections:
   utf16-char-model:
     difficulty: BASIC
-    isImportant: false
   code-point:
     difficulty: BASIC
-    isImportant: false
   surrogate-pairs:
     difficulty: BASIC
-    isImportant: false
   unicode-iteration:
     difficulty: BASIC
-    isImportant: false
   code-unit-code-point-grapheme:
     difficulty: BASIC
-    isImportant: false
   unicode-normalization:
     difficulty: BASIC
-    isImportant: false
   canonical-equivalence:
     difficulty: BASIC
-    isImportant: false

@@ -1,40 +1,27 @@
 sections:
   flow-and-backpressure-001:
     difficulty: BASIC
-    isImportant: true
   flow-and-backpressure-002:
     difficulty: BASIC
-    isImportant: true
   flow-and-backpressure-003:
     difficulty: BASIC
-    isImportant: true
   flow-and-backpressure-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   flow-and-backpressure-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   flow-and-backpressure-006:
     difficulty: BASIC
-    isImportant: true
   flow-and-backpressure-007:
     difficulty: ADVANCED
-    isImportant: true
   flow-and-backpressure-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   flow-and-backpressure-009:
     difficulty: ADVANCED
-    isImportant: true
   flow-and-backpressure-010:
     difficulty: INTERMEDIATE
-    isImportant: false
   flow-and-backpressure-011:
     difficulty: INTERMEDIATE
-    isImportant: false
   flow-and-backpressure-012:
     difficulty: ADVANCED
-    isImportant: true
   flow-and-backpressure-013:
     difficulty: ADVANCED
-    isImportant: true

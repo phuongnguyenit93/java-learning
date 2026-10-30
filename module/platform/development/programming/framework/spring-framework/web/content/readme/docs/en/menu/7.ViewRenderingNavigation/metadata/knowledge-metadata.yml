@@ -1,16 +1,11 @@
 sections:
   model-and-view:
     difficulty: BASIC
-    isImportant: false
   view-resolution-and-logical-names:
     difficulty: BASIC
-    isImportant: false
   redirects-and-flash-attributes:
     difficulty: BASIC
-    isImportant: false
   uri-building:
     difficulty: BASIC
-    isImportant: false
   view-technology-boundary:
     difficulty: BASIC
-    isImportant: false

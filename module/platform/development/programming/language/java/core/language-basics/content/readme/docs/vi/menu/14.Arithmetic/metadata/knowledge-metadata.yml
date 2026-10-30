@@ -1,31 +1,21 @@
 sections:
   arithmetic-001:
     difficulty: BASIC
-    isImportant: false
   arithmetic-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   arithmetic-003:
     difficulty: BASIC
-    isImportant: false
   arithmetic-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   arithmetic-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   arithmetic-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   arithmetic-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   arithmetic-008:
     difficulty: ADVANCED
-    isImportant: false
   arithmetic-009:
     difficulty: INTERMEDIATE
-    isImportant: false
   arithmetic-010:
     difficulty: ADVANCED
-    isImportant: false

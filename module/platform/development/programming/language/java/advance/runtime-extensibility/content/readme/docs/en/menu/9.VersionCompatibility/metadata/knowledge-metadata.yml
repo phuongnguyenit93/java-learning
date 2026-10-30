@@ -1,19 +1,13 @@
 sections:
   compatibility-contract:
     difficulty: ADVANCED
-    isImportant: false
   spi-evolution-rules:
     difficulty: ADVANCED
-    isImportant: false
   host-provider-version-negotiation:
     difficulty: ADVANCED
-    isImportant: false
   dependency-version-conflicts:
     difficulty: ADVANCED
-    isImportant: false
   capability-versioning:
     difficulty: ADVANCED
-    isImportant: false
   compatibility-testing:
     difficulty: ADVANCED
-    isImportant: false

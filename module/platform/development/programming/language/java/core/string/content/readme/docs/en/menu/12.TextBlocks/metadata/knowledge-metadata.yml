@@ -1,16 +1,11 @@
 sections:
   text-block-syntax:
     difficulty: BASIC
-    isImportant: false
   incidental-whitespace:
     difficulty: BASIC
-    isImportant: false
   escape-processing:
     difficulty: BASIC
-    isImportant: false
   text-block-not-template:
     difficulty: BASIC
-    isImportant: false
   string-synthesis:
     difficulty: BASIC
-    isImportant: false

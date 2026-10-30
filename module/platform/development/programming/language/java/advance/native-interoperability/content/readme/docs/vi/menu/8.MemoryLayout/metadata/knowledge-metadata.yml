@@ -1,25 +1,17 @@
 sections:
   memory-layout-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   value-layouts:
     difficulty: INTERMEDIATE
-    isImportant: false
   struct-layout:
     difficulty: INTERMEDIATE
-    isImportant: false
   sequence-layout:
     difficulty: INTERMEDIATE
-    isImportant: false
   union-layout:
     difficulty: INTERMEDIATE
-    isImportant: false
   address-layout:
     difficulty: INTERMEDIATE
-    isImportant: false
   layout-alignment-offset:
     difficulty: ADVANCED
-    isImportant: false
   layout-path-access:
     difficulty: ADVANCED
-    isImportant: false

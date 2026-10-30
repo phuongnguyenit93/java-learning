@@ -1,13 +1,9 @@
 sections:
   validation-binding-purpose:
     difficulty: BASIC
-    isImportant: false
   validation-vs-binding:
     difficulty: BASIC
-    isImportant: false
   conversion-vs-formatting:
     difficulty: BASIC
-    isImportant: false
   validation-binding-module-boundary:
     difficulty: BASIC
-    isImportant: false

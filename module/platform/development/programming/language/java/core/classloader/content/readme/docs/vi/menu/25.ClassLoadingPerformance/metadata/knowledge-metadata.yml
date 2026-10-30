@@ -1,25 +1,17 @@
 sections:
   class-loading-performance-001:
     difficulty: ADVANCED
-    isImportant: true
   class-loading-performance-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   class-loading-performance-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   class-loading-performance-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   class-loading-performance-005:
     difficulty: ADVANCED
-    isImportant: true
   class-loading-performance-006:
     difficulty: ADVANCED
-    isImportant: false
   class-loading-performance-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   class-loading-performance-008:
     difficulty: ADVANCED
-    isImportant: true

@@ -1,19 +1,13 @@
 sections:
   why-focused-context-tests:
     difficulty: BASIC
-    isImportant: false
   application-context-runner:
     difficulty: BASIC
-    isImportant: false
   back-off-and-property-tests:
     difficulty: BASIC
-    isImportant: false
   filtered-class-loader:
     difficulty: BASIC
-    isImportant: false
   web-context-runners:
     difficulty: BASIC
-    isImportant: false
   condition-report-in-tests:
     difficulty: BASIC
-    isImportant: false

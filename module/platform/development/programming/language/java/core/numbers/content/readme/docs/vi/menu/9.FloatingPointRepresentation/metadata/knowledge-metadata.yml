@@ -1,34 +1,23 @@
 sections:
   floating-point-representation-001:
     difficulty: BASIC
-    isImportant: true
   floating-point-representation-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   floating-point-representation-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   floating-point-representation-004:
     difficulty: BASIC
-    isImportant: true
   floating-point-representation-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   floating-point-representation-006:
     difficulty: ADVANCED
-    isImportant: true
   floating-point-representation-007:
     difficulty: BASIC
-    isImportant: true
   floating-point-representation-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   floating-point-representation-009:
     difficulty: ADVANCED
-    isImportant: true
   floating-point-representation-010:
     difficulty: INTERMEDIATE
-    isImportant: true
   floating-point-representation-011:
     difficulty: INTERMEDIATE
-    isImportant: true

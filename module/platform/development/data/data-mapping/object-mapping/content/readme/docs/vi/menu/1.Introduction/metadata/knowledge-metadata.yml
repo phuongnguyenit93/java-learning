@@ -1,19 +1,13 @@
 sections:
   object-mapping-what:
     difficulty: BASIC
-    isImportant: false
   object-mapping-why:
     difficulty: BASIC
-    isImportant: false
   object-mapping-without:
     difficulty: BASIC
-    isImportant: false
   object-mapping-model:
     difficulty: BASIC
-    isImportant: false
   object-mapping-tools:
     difficulty: BASIC
-    isImportant: false
   object-mapping-boundary:
     difficulty: BASIC
-    isImportant: false

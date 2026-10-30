@@ -1,31 +1,21 @@
 sections:
   try-catch-001:
     difficulty: BASIC
-    isImportant: false
   try-catch-002:
     difficulty: BASIC
-    isImportant: false
   try-catch-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   try-catch-004:
     difficulty: BASIC
-    isImportant: false
   try-catch-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   try-catch-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   try-catch-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   try-catch-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   try-catch-009:
     difficulty: INTERMEDIATE
-    isImportant: false
   try-catch-010:
     difficulty: ADVANCED
-    isImportant: false

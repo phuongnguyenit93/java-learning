@@ -1,215 +1,146 @@
 01-repository-topology-foundations.md:
   what-is-repository-topology:
     difficulty: BASIC
-    isImportant: false
   why-repository-boundaries-matter:
     difficulty: BASIC
-    isImportant: false
   monorepo-definition:
     difficulty: BASIC
-    isImportant: false
   polyrepo-definition:
     difficulty: BASIC
-    isImportant: false
   repository-versus-project-module:
     difficulty: BASIC
-    isImportant: false
   repository-versus-service-deployment:
     difficulty: BASIC
-    isImportant: false
   ownership-coordination-independence:
     difficulty: BASIC
-    isImportant: false
   monorepo-is-not-monolith:
     difficulty: BASIC
-    isImportant: false
   recognize-topology-in-examples:
     difficulty: BASIC
-    isImportant: false
 02-boundaries-and-ownership.md:
   what-is-code-ownership:
     difficulty: BASIC
-    isImportant: false
   ownership-by-path-or-component:
     difficulty: BASIC
-    isImportant: false
   ownership-by-repository:
     difficulty: BASIC
-    isImportant: false
   discoverability-and-reuse:
     difficulty: BASIC
-    isImportant: false
   ownership-versus-access-control:
     difficulty: BASIC
-    isImportant: false
   team-boundary-versus-repository-boundary:
     difficulty: BASIC
-    isImportant: false
   service-count-is-not-repository-count:
     difficulty: BASIC
-    isImportant: false
   verify-ownership-boundaries:
     difficulty: BASIC
-    isImportant: false
 03-cross-component-coordination.md:
   what-is-cross-component-change:
     difficulty: INTERMEDIATE
-    isImportant: false
   why-coordination-gets-expensive:
     difficulty: INTERMEDIATE
-    isImportant: false
   single-history-coordinated-change:
     difficulty: INTERMEDIATE
-    isImportant: false
   multiple-repositories-linked-changes:
     difficulty: INTERMEDIATE
-    isImportant: false
   integration-order-and-compatibility:
     difficulty: INTERMEDIATE
-    isImportant: false
   review-responsibility-and-context:
     difficulty: INTERMEDIATE
-    isImportant: false
   traceability-across-components:
     difficulty: INTERMEDIATE
-    isImportant: false
   coordination-failure-evidence:
     difficulty: INTERMEDIATE
-    isImportant: false
   compare-cross-repo-change-scenario:
     difficulty: INTERMEDIATE
-    isImportant: false
 04-shared-code-and-dependency-compatibility.md:
   shared-library-and-consumers:
     difficulty: INTERMEDIATE
-    isImportant: false
   dependency-boundary-vs-repository-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   coordinated-library-update-in-monorepo:
     difficulty: INTERMEDIATE
-    isImportant: false
   version-adoption-across-polyrepos:
     difficulty: INTERMEDIATE
-    isImportant: false
   interface-contract-and-compatibility:
     difficulty: INTERMEDIATE
-    isImportant: false
   dependency-consistency-vs-autonomy:
     difficulty: INTERMEDIATE
-    isImportant: false
   co-location-does-not-force-versions:
     difficulty: INTERMEDIATE
-    isImportant: false
   compare-dependency-migration-evidence:
     difficulty: INTERMEDIATE
-    isImportant: false
 05-release-coupling-and-independence.md:
   change-coupling-vs-release-coupling:
     difficulty: INTERMEDIATE
-    isImportant: false
   why-independent-release-matters:
     difficulty: INTERMEDIATE
-    isImportant: false
   monorepo-can-release-independently:
     difficulty: INTERMEDIATE
-    isImportant: false
   polyrepo-can-be-release-coupled:
     difficulty: INTERMEDIATE
-    isImportant: false
   shared-interface-upgrade-release-risks:
     difficulty: INTERMEDIATE
-    isImportant: false
   validation-boundaries-and-readiness:
     difficulty: INTERMEDIATE
-    isImportant: false
   release-cadence-and-team-coordination:
     difficulty: INTERMEDIATE
-    isImportant: false
   analyze-release-independence-scenario:
     difficulty: INTERMEDIATE
-    isImportant: false
 06-access-and-repository-governance.md:
   repository-access-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   path-ownership-and-review-governance:
     difficulty: INTERMEDIATE
-    isImportant: false
   review-rules-vs-access-isolation:
     difficulty: INTERMEDIATE
-    isImportant: false
   restricted-source-and-compliance:
     difficulty: INTERMEDIATE
-    isImportant: false
   governance-consistency-across-polyrepos:
     difficulty: INTERMEDIATE
-    isImportant: false
   monorepo-ownership-gaps:
     difficulty: INTERMEDIATE
-    isImportant: false
   polyrepo-policy-drift:
     difficulty: INTERMEDIATE
-    isImportant: false
   compare-governance-constraints:
     difficulty: INTERMEDIATE
-    isImportant: false
 07-scale-tooling-and-ci-strategy.md:
   repository-scale-dimensions:
     difficulty: INTERMEDIATE
-    isImportant: false
   source-history-and-feedback-latency:
     difficulty: INTERMEDIATE
-    isImportant: false
   changed-scope-and-affected-work:
     difficulty: INTERMEDIATE
-    isImportant: false
   strategic-build-test-ci-requirements:
     difficulty: INTERMEDIATE
-    isImportant: false
   polyrepo-configuration-duplication:
     difficulty: INTERMEDIATE
-    isImportant: false
   monorepo-tooling-investment:
     difficulty: INTERMEDIATE
-    isImportant: false
   tooling-choice-and-team-autonomy:
     difficulty: INTERMEDIATE
-    isImportant: false
   indicators-of-topology-strain:
     difficulty: INTERMEDIATE
-    isImportant: false
   evidence-for-scale-tradeoffs:
     difficulty: INTERMEDIATE
-    isImportant: false
 08-choose-split-consolidate.md:
   topology-decision-criteria:
     difficulty: INTERMEDIATE
-    isImportant: false
   cross-team-change-frequency:
     difficulty: INTERMEDIATE
-    isImportant: false
   ownership-access-dependency-release-matrix:
     difficulty: INTERMEDIATE
-    isImportant: false
   when-to-consolidate-repositories:
     difficulty: INTERMEDIATE
-    isImportant: false
   when-to-split-repository:
     difficulty: INTERMEDIATE
-    isImportant: false
   migration-costs-and-risk:
     difficulty: INTERMEDIATE
-    isImportant: false
   transition-plan-and-observable-outcomes:
     difficulty: INTERMEDIATE
-    isImportant: false
   evaluate-monorepo-case-evidence:
     difficulty: INTERMEDIATE
-    isImportant: false
   compare-balanced-case-scenarios:
     difficulty: INTERMEDIATE
-    isImportant: false
   handoff-to-neighboring-owners:
     difficulty: INTERMEDIATE
-    isImportant: false

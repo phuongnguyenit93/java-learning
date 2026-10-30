@@ -1,34 +1,23 @@
 sections:
   webflux-webfilter-chain:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-webfilter-ordering:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-reactor-context:
     difficulty: ADVANCED
-    isImportant: false
   webflux-context-vs-threadlocal:
     difficulty: ADVANCED
-    isImportant: false
   webflux-web-session:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-webexceptionhandler:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-error-handling-layers:
     difficulty: ADVANCED
-    isImportant: false
   webflux-configurer:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-cors-path-config:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-blocking-execution:
     difficulty: ADVANCED
-    isImportant: false
   webflux-security-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false

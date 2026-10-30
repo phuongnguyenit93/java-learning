@@ -1,25 +1,17 @@
 sections:
   io-overview-001:
     difficulty: BASIC
-    isImportant: true
   io-overview-002:
     difficulty: BASIC
-    isImportant: true
   io-overview-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   io-overview-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   io-overview-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   io-overview-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   io-overview-007:
     difficulty: BASIC
-    isImportant: false
   io-overview-008:
     difficulty: INTERMEDIATE
-    isImportant: true

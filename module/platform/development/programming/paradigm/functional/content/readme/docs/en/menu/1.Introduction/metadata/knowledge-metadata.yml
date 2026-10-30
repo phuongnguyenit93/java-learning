@@ -1,22 +1,15 @@
 sections:
   functional-what:
     difficulty: BASIC
-    isImportant: false
   functional-why:
     difficulty: BASIC
-    isImportant: false
   functional-without:
     difficulty: BASIC
-    isImportant: false
   functional-prerequisites:
     difficulty: BASIC
-    isImportant: false
   functional-solution:
     difficulty: BASIC
-    isImportant: false
   functional-when:
     difficulty: BASIC
-    isImportant: false
   functional-learning-journey:
     difficulty: BASIC
-    isImportant: false

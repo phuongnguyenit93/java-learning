@@ -1,46 +1,31 @@
 sections:
   big-integer-001:
     difficulty: BASIC
-    isImportant: true
   big-integer-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   big-integer-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   big-integer-004:
     difficulty: BASIC
-    isImportant: true
   big-integer-005:
     difficulty: BASIC
-    isImportant: true
   big-integer-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   big-integer-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   big-integer-008:
     difficulty: ADVANCED
-    isImportant: true
   big-integer-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   big-integer-010:
     difficulty: INTERMEDIATE
-    isImportant: true
   big-integer-011:
     difficulty: BASIC
-    isImportant: true
   big-integer-012:
     difficulty: INTERMEDIATE
-    isImportant: true
   big-integer-013:
     difficulty: ADVANCED
-    isImportant: true
   big-integer-014:
     difficulty: ADVANCED
-    isImportant: false
   big-integer-015:
     difficulty: ADVANCED
-    isImportant: true

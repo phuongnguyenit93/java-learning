@@ -1,16 +1,11 @@
 sections:
   choose-jdbc-client-layer:
     difficulty: INTERMEDIATE
-    isImportant: false
   choose-jdbc-or-r2dbc:
     difficulty: INTERMEDIATE
-    isImportant: false
   choose-persistence-abstraction-level:
     difficulty: INTERMEDIATE
-    isImportant: false
   blocking-jdbc-in-reactive-paths:
     difficulty: ADVANCED
-    isImportant: false
   data-access-end-to-end-model:
     difficulty: INTERMEDIATE
-    isImportant: false

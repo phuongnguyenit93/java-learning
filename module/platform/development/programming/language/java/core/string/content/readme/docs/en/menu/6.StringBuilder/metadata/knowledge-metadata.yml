@@ -1,10 +1,7 @@
 sections:
   builder-mutable-buffer:
     difficulty: BASIC
-    isImportant: false
   builder-usage:
     difficulty: BASIC
-    isImportant: false
   builder-capacity:
     difficulty: BASIC
-    isImportant: false

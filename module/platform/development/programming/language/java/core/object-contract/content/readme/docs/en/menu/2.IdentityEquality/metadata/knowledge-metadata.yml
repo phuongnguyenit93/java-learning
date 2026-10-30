@@ -1,10 +1,7 @@
 sections:
   identity-vs-equality:
     difficulty: BASIC
-    isImportant: false
   reference-equality:
     difficulty: BASIC
-    isImportant: false
   value-object-equality:
     difficulty: BASIC
-    isImportant: false

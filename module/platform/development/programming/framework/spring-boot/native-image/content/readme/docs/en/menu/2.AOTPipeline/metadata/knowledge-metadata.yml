@@ -1,22 +1,15 @@
 sections:
   spring-aot-purpose:
     difficulty: BASIC
-    isImportant: false
   aot-entry-model:
     difficulty: BASIC
-    isImportant: false
   aot-generated-assets:
     difficulty: BASIC
-    isImportant: false
   aot-condition-timing:
     difficulty: BASIC
-    isImportant: false
   aot-runtime-handoff:
     difficulty: BASIC
-    isImportant: false
   aot-diagnostic-evidence:
     difficulty: BASIC
-    isImportant: false
   aot-auto-configuration-boundary:
     difficulty: BASIC
-    isImportant: false

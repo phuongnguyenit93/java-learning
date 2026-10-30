@@ -1,25 +1,17 @@
 sections:
   transaction-service-layer-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-manager-capabilities:
     difficulty: ADVANCED
-    isImportant: false
   transaction-thread-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-remote-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-messaging-boundary:
     difficulty: ADVANCED
-    isImportant: false
   transaction-long-running-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-testing-handoff:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-design-checklist:
     difficulty: INTERMEDIATE
-    isImportant: false

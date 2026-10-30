@@ -1,25 +1,17 @@
 sections:
   transaction-manager-strategy:
     difficulty: BASIC
-    isImportant: false
   transaction-platform-manager:
     difficulty: BASIC
-    isImportant: false
   transaction-reactive-manager:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-definition:
     difficulty: BASIC
-    isImportant: false
   transaction-status:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-lifecycle:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-manager-selection:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-local-vs-global:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,22 +1,15 @@
 sections:
   type-foundations-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   type-foundations-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   type-foundations-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   type-foundations-004:
     difficulty: ADVANCED
-    isImportant: true
   type-foundations-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   type-foundations-006:
     difficulty: ADVANCED
-    isImportant: true
   type-foundations-007:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,13 +1,9 @@
 sections:
   terminology-map:
     difficulty: BASIC
-    isImportant: false
   terminology-demo:
     difficulty: BASIC
-    isImportant: false
   spring-aop-vs-aspectj-style:
     difficulty: BASIC
-    isImportant: false
   terminology-conclusion:
     difficulty: BASIC
-    isImportant: false

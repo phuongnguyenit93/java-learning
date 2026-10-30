@@ -1,16 +1,11 @@
 sections:
   data-access-exception-model:
     difficulty: BASIC
-    isImportant: false
   data-access-exception-categories:
     difficulty: BASIC
-    isImportant: false
   jdbc-r2dbc-exception-translation:
     difficulty: INTERMEDIATE
-    isImportant: false
   repository-exception-translation:
     difficulty: INTERMEDIATE
-    isImportant: false
   data-access-failure-handling:
     difficulty: INTERMEDIATE
-    isImportant: false

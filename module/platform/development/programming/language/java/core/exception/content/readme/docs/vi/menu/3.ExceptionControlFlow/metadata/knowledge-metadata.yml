@@ -1,28 +1,19 @@
 sections:
   exception-control-flow-001:
     difficulty: BASIC
-    isImportant: false
   exception-control-flow-002:
     difficulty: BASIC
-    isImportant: false
   exception-control-flow-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-control-flow-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-control-flow-005:
     difficulty: BASIC
-    isImportant: false
   exception-control-flow-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-control-flow-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   exception-control-flow-008:
     difficulty: ADVANCED
-    isImportant: false
   exception-control-flow-009:
     difficulty: ADVANCED
-    isImportant: false

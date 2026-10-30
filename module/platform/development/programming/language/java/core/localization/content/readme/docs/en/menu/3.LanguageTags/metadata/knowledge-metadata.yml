@@ -1,19 +1,13 @@
 sections:
   bcp47-language-tag:
     difficulty: BASIC
-    isImportant: false
   for-language-tag:
     difficulty: BASIC
-    isImportant: false
   locale-matching:
     difficulty: BASIC
-    isImportant: false
   language-script-region:
     difficulty: BASIC
-    isImportant: false
   locale-extensions:
     difficulty: BASIC
-    isImportant: false
   canonicalization-boundary:
     difficulty: BASIC
-    isImportant: false

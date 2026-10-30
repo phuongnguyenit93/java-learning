@@ -1,25 +1,17 @@
 sections:
   string-transformation-001:
     difficulty: BASIC
-    isImportant: false
   string-transformation-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-transformation-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-transformation-004:
     difficulty: BASIC
-    isImportant: false
   string-transformation-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-transformation-006:
     difficulty: ADVANCED
-    isImportant: false
   string-transformation-007:
     difficulty: ADVANCED
-    isImportant: false
   string-transformation-008:
     difficulty: INTERMEDIATE
-    isImportant: false

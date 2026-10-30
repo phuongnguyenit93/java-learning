@@ -1,13 +1,9 @@
 sections:
   spring-concurrency-purpose:
     difficulty: BASIC
-    isImportant: false
   execution-async-scheduling:
     difficulty: BASIC
-    isImportant: false
   spring-vs-jdk-concurrency:
     difficulty: BASIC
-    isImportant: false
   container-managed-task-infrastructure:
     difficulty: BASIC
-    isImportant: false

@@ -1,37 +1,25 @@
 sections:
   precision-and-rounding-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   precision-and-rounding-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   precision-and-rounding-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   precision-and-rounding-004:
     difficulty: BASIC
-    isImportant: true
   precision-and-rounding-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   precision-and-rounding-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   precision-and-rounding-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   precision-and-rounding-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   precision-and-rounding-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   precision-and-rounding-010:
     difficulty: ADVANCED
-    isImportant: true
   precision-and-rounding-011:
     difficulty: INTERMEDIATE
-    isImportant: true
   precision-and-rounding-012:
     difficulty: INTERMEDIATE
-    isImportant: true

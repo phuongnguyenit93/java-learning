@@ -1,31 +1,21 @@
 sections:
   candidate-selection-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   candidate-selection-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   candidate-selection-003:
     difficulty: BASIC
-    isImportant: false
   candidate-selection-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   candidate-selection-005:
     difficulty: ADVANCED
-    isImportant: false
   candidate-selection-006:
     difficulty: ADVANCED
-    isImportant: false
   candidate-selection-007:
     difficulty: ADVANCED
-    isImportant: false
   candidate-selection-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   candidate-selection-009:
     difficulty: ADVANCED
-    isImportant: false
   candidate-selection-010:
     difficulty: INTERMEDIATE
-    isImportant: false

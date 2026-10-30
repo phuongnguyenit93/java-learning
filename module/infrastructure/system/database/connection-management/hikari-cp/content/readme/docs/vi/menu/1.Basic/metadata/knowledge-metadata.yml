@@ -1,7 +1,5 @@
 sections:
   hikari-basic:
     difficulty: BASIC
-    isImportant: false
   hikari-config:
     difficulty: BASIC
-    isImportant: false

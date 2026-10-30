@@ -1,19 +1,13 @@
 sections:
   localized-date-format:
     difficulty: BASIC
-    isImportant: false
   locale-vs-zone:
     difficulty: BASIC
-    isImportant: false
   locale-week-conventions:
     difficulty: BASIC
-    isImportant: false
   localized-numbering-calendar:
     difficulty: BASIC
-    isImportant: false
   localized-pattern:
     difficulty: BASIC
-    isImportant: false
   localized-parsing:
     difficulty: BASIC
-    isImportant: false

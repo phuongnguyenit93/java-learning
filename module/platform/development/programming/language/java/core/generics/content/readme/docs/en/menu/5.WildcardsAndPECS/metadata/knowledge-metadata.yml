@@ -1,34 +1,23 @@
 sections:
   unbounded-wildcard:
     difficulty: BASIC
-    isImportant: false
   wildcard-vs-object:
     difficulty: BASIC
-    isImportant: false
   wildcard-placement:
     difficulty: INTERMEDIATE
-    isImportant: false
   wildcard-vs-type-parameter:
     difficulty: INTERMEDIATE
-    isImportant: false
   extends-wildcard:
     difficulty: INTERMEDIATE
-    isImportant: false
   super-wildcard:
     difficulty: INTERMEDIATE
-    isImportant: false
   pecs-rule:
     difficulty: INTERMEDIATE
-    isImportant: false
   read-from-producer:
     difficulty: INTERMEDIATE
-    isImportant: false
   write-to-consumer:
     difficulty: INTERMEDIATE
-    isImportant: false
   pecs-api-design:
     difficulty: INTERMEDIATE
-    isImportant: false
   wildcard-capture:
     difficulty: ADVANCED
-    isImportant: false

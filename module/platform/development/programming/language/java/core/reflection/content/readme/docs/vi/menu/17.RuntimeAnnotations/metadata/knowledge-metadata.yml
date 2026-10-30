@@ -1,37 +1,25 @@
 sections:
   runtime-annotations-001:
     difficulty: BASIC
-    isImportant: true
   runtime-annotations-002:
     difficulty: BASIC
-    isImportant: true
   runtime-annotations-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   runtime-annotations-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   runtime-annotations-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   runtime-annotations-006:
     difficulty: ADVANCED
-    isImportant: true
   runtime-annotations-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   runtime-annotations-008:
     difficulty: ADVANCED
-    isImportant: true
   runtime-annotations-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   runtime-annotations-010:
     difficulty: INTERMEDIATE
-    isImportant: true
   runtime-annotations-011:
     difficulty: ADVANCED
-    isImportant: false
   runtime-annotations-012:
     difficulty: INTERMEDIATE
-    isImportant: true

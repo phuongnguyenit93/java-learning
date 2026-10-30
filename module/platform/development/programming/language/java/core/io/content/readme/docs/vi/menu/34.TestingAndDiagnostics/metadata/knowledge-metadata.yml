@@ -1,34 +1,23 @@
 sections:
   testing-and-diagnostics-001:
     difficulty: BASIC
-    isImportant: true
   testing-and-diagnostics-002:
     difficulty: BASIC
-    isImportant: true
   testing-and-diagnostics-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   testing-and-diagnostics-004:
     difficulty: ADVANCED
-    isImportant: true
   testing-and-diagnostics-005:
     difficulty: ADVANCED
-    isImportant: true
   testing-and-diagnostics-006:
     difficulty: ADVANCED
-    isImportant: true
   testing-and-diagnostics-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   testing-and-diagnostics-008:
     difficulty: ADVANCED
-    isImportant: true
   testing-and-diagnostics-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   testing-and-diagnostics-010:
     difficulty: INTERMEDIATE
-    isImportant: true
   testing-and-diagnostics-011:
     difficulty: ADVANCED
-    isImportant: true

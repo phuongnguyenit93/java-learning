@@ -1,19 +1,13 @@
 sections:
   cloud-config-trade-off:
     difficulty: BASIC
-    isImportant: false
   gradle-task-and-spring-cloud-config:
     difficulty: BASIC
-    isImportant: false
   spof-config-server:
     difficulty: BASIC
-    isImportant: false
   spring-cloud-server-config:
     difficulty: BASIC
-    isImportant: false
   hot-reload-spring-cloud-config:
     difficulty: BASIC
-    isImportant: false
   spring-cloud-server-precedence:
     difficulty: BASIC
-    isImportant: false

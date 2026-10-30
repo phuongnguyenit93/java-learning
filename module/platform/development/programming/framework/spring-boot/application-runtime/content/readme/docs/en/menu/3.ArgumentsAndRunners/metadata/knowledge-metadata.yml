@@ -1,19 +1,13 @@
 sections:
   application-arguments-model:
     difficulty: BASIC
-    isImportant: false
   runner-timing:
     difficulty: BASIC
-    isImportant: false
   applicationrunner-vs-commandlinerunner:
     difficulty: BASIC
-    isImportant: false
   runner-ordering:
     difficulty: BASIC
-    isImportant: false
   runner-use-cases:
     difficulty: BASIC
-    isImportant: false
   runner-antipatterns:
     difficulty: BASIC
-    isImportant: false

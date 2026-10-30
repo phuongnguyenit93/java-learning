@@ -1,28 +1,19 @@
 sections:
   refactoring-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   refactoring-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   refactoring-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   refactoring-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   refactoring-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   refactoring-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   refactoring-007:
     difficulty: ADVANCED
-    isImportant: true
   refactoring-008:
     difficulty: ADVANCED
-    isImportant: false
   refactoring-009:
     difficulty: INTERMEDIATE
-    isImportant: true

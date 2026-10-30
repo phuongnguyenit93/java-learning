@@ -1,13 +1,9 @@
 sections:
   keystore-model:
     difficulty: BASIC
-    isImportant: false
   keystore-entry-types:
     difficulty: INTERMEDIATE
-    isImportant: false
   keystore-protection:
     difficulty: INTERMEDIATE
-    isImportant: false
   keystore-vs-truststore:
     difficulty: BASIC
-    isImportant: false

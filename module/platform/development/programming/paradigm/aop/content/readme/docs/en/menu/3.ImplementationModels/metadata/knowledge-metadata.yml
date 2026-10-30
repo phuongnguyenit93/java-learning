@@ -1,19 +1,13 @@
 sections:
   aop-compile-time:
     difficulty: BASIC
-    isImportant: false
   aop-load-time:
     difficulty: BASIC
-    isImportant: false
   aop-runtime:
     difficulty: BASIC
-    isImportant: false
   aop-model-boundary:
     difficulty: BASIC
-    isImportant: false
   aop-aspectj-spring-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   aop-interception-limits:
     difficulty: INTERMEDIATE
-    isImportant: false

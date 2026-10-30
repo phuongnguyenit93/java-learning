@@ -1,16 +1,11 @@
 sections:
   startup-as-evidence:
     difficulty: BASIC
-    isImportant: false
   reading-startup-output:
     difficulty: BASIC
-    isImportant: false
   defaults-observable-overridable:
     difficulty: BASIC
-    isImportant: false
   startup-failure-classes:
     difficulty: BASIC
-    isImportant: false
   diagnostics-handoff:
     difficulty: BASIC
-    isImportant: false

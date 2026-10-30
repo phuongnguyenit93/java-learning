@@ -1,16 +1,11 @@
 sections:
   ioc-di-what:
     difficulty: BASIC
-    isImportant: false
   ioc-di-why:
     difficulty: BASIC
-    isImportant: false
   ioc-di-before:
     difficulty: BASIC
-    isImportant: false
   ioc-di-solution:
     difficulty: BASIC
-    isImportant: false
   ioc-di-framework:
     difficulty: BASIC
-    isImportant: false

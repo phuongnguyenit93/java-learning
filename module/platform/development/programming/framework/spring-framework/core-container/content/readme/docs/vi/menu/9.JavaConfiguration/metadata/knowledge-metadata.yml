@@ -1,31 +1,21 @@
 sections:
   java-configuration-001:
     difficulty: BASIC
-    isImportant: false
   java-configuration-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   java-configuration-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   java-configuration-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   java-configuration-005:
     difficulty: ADVANCED
-    isImportant: false
   java-configuration-006:
     difficulty: ADVANCED
-    isImportant: false
   java-configuration-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   java-configuration-008:
     difficulty: ADVANCED
-    isImportant: false
   java-configuration-009:
     difficulty: ADVANCED
-    isImportant: false
   java-configuration-010:
     difficulty: ADVANCED
-    isImportant: false

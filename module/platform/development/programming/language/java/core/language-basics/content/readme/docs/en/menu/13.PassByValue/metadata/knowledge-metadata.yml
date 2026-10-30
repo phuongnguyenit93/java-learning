@@ -1,10 +1,7 @@
 sections:
   java-pass-by-value:
     difficulty: BASIC
-    isImportant: false
   reference-copy-mutation:
     difficulty: BASIC
-    isImportant: false
   reassignment-vs-mutation:
     difficulty: BASIC
-    isImportant: false

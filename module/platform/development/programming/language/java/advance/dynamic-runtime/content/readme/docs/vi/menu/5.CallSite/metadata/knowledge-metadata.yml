@@ -1,16 +1,11 @@
 sections:
   call-site-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   call-site-type-invariant:
     difficulty: INTERMEDIATE
-    isImportant: false
   call-site-kinds:
     difficulty: INTERMEDIATE
-    isImportant: false
   call-site-target-updates:
     difficulty: ADVANCED
-    isImportant: false
   call-site-linkage-vs-target-change:
     difficulty: ADVANCED
-    isImportant: false

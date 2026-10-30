@@ -1,19 +1,13 @@
 sections:
   actuator-role:
     difficulty: BASIC
-    isImportant: false
   actuator-problem:
     difficulty: BASIC
-    isImportant: false
   production-management-surface:
     difficulty: BASIC
-    isImportant: false
   runtime-state-vs-actuator-view:
     difficulty: BASIC
-    isImportant: false
   actuator-boundaries:
     difficulty: BASIC
-    isImportant: false
   actuator-learning-path:
     difficulty: BASIC
-    isImportant: false

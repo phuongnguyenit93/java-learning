@@ -1,13 +1,9 @@
 sections:
   closeable-lifecycle:
     difficulty: BASIC
-    isImportant: false
   resource-ownership:
     difficulty: BASIC
-    isImportant: false
   try-with-resources-io:
     difficulty: BASIC
-    isImportant: false
   close-wrapper-chain:
     difficulty: BASIC
-    isImportant: false

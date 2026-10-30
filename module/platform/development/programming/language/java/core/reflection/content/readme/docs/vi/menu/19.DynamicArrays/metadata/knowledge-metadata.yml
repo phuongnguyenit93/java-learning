@@ -1,31 +1,21 @@
 sections:
   dynamic-arrays-001:
     difficulty: BASIC
-    isImportant: true
   dynamic-arrays-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   dynamic-arrays-003:
     difficulty: BASIC
-    isImportant: true
   dynamic-arrays-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   dynamic-arrays-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   dynamic-arrays-006:
     difficulty: ADVANCED
-    isImportant: true
   dynamic-arrays-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   dynamic-arrays-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   dynamic-arrays-009:
     difficulty: ADVANCED
-    isImportant: false
   dynamic-arrays-010:
     difficulty: BASIC
-    isImportant: true

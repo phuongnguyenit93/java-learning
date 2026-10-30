@@ -1,25 +1,17 @@
 sections:
   jms-template-core-roles:
     difficulty: BASIC
-    isImportant: false
   jms-template-send:
     difficulty: BASIC
-    isImportant: false
   jms-template-sync-receive:
     difficulty: BASIC
-    isImportant: false
   jms-template-request-reply:
     difficulty: INTERMEDIATE
-    isImportant: false
   jms-template-callbacks:
     difficulty: INTERMEDIATE
-    isImportant: false
   jms-template-qos:
     difficulty: INTERMEDIATE
-    isImportant: false
   jms-template-exception-translation:
     difficulty: BASIC
-    isImportant: false
   jms-messaging-template-bridge:
     difficulty: INTERMEDIATE
-    isImportant: false

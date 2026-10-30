@@ -1,25 +1,17 @@
 sections:
   lambda-lexical-scope:
     difficulty: BASIC
-    isImportant: false
   captured-local-variables:
     difficulty: BASIC
-    isImportant: false
   captured-local-values:
     difficulty: INTERMEDIATE
-    isImportant: false
   effectively-final:
     difficulty: INTERMEDIATE
-    isImportant: false
   instance-static-state-access:
     difficulty: BASIC
-    isImportant: false
   lambda-this:
     difficulty: INTERMEDIATE
-    isImportant: false
   lambda-vs-anonymous-class-scope:
     difficulty: INTERMEDIATE
-    isImportant: false
   captured-reference-mutation:
     difficulty: INTERMEDIATE
-    isImportant: false

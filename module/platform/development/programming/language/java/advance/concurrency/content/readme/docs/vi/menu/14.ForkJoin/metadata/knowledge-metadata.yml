@@ -1,70 +1,47 @@
 sections:
   fork-join-001:
     difficulty: BASIC
-    isImportant: true
   fork-join-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   fork-join-003:
     difficulty: BASIC
-    isImportant: true
   fork-join-004:
     difficulty: BASIC
-    isImportant: true
   fork-join-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   fork-join-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   fork-join-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   fork-join-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   fork-join-009:
     difficulty: ADVANCED
-    isImportant: true
   fork-join-010:
     difficulty: ADVANCED
-    isImportant: true
   fork-join-011:
     difficulty: INTERMEDIATE
-    isImportant: true
   fork-join-012:
     difficulty: INTERMEDIATE
-    isImportant: true
   fork-join-013:
     difficulty: ADVANCED
-    isImportant: true
   fork-join-014:
     difficulty: ADVANCED
-    isImportant: true
   fork-join-015:
     difficulty: ADVANCED
-    isImportant: true
   fork-join-016:
     difficulty: ADVANCED
-    isImportant: true
   fork-join-017:
     difficulty: ADVANCED
-    isImportant: true
   fork-join-018:
     difficulty: ADVANCED
-    isImportant: true
   fork-join-019:
     difficulty: ADVANCED
-    isImportant: true
   fork-join-020:
     difficulty: ADVANCED
-    isImportant: false
   fork-join-021:
     difficulty: INTERMEDIATE
-    isImportant: true
   fork-join-022:
     difficulty: ADVANCED
-    isImportant: true
   fork-join-023:
     difficulty: ADVANCED
-    isImportant: true

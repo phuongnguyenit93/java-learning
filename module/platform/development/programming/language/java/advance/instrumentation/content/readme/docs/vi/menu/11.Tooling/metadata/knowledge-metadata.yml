@@ -1,19 +1,13 @@
 sections:
   tool-selection-principles:
     difficulty: INTERMEDIATE
-    isImportant: false
   asm-supporting-role:
     difficulty: INTERMEDIATE
-    isImportant: false
   byte-buddy-supporting-role:
     difficulty: INTERMEDIATE
-    isImportant: false
   low-level-vs-abstraction:
     difficulty: INTERMEDIATE
-    isImportant: false
   helper-class-visibility:
     difficulty: INTERMEDIATE
-    isImportant: false
   tooling-version-compatibility:
     difficulty: INTERMEDIATE
-    isImportant: false

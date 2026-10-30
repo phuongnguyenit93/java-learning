@@ -1,25 +1,17 @@
 sections:
   numeric-performance-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   numeric-performance-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   numeric-performance-003:
     difficulty: ADVANCED
-    isImportant: true
   numeric-performance-004:
     difficulty: ADVANCED
-    isImportant: true
   numeric-performance-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   numeric-performance-006:
     difficulty: ADVANCED
-    isImportant: true
   numeric-performance-007:
     difficulty: ADVANCED
-    isImportant: true
   numeric-performance-008:
     difficulty: ADVANCED
-    isImportant: true

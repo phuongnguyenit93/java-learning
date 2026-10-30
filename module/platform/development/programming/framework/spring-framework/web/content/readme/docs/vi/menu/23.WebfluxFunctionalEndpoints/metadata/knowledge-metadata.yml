@@ -1,22 +1,15 @@
 sections:
   webflux-functional-endpoints-001:
     difficulty: BASIC
-    isImportant: false
   webflux-functional-endpoints-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-functional-endpoints-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-functional-endpoints-004:
     difficulty: ADVANCED
-    isImportant: false
   webflux-functional-endpoints-005:
     difficulty: ADVANCED
-    isImportant: false
   webflux-functional-endpoints-006:
     difficulty: ADVANCED
-    isImportant: false
   webflux-functional-endpoints-007:
     difficulty: ADVANCED
-    isImportant: false

@@ -1,22 +1,15 @@
 sections:
   resource-abstraction:
     difficulty: BASIC
-    isImportant: false
   resource-loading-and-patterns:
     difficulty: INTERMEDIATE
-    isImportant: false
   application-events:
     difficulty: INTERMEDIATE
-    isImportant: false
   event-listeners:
     difficulty: INTERMEDIATE
-    isImportant: false
   message-source-i18n:
     difficulty: INTERMEDIATE
-    isImportant: false
   context-hierarchy:
     difficulty: INTERMEDIATE
-    isImportant: false
   context-service-boundaries:
     difficulty: INTERMEDIATE
-    isImportant: false

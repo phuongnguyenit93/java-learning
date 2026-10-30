@@ -1,16 +1,11 @@
 sections:
   dop-schema-concept:
     difficulty: BASIC
-    isImportant: false
   dop-schema-optional:
     difficulty: BASIC
-    isImportant: false
   dop-validation-boundaries:
     difficulty: BASIC
-    isImportant: false
   dop-validation-failure:
     difficulty: BASIC
-    isImportant: false
   dop-schema-tradeoffs:
     difficulty: BASIC
-    isImportant: false

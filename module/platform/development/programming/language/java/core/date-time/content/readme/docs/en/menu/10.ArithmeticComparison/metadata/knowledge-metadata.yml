@@ -1,16 +1,11 @@
 sections:
   temporal-arithmetic:
     difficulty: BASIC
-    isImportant: false
   between-semantics:
     difficulty: BASIC
-    isImportant: false
   date-time-comparison:
     difficulty: BASIC
-    isImportant: false
   dst-gap-overlap:
     difficulty: BASIC
-    isImportant: false
   business-calendar-boundary:
     difficulty: BASIC
-    isImportant: false

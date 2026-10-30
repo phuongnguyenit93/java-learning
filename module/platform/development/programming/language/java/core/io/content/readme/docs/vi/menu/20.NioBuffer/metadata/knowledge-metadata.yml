@@ -1,37 +1,25 @@
 sections:
   nio-buffer-001:
     difficulty: BASIC
-    isImportant: true
   nio-buffer-002:
     difficulty: BASIC
-    isImportant: true
   nio-buffer-003:
     difficulty: BASIC
-    isImportant: true
   nio-buffer-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   nio-buffer-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   nio-buffer-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   nio-buffer-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   nio-buffer-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   nio-buffer-009:
     difficulty: ADVANCED
-    isImportant: false
   nio-buffer-010:
     difficulty: ADVANCED
-    isImportant: true
   nio-buffer-011:
     difficulty: ADVANCED
-    isImportant: true
   nio-buffer-012:
     difficulty: ADVANCED
-    isImportant: true

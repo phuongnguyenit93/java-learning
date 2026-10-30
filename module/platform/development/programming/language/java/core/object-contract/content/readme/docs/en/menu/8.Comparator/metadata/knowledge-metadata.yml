@@ -1,13 +1,9 @@
 sections:
   external-order:
     difficulty: BASIC
-    isImportant: false
   comparator-composition:
     difficulty: INTERMEDIATE
-    isImportant: false
   comparator-contract:
     difficulty: INTERMEDIATE
-    isImportant: false
   sorting-stability-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false

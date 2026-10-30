@@ -1,13 +1,9 @@
 sections:
   equals-hashcode-consistency:
     difficulty: BASIC
-    isImportant: false
   hash-collection-lookup:
     difficulty: BASIC
-    isImportant: false
   broken-contract-effects:
     difficulty: BASIC
-    isImportant: false
   mutable-key-risk:
     difficulty: INTERMEDIATE
-    isImportant: false

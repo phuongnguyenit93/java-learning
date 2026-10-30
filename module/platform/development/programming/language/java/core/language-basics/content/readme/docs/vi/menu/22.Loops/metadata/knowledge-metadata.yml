@@ -1,31 +1,21 @@
 sections:
   loops-001:
     difficulty: BASIC
-    isImportant: false
   loops-002:
     difficulty: BASIC
-    isImportant: false
   loops-003:
     difficulty: BASIC
-    isImportant: false
   loops-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   loops-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   loops-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   loops-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   loops-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   loops-009:
     difficulty: ADVANCED
-    isImportant: false
   loops-010:
     difficulty: INTERMEDIATE
-    isImportant: false

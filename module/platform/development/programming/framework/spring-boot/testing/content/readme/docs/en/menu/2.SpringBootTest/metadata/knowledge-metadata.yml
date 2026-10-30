@@ -1,19 +1,13 @@
 sections:
   full-context-purpose:
     difficulty: BASIC
-    isImportant: false
   springboottest-context-model:
     difficulty: BASIC
-    isImportant: false
   full-context-configuration-discovery:
     difficulty: BASIC
-    isImportant: false
   full-context-fidelity-cost:
     difficulty: BASIC
-    isImportant: false
   full-context-vs-slice:
     difficulty: BASIC
-    isImportant: false
   web-environment-handoff:
     difficulty: BASIC
-    isImportant: false

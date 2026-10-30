@@ -1,28 +1,19 @@
 sections:
   string-practice-001:
     difficulty: ADVANCED
-    isImportant: false
   string-practice-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-practice-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-practice-004:
     difficulty: ADVANCED
-    isImportant: false
   string-practice-005:
     difficulty: ADVANCED
-    isImportant: false
   string-practice-006:
     difficulty: ADVANCED
-    isImportant: false
   string-practice-007:
     difficulty: ADVANCED
-    isImportant: false
   string-practice-008:
     difficulty: ADVANCED
-    isImportant: false
   string-practice-009:
     difficulty: INTERMEDIATE
-    isImportant: false

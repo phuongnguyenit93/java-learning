@@ -1,28 +1,19 @@
 sections:
   stack-frames-and-calls-001:
     difficulty: BASIC
-    isImportant: false
   stack-frames-and-calls-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   stack-frames-and-calls-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   stack-frames-and-calls-004:
     difficulty: ADVANCED
-    isImportant: false
   stack-frames-and-calls-005:
     difficulty: ADVANCED
-    isImportant: false
   stack-frames-and-calls-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   stack-frames-and-calls-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   stack-frames-and-calls-008:
     difficulty: ADVANCED
-    isImportant: false
   stack-frames-and-calls-009:
     difficulty: ADVANCED
-    isImportant: false

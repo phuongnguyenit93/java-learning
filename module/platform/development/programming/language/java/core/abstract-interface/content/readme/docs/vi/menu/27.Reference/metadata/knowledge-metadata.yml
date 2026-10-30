@@ -1,16 +1,11 @@
 sections:
   reference-001:
     difficulty: BASIC
-    isImportant: true
   reference-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   reference-003:
     difficulty: ADVANCED
-    isImportant: true
   reference-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   reference-005:
     difficulty: INTERMEDIATE
-    isImportant: false

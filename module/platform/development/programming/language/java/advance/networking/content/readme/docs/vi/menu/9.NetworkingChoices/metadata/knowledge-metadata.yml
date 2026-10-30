@@ -1,22 +1,15 @@
 sections:
   networking-choice-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   transport-choice:
     difficulty: INTERMEDIATE
-    isImportant: false
   blocking-concurrency-choice:
     difficulty: INTERMEDIATE
-    isImportant: false
   networking-security-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   networking-resilience-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   networking-integration-handoff:
     difficulty: INTERMEDIATE
-    isImportant: false
   networking-end-to-end-model:
     difficulty: INTERMEDIATE
-    isImportant: false

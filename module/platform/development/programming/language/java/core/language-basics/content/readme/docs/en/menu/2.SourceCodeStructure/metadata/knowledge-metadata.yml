@@ -1,10 +1,7 @@
 sections:
   source-file-type-structure:
     difficulty: BASIC
-    isImportant: false
   statement-expression-model:
     difficulty: BASIC
-    isImportant: false
   lexical-elements:
     difficulty: BASIC
-    isImportant: false

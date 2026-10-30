@@ -1,19 +1,13 @@
 sections:
   artifact-strategy:
     difficulty: BASIC
-    isImportant: false
   delivery-environment-fit:
     difficulty: BASIC
-    isImportant: false
   deployment-ownership-boundary:
     difficulty: BASIC
-    isImportant: false
   normal-jvm-vs-native-handoff:
     difficulty: BASIC
-    isImportant: false
   end-to-end-build-flow:
     difficulty: BASIC
-    isImportant: false
   build-failure-classification:
     difficulty: BASIC
-    isImportant: false

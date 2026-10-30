@@ -1,22 +1,15 @@
 sections:
   boot-testing-role:
     difficulty: BASIC
-    isImportant: false
   boot-testing-problem:
     difficulty: BASIC
-    isImportant: false
   boot-test-support-modules:
     difficulty: BASIC
-    isImportant: false
   springapplication-test-bootstrap:
     difficulty: BASIC
-    isImportant: false
   primary-test-configuration-discovery:
     difficulty: BASIC
-    isImportant: false
   testing-ownership-boundary:
     difficulty: BASIC
-    isImportant: false
   testing-learning-path:
     difficulty: BASIC
-    isImportant: false

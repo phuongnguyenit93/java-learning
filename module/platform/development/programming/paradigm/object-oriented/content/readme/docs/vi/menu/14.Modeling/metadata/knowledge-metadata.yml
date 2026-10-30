@@ -1,28 +1,19 @@
 sections:
   modeling-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   modeling-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   modeling-003:
     difficulty: ADVANCED
-    isImportant: true
   modeling-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   modeling-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   modeling-006:
     difficulty: BASIC
-    isImportant: false
   modeling-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   modeling-008:
     difficulty: ADVANCED
-    isImportant: true
   modeling-009:
     difficulty: ADVANCED
-    isImportant: true

@@ -1,25 +1,17 @@
 sections:
   bean-creation-timing-001:
     difficulty: INTERMEDIATE
-    isImportant: false
   bean-creation-timing-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   bean-creation-timing-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   bean-creation-timing-004:
     difficulty: ADVANCED
-    isImportant: false
   bean-creation-timing-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   bean-creation-timing-006:
     difficulty: ADVANCED
-    isImportant: false
   bean-creation-timing-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   bean-creation-timing-008:
     difficulty: ADVANCED
-    isImportant: false

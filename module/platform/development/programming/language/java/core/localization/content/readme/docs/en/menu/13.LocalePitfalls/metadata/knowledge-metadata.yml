@@ -1,16 +1,11 @@
 sections:
   default-locale:
     difficulty: BASIC
-    isImportant: false
   turkish-i:
     difficulty: BASIC
-    isImportant: false
   default-locale-production-risk:
     difficulty: BASIC
-    isImportant: false
   format-parse-roundtrip:
     difficulty: BASIC
-    isImportant: false
   localization-synthesis:
     difficulty: BASIC
-    isImportant: false

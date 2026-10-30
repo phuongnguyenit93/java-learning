@@ -1,10 +1,7 @@
 sections:
   local-time-model:
     difficulty: BASIC
-    isImportant: false
   local-time-precision:
     difficulty: BASIC
-    isImportant: false
   local-time-wrap:
     difficulty: BASIC
-    isImportant: false

@@ -1,25 +1,17 @@
 sections:
   primitive-wrappers-001:
     difficulty: BASIC
-    isImportant: false
   primitive-wrappers-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   primitive-wrappers-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   primitive-wrappers-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   primitive-wrappers-005:
     difficulty: ADVANCED
-    isImportant: false
   primitive-wrappers-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   primitive-wrappers-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   primitive-wrappers-008:
     difficulty: ADVANCED
-    isImportant: false

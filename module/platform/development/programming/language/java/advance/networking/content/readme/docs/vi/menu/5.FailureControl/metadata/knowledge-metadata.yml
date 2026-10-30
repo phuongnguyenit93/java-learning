@@ -1,22 +1,15 @@
 sections:
   network-wait-points:
     difficulty: BASIC
-    isImportant: false
   socket-timeouts:
     difficulty: INTERMEDIATE
-    isImportant: false
   socket-options:
     difficulty: INTERMEDIATE
-    isImportant: false
   network-failure-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   network-resource-cleanup:
     difficulty: INTERMEDIATE
-    isImportant: false
   network-cancellation:
     difficulty: ADVANCED
-    isImportant: false
   networking-pitfalls:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,28 +1,19 @@
 sections:
   character-streams-001:
     difficulty: BASIC
-    isImportant: true
   character-streams-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   character-streams-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   character-streams-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   character-streams-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   character-streams-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   character-streams-007:
     difficulty: ADVANCED
-    isImportant: true
   character-streams-008:
     difficulty: ADVANCED
-    isImportant: false
   character-streams-009:
     difficulty: INTERMEDIATE
-    isImportant: true

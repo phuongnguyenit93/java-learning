@@ -1,28 +1,19 @@
 sections:
   spring-aop-setup-001:
     difficulty: BASIC
-    isImportant: false
   spring-aop-setup-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   spring-aop-setup-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   spring-aop-setup-004:
     difficulty: BASIC
-    isImportant: false
   spring-aop-setup-005:
     difficulty: ADVANCED
-    isImportant: false
   spring-aop-setup-006:
     difficulty: ADVANCED
-    isImportant: false
   spring-aop-setup-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   spring-aop-setup-008:
     difficulty: BASIC
-    isImportant: false
   spring-aop-setup-009:
     difficulty: ADVANCED
-    isImportant: false

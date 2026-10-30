@@ -1,16 +1,11 @@
 sections:
   runtime-extensibility-purpose:
     difficulty: BASIC
-    isImportant: false
   host-extension-model:
     difficulty: BASIC
-    isImportant: false
   static-wiring-limitations:
     difficulty: BASIC
-    isImportant: false
   extensibility-mechanism-spectrum:
     difficulty: BASIC
-    isImportant: false
   runtime-extensibility-boundaries:
     difficulty: BASIC
-    isImportant: false

@@ -1,25 +1,17 @@
 sections:
   scheduled-infrastructure:
     difficulty: BASIC
-    isImportant: false
   scheduled-trigger-modes:
     difficulty: BASIC
-    isImportant: false
   scheduled-cron-zone-timeunit:
     difficulty: BASIC
-    isImportant: false
   scheduled-scheduler-qualifier:
     difficulty: BASIC
-    isImportant: false
   scheduled-overlap:
     difficulty: BASIC
-    isImportant: false
   scheduled-failure:
     difficulty: BASIC
-    isImportant: false
   reactive-scheduled-methods:
     difficulty: BASIC
-    isImportant: false
   scheduling-configurer:
     difficulty: BASIC
-    isImportant: false

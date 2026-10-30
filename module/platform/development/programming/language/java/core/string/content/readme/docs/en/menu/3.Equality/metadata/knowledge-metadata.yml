@@ -1,10 +1,7 @@
 sections:
   string-equals:
     difficulty: BASIC
-    isImportant: false
   string-reference-equality:
     difficulty: BASIC
-    isImportant: false
   case-insensitive-boundary:
     difficulty: BASIC
-    isImportant: false

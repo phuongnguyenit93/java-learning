@@ -1,25 +1,17 @@
 sections:
   no-generic-primitives:
     difficulty: BASIC
-    isImportant: false
   no-new-type-parameter:
     difficulty: INTERMEDIATE
-    isImportant: false
   generic-array-limit:
     difficulty: ADVANCED
-    isImportant: false
   runtime-type-information-limit:
     difficulty: INTERMEDIATE
-    isImportant: false
   static-type-parameter-limit:
     difficulty: INTERMEDIATE
-    isImportant: false
   erasure-signature-clash:
     difficulty: INTERMEDIATE
-    isImportant: false
   generic-exception-limit:
     difficulty: ADVANCED
-    isImportant: false
   generic-api-design:
     difficulty: INTERMEDIATE
-    isImportant: false

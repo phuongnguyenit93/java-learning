@@ -1,25 +1,17 @@
 sections:
   classfile-format-overview:
     difficulty: INTERMEDIATE
-    isImportant: false
   classfile-structure:
     difficulty: INTERMEDIATE
-    isImportant: false
   bytecode-instruction-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   constant-pool-symbolic-references:
     difficulty: INTERMEDIATE
-    isImportant: false
   runtime-constant-pool:
     difficulty: INTERMEDIATE
-    isImportant: false
   loading-linking-initialization-overview:
     difficulty: INTERMEDIATE
-    isImportant: false
   verification-preparation-resolution:
     difficulty: ADVANCED
-    isImportant: false
   pre-execution-failures:
     difficulty: INTERMEDIATE
-    isImportant: false

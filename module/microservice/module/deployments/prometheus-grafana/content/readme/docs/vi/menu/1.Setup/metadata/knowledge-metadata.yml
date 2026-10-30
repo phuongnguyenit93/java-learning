@@ -1,10 +1,7 @@
 sections:
   setup-prometheus:
     difficulty: BASIC
-    isImportant: false
   config-prometheus-advance:
     difficulty: BASIC
-    isImportant: false
   config-prometheus-with-eureka-server:
     difficulty: BASIC
-    isImportant: false

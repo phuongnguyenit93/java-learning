@@ -1,31 +1,21 @@
 sections:
   class-lifecycle-001:
     difficulty: BASIC
-    isImportant: true
   class-lifecycle-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   class-lifecycle-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   class-lifecycle-004:
     difficulty: ADVANCED
-    isImportant: false
   class-lifecycle-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   class-lifecycle-006:
     difficulty: ADVANCED
-    isImportant: true
   class-lifecycle-007:
     difficulty: ADVANCED
-    isImportant: false
   class-lifecycle-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   class-lifecycle-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   class-lifecycle-010:
     difficulty: INTERMEDIATE
-    isImportant: true

@@ -1,10 +1,7 @@
 sections:
   primitive-vs-reference-model:
     difficulty: BASIC
-    isImportant: false
   primitive-ranges-and-defaults:
     difficulty: BASIC
-    isImportant: false
   reference-value-semantics:
     difficulty: BASIC
-    isImportant: false

@@ -1,13 +1,9 @@
 sections:
   wrapper-types:
     difficulty: BASIC
-    isImportant: false
   boxing-unboxing:
     difficulty: BASIC
-    isImportant: false
   wrapper-caching:
     difficulty: BASIC
-    isImportant: false
   unboxing-null:
     difficulty: BASIC
-    isImportant: false

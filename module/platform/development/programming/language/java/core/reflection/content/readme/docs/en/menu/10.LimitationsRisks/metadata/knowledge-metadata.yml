@@ -1,22 +1,15 @@
 sections:
   reflection-cost-boundary:
     difficulty: BASIC
-    isImportant: false
   compile-time-safety-loss:
     difficulty: BASIC
-    isImportant: false
   encapsulation-breakage:
     difficulty: INTERMEDIATE
-    isImportant: false
   reflection-performance:
     difficulty: INTERMEDIATE
-    isImportant: false
   native-image-boundary:
     difficulty: ADVANCED
-    isImportant: false
   reflection-maintainability:
     difficulty: INTERMEDIATE
-    isImportant: false
   reflection-decision-model:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,22 +1,15 @@
 sections:
   downcall-model:
     difficulty: ADVANCED
-    isImportant: false
   downcall-handle:
     difficulty: ADVANCED
-    isImportant: false
   native-argument-return:
     difficulty: ADVANCED
-    isImportant: false
   upcall-model:
     difficulty: ADVANCED
-    isImportant: false
   upcall-stub:
     difficulty: ADVANCED
-    isImportant: false
   callback-lifetime:
     difficulty: ADVANCED
-    isImportant: false
   callback-thread-boundary:
     difficulty: ADVANCED
-    isImportant: false

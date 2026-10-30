@@ -1,19 +1,13 @@
 sections:
   resource-acquisition-release:
     difficulty: INTERMEDIATE
-    isImportant: false
   datasource-utils-transaction-participation:
     difficulty: ADVANCED
-    isImportant: false
   connection-factory-utils-transaction-participation:
     difficulty: ADVANCED
-    isImportant: false
   transaction-aware-resource-proxies:
     difficulty: ADVANCED
-    isImportant: false
   thread-vs-subscriber-context-resources:
     difficulty: ADVANCED
-    isImportant: false
   transaction-management-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false

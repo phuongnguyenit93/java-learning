@@ -1,37 +1,25 @@
 sections:
   concurrency-design-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   concurrency-design-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   concurrency-design-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   concurrency-design-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   concurrency-design-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   concurrency-design-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   concurrency-design-007:
     difficulty: ADVANCED
-    isImportant: false
   concurrency-design-008:
     difficulty: ADVANCED
-    isImportant: true
   concurrency-design-009:
     difficulty: ADVANCED
-    isImportant: true
   concurrency-design-010:
     difficulty: ADVANCED
-    isImportant: true
   concurrency-design-011:
     difficulty: ADVANCED
-    isImportant: true
   concurrency-design-012:
     difficulty: ADVANCED
-    isImportant: true

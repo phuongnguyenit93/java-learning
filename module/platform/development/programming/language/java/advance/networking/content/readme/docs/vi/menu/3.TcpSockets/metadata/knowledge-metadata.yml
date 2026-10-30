@@ -1,22 +1,15 @@
 sections:
   tcp-connection-model:
     difficulty: BASIC
-    isImportant: false
   tcp-bind-connect-accept:
     difficulty: BASIC
-    isImportant: false
   tcp-client-server-lifecycle:
     difficulty: BASIC
-    isImportant: false
   tcp-stream-io:
     difficulty: BASIC
-    isImportant: false
   tcp-message-framing:
     difficulty: INTERMEDIATE
-    isImportant: false
   tcp-half-close:
     difficulty: INTERMEDIATE
-    isImportant: false
   tcp-resource-lifecycle:
     difficulty: INTERMEDIATE
-    isImportant: false

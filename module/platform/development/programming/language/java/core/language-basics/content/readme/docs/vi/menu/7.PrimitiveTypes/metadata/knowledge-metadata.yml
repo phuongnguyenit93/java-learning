@@ -1,31 +1,21 @@
 sections:
   primitive-types-001:
     difficulty: BASIC
-    isImportant: false
   primitive-types-002:
     difficulty: BASIC
-    isImportant: false
   primitive-types-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   primitive-types-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   primitive-types-005:
     difficulty: ADVANCED
-    isImportant: false
   primitive-types-006:
     difficulty: BASIC
-    isImportant: false
   primitive-types-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   primitive-types-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   primitive-types-009:
     difficulty: INTERMEDIATE
-    isImportant: false
   primitive-types-010:
     difficulty: INTERMEDIATE
-    isImportant: false

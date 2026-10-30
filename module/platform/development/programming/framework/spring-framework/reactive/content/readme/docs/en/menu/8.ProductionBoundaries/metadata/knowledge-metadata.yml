@@ -1,31 +1,21 @@
 sections:
   webflux-blocking-thread-starvation:
     difficulty: ADVANCED
-    isImportant: false
   webflux-buffering-scheduler-pitfalls:
     difficulty: ADVANCED
-    isImportant: false
   webflux-backpressure-cancellation:
     difficulty: ADVANCED
-    isImportant: false
   webflux-connection-lifetime:
     difficulty: ADVANCED
-    isImportant: false
   webflux-resource-limits:
     difficulty: ADVANCED
-    isImportant: false
   webflux-mvc-decision:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-dependency-stack-fit:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-team-complexity:
     difficulty: INTERMEDIATE
-    isImportant: false
   webflux-neighboring-module-handoffs:
     difficulty: BASIC
-    isImportant: false
   webflux-end-to-end-flow:
     difficulty: ADVANCED
-    isImportant: false

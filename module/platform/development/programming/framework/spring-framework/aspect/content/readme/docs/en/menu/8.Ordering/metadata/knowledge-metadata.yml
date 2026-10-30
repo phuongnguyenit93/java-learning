@@ -1,16 +1,11 @@
 sections:
   ordering-mental-model:
     difficulty: BASIC
-    isImportant: false
   aspect-instantiation-models:
     difficulty: BASIC
-    isImportant: false
   ordering-demo:
     difficulty: BASIC
-    isImportant: false
   ordering-pitfall:
     difficulty: BASIC
-    isImportant: false
   ordering-conclusion:
     difficulty: BASIC
-    isImportant: false

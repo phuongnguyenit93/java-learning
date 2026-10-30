@@ -1,25 +1,17 @@
 sections:
   class-001:
     difficulty: BASIC
-    isImportant: true
   class-002:
     difficulty: BASIC
-    isImportant: true
   class-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   class-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   class-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   class-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   class-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   class-008:
     difficulty: ADVANCED
-    isImportant: true

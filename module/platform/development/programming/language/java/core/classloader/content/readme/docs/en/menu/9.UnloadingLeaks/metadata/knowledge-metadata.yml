@@ -1,19 +1,13 @@
 sections:
   class-unloading:
     difficulty: BASIC
-    isImportant: false
   loader-retention:
     difficulty: BASIC
-    isImportant: false
   static-threadlocal-leaks:
     difficulty: BASIC
-    isImportant: false
   redeploy-leak:
     difficulty: BASIC
-    isImportant: false
   unloading-observation:
     difficulty: BASIC
-    isImportant: false
   end-to-end-synthesis:
     difficulty: BASIC
-    isImportant: false

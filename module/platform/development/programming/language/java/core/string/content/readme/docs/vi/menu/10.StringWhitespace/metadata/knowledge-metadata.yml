@@ -1,25 +1,17 @@
 sections:
   string-whitespace-001:
     difficulty: BASIC
-    isImportant: false
   string-whitespace-002:
     difficulty: BASIC
-    isImportant: false
   string-whitespace-003:
     difficulty: BASIC
-    isImportant: false
   string-whitespace-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-whitespace-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   string-whitespace-006:
     difficulty: BASIC
-    isImportant: false
   string-whitespace-007:
     difficulty: ADVANCED
-    isImportant: false
   string-whitespace-008:
     difficulty: INTERMEDIATE
-    isImportant: false

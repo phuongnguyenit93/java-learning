@@ -1,25 +1,17 @@
 sections:
   when-to-use-instrumentation:
     difficulty: INTERMEDIATE
-    isImportant: false
   when-not-to-use-instrumentation:
     difficulty: INTERMEDIATE
-    isImportant: false
   startup-vs-dynamic-agent-choice:
     difficulty: INTERMEDIATE
-    isImportant: false
   redefine-vs-retransform-choice:
     difficulty: INTERMEDIATE
-    isImportant: false
   instrumentation-vs-reflection-proxy:
     difficulty: INTERMEDIATE
-    isImportant: false
   instrumentation-vs-runtime-diagnostics:
     difficulty: INTERMEDIATE
-    isImportant: false
   jvmti-native-agent-handoff:
     difficulty: INTERMEDIATE
-    isImportant: false
   end-to-end-agent-flow:
     difficulty: INTERMEDIATE
-    isImportant: false

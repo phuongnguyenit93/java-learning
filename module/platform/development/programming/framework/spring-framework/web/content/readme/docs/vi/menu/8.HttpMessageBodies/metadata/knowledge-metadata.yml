@@ -1,25 +1,17 @@
 sections:
   http-message-bodies-001:
     difficulty: BASIC
-    isImportant: false
   http-message-bodies-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   http-message-bodies-003:
     difficulty: ADVANCED
-    isImportant: false
   http-message-bodies-004:
     difficulty: ADVANCED
-    isImportant: false
   http-message-bodies-005:
     difficulty: ADVANCED
-    isImportant: false
   http-message-bodies-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   http-message-bodies-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   http-message-bodies-008:
     difficulty: ADVANCED
-    isImportant: false

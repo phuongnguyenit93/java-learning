@@ -1,25 +1,17 @@
 sections:
   first-application-001:
     difficulty: BASIC
-    isImportant: false
   first-application-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   first-application-003:
     difficulty: BASIC
-    isImportant: false
   first-application-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   first-application-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   first-application-006:
     difficulty: ADVANCED
-    isImportant: false
   first-application-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   first-application-008:
     difficulty: INTERMEDIATE
-    isImportant: false

@@ -1,25 +1,17 @@
 sections:
   reactive-what:
     difficulty: BASIC
-    isImportant: false
   reactive-why:
     difficulty: BASIC
-    isImportant: false
   reactive-values-vs-streams:
     difficulty: BASIC
-    isImportant: false
   reactive-foundation-bridge:
     difficulty: BASIC
-    isImportant: false
   reactive-solution:
     difficulty: BASIC
-    isImportant: false
   reactive-streams-boundary:
     difficulty: BASIC
-    isImportant: false
   reactive-framework-boundary:
     difficulty: BASIC
-    isImportant: false
   reactive-learning-path:
     difficulty: BASIC
-    isImportant: false

@@ -1,22 +1,15 @@
 sections:
   transaction-declarative-model:
     difficulty: BASIC
-    isImportant: false
   transaction-enable-management:
     difficulty: BASIC
-    isImportant: false
   transactional-metadata:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-interceptor:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-proxy-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-aspectj-mode:
     difficulty: ADVANCED
-    isImportant: false
   transaction-metadata-precedence:
     difficulty: INTERMEDIATE
-    isImportant: false

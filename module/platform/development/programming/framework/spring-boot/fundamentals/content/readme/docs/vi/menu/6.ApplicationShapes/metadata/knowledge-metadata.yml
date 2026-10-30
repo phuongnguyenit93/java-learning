@@ -1,16 +1,11 @@
 sections:
   application-shapes:
     difficulty: BASIC
-    isImportant: false
   non-web-servlet-reactive:
     difficulty: BASIC
-    isImportant: false
   embedded-server-mental-model:
     difficulty: BASIC
-    isImportant: false
   classpath-changes-runtime-shape:
     difficulty: BASIC
-    isImportant: false
   web-runtime-handoff:
     difficulty: BASIC
-    isImportant: false

@@ -1,16 +1,11 @@
 sections:
   transaction-event-listener:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-event-fallback:
     difficulty: INTERMEDIATE
-    isImportant: false
   transaction-reactive-events:
     difficulty: ADVANCED
-    isImportant: false
   transaction-post-completion-resources:
     difficulty: ADVANCED
-    isImportant: false
   transaction-execution-listener:
     difficulty: ADVANCED
-    isImportant: false

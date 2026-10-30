@@ -1,19 +1,13 @@
 sections:
   compile-time-vs-runtime-type:
     difficulty: BASIC
-    isImportant: false
   assignment-compatibility:
     difficulty: BASIC
-    isImportant: false
   instanceof-safe-cast:
     difficulty: BASIC
-    isImportant: false
   class-cast-failure:
     difficulty: BASIC
-    isImportant: false
   overload-vs-override-dispatch:
     difficulty: BASIC
-    isImportant: false
   type-system-boundaries:
     difficulty: BASIC
-    isImportant: false

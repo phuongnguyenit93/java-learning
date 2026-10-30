@@ -1,19 +1,13 @@
 sections:
   server-properties-model:
     difficulty: BASIC
-    isImportant: false
   common-server-namespace:
     difficulty: BASIC
-    isImportant: false
   port-address-endpoint-controls:
     difficulty: BASIC
-    isImportant: false
   server-specific-namespaces:
     difficulty: BASIC
-    isImportant: false
   portable-vs-server-specific-properties:
     difficulty: BASIC
-    isImportant: false
   external-configuration-handoff:
     difficulty: BASIC
-    isImportant: false

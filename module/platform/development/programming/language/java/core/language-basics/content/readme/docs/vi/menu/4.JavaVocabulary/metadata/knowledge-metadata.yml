@@ -1,25 +1,17 @@
 sections:
   java-vocabulary-001:
     difficulty: BASIC
-    isImportant: false
   java-vocabulary-002:
     difficulty: BASIC
-    isImportant: false
   java-vocabulary-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   java-vocabulary-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   java-vocabulary-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   java-vocabulary-006:
     difficulty: INTERMEDIATE
-    isImportant: false
   java-vocabulary-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   java-vocabulary-008:
     difficulty: ADVANCED
-    isImportant: false

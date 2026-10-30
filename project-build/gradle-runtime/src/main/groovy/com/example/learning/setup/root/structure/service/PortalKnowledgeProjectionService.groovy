@@ -709,7 +709,6 @@ Section ids must be unique within one module/language.
                                 title      : candidate.title,
                                 content    : publicPath,
                                 difficulty : sectionMetadata.difficulty,
-                                isImportant: sectionMetadata.isImportant,
                         ]
                 )
 
@@ -973,80 +972,8 @@ ${ReadmeMetadataSyncService.ALLOWED_DIFFICULTIES.join(', ')}
         }
 
 
-        boolean isImportant =
-                resolveBooleanMetadata(
-                        section,
-                        'isImportant',
-                        ReadmeMetadataSyncService.DEFAULT_IS_IMPORTANT,
-                        routeId,
-                        language,
-                        sourcePath,
-                        sectionId
-                )
-
-
-        return [
-                difficulty : difficulty,
-                isImportant: isImportant
-        ]
+        return [difficulty: difficulty]
     }
-
-
-    private static boolean resolveBooleanMetadata(
-            Map<String, Object> section,
-            String field,
-            boolean defaultValue,
-            String routeId,
-            String language,
-            String sourcePath,
-            String sectionId
-    ) {
-
-        Object value =
-                section[
-                        field
-                ]
-
-
-        if (value == null) {
-
-            return defaultValue
-        }
-
-
-        if (value instanceof Boolean) {
-
-            return value as boolean
-        }
-
-
-        throw new GradleException(
-                """
-Invalid Portal README knowledge boolean metadata.
-
-Module:
-${routeId}
-
-Language:
-${language}
-
-README file:
-${sourcePath}
-
-Section id:
-${sectionId}
-
-Field:
-${field}
-
-Value:
-${value}
-
-Expected YAML boolean true or false.
-""".stripIndent()
-        )
-    }
-
 
     private String processContentReferences(
             Project moduleProject,

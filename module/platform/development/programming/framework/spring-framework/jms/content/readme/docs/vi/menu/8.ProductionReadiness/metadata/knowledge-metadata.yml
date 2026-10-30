@@ -1,19 +1,13 @@
 sections:
   jms-observability-61:
     difficulty: INTERMEDIATE
-    isImportant: false
   jms-testing-strategy:
     difficulty: INTERMEDIATE
-    isImportant: false
   jms-real-provider-testing:
     difficulty: INTERMEDIATE
-    isImportant: false
   jms-direct-vs-integration:
     difficulty: BASIC
-    isImportant: false
   jms-neighboring-messaging-boundaries:
     difficulty: BASIC
-    isImportant: false
   jms-end-to-end-synthesis:
     difficulty: INTERMEDIATE
-    isImportant: false

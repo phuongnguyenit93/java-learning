@@ -1,7 +1,5 @@
 sections:
   generic-type-purpose:
     difficulty: BASIC
-    isImportant: false
   type-parameter:
     difficulty: BASIC
-    isImportant: false

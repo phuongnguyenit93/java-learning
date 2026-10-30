@@ -1,16 +1,11 @@
 sections:
   hibernate-what:
     difficulty: BASIC
-    isImportant: false
   hibernate-why:
     difficulty: BASIC
-    isImportant: false
   hibernate-model:
     difficulty: BASIC
-    isImportant: false
   hibernate-jpa:
     difficulty: BASIC
-    isImportant: false
   hibernate-boundary:
     difficulty: BASIC
-    isImportant: false

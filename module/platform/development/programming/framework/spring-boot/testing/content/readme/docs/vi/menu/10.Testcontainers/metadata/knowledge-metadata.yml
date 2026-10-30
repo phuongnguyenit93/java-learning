@@ -1,25 +1,17 @@
 sections:
   service-connection-purpose:
     difficulty: BASIC
-    isImportant: false
   spring-boot-testcontainers-dependency:
     difficulty: BASIC
-    isImportant: false
   connection-details-precedence:
     difficulty: BASIC
-    isImportant: false
   service-connection-container-field:
     difficulty: BASIC
-    isImportant: false
   service-connection-container-bean:
     difficulty: BASIC
-    isImportant: false
   service-connection-name-hints:
     difficulty: BASIC
-    isImportant: false
   dynamic-property-source-fallback:
     difficulty: BASIC
-    isImportant: false
   testcontainers-ownership-boundary:
     difficulty: BASIC
-    isImportant: false

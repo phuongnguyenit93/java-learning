@@ -1,31 +1,21 @@
 sections:
   garbage-collectors-001:
     difficulty: BASIC
-    isImportant: false
   garbage-collectors-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   garbage-collectors-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   garbage-collectors-004:
     difficulty: ADVANCED
-    isImportant: false
   garbage-collectors-005:
     difficulty: ADVANCED
-    isImportant: false
   garbage-collectors-006:
     difficulty: ADVANCED
-    isImportant: false
   garbage-collectors-007:
     difficulty: ADVANCED
-    isImportant: false
   garbage-collectors-008:
     difficulty: INTERMEDIATE
-    isImportant: false
   garbage-collectors-009:
     difficulty: ADVANCED
-    isImportant: false
   garbage-collectors-010:
     difficulty: ADVANCED
-    isImportant: false

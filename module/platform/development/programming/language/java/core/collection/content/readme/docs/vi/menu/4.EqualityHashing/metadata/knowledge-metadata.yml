@@ -1,25 +1,17 @@
 sections:
   equality-hashing-001:
     difficulty: BASIC
-    isImportant: false
   equality-hashing-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   equality-hashing-003:
     difficulty: BASIC
-    isImportant: false
   equality-hashing-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   equality-hashing-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   equality-hashing-006:
     difficulty: ADVANCED
-    isImportant: false
   equality-hashing-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   equality-hashing-008:
     difficulty: ADVANCED
-    isImportant: false

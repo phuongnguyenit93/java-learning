@@ -1,19 +1,13 @@
 sections:
   method-handle-adaptation-model:
     difficulty: INTERMEDIATE
-    isImportant: false
   method-handle-type-adaptation:
     difficulty: INTERMEDIATE
-    isImportant: false
   method-handle-binding:
     difficulty: INTERMEDIATE
-    isImportant: false
   method-handle-transformations:
     difficulty: ADVANCED
-    isImportant: false
   method-handle-composition:
     difficulty: ADVANCED
-    isImportant: false
   method-handle-guards:
     difficulty: ADVANCED
-    isImportant: false

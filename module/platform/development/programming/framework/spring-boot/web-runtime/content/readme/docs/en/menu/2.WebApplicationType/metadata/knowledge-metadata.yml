@@ -1,16 +1,11 @@
 sections:
   web-application-types:
     difficulty: BASIC
-    isImportant: false
   classpath-type-deduction:
     difficulty: BASIC
-    isImportant: false
   servlet-reactive-precedence:
     difficulty: BASIC
-    isImportant: false
   explicit-type-override:
     difficulty: BASIC
-    isImportant: false
   application-type-consequences:
     difficulty: BASIC
-    isImportant: false

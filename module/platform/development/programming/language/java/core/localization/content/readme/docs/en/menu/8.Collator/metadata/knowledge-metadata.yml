@@ -1,13 +1,9 @@
 sections:
   collator-model:
     difficulty: BASIC
-    isImportant: false
   collation-strength:
     difficulty: BASIC
-    isImportant: false
   collator-vs-string-order:
     difficulty: BASIC
-    isImportant: false
   sorting-user-text:
     difficulty: BASIC
-    isImportant: false

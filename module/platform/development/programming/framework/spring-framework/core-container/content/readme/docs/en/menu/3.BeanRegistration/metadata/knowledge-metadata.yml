@@ -1,28 +1,19 @@
 sections:
   explicit-vs-scanning:
     difficulty: BASIC
-    isImportant: false
   stereotype-components:
     difficulty: BASIC
-    isImportant: false
   component-scan-boundaries:
     difficulty: BASIC
-    isImportant: false
   configuration-and-bean:
     difficulty: BASIC
-    isImportant: false
   bean-names-and-aliases:
     difficulty: BASIC
-    isImportant: false
   full-vs-lite-configuration:
     difficulty: INTERMEDIATE
-    isImportant: false
   import-composition:
     difficulty: BASIC
-    isImportant: false
   conditional-registration:
     difficulty: INTERMEDIATE
-    isImportant: false
   xml-and-programmatic-registration:
     difficulty: INTERMEDIATE
-    isImportant: false

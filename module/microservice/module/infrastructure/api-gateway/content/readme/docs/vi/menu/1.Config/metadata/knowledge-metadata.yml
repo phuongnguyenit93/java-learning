@@ -1,7 +1,5 @@
 sections:
   api-gateway-config:
     difficulty: BASIC
-    isImportant: false
   route-config-gateway:
     difficulty: BASIC
-    isImportant: false

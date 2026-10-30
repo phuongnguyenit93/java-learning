@@ -1,25 +1,17 @@
 sections:
   views-copies-001:
     difficulty: BASIC
-    isImportant: false
   views-copies-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   views-copies-003:
     difficulty: INTERMEDIATE
-    isImportant: false
   views-copies-004:
     difficulty: ADVANCED
-    isImportant: false
   views-copies-005:
     difficulty: INTERMEDIATE
-    isImportant: false
   views-copies-006:
     difficulty: ADVANCED
-    isImportant: false
   views-copies-007:
     difficulty: INTERMEDIATE
-    isImportant: false
   views-copies-008:
     difficulty: ADVANCED
-    isImportant: false

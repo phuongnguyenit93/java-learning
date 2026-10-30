@@ -1,22 +1,15 @@
 sections:
   websocket-stomp-client:
     difficulty: INTERMEDIATE
-    isImportant: false
   reactor-netty-tcp-stomp-client:
     difficulty: INTERMEDIATE
-    isImportant: false
   stomp-session-lifecycle:
     difficulty: INTERMEDIATE
-    isImportant: false
   stomp-client-subscriptions:
     difficulty: INTERMEDIATE
-    isImportant: false
   stomp-client-heartbeats:
     difficulty: INTERMEDIATE
-    isImportant: false
   stomp-client-receipts:
     difficulty: INTERMEDIATE
-    isImportant: false
   stomp-connection-recovery:
     difficulty: INTERMEDIATE
-    isImportant: false

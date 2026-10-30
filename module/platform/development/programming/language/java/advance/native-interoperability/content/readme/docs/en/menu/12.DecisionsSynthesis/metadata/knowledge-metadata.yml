@@ -1,19 +1,13 @@
 sections:
   jni-vs-ffm:
     difficulty: INTERMEDIATE
-    isImportant: false
   interop-selection-criteria:
     difficulty: INTERMEDIATE
-    isImportant: false
   deployment-portability:
     difficulty: ADVANCED
-    isImportant: false
   end-to-end-native-integration:
     difficulty: ADVANCED
-    isImportant: false
   when-not-to-use-native:
     difficulty: INTERMEDIATE
-    isImportant: false
   native-interoperability-handoffs:
     difficulty: INTERMEDIATE
-    isImportant: false

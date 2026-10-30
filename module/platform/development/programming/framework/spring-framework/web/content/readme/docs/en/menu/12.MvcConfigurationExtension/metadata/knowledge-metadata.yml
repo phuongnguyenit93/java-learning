@@ -1,28 +1,19 @@
 sections:
   enable-web-mvc:
     difficulty: BASIC
-    isImportant: false
   web-mvc-configurer:
     difficulty: BASIC
-    isImportant: false
   path-matching-configuration:
     difficulty: BASIC
-    isImportant: false
   conversion-validation-configuration:
     difficulty: BASIC
-    isImportant: false
   message-converter-content-negotiation-configuration:
     difficulty: BASIC
-    isImportant: false
   interceptor-cors-resource-view-configuration:
     difficulty: BASIC
-    isImportant: false
   async-support-configuration:
     difficulty: BASIC
-    isImportant: false
   custom-mvc-spis:
     difficulty: BASIC
-    isImportant: false
   framework-defaults-vs-customization:
     difficulty: BASIC
-    isImportant: false

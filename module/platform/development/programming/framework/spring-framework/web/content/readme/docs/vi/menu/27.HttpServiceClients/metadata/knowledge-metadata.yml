@@ -1,19 +1,13 @@
 sections:
   http-service-clients-001:
     difficulty: BASIC
-    isImportant: false
   http-service-clients-002:
     difficulty: INTERMEDIATE
-    isImportant: false
   http-service-clients-003:
     difficulty: ADVANCED
-    isImportant: false
   http-service-clients-004:
     difficulty: ADVANCED
-    isImportant: false
   http-service-clients-005:
     difficulty: ADVANCED
-    isImportant: false
   http-service-clients-006:
     difficulty: ADVANCED
-    isImportant: false

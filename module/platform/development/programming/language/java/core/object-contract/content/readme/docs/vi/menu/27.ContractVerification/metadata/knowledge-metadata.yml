@@ -1,31 +1,21 @@
 sections:
   contract-verification-001:
     difficulty: BASIC
-    isImportant: true
   contract-verification-002:
     difficulty: INTERMEDIATE
-    isImportant: true
   contract-verification-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   contract-verification-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   contract-verification-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   contract-verification-006:
     difficulty: ADVANCED
-    isImportant: true
   contract-verification-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   contract-verification-008:
     difficulty: ADVANCED
-    isImportant: true
   contract-verification-009:
     difficulty: ADVANCED
-    isImportant: true
   contract-verification-010:
     difficulty: ADVANCED
-    isImportant: false

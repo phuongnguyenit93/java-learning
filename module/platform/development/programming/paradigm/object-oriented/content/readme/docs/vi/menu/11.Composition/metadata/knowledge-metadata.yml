@@ -1,25 +1,17 @@
 sections:
   composition-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   composition-002:
     difficulty: BASIC
-    isImportant: true
   composition-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   composition-004:
     difficulty: INTERMEDIATE
-    isImportant: true
   composition-005:
     difficulty: ADVANCED
-    isImportant: false
   composition-006:
     difficulty: INTERMEDIATE
-    isImportant: true
   composition-007:
     difficulty: ADVANCED
-    isImportant: true
   composition-008:
     difficulty: ADVANCED
-    isImportant: false

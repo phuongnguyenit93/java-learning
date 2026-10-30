@@ -1,16 +1,11 @@
 sections:
   native-interoperability-definition:
     difficulty: INTERMEDIATE
-    isImportant: false
   native-interoperability-purpose:
     difficulty: INTERMEDIATE
-    isImportant: false
   managed-native-boundary:
     difficulty: INTERMEDIATE
-    isImportant: false
   native-interoperability-use-cases:
     difficulty: INTERMEDIATE
-    isImportant: false
   native-boundary-costs:
     difficulty: INTERMEDIATE
-    isImportant: false

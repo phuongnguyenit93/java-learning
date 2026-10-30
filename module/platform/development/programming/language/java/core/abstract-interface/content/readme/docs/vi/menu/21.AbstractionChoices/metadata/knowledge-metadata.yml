@@ -1,31 +1,21 @@
 sections:
   abstraction-choices-001:
     difficulty: INTERMEDIATE
-    isImportant: true
   abstraction-choices-002:
     difficulty: BASIC
-    isImportant: true
   abstraction-choices-003:
     difficulty: INTERMEDIATE
-    isImportant: true
   abstraction-choices-004:
     difficulty: INTERMEDIATE
-    isImportant: false
   abstraction-choices-005:
     difficulty: INTERMEDIATE
-    isImportant: true
   abstraction-choices-006:
     difficulty: ADVANCED
-    isImportant: true
   abstraction-choices-007:
     difficulty: INTERMEDIATE
-    isImportant: true
   abstraction-choices-008:
     difficulty: INTERMEDIATE
-    isImportant: true
   abstraction-choices-009:
     difficulty: INTERMEDIATE
-    isImportant: true
   abstraction-choices-010:
     difficulty: INTERMEDIATE
-    isImportant: true

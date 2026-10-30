@@ -1,13 +1,9 @@
 sections:
   null-reference:
     difficulty: BASIC
-    isImportant: false
   null-dereference:
     difficulty: BASIC
-    isImportant: false
   null-comparison:
     difficulty: BASIC
-    isImportant: false
   null-api-design:
     difficulty: BASIC
-    isImportant: false
