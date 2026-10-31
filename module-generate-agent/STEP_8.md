@@ -1,73 +1,90 @@
-# STEP 8 — Sheet Case Study → Java GET demo trong module (một lượt worker/group)
+# STEP 8 MỚI — Chuyển nguyên trạng mã Case Study trên Sheet thành Java phân package
 
-## 0. Phạm vi và luồng thực hiện
+## 0. Mệnh lệnh ưu tiên tuyệt đối
 
-STEP 8 mới chạy sau STEP 7 mới. Chỉ có **MỘT lượt worker**: mỗi worker sở hữu **trọn một groupID** và chuyển code mọi Case Study của group đó **trực tiếp từ Google Sheet thành Java source/test final trong đúng module**. Không chia một case/worker; không có worker Phase 1/Phase 2, không staging Java rồi promote, không có lượt refactor thứ hai. Worker được phép cấu trúc lại code khi chuyển đổi để ví dụ dễ đọc và chạy được.
+**STEP 8 là STRUCTURAL TRANSFORMATION (tách/đặt class vào package), KHÔNG phải generate/refactor/sáng tác logic.** Nguồn chân lý duy nhất là Java code đã có trong Case Study Phase 4 trên Google Sheet. **Không thay đổi bất kỳ nội dung hoặc hành vi nào so với code gốc, NGOẠI TRỪ đoạn thật sự gây lỗi và có bằng chứng cụ thể.** Việc đổi chỗ khai báo nhằm làm Java compile được ở package mới là thay đổi cấu trúc bắt buộc, không phải quyền sửa nghiệp vụ.
 
-**Prime** chịu trách nhiệm preflight, điều phối, xác nhận output và QA **từng case + toàn module** sau khi workers hoàn tất. Nếu QA fail, trả đúng group worker sửa các Java files do group đó sở hữu, không tổ chức thêm phase. STEP 8 không viết ngược Sheet, Case Study YAML/Markdown, không chạy importer STEP 6/7. **Đồng bộ module → file/Sheet thuộc STEP 9 sau này**, chưa làm ở STEP 8. Không hồi sinh STEP 8 Practice/Interview lịch sử, MVC skeleton theo chương, .gitkeep hoặc isImportant; không tự commit/push/deploy.
+- **ĐÚNG MỘT WORKER / MỘT GROUPID / MỘT LƯỢT:** Prime giao nguyên group, **bao gồm tất cả caseIndex của group đó**, cho đúng một worker sở hữu từ lúc nhận nhiệm vụ đến khi hoàn tất/readback và nhả quyền ghi. **Cấm giao riêng từng case cho các worker khác nhau, chia một group thành batch hoặc để nhiều worker cùng ghi một group.** Worker viết trực tiếp Java final dưới casestudy/gX/cY. Prime điều phối và **chỉ QA**, không tự viết/chỉnh/gom source. Không Phase 2, temp promotion hoặc worker refactor tự do.
+- **Worker TUYỆT ĐỐI KHÔNG tạo, sửa, xóa hay di chuyển Controller hoặc ControllerTest.** Controller/HTTP adapter phải có owner/quy trình độc lập bên ngoài worker STEP 8; Prime chỉ xác minh contract có sẵn. Không tự giao cho Prime viết Controller. Nếu thiếu hoặc bất tương thích, ghi blocker và chờ xử lý đúng ownership, không chế endpoint/DTO.
+- Worker chỉ tạo/chuyển **CaseService.execute()**, các class/interface/record/enum vốn có trong code gốc thành file top-level, các static helper sang utils, tests bảo toàn nguyên bản và manifest. **Cấm đặt bất kỳ inner/nested class, static class, record, enum, interface nào trong CaseService.**
+- Giữ toàn bộ câu lệnh, phép tính, hằng số, vòng lặp, điều kiện, thứ tự side effect, thông báo, exception, assertion, tên và ý nghĩa mã nguồn; **không xóa code chỉ vì unused/dead, không đổi thuật toán, không tối ưu, không thêm validation/fake/luồng demo/DTO/response trường mới**. Không sửa code để “đẹp hơn” hay tăng coverage.
+- STEP 8 chỉ READ Google Sheet và đối chiếu YAML module; không ghi Sheet, YAML/Markdown, Interview/Quiz/Knowledge, Gradle, Spring Application, master.json hay Git. Không commit/push/deploy. Không coi kết quả STEP 8/9 pilot cũ đã đạt hợp đồng mới; muốn chạy lại phải preflight ownership/baseline trước.
 
-Mục đích API là **bấm GET và thấy Java thực thi để học**, không phải API nghiệp vụ/CRUD bắt nhập request body hoặc tham số.
+## 1. Nguồn Sheet và fingerprint — giữ contract hiện có
 
-## 1. Sheet là nguồn code trực tiếp
+1. Prime đọc GENERAL_AGENT_RULES.md, toàn bộ rules/, STEP_8.md và worker/STEP_8_WORKER.md. Xác minh module-generate-info.txt, URL/gid/tab, A1/B1/I3 và MODULE_ROOT/master.json (MODULE_TYPE, JAVA_BASE_PACKAGE, CURRENT_STEP). Không tự suy ra tab hoặc module từ tên.
+2. Ghép nguyên văn YAML Case Study nền **S20:U24** (theo hàng trên→dưới, mỗi hàng cột S→T→U, **không separator**), parse caseStudy[].groupID/cases[] và situation/resolve/knowledge/readmeRelated.
+3. Với group g, ghép nguyên văn code Phase 4 **S(27+3×(g−1)):U(29+3×(g−1))**, parse groupID/codes[].caseIndex/code. Ghép **theo groupID + caseIndex** (1-based), đọc toàn bộ Markdown/Java fences và giải thích; phân biệt phiên bản sai/đúng, ví dụ compile-fail, executable code và instruction chạy ngoài JVM. Không chỉ lấy fence đầu hoặc tự trộn nhiều chương trình.
+4. Tính và kiểm **SOURCE_SHA256 = SHA256(UTF8(baseYamlJoined + "\n---STEP8-GROUP-PHASE4---\n" + groupCodeYamlJoined))** trên đúng bytes từ cell, cùng **CASE_CODE_SHA256 = SHA256(UTF8(raw code Markdown))** của từng case. Worker kiểm trước ghi và đọc lại Sheet trước bàn giao. Drift/missing/case mapping sai → BLOCKER: STEP8_SHEET_SOURCE_DRIFT.
+5. Case không có runnable Java entrypoint hoặc có nhiều entrypoint không xác định được chương trình canonical: báo NOT_APPLICABLE/BLOCKER kèm lý do và vị trí nguồn; **không chế main(), không hợp nhất các fence, không tạo Service trả PASS giả**. Không dùng YAML module/cache làm nguồn thay Sheet.
 
-1. Prime xác minh URL Google Sheet, gid/tab và A1,B1,I3 để ánh xạ duy nhất sang MODULE_ROOT/Gradle module thật. Sheet **chỉ đọc** trong STEP 8, không sửa ô nào.
-2. **Case Study nền:** ghép chuỗi YAML trong S20:U24 (5 hàng × 3 cột), đọc ô **trái → phải, trên → dưới, không separator**, parse caseStudy[] với groupID, groupName, cases[] (situation, resolve, knowledge, readmeRelated, các metadata).
-3. **Code Phase 4 cho groupID = g:** vùng **S(27+3×(g−1)):U(29+3×(g−1))** (3 hàng × 3 cột), ghép ô cùng cách. Parse groupID và codes[] chứa caseIndex (1-based) cùng code Markdown. **Ghép theo groupID và caseIndex**, không lấy caseIndex từ số hàng Sheet; không trộn nhóm. Không dùng bản YAML module thay cho Sheet.
-4. Kiểm mọi group/index duy nhất, đủ số cases, không duplicate/gap/out-of-range; đọc đủ Java fences BEFORE/AFTER/TEST và giải thích code sai đúng. Với case không có runnable Java, ghi NOT_APPLICABLE có chứng cứ, không tạo endpoint giả. Nếu Sheet thiếu/thay đổi/không thể parse → BLOCKER: STEP8_SHEET_SOURCE, không tự chạy importer hoặc lấy cache thay.
-5. Prime cấp SOURCE_SHA256 cho mỗi group theo công thức **SHA256(UTF8(baseYamlJoined + "\n---STEP8-GROUP-PHASE4---\n" + groupCodeYamlJoined))**, trong đó mỗi joined value lấy từ **nguyên văn các cell** đã đọc, không re-render YAML trước hashing. Worker tính lại trước ghi và đọc lại source trước bàn giao. Đồng thời lưu SHA-256 nguyên chuỗi code của mỗi case. Prime giữ ledger mọi group/case, owner theo group, source fingerprint, file/route/bean/QA.
-6. MODULE_ROOT/content/casestudy/vi/casestudy.yml có thể đọc **chỉ để đối chiếu/provenance**, không phải nguồn thay thế hoặc nơi ghi trong STEP 8. Nếu Sheet không đồng nhất hoặc chưa đủ nguồn, báo blocker và chứng cứ, không đoán.
+## 2. Phép biến đổi duy nhất được phép
 
-## 2. Java final bắt buộc cho mỗi case
+**A. main → Service.execute**
 
-Với groupID g và caseIndex c, worker ghi **trực tiếp vào source Java final**:
+- Lấy **chính xác phần thân** của phương thức **static void main(String[] args)** trong chương trình runnable được xác định, đưa vào **CaseService.execute()** theo nguyên thứ tự; không tóm tắt, diễn giải, viết lại hay hoán đổi câu lệnh.
+- Giữ nguyên khởi tạo biến, literal, cấu trúc điều khiển, lời gọi, assert/check, System.out/err, throw, kết quả và side effect. **Không tự thay println bằng Map/JSON, không sinh DemoResult**, không xóa assertion/check, không sinh sample inputs/policy/notification mô phỏng ngoài những gì main gốc đã có.
+- Khác biệt kỹ thuật bắt buộc: tên/signature main → execute, static context và định danh kiểu/phương thức theo package mới. Với main gốc void, **không tự sáng tạo return object**. Kiểu trả về và kết nối HTTP là hợp đồng adapter độc lập; nếu Controller hiện có yêu cầu return type khác hoặc main dùng args nhưng GET không có input, báo **BLOCKER: STEP8_EXECUTE_CONTRACT** thay vì viết lại code.
+- Không giữ bản main() trùng lặp trong production sau khi đã chuyển thân vào execute, trừ khi source có nhiều mục đích chạy riêng bắt buộc phải giữ và Prime đã xác minh; **không xóa chính các câu lệnh của main**.
+
+**B. Class/type → top-level file trong package phù hợp**
+
+- Mỗi inner/nested class, **static class**, interface, record, enum, kể cả nested nhiều cấp, được tách thành **top-level type trong file Java tên tương ứng**. Giữ nguyên tên type, members, methods, field initialization, constructor, inheritance, generic, annotations và visibility/semantics tối đa. Outer class chỉ làm container của code gốc có thể biến mất như một wrapper sau khi **mọi nội dung có nghĩa đã được map**; nếu outer class còn state/behavior thì phải giữ dưới dạng type riêng, không làm rơi code.
+- Package gốc của từng case: JAVA_BASE_PACKAGE.casestudy.g<g>.c<c>. Danh mục package gợi ý theo **trách nhiệm thực của code gốc**: **application** (use case/điều phối), **domain** (entity/value/invariant/policy), **port** (interface giao tiếp external), **dto** (chỉ DTO đã thật sự có trong source), **model** (data model không rõ domain), **adapter** (implementation I/O đã có), **repository** (logic lưu trữ đã có), **utils** (static methods); **service** chỉ chứa CaseService, **controller** là vùng của owner khác. Không ép đủ layer; không tự tạo package ngoài danh mục khi chưa được Prime xác minh. Không tạo class giả để “đủ bộ”.
+- **Tất cả static methods phụ trợ (ngoại trừ main)** phải được nhấc ra class tương ứng trong **utils/** và cập nhật lời gọi. Giữ nguyên method name/body/parameters/return/exception và thứ tự; static field không tự biến thành biến instance/đổi vòng đời. Nếu method phụ thuộc private state, overload, method reference, initialization hoặc Java access rules làm việc chuyển không thể bảo toàn ngữ nghĩa, **BLOCKER: STEP8_STATIC_EXTRACTION_SEMANTICS**; không sửa thuật toán để lách.
+- Chỉ được đổi **package/import, qualification, visibility ở mức tối thiểu để compile**, và những sửa chữa cú pháp thực sự bắt buộc vì tách type/method. Không thay string, number, operator, check, condition, sequence, validation, exception hoặc test outcome.
+
+**C. Lỗi thật sự — ngoại lệ duy nhất cho sửa nội dung**
+
+- Chỉ sửa khi có **lỗi compile/runtime cụ thể được tái hiện** từ code gốc hoặc từ phép di chuyển cấu trúc, không phải cảnh báo style/unused/dead code, lời khuyên design, hay giả định người đọc sẽ thích hơn.
+- Trước sửa lưu **file, dòng, code trước, lỗi/log/stack trace, nguyên nhân, cách sửa nhỏ nhất, code sau và test xác nhận** vào manifest. Bất kỳ sửa nào ngoài package/import/qualification/visibility/signature bắt buộc phải đánh dấu **ERROR_FIX** riêng và đưa Prime QA; không chứng minh được → BLOCKER: STEP8_CONTENT_CHANGE_UNPROVEN.
+- Không dùng “sửa lỗi” để thêm behavior mới, giả lập thành công, đổi output hoặc xóa ví dụ sai có chủ đích. Nếu logic gốc gây side effect thật/nguy hiểm khi GET gọi, **không tự thay bằng fake**; báo BLOCKER: STEP8_UNSAFE_OR_UNSUPPORTED_EXECUTION.
+
+## 3. Cấu trúc output; Controller không thuộc worker
+
+Với case Gg/Cc, module base package được xác minh:
 
 ~~~text
-MODULE_ROOT/src/main/java/JAVA_BASE_PACKAGE_PATH/casestudy/g<g>/c<c>/CaseController.java
-MODULE_ROOT/src/main/java/JAVA_BASE_PACKAGE_PATH/casestudy/g<g>/c<c>/CaseService.java
-MODULE_ROOT/src/test/java/JAVA_BASE_PACKAGE_PATH/casestudy/g<g>/c<c>/CaseServiceTest.java
-MODULE_ROOT/src/test/java/JAVA_BASE_PACKAGE_PATH/casestudy/g<g>/c<c>/CaseControllerTest.java (nếu HTTP tests phù hợp)
+MODULE_ROOT/src/main/java/<BASE_PACKAGE_PATH>/casestudy/g<g>/c<c>/
+    service/CaseService.java                # thân main -> execute
+    application/<OriginalUseCase>.java      # nếu source có
+    domain/<OriginalDomainType>.java        # nếu source có
+    port/<OriginalPortInterface>.java       # nếu source có
+    dto/<OriginalDto>.java                  # chỉ nếu source có
+    model/ | adapter/ | repository/         # chỉ nếu source có và phù hợp
+    utils/<OriginalPurpose>Utils.java       # static helper từ source
+MODULE_ROOT/src/test/java/<BASE_PACKAGE_PATH>/casestudy/g<g>/c<c>/
+    ...tests kiểm chứng phép chuyển cấu trúc và kết quả gốc...
 ~~~
 
-- Java package: JAVA_BASE_PACKAGE.casestudy.g<g>.c<c>. Mỗi case **đúng class chính tên CaseController và CaseService**, không Case1Controller/Case1Service. Khác package g/c cho phép tên class lặp lại.
-- Bean Controller: @RestController("caseStudyG<g>C<c>Controller"), ví dụ **caseStudyG1C1Controller**. Bean Service riêng, khuyến nghị @Service("caseStudyG<g>C<c>Service").
-- Endpoint **chính xác**: **GET /case-studies/group/<g>/case/<c>/execute**, ví dụ **GET /case-studies/group/1/case/1/execute**. Cấm POST/PUT, không thêm /api/v1/java, không đổi group thành groups. Phương thức Controller execute() **không có đối số client**, không RequestBody, RequestParam, PathVariable hoặc form/input header nghiệp vụ.
-- **Service tự khai báo/tạo dữ liệu đầu vào mẫu mỗi lần GET** rồi thực thi logic Java của tình huống, trả response có kết quả **tính được thật** (steps, before/after, số lượng, so sánh kịch bản, state giả lập, explanation), để người học bấm là thấy. Không chỉ log, không trả sẵn PASS/OK hoặc response tĩnh thay cho logic.
-- Nếu ví dụ gồm main()/assertion, chuyển thành method và test nhưng giữ kiến thức/behavior và phần phân biệt phản ví dụ/giải pháp. Có thể tách DTO, helper, model **trong package case** khi cần; không tạo abstraction rườm rà chỉ để tăng file.
-- GET **an toàn để gọi lặp**: dữ liệu mỗi request được cô lập, không ghi DB thật, gửi mail/SMS, gọi network thật, shared mutable state hay chạy deadlock/sleep vô hạn. Với ví dụ mutation/concurrency/transaction, dùng in-memory/fake dependencies mới mỗi request và timeout hữu hạn; test đảm bảo repeatability.
-- SERVLET dùng Spring MVC; REACTIVE dùng WebFlux tương ứng. LIBRARY/PLATFORM thiếu HTTP runtime → BLOCKER: STEP8_MODULE_RUNTIME_POLICY; worker không đổi module type/Gradle để ép chạy Controller. Dùng JDK tương thích Gradle/module (mặc định Java 21 khi có).
+- **CaseService.java chỉ chứa class top-level CaseService và execute (cùng boilerplate/annotation framework thật sự cần để nối bean), không lồng bất kỳ type gốc nào; không thêm record DemoResult.** Spring Service bean identity nếu adapter có hợp đồng: caseStudyG<g>C<c>Service.
+- **Controller không nằm trong WRITE của worker, kể cả nếu file hiện hữu trong group root**. Prime kiểm tra route GET /case-studies/group/<g>/case/<c>/execute, bean caseStudyG<g>C<c>Controller, no-client-input và API signature do owner khác cung cấp. Missing Controller / incompatible execute response → **BLOCKER: STEP8_CONTROLLER_OWNER_OR_SIGNATURE**. Prime STEP 8 vẫn chỉ QA, không tự bổ sung Controller.
+- Ví dụ mapping **G1/C1 của source Sheet** (chỉ minh họa tên/package, không phải hướng dẫn tạo class mới): Case1.main → service/CaseService.execute; Patient & AppointmentBook & Billing → domain; HospitalUseCase → application; Messenger → port; static check → utils/Case1Utils.check. Mọi biểu thức phí/lịch/thông báo/check và println phải giữ nguyên; không có DemoResult vì source không có.
+- Chỉ triển khai từ mã nguồn gốc, không coi các Java STEP8/STEP9 pilot đã refactor là nguồn chuẩn. Nếu source final cũ đang nằm tại đích, **không overwrite tự động**; phải xác minh ownership và bảo toàn snapshot trước khi triển khai lại.
 
-## 3. Prime preflight/ownership
+## 4. Prime preflight, assignment và ownership
 
-1. Đọc GENERAL_AGENT_RULES.md, **toàn bộ rules/**, file STEP_8.md này và **một file worker-only**: worker/STEP_8_WORKER.md. Worker pool theo PRIME_RULES.md: Mode A tối đa 3, Mode B đúng N user cấp (8 worker có thể xử lý tối đa 8 group song song), reuse SLEEPING, spawn tuần tự. **Một group chỉ một writer**; worker xong mới nhận group khác.
-2. Kiểm master.json (MODULE_TYPE, JAVA_BASE_PACKAGE, CURRENT_STEP), Gradle/JDK/runtime, existing Java/test, Controller/Service/Bean/routes, **Git worktree và index**. Snapshot trước khi chạy; không overwrite source nghiệp vụ có sẵn, không stage/restore/clean source khác. Staged deletions, writers đồng thời hay task Gradle làm biến mất source ngoài ownership → BLOCKER: STEP8_UNSAFE_WORKTREE; không tự phục hồi/chỉnh index của người khác. Tách lỗi baseline build với lỗi Java STEP 8.
-3. Kiểm các package final đã tồn tại/bean/route collision. Nếu còn Java pilot cũ trong casestudy/temp/gX/cY hoặc API tương đương đang scan, **không tự xóa, ghi đè hoặc cho Spring scan trùng**. Cần xác minh cách xử lý theo ownership và bảo toàn source; nếu không làm được → BLOCKER: STEP8_LEGACY_TEMP_COLLISION.
-4. Prime cấp RUN_ID, ledger/snapshot/QA dưới MODULE_ROOT/build/step8/RUN_ID/ (Git ignored); worker chỉ WRITE đúng hai group final root: src/main/java/.../casestudy/g<g>/ và src/test/java/.../casestudy/g<g>/. Group chia c1/, c2/, ... riêng, không tạo thư mục temp/proposal hay .gitkeep.
-5. **Không chạy Gradle compile/test/startup khi bất kỳ worker còn đang ghi** vào main sourceSet. Prime xây barrier sau khi mọi group worker release. Không tự chạy Gradle clean xóa backup.
-
-## 4. Handoff chính xác bốn dòng — một group, một lượt
+1. Kiểm exact MODULE_ROOT, type/runtime, JDK, existing Controller adapter, class collisions, source/test roots và Git worktree/index; snapshot file/hash hiện có. Phải phân biệt lỗi source gốc với lỗi vì package. **Không restore/clean/overwrite code bị xóa hay sửa có chủ đích**, không sửa Controller cũ.
+2. Mode A tối đa 3 worker, Mode B đúng N user cấp; reuse SLEEPING, spawn tuần tự từng worker. **Đơn vị phân công và ownership luôn là GROUP, không phải CASE**: Prime lập hàng đợi toàn bộ groupID, mỗi group chỉ một worker writer, mỗi worker nhận đúng một group tại một thời điểm; các worker khác chỉ được nhận **group khác**. Worker phải xử lý đủ mọi case của group, lập manifest đủ case, readback và release ownership **trước khi** được giao group kế tiếp. QA lỗi case nào thì trả lại **worker owner của group**, không tạo assignment cho một worker khác chỉ xử lý case đó.
+3. Handoff **bốn dòng**, hai Java group roots và một đường manifest trong build ignored đã xác minh. Vùng build/step8 chỉ ghi evidence của RUN được giao; không chạm manifest lịch sử của RUN cũ:
 
 ~~~text
 <VERIFIED_SHEET_TAB_URL>
-READ=A1,B1,I3,S20:U24,<EXACT_GROUP_PHASE4_RANGE>;UNIT=G<groupID>;RUN=<RUN_ID>;SOURCE_SHA256=<EXACT_GROUP_SOURCE_SHA256>
-WRITE=<EXACT_MAIN_GROUP_FINAL_DIR>,<EXACT_TEST_GROUP_FINAL_DIR>
+READ=A1,B1,I3,S20:U24,<EXACT_GROUP_PHASE4_RANGE>;UNIT=G<groupID>;RUN=<RUN_ID>;SOURCE_SHA256=<GROUP_SOURCE_SHA256>
+WRITE=<EXACT_MAIN_GROUP_ROOT>,<EXACT_TEST_GROUP_ROOT>,<EXACT_IGNORED_STEP8_GROUP_EVIDENCE_DIR>
 /java-learning/module-generate-agent/worker/STEP_8_WORKER.md
 ~~~
 
-Prime thay toàn bộ placeholder bằng URL, range, path và source hash **đã xác minh**; không gửi code/đáp án/yêu cầu refactor trong chat handoff. UNIT **chỉ Gx**, không Gx/Cy. Worker không ghi ra ngoài WRITE hoặc đọc/ghi Sheet ngoài scope được cấp. Khi cần sửa theo QA, giao lại **cùng group và quyền sở hữu**, không đặt tên Phase 2.
+4. Worker ghi riêng từng c<c>/ dưới **group đã nhận**, **không chỉnh Controller/ControllerTest hoặc group khác**; được xử lý tất cả case của group đó, không nhận thêm case/group ngoài assignment. Không ghi staging/temp ngoài owner. Lưu mapping từng original type/method/statement → file/package/dòng đích; các class không có trong source phải bị đánh dấu EXTRA và fail QA. Manifest mới đặt tại build/step8/<RUN_ID>/g<g>/step8-group-manifest.json (ignored), **phải bao phủ mọi caseIndex của group**; **không sửa step8-group-manifest.json lịch sử đã tồn tại trong test root**.
+5. Khi nhiều worker còn ghi cùng module sourceSet, **không chạy full Gradle compile/test/startup**. Worker được rà riêng scope và báo BUILD_DEFERRED trung thực. Prime chờ writer barrier mới chạy QA chung.
 
-## 5. Worker một lượt Sheet → Java module
+## 5. Worker completion & Prime QA-only
 
-1. Đọc trực tiếp S20:U24 và **block Phase 4 của group** từ Sheet, đối chiếu nguồn/hash, đủ tình huống, giải pháp, kiến thức và code cho mọi case. Không chỉ lấy code fence đầu tiên hoặc cố tạo API giả cho case không code.
-2. Tạo mỗi case runnable một **CaseController.java, CaseService.java**, tests và helper cần thiết **ngay trong package final gX/cY**, theo class/bean/GET/no-input ở §2. Data demo tự có trong Service; kết quả GET bộc lộ cách chạy. Refactor tối thiểu **trong cùng lượt chuyển đổi** nếu giúp code runnable/rõ ràng, không có worker phase thứ hai.
-3. Tạo Service assertions (behavior, before/after, repeatability, edge) và Controller/HTTP GET tests (status 200 + response thực, không body/query) phù hợp với runtime. Nếu module còn worker đang ghi, defer build cho Prime; không báo compile PASS khi chưa chạy.
-4. Không ghi Sheet, YAML module, Interview/Quiz/Knowledge/README, Gradle, Spring Application, master.json, Java group khác hoặc Git. Không import/export ngược file. Không tự cập nhật CURRENT_STEP.
-5. Tạo **một** step8-group-manifest.json trong root test group; gồm runId, groupID, sourceSha256, caseCount, từng caseIndex/sourceCodeSha256, status GENERATED/NOT_APPLICABLE/BLOCKER, Java/test files + SHA-256, package/classes/beans/GET route, test evidence/build status, limitations. **Exact readback** toàn file và nguồn Sheet trước báo cáo. Report rõ case nào không code, case nào blocker. Worker release ownership rồi về SLEEPING.
+- Worker đối chiếu **1:1 source-to-target**: toàn bộ type (bao gồm static/nested), toàn bộ static methods chuyển vào utils, từng statement main nằm trong CaseService.execute với nguyên thứ tự, các field/constructor/instance methods giữ nguyên; mọi code lỗi sửa có audit trail. Không tự thêm/bỏ bất kỳ logic nào.
+- Tests trong đúng case test root chỉ so **hành vi nguyên bản** (output, exception, assertion, thứ tự, state) và verify structural package; không biến test trở thành lý do sửa code. Test HTTP/Controller đã có do owner khác quản lý, worker không sửa. Nếu JUnit cũ import source không còn, Prime phân biệt **baseline blocker** với STEP 8 compile lỗi.
+- Exact readback Java/test + manifest, source hashes từ Sheet, path ownership, Controller unchanged. Manifest status per case: TRANSFORMED / NOT_APPLICABLE / BLOCKER, original list of types/static methods/main statements, destination files/hashes, preserved behavior evidence, compile status, **ERROR_FIX diff/audit** hoặc NONE.
+- Prime **chỉ QA**: verify diff ngoài phép di chuyển, 100% source coverage và type/statement mapping, Service không nested types, Controller unchanged, compile/test startup/GET khi integration sẵn có và an toàn; lỗi giao đúng worker group sửa trong scope. Nếu Controller chưa có owner/contract, không báo endpoint PASS và không đóng STEP. Không gom Java một module/case hay tạo phase chuyển tiếp.
+- Completion toàn STEP chỉ khi đủ mọi group/case, source fidelity và compile/tests/adapter integration được xác minh hoặc NOT_APPLICABLE hợp lệ; không còn blocker/worker pending. Pilot một group **không** cập nhật CURRENT_STEP. Chỉ Prime xét CURRENT_STEP.VALUE="8" theo rules/PRIME_RULES.md §2 sau QA toàn module; không commit/push.
+- **STEP 9 về sau chỉ được kiểm chứng/đặt package đúng hợp đồng nguồn, không được dùng quyền refactor sáng tạo của các bản STEP 9 cũ để sửa nội dung STEP 8 vừa bảo toàn.** Nếu STEP 9 chưa được đồng bộ contract thì chưa được chạy lại theo logic cũ.
 
-## 6. Prime QA sau worker — không có phase khác
-
-1. Đợi **toàn bộ worker** dừng ghi. Verify source hashes vs Sheet, manifest/file hashes, group/case coverage và class/bean/route uniqueness. Mọi case runnable có Java thực, tests và GET không input; case NOT_APPLICABLE có lý do. Không tin vào report thay test.
-2. QA module: compileJava/test, Spring context/startup, HTTP smoke **GET đúng từng URL không body/query**, kiểm response có giá trị thực và gọi lặp an toàn, regression không phá Java cũ. Nếu lỗi, giao đúng **worker group** sửa **Java final**, không tạo Phase 2, không thay Sheet/YAML. Nếu build khiến tracked source/index thay đổi ngoài phạm vi thì dừng, báo blocker, không tự git restore/clean.
-3. Output đã nằm **thẳng trong production package casestudy/gX/cY**; Prime **không merge/promote temp**, không tạo thêm Controller/Service chung toàn group. Giữ provenance/QA mapping cho STEP 9 nhưng **không thực hiện module→file/Sheet sync** trong STEP 8. Chỉ dọn staging/backup do chính RUN sở hữu khi QA PASS; không xóa temp pilot chưa rõ owner.
-4. Completion chỉ khi **tất cả group/case của module** đã PASS/NOT_APPLICABLE có chứng cứ và full tests/HTTP/regression đạt. Pilot 1 group **không** nâng CURRENT_STEP. Chỉ Prime xét CURRENT_STEP.VALUE="8" theo rules/PRIME_RULES.md §2, không ghi lùi và không coi giá trị "8" lịch sử là bằng chứng STEP 8 mới hoàn tất. Không commit/push/deploy nếu chưa có lệnh riêng.
-
-**Prime report:** RUN_ID, module/gid, worker N/assignments, group/case count và statuses, source range/hash, Java classes/beans/GET routes, GET_NO_INPUT/DEMO_RESULTS, COMPILE/TEST/STARTUP/HTTP_SMOKE/REGRESSION, SHEET_AND_YAML_UNCHANGED, WORKTREE_SAFETY, CURRENT_STEP_BEFORE/AFTER/READBACK, BLOCKERS. Không claim PASS nếu chưa chạy thực.
+**Prime report bắt buộc:** RUN/URL/gid/module, SOURCE_SHA256 và CASE_CODE_SHA256, group/case count, TYPE_MAPPING, STATIC_METHOD_MAPPING, MAIN_STATEMENT_FIDELITY, PACKAGE_ASSIGNMENTS, UNAPPROVED_ADDITIONS=0, ERROR_FIX_LOG, SERVICE_NO_INNER_TYPES, CONTROLLER_UNCHANGED/ADAPTER_STATUS, TEST/BUILD/HTTP nếu có, HISTORICAL_MANIFEST_UNCHANGED, SHEET/YAML_UNCHANGED, OUT_OF_SCOPE_UNCHANGED, CURRENT_STEP_BEFORE/AFTER, BLOCKERS.
