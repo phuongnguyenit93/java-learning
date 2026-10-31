@@ -764,6 +764,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/infrastructure/system/observability/diagnostic/profiling'>📁 profiling</a></b></summary>
 <ul>
 <li>
+  <a href='./module/infrastructure/system/observability/diagnostic/profiling/jmc'>🪄 jmc</a>
+</li>
+<li>
   <a href='./module/infrastructure/system/observability/diagnostic/profiling/jprofiler'>🪄 jprofiler</a>
 </li>
 <li>
