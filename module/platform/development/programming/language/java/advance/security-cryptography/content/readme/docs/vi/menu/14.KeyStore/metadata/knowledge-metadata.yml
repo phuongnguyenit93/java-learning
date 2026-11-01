@@ -1,9 +1,0 @@
-sections:
-  keystore-model:
-    difficulty: BASIC
-  keystore-entry-types:
-    difficulty: INTERMEDIATE
-  keystore-protection:
-    difficulty: INTERMEDIATE
-  keystore-vs-truststore:
-    difficulty: BASIC

@@ -1,9 +1,0 @@
-sections:
-  boot-build-image:
-    difficulty: BASIC
-  oci-image-output:
-    difficulty: BASIC
-  image-builder-connection:
-    difficulty: BASIC
-  image-publication:
-    difficulty: BASIC

@@ -1,9 +1,0 @@
-sections:
-  symmetric-encryption-model:
-    difficulty: BASIC
-  cipher-transformation:
-    difficulty: INTERMEDIATE
-  iv-and-parameters:
-    difficulty: INTERMEDIATE
-  symmetric-encryption-workflow:
-    difficulty: INTERMEDIATE

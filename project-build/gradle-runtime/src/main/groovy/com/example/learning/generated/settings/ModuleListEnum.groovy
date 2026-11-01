@@ -1713,87 +1713,6 @@ enum ModuleListEnum {
             []
     ),
 
-    SPRING_BOOT_ACTUATOR(
-            'module:platform:development:programming:framework:spring-boot:actuator',
-            'module/platform/development/programming/framework/spring-boot/actuator',
-            'SERVLET',
-            'Spring Boot Actuator knowledge: production-ready endpoints, health, metrics, diagnostics, security and observability',
-            false,
-            []
-    ),
-
-    SPRING_BOOT_APPLICATION_RUNTIME(
-            'module:platform:development:programming:framework:spring-boot:application-runtime',
-            'module/platform/development/programming/framework/spring-boot/application-runtime',
-            'SERVLET',
-            'Spring Boot application runtime lifecycle, execution, logging, TLS, Docker Compose integration, and runtime customization',
-            false,
-            []
-    ),
-
-    SPRING_BOOT_AUTO_CONFIGURATION(
-            'module:platform:development:programming:framework:spring-boot:auto-configuration',
-            'module/platform/development/programming/framework/spring-boot/auto-configuration',
-            'LIBRARY',
-            'Spring Boot auto-configuration model, conditional registration, ordering, diagnostics and custom auto-configuration',
-            false,
-            []
-    ),
-
-    SPRING_BOOT_BUILD_TOOLING_PACKAGING(
-            'module:platform:development:programming:framework:spring-boot:build-tooling-packaging',
-            'module/platform/development/programming/framework/spring-boot/build-tooling-packaging',
-            'LIBRARY',
-            'Spring Boot build plugins, executable packaging, layered archives, OCI images, Buildpacks, and deployment handoff',
-            false,
-            []
-    ),
-
-    SPRING_BOOT_EXTERNALIZED_CONFIGURATION(
-            'module:platform:development:programming:framework:spring-boot:externalized-configuration',
-            'module/platform/development/programming/framework/spring-boot/externalized-configuration',
-            'LIBRARY',
-            'Spring Boot externalized configuration including config data, property precedence, binding, profiles, validation and metadata',
-            false,
-            []
-    ),
-
-    SPRING_BOOT_FUNDAMENTALS(
-            'module:platform:development:programming:framework:spring-boot:fundamentals',
-            'module/platform/development/programming/framework/spring-boot/fundamentals',
-            'LIBRARY',
-            'Spring Boot fundamentals including application bootstrap, starters, embedded servers, lifecycle, packaging and development experience',
-            false,
-            []
-    ),
-
-    SPRING_BOOT_NATIVE_IMAGE(
-            'module:platform:development:programming:framework:spring-boot:native-image',
-            'module/platform/development/programming/framework/spring-boot/native-image',
-            'LIBRARY',
-            'Spring Boot AOT and native image support including GraalVM integration, runtime hints, testing and trade-offs',
-            false,
-            []
-    ),
-
-    SPRING_BOOT_TESTING(
-            'module:platform:development:programming:framework:spring-boot:testing',
-            'module/platform/development/programming/framework/spring-boot/testing',
-            'LIBRARY',
-            'Spring Boot testing support including application context tests, test slices, test auto-configuration and integration testing',
-            false,
-            []
-    ),
-
-    SPRING_BOOT_WEB_RUNTIME(
-            'module:platform:development:programming:framework:spring-boot:web-runtime',
-            'module/platform/development/programming/framework/spring-boot/web-runtime',
-            'SERVLET',
-            'Spring Boot web runtime, embedded servers, server auto-configuration, TLS, proxy handling, and graceful shutdown',
-            false,
-            []
-    ),
-
     SPRING_CACHE(
             'module:platform:development:programming:framework:spring-framework:cache',
             'module/platform/development/programming/framework/spring-framework/cache',
@@ -1875,15 +1794,6 @@ enum ModuleListEnum {
             []
     ),
 
-    SPRING_INTEGRATION(
-            'module:platform:development:programming:framework:spring-integration',
-            'module/platform/development/programming/framework/spring-integration',
-            'LIBRARY',
-            'Spring Integration knowledge for Enterprise Integration Patterns, messaging channels, endpoints, routers, transformers, gateways and adapters',
-            false,
-            []
-    ),
-
     SPRING_JMS(
             'module:platform:development:programming:framework:spring-framework:jms',
             'module/platform/development/programming/framework/spring-framework/jms',
@@ -1925,15 +1835,6 @@ enum ModuleListEnum {
             'module/platform/development/programming/framework/spring-framework/reactive',
             'REACTIVE',
             'Spring WebFlux streaming, context propagation and blocking-boundary learning experiments',
-            false,
-            []
-    ),
-
-    SPRING_SECURITY(
-            'module:platform:development:programming:framework:spring-security',
-            'module/platform/development/programming/framework/spring-security',
-            'LIBRARY',
-            'Spring Security framework architecture and implementation: filters, authentication, authorization, method security, web protections, OAuth2 and OIDC integrations; framework-independent security concepts belong to infrastructure/system/security',
             false,
             []
     ),
@@ -2015,6 +1916,15 @@ enum ModuleListEnum {
             'module/infrastructure/system/observability/instrumentation/opentelemetry',
             'LIBRARY',
             'OpenTelemetry instrumentation and telemetry pipeline concepts: traces, metrics, logs, context propagation, OTLP, SDKs, auto-instrumentation and Collector',
+            false,
+            []
+    ),
+
+    TRANSACTIONAL_OUTBOX(
+            'module:platform:development:software-design:architecture:distributed-system:transactional-outbox',
+            'module/platform/development/software-design/architecture/distributed-system/transactional-outbox',
+            'LIBRARY',
+            'Transactional Outbox pattern for reliable event publication across a database and a message broker',
             false,
             []
     );

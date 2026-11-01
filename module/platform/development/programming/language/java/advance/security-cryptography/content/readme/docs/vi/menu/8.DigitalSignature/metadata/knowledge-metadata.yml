@@ -1,9 +1,0 @@
-sections:
-  signature-model:
-    difficulty: BASIC
-  sign-and-verify:
-    difficulty: INTERMEDIATE
-  signature-data-contract:
-    difficulty: ADVANCED
-  signature-comparison:
-    difficulty: INTERMEDIATE

@@ -1,5 +1,7 @@
 module
 ├── infrastructure
+│   ├── cloud
+│   │   └── serverless
 │   ├── devops
 │   │   ├── fundamentals [DEVOPS_FUNDAMENTALS] : DevOps fundamentals: lifecycle, culture, feedback loops, source-to-production flow, automation, delivery, operations and cross-cutting practices
 │   │   ├── source-management
@@ -138,7 +140,8 @@ module
 │       ├── observability
 │       │   ├── fundamentals [SYSTEM_OBSERVABILITY_FUNDAMENTALS] : Observability fundamentals: monitoring versus observability, telemetry signals, instrumentation, correlation, context propagation, cardinality and telemetry pipelines
 │       │   ├── instrumentation
-│       │   │   └── opentelemetry [SYSTEM_OBSERVABILITY_OPENTELEMETRY] : OpenTelemetry instrumentation and telemetry pipeline concepts: traces, metrics, logs, context propagation, OTLP, SDKs, auto-instrumentation and Collector
+│       │   │   ├── opentelemetry [SYSTEM_OBSERVABILITY_OPENTELEMETRY] : OpenTelemetry instrumentation and telemetry pipeline concepts: traces, metrics, logs, context propagation, OTLP, SDKs, auto-instrumentation and Collector
+│       │   │   └── micrometer
 │       │   ├── logging
 │       │   │   ├── event-log
 │       │   │   │   ├── audit-log
@@ -372,20 +375,23 @@ module
     │   │                   └── k6
     │   ├── programming
     │   │   ├── framework
+    │   │   │   ├── project-reactor
     │   │   │   ├── spring-ai
     │   │   │   ├── spring-amqp
     │   │   │   ├── spring-batch [SPRING_BATCH] : Spring Batch job and step processing, chunk-oriented processing, restartability, fault tolerance and scaling
     │   │   │   ├── spring-boot
-    │   │   │   │   ├── fundamentals [SPRING_BOOT_FUNDAMENTALS] : Spring Boot fundamentals including application bootstrap, starters, embedded servers, lifecycle, packaging and development experience
-    │   │   │   │   ├── externalized-configuration [SPRING_BOOT_EXTERNALIZED_CONFIGURATION] : Spring Boot externalized configuration including config data, property precedence, binding, profiles, validation and metadata
-    │   │   │   │   ├── auto-configuration [SPRING_BOOT_AUTO_CONFIGURATION] : Spring Boot auto-configuration model, conditional registration, ordering, diagnostics and custom auto-configuration
-    │   │   │   │   ├── application-runtime [SPRING_BOOT_APPLICATION_RUNTIME] : Spring Boot application runtime lifecycle, execution, logging, TLS, Docker Compose integration, and runtime customization
-    │   │   │   │   ├── web-runtime [SPRING_BOOT_WEB_RUNTIME] : Spring Boot web runtime, embedded servers, server auto-configuration, TLS, proxy handling, and graceful shutdown
-    │   │   │   │   ├── build-tooling-packaging [SPRING_BOOT_BUILD_TOOLING_PACKAGING] : Spring Boot build plugins, executable packaging, layered archives, OCI images, Buildpacks, and deployment handoff
-    │   │   │   │   ├── actuator [SPRING_BOOT_ACTUATOR] : Spring Boot Actuator knowledge: production-ready endpoints, health, metrics, diagnostics, security and observability
-    │   │   │   │   ├── testing [SPRING_BOOT_TESTING] : Spring Boot testing support including application context tests, test slices, test auto-configuration and integration testing
-    │   │   │   │   └── native-image [SPRING_BOOT_NATIVE_IMAGE] : Spring Boot AOT and native image support including GraalVM integration, runtime hints, testing and trade-offs
+    │   │   │   │   ├── fundamentals
+    │   │   │   │   ├── externalized-configuration
+    │   │   │   │   ├── auto-configuration
+    │   │   │   │   ├── application-runtime
+    │   │   │   │   ├── web-runtime
+    │   │   │   │   ├── build-tooling-packaging
+    │   │   │   │   ├── actuator
+    │   │   │   │   ├── testing
+    │   │   │   │   ├── native-image
+    │   │   │   │   └── integration
     │   │   │   ├── spring-cloud
+    │   │   │   │   ├── function
     │   │   │   │   └── gateway
     │   │   │   ├── spring-data
     │   │   │   │   ├── jdbc [SPRING_DATA_JDBC] : Spring Data JDBC aggregate-oriented relational persistence, repositories, mapping and transactions
@@ -405,18 +411,32 @@ module
     │   │   │   │   ├── reactive [SPRING_REACTIVE] : Spring WebFlux streaming, context propagation and blocking-boundary learning experiments
     │   │   │   │   ├── messaging [SPRING_MESSAGING] : Spring Framework messaging foundation plus WebSocket/STOMP and RSocket application messaging infrastructure
     │   │   │   │   ├── jms [SPRING_JMS] : Spring Framework JMS access, JmsTemplate, listener containers, annotation-driven listeners and transaction integration
-    │   │   │   │   └── testing [SPRING_TESTING] : Spring TestContext Framework including context configuration, profiles, test properties, context caching, transactions and integration testing
+    │   │   │   │   ├── testing [SPRING_TESTING] : Spring TestContext Framework including context configuration, profiles, test properties, context caching, transactions and integration testing
+    │   │   │   │   ├── jmx
+    │   │   │   │   └── mail
     │   │   │   ├── spring-graphql
     │   │   │   ├── spring-grpc
     │   │   │   ├── spring-hateoas
-    │   │   │   ├── spring-integration [SPRING_INTEGRATION] : Spring Integration knowledge for Enterprise Integration Patterns, messaging channels, endpoints, routers, transformers, gateways and adapters
+    │   │   │   ├── spring-integration
+    │   │   │   │   ├── adapters
+    │   │   │   │   ├── core
+    │   │   │   │   ├── pattern
+    │   │   │   │   └── runtime
     │   │   │   ├── spring-kafka
     │   │   │   ├── spring-ldap
     │   │   │   ├── spring-modulith [SPRING_MODULITH] : Spring Modulith application modules, structural verification, module events, testing, observability and documentation
     │   │   │   ├── spring-rest-docs
-    │   │   │   ├── spring-security [SPRING_SECURITY] : Spring Security framework architecture and implementation: filters, authentication, authorization, method security, web protections, OAuth2 and OIDC integrations; framework-independent security concepts belong to infrastructure/system/security
+    │   │   │   ├── spring-security
+    │   │   │   │   ├── authentication
+    │   │   │   │   ├── authorization
+    │   │   │   │   ├── federation
+    │   │   │   │   ├── fundamentals
+    │   │   │   │   ├── oauth2-oidc
+    │   │   │   │   ├── reactive
+    │   │   │   │   └── servlet
     │   │   │   ├── spring-session [SPRING_SESSION] : Spring Session externalized HTTP session management, repositories, Redis/JDBC backing stores and Spring Security integration
     │   │   │   ├── spring-shell
+    │   │   │   ├── spring-web-flow
     │   │   │   ├── spring-web-services
     │   │   │   └── springdoc
     │   │   │       └── openapi [SPRINGDOC_OPENAPI] : Springdoc OpenAPI knowledge and examples for documenting Spring web APIs
@@ -433,7 +453,8 @@ module
     │   │   │       │   ├── instrumentation [JAVA_INSTRUMENTATION] : Java instrumentation, agents and class transformation
     │   │   │       │   ├── runtime-diagnostics [JAVA_RUNTIME_DIAGNOSTICS] : Java runtime diagnostics, management and troubleshooting
     │   │   │       │   ├── compilation [JAVA_ADVANCE_COMPILATION] : Advanced Java compilation, compiler pipeline and bytecode generation
-    │   │   │       │   └── concurrency [JAVA_ADVANCE_CONCURRENCY] : Advanced Java concurrency, coordination and execution models
+    │   │   │       │   ├── concurrency [JAVA_ADVANCE_CONCURRENCY] : Advanced Java concurrency, coordination and execution models
+    │   │   │       │   └── crac
     │   │   │       ├── core
     │   │   │       │   ├── language-basics [JAVA_LANGUAGE_BASICS] : Java language basics
     │   │   │       │   ├── numbers [JAVA_NUMBERS] : Java numeric types and arithmetic
@@ -508,7 +529,8 @@ module
     │   │   │   │   ├── cqrs
     │   │   │   │   ├── event-sourcing
     │   │   │   │   ├── saga
-    │   │   │   │   └── sidecar
+    │   │   │   │   ├── sidecar
+    │   │   │   │   └── transactional-outbox [TRANSACTIONAL_OUTBOX] : Transactional Outbox pattern for reliable event publication across a database and a message broker
     │   │   │   └── domain-modeling
     │   │   │       └── domain-driven-design [DOMAIN_DRIVEN_DESIGN] : Domain-Driven Design fundamentals, strategic design and tactical design
     │   │   ├── design-pattern

@@ -1,9 +1,0 @@
-sections:
-  security-goals:
-    difficulty: BASIC
-  cryptography-role:
-    difficulty: BASIC
-  threat-model-boundary:
-    difficulty: BASIC
-  primitive-by-goal:
-    difficulty: BASIC

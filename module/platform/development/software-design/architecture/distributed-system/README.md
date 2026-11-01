@@ -4,7 +4,7 @@
 - Idempotency
 - Saga
 - Eventual Consistency
-- Outbox Pattern
+- [Transactional Outbox Pattern](./transactional-outbox/README.md)
 - Related database locking concepts: Optimistic Lock, Pessimistic Lock
 - Database locking reference: `module/infrastructure/system/database/performance/locking`
 

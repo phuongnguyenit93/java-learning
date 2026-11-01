@@ -1,1 +1,0 @@
-﻿# Message, Payload và Header

@@ -1,9 +1,0 @@
-sections:
-  spring-boot-dependencies:
-    difficulty: BASIC
-  maven-parent-vs-bom:
-    difficulty: BASIC
-  gradle-dependency-alignment:
-    difficulty: BASIC
-  managed-version-override:
-    difficulty: BASIC

@@ -1,9 +1,0 @@
-sections:
-  cryptographic-randomness:
-    difficulty: BASIC
-  entropy-and-seeding:
-    difficulty: INTERMEDIATE
-  secure-random-selection:
-    difficulty: INTERMEDIATE
-  randomness-misuse:
-    difficulty: INTERMEDIATE

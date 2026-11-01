@@ -1,9 +1,0 @@
-sections:
-  boot-build-plugins:
-    difficulty: BASIC
-  plugin-responsibilities:
-    difficulty: BASIC
-  plugin-vs-build-tool:
-    difficulty: BASIC
-  plugin-choice-boundary:
-    difficulty: BASIC

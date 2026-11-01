@@ -1,9 +1,0 @@
-sections:
-  build-tooling-purpose:
-    difficulty: BASIC
-  build-tooling-problem:
-    difficulty: BASIC
-  build-time-runtime-boundary:
-    difficulty: BASIC
-  build-deployment-handoff:
-    difficulty: BASIC

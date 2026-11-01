@@ -1,9 +1,0 @@
-sections:
-  asymmetric-encryption-model:
-    difficulty: BASIC
-  public-private-key-roles:
-    difficulty: INTERMEDIATE
-  asymmetric-encryption-limits:
-    difficulty: INTERMEDIATE
-  hybrid-encryption-model:
-    difficulty: ADVANCED

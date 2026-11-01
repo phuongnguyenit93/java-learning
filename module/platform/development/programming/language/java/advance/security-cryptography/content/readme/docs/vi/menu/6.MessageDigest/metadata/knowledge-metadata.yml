@@ -1,9 +1,0 @@
-sections:
-  digest-model:
-    difficulty: BASIC
-  message-digest-workflow:
-    difficulty: BASIC
-  trusted-digest-reference:
-    difficulty: INTERMEDIATE
-  digest-limitations:
-    difficulty: INTERMEDIATE

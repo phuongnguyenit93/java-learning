@@ -1,9 +1,0 @@
-sections:
-  dockerfile-vs-buildpacks:
-    difficulty: BASIC
-  archive-vs-image-layering:
-    difficulty: BASIC
-  control-standardization-maintenance:
-    difficulty: BASIC
-  image-cache-strategy:
-    difficulty: BASIC

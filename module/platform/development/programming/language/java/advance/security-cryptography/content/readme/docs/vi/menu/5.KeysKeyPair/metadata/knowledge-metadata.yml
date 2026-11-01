@@ -1,9 +1,0 @@
-sections:
-  key-models:
-    difficulty: BASIC
-  key-generation:
-    difficulty: BASIC
-  key-factory-specification:
-    difficulty: INTERMEDIATE
-  key-material-boundary:
-    difficulty: ADVANCED

@@ -1,9 +1,0 @@
-sections:
-  encoding-purpose:
-    difficulty: BASIC
-  hashing-purpose:
-    difficulty: BASIC
-  encryption-purpose:
-    difficulty: BASIC
-  authentication-purpose:
-    difficulty: BASIC

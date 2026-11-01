@@ -1,9 +1,0 @@
-sections:
-  key-establishment-purpose:
-    difficulty: INTERMEDIATE
-  key-agreement-model:
-    difficulty: ADVANCED
-  kem-model:
-    difficulty: ADVANCED
-  agreement-vs-kem:
-    difficulty: ADVANCED

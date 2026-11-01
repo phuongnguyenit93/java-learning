@@ -1,9 +1,0 @@
-sections:
-  mac-model:
-    difficulty: BASIC
-  mac-shared-secret:
-    difficulty: INTERMEDIATE
-  mac-workflow:
-    difficulty: INTERMEDIATE
-  mac-comparison:
-    difficulty: BASIC

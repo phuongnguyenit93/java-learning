@@ -1,9 +1,0 @@
-sections:
-  aead-purpose:
-    difficulty: INTERMEDIATE
-  nonce-uniqueness:
-    difficulty: ADVANCED
-  aad-and-authentication-tag:
-    difficulty: INTERMEDIATE
-  aead-decryption-failure:
-    difficulty: ADVANCED
