@@ -118,6 +118,16 @@ class CodeExplorerMaterialService {
     }
 
     private static Map build(Map cfg, File sourceRoot, List<File> selected, File swagger) {
+        Map<String,byte[]> sources = new TreeMap<>()
+        selected.each { File file ->
+            sources[slash(sourceRoot.toPath().relativize(file.toPath()))] =
+                    Files.readAllBytes(file.toPath())
+        }
+        return buildFromSources(cfg.id as String, sources, swagger)
+    }
+
+    /** Used by STEP 9: index exactly the bytes users will see in Monaco. */
+    static Map buildFromSources(String materialId, Map<String,byte[]> sources, File swagger = null) {
         // Gradle 8.x includes an older JavaParser in its own classloader.
         // Avoid a hard JAVA_21 enum reference when the Gradle-bundled parser
         // shadows the newer declared dependency.
@@ -130,15 +140,13 @@ class CodeExplorerMaterialService {
         List<Map> types = []
         List<Map> symbols = []
         Map<String,byte[]> assets = new TreeMap<>()
-        selected.each { File f ->
-            String name = slash(sourceRoot.toPath().relativize(f.toPath()))
-            byte[] bytes = Files.readAllBytes(f.toPath())
+        sources.each { String name, byte[] bytes ->
             try {
                 StandardCharsets.UTF_8.newDecoder().decode(ByteBuffer.wrap(bytes))
             } catch (Exception error) {
                 throw new GradleException('Non-UTF8 Java file: ' + name, error)
             }
-            def result = parser.parse(f)
+            def result = parser.parse(new String(bytes, StandardCharsets.UTF_8))
             if (!result.successful || !result.result.present) {
                 throw new GradleException('Cannot parse ' + name + ': ' + result.problems)
             }
@@ -195,8 +203,8 @@ class CodeExplorerMaterialService {
             (a.file <=> b.file) ?: (a.line <=> b.line) ?:
                     (a.column <=> b.column) ?: (a.kind <=> b.kind)
         }
-        List<Map> endpoints = apiEntries(swagger, typeIndex, methodIndex)
-        Map index = [version:1, type:'CODE_EXPLORER', id:cfg.id, language:'java',
+        List<Map> endpoints = swagger == null ? [] : apiEntries(swagger, typeIndex, methodIndex)
+        Map index = [version:1, type:'CODE_EXPLORER', id:materialId, language:'java',
                      files:files, tree:buildTree(files), symbolCount:symbols.size(),
                      referenceCount:references.size(),
                      resolvedReferences:references.count { it.status == 'RESOLVED' },
@@ -367,7 +375,7 @@ class CodeExplorerMaterialService {
         }
     }
 
-    private static byte[] json(Object value) {
+    static byte[] json(Object value) {
         return (JsonOutput.prettyPrint(JsonOutput.toJson(value)) + '\n')
                 .getBytes(StandardCharsets.UTF_8)
     }
@@ -395,7 +403,52 @@ class CodeExplorerMaterialService {
         }
     }
 
-    private static void writeBundle(Path root, File directory, Map<String,byte[]> output) {
+    /**
+     * Only legacy V1 files are removed when their module no longer opts in.
+     * Preserve the sibling casestudy/ subtree owned by STEP 9.
+     */
+    static void cleanUnclaimedLegacyBundles(File repo, Set<String> activeRoutes) {
+        File canonicalRepo = repo.canonicalFile
+        Path root = canonicalRepo.toPath()
+        File modules = new File(canonicalRepo, 'build/learning-data/java/module')
+        if (!modules.isDirectory()) return
+        modules.listFiles()?.findAll { it.isDirectory() && !activeRoutes.contains(it.name) }
+                ?.each { File module ->
+            File explorer = new File(module, 'code-explorer')
+            if (!explorer.isDirectory()) return
+            ['index.json', 'symbols.json', 'references.json', 'api-map.json', 'files'].each {
+                String name ->
+                Path owned = new File(explorer, name).toPath()
+                safe(root, owned)
+                if (!Files.exists(owned, LinkOption.NOFOLLOW_LINKS)) return
+                if (Files.isDirectory(owned, LinkOption.NOFOLLOW_LINKS)) {
+                    if (name != 'files') {
+                        throw new GradleException('Unexpected legacy Explorer directory: ' + owned)
+                    }
+                    def walk = Files.walk(owned)
+                    List<Path> paths = []
+                    try {
+                        walk.forEach { Path path ->
+                            safe(root, path)
+                            if (Files.isSymbolicLink(path)) {
+                                throw new GradleException('Legacy Explorer symlink forbidden: ' + path)
+                            }
+                            paths.add(path)
+                        }
+                    } finally { walk.close() }
+                    paths.sort { a,b -> b.nameCount <=> a.nameCount }
+                    paths.each { Files.delete(it) }
+                } else {
+                    if (!Files.isRegularFile(owned, LinkOption.NOFOLLOW_LINKS)) {
+                        throw new GradleException('Unexpected Explorer output: ' + owned)
+                    }
+                    Files.delete(owned)
+                }
+            }
+        }
+    }
+
+    static void writeBundle(Path root, File directory, Map<String,byte[]> output) {
         safe(root,directory.toPath())
         Files.createDirectories(directory.toPath())
         output.each { String relative, byte[] data ->

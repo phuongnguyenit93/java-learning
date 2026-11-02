@@ -12,6 +12,7 @@ import com.example.learning.setup.root.structure.service.PortalSummaryProjection
 import com.example.learning.setup.root.structure.service.PortalRoadmapProjectionService
 import com.example.learning.setup.root.structure.service.PortalVideoProjectionService
 import com.example.learning.task.codeexplorer.service.CodeExplorerMaterialService
+import com.example.learning.task.codeexplorer.service.CaseStudyExplorerService
 import com.example.learning.setup.root.structure.task.GenerateModuleOrderTask
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
@@ -579,11 +580,37 @@ ${project.path}
                             include '**/content/code-explorer/material.yml'
                             exclude '**/build/**'
                         }.files.toList().sort { it.absolutePath }
+                        Set<String> activeRoutes = [] as Set<String>
                         configs.each { File config ->
                             File moduleDirectory = config.parentFile.parentFile.parentFile
+                            def master = new groovy.json.JsonSlurper().parse(
+                                    new File(moduleDirectory, 'master.json')) as Map
+                            activeRoutes.add(master.SERVICE_NAME.VALUE as String)
                             Map result = generator.execute(project.projectDir, moduleDirectory, true, true)
                             project.logger.lifecycle('[PORTAL-CODE-EXPLORER] {}: {} Java files, {} API entries',
                                     result.module, result.files, result.apis)
+                        }
+                        CodeExplorerMaterialService.cleanUnclaimedLegacyBundles(
+                                project.projectDir, activeRoutes)
+                    }
+                }
+
+        def generatePortalCaseStudyExplorer =
+                project.tasks.register('generatePortalCaseStudyExplorer') { task ->
+                    task.group = 'learning portal'
+                    task.description = 'Generate STEP 9 case-scoped Java Code Explorer materials.'
+                    task.dependsOn(generatePortalCodeExplorer)
+                    task.doLast {
+                        CaseStudyExplorerService generator = new CaseStudyExplorerService()
+                        def configs = project.fileTree(new File(project.projectDir, 'module')) {
+                            include '**/content/code-explorer/casestudy.yml'
+                            exclude '**/build/**'
+                        }.files.toList().sort { it.absolutePath }
+                        configs.each { File config ->
+                            File moduleDirectory = config.parentFile.parentFile.parentFile
+                            Map result = generator.execute(project.projectDir, moduleDirectory, true, true)
+                            project.logger.lifecycle('[PORTAL-STEP9] {}: {} cases, {} Java files',
+                                    result.module, result.cases, result.files)
                         }
                     }
                 }
@@ -615,7 +642,8 @@ ${project.path}
                         generatePortalVideo,
                         generatePortalReference,
                         generatePortalSummary,
-                        generatePortalCodeExplorer
+                        generatePortalCodeExplorer,
+                        generatePortalCaseStudyExplorer
                 )
         }
 

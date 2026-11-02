@@ -229,6 +229,46 @@ class JavaDataPublisherTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "checksum mismatch"):
             publisher.validate(self.data)
 
+    def test_step9_case_scoped_java_is_verified_and_requires_full_manifest(self):
+        import hashlib
+        base = self.module / "code-explorer" / "casestudy"
+        folder = base / "groups" / "1" / "cases" / "1"
+        path = "demo/casestudy/controller/Group1Controller.java"
+        source_file = folder / "files" / path
+        self.write_text(source_file, "package demo.casestudy.controller; public class Group1Controller {}\n")
+        source = source_file.read_bytes()
+        self.write_json(folder / "index.json", {
+            "version": 1, "type": "CODE_EXPLORER", "id": "casestudy-g1-c1",
+            "files": [{"path": path, "bytes": len(source),
+                       "sha256": hashlib.sha256(source).hexdigest()}],
+            "symbols": "symbols.json", "references": "references.json",
+            "apiMap": "api-map.json",
+        })
+        self.write_json(folder / "symbols.json", {"version": 1, "symbols": []})
+        self.write_json(folder / "references.json", {"version": 1, "references": []})
+        self.write_json(folder / "api-map.json", {"version": 1, "endpoints": []})
+        manifest = {"version": 1, "type": "CASE_STUDY_EXPLORER",
+                    "complete": True, "cases": [{
+                        "groupID": 1, "caseIndex": 1,
+                        "path": "groups/1/cases/1/index.json", "files": 1}]}
+        self.write_json(base / "index.json", manifest)
+        catalog_file = self.data / "module-catalog.json"
+        catalog = json.loads(catalog_file.read_text(encoding="utf-8"))
+        catalog["root"]["children"][0]["caseStudyExplorer"] = (
+            "/module/EXAMPLE/code-explorer/casestudy/index.json")
+        self.write_json(catalog_file, catalog)
+        files, _, _, _ = publisher.validate(self.data)
+        self.assertIn(source_file, files)
+        manifest["complete"] = False
+        self.write_json(base / "index.json", manifest)
+        with self.assertRaisesRegex(ValueError, "Incomplete STEP9"):
+            publisher.validate(self.data)
+        manifest["complete"] = True
+        self.write_json(base / "index.json", manifest)
+        self.write_text(source_file, "tampered")
+        with self.assertRaisesRegex(ValueError, "STEP9 source checksum mismatch"):
+            publisher.validate(self.data)
+
     def test_unclaimed_java_and_unrelated_java_are_rejected(self):
         extra = self.module / "code-explorer" / "files" / "Demo.java"
         self.write_text(extra, "public class Demo {}")

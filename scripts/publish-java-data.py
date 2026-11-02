@@ -20,10 +20,15 @@ import yaml
 EXPOSED_FIELDS = (
     "overview", "knowledge", "roadmap", "video", "quiz",
     "interview", "casestudy", "api", "reference", "codeExplorer",
+    "caseStudyExplorer",
 )
 ALLOWED_EXTENSIONS = frozenset({".json", ".yml", ".yaml", ".md"})
 EXPLORER_SOURCE_RE = re.compile(
     r"^module/[A-Z0-9_-]+/code-explorer/files/(?:[A-Za-z0-9_$-]+/)*[A-Za-z0-9_$-]+\.java$"
+)
+CASE_SOURCE_RE = re.compile(
+    r"^module/[A-Z0-9_-]+/code-explorer/casestudy/groups/[1-9]\d*/cases/[1-9]\d*/files/"
+    r"(?:[A-Za-z0-9_$-]+/)*[A-Za-z0-9_$-]+\.java$"
 )
 # Temporarily exclude cross-module Knowledge search from Java data releases.
 DISABLED_SEARCH_PREFIX = "search/knowledge-search."
@@ -140,7 +145,9 @@ def validate(directory):
         casefolded.add(folded)
         suffix = file.suffix.lower()
         if suffix not in ALLOWED_EXTENSIONS and not (
-                suffix == ".java" and EXPLORER_SOURCE_RE.fullmatch(relative)):
+                suffix == ".java" and (
+                    EXPLORER_SOURCE_RE.fullmatch(relative)
+                    or CASE_SOURCE_RE.fullmatch(relative))):
             fail(
                 f"Forbidden generated file type: {relative} "
                 f"(allowed: {', '.join(sorted(ALLOWED_EXTENSIONS))})"
@@ -174,6 +181,7 @@ def validate(directory):
     seen_modules = set()
     checked_refs = 0
     explorers = {}
+    case_explorers = {}
     group_indexes = {}
 
     def walk(node):
@@ -192,6 +200,11 @@ def validate(directory):
                 if node["codeExplorer"] != expected:
                     fail(f"Unexpected Code Explorer catalog path for {module_id}")
                 explorers[module_id] = directory / expected.lstrip("/")
+            if node.get("caseStudyExplorer") is not None:
+                expected = f"/module/{module_id}/code-explorer/casestudy/index.json"
+                if node["caseStudyExplorer"] != expected:
+                    fail(f"Unexpected Case Study Explorer path for {module_id}")
+                case_explorers[module_id] = directory / expected.lstrip("/")
             for kind in ("quiz", "interview", "casestudy"):
                 localized = node.get(kind)
                 if not isinstance(localized, dict):
@@ -287,6 +300,71 @@ def validate(directory):
                     or sha256(source) != entry.get("sha256")):
                 fail(f"Code Explorer source checksum mismatch: {relative}")
             checked_refs += 1
+    # STEP 9 materials are independent of Swagger and the legacy API Explorer.
+    # Each case owns a separate, hash-checked V1 source and symbol bundle.
+    for module_id, manifest_file in case_explorers.items():
+        manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+        entries = manifest.get("cases")
+        if (manifest.get("version") != 1 or
+                manifest.get("type") != "CASE_STUDY_EXPLORER" or
+                manifest.get("complete") is not True or
+                not isinstance(entries, list) or not entries):
+            fail(f"Incomplete STEP9 material for {module_id}")
+        seen = set()
+        for entry in entries:
+            g, c = entry.get("groupID"), entry.get("caseIndex")
+            if (not isinstance(g, int) or isinstance(g, bool) or g < 1 or
+                    not isinstance(c, int) or isinstance(c, bool) or c < 1 or
+                    (g, c) in seen):
+                fail(f"Invalid STEP9 group/case for {module_id}")
+            seen.add((g, c))
+            relative = f"groups/{g}/cases/{c}/index.json"
+            if entry.get("path") != relative:
+                fail(f"Unexpected STEP9 case path for {module_id}")
+            case_dir = manifest_file.parent / f"groups/{g}/cases/{c}"
+            index_file = case_dir / "index.json"
+            if not index_file.is_file():
+                fail(f"STEP9 case material missing: {index_file}")
+            index = json.loads(index_file.read_text(encoding="utf-8"))
+            if (index.get("version") != 1 or index.get("type") != "CODE_EXPLORER"
+                    or index.get("id") != f"casestudy-g{g}-c{c}"
+                    or not isinstance(index.get("files"), list)
+                    or entry.get("files") != len(index["files"])):
+                fail(f"Invalid STEP9 bundle: {index_file}")
+            for key, name in (("symbols", "symbols.json"),
+                              ("references", "references.json"),
+                              ("apiMap", "api-map.json")):
+                if index.get(key) != name or not (case_dir / name).is_file():
+                    fail(f"STEP9 metadata missing: {case_dir / name}")
+            paths = set()
+            for file in index["files"]:
+                path = file.get("path") if isinstance(file, dict) else None
+                relative_path = f"module/{module_id}/code-explorer/casestudy/groups/{g}/cases/{c}/files/{path}"
+                if (not isinstance(path, str) or
+                        not EXPLORER_SOURCE_RE.fullmatch(
+                            f"module/{module_id}/code-explorer/files/{path}") or
+                        relative_path in claimed_java):
+                    fail(f"Unsafe or duplicate STEP9 Java file: {relative_path}")
+                if path in paths:
+                    fail(f"Duplicate STEP9 file: {path}")
+                paths.add(path)
+                claimed_java.add(relative_path)
+                source = case_dir / "files" / path
+                if (not source.is_file() or source.stat().st_size != file.get("bytes")
+                        or sha256(source) != file.get("sha256")):
+                    fail(f"STEP9 source checksum mismatch: {relative_path}")
+                checked_refs += 1
+            symbols = json.loads((case_dir / "symbols.json").read_text(encoding="utf-8"))
+            references = json.loads((case_dir / "references.json").read_text(encoding="utf-8"))
+            if (not isinstance(symbols.get("symbols"), list) or
+                    not isinstance(references.get("references"), list) or
+                    any(s.get("file") not in paths for s in symbols["symbols"]) or
+                    any(r.get("file") not in paths for r in references["references"])):
+                fail(f"STEP9 broken symbol index: {case_dir}")
+            known_ids = {s["id"] for s in symbols["symbols"]}
+            if any(t not in known_ids for r in references["references"]
+                   for t in r.get("targets", [])):
+                fail(f"STEP9 unresolved indexed target: {case_dir}")
     actual_java = {
         file.relative_to(directory).as_posix()
         for file in regular if file.suffix.lower() == ".java"

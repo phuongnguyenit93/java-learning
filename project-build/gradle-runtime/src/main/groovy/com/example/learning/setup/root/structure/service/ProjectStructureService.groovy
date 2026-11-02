@@ -294,6 +294,8 @@ ${moduleDirectory.absolutePath}
 
             node.codeExplorerAvailable =
                     new File(directory, 'content/code-explorer/material.yml').isFile()
+            node.caseStudyExplorerAvailable =
+                    new File(directory, 'content/code-explorer/casestudy.yml').isFile()
 
             if (
                     'SERVLET'.equalsIgnoreCase(node.moduleType) ||
@@ -716,6 +718,10 @@ ${moduleDirectory.absolutePath}
             if (node.codeExplorerAvailable) {
                 result.codeExplorer =
                         "/module/${resolveRouteId(node)}/code-explorer/index.json"
+            }
+            if (node.caseStudyExplorerAvailable) {
+                result.caseStudyExplorer =
+                        "/module/${resolveRouteId(node)}/code-explorer/casestudy/index.json"
             }
 
 
@@ -1768,6 +1774,7 @@ ${exception.message}
         String sourceFingerprint
         boolean moduleDepend
         boolean codeExplorerAvailable
+        boolean caseStudyExplorerAvailable
         Map<String, File> overviewSources = [:]
         Set<String> knowledgeLanguages = [] as Set<String>
         Set<String> summaryLanguages = [] as Set<String>

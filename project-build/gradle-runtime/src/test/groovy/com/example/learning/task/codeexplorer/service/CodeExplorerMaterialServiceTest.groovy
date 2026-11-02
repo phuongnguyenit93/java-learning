@@ -12,6 +12,25 @@ class CodeExplorerMaterialServiceTest {
     @Rule public TemporaryFolder temp = new TemporaryFolder()
 
     @Test
+    void legacyCleanupPreservesIndependentCaseStudyMaterial() {
+        Map f = fixture()
+        File output = new File(f.root,
+                'build/learning-data/java/module/SAMPLE_MODULE/code-explorer')
+        File stale = new File(output, 'files/sample/Old.java')
+        File caseIndex = new File(output, 'casestudy/index.json')
+        stale.parentFile.mkdirs()
+        stale.setText('public class Old {}', 'UTF-8')
+        caseIndex.parentFile.mkdirs()
+        caseIndex.setText('{"type":"CASE_STUDY_EXPLORER"}', 'UTF-8')
+        new File(output, 'index.json').setText('{"version":1}', 'UTF-8')
+        CodeExplorerMaterialService.cleanUnclaimedLegacyBundles(f.root, [] as Set<String>)
+        assertFalse(stale.exists())
+        assertFalse(new File(output, 'files').exists())
+        assertFalse(new File(output, 'index.json').exists())
+        assertTrue(caseIndex.isFile())
+    }
+
+    @Test
     void buildsPortableBundleWithDirectGoToDefinitionAndSwaggerEndpoint() {
         Map f = fixture()
         CodeExplorerMaterialService service = new CodeExplorerMaterialService()
