@@ -1,6 +1,7 @@
 package com.example.learning.setup.module.task.plugin
 
 import com.example.learning.task.codeexplorer.plugin.CodeExplorerPlugin
+import com.example.learning.task.swagger.plugin.SwaggerTaskPlugin
 
 import com.example.learning.generated.root.ProjectPluginEnum
 import com.example.learning.setup.module.task.service.TaskGradleGeneratorService
@@ -48,6 +49,9 @@ class TaskSetupPlugin
         // Optional, module-local static source material; no impact on Sheets,
         // Swagger or the module's runnable application.
         project.pluginManager.apply(CodeExplorerPlugin)
+        // Restore the module-local, explicitly invoked Swagger YAML generator.
+        // Registering it does not generate or modify Swagger metadata.
+        project.pluginManager.apply(SwaggerTaskPlugin)
 
 
         List<Map> moduleDefinitions =

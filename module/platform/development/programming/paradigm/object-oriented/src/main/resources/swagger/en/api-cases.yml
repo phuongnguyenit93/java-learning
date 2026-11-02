@@ -1,0 +1,3757 @@
+Group10Controller:
+  executeCase1():
+    methodName: executeCase1
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/1/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase2():
+    methodName: executeCase2
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/2/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase3():
+    methodName: executeCase3
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/3/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase4():
+    methodName: executeCase4
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/4/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase5():
+    methodName: executeCase5
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/5/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase6():
+    methodName: executeCase6
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/6/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase7():
+    methodName: executeCase7
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/7/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase8():
+    methodName: executeCase8
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/8/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase9():
+    methodName: executeCase9
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/9/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase10():
+    methodName: executeCase10
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/10/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase11():
+    methodName: executeCase11
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/11/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase12():
+    methodName: executeCase12
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/12/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+Group11Controller:
+  executeCase1():
+    methodName: executeCase1
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/1/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase2():
+    methodName: executeCase2
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/2/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase3():
+    methodName: executeCase3
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/3/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase4():
+    methodName: executeCase4
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/4/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase5():
+    methodName: executeCase5
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/5/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase6():
+    methodName: executeCase6
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/6/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase7():
+    methodName: executeCase7
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/7/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase8():
+    methodName: executeCase8
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/8/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase9():
+    methodName: executeCase9
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/9/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase10():
+    methodName: executeCase10
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/10/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase11():
+    methodName: executeCase11
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/11/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+Group12Controller:
+  executeCase1():
+    methodName: executeCase1
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/1/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase2():
+    methodName: executeCase2
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/2/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase3():
+    methodName: executeCase3
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/3/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase4():
+    methodName: executeCase4
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/4/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase5():
+    methodName: executeCase5
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/5/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase6():
+    methodName: executeCase6
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/6/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase7():
+    methodName: executeCase7
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/7/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase8():
+    methodName: executeCase8
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/8/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+Group13Controller:
+  executeCase1():
+    methodName: executeCase1
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/1/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase2():
+    methodName: executeCase2
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/2/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase3():
+    methodName: executeCase3
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/3/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase4():
+    methodName: executeCase4
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/4/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase5():
+    methodName: executeCase5
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/5/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase6():
+    methodName: executeCase6
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/6/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase7():
+    methodName: executeCase7
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/7/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase8():
+    methodName: executeCase8
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/8/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase9():
+    methodName: executeCase9
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/9/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase10():
+    methodName: executeCase10
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/10/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+Group1Controller:
+  executeCase1():
+    methodName: executeCase1
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/1/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase2():
+    methodName: executeCase2
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/2/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase3():
+    methodName: executeCase3
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/3/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase4():
+    methodName: executeCase4
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/4/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase5():
+    methodName: executeCase5
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/5/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase6():
+    methodName: executeCase6
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/6/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase7():
+    methodName: executeCase7
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/7/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase8():
+    methodName: executeCase8
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/8/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase9(String):
+    methodName: executeCase9
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/9/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase10():
+    methodName: executeCase10
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/10/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase11():
+    methodName: executeCase11
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/11/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase12():
+    methodName: executeCase12
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/12/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+Group2Controller:
+  executeCase1():
+    methodName: executeCase1
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/1/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase2():
+    methodName: executeCase2
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/2/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase3():
+    methodName: executeCase3
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/3/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase4():
+    methodName: executeCase4
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/4/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase5():
+    methodName: executeCase5
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/5/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase6():
+    methodName: executeCase6
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/6/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase7():
+    methodName: executeCase7
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/7/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase8():
+    methodName: executeCase8
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/8/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase9():
+    methodName: executeCase9
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/9/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase10():
+    methodName: executeCase10
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/10/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase11():
+    methodName: executeCase11
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/11/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase12():
+    methodName: executeCase12
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/12/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase13():
+    methodName: executeCase13
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/13/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase14():
+    methodName: executeCase14
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/14/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+Group3Controller:
+  executeCase1():
+    methodName: executeCase1
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/1/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase2():
+    methodName: executeCase2
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/2/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase3():
+    methodName: executeCase3
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/3/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase4():
+    methodName: executeCase4
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/4/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase5():
+    methodName: executeCase5
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/5/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase6():
+    methodName: executeCase6
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/6/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase7():
+    methodName: executeCase7
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/7/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase8():
+    methodName: executeCase8
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/8/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase9():
+    methodName: executeCase9
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/9/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase10():
+    methodName: executeCase10
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/10/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase11():
+    methodName: executeCase11
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/11/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase12():
+    methodName: executeCase12
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/12/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase13():
+    methodName: executeCase13
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/13/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase14():
+    methodName: executeCase14
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/14/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+Group4Controller:
+  executeCase1():
+    methodName: executeCase1
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/1/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase2():
+    methodName: executeCase2
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/2/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase3():
+    methodName: executeCase3
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/3/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase4():
+    methodName: executeCase4
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/4/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase5():
+    methodName: executeCase5
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/5/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase6():
+    methodName: executeCase6
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/6/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase7():
+    methodName: executeCase7
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/7/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase8():
+    methodName: executeCase8
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/8/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase9():
+    methodName: executeCase9
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/9/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase10():
+    methodName: executeCase10
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/10/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase11():
+    methodName: executeCase11
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/11/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+Group5Controller:
+  executeCase1():
+    methodName: executeCase1
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/1/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase2():
+    methodName: executeCase2
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/2/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase3():
+    methodName: executeCase3
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/3/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase4():
+    methodName: executeCase4
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/4/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase5():
+    methodName: executeCase5
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/5/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase6():
+    methodName: executeCase6
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/6/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase7():
+    methodName: executeCase7
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/7/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase8():
+    methodName: executeCase8
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/8/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase9():
+    methodName: executeCase9
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/9/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase10():
+    methodName: executeCase10
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/10/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase11():
+    methodName: executeCase11
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/11/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase12():
+    methodName: executeCase12
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/12/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+Group6Controller:
+  executeCase1():
+    methodName: executeCase1
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/1/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase2():
+    methodName: executeCase2
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/2/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase3():
+    methodName: executeCase3
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/3/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase4():
+    methodName: executeCase4
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/4/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase5():
+    methodName: executeCase5
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/5/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase6():
+    methodName: executeCase6
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/6/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase7():
+    methodName: executeCase7
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/7/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase8():
+    methodName: executeCase8
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/8/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase9():
+    methodName: executeCase9
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/9/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase10():
+    methodName: executeCase10
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/10/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase11():
+    methodName: executeCase11
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/11/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase12():
+    methodName: executeCase12
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/12/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase13():
+    methodName: executeCase13
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/13/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+Group7Controller:
+  executeCase1():
+    methodName: executeCase1
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/1/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase2():
+    methodName: executeCase2
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/2/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase3():
+    methodName: executeCase3
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/3/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase4():
+    methodName: executeCase4
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/4/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase5():
+    methodName: executeCase5
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/5/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase6():
+    methodName: executeCase6
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/6/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase7():
+    methodName: executeCase7
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/7/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase8():
+    methodName: executeCase8
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/8/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase9():
+    methodName: executeCase9
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/9/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase10():
+    methodName: executeCase10
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/10/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase11():
+    methodName: executeCase11
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/11/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase12():
+    methodName: executeCase12
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/12/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase13():
+    methodName: executeCase13
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/13/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+Group8Controller:
+  executeCase1():
+    methodName: executeCase1
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/1/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase2():
+    methodName: executeCase2
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/2/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase3():
+    methodName: executeCase3
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/3/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase4():
+    methodName: executeCase4
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/4/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase5():
+    methodName: executeCase5
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/5/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase6():
+    methodName: executeCase6
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/6/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase7():
+    methodName: executeCase7
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/7/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase8():
+    methodName: executeCase8
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/8/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase9():
+    methodName: executeCase9
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/9/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase10():
+    methodName: executeCase10
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/10/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase11():
+    methodName: executeCase11
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/11/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase12():
+    methodName: executeCase12
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/12/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase13():
+    methodName: executeCase13
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/13/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+Group9Controller:
+  executeCase1():
+    methodName: executeCase1
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/1/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase2():
+    methodName: executeCase2
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/2/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase3():
+    methodName: executeCase3
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/3/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase4():
+    methodName: executeCase4
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/4/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase5():
+    methodName: executeCase5
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/5/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase6():
+    methodName: executeCase6
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/6/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase7():
+    methodName: executeCase7
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/7/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase8():
+    methodName: executeCase8
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/8/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase9():
+    methodName: executeCase9
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/9/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase10():
+    methodName: executeCase10
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/10/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase11():
+    methodName: executeCase11
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/11/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase12():
+    methodName: executeCase12
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/12/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+  executeCase13():
+    methodName: executeCase13
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/13/execute
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this
+        result.</p>'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null

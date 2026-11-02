@@ -1,0 +1,4661 @@
+Group10Controller:
+  executeCase1():
+    summary: Một entity Customer dùng họ tên để định danh nên hai khách hàng trùng
+      tên bị coi là cùng một bản ghi trong collection.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Định nghĩa Customer equality theo customerId, tên là thuộc tính có thể trùng; kiểm thử nhiều customer cùng tên.</p>
+      <p><strong>Kiến thức liên quan:</strong> Entity identity, equals/hashCode và mutable attributes.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-004
+      - class-design-006
+      - language-mechanics-006
+      - design-pitfalls-009
+      - practice-005
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Một entity mới chưa có database ID được đưa vào HashSet, rồi sau khi
+      lưu và nhận ID thì phép contains trả false.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Không dùng ID được gán sau khi lưu làm hash của object đã nằm trong Set; chọn identity ổn định hoặc tách key bất biến.</p>
+      <p><strong>Kiến thức liên quan:</strong> Transient entity identity, equals/hashCode và hash bucket invariants.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-004
+      - object-005
+      - language-mechanics-006
+      - design-pitfalls-009
+      - testing-001
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Hai địa chỉ có nội dung như nhau nhưng được so bằng reference nên ứng
+      dụng tính chúng là hai địa điểm giao hàng khác nhau.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Biểu diễn Address như immutable value object có equals/hashCode theo các thành phần chuẩn hóa; không so reference.</p>
+      <p><strong>Kiến thức liên quan:</strong> Value equality, records/value objects và normalization policy.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-004
+      - class-design-006
+      - language-mechanics-006
+      - practice-005
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Một Money value object giữ amount dưới dạng double nên cộng dồn nhiều
+      giao dịch cho ra sai số khi so sánh tổng.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Dùng BigDecimal hoặc integer minor units cho tiền, xác định precision/rounding theo loại tiền và kiểm thử cộng dồn.</p>
+      <p><strong>Kiến thức liên quan:</strong> Money value object, binary floating-point và rounding policies.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-008
+      - class-design-006
+      - language-mechanics-005
+      - practice-005
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Một aggregate cho phép caller sửa trực tiếp child entity, khiến tổng
+      số lượng đơn hàng không còn đúng với danh sách item.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Ẩn child collection, mọi cập nhật qua aggregate root cập nhật/tính lại total và kiểm tra invariant trước commit.</p>
+      <p><strong>Kiến thức liên quan:</strong> Aggregate root, encapsulation và derived state.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - encapsulation-001
+      - encapsulation-002
+      - encapsulation-008
+      - composition-007
+      - class-design-007
+      - testing-003
+      - practice-002
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Domain service gửi notification trước khi transaction hoàn tất nên người
+      dùng nhận thông báo thành công dù database rollback.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Commit transaction trước khi phát side effect; dùng outbox để gửi notification sau commit, xử lý retry có kiểm soát.</p>
+      <p><strong>Kiến thức liên quan:</strong> Transaction boundary, transactional outbox và eventual consistency.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-design-004
+      - modeling-007
+      - design-patterns-010
+      - testing-010
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Ứng dụng phát cùng một domain event nhiều lần khi retry request, làm
+      số lượng email và lần trừ tồn kho bị nhân đôi.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Gán eventId/idempotency key, deduplicate consumer và kiểm soát retry để không gửi mail hay trừ kho nhiều lần.</p>
+      <p><strong>Kiến thức liên quan:</strong> At-least-once delivery, idempotent consumers và outbox.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - modeling-007
+      - design-patterns-010
+      - testing-010
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Một luồng nghiệp vụ sửa hai aggregate ở hai database nhưng lại giả định
+      một transaction cục bộ đủ bảo đảm tính nhất quán.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Dùng saga/compensation hoặc mô hình nhất quán cuối cùng giữa hai database; không giả định một local transaction phủ cả hai.</p>
+      <p><strong>Kiến thức liên quan:</strong> Distributed transactions, saga và consistency models.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - design-patterns-007
+      - testing-003
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Tầng controller web kiểm tra hạn hủy vé còn API mobile và batch đi đường
+      khác, tạo ra kết quả hoàn tiền trái quy tắc.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Đưa chính sách hạn hủy/hoàn tiền vào domain/application use case chung; tất cả web/mobile/batch dùng cùng guard.</p>
+      <p><strong>Kiến thức liên quan:</strong> Business invariants, shared use cases và channel consistency.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - encapsulation-005
+      - class-design-004
+      - class-design-007
+      - solid-002
+      - testing-003
+      - practice-010
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Một workflow đơn hàng có nhiều public setter độc lập khiến user có thể
+      chuyển thẳng từ NEW sang REFUNDED dù chưa thanh toán.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Thay setter bằng transition methods có guard, từ chối NEW→REFUNDED và kiểm thử state graph.</p>
+      <p><strong>Kiến thức liên quan:</strong> State machines, domain commands và legal transitions.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - encapsulation-008
+      - encapsulation-009
+      - modeling-008
+      - design-patterns-009
+      - testing-003
+      - practice-002
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Một entity ORM với lazy relationship được trả thẳng ra HTTP; serializer
+      truy cập quan hệ khi session đã đóng và request thất bại.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Map ORM entity sang DTO trong transaction phù hợp hoặc fetch chủ đích; không serialize trực tiếp lazy proxy khi session đóng.</p>
+      <p><strong>Kiến thức liên quan:</strong> ORM lazy loading, persistence boundary và API DTO.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - abstraction-008
+      - class-design-004
+      - class-design-009
+      - solid-006
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase12():
+    summary: Một domain object phụ thuộc vào thời gian hiện tại qua System.currentTimeMillis
+      trong mọi method, khiến kết quả test thay đổi theo thời điểm chạy.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Inject Clock vào domain service hoặc truyền time theo use case; test thời điểm cố định, biên thời gian và timezone.</p>
+      <p><strong>Kiến thức liên quan:</strong> Time dependency injection, determinism và temporal boundaries.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - composition-006
+      - testing-007
+      - practice-010
+    methodName: executeCase12
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/12/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/12/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group11Controller:
+  executeCase1():
+    summary: Một lớp sử dụng equality theo business key nhưng business key được phép
+      sửa, làm các Map và Set chứa object trả kết quả sai.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Dùng business ID không đổi cho hash/equality hoặc snapshot immutable key; tránh mutation khi object đang trong Map/Set.</p>
+      <p><strong>Kiến thức liên quan:</strong> Equality consistency, mutable keys và hashed collections.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-004
+      - object-005
+      - language-mechanics-006
+      - design-pitfalls-009
+      - testing-001
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Một class override equals nhưng bỏ quên hashCode khiến hai key bằng nhau
+      nằm ở các bucket khác nhau của HashMap.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Override equals và hashCode đồng bộ dựa cùng các field ổn định; kiểm thử HashMap put/get và hợp đồng equality.</p>
+      <p><strong>Kiến thức liên quan:</strong> equals/hashCode contract và Java hashed collections.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-004
+      - language-mechanics-006
+      - testing-001
+      - practice-005
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Một cách override equals dùng instanceof trên superclass và getClass
+      trên subclass làm tính đối xứng của phép bằng bị phá.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Chọn thống nhất getClass hoặc instanceof theo chính sách kế thừa; ưu tiên composition/value semantics khi subclass phá đối xứng.</p>
+      <p><strong>Kiến thức liên quan:</strong> Equality symmetry/transitivity và inheritance pitfalls.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-004
+      - language-mechanics-006
+      - testing-005
+      - practice-005
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Comparator chỉ so sánh tên sản phẩm khiến TreeSet loại bỏ các sản phẩm
+      khác mã nhưng trùng tên.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Thêm tie-breaker mã sản phẩm cho Comparator; chỉ trả 0 khi thật sự cùng khóa sorted collection.</p>
+      <p><strong>Kiến thức liên quan:</strong> Comparator ordering, TreeSet equivalence và consistent-with-equals.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - language-mechanics-006
+      - practice-005
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Một record chứa List mutable được xem là immutable và được chia sẻ qua
+      API, nhưng caller sửa phần tử làm snapshot lịch sử thay đổi.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tạo defensive copies của list và phần tử mutable ngay trong record constructor; chỉ expose immutable projections.</p>
+      <p><strong>Kiến thức liên quan:</strong> Records, shallow immutability và defensive copying.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-006
+      - object-005
+      - object-006
+      - encapsulation-007
+      - class-design-006
+      - practice-005
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Phương thức toString duyệt cả graph object hai chiều khiến ghi log một
+      node làm tràn stack.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Chặn duyệt vòng trong toString bằng ID/summary, không tự nối parent và children đệ quy vô hạn.</p>
+      <p><strong>Kiến thức liên quan:</strong> Object graph cycles, safe logging và StackOverflowError.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - relationships-006
+      - language-mechanics-007
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Một toString của User tự động in token truy cập và số thẻ thanh toán
+      vào log theo mỗi lần debug.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Không đưa secret/payment fields vào toString; dùng redaction, allowlist và test bảo vệ thông tin nhạy cảm trong log.</p>
+      <p><strong>Kiến thức liên quan:</strong> Information disclosure, structured logging và sensitive data handling.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - language-mechanics-007
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Một copy constructor chỉ copy các reference nested object, khiến người
+      dùng chỉnh sửa bản sao và vô tình đổi bản gốc.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Deep copy những nested objects cần độc lập hoặc dùng immutable structures; kiểm thử sửa bản sao không đổi bản gốc.</p>
+      <p><strong>Kiến thức liên quan:</strong> Copy constructor, graph ownership và shallow/deep copy.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-003
+      - object-006
+      - encapsulation-007
+      - practice-005
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Một Generic Repository dùng Object cho kiểu trả về nên cast lỗi chỉ được
+      phát hiện ở runtime.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Định nghĩa Repository&lt;T,ID&gt; và trả T/Optional&lt;T&gt; có generic type; loại cast runtime không an toàn.</p>
+      <p><strong>Kiến thức liên quan:</strong> Java generics, type safety và parametric polymorphism.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - language-mechanics-001
+      - design-pitfalls-005
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Một API generic nhận List của subtype nhưng caller kỳ vọng truyền trực
+      tiếp List<Subtype> vào List<Supertype>, gây lỗi biên dịch.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Không gán List&lt;Subtype&gt; cho List&lt;Supertype&gt; vì invariant; dùng List&lt;? extends Supertype&gt; cho đọc, copy để ghi phù hợp.</p>
+      <p><strong>Kiến thức liên quan:</strong> Generic invariance, bounded wildcards và PECS.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - subtyping-002
+      - language-mechanics-001
+      - language-mechanics-003
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Một wildcard API cho phép ghi dữ liệu vào collection chỉ để đọc khiến
+      hợp đồng kiểu trở nên mơ hồ và compiler từ chối lời gọi.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tách producer/consumer interface; với nguồn đọc dùng ? extends T, nơi ghi dùng ? super T; tránh yêu cầu ghi vào extends wildcard.</p>
+      <p><strong>Kiến thức liên quan:</strong> PECS, wildcard variance và type-safe collections.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - subtyping-002
+      - language-mechanics-002
+      - language-mechanics-003
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group12Controller:
+  executeCase1():
+    summary: Một unit test kiểm tra chi tiết private helper qua reflection nên sau
+      khi refactor hành vi không đổi mà hàng loạt test vẫn thất bại.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Viết unit tests theo public behavior/invariant, không phản chiếu private helper; giữ test ổn định khi implementation thay đổi.</p>
+      <p><strong>Kiến thức liên quan:</strong> Black-box testing, encapsulation và refactorability.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - encapsulation-001
+      - testing-008
+      - refactoring-009
+      - practice-010
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group12Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Một kiểm thử chỉ xác nhận mock được gọi đúng số lần nhưng không phát
+      hiện object cuối cùng vi phạm invariant.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Thêm assertion về state và outcome của object; chỉ verify mock interactions khi tương tác là một phần contract observable.</p>
+      <p><strong>Kiến thức liên quan:</strong> Behavioral tests, invariants và over-mocking.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - encapsulation-002
+      - testing-001
+      - testing-008
+      - testing-010
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group12Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Hai implementation cùng interface vượt qua unit test riêng nhưng phản
+      hồi khác nhau với null input và exception, gây lỗi khi thay thế.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tạo shared contract suite chạy trên mọi implementation, phủ null, exceptions, edge cases và side effects theo một spec.</p>
+      <p><strong>Kiến thức liên quan:</strong> Contract tests, LSP và semantic compatibility.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - abstraction-004
+      - interface-008
+      - subtyping-007
+      - solid-004
+      - testing-004
+      - testing-005
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group12Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Một method dài trong OrderService trộn validation, tính phí, update trạng
+      thái và persistence nhưng thiếu regression test nên developer sợ tách trách
+      nhiệm.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Bổ sung characterization/regression tests trước khi chia OrderService, tách validation/pricing/state/persistence theo từng thay đổi nhỏ.</p>
+      <p><strong>Kiến thức liên quan:</strong> Safe refactoring, characterization tests và SRP.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-design-001
+      - class-design-004
+      - solid-002
+      - testing-009
+      - refactoring-003
+      - refactoring-009
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group12Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Một chức năng được refactor sang composition nhưng delegation vô tình
+      bỏ qua kiểm tra quyền vốn nằm trong superclass cũ.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Giữ permission guard khi chuyển sang delegation, đặt ở boundary duy nhất và viết regression test cho unauthorized/authorized.</p>
+      <p><strong>Kiến thức liên quan:</strong> Delegation, security invariants và behavior preservation.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - abstraction-004
+      - subtyping-007
+      - composition-008
+      - solid-004
+      - testing-009
+      - refactoring-007
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group12Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Một đội chuyển từ procedural code sang nhiều domain object trong một
+      lần thay đổi lớn nên khó xác định bước nào làm sai nghiệp vụ.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Chuyển từng use case, giữ golden-master/characterization tests và điểm rollback nhỏ; tránh thay toàn bộ model trong một commit.</p>
+      <p><strong>Kiến thức liên quan:</strong> Incremental refactoring, regression safety và change isolation.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - oop-basic-006
+      - solid-008
+      - testing-009
+      - refactoring-009
+      - practice-007
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group12Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Một refactoring chuyển method sang class khác làm thay đổi thứ tự side
+      effect, khiến callback chạy trước khi trạng thái dữ liệu hoàn tất.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Ghi rõ thứ tự side effect theo contract, validate/commit trước callback; test thứ tự và đường lỗi sau Move Method.</p>
+      <p><strong>Kiến thức liên quan:</strong> Refactoring semantics, observable side effects và sequencing.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-005
+      - object-009
+      - modeling-007
+      - testing-009
+      - testing-010
+      - refactoring-004
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group12Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Một test khởi động toàn bộ Spring context để kiểm tra object tính tiền
+      đơn giản, làm bộ unit test chạy quá lâu và phụ thuộc môi trường.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Test class tính tiền bằng unit test thuần và fake dependencies; chỉ dùng Spring context test để kiểm tra wiring/integration thực.</p>
+      <p><strong>Kiến thức liên quan:</strong> Test pyramid, test isolation và Spring context cost.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - interface-009
+      - composition-006
+      - solid-006
+      - solid-007
+      - testing-007
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group12Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group13Controller:
+  executeCase1():
+    summary: Hai thread cùng đọc rồi tăng một counter nằm trong object mutable khiến
+      số lượng xử lý thực tế thấp hơn số request đã nhận.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Dùng AtomicInteger hoặc lock bao quanh toàn bộ read-modify-write; test với nhiều thread và khẳng định tổng cập nhật.</p>
+      <p><strong>Kiến thức liên quan:</strong> Race conditions, atomic operations và lost updates.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-003
+      - object-007
+      - design-pitfalls-008
+      - testing-003
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Một thread cập nhật flag completed nhưng thread khác không quan sát được
+      giá trị mới kịp thời vì thiếu quan hệ đồng bộ bộ nhớ.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Dùng volatile/AtomicBoolean hoặc lock để thiết lập happens-before; không coi sleep là bảo đảm visibility.</p>
+      <p><strong>Kiến thức liên quan:</strong> Java Memory Model, visibility và happens-before.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-007
+      - design-pitfalls-008
+      - testing-003
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Một object chứa HashMap mutable được nhiều request đọc và ghi cùng lúc
+      làm dữ liệu trả về không ổn định và có thể bị mất cập nhật.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Dùng ConcurrentHashMap hoặc immutable snapshots có contract thao tác phù hợp; bảo vệ compound operations khi nhiều request cạnh tranh.</p>
+      <p><strong>Kiến thức liên quan:</strong> Concurrent collections, thread safety và atomic compound actions.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-005
+      - object-007
+      - design-pitfalls-008
+      - testing-003
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Một listener callback được gọi khi object vẫn đang giữ lock, gây deadlock
+      khi callback gọi ngược vào object khác.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Không gọi callback ngoài trong khi giữ lock; copy danh sách listener dưới lock rồi phát sau unlock, kiểm tra thứ tự lock.</p>
+      <p><strong>Kiến thức liên quan:</strong> Deadlock, lock ordering và external calls under locks.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - design-patterns-010
+      - testing-010
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Một class thread-safe ở từng method nhưng thao tác gồm đọc rồi sửa qua
+      hai method vẫn bị race khi có request khác xen vào.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Gộp read-and-update vào một atomic method hoặc khóa transaction toàn thao tác, không chỉ synchronized từng getter/setter.</p>
+      <p><strong>Kiến thức liên quan:</strong> Compound race, atomicity boundaries và thread safety.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-007
+      - encapsulation-009
+      - design-pitfalls-008
+      - testing-003
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Một cache giữ reference của toàn bộ request object đã xử lý mà không
+      có eviction, khiến heap tăng dần dù kết quả đã hết giá trị.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Giới hạn cache bằng eviction/TTL/size, bỏ reference khi hết nhu cầu; dùng heap dump theo thời gian để chẩn đoán retention.</p>
+      <p><strong>Kiến thức liên quan:</strong> GC reachability, cache eviction và memory leak analysis.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-003
+      - lifecycle-006
+      - lifecycle-007
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Đội tối ưu hóa bằng cách thay object thành nhiều mảng primitive trước
+      khi đo, khiến mã khó hiểu hơn nhưng latency không có số liệu chứng minh cải
+      thiện.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Thiết lập baseline với profiler/benchmark workload thật trước và sau; chỉ đánh đổi readability lấy tối ưu có lợi ích được đo.</p>
+      <p><strong>Kiến thức liên quan:</strong> Performance profiling, allocation và evidence-based optimization.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - oop-basic-008
+      - lifecycle-001
+      - lifecycle-007
+      - refactoring-001
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Một thay đổi cho object reuse nhằm giảm allocation vô tình giữ lại state
+      của request trước, gây rò rỉ dữ liệu giữa các người dùng.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Không reuse mutable object qua các request không tin cậy; dùng immutable context/new instance hoặc reset đầy đủ và test isolation.</p>
+      <p><strong>Kiến thức liên quan:</strong> Object pooling risks, aliasing và data isolation.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-005
+      - object-007
+      - lifecycle-006
+      - design-pitfalls-008
+      - testing-003
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Ứng dụng dùng synchronized trên toàn service để bảo vệ một field nhỏ,
+      khiến các request độc lập bị chặn nối đuôi nhau dưới tải cao.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Thu nhỏ critical section hoặc dùng khóa theo resource/atomic field; kiểm benchmark contention trên workload thực trước chọn giải pháp.</p>
+      <p><strong>Kiến thức liên quan:</strong> Lock granularity, contention và concurrent throughput.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList: [
+        ]
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Một object domain chứa hàng chục collection và cache dẫn xuất nhưng không
+      có quy tắc invalidation nhất quán, làm dữ liệu sau cập nhật vẫn bị cũ.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Xác định dependency của cache dẫn xuất, invalidation lúc mutate hoặc tính lại on demand; kiểm thử consistency sau từng update.</p>
+      <p><strong>Kiến thức liên quan:</strong> Cache invalidation, derived state và object invariants.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-001
+      - object-007
+      - encapsulation-002
+      - class-design-007
+      - design-pitfalls-008
+      - testing-003
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group1Controller:
+  executeCase1():
+    summary: Ứng dụng quản lý bệnh viện dồn hồ sơ bệnh nhân, lịch khám, hóa đơn và
+      gửi tin nhắn vào một class, nên sửa tính phí lại làm hỏng đặt lịch.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tách hồ sơ bệnh nhân, lịch khám, thanh toán và thông báo theo trách nhiệm; giữ application service điều phối use case và regression test từng chức năng.</p>
+      <p><strong>Kiến thức liên quan:</strong> SRP, high cohesion, domain boundaries và tách tác vụ hạ tầng.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-design-001
+      - class-design-002
+      - class-design-004
+      - modeling-003
+      - solid-002
+      - design-pitfalls-001
+      - testing-009
+      - refactoring-003
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Một nhóm phát triển tạo class mới cho từng hàm xử lý nhỏ khiến luồng
+      đặt hàng đi qua hàng chục lớp trung gian và rất khó truy dấu lỗi.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Gộp các lớp trung gian chỉ chuyển tiếp, đặt hành vi gần dữ liệu sở hữu; kiểm tra luồng gọi và test trước/sau để giảm tầng không cần thiết.</p>
+      <p><strong>Kiến thức liên quan:</strong> KISS, cohesion, indirection và phát hiện speculative generality.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - oop-basic-008
+      - abstraction-007
+      - class-design-002
+      - solid-008
+      - design-patterns-013
+      - design-pitfalls-010
+      - refactoring-008
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Code nghiệp vụ được viết thành các static utility thao tác trên object
+      chỉ chứa dữ liệu, khiến trạng thái có thể bị sửa mà không qua quy tắc nào.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Chuyển quy tắc và thay đổi trạng thái vào method của domain object; hạn chế public setter, utility chỉ giữ hàm thuần phù hợp.</p>
+      <p><strong>Kiến thức liên quan:</strong> Rich domain model, encapsulation, invariant và Tell Don&#39;t Ask.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - oop-basic-006
+      - encapsulation-008
+      - class-design-007
+      - solid-002
+      - design-pitfalls-003
+      - refactoring-004
+      - practice-007
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Hai nhóm cùng dùng một class Customer cho bán hàng và chăm sóc khách
+      hàng nhưng cần thay đổi các thuộc tính theo hai quy trình khác nhau.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tách vai trò Customer theo bounded context hoặc model/DTO riêng; chỉ chia sẻ định danh và dữ liệu đã có hợp đồng rõ.</p>
+      <p><strong>Kiến thức liên quan:</strong> Bounded contexts, SRP theo actor và tránh shared model coupling.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-design-001
+      - modeling-001
+      - solid-002
+      - design-pitfalls-001
+      - refactoring-003
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Một class thay đổi thường xuyên vì vừa định dạng báo cáo, vừa gọi database,
+      vừa gửi email, làm mọi lần phát hành có phạm vi ảnh hưởng rộng.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tách logic báo cáo, truy cập dữ liệu và email khỏi class nghiệp vụ; xác định boundary và kiểm thử các phần độc lập.</p>
+      <p><strong>Kiến thức liên quan:</strong> SRP, cohesion, separation of concerns và dependency direction.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-design-001
+      - class-design-002
+      - class-design-004
+      - solid-002
+      - design-pitfalls-001
+      - refactoring-003
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Mỗi lần thêm một phương thức vận chuyển, developer phải sửa nhiều đoạn
+      if-else ở bảng giá, kiểm tra đơn và tạo nhãn giao hàng.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tập trung lựa chọn và quy tắc vận chuyển tại một policy/strategy boundary; kiểm thử thêm phương thức mới không ảnh hưởng loại cũ.</p>
+      <p><strong>Kiến thức liên quan:</strong> OCP, polymorphism, Strategy và regression tests.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - interface-003
+      - polymorphism-009
+      - composition-005
+      - solid-003
+      - design-patterns-008
+      - testing-009
+      - refactoring-006
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Một object giao dịch vừa được dùng làm dữ liệu API, vừa làm entity persistence,
+      vừa chứa logic hiển thị, khiến thay đổi từ một lớp lan sang các lớp khác.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tách domain entity, persistence mapping, API DTO và presentation model; mapper ở boundary giảm rò rỉ thay đổi giữa tầng.</p>
+      <p><strong>Kiến thức liên quan:</strong> Separation of concerns, anti-corruption mapping và domain boundaries.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - abstraction-008
+      - class-design-004
+      - solid-002
+      - solid-006
+      - refactoring-003
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Hai bản ghi nhân viên có cùng tên và ngày sinh bị coi là cùng một object
+      dù thuộc hai nhân viên khác nhau.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Dùng employeeId ổn định cho entity equality; không dùng họ tên/ngày sinh làm identity; kiểm thử hai nhân viên cùng thông tin.</p>
+      <p><strong>Kiến thức liên quan:</strong> Entity identity so với value equality, equals/hashCode contract.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-004
+      - class-design-006
+      - language-mechanics-006
+      - practice-005
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9(String):
+    summary: Hệ thống tạo hàng nghìn object tạm ở mỗi request nhưng không đo được
+      liệu độ trễ đến từ logic ứng dụng, cấp phát hay garbage collection.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Đo bằng profiler/JFR và benchmark workload đại diện trước tối ưu; xem allocation rate, GC pause và tracing luồng nghiệp vụ thay vì suy đoán.</p>
+      <p><strong>Kiến thức liên quan:</strong> Profiling, allocation, garbage collection và performance baselines.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - oop-basic-008
+      - lifecycle-001
+      - lifecycle-007
+      - refactoring-001
+    methodName: executeCase9
+    params:
+    - mode
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Mô hình nghiệp vụ có quá nhiều class tên Manager, Helper và Processor
+      nhưng không ai xác định được object nào sở hữu quy tắc tính giá.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Xác định object sở hữu chính sách tính giá từ use case; đổi tên/di chuyển hành vi theo domain và giảm lớp điều phối mơ hồ.</p>
+      <p><strong>Kiến thức liên quan:</strong> Responsibility-driven design, cohesion và domain modeling.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-design-001
+      - class-design-005
+      - class-design-007
+      - modeling-003
+      - solid-002
+      - design-pitfalls-001
+      - refactoring-004
+      - practice-007
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Đội phát triển tranh luận một khái niệm đơn hàng nên là entity hay tập
+      dữ liệu truyền qua service vì định danh và vòng đời của nó chưa được làm rõ.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Xác định vòng đời, business ID và invariant của Order; dùng entity nếu cần danh tính qua thay đổi, DTO cho trao đổi dữ liệu.</p>
+      <p><strong>Kiến thức liên quan:</strong> Entity vs DTO, identity, object lifecycle và aggregate boundaries.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-001
+      - object-004
+      - class-design-006
+      - modeling-002
+      - practice-008
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase12():
+    summary: Một chức năng xuất CSV rất đơn giản bị buộc đi qua factory, service locator
+      và nhiều interface dù ứng dụng không có biến thể triển khai.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Bỏ factory/locator/interface dự phòng nếu chỉ có một luồng xuất CSV; dùng hàm có hợp đồng rõ và test độc lập.</p>
+      <p><strong>Kiến thức liên quan:</strong> YAGNI, KISS, trade-off của abstraction và simplicity.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - oop-basic-008
+      - abstraction-007
+      - solid-008
+      - design-patterns-013
+      - design-pitfalls-010
+      - refactoring-008
+    methodName: executeCase12
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/12/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/12/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group2Controller:
+  executeCase1():
+    summary: Object thanh toán được khởi tạo với số tiền âm nhưng chỉ bị phát hiện
+      khi ghi vào database, khiến lỗi xuất hiện xa vị trí tạo dữ liệu.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Kiểm tra số tiền ở constructor/factory hoặc Money value object trước khi tạo Payment; trả lỗi ngay tại ranh giới miền.</p>
+      <p><strong>Kiến thức liên quan:</strong> Constructor invariant, fail-fast validation và value objects.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - lifecycle-002
+      - encapsulation-002
+      - encapsulation-005
+      - class-design-006
+      - testing-002
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Một constructor yêu cầu mười hai tham số cùng kiểu String và developer
+      truyền nhầm số điện thoại vào vị trí mã khách hàng.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Thay chuỗi tham số cùng kiểu bằng value objects có tên/Builder kiểm tra required fields; cung cấp factory có ý nghĩa.</p>
+      <p><strong>Kiến thức liên quan:</strong> Primitive obsession, type safety, Builder và object construction.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - lifecycle-003
+      - lifecycle-005
+      - class-design-006
+      - design-patterns-003
+      - testing-002
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Constructor của lớp cha gọi một method có thể override làm lớp con đọc
+      field chưa khởi tạo và trả kết quả khác nhau theo cách tạo object.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Không gọi overridable method trong constructor cha; dùng private/final initialization rồi kích hoạt hành vi subclass sau khi khởi tạo.</p>
+      <p><strong>Kiến thức liên quan:</strong> Java initialization order, dynamic dispatch và constructor safety.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - lifecycle-004
+      - lifecycle-009
+      - inheritance-006
+      - polymorphism-004
+      - testing-002
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Trong quá trình tạo một object, constructor mở socket rồi ném exception
+      ở bước đọc cấu hình, để lại kết nối không được đóng.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Đảm bảo close các tài nguyên đã mở nếu khởi tạo thất bại bằng try-with-resources/factory; phân định rõ owner đóng socket.</p>
+      <p><strong>Kiến thức liên quan:</strong> Exception safety, AutoCloseable và resource ownership.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - lifecycle-001
+      - lifecycle-008
+      - composition-007
+      - language-mechanics-008
+      - testing-002
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Một static initializer đọc biến môi trường không tồn tại làm toàn bộ
+      class thất bại khi lần đầu được tải trong môi trường production.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Đưa kiểm tra cấu hình vào bước bootstrap có thông báo lỗi rõ thay vì static initializer khó kiểm soát; xử lý thiếu config sớm.</p>
+      <p><strong>Kiến thức liên quan:</strong> Class initialization, fail-fast configuration và exception handling.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-003
+      - lifecycle-004
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Một object được đưa vào cache trước khi hoàn tất khởi tạo nên request
+      khác quan sát thấy các field có giá trị mặc định.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Chỉ đưa object vào cache sau khi validate và khởi tạo hoàn chỉnh; dùng factory và cơ chế công bố an toàn giữa thread.</p>
+      <p><strong>Kiến thức liên quan:</strong> Safe publication, object invariant và concurrent visibility.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-007
+      - object-007
+      - lifecycle-009
+      - encapsulation-002
+      - testing-002
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Hai constructor overload cùng nhận nhiều tham số nullable khiến lời gọi
+      với null chọn sai chữ ký hoặc không biên dịch do mơ hồ.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Loại overload mơ hồ với null bằng tên factory rõ ràng hoặc type-specific value objects; tránh các chữ ký dễ gây nhập nhằng.</p>
+      <p><strong>Kiến thức liên quan:</strong> Overload resolution, null ambiguity và type-safe API design.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-005
+      - lifecycle-003
+      - polymorphism-005
+      - language-mechanics-004
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Builder cho phép tạo yêu cầu chuyển khoản thiếu tài khoản đích và chỉ
+      phát hiện lỗi sau khi gọi hệ thống ngân hàng.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Cho Builder từ chối thiếu destination/amount khi build, tạo object bất biến hợp lệ; kiểm tra cả trường hợp không đủ dữ liệu.</p>
+      <p><strong>Kiến thức liên quan:</strong> Builder validation, required fields và constructor invariant.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - lifecycle-002
+      - lifecycle-005
+      - encapsulation-002
+      - encapsulation-005
+      - design-patterns-003
+      - testing-002
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Một static factory trả object dùng chung có trạng thái mutable khiến
+      hai người dùng vô tình ảnh hưởng lẫn nhau.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Trả object immutable hoặc instance tách biệt theo owner; nếu chia sẻ cần đồng bộ trạng thái và hợp đồng lifetime rõ.</p>
+      <p><strong>Kiến thức liên quan:</strong> Aliasing, shared mutable state, scope và thread safety.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-003
+      - object-003
+      - object-005
+      - object-007
+      - lifecycle-005
+      - design-pitfalls-008
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Một đối tượng có field final tham chiếu tới danh sách sản phẩm nhưng
+      caller vẫn thay đổi các phần tử bên trong sau khi object đã được tạo.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tạo defensive copies của cả list lẫn phần tử mutable; trả immutable snapshot/DTO thay vì để caller giữ alias.</p>
+      <p><strong>Kiến thức liên quan:</strong> Shallow vs deep immutability, final reference và defensive copying.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-006
+      - object-005
+      - object-006
+      - encapsulation-007
+      - testing-002
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Vòng đời của một session object kéo dài qua nhiều request khiến quyền
+      truy cập cũ vẫn tồn tại sau khi người dùng đăng xuất.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Gắn session với lifecycle và thời hạn phù hợp; vô hiệu hóa khi logout, tránh cache/tái sử dụng principal có quyền đã hết hạn.</p>
+      <p><strong>Kiến thức liên quan:</strong> Object scope, session lifecycle, invalidation và access control.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - lifecycle-006
+      - design-pitfalls-008
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase12():
+    summary: Đối tượng dùng làm key trong cache có hashCode dựa trên field thay đổi
+      theo thời gian, khiến cùng đối tượng không thể truy xuất lại.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Không dùng field mutable tham gia hash của cache key; chọn immutable ID/value key, hoặc loại key cũ rồi thêm key mới có kiểm soát.</p>
+      <p><strong>Kiến thức liên quan:</strong> equals/hashCode, hashed collections và mutable key hazards.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-004
+      - object-005
+      - language-mechanics-006
+      - design-pitfalls-009
+      - testing-001
+    methodName: executeCase12
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/12/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/12/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase13():
+    summary: Khi clone đơn hàng mẫu, danh sách item vẫn tham chiếu tới các object
+      con của đơn gốc nên sửa đơn mới làm thay đổi đơn cũ.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Copy sâu các line item cần sở hữu riêng hoặc dùng immutable item; ghi rõ contract copy và thử sửa bản sao mà không ảnh hưởng gốc.</p>
+      <p><strong>Kiến thức liên quan:</strong> Copy constructors, clone semantics và graph aliasing.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-003
+      - object-006
+      - encapsulation-007
+      - composition-007
+      - practice-005
+    methodName: executeCase13
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/13/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/13/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase14():
+    summary: Một lần khôi phục object từ JSON tạo được trạng thái mà constructor thường
+      từ chối, khiến quy tắc miền không còn nhất quán.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Áp dụng validate/invariant sau deserialize hoặc map DTO vào constructor/factory của domain; từ chối trạng thái JSON không hợp lệ.</p>
+      <p><strong>Kiến thức liên quan:</strong> Deserialization boundaries, object invariants và factory validation.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - lifecycle-002
+      - encapsulation-005
+      - class-design-004
+      - class-design-007
+      - testing-002
+      - testing-003
+    methodName: executeCase14
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/14/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/14/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group3Controller:
+  executeCase1():
+    summary: Public setter cho trạng thái đơn hàng cho phép ứng dụng mobile đưa đơn
+      từ CREATED sang DELIVERED khi chưa có thanh toán.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Ẩn setter status; chỉ có transition methods với guard xác nhận thanh toán và kiểm thử chuyển trạng thái trái phép.</p>
+      <p><strong>Kiến thức liên quan:</strong> Encapsulation, state machine, domain commands và invariants.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - encapsulation-003
+      - encapsulation-008
+      - encapsulation-009
+      - modeling-008
+      - design-patterns-009
+      - testing-003
+      - practice-002
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Mỗi field của hóa đơn có setter riêng nên giảm giá có thể được cập nhật
+      nhưng tổng tiền chưa đổi nếu request thất bại giữa chừng.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Cập nhật discount và total trong một method, validate trước khi mutate; cân nhắc tính total dẫn xuất thay vì lưu hai trạng thái trùng.</p>
+      <p><strong>Kiến thức liên quan:</strong> Cross-field invariant, exception safety và atomic domain operations.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - encapsulation-002
+      - encapsulation-004
+      - class-design-008
+      - language-mechanics-008
+      - testing-003
+      - practice-002
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Caller nhận trực tiếp List sản phẩm từ Cart.getItems và xóa mặt hàng
+      mà không đi qua kiểm tra tồn kho của giỏ hàng.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Không trả live list; cung cấp snapshot bất biến và phương thức add/remove kiểm tra tồn kho, giới hạn và trạng thái Cart.</p>
+      <p><strong>Kiến thức liên quan:</strong> Representation exposure, aggregate encapsulation và defensive copies.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-005
+      - encapsulation-001
+      - encapsulation-006
+      - encapsulation-008
+      - class-design-007
+      - testing-003
+      - practice-002
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: API getter trả một mảng byte chứa khóa phiên làm client sửa phần tử và
+      khiến các bước xác thực sau sử dụng dữ liệu sai.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Trả bản sao byte array ở constructor/getter hoặc không expose secret; kiểm soát quyền truy cập và vòng đời dữ liệu nhạy cảm.</p>
+      <p><strong>Kiến thức liên quan:</strong> Array mutability, defensive copying và information hiding.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-006
+      - object-006
+      - encapsulation-006
+      - encapsulation-007
+      - testing-003
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Một class khai báo private field nhưng public getter trả chính object
+      mutable chứa thông tin nội bộ, làm việc đóng gói trở nên hình thức.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Thay getter trả live object bằng immutable projection/defensive copy; chỉ expose thao tác nghiệp vụ thay đổi hợp lệ.</p>
+      <p><strong>Kiến thức liên quan:</strong> Encapsulation, aliasing và representation exposure.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-003
+      - encapsulation-006
+      - encapsulation-007
+      - testing-003
+      - refactoring-005
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Dữ liệu ngày bắt đầu và kết thúc hợp đồng được nhập hợp lệ từng field
+      nhưng kết hợp lại thành khoảng thời gian có ngày kết thúc trước ngày bắt đầu.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Dùng DateRange value object kiểm tra start &lt;= end trước khi xây hợp đồng; cùng invariant áp dụng ở mọi kênh.</p>
+      <p><strong>Kiến thức liên quan:</strong> Cross-field invariants, value objects và validation boundaries.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - lifecycle-002
+      - encapsulation-002
+      - encapsulation-005
+      - class-design-006
+      - testing-002
+      - testing-003
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Ứng dụng web kiểm tra hạn mức chuyển tiền còn batch job gọi trực tiếp
+      model nên các giao dịch batch vượt hạn mức.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Đưa kiểm tra hạn mức vào domain/application use case chung, bắt buộc web và batch gọi qua cùng điểm, kiểm thử cả hai đường.</p>
+      <p><strong>Kiến thức liên quan:</strong> Domain rule centralization, policy enforcement và boundary validation.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-008
+      - encapsulation-005
+      - class-design-007
+      - class-design-004
+      - modeling-009
+      - testing-003
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Một phương thức rút tiền trừ số dư trước khi gọi kiểm tra phí và khi
+      bước sau ném exception thì số dư đã bị thay đổi.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tính phí và kiểm tra đủ số dư trước khi trừ; nếu nhiều bước ghi, dùng transaction/rollback để trạng thái cũ không bị hỏng khi lỗi.</p>
+      <p><strong>Kiến thức liên quan:</strong> Strong exception safety, atomicity và transaction boundaries.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-008
+      - encapsulation-002
+      - encapsulation-009
+      - language-mechanics-008
+      - testing-003
+      - practice-001
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Hai luồng cập nhật hai field phụ thuộc nhau trên cùng object và một luồng
+      đọc được trạng thái chỉ mới cập nhật một nửa.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Gộp hai field thành immutable state cập nhật atomically hoặc bảo vệ cả đọc/ghi bằng cùng lock; không cho thấy trạng thái dở dang.</p>
+      <p><strong>Kiến thức liên quan:</strong> Thread safety, atomic snapshot, visibility và compound invariants.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-007
+      - encapsulation-002
+      - class-design-008
+      - design-pitfalls-008
+      - testing-003
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Danh sách trả về được bọc unmodifiable nhưng phần tử bên trong vẫn có
+      setter nên caller có thể sửa thông tin giỏ hàng.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Trả list chứa immutable DTO/deep copies thay vì chỉ unmodifiable wrapper trên các phần tử có setter.</p>
+      <p><strong>Kiến thức liên quan:</strong> Unmodifiable view vs deep immutability và defensive copies.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-006
+      - object-005
+      - object-006
+      - encapsulation-006
+      - encapsulation-007
+      - testing-003
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Một object dùng chung giữ tham chiếu tới Date mutable của caller, khiến
+      ngày hết hạn thay đổi âm thầm sau khi tạo object.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Sao chép Date ở biên vào/ra hoặc thay bằng Instant/LocalDate bất biến; không giữ tham chiếu mutable của caller.</p>
+      <p><strong>Kiến thức liên quan:</strong> Temporal value types, aliasing và defensive copying.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-003
+      - object-005
+      - encapsulation-007
+      - practice-005
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase12():
+    summary: Tính năng hủy đơn hàng được cho phép từ bất kỳ trạng thái nào vì nghiệp
+      vụ được biểu diễn bằng setter thay vì các hành vi cụ thể.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Ẩn setter, định nghĩa cancel() theo các trạng thái cho phép cùng điều kiện hoàn tiền; kiểm thử các transition không hợp lệ.</p>
+      <p><strong>Kiến thức liên quan:</strong> State machines, guard clauses và domain invariants.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - encapsulation-008
+      - encapsulation-009
+      - modeling-008
+      - design-patterns-009
+      - testing-003
+      - practice-002
+    methodName: executeCase12
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/12/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/12/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase13():
+    summary: Một phương thức thay đổi trạng thái đồng thời ghi log, gửi email và gọi
+      API ngoài, khiến thất bại ở một bước để lại object ở trạng thái khó xác định.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tách chuyển trạng thái và side effects; commit dữ liệu trước, phát sự kiện/outbox sau và kiểm soát retry/idempotency cho ngoại hệ.</p>
+      <p><strong>Kiến thức liên quan:</strong> Transaction boundary, domain events, outbox và failure isolation.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-design-004
+      - class-design-008
+      - modeling-007
+      - design-patterns-010
+      - language-mechanics-008
+      - testing-010
+    methodName: executeCase13
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/13/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/13/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase14():
+    summary: Một class công khai nhiều getter khiến các caller tự ghép lại quy tắc
+      tính tiền; sau khi công thức thay đổi, các caller trả kết quả không đồng nhất.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Đưa công thức tính tiền về PricePolicy/domain method duy nhất; client chỉ nhận kết quả thay vì tự tổ hợp getter.</p>
+      <p><strong>Kiến thức liên quan:</strong> Tell Don&#39;t Ask, cohesion, single source of truth.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - encapsulation-004
+      - encapsulation-008
+      - class-design-007
+      - class-design-009
+      - solid-002
+      - refactoring-004
+    methodName: executeCase14
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/14/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/14/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group4Controller:
+  executeCase1():
+    summary: SDK của nhà cung cấp thanh toán bị gọi trực tiếp từ domain model nên
+      đổi vendor đòi sửa cả logic đặt hàng.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tạo PaymentGateway port theo miền và adapter bọc SDK; inject dependency tại composition root để đổi vendor độc lập.</p>
+      <p><strong>Kiến thức liên quan:</strong> DIP, ports-and-adapters và anti-corruption layer.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - abstraction-008
+      - interface-009
+      - subtyping-003
+      - composition-006
+      - solid-006
+      - solid-007
+      - design-patterns-005
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: 'Hai implementation của cùng interface xử lý mã đơn hàng không tồn tại
+      khác nhau: một trả null, một ném exception, làm client lỗi ngẫu nhiên.'
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Chốt một chính sách not-found bằng Optional hoặc exception định nghĩa rõ, sửa cả hai adapter và chạy shared contract tests.</p>
+      <p><strong>Kiến thức liên quan:</strong> Interface semantic contracts, nullability và LSP.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - abstraction-003
+      - abstraction-004
+      - interface-008
+      - subtyping-007
+      - solid-004
+      - language-mechanics-008
+      - testing-004
+      - testing-005
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Một interface in hóa đơn có cả phương thức ghi dữ liệu và hủy tài liệu,
+      buộc client chỉ đọc phải phụ thuộc vào các thao tác nguy hiểm.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Chia ReadInvoice và ManageInvoice theo vai trò, chỉ cấp quyền thao tác cần thiết cho client chỉ đọc.</p>
+      <p><strong>Kiến thức liên quan:</strong> ISP, least privilege và role-based interfaces.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - interface-006
+      - solid-005
+      - design-pitfalls-006
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Một API public được mở rộng thêm default method làm class đang implements
+      hai interface phát sinh xung đột và không còn biên dịch.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Rà soát method trùng và thêm override tường minh theo quy tắc Java; kiểm tra tương thích binary/source trước nâng API.</p>
+      <p><strong>Kiến thức liên quan:</strong> Default method conflict, interface evolution và method resolution.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - interface-007
+      - inheritance-008
+      - polymorphism-006
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Một interface dành cho repository chứa quá nhiều phương thức, khiến adapter
+      chỉ hỗ trợ tra cứu phải ném UnsupportedOperationException cho thao tác ghi.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tách read repository khỏi write repository; loại những thao tác không hỗ trợ thay vì trả UnsupportedOperationException.</p>
+      <p><strong>Kiến thức liên quan:</strong> ISP, capability interfaces và contract consistency.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - interface-006
+      - subtyping-007
+      - solid-005
+      - design-pitfalls-006
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Class phụ thuộc trực tiếp nhiều implementation cụ thể khiến test tích
+      hợp phải khởi động cả database, queue và email server.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Inject ports nhỏ cho storage/queue/email vào class; test với test doubles thay vì khởi động mọi hệ thống ngoài.</p>
+      <p><strong>Kiến thức liên quan:</strong> Dependency injection, dependency inversion và unit test isolation.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - interface-009
+      - composition-006
+      - class-design-004
+      - solid-006
+      - solid-007
+      - testing-007
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Nhóm phát triển tạo interface cho mọi concrete class dù không có ranh
+      giới module hay nhu cầu thay thế, gây khó tìm luồng thực thi.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Chỉ tạo interface tại điểm biến thiên/boundary có nhu cầu; ưu tiên concrete class đơn giản cho phần ổn định, bỏ wrapper vô ích.</p>
+      <p><strong>Kiến thức liên quan:</strong> YAGNI, speculative abstraction và trade-off design.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - oop-basic-008
+      - abstraction-007
+      - solid-008
+      - design-patterns-013
+      - design-pitfalls-010
+      - refactoring-008
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Một abstraction đặt tên chung chung là execute nhận Map String,Object
+      làm các implementation diễn giải key và lỗi theo cách khác nhau.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Thay Map String,Object bằng request/command type rõ trường và validation; đặc tả đầu vào, lỗi và side effects của execute.</p>
+      <p><strong>Kiến thức liên quan:</strong> Type safety, explicit contracts và schema validation.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-005
+      - abstraction-003
+      - abstraction-004
+      - abstraction-008
+      - interface-008
+      - subtyping-003
+      - solid-004
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Service công khai hợp đồng cho phép truyền null nhưng một implementation
+      lại dereference ngay và ném NullPointerException.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Thống nhất null policy trong contract; kiểm tra null có chủ đích hoặc sửa đặc tả thành non-null, test mọi implementation.</p>
+      <p><strong>Kiến thức liên quan:</strong> Nullability, preconditions và behavioral subtyping.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-008
+      - abstraction-004
+      - interface-008
+      - subtyping-007
+      - solid-004
+      - language-mechanics-008
+      - testing-004
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Một API được thiết kế trả kết quả bất biến nhưng một implementation trả
+      danh sách có thể sửa còn implementation khác trả snapshot.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Định nghĩa ownership đầu ra: luôn immutable snapshot hoặc bản sao phòng vệ; kiểm thử cả việc sửa list và mutable elements.</p>
+      <p><strong>Kiến thức liên quan:</strong> Return-value contract, defensive copies và LSP.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-006
+      - encapsulation-006
+      - encapsulation-007
+      - interface-008
+      - solid-004
+      - testing-004
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Một class abstract có method template phụ thuộc thứ tự hook không được
+      tài liệu hóa, khiến subclass mới hoạt động sai dù compile thành công.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tài liệu hóa thứ tự hook và invariant trước/sau; đóng băng bước bắt buộc hoặc chuyển sang composition nếu subclass tùy biến quá rộng.</p>
+      <p><strong>Kiến thức liên quan:</strong> Template Method, subclass contracts và fragile base class.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - abstraction-004
+      - abstraction-005
+      - inheritance-010
+      - subtyping-001
+      - design-patterns-011
+      - testing-009
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group5Controller:
+  executeCase1():
+    summary: Một subtype Vehicle buộc đối tượng Bicycle có phương thức startEngine
+      dù xe đạp không có hành vi động cơ.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Phân tách EnginePowered khỏi Vehicle, chỉ gắn năng lực startEngine cho phương tiện có động cơ; không ép Bicycle hỗ trợ giả.</p>
+      <p><strong>Kiến thức liên quan:</strong> LSP, ISP, role interface và capability modeling.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - interface-006
+      - subtyping-007
+      - solid-005
+      - design-pitfalls-006
+      - practice-004
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Subclass tài khoản tiết kiệm cho phép số dư âm trong khi các client sử
+      dụng hợp đồng Account luôn giả định số dư không âm.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Sửa withdraw giữ invariant số dư theo Account contract; nếu quy tắc khác biệt bản chất, tạo type/hợp đồng phù hợp.</p>
+      <p><strong>Kiến thức liên quan:</strong> LSP, postconditions và invariants.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - encapsulation-002
+      - encapsulation-009
+      - abstraction-004
+      - subtyping-007
+      - solid-004
+      - testing-005
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Thay đổi thêm validation trong superclass phá luồng tạo object của nhiều
+      subclass vốn truyền dữ liệu trung gian trong constructor.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Không dùng subclass state chưa sẵn sàng khi superclass constructor chạy; đặt validation tại factory/phase thích hợp và thêm regression tests.</p>
+      <p><strong>Kiến thức liên quan:</strong> Initialization order, base-class coupling và subclass invariants.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - lifecycle-004
+      - lifecycle-009
+      - inheritance-006
+      - inheritance-010
+      - testing-002
+      - testing-009
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Một lớp con override hàm định giá nhưng âm thầm bỏ qua một khoản phí
+      mà mọi client của lớp cha đều coi là bắt buộc.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Giữ thành phần phí bắt buộc trong semantic contract, test tất cả subtype bằng shared contract tests với tình huống biên.</p>
+      <p><strong>Kiến thức liên quan:</strong> Behavioral subtyping, postconditions và contract testing.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - abstraction-004
+      - interface-008
+      - subtyping-007
+      - solid-004
+      - testing-005
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Một subclass ném loại checked exception khác với phương thức của lớp
+      cha nên đoạn override không thể biên dịch.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Sửa override chỉ ném checked exception đúng loại hoặc subtype đã khai báo; nếu cần lỗi khác, chuyển đổi theo hợp đồng.</p>
+      <p><strong>Kiến thức liên quan:</strong> Checked exception override rules và Java type system.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - inheritance-004
+      - subtyping-002
+      - language-mechanics-008
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Một method overload nhận Object và String khiến lời gọi null chạy vào
+      nhánh ngoài mong đợi hoặc gây lỗi khi chữ ký được mở rộng.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tránh overload có quan hệ type dễ mơ hồ với null; đổi tên API hoặc cast/chỉ định type tại call site theo ý định.</p>
+      <p><strong>Kiến thức liên quan:</strong> Compile-time overload resolution và null overload ambiguity.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-005
+      - subtyping-004
+      - polymorphism-005
+      - language-mechanics-004
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Developer mong static method của subclass được dispatch theo kiểu object
+      thực tế nên kết quả xử lý khác với dự đoán.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tách kỳ vọng static method dispatch khỏi dynamic polymorphism; dùng instance virtual method khi thật sự cần hành vi subtype.</p>
+      <p><strong>Kiến thức liên quan:</strong> Static method hiding và runtime dynamic dispatch.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-003
+      - subtyping-004
+      - polymorphism-006
+      - language-mechanics-004
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Một subclass khai báo field cùng tên với superclass khiến một biến được
+      truy cập theo kiểu cha và kiểu con trả hai giá trị khác nhau.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Không tái khai báo field trùng tên trong subtype; dùng accessor có nghĩa, bảo đảm một nguồn trạng thái hoặc composition.</p>
+      <p><strong>Kiến thức liên quan:</strong> Field hiding, lexical resolution và encapsulation.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - inheritance-002
+      - subtyping-004
+      - polymorphism-006
+      - polymorphism-007
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Refactor chuyển một method từ protected sang private làm các subclass
+      từng override nó không còn thay đổi được hành vi.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Giữ protected extension contract khi cần tương thích hoặc thay bằng strategy/hook chính thức và migration có test.</p>
+      <p><strong>Kiến thức liên quan:</strong> Access modifiers, override contracts và API compatibility.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-004
+      - inheritance-005
+      - subtyping-002
+      - refactoring-009
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Một class final được dùng làm điểm mở rộng trong thư viện nhưng plugin
+      bên ngoài không thể kế thừa và phải sao chép logic.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Thiết kế extension points bằng interface/strategy thay cho kế thừa class final; tránh copy implementation nội bộ.</p>
+      <p><strong>Kiến thức liên quan:</strong> Final classes, composition và plugin extensibility.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - interface-005
+      - inheritance-007
+      - composition-004
+      - design-patterns-008
+      - practice-004
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Quy tắc tính diện tích của một Square mutable kế thừa Rectangle phá kỳ
+      vọng client khi thay đổi chiều rộng nhưng chiều cao cũng đổi.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Không cho Square subtype Rectangle mutable nếu phá setWidth/setHeight contract; chọn Shape chung hoặc mô hình bất biến.</p>
+      <p><strong>Kiến thức liên quan:</strong> LSP, Rectangle-Square problem và pre/postconditions.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - subtyping-008
+      - solid-004
+      - testing-005
+      - practice-004
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase12():
+    summary: Một hệ thống mở rộng chuỗi class kế thừa sâu đến mức sửa hook trong lớp
+      gốc làm lỗi hiển thị ở nhiều màn hình không liên quan.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Giảm hierarchy sâu bằng composition/delegation; viết contract tests cho hook và refactor theo từng lớp kiểm soát tác động.</p>
+      <p><strong>Kiến thức liên quan:</strong> Fragile base class, inheritance coupling và refactoring.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - inheritance-010
+      - subtyping-001
+      - composition-008
+      - testing-009
+      - refactoring-007
+    methodName: executeCase12
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/12/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/12/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group6Controller:
+  executeCase1():
+    summary: Mã xử lý báo cáo lặp đi lặp lại instanceof cho từng loại nhân viên nên
+      thêm vị trí mới phải sửa nhiều caller.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Đưa report behavior cần biến thiên vào interface nhân viên hoặc strategy tương ứng; giảm lặp instanceof tại caller.</p>
+      <p><strong>Kiến thức liên quan:</strong> Subtype polymorphism, Tell Don&#39;t Ask và OCP.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - subtyping-006
+      - polymorphism-009
+      - solid-003
+      - design-patterns-008
+      - testing-009
+      - refactoring-006
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Một tập lệnh switch theo type code ở controller, service và UI làm hai
+      thành phần hiểu khác nhau về cùng một loại giao dịch.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tập trung mapping type code và hành vi vào một tầng hoặc polymorphic API; dùng contract tests tránh cách hiểu lệch giữa UI/service.</p>
+      <p><strong>Kiến thức liên quan:</strong> Dynamic dispatch, type codes và consistency.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - polymorphism-009
+      - solid-003
+      - design-pitfalls-005
+      - refactoring-006
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Hai biến thể tính thuế dùng cùng interface nhưng khác nhau trong việc
+      làm tròn, khiến hợp đồng chung không bảo đảm kết quả tương đương.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Xác định chính sách rounding là một phần contract của tính thuế, thống nhất precision và các case biên cho mọi implementation.</p>
+      <p><strong>Kiến thức liên quan:</strong> Semantic contracts, money rounding và contract tests.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - abstraction-004
+      - interface-008
+      - subtyping-007
+      - solid-004
+      - testing-004
+      - testing-005
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Một object được giữ trong biến kiểu superclass nhưng caller liên tục
+      cast sang subclass để gọi phương thức không nằm trong hợp đồng chung.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Bổ sung năng lực cần dùng vào hợp đồng phù hợp hoặc tách interface theo vai trò; cast chỉ tại boundary thật sự cần thông tin subtype.</p>
+      <p><strong>Kiến thức liên quan:</strong> Polymorphism, ISP và type-safe API design.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - interface-001
+      - subtyping-004
+      - subtyping-006
+      - solid-005
+      - design-pitfalls-005
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Ứng dụng muốn thêm một kênh thông báo mới nhưng phải thay đổi luồng xử
+      lý của các kênh đang hoạt động, gây lỗi hồi quy.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tách NotificationSender khỏi điều phối, thêm implementation mới tại composition root; kiểm thử không thay kết quả các kênh cũ.</p>
+      <p><strong>Kiến thức liên quan:</strong> OCP, Strategy và regression isolation.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - interface-003
+      - polymorphism-002
+      - solid-003
+      - design-patterns-008
+      - testing-009
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Một interface có nhiều implementation nhưng không có test chung, khiến
+      implementation mới trả giá trị sai cho trường hợp biên.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tạo shared contract test suite cho mọi implementation, gồm null, empty, errors, rounding và side effects.</p>
+      <p><strong>Kiến thức liên quan:</strong> LSP, semantic contracts và parameterized testing.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - abstraction-004
+      - interface-008
+      - subtyping-007
+      - solid-004
+      - testing-004
+      - testing-005
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Thiết kế dùng hàng chục subclass để mô tả mọi tổ hợp khuyến mãi, loại
+      khách hàng và phương thức vận chuyển, khiến số lớp tăng theo cấp số nhân.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Thay tổ hợp subclass bằng các policy độc lập cho promotion/customer/shipping, ghép qua composition với validation tổ hợp hợp lệ.</p>
+      <p><strong>Kiến thức liên quan:</strong> Composition over inheritance, Strategy và combinatorial explosion.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - inheritance-010
+      - composition-004
+      - composition-005
+      - solid-003
+      - design-patterns-008
+      - refactoring-007
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Một thuật toán có thể thay đổi lúc runtime lại được cố định bằng inheritance
+      nên phải tạo lại toàn bộ object mỗi khi người dùng đổi lựa chọn.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Đưa thuật toán biến đổi vào collaborator Strategy có thể thay trong phạm vi owner; không dùng subclass chỉ để đổi runtime option.</p>
+      <p><strong>Kiến thức liên quan:</strong> Strategy, runtime delegation và state ownership.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - composition-005
+      - solid-003
+      - design-patterns-008
+      - refactoring-007
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Logic vẽ từng Shape được quyết định bằng class name dạng String, khiến
+      đổi tên class làm lỗi chức năng lúc chạy.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Thay kiểm tra class name bằng Shape.draw hoặc capability dispatch theo hợp đồng; tránh String reflection cho phân loại hành vi.</p>
+      <p><strong>Kiến thức liên quan:</strong> Dynamic dispatch, polymorphism và brittle type codes.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - subtyping-004
+      - subtyping-006
+      - polymorphism-009
+      - design-pitfalls-005
+      - refactoring-006
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Khi nhiều interface có default method cùng tên, developer không biết
+      method nào được gọi và gặp lỗi xung đột ở class kết hợp.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Khi cần hai default method xung đột, override tại class và gọi rõ InterfaceName.super.method nếu thích hợp; kiểm thử behavior chọn.</p>
+      <p><strong>Kiến thức liên quan:</strong> Interface default method precedence và ambiguity.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - interface-007
+      - inheritance-008
+      - polymorphism-006
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Một trò chơi có quá nhiều trạng thái được mã hóa bằng boolean trên object
+      nhân vật, cho phép các kết hợp trạng thái vô nghĩa.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Biểu diễn các trạng thái hợp lệ bằng enum/state machine có transition guard; không để nhiều boolean độc lập tạo tổ hợp vô lý.</p>
+      <p><strong>Kiến thức liên quan:</strong> State pattern, invariants và state explosion.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - encapsulation-002
+      - encapsulation-009
+      - modeling-008
+      - design-patterns-009
+      - testing-003
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase12():
+    summary: Hai hướng xử lý checkout được gom vào một abstract superclass dù chúng
+      không chia sẻ invariant, khiến subclass phải override gần hết hành vi.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tách hai checkout flow bằng strategy/composition có contract chung thật sự; bỏ superclass không có behavior/invariant ổn định.</p>
+      <p><strong>Kiến thức liên quan:</strong> Inheritance vs composition, fragile base class và variation points.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - inheritance-010
+      - subtyping-001
+      - composition-004
+      - composition-008
+      - solid-008
+      - refactoring-007
+      - refactoring-008
+    methodName: executeCase12
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/12/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/12/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase13():
+    summary: Mã nguồn kế thừa một library base class chỉ để tái sử dụng vài utility
+      method, làm ứng dụng phụ thuộc chặt vào lifecycle của library.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Dùng utility qua collaborator hoặc static method được cấp phép thay vì extends library base; quản lý library lifecycle ở adapter.</p>
+      <p><strong>Kiến thức liên quan:</strong> Prefer composition, dependency direction và API stability.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - inheritance-010
+      - subtyping-001
+      - composition-008
+      - solid-008
+      - design-pitfalls-004
+      - refactoring-007
+    methodName: executeCase13
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/13/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/13/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group7Controller:
+  executeCase1():
+    summary: Một Order giữ cả reference Customer và bản sao địa chỉ giao hàng nhưng
+      đội phát triển không xác định được nguồn dữ liệu nào được phép thay đổi.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Phân biệt địa chỉ hiện hành từ Customer với snapshot địa chỉ tại lúc đặt hàng; đặt tên trường và thời điểm chụp rõ ràng.</p>
+      <p><strong>Kiến thức liên quan:</strong> Entity reference, historical snapshot và aggregate ownership.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-006
+      - object-007
+      - encapsulation-007
+      - composition-007
+      - class-design-006
+      - practice-011
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Danh sách children của một TreeNode đổi parent nhưng reference parent
+      cũ vẫn chứa node, gây kết quả duyệt cây không nhất quán.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Cập nhật parent/children qua reparent operation duy nhất, xóa khỏi parent cũ và thêm parent mới, cấm cycle và kiểm thử đồ thị.</p>
+      <p><strong>Kiến thức liên quan:</strong> Bidirectional association, graph invariants và consistency.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - relationships-004
+      - relationships-005
+      - relationships-006
+      - modeling-005
+      - testing-003
+      - testing-010
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Một thao tác xóa phòng ban khỏi hệ thống vô tình xóa thông tin nhân viên
+      do mô hình ownership giữa hai loại object bị hiểu sai.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Xác định nhân viên có lifecycle độc lập phòng ban; ngăn cascade delete không phù hợp, chuyển quan hệ trước khi xóa.</p>
+      <p><strong>Kiến thức liên quan:</strong> Association vs composition, ownership và cascade semantics.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - composition-002
+      - composition-007
+      - relationships-003
+      - modeling-005
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Một object giữ cả parent và child theo hai chiều nhưng quá trình serialize
+      JSON đi vào vòng lặp vô hạn.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Trả DTO hoặc cấu hình serialization một chiều/ID reference; không duyệt toàn bộ parent-child cycle khi xuất JSON.</p>
+      <p><strong>Kiến thức liên quan:</strong> Object graph cycles, serialization boundaries và DTO mapping.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - relationships-005
+      - relationships-006
+      - class-design-004
+      - class-design-009
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Hai aggregate có reference vòng và constructor yêu cầu mỗi bên được tạo
+      trước, khiến quá trình khởi tạo không thể hoàn tất.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Phá constructor cycle bằng factory/orchestrator và ID/reference sau khi tạo entity hợp lệ; xem lại ranh giới aggregate.</p>
+      <p><strong>Kiến thức liên quan:</strong> Circular dependencies, aggregate boundaries và construction order.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - relationships-007
+      - modeling-005
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Nhiều đối tượng đọc trực tiếp dữ liệu sâu qua chuỗi getter khiến đổi
+      cấu trúc nội bộ của Customer kéo theo sửa hàng loạt service.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Đưa thao tác vào method cấp object sở hữu thông tin hoặc facade theo nhu cầu; giảm chuỗi getter và sửa sâu từ ngoài.</p>
+      <p><strong>Kiến thức liên quan:</strong> Law of Demeter, Tell Don&#39;t Ask và encapsulation.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - encapsulation-004
+      - encapsulation-008
+      - class-design-009
+      - design-pitfalls-007
+      - refactoring-004
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Một Cart public method trả live list nên bên khác thêm item mà không
+      áp dụng giới hạn số lượng mặt hàng.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Ẩn live list Cart, cho addItem kiểm giới hạn và trả immutable snapshot; mọi update phải đi qua aggregate root.</p>
+      <p><strong>Kiến thức liên quan:</strong> Aggregate boundary, representation exposure và invariant.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - encapsulation-006
+      - encapsulation-008
+      - composition-007
+      - class-design-007
+      - testing-003
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Một class đăng ký listener lên object sống lâu nhưng không hủy đăng ký,
+      khiến object không còn dùng vẫn bị giữ trong bộ nhớ.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Gắn unsubscribe/close với lifecycle listener hoặc dùng weak subscription khi phù hợp; kiểm thử object được giải phóng.</p>
+      <p><strong>Kiến thức liên quan:</strong> Observer lifecycle, memory retention và resource cleanup.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - lifecycle-006
+      - design-patterns-010
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Đội phát triển hiểu nhầm composition nghĩa là tự động quản lý vòng đời
+      mọi dependency, dẫn đến đóng nhầm collaborator được chia sẻ.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Ghi rõ ai tạo/đóng dependency; không đóng shared collaborator khi một composite ngừng dùng, inject owner quản lý scope.</p>
+      <p><strong>Kiến thức liên quan:</strong> Composition ownership, lifecycle scopes và dependency management.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - lifecycle-008
+      - composition-007
+      - relationships-003
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Một module tự khởi tạo concrete repository trong constructor nên test
+      unit phải kết nối database thật dù chỉ cần kiểm tra phép tính.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Inject Repository interface vào module; dùng fake/in-memory implementation trong unit tests và adapter cụ thể ở composition root.</p>
+      <p><strong>Kiến thức liên quan:</strong> Constructor injection, DIP và test isolation.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - interface-009
+      - composition-006
+      - solid-006
+      - solid-007
+      - testing-007
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Service nhận một đối tượng cấu hình mutable chia sẻ cho toàn ứng dụng
+      và request A có thể thay đổi tham số xử lý của request B.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Chuyển config chia sẻ thành immutable snapshot per-request hoặc theo scope; không cho request mutate singleton settings.</p>
+      <p><strong>Kiến thức liên quan:</strong> Immutable configuration, request scope và concurrent aliasing.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-006
+      - object-005
+      - object-007
+      - design-pitfalls-008
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase12():
+    summary: Một thay đổi thiết kế từ one-to-many sang many-to-many làm nhiều method
+      giả định mỗi item chỉ thuộc một parent trả kết quả sai.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Mô hình quan hệ many-to-many bằng association entity/collection có identity rõ; sửa cardinality assumptions và kiểm thử add/remove hai chiều.</p>
+      <p><strong>Kiến thức liên quan:</strong> Multiplicity, association invariants và relation modeling.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - relationships-004
+      - relationships-006
+      - modeling-005
+      - testing-010
+    methodName: executeCase12
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/12/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/12/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase13():
+    summary: Một entity bị tham chiếu bởi nhiều domain object nhưng mỗi nơi giữ bản
+      sao dữ liệu nên việc cập nhật không đồng bộ theo thời gian.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Giữ reference theo entity ID tới nguồn chân lý; dùng snapshot có chủ đích khi lịch sử cần cố định, không sao chép tùy tiện.</p>
+      <p><strong>Kiến thức liên quan:</strong> Entity identity, source of truth và consistency.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - object-004
+      - object-007
+      - composition-007
+      - relationships-001
+      - class-design-006
+      - practice-011
+    methodName: executeCase13
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/13/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/13/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group8Controller:
+  executeCase1():
+    summary: Hai module import class của nhau qua một chuỗi package, gây phụ thuộc
+      vòng và ngăn build hoặc test từng module độc lập.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Lập đồ thị dependency để tìm chu trình, tách shared contract xuống module độc lập hoặc thay cuộc gọi ngược bằng port/event.</p>
+      <p><strong>Kiến thức liên quan:</strong> Module cycles, DIP và acyclic dependencies.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - relationships-007
+      - class-design-003
+      - solid-006
+      - design-pitfalls-007
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Một high-level rule phải đổi theo một thay đổi nhỏ trong SQL query vì
+      nghiệp vụ phụ thuộc trực tiếp lớp persistence.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Để high-level policy phụ thuộc Repository port; SQL adapter implement phía infrastructure, không cho query detail lan vào business rule.</p>
+      <p><strong>Kiến thức liên quan:</strong> Dependency Inversion, persistence ports và hexagonal architecture.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - abstraction-008
+      - interface-009
+      - class-design-004
+      - solid-006
+      - testing-007
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Class quản lý đơn hàng vừa gửi email, vừa tính phí, vừa ghi sổ và vừa
+      cập nhật kho, nên một lỗi hạ tầng làm hỏng thao tác kinh doanh khác.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tách pricing, stock, accounting, notification; điều phối use case với transaction và cơ chế xử lý side effects thất bại.</p>
+      <p><strong>Kiến thức liên quan:</strong> SRP, transaction boundaries và fault isolation.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-design-001
+      - class-design-004
+      - solid-002
+      - design-pitfalls-001
+      - testing-010
+      - refactoring-003
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Một class chỉ cần thao tác đọc phải inject cả interface quản trị xóa
+      dữ liệu, tạo quyền truy cập vượt nhu cầu.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tách ReadOnlyRepository và AdminRepository; inject chỉ khả năng cần dùng, không cấp quyền ghi/xóa cho read-only client.</p>
+      <p><strong>Kiến thức liên quan:</strong> ISP, least privilege và capability security.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - interface-006
+      - solid-005
+      - design-pitfalls-006
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Một phương thức service có 18 dependency trong constructor, cho thấy
+      nhiều trách nhiệm không liên quan đã bị dồn vào cùng điểm điều phối.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Nhóm 18 dependency theo trách nhiệm/use case, tách class điều phối quá lớn; tránh chữa bằng service locator che số phụ thuộc.</p>
+      <p><strong>Kiến thức liên quan:</strong> SRP, high coupling và constructor dependency smell.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-design-001
+      - class-design-002
+      - solid-002
+      - design-pitfalls-001
+      - refactoring-003
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Một interface được sửa thêm method ghi để phục vụ một client làm tất
+      cả implementation chỉ đọc cũ không còn biên dịch.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Thay interface tổng bằng read/write contracts tách biệt, giữ API cũ nếu cần migration; bảo vệ compatibility bằng compile tests.</p>
+      <p><strong>Kiến thức liên quan:</strong> ISP, interface evolution và backward compatibility.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - interface-006
+      - interface-007
+      - solid-005
+      - design-pitfalls-006
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Các lớp application và infrastructure gọi ngược lẫn nhau, gây một thay
+      đổi nhỏ trong adapter dẫn đến hiệu ứng dây chuyền sang business rules.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Định hướng dependency từ application tới port, infrastructure implement port; loại import ngược và kiểm tra đồ thị module.</p>
+      <p><strong>Kiến thức liên quan:</strong> Dependency Rule, DIP và architecture boundaries.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - abstraction-008
+      - interface-009
+      - class-design-004
+      - solid-006
+      - design-pitfalls-007
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Kỹ sư áp dụng mọi nguyên tắc SOLID bằng cách tạo thêm factory, decorator,
+      provider và service cho ứng dụng nhỏ, khiến lỗi thực tế bị che khuất.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Bỏ abstraction không tạo biến thể/test seam có giá trị; tối ưu cho luồng nhỏ bằng thiết kế dễ đọc và thay đổi có kiểm chứng.</p>
+      <p><strong>Kiến thức liên quan:</strong> SOLID pragmatism, KISS, YAGNI.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - oop-basic-008
+      - abstraction-007
+      - solid-008
+      - design-patterns-013
+      - design-pitfalls-010
+      - refactoring-008
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Một component lấy dependency từ global service locator trong từng method
+      nên test không biết cần chuẩn bị những dịch vụ nào trước khi chạy.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Đưa dependency bắt buộc vào constructor thay vì tra locator tại runtime; test nêu rõ fake cần cung cấp.</p>
+      <p><strong>Kiến thức liên quan:</strong> Dependency injection vs Service Locator và explicit dependencies.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - composition-006
+      - solid-007
+      - testing-007
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Một Singleton mutable chứa người dùng hiện tại bị tái sử dụng trên nhiều
+      request, làm dữ liệu phiên đăng nhập bị lẫn giữa các khách hàng.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Không lưu current user trong singleton; đưa identity vào request/security context đã xác thực, tránh state mutable chia sẻ.</p>
+      <p><strong>Kiến thức liên quan:</strong> Singleton scope, thread isolation và authorization context.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-003
+      - object-007
+      - design-patterns-004
+      - design-pitfalls-008
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Trong quá trình cấu hình dependency injection, hai service constructor
+      phụ thuộc ngược lẫn nhau làm ứng dụng không khởi động được.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tách trách nhiệm để loại constructor cycle; có thể di chuyển orchestration lên service thứ ba hoặc dùng port phụ thuộc một chiều.</p>
+      <p><strong>Kiến thức liên quan:</strong> DI cycle, DAG construction và service decomposition.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - composition-006
+      - relationships-007
+      - solid-007
+      - design-pitfalls-007
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase12():
+    summary: Nhiều class dùng chung một interface khổng lồ chỉ vì có vài method trùng
+      tên, buộc implementation có nhiều hành vi không hợp lệ.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tách interface theo năng lực thực sự được hỗ trợ; không ép implementation ném lỗi cho những method vô nghĩa.</p>
+      <p><strong>Kiến thức liên quan:</strong> ISP, LSP và role segregation.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - interface-006
+      - solid-005
+      - design-pitfalls-006
+    methodName: executeCase12
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/12/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/12/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase13():
+    summary: Một API chỉ cần thêm loại chiết khấu mới nhưng developer phải thay đổi
+      cấu trúc core framework và tất cả nơi gọi.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Chỉ mở rộng tại điểm biến thiên chính sách chiết khấu, không buộc sửa framework core; giữ contract ổn định và test tương thích.</p>
+      <p><strong>Kiến thức liên quan:</strong> OCP, extension points và abstraction boundaries.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - interface-008
+      - polymorphism-009
+      - solid-003
+      - design-patterns-008
+      - testing-009
+    methodName: executeCase13
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/13/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/13/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group9Controller:
+  executeCase1():
+    summary: Nhóm áp dụng Strategy cho ba công thức đang thay đổi nhưng logic chọn
+      strategy lại bị nhân bản trong nhiều controller.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Tập trung Strategy selection tại một factory/application boundary; các controller chỉ gọi dịch vụ định giá qua contract.</p>
+      <p><strong>Kiến thức liên quan:</strong> Strategy, composition root và DRY selection logic.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - composition-005
+      - composition-006
+      - solid-003
+      - design-patterns-008
+      - testing-009
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Một factory dùng tham số environment lấy từ biến toàn cục khiến object
+      trong test và production bị tạo với các dependency khác kỳ vọng.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Truyền environment/config tường minh vào factory; kiểm thử tương ứng từng profile, tránh đọc mutable global state.</p>
+      <p><strong>Kiến thức liên quan:</strong> Abstract Factory, configuration injection và reproducibility.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - lifecycle-005
+      - composition-006
+      - solid-007
+      - design-patterns-002
+      - testing-007
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Một Abstract Factory tạo database client của môi trường staging nhưng
+      messaging client của production, khiến một thao tác phát dữ liệu sai môi trường.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Ràng buộc tất cả client trong cùng bộ factory theo environment duy nhất; validate profile và loại mixed dependencies trước khởi tạo.</p>
+      <p><strong>Kiến thức liên quan:</strong> Abstract Factory product families, environment isolation.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - lifecycle-005
+      - design-patterns-002
+      - testing-010
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Decorator ghi audit log không giữ nguyên exception của service bên trong
+      khiến client nhận lỗi khác với contract ban đầu.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Decorator nên giữ nguyên success/error contract, log lỗi rồi rethrow thích hợp; không thay loại exception ngoài hợp đồng.</p>
+      <p><strong>Kiến thức liên quan:</strong> Decorator transparency, exception propagation và LSP.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - abstraction-004
+      - interface-008
+      - subtyping-007
+      - solid-004
+      - design-patterns-006
+      - language-mechanics-008
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Adapter tích hợp dịch vụ bên ngoài rò rỉ enum và DTO vendor vào domain
+      nên nâng version SDK làm hàng loạt object không biên dịch.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Map DTO/enum/error vendor sang domain contracts trong Adapter; không expose SDK ở domain public API.</p>
+      <p><strong>Kiến thức liên quan:</strong> Adapter, anti-corruption layer và vendor isolation.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - abstraction-008
+      - interface-009
+      - class-design-004
+      - solid-006
+      - design-patterns-005
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Facade gộp nhiều lời gọi backend nhưng một bước phụ thất bại khiến caller
+      không biết thao tác chính đã thành công hay chưa.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Định nghĩa contract trả kết quả của Facade theo từng bước, trạng thái partial success và retry/idempotency thay vì che lỗi phụ.</p>
+      <p><strong>Kiến thức liên quan:</strong> Facade, failure semantics và idempotent orchestration.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - abstraction-004
+      - class-design-008
+      - modeling-007
+      - design-patterns-007
+      - language-mechanics-008
+      - testing-010
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Một hệ thống Observer gọi đồng bộ hàng chục subscriber, trong đó một
+      subscriber ném exception khiến các subscriber còn lại không nhận sự kiện.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Cô lập callback bằng cơ chế dispatch xử lý lỗi riêng, chọn async/event queue khi phù hợp; mô tả thứ tự và retry rõ.</p>
+      <p><strong>Kiến thức liên quan:</strong> Observer, fault isolation và event delivery guarantees.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - design-patterns-010
+      - testing-010
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Một listener không được unsubscribe sau khi tab UI đóng, khiến mỗi lần
+      mở lại tab đều xuất hiện thông báo trùng lặp.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Unsubscribe khi đóng tab, quản lý subscription handle và idempotent register; kiểm thử mở/đóng không nhân listener.</p>
+      <p><strong>Kiến thức liên quan:</strong> Observer listener lifecycle, cleanup và duplicate events.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - lifecycle-006
+      - design-patterns-010
+      - testing-010
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Template Method trong superclass có hook được override thay đổi thứ tự
+      xử lý, khiến dữ liệu được ghi trước khi validation.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Đóng băng bước validate bắt buộc trước write trong template; không để hook phá thứ tự hoặc chuyển sang composition.</p>
+      <p><strong>Kiến thức liên quan:</strong> Template Method, invariant sequencing và hook contracts.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - abstraction-004
+      - inheritance-007
+      - subtyping-001
+      - design-patterns-011
+      - testing-009
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Builder cho object cấu hình cho phép hai tùy chọn loại trừ nhau cùng
+      xuất hiện, gây lỗi chỉ lúc đưa vào production.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Kiểm tra các option loại trừ nhau ở build(), đưa ra lỗi trước khi tạo config; nếu phù hợp dùng kiểu tổng để ngăn kết hợp sai.</p>
+      <p><strong>Kiến thức liên quan:</strong> Builder, cross-field invariants và validation.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - lifecycle-005
+      - encapsulation-002
+      - encapsulation-005
+      - design-patterns-003
+      - testing-002
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: State pattern bị sử dụng với state object có mutable dữ liệu chia sẻ,
+      khiến transition của phiên làm việc này thay đổi phiên khác.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Không chia sẻ mutable state object giữa phiên; tạo state riêng per aggregate hoặc state strategy bất biến; bảo vệ transitions.</p>
+      <p><strong>Kiến thức liên quan:</strong> State pattern, object lifetime và shared mutable state.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - class-003
+      - object-005
+      - object-007
+      - design-patterns-009
+      - design-pitfalls-008
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase12():
+    summary: Một pattern Decorator được lồng qua nhiều tầng khiến stack trace không
+      còn cho biết lớp nào thay đổi dữ liệu request.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Giảm decorator layers, đặt tên/tracing rõ; xác định trách nhiệm từng wrapper và giữ stack trace/cause khi bắt lỗi.</p>
+      <p><strong>Kiến thức liên quan:</strong> Decorator chain, observability và exception chaining.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - composition-003
+      - design-patterns-006
+      - design-patterns-013
+      - design-pitfalls-010
+      - refactoring-008
+    methodName: executeCase12
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/12/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/12/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase13():
+    summary: Đội phát triển thay switch đơn giản bằng nhiều pattern trước khi có yêu
+      cầu biến thể, khiến người mới khó sửa một quy tắc nhỏ.
+    description: |-
+      <p><strong>Hướng xử lý:</strong> Chỉ dùng pattern khi có variation/failure mode thực, so sánh chi phí lớp mới với switch đơn giản; bỏ speculative abstraction.</p>
+      <p><strong>Kiến thức liên quan:</strong> KISS, YAGNI và pattern trade-offs.</p>
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    readmeRelated:
+      anchorList:
+      - oop-basic-008
+      - abstraction-007
+      - solid-008
+      - design-patterns-001
+      - design-patterns-013
+      - refactoring-008
+    methodName: executeCase13
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/13/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/13/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

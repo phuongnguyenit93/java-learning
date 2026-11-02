@@ -1,0 +1,3601 @@
+Group10Controller:
+  executeCase1():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase12():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase12
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group10Controller.java
+    mapping: '@GetMapping("/case/12/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/10/case/12/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group11Controller:
+  executeCase1():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group11Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/11/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group12Controller:
+  executeCase1():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group12Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group12Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group12Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group12Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group12Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group12Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group12Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group12Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/12/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group13Controller:
+  executeCase1():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group13Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/13/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group1Controller:
+  executeCase1():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9(String):
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase9
+    params:
+    - mode
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase12():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase12
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group1Controller.java
+    mapping: '@GetMapping("/case/12/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/1/case/12/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group2Controller:
+  executeCase1():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase12():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase12
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/12/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/12/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase13():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase13
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/13/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/13/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase14():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase14
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group2Controller.java
+    mapping: '@GetMapping("/case/14/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/2/case/14/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group3Controller:
+  executeCase1():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase12():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase12
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/12/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/12/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase13():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase13
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/13/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/13/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase14():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase14
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group3Controller.java
+    mapping: '@GetMapping("/case/14/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/3/case/14/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group4Controller:
+  executeCase1():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group4Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/4/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group5Controller:
+  executeCase1():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase12():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase12
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group5Controller.java
+    mapping: '@GetMapping("/case/12/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/5/case/12/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group6Controller:
+  executeCase1():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase12():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase12
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/12/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/12/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase13():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase13
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group6Controller.java
+    mapping: '@GetMapping("/case/13/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/6/case/13/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group7Controller:
+  executeCase1():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase12():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase12
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/12/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/12/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase13():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase13
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group7Controller.java
+    mapping: '@GetMapping("/case/13/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/7/case/13/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group8Controller:
+  executeCase1():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase12():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase12
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/12/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/12/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase13():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase13
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group8Controller.java
+    mapping: '@GetMapping("/case/13/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/8/case/13/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+Group9Controller:
+  executeCase1():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase1
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/1/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/1/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase2():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase2
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/2/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/2/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase3():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase3
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/3/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/3/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase4():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase4
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/4/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/4/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase5():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase5
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/5/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/5/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase6():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase6
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/6/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/6/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase7():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase7
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/7/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/7/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase8():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase8
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/8/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/8/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase9():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase9
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/9/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/9/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase10():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase10
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/10/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/10/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase11():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase11
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/11/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/11/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase12():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase12
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/12/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/12/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  executeCase13():
+    summary: Title not provided
+    description: Detailed description not provided
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: executeCase13
+    params: [
+      ]
+    path: com/example/learning/casestudy/controller/Group9Controller.java
+    mapping: '@GetMapping("/case/13/execute")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /case-studies/group/9/case/13/execute
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
