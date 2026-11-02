@@ -388,7 +388,7 @@ module
     │   │   │   │   ├── core-processing
     │   │   │   │   └── scaling-operations
     │   │   │   ├── spring-boot
-    │   │   │   │   ├── fundamentals
+    │   │   │   │   ├── fundamentals [SPRING_BOOT_FUNDAMENTALS]
     │   │   │   │   ├── externalized-configuration
     │   │   │   │   ├── auto-configuration
     │   │   │   │   ├── application-runtime
@@ -452,7 +452,7 @@ module
     │   │   │   │   ├── authentication
     │   │   │   │   ├── authorization
     │   │   │   │   ├── federation
-    │   │   │   │   ├── fundamentals
+    │   │   │   │   ├── fundamentals [SPRING_SECURITY_FUNDAMENTALS]
     │   │   │   │   ├── oauth2-oidc
     │   │   │   │   ├── reactive
     │   │   │   │   └── servlet

@@ -759,15 +759,6 @@ enum ModuleListEnum {
             []
     ),
 
-    FUNDAMENTALS(
-            'module:platform:development:programming:framework:spring-boot:fundamentals',
-            'module/platform/development/programming/framework/spring-boot/fundamentals',
-            '',
-            '',
-            false,
-            []
-    ),
-
     GLOBAL_EXCEPTION_HANDLER(
             'project-build:springboot-runtime:exception-handler-servlet',
             'project-build/springboot-runtime/exception-handler-servlet',
@@ -1818,6 +1809,15 @@ enum ModuleListEnum {
             'LIBRARY',
             'Runtime dependency wrapper for Spring Boot Actuator',
             true,
+            []
+    ),
+
+    SPRING_BOOT_FUNDAMENTALS(
+            'module:platform:development:programming:framework:spring-boot:fundamentals',
+            'module/platform/development/programming/framework/spring-boot/fundamentals',
+            '',
+            '',
+            false,
             []
     ),
 
