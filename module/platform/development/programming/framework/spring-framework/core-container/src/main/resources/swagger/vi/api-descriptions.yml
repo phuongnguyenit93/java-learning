@@ -39,7 +39,9 @@ DependencyFailureExperimentController:
       anchor: dependency-resolution-failures
     methodName: observeDependencyFailure
     params:
-    - scenario
+    - name: scenario
+      summary: Kịch bản dependency failure
+      description: Chọn một lỗi context-refresh có giới hạn để quan sát. Các giá trị hỗ trợ gồm MISSING, AMBIGUOUS và CONSTRUCTOR_CYCLE. Endpoint mặc định dùng MISSING.
     path: com/example/learning/corecontainer/experiment/controller/DependencyFailureExperimentController.java
     mapping: '@GetMapping("/failure")'
     httpMethods:

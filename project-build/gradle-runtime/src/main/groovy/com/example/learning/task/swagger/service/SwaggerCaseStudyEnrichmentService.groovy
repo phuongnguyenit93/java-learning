@@ -56,11 +56,8 @@ class SwaggerCaseStudyEnrichmentService {
                     s.isBlank() || s.matches('(?s)<h2>Group[0-9]+ Controller</h2>\\s*<p>(Đây là mô tả|This is a description)</p>')
                 })) changed++
                 else if (controller.description != heading) preserved++
-                if (controller.readmeRelated instanceof Map &&
-                        (controller.readmeRelated as Map).size() == 1 &&
-                        !(controller.readmeRelated as Map).file?.toString()?.trim()) {
-                    controller.remove('readmeRelated')
-                }
+                // No controller-level Knowledge relationship in Swagger.
+                if (controller.remove('readmeRelated') != null) changed++
                 List cases = group.cases instanceof List ? group.cases as List : null
                 if (cases == null || cases.isEmpty()) throw new GradleException('No cases in ' + name)
                 Set matched = new LinkedHashSet()

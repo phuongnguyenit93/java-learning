@@ -145,14 +145,32 @@ class DynamicSwaggerRegistrarTest {
         mapParameter.setAccessible(true);
         Parameter parameter = new Parameter().name("request");
         mapParameter.invoke(registrar, parameter, yamlMapper.readTree("""
-                request:
-                  summary: Parameter summary
-                  description: Parameter explanation
+                params:
+                  - name: request
+                    summary: Parameter summary
+                    description: Parameter explanation
                 """));
         assertEquals(
                 "**Parameter summary**: Parameter explanation",
                 parameter.getDescription()
         );
+        Parameter different = new Parameter().name("request");
+        mapParameter.invoke(registrar, different, yamlMapper.readTree("""
+                params:
+                  - name: request
+                    summary: Different method
+                    description: Own parameter description
+                """));
+        assertEquals("**Different method**: Own parameter description",
+                different.getDescription());
+        Parameter missing = new Parameter().name("other").description("Spring annotation");
+        mapParameter.invoke(registrar, missing, yamlMapper.readTree("""
+                params:
+                  - name: request
+                    summary: Unrelated
+                    description: Must not apply
+                """));
+        assertEquals("Spring annotation", missing.getDescription());
     }
 
     @Test

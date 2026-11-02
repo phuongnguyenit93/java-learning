@@ -70,13 +70,6 @@ ${swaggerDirectory.absolutePath}
                 )
 
 
-        File paramsFile =
-                new File(
-                        swaggerDirectory,
-                        'api-params.yml'
-                )
-
-
         File controllerDescriptionFile =
                 new File(
                         swaggerDirectory,
@@ -103,12 +96,6 @@ ${swaggerDirectory.absolutePath}
                 )
 
 
-        Map<String, Object> paramsData =
-                loadMap(
-                        paramsFile
-                )
-
-
         Map<String, Object> controllerDescriptionData =
                 loadMap(
                         controllerDescriptionFile
@@ -128,13 +115,6 @@ ${swaggerDirectory.absolutePath}
         )
 
 
-        mergeParamsData(
-                paramsData,
-                scanResult.parameterNames,
-                defaults
-        )
-
-
         mergeControllerDescriptionData(
                 controllerDescriptionData,
                 scanResult,
@@ -149,11 +129,7 @@ ${swaggerDirectory.absolutePath}
         )
 
 
-        validateReadmeRelationships(
-                swaggerDirectory,
-                controllerDescriptionData,
-                apiData
-        )
+        validateReadmeRelationships(swaggerDirectory, apiData)
 
 
         /*
@@ -162,12 +138,6 @@ ${swaggerDirectory.absolutePath}
         String apiYaml =
                 writer.dump(
                         apiData
-                )
-
-
-        String paramsYaml =
-                writer.dump(
-                        paramsData
                 )
 
 
@@ -190,12 +160,6 @@ ${swaggerDirectory.absolutePath}
 
 
         writeSafely(
-                paramsFile,
-                paramsYaml
-        )
-
-
-        writeSafely(
                 controllerDescriptionFile,
                 controllerDescriptionYaml
         )
@@ -208,185 +172,40 @@ ${swaggerDirectory.absolutePath}
     }
 
 
+    /** Only method-level legacy file/anchor references require file validation. */
     private static void validateReadmeRelationships(
             File swaggerDirectory,
-            Map<String, Object> controllerDescriptionData,
             Map<String, Object> apiData
     ) {
+        File projectDirectory = resolveProjectDirectory(swaggerDirectory)
+        if (projectDirectory == null) return
 
-        File projectDirectory =
-                resolveProjectDirectory(
-                        swaggerDirectory
-                )
-
-
-        if (projectDirectory == null) {
-            return
-        }
-
-
-        String language =
-                swaggerDirectory.name
-
-
-        File menuDirectory =
-                new File(
-                        projectDirectory,
-                        "content/readme/docs/${language}/menu"
-                )
-
-
-        controllerDescriptionData.each {
-            String controllerName,
-            Object controllerValue ->
-
-                Map<String, Object> controllerEntry =
-                        requireMap(
-                                controllerValue,
-                                "Invalid Swagger controller description entry: ${controllerName}"
-                        )
-
-
-                String controllerFile =
-                        readReadmeField(
-                                controllerEntry,
-                                'file'
-                        )
-
-
-                if (
-                        controllerFile != null &&
-                                !controllerFile.isBlank() &&
-                                !isValidReadmeFile(
-                                        menuDirectory,
-                                        controllerFile
-                                )
-                ) {
-
-                    warnReadmeMapping(
-                            language,
-                            controllerName,
-                            'INVALID_FILE',
-                            controllerFile,
-                            null
-                    )
-                }
-
-
-                Object apiControllerValue =
-                        apiData[
-                                controllerName
-                        ]
-
-
-                if (apiControllerValue == null) {
+        String language = swaggerDirectory.name
+        File menuDirectory = new File(projectDirectory,
+                "content/readme/docs/${language}/menu")
+        apiData.each { String controllerName, Object apiControllerValue ->
+            Map<String, Object> apiController = requireMap(apiControllerValue,
+                    "Invalid Swagger API controller entry: ${controllerName}")
+            apiController.each { String methodSignature, Object methodValue ->
+                Map<String, Object> methodEntry = requireMap(methodValue,
+                        "Invalid Swagger API entry: ${controllerName}#${methodSignature}")
+                String anchor = readReadmeField(methodEntry, 'anchor')
+                if (anchor == null || anchor.isBlank()) return
+                String methodFile = readReadmeField(methodEntry, 'file')
+                if (methodFile == null || methodFile.isBlank() ||
+                        !isValidReadmeFile(menuDirectory, methodFile)) {
+                    warnReadmeMapping(language, "${controllerName}#${methodSignature}",
+                            'INVALID_FILE', methodFile, anchor)
                     return
                 }
-
-
-                Map<String, Object> apiController =
-                        requireMap(
-                                apiControllerValue,
-                                "Invalid Swagger API controller entry: ${controllerName}"
-                        )
-
-
-                apiController.each {
-                    String methodSignature,
-                    Object methodValue ->
-
-                        Map<String, Object> methodEntry =
-                                requireMap(
-                                        methodValue,
-                                        "Invalid Swagger API entry: ${controllerName}#${methodSignature}"
-                                )
-
-
-                        String anchor =
-                                readReadmeField(
-                                        methodEntry,
-                                        'anchor'
-                                )
-
-
-                        if (
-                                anchor == null ||
-                                        anchor.isBlank()
-                        ) {
-                            return
-                        }
-
-
-                        String methodFile =
-                                readReadmeField(
-                                        methodEntry,
-                                        'file'
-                                )
-
-
-                        String resolvedFile =
-                                methodFile != null &&
-                                        !methodFile.isBlank()
-                                        ? methodFile
-                                        : controllerFile
-
-
-                        if (
-                                resolvedFile == null ||
-                                        resolvedFile.isBlank() ||
-                                        !isValidReadmeFile(
-                                                menuDirectory,
-                                                resolvedFile
-                                        )
-                        ) {
-
-                            warnReadmeMapping(
-                                    language,
-                                    "${controllerName}#${methodSignature}",
-                                    'INVALID_FILE',
-                                    resolvedFile,
-                                    anchor
-                            )
-
-                            return
-                        }
-
-
-                        File readmeFile =
-                                new File(
-                                        menuDirectory,
-                                        normalizeReadmeFile(
-                                                resolvedFile
-                                        )
-                                )
-
-
-                        String markdown =
-                                readmeFile.getText(
-                                        'UTF-8'
-                                )
-
-
-                        if (
-                                !containsReadmeAnchor(
-                                        markdown,
-                                        anchor
-                                )
-                        ) {
-
-                            warnReadmeMapping(
-                                    language,
-                                    "${controllerName}#${methodSignature}",
-                                    'INVALID_ANCHOR',
-                                    resolvedFile,
-                                    anchor
-                            )
-                        }
+                File readmeFile = new File(menuDirectory, normalizeReadmeFile(methodFile))
+                if (!containsReadmeAnchor(readmeFile.getText('UTF-8'), anchor)) {
+                    warnReadmeMapping(language, "${controllerName}#${methodSignature}",
+                            'INVALID_ANCHOR', methodFile, anchor)
                 }
+            }
         }
     }
-
-
     private static File resolveProjectDirectory(
             File swaggerDirectory
     ) {
@@ -710,9 +529,8 @@ ${controllerName}
                 }
 
 
-                // Controller metadata does not require a fixed README file path.
-                // Preserve any authored legacy relation without creating one.
-
+                // Controller descriptions have no readmeRelated schema.
+                entry.remove('readmeRelated')
 
                 merged[
                         controllerName
@@ -816,8 +634,11 @@ ${controllerName}
 
                         apiEntry[
                                 'params'
-                        ] =
-                                metadata.params
+                        ] = mergeMethodParameters(
+                                apiEntry['params'],
+                                metadata.params,
+                                defaults
+                        )
 
 
                         apiEntry[
@@ -942,108 +763,39 @@ ${metadata.methodSignature}
     }
 
 
-    private static void mergeParamsData(
-            Map<String, Object> paramsData,
+    /**
+     * Source owns parameter identity/order; authors own localized prose.
+     * Parameter descriptions are scoped to each API method, never global names.
+     */
+    private static List<Map<String, Object>> mergeMethodParameters(
+            Object existing,
             Collection<String> currentParameters,
             SwaggerDescriptionDefault defaults
     ) {
-
-        /*
-         * Parameter cũ vẫn giữ lại,
-         * chỉ đổi usage=false.
-         */
-        paramsData.each {
-            String parameterName,
-            Object value ->
-
-                Map<String, Object> entry =
-                        requireMap(
-                                value,
-                                """
-Invalid Swagger parameter entry:
-
-${parameterName}
-"""
-                        )
-
-
-                entry[
-                        'usage'
-                ] =
-                        false
+        if (existing != null && !(existing instanceof List)) {
+            throw new IllegalStateException('Swagger method params must be a list.')
         }
-
-
-        currentParameters.each {
-            String parameterName ->
-
-                Object existing =
-                        paramsData[
-                                parameterName
-                        ]
-
-
-                Map<String, Object> entry
-
-
-                if (existing == null) {
-
-                    entry =
-                            new LinkedHashMap<>()
-
-
-                    paramsData[
-                            parameterName
-                    ] =
-                            entry
-                }
-                else {
-
-                    entry =
-                            requireMap(
-                                    existing,
-                                    """
-Invalid Swagger parameter entry:
-
-${parameterName}
-"""
-                            )
-                }
-
-
-                /*
-                 * HUMAN OWNED
-                 */
-                if (
-                        !entry.containsKey(
-                                'summary'
-                        )
-                ) {
-
-                    entry[
-                            'summary'
-                    ] =
-                            defaults.summary
-                }
-
-
-                if (
-                        !entry.containsKey(
-                                'description'
-                        )
-                ) {
-
-                    entry[
-                            'description'
-                    ] =
-                            defaults.description
-                }
-
-
-                entry[
-                        'usage'
-                ] =
-                        true
+        Map<String, Map<String, Object>> byName = new LinkedHashMap<>()
+        (existing ?: []).each { Object value ->
+            if (!(value instanceof Map) || !(value.name instanceof String) ||
+                    !(value.name as String).trim()) {
+                throw new IllegalStateException(
+                        'Swagger method params must contain objects with a nonempty name.')
+            }
+            String name = value.name as String
+            if (byName.containsKey(name)) {
+                throw new IllegalStateException('Duplicate Swagger method parameter: ' + name)
+            }
+            byName[name] = new LinkedHashMap<>(value as Map)
+        }
+        return currentParameters.collect { String name ->
+            Map<String, Object> param = byName[name] ?: new LinkedHashMap<>()
+            param['name'] = name
+            if (!param.containsKey('summary')) param['summary'] = defaults.summary
+            if (!param.containsKey('description')) param['description'] = defaults.description
+            // Method-level params have no independent usage flag.
+            param.remove('usage')
+            param
         }
     }
 

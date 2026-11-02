@@ -9,7 +9,8 @@ import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 
 /**
- * Generates a fill-in-the-blanks use-case inventory beside Swagger metadata.
+ * Generates editable examples only for Controller methods with input parameters.
+ * Parameterless or removed endpoints must not remain in api-cases.yml.
  * Example payloads, statuses and expected responses cannot be inferred safely.
  */
 class SwaggerApiCasesMergeService {
@@ -30,28 +31,28 @@ class SwaggerApiCasesMergeService {
 
         validateDocument(document)
 
-        document.each { Object controller, Object value ->
-            (value as Map).each { Object method, Object entry ->
-                (entry as Map)['usage'] = false
-            }
-        }
-
         boolean vietnamese = swaggerDirectory.name.toLowerCase(Locale.ROOT) == 'vi' ||
                 swaggerDirectory.name.toLowerCase(Locale.ROOT).endsWith('-vi')
 
+        Map<String, Object> eligible = new LinkedHashMap<>()
         scanResult.apiByController.each {
             String controllerName, Map<String, SwaggerApiMetadata> methods ->
-                Map<String, Object> controllerData =
-                        (Map<String, Object>) document.computeIfAbsent(controllerName) {
-                            new LinkedHashMap<String, Object>()
-                        }
+                Map<String, Object> previousController =
+                        (Map<String, Object>) (document[controllerName] ?: [:])
+                Map<String, Object> controllerData = new LinkedHashMap<>()
 
                 methods.each {
                     String signature, SwaggerApiMetadata api ->
+                        if (api.params == null || api.params.isEmpty()) {
+                            return
+                        }
                         Map<String, Object> entry =
-                                (Map<String, Object>) controllerData.computeIfAbsent(signature) {
-                                    new LinkedHashMap<String, Object>()
-                                }
+                                previousController[signature] instanceof Map
+                                        ? new LinkedHashMap<String, Object>(
+                                                previousController[signature] as Map)
+                                        : new LinkedHashMap<String, Object>()
+
+                        controllerData[signature] = entry
 
                         entry['methodName'] = api.methodName
                         entry['httpMethods'] = api.httpMethods
@@ -78,9 +79,12 @@ class SwaggerApiCasesMergeService {
                             }
                         }
                 }
+                if (!controllerData.isEmpty()) {
+                    eligible[controllerName] = controllerData
+                }
         }
 
-        String serialized = writer.dump(document)
+        String serialized = writer.dump(eligible)
         if (outputFile.isFile() && outputFile.getText('UTF-8') == serialized) {
             return
         }

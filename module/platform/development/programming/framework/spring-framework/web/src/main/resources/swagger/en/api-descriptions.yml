@@ -91,7 +91,9 @@ HttpClientExperimentController:
       anchor: synchronous-http-client-adapters
     methodName: httpServiceAdapters
     params:
-    - id
+    - name: id
+      summary: Echo identifier
+      description: Identifier inserted into the HTTP Service interface path so both synchronous adapters can prove path-variable argument resolution.
     path: com/example/learning/module/web/client/controller/HttpClientExperimentController.java
     mapping: '@GetMapping("/http-service-adapters")'
     httpMethods:
@@ -118,7 +120,9 @@ MvcInputExperimentController:
       anchor: validation-exception-paths
     methodName: validatedBody
     params:
-    - request
+    - name: request
+      summary: Order request body
+      description: JSON object decoded into CreateOrderRequest. item must be non-blank and quantity must be at least 1.
     path: com/example/learning/module/web/input/controller/MvcInputExperimentController.java
     mapping: '@PostMapping("/validated-body")'
     httpMethods:
@@ -144,7 +148,9 @@ MvcInputExperimentController:
       anchor: mvc-method-validation-6-1
     methodName: methodValidation
     params:
-    - quantity
+    - name: quantity
+      summary: Quantity constrained by MVC method validation
+      description: Integer request parameter with a direct @Min(1) constraint. Values below 1 exercise HandlerMethodValidationException.
     path: com/example/learning/module/web/input/controller/MvcInputExperimentController.java
     mapping: '@GetMapping("/method-validation")'
     httpMethods:

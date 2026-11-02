@@ -56,7 +56,7 @@ class ModuleTranslationCatalogServiceTest {
         def service = new ModuleTranslationCatalogService()
         Map dry = service.execute(f.root as File, f.module as File, 'trial', 'PREPARE', false)
         assertEquals('DRY_RUN', dry.status)
-        assertEquals(7, dry.total)
+        assertEquals(6, dry.total)
         assertFalse((dry.manifest as File).exists())
         Map prepared = service.execute(f.root as File, f.module as File,
                 'trial', 'PREPARE', true)
@@ -78,9 +78,9 @@ class ModuleTranslationCatalogServiceTest {
         Map checked = service.execute(f.root as File, f.module as File,
                 'trial', 'VALIDATE', false)
         assertEquals('VALIDATED_STRUCTURE', checked.status)
-        assertEquals(7, checked.total)
+        assertEquals(6, checked.total)
         assertEquals(2, checked.translated)
-        assertEquals(5, checked.pending)
+        assertEquals(4, checked.pending)
         assertTrue(checked.semanticQaRequired)
         File snapshot = new File(f.module as File,
                 'build/step14/trial/baseline/content/readme/docs/en/menu/1.Basic/quiz/question.yml')
@@ -172,6 +172,12 @@ System.out.println("KEEP");
                 'SWAGGER_API_CASES', 'Controller.method().cases[0].description'))
         assertFalse(ModuleTranslationValidationService.editable(
                 'SWAGGER_API_CASES', 'Controller.method().cases[0].response'))
+        assertTrue(ModuleTranslationValidationService.editable(
+                'SWAGGER_API_DESCRIPTIONS', 'DemoController.execute(String).params[0].summary'))
+        assertTrue(ModuleTranslationValidationService.editable(
+                'SWAGGER_API_DESCRIPTIONS', 'DemoController.execute(String).params[0].description'))
+        assertFalse(ModuleTranslationValidationService.editable(
+                'SWAGGER_API_DESCRIPTIONS', 'DemoController.execute(String).params[0].name'))
     }
 
     @Test
@@ -189,7 +195,7 @@ System.out.println("KEEP");
         write(module, 'content/readme/docs/en/menu/LegacyRoot.md',
                 '# Legacy root Knowledge')
         List<Map> inventory = ModuleTranslationCatalogService.inventory(module)
-        assertEquals(8, inventory.size())
+        assertEquals(7, inventory.size())
         assertEquals(2, inventory.count { it.type == 'README' })
         assertEquals(1, inventory.count { it.type == 'QUIZ' })
         assertEquals(1, inventory.count { it.type == 'INTERVIEW' })
@@ -231,7 +237,7 @@ System.out.println("KEEP");
 
         def service = new ModuleTranslationCatalogService()
         List<Map> inventory = ModuleTranslationCatalogService.inventory(module)
-        assertEquals(7, inventory.size())
+        assertEquals(6, inventory.size())
         assertFalse(inventory.any { it.enPath?.contains('/video/') })
         assertEquals('PREPARED', service.execute(f.root as File, module,
                 'video-independent', 'PREPARE', true).status)
@@ -282,8 +288,6 @@ System.out.println("KEEP");
 ''',
                 'content/readme/docs/vi/menu/1.Basic/video/video-script.yml':
                         'title: Tiêu đề\nsections:\n  - title: Bài học\n    items:\n      - {type: SCENE, time: "00:00-00:10", visual: Hình ảnh, script: Thuyết minh, purpose: Mục đích}',
-                'src/main/resources/swagger/vi/api-params.yml':
-                        'request:\n  summary: Tóm tắt\n  description: Mô tả\n  usage: true'
         ].each { String viPath, String content ->
             write(module, viPath, content)
             String enPath = viPath.replace('/vi/', '/en/')

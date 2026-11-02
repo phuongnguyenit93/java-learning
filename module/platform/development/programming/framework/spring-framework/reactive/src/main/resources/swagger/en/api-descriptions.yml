@@ -12,7 +12,9 @@ ReactiveContextController:
       anchor: ''
     methodName: reactorContext
     params:
-    - exchange
+    - name: exchange
+      summary: Inactive historical framework parameter
+      description: ServerWebExchange parameter from an earlier in-step signature. It is retained only because stale generated metadata uses usage=false.
     path: com/example/learning/module/context/controller/ReactiveContextController.java
     mapping: '@GetMapping("/reactor")'
     httpMethods:
@@ -64,7 +66,9 @@ ReactiveContextController:
       anchor: webflux-reactor-context
     methodName: reactorContext
     params:
-    - correlationId
+    - name: correlationId
+      summary: Correlation id carried by Reactor Context
+      description: Value from the X-Correlation-Id request header. When the header is absent or blank the experiment uses demo-context so the result stays deterministic.
     path: com/example/learning/module/context/controller/ReactiveContextController.java
     mapping: '@GetMapping("/reactor")'
     httpMethods:
@@ -90,8 +94,12 @@ ReactiveHttpDataController:
       anchor: webflux-streaming-vs-aggregation
     methodName: stream
     params:
-    - count
-    - delayMillis
+    - name: count
+      summary: Number of SSE elements
+      description: Finite event count for the streaming experiment. Accepted range is 1 through 5; default is 3.
+    - name: delayMillis
+      summary: Delay between SSE elements
+      description: Delay in milliseconds between emitted events. Accepted range is 50 through 500; default is 120.
     path: com/example/learning/module/http/controller/ReactiveHttpDataController.java
     mapping: '@GetMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)'
     httpMethods:

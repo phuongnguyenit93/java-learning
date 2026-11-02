@@ -63,7 +63,9 @@ CastingController:
       anchor: class-cast-failure
     methodName: safeAndUnsafeCast
     params:
-    - input
+    - name: input
+      summary: 'Input parameter: input'
+      description: Controls the bounded sample input used by this learning endpoint.
     path: com/example/learning/controller/CastingController.java
     mapping: '@GetMapping("/safe-and-unsafe")'
     httpMethods:
@@ -193,7 +195,9 @@ TypeSystemController:
       anchor: compile-time-vs-runtime-type
     methodName: inspectRuntimeType
     params:
-    - value
+    - name: value
+      summary: 'Input parameter: value'
+      description: Controls the bounded sample input used by this learning endpoint.
     path: com/example/learning/controller/TypeSystemController.java
     mapping: '@GetMapping("/runtime-type")'
     httpMethods:

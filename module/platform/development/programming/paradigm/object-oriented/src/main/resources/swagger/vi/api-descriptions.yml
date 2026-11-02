@@ -1463,7 +1463,9 @@ Group1Controller:
       - refactoring-001
     methodName: executeCase9
     params:
-    - mode
+    - name: mode
+      summary: Chưa có tiêu đề
+      description: Chưa có mô tả chi tiết
     path: com/example/learning/casestudy/controller/Group1Controller.java
     mapping: '@GetMapping("/case/9/execute")'
     httpMethods:

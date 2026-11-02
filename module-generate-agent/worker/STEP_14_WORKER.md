@@ -26,7 +26,6 @@
 | `SWAGGER_API_DESCRIPTIONS` | `<Controller>.<method>.summary`, `description` |
 | `SWAGGER_API_EXECUTION` | `<Controller>.<method>.execution` (HTML text, giữ cấu trúc tag) |
 | `SWAGGER_API_CASES` | `<Controller>.<method>.cases[].title`, `description`, `detailDescription` (HTML text, giữ tags) |
-| `SWAGGER_API_PARAMS` | `<paramName>.summary`, `description` |
 
 **Phần khóa riêng cần nhớ:**
 
@@ -36,7 +35,7 @@
 - **SUMMARY_QUESTIONS:** Chỉ dịch question/answer; không thêm câu, không trộn với Interview hoặc Summary STEP 5, không thêm metadata/related.
 - **ROADMAP:** `id`, `dependsOn`, `relatedKnowledge`, `relatedModules[].routeId`, số lượng/thứ tự milestone là khóa. Không dịch route/category ID.
 - **VIDEO không thuộc STEP 14:** file Video phải được chuyển sang `STEP_OPTIONAL_VIDEO_TRANSLATE` sau `STEP_FINAL`; nếu nhận file Video trong bước này, worker báo `BLOCKER: WRONG STEP`.
-- **SWAGGER:** Controller name, exact method signature, `usage`, `methodName`, `params`, `path`, `mapping`, `httpMethods`, `mappingPaths`, `consumes/produces`, `enableVideoYoutube`, `videoYoutubeId/title`, case `id`, `input`, `status`, `response`, `readmeRelated`, metadata đều khóa. Không "dịch" literal JSON body, lỗi kỹ thuật, Java code hoặc response gốc. `api-params.yml`: param keys và `usage` khóa.
+- **SWAGGER:** Controller name, exact method signature, `usage`, `methodName`, `params`, `path`, `mapping`, `httpMethods`, `mappingPaths`, `consumes/produces`, `enableVideoYoutube`, `videoYoutubeId/title`, case `id`, `input`, `status`, `response`, `readmeRelated`, metadata đều khóa. Không "dịch" literal JSON body, lỗi kỹ thuật, Java code hoặc response gốc. `params[].name` và thứ tự tham số khóa; dịch `params[].summary` và `params[].description` ngay trong `api-descriptions.yml`.
 - **YAML comments** (bao gồm khối `# <quiz-schema>`, `# <roadmap-schema>`) là schema contract cố định, **không sửa/xóa/reflow**. Chỉ sửa đúng các scalar strings được whitelist; giữ YAML parser compatibility và Unicode.
 
 ## W3. Quy trình thực thi

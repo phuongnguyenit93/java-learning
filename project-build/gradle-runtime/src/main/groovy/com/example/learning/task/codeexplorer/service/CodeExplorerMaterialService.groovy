@@ -126,7 +126,7 @@ class CodeExplorerMaterialService {
         return buildFromSources(cfg.id as String, sources, swagger)
     }
 
-    /** Used by STEP 9: index exactly the bytes users will see in Monaco. */
+    /** Used by STEP 8 Code Explorer: index exactly the bytes users will see in Monaco. */
     static Map buildFromSources(String materialId, Map<String,byte[]> sources, File swagger = null) {
         // Gradle 8.x includes an older JavaParser in its own classloader.
         // Avoid a hard JAVA_21 enum reference when the Gradle-bundled parser
@@ -405,7 +405,7 @@ class CodeExplorerMaterialService {
 
     /**
      * Only legacy V1 files are removed when their module no longer opts in.
-     * Preserve the sibling casestudy/ subtree owned by STEP 9.
+     * Preserve the sibling casestudy/ subtree owned by STEP 8 Code Explorer.
      */
     static void cleanUnclaimedLegacyBundles(File repo, Set<String> activeRoutes) {
         File canonicalRepo = repo.canonicalFile

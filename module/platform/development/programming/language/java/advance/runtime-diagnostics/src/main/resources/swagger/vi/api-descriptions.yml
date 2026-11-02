@@ -14,7 +14,9 @@ RuntimeDiagnosticsExperimentController:
       anchor: locks-deadlocks-and-contention
     methodName: threadContention
     params:
-    - durationMillis
+    - name: durationMillis
+      summary: Thời lượng cửa sổ quan sát
+      description: Thời lượng mong muốn tính bằng millisecond. Service luôn clamp giá trị thực tế vào 2000–15000 ms để thí nghiệm kết thúc tự động và không giữ CPU, monitor hoặc heap vô thời hạn.
     path: com/example/learning/module/runtimediagnostics/controller/RuntimeDiagnosticsExperimentController.java
     mapping: '@PostMapping("/thread-contention")'
     httpMethods:
@@ -41,8 +43,12 @@ RuntimeDiagnosticsExperimentController:
       anchor: class-histogram
     methodName: heapRetention
     params:
-    - megabytes
-    - durationMillis
+    - name: megabytes
+      summary: Dung lượng heap muốn giữ tạm thời
+      description: Số MiB mà heap-retention experiment yêu cầu giữ bằng DiagnosticRetainedPayload. Service clamp giá trị thực tế vào 1–16 MiB để tránh biến demo thành memory-pressure/OOME test không an toàn.
+    - name: durationMillis
+      summary: Thời lượng cửa sổ quan sát
+      description: Thời lượng mong muốn tính bằng millisecond. Service luôn clamp giá trị thực tế vào 2000–15000 ms để thí nghiệm kết thúc tự động và không giữ CPU, monitor hoặc heap vô thời hạn.
     path: com/example/learning/module/runtimediagnostics/controller/RuntimeDiagnosticsExperimentController.java
     mapping: '@PostMapping("/heap-retention")'
     httpMethods:
@@ -68,7 +74,9 @@ RuntimeDiagnosticsExperimentController:
       anchor: cpu-thread-lock-analysis
     methodName: jfrCpuWindow
     params:
-    - durationMillis
+    - name: durationMillis
+      summary: Thời lượng cửa sổ quan sát
+      description: Thời lượng mong muốn tính bằng millisecond. Service luôn clamp giá trị thực tế vào 2000–15000 ms để thí nghiệm kết thúc tự động và không giữ CPU, monitor hoặc heap vô thời hạn.
     path: com/example/learning/module/runtimediagnostics/controller/RuntimeDiagnosticsExperimentController.java
     mapping: '@PostMapping("/jfr-cpu-window")'
     httpMethods:

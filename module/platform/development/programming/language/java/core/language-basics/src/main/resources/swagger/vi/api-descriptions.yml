@@ -57,7 +57,9 @@ CastingController:
       anchor: class-cast-failure
     methodName: safeAndUnsafeCast
     params:
-    - input
+    - name: input
+      summary: 'Tham số đầu vào: input'
+      description: Chọn giá trị đầu vào giới hạn được dùng trong thí nghiệm học tập này.
     path: com/example/learning/controller/CastingController.java
     mapping: '@GetMapping("/safe-and-unsafe")'
     httpMethods:
@@ -177,7 +179,9 @@ TypeSystemController:
       anchor: compile-time-vs-runtime-type
     methodName: inspectRuntimeType
     params:
-    - value
+    - name: value
+      summary: 'Tham số đầu vào: value'
+      description: Chọn giá trị đầu vào giới hạn được dùng trong thí nghiệm học tập này.
     path: com/example/learning/controller/TypeSystemController.java
     mapping: '@GetMapping("/runtime-type")'
     httpMethods:

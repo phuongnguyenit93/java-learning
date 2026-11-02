@@ -17,7 +17,7 @@ import java.nio.file.LinkOption
 import java.nio.file.Path
 
 /**
- * STEP 9: deterministic, read-only projections of STEP 8 Java source.
+ * STEP 8 completion gate: deterministic, read-only projections of Java source.
  * Runtime Java is never edited. A scope contains exactly one controller and
  * service endpoint and the explicit group/case Java packages.
  */
@@ -38,36 +38,36 @@ class CaseStudyExplorerService {
         File module = moduleDir.canonicalFile
         if (!module.toPath().startsWith(new File(root, 'module').canonicalFile.toPath()) ||
                 !new File(module, 'gradle.properties').isFile()) {
-            throw new GradleException('STEP9 requires a real Gradle module.')
+            throw new GradleException('STEP8_EXPLORER requires a real Gradle module.')
         }
         File settings = new File(module, CONFIG)
         if (!settings.isFile() || settings.getText('UTF-8').replace('\r\n','\n').trim() !=
                 'version: 1\ntype: CASE_STUDY_EXPLORER') {
-            throw new GradleException('STEP9 requires canonical ' + CONFIG)
+            throw new GradleException('STEP8_EXPLORER requires canonical ' + CONFIG)
         }
         if ((requestedGroup == null) != (requestedCase == null) ||
                 (requestedGroup != null && (requestedGroup < 1 || requestedCase < 1))) {
-            throw new GradleException('STEP9 groupID and caseIndex must both be positive or both absent.')
+            throw new GradleException('STEP8_EXPLORER groupID and caseIndex must both be positive or both absent.')
         }
         if (publish && requestedGroup != null) {
-            throw new GradleException('STEP9 pilot cannot overwrite published full Case Study material.')
+            throw new GradleException('STEP8_EXPLORER pilot cannot overwrite published full Case Study material.')
         }
         Map master = new JsonSlurper().parse(new File(module, 'master.json')) as Map
         String serviceName = master.SERVICE_NAME?.VALUE?.toString()
         String packageName = master.JAVA_BASE_PACKAGE?.VALUE?.toString()
         if (!(serviceName ==~ /[A-Z0-9_-]{1,128}/) ||
                 !(packageName ==~ /[a-zA-Z_$][\w$]*(\.[a-zA-Z_$][\w$]*)*/)) {
-            throw new GradleException('Invalid STEP9 module package or SERVICE_NAME.')
+            throw new GradleException('Invalid STEP8_EXPLORER module package or SERVICE_NAME.')
         }
         String prefix = packageName.replace('.', '/') + '/casestudy/'
         File javaRoot = new File(module, 'src/main/java')
         File content = new File(module, 'content/casestudy/vi/casestudy.yml')
-        if (!content.isFile()) throw new GradleException('STEP9 Case Study YAML missing.')
+        if (!content.isFile()) throw new GradleException('STEP8_EXPLORER Case Study YAML missing.')
         def options = new LoaderOptions()
         options.allowDuplicateKeys = false
         Map document = new Yaml(new SafeConstructor(options)).load(content.getText('UTF-8')) as Map
         if (!(document?.caseStudy instanceof List) || document.caseStudy.isEmpty()) {
-            throw new GradleException('STEP9 Case Study groups missing.')
+            throw new GradleException('STEP8_EXPLORER Case Study groups missing.')
         }
         List<Map> scopes = []
         int groupOrder = 0
@@ -76,11 +76,11 @@ class CaseStudyExplorerService {
             Map group = entry as Map
             if (group.groupID != groupOrder || !(group.cases instanceof List) ||
                     group.cases.isEmpty()) {
-                throw new GradleException('STEP9 invalid Case Study group ' + groupOrder)
+                throw new GradleException('STEP8_EXPLORER invalid Case Study group ' + groupOrder)
             }
             group.cases.eachWithIndex { Object item, int offset ->
                 if (!(item instanceof Map)) {
-                    throw new GradleException('STEP9 invalid case ' + groupOrder + '/' + (offset + 1))
+                    throw new GradleException('STEP8_EXPLORER invalid case ' + groupOrder + '/' + (offset + 1))
                 }
                 scopes.add([groupID:groupOrder, caseIndex:offset + 1])
             }
@@ -90,7 +90,7 @@ class CaseStudyExplorerService {
                 it.groupID == requestedGroup && it.caseIndex == requestedCase
             }
             if (scopes.size() != 1) {
-                throw new GradleException('STEP9 unknown groupID/caseIndex.')
+                throw new GradleException('STEP8_EXPLORER unknown groupID/caseIndex.')
             }
         }
         Map<String,byte[]> output = new TreeMap<>()
@@ -107,12 +107,12 @@ class CaseStudyExplorerService {
             sources[servicePath] = filtered(javaRoot, servicePath,
                     "Group${g}Service", "executeCase${c}")
             File base = new File(javaRoot, prefix)
-            if (!base.isDirectory()) throw new GradleException('STEP9 Java source missing: ' + base)
+            if (!base.isDirectory()) throw new GradleException('STEP8_EXPLORER Java source missing: ' + base)
             def stream = Files.walk(base.toPath())
             try {
                 stream.forEach { Path path ->
                     if (Files.isSymbolicLink(path)) {
-                        throw new GradleException('STEP9 source symlink forbidden: ' + path)
+                        throw new GradleException('STEP8_EXPLORER source symlink forbidden: ' + path)
                     }
                     if (!Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS) ||
                             !path.fileName.toString().endsWith('.java')) return
@@ -132,7 +132,7 @@ class CaseStudyExplorerService {
             Map bundle = CodeExplorerMaterialService.buildFromSources(
                     "casestudy-g${g}-c${c}", sources)
             if (!(bundle.outputs['index.json'] as byte[])) {
-                throw new GradleException('STEP9 failed generating scope ' + g + '/' + c)
+                throw new GradleException('STEP8_EXPLORER failed generating scope ' + g + '/' + c)
             }
             Map navigation = new JsonSlurper().parseText(new String(
                     bundle.outputs['references.json'] as byte[], StandardCharsets.UTF_8)) as Map
@@ -144,7 +144,7 @@ class CaseStudyExplorerService {
                     calls[0].targets.size() != 1 ||
                     !(calls[0].targets[0] as String).startsWith(
                             packageName + ".casestudy.service.Group${g}Service#executeCase${c}(")) {
-                throw new GradleException('STEP9 Controller -> Service navigation unresolved: ' +
+                throw new GradleException('STEP8_EXPLORER Controller -> Service navigation unresolved: ' +
                         g + '/' + c)
             }
             (bundle.outputs as Map<String,byte[]>).each { String path, byte[] data ->
@@ -181,12 +181,12 @@ class CaseStudyExplorerService {
         List<ClassOrInterfaceDeclaration> classes = unit.findAll(ClassOrInterfaceDeclaration)
                 .findAll { it.parentNode.orElse(null) == unit && it.nameAsString == expectedClass }
         if (classes.size() != 1 || unit.types.size() != 1) {
-            throw new GradleException('STEP9 expected one top-level class in ' + path)
+            throw new GradleException('STEP8_EXPLORER expected one top-level class in ' + path)
         }
         ClassOrInterfaceDeclaration clazz = classes[0]
         List<MethodDeclaration> matches = clazz.methods.findAll { it.nameAsString == methodName }
         if (matches.size() != 1) {
-            throw new GradleException('STEP9 expected unique ' + methodName + ' in ' + path)
+            throw new GradleException('STEP8_EXPLORER expected unique ' + methodName + ' in ' + path)
         }
         if (expectedClass.endsWith('Controller')) {
             String group = expectedClass.replace('Group', '').replace('Controller', '')
@@ -195,7 +195,7 @@ class CaseStudyExplorerService {
                     it.toString().contains('"/case-studies/group/' + group + '"') } ||
                     !matches[0].annotations.any { it.nameAsString == 'GetMapping' &&
                             it.toString().contains('"/case/' + caseId + '/execute"') }) {
-                throw new GradleException('STEP9 Controller HTTP mapping mismatch: ' + path)
+                throw new GradleException('STEP8_EXPLORER Controller HTTP mapping mismatch: ' + path)
             }
         }
         clazz.methods.toList().each { MethodDeclaration method ->
@@ -220,7 +220,7 @@ class CaseStudyExplorerService {
     private CompilationUnit parse(String code, String path) {
         def parsed = parser.parse(code)
         if (!parsed.successful || !parsed.result.present) {
-            throw new GradleException('STEP9 cannot parse ' + path + ': ' + parsed.problems)
+            throw new GradleException('STEP8_EXPLORER cannot parse ' + path + ': ' + parsed.problems)
         }
         return parsed.result.get()
     }
@@ -230,13 +230,13 @@ class CaseStudyExplorerService {
         Path base = root.canonicalFile.toPath()
         Path target = file.toPath().toAbsolutePath().normalize()
         if (!target.startsWith(base) || !Files.isRegularFile(target, LinkOption.NOFOLLOW_LINKS)) {
-            throw new GradleException('STEP9 Java source missing or unsafe: ' + path)
+            throw new GradleException('STEP8_EXPLORER Java source missing or unsafe: ' + path)
         }
         Path current = base
         for (Path part : base.relativize(target)) {
             current = current.resolve(part)
             if (Files.isSymbolicLink(current)) {
-                throw new GradleException('STEP9 source symlink forbidden: ' + path)
+                throw new GradleException('STEP8_EXPLORER source symlink forbidden: ' + path)
             }
         }
         return Files.readAllBytes(target)

@@ -35,7 +35,7 @@ Trước khi kiểm tra, Prime đọc **toàn văn** `module-generate-agent/GENE
 
 ### Gate 3 — Swagger giữ nguyên cấu trúc và hành vi kỹ thuật
 
-- Đối chiếu toàn bộ các file Swagger được quản lý, đặc biệt `controller-description.yml`, `api-descriptions.yml`, `api-execution.yml`, `api-cases.yml`, `api-params.yml` **nếu có**.
+- Đối chiếu toàn bộ các file Swagger được quản lý, đặc biệt `controller-description.yml`, `api-descriptions.yml` (bao gồm `params[].summary/description`), `api-execution.yml`, `api-cases.yml`.
 - Đối chiếu **chính xác** tập Controller, method signature, URL/path, HTTP method, param/request/response schema, status code, case ID, thứ tự cases, request examples, expected results và các field kỹ thuật. Không chỉ so số Controller hay số method.
 - Kiểm tra Swagger `readmeRelated` trỏ đúng README/chapter/anchor; `apiRelated` trong Quiz/Interview trỏ đúng Controller/method. Kiểm tra Java source/test khi cần xác minh API thực sự tồn tại.
 - **Giai đoạn ngay sau clone:** Swagger VI và EN phải **khớp bytes và nội dung**, vì chưa có thay đổi ngôn ngữ nào ở STEP 14.
@@ -88,7 +88,7 @@ Chỉ khi **cả 6 gate = PASS** thì ghi `STEP_14_PRECHECK=PASS` vào báo cáo
 | INTERVIEW | Mỗi `content/readme/docs/en/menu/<chapter>/questions/interview.yml` |
 | SUMMARY_QUESTIONS | Mỗi `content/readme/docs/en/menu/<chapter>/questions/summary.yml` (chỉ question/answer) |
 | ROADMAP | Toàn bộ `content/roadmap/en/roadmap.yml` |
-| SWAGGER | **Mỗi file riêng**: `controller-description.yml`, `api-descriptions.yml`, `api-execution.yml`, `api-cases.yml`, `api-params.yml` dưới `src/main/resources/swagger/en/` nếu hiện hữu |
+| SWAGGER | **Mỗi file riêng**: `controller-description.yml`, `api-descriptions.yml` (cả mô tả tham số theo method), `api-execution.yml`, `api-cases.yml` dưới `src/main/resources/swagger/en/` nếu hiện hữu |
 
 **Prime-only/không dịch:** `content/readme/docs/en/LIST.md` (link/menu kỹ thuật STEP 13), mọi `content/readme/docs/en/menu/<chapter>/metadata/knowledge-metadata.yml`, schema comment của YAML, Java code/test, Reference, Excel, Google Sheets, Portal, Gradle/config, toàn bộ VI. Module thiếu capability thì `NOT_APPLICABLE`; file bất thường/không xác định type thì BLOCKER.
 

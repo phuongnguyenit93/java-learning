@@ -28,7 +28,6 @@ class ModuleTranslationCatalogService {
             'api-descriptions.yml': 'SWAGGER_API_DESCRIPTIONS',
             'api-execution.yml': 'SWAGGER_API_EXECUTION',
             'api-cases.yml': 'SWAGGER_API_CASES',
-            'api-params.yml': 'SWAGGER_API_PARAMS'
     ].asImmutable()
 
     Map execute(File repoRoot, File moduleRoot, String runId, String operation,

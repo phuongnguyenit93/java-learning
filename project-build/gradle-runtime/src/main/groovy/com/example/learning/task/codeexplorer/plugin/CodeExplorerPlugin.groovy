@@ -32,7 +32,7 @@ class CodeExplorerPlugin implements Plugin<Project> {
         ].each { String name, boolean publish ->
             project.tasks.register(name, CaseStudyExplorerTask) { task ->
                 task.group = 'code explorer'
-                task.description = 'STEP 9: filter and index Case Study Java by group/case.'
+                task.description = 'STEP 8 completion: filter and index Case Study Java by group/case.'
                 task.publish.convention(publish)
                 task.mode.convention(project.providers.gradleProperty('caseStudyExplorerMode')
                         .orElse(project.providers.gradleProperty('mode').orElse('DRY_RUN')))

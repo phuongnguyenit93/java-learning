@@ -191,7 +191,7 @@ class ModuleLanguageCloneValidationService {
                 }
         swagger.each { String path, byte[] bytes ->
             if (!(path in ['api-descriptions.yml', 'api-execution.yml',
-                           'api-cases.yml', 'controller-description.yml', 'api-params.yml'])) {
+                           'api-cases.yml', 'controller-description.yml'])) {
                 throw new GradleException('Unexpected VI Swagger file: ' + path)
             }
             Map document = yaml(bytes, 'swagger/' + path)

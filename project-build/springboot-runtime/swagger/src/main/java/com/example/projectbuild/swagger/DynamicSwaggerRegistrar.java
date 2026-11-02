@@ -140,7 +140,6 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
             // and embedded YouTube videos.
             JsonNode apiDescs = loadYamlResource("swagger/" + language + "/api-descriptions.yml");
             JsonNode apiExecutions = loadYamlResource("swagger/" + language + "/api-execution.yml");
-            JsonNode apiParams = loadYamlResource("swagger/" + language + "/api-params.yml");
             JsonNode apiCases = loadYamlResource("swagger/" + language + "/api-cases.yml");
             JsonNode controllerDescs = loadYamlResource("swagger/" + language + "/controller-description.yml");
             Map<String, String> controllerByTag = new LinkedHashMap<>();
@@ -171,8 +170,9 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
                     mapExecutionMetadata(operation, apiExecutions, controllerName, methodSignature);
                     mapApiCasesMetadata(operation, apiCases, controllerName, methodSignature);
                     if (operation.getParameters() != null) {
+                        JsonNode methodNode = findMethodNode(apiDescs, controllerName, methodSignature);
                         operation.getParameters().forEach(parameter ->
-                                mapParameterMetadata(parameter, apiParams));
+                                mapParameterMetadata(parameter, methodNode));
                     }
                 });
             });
@@ -485,23 +485,22 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
         return type.equals("application/json") || type.endsWith("+json");
     }
 
-    private void mapParameterMetadata(Parameter parameter, JsonNode apiParams) {
-        // Đường dẫn trong YAML: moduleName -> ParameterName
-        JsonNode paramNode = apiParams.path(parameter.getName());
-
-        if (!paramNode.isMissingNode()) {
+    private void mapParameterMetadata(Parameter parameter, JsonNode methodNode) {
+        if (methodNode == null || !methodNode.path("params").isArray()) {
+            return;
+        }
+        for (JsonNode paramNode : methodNode.path("params")) {
+            if (!parameter.getName().equals(paramNode.path("name").asText())) {
+                continue;
+            }
             String summary = paramNode.path("summary").asText("");
             String description = paramNode.path("description").asText("");
-
-            // Vì Swagger Parameter chỉ có field 'description',
-            // ta nối Summary và Description lại để hiển thị đầy đủ thông tin.
-            StringBuilder fullDesc = new StringBuilder();
-            if (!summary.isEmpty()) {
-                fullDesc.append("**").append(summary).append("**: ");
+            if (summary.isBlank() && description.isBlank()) {
+                return;
             }
-            fullDesc.append(description);
-
-            parameter.setDescription(fullDesc.toString());
+            parameter.setDescription(
+                    (summary.isBlank() ? "" : "**" + summary + "**: ") + description);
+            return;
         }
     }
 

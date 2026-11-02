@@ -178,13 +178,11 @@ class ModuleTranslationValidationService {
             case 'SWAGGER_CONTROLLER_DESCRIPTION':
                 return path ==~ /[^.]+\.description/
             case 'SWAGGER_API_DESCRIPTIONS':
-                return path ==~ /[^.]+\..+\.(summary|description)/
+                return path ==~ /[^.]+\..+\.(summary|description|params\[\d+\]\.(summary|description))/
             case 'SWAGGER_API_EXECUTION':
                 return path ==~ /[^.]+\..+\.execution/
             case 'SWAGGER_API_CASES':
                 return path ==~ /[^.]+\..+\.cases\[\d+\]\.(title|description|detailDescription)/
-            case 'SWAGGER_API_PARAMS':
-                return path ==~ /[^.]+\.(summary|description)/
             default:
                 return false
         }

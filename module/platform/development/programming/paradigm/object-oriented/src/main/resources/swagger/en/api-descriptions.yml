@@ -1141,7 +1141,9 @@ Group1Controller:
       anchor: ''
     methodName: executeCase9
     params:
-    - mode
+    - name: mode
+      summary: Title not provided
+      description: Detailed description not provided
     path: com/example/learning/casestudy/controller/Group1Controller.java
     mapping: '@GetMapping("/case/9/execute")'
     httpMethods:

@@ -598,7 +598,7 @@ ${project.path}
         def generatePortalCaseStudyExplorer =
                 project.tasks.register('generatePortalCaseStudyExplorer') { task ->
                     task.group = 'learning portal'
-                    task.description = 'Generate STEP 9 case-scoped Java Code Explorer materials.'
+                    task.description = 'Generate STEP 8 case-scoped Java Code Explorer materials.'
                     task.dependsOn(generatePortalCodeExplorer)
                     task.doLast {
                         CaseStudyExplorerService generator = new CaseStudyExplorerService()
@@ -609,7 +609,7 @@ ${project.path}
                         configs.each { File config ->
                             File moduleDirectory = config.parentFile.parentFile.parentFile
                             Map result = generator.execute(project.projectDir, moduleDirectory, true, true)
-                            project.logger.lifecycle('[PORTAL-STEP9] {}: {} cases, {} Java files',
+                            project.logger.lifecycle('[PORTAL-STEP8-EXPLORER] {}: {} cases, {} Java files',
                                     result.module, result.cases, result.files)
                         }
                     }

@@ -39,7 +39,9 @@ DependencyFailureExperimentController:
       anchor: dependency-resolution-failures
     methodName: observeDependencyFailure
     params:
-    - scenario
+    - name: scenario
+      summary: Dependency failure scenario
+      description: Selects one bounded context-refresh failure to observe. Supported values are MISSING, AMBIGUOUS, and CONSTRUCTOR_CYCLE. The endpoint defaults to MISSING.
     path: com/example/learning/corecontainer/experiment/controller/DependencyFailureExperimentController.java
     mapping: '@GetMapping("/failure")'
     httpMethods:

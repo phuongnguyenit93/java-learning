@@ -76,7 +76,7 @@ class SwaggerApiCasesMergeServiceTest {
     }
 
     @Test
-    void rerunPreservesAuthoredCasesAndMarksDeletedApisUnused() {
+    void rerunPreservesAuthoredCasesAndRemovesDeletedApis() {
         File dir = temporary.newFolder('swagger-en')
         SwaggerApiCasesMergeService service = new SwaggerApiCasesMergeService()
         service.merge(dir, scan('create(CreateRequest)'))
@@ -107,9 +107,35 @@ class SwaggerApiCasesMergeServiceTest {
         assertEquals(rerun, output.getText('UTF-8'))
 
         service.merge(dir, scan('cancel(String)'))
-        assertEquals(false, read(dir).DemoController['create(CreateRequest)'].usage)
-        assertEquals('Valid checkout',
-                read(dir).DemoController['create(CreateRequest)'].cases[0].title)
+        assertFalse(read(dir).DemoController.containsKey('create(CreateRequest)'))
+        assertTrue(read(dir).DemoController.containsKey('cancel(String)'))
+    }
+
+    @Test
+    void parameterlessMethodsAndEmptyControllersAreExcludedAndOldEntriesRemoved() {
+        File dir = temporary.newFolder('swagger-filtered')
+        SwaggerApiCasesMergeService service = new SwaggerApiCasesMergeService()
+        service.merge(dir, scan('executeCase1()', 'executeCase9(String)'))
+        Map selected = read(dir)
+        assertEquals(['executeCase9(String)'] as Set,
+                selected.DemoController.keySet() as Set)
+
+        // Simulate historical, already generated cases for endpoints with no input.
+        selected.DemoController['executeCase1()'] = [
+                methodName: 'executeCase1', usage: true,
+                cases: [[id: 'case_001', title: 'Old generated example']]
+        ]
+        new File(dir, 'api-cases.yml').setText(new Yaml().dump(selected), 'UTF-8')
+
+        service.merge(dir, scan('executeCase1()', 'executeCase9(String)'))
+        assertEquals(['executeCase9(String)'] as Set,
+                read(dir).DemoController.keySet() as Set)
+        String first = new File(dir, 'api-cases.yml').getText('UTF-8')
+        service.merge(dir, scan('executeCase1()', 'executeCase9(String)'))
+        assertEquals(first, new File(dir, 'api-cases.yml').getText('UTF-8'))
+
+        service.merge(dir, scan('executeCase1()'))
+        assertEquals([:], read(dir))
     }
 
     @Test
@@ -238,8 +264,9 @@ class SwaggerApiCasesMergeServiceTest {
         Map<String, SwaggerApiMetadata> methods = new LinkedHashMap<>()
         signatures.each { String signature ->
             String name = signature.substring(0, signature.indexOf('('))
+            List<String> params = signature.endsWith('()') ? [] : ['request']
             methods[signature] = new SwaggerApiMetadata(
-                    'DemoController', signature, name, ['request'],
+                    'DemoController', signature, name, params,
                     'com/example/DemoController.java', '@PostMapping',
                     ['POST'], ['/demo/' + name], [], [])
         }

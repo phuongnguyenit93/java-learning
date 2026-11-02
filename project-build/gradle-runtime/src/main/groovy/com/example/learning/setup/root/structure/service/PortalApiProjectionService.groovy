@@ -24,7 +24,6 @@ class PortalApiProjectionService {
             [
                     'api-descriptions.yml',
                     'api-execution.yml',
-                    'api-params.yml',
                     'controller-description.yml'
             ]
 

@@ -109,21 +109,46 @@ class SettingInfoGeneratorService {
 
             moduleName =
                     module.directory.name
+                            .replaceAll('[^A-Za-z0-9]+', '_')
+                            .replaceAll('^_+|_+$', '')
+                            .toUpperCase(Locale.ROOT)
+
+            if (
+                    !moduleName.matches('[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*') ||
+                            moduleCatalog.containsKey(moduleName)
+            ) {
+                List<String> segments = module.modulePath.tokenize(':')
+                moduleName = segments.takeRight(2).join('_')
+                        .replaceAll('[^A-Za-z0-9_]', '_')
+                        .toUpperCase(Locale.ROOT)
+
+                if (moduleCatalog.containsKey(moduleName)) {
+                    moduleName = segments.join('_')
+                            .replaceAll('[^A-Za-z0-9_]', '_')
+                            .toUpperCase(Locale.ROOT)
+                }
+            }
 
 
             logger.warn(
                     '⚠️ [GRADLE-RUNTIME] SERVICE_NAME is blank for module {}. ' +
-                            'Fallback to directory name: {}',
+                            'Fallback to module identifier: {}',
                     module.modulePath,
                     moduleName
             )
         }
 
 
-        validateEnumConstant(
+        validateServiceName(
                 moduleName,
-                'SERVICE_NAME'
+                module.modulePath
         )
+
+        if (moduleCatalog.containsKey(moduleName)) {
+            throw new GradleException(
+                    "Duplicate SERVICE_NAME '${moduleName}' for module '${module.modulePath}'; " +
+                            "already assigned to '${moduleCatalog[moduleName].MODULE_PATH}'.")
+        }
 
 
         return moduleName
@@ -494,9 +519,9 @@ Duplicate modules:
                                             entry.key
 
 
-                                    validateEnumConstant(
+                                    validateServiceName(
                                             moduleName,
-                                            'SERVICE_NAME'
+                                            entry.value.MODULE_PATH?.toString() ?: ''
                                     )
 
 
@@ -1132,6 +1157,34 @@ Examples:
 """.stripIndent()
             )
         }
+    }
+
+
+    /**
+     * SERVICE_NAME identifies a module and becomes a generated enum constant.
+     * Unlike general enum constants (e.g. database identifiers), it must be
+     * uppercase snake case. Never normalize explicit authored values silently.
+     */
+    private static void validateServiceName(
+            String value,
+            String modulePath
+    ) {
+        if (value != null &&
+                value.matches('[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*')) {
+            return
+        }
+
+        throw new GradleException(
+                """
+Invalid SERVICE_NAME '${value}' for module '${modulePath}'.
+
+Expected UPPER_SNAKE_CASE:
+[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*
+
+Examples: OBJECT_ORIENTED, OBJECT_ORIENTED_PROGRAMMING, SPRING_BOOT.
+Keep existing valid module identifiers unchanged.
+""".stripIndent()
+        )
     }
 
 

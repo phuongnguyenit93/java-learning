@@ -12,7 +12,9 @@ ReactiveContextController:
       anchor: ''
     methodName: reactorContext
     params:
-    - exchange
+    - name: exchange
+      summary: Framework parameter lịch sử không còn active
+      description: ServerWebExchange parameter từ signature ở giai đoạn triển khai trước. Entry chỉ được giữ vì stale generated metadata dùng usage=false.
     path: com/example/learning/module/context/controller/ReactiveContextController.java
     mapping: '@GetMapping("/reactor")'
     httpMethods:
@@ -64,7 +66,9 @@ ReactiveContextController:
       anchor: webflux-reactor-context
     methodName: reactorContext
     params:
-    - correlationId
+    - name: correlationId
+      summary: Correlation id được mang theo Reactor Context
+      description: Giá trị từ request header X-Correlation-Id. Nếu header bị thiếu hoặc rỗng, thí nghiệm dùng demo-context để kết quả luôn xác định.
     path: com/example/learning/module/context/controller/ReactiveContextController.java
     mapping: '@GetMapping("/reactor")'
     httpMethods:
@@ -90,8 +94,12 @@ ReactiveHttpDataController:
       anchor: webflux-streaming-vs-aggregation
     methodName: stream
     params:
-    - count
-    - delayMillis
+    - name: count
+      summary: Số phần tử SSE
+      description: Số event hữu hạn của thí nghiệm streaming. Giá trị hợp lệ từ 1 đến 5; mặc định là 3.
+    - name: delayMillis
+      summary: Khoảng trễ giữa các phần tử SSE
+      description: Khoảng trễ tính bằng mili-giây giữa hai event. Giá trị hợp lệ từ 50 đến 500; mặc định là 120.
     path: com/example/learning/module/http/controller/ReactiveHttpDataController.java
     mapping: '@GetMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)'
     httpMethods:

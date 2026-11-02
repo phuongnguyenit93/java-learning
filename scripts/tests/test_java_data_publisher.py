@@ -261,12 +261,12 @@ class JavaDataPublisherTests(unittest.TestCase):
         self.assertIn(source_file, files)
         manifest["complete"] = False
         self.write_json(base / "index.json", manifest)
-        with self.assertRaisesRegex(ValueError, "Incomplete STEP9"):
+        with self.assertRaisesRegex(ValueError, "Incomplete STEP8_EXPLORER"):
             publisher.validate(self.data)
         manifest["complete"] = True
         self.write_json(base / "index.json", manifest)
         self.write_text(source_file, "tampered")
-        with self.assertRaisesRegex(ValueError, "STEP9 source checksum mismatch"):
+        with self.assertRaisesRegex(ValueError, "STEP8_EXPLORER source checksum mismatch"):
             publisher.validate(self.data)
 
     def test_unclaimed_java_and_unrelated_java_are_rejected(self):

@@ -79,6 +79,35 @@ class SwaggerCaseStudyEnrichmentServiceTest {
         }
     }
 
+    @Test
+    void controllerReadmeRelatedIsRemovedRegardlessOfItsPreviousContent() {
+        File root = Files.createTempDirectory('swagger-controller-cleanup-').toFile()
+        try {
+            File source = new File(root, 'content/casestudy/vi/casestudy.yml')
+            File api = new File(root, 'src/main/resources/swagger/vi/api-descriptions.yml')
+            File controller = new File(root, 'src/main/resources/swagger/vi/controller-description.yml')
+            write(source, [caseStudy: [[groupID: 1, groupName: 'Group One', cases: [
+                    [situation: 'S', resolve: 'R', knowledge: 'K',
+                     readmeRelated: [anchorList: []]]
+            ]]]])
+            write(api, [Group1Controller: ['executeCase1()': [
+                    usage: true, methodName: 'executeCase1',
+                    mappingPaths: ['/case-studies/group/1/case/1/execute'],
+                    summary: 'Chưa có tiêu đề', description: 'Chưa có mô tả chi tiết',
+                    readmeRelated: [anchorList: []]]]])
+            write(controller, [Group1Controller: [
+                    description: '<h2>Group One</h2>',
+                    readmeRelated: [file: 'old.md', anchor: 'old-knowledge']]])
+            def service = new SwaggerCaseStudyEnrichmentService()
+            assertEquals(2, service.execute(root, ['vi'], false).filesChanged)
+            service.execute(root, ['vi'], true)
+            assertFalse(read(controller).Group1Controller.containsKey('readmeRelated'))
+            assertEquals(0, service.execute(root, ['vi'], false).filesChanged)
+        } finally {
+            root.deleteDir()
+        }
+    }
+
     private static void write(File file, Map data) {
         file.parentFile.mkdirs()
         file.setText(new Yaml().dump(data), 'UTF-8')

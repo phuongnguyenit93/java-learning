@@ -25,7 +25,7 @@ abstract class CaseStudyExplorerTask extends DefaultTask {
         Map result = new CaseStudyExplorerService().execute(
                 project.rootProject.projectDir, project.projectDir,
                 choice == 'APPLY', publish.get(), group, item)
-        logger.lifecycle('[STEP9-EXPLORER] {} module={} cases={} files={} complete={} output={}',
+        logger.lifecycle('[STEP8-EXPLORER] {} module={} cases={} files={} complete={} output={}',
                 result.status, result.module, result.cases, result.files,
                 result.complete, result.output)
     }
@@ -33,7 +33,7 @@ abstract class CaseStudyExplorerTask extends DefaultTask {
     private static Integer number(String value, String label) {
         if (value == null) return null
         if (!(value ==~ /[1-9][0-9]*/)) {
-            throw new GradleException('Invalid STEP9 ' + label + ': ' + value)
+            throw new GradleException('Invalid STEP8 Code Explorer ' + label + ': ' + value)
         }
         return Integer.parseInt(value)
     }

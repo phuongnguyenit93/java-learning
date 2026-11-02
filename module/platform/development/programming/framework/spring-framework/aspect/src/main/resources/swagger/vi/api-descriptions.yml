@@ -380,7 +380,9 @@ PracticalPatternController:
     videoYoutubeTitle: Tiêu đề của video
     methodName: checkout
     params:
-    - item
+    - name: item
+      summary: Mặt hàng cần checkout
+      description: Tên mặt hàng truyền vào business operation checkout để quan sát auditing và timing Aspect quanh một lời gọi cụ thể.
     path: com/example/learning/module/patterns/controller/PracticalPatternController.java
     mapping: '@GetMapping("/checkout")'
     httpMethods:

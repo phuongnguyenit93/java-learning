@@ -1,4 +1,4 @@
-# STEP 8 — Prime tạo Controller/Service theo group; Worker chuyển nguyên trạng Java theo case
+# STEP 8 — Prime/Worker tạo Java theo group/case; Prime xuất Code Explorer cho FE sau QA
 
 ## 0. Hợp đồng hiện hành — ưu tiên cao nhất
 
@@ -10,7 +10,7 @@
 2. **Prime chỉ giao groupID và vùng đọc Sheet chính xác**: handoff có `UNIT=G<groupID>`, `S20:U24` và vùng Phase 4 của group đó. **Không cần giao danh sách caseIndex hoặc caseCount.** Worker đọc nguồn để xác định **toàn bộ case thuộc group được giao**, không tự chọn group khác hoặc bỏ case; không chia group thành nhiều worker hoặc nhiều phase. Worker chuyển **nguyên thân `static void main(String[] args)`** của từng case vào đúng `Group<g>Service.executeCase<c>()`, không sáng tác chương trình mới. Mặc định worker không sửa Controller; chỉ được sửa input binding đúng group khi khớp `INPUT_REQUIRED`.
 3. Worker tách các type gốc (class, static/nested class, interface, record, enum) thành **top-level file** và đặt trong `casestudy/<loại-package>/group<g>/case<c>/OriginalType.java`; static helper methods vào `casestudy/utils/group<g>/case<c>/...`. **Không để nested type hay static helper của case trong GroupService.** Package được chọn theo trách nhiệm thật, không ép đủ layer.
 4. **Nội dung nguồn bất biến về hành vi:** giữ toàn bộ statement và thứ tự, giá trị, biểu thức, điều kiện, side effect, console output, assertion, exception, field, constructor, method. Được format lại whitespace/layout cho dễ đọc và dọn import/qualification theo **worker/STEP_8_WORKER.md §3A** nhưng không thay đổi semantics; thay đổi nội dung nghiệp vụ khác chỉ khi có lỗi compile/runtime được tái hiện, audit before/after và sửa tối thiểu. Không xóa unused/dead, không thêm validation, fake, logic demo, DTO, `DemoResult` hoặc return JSON tự sáng tác.
-5. Phạm vi STEP 8: Google Sheet **READ-ONLY**, worker không ghi Sheet/YAML/Markdown/importer, Gradle, Spring Application hoặc Git; **hạ tầng JVM con dùng chung nếu cần do Prime chuẩn bị riêng**, không cấp quyền worker sửa build/runtime toàn module. Không tự commit/push/deploy. `CURRENT_STEP` chỉ Prime xem xét sau completion gate **toàn module**; pilot vài group không chốt tiến độ. STEP 9 pilot cũ không được dùng để refactor lại nội dung.
+5. Phạm vi STEP 8: Google Sheet **READ-ONLY**, worker không ghi Sheet/YAML/Markdown/importer, Gradle, Spring Application hoặc Git; **hạ tầng JVM con dùng chung nếu cần do Prime chuẩn bị riêng**, không cấp quyền worker sửa build/runtime toàn module. Không tự commit/push/deploy. **Sau khi toàn module qua QA Java, Prime phải chạy Code Explorer theo §6 rồi mới xét `CURRENT_STEP="8"`.** Pilot vài group không chốt tiến độ. STEP 9 được dành cho nhiệm vụ khác, không chạy pilot/refactor STEP 9 cũ.
 
 ## 1. Prime — đọc Sheet, xác minh và dựng khung trước khi giao worker
 
@@ -137,6 +137,45 @@ Checklist:
 - Source→target fidelity, `BLOCKER_RESOLUTION` chứng minh worker **đã xét đầy đủ danh sách điều kiện hiện hành trước khi kết luận blocker thật**; các case được giải quyết bằng quy tắc có trong danh sách có code/test tương đương, không chuyển thành PASS chỉ dựa vào thiết kế. Blocked cases giữ fail-closed placeholder và lý do; Controller không chứa logic; mọi file/test/hash, audit minimal error fix, manifest readback PASS.
 - **FORMAT + IMPORT CLEANUP gate:** Prime phải kiểm tra `FORMAT_IMPORT_QA` từ mỗi group worker: Service/type/utils/test được format dễ đọc, không dồn nhiều statement trên một dòng; import ngắn gọn khi không xung đột, giữ FQCN có lý do khi các case trùng simple name; không dùng wildcard import để né collision. Đối chiếu token/hành vi sau format, kiểm compile/test và xem các ngoại lệ; **không coi compile PASS là đủ nếu code vẫn khó đọc hoặc chưa QA format/import**. Quyền ghi vẫn giới hạn theo group và hai ngoại lệ catalog hiện hành.
 - **Sau barrier** mới chạy module compile, scoped/full tests, Spring startup, GET smoke đúng đường dẫn, kiểm repeatability/safety chỉ những case runnable; với `JVM_ISOLATION_REQUIRED`, Prime kiểm launcher/classpath của artifact triển khai, ít nhất hai request tuần tự và failure/timeout không PASS, state JVM cha không đổi. Blocked cases không tính HTTP PASS. Tách baseline legacy compile lỗi khỏi lỗi STEP 8; đừng sửa ngoài ownership để làm xanh test.
-- Cả module phải hoàn thành đủ case và QA không blocker mới xét `CURRENT_STEP.VALUE="8"` theo `rules/PRIME_RULES.md §2`. Pilot 3 group không được chốt STEP. Không tự chạy STEP9, import Sheet, commit/push/deploy.
+- Cả module phải hoàn thành đủ case, QA Java không blocker **và Code Explorer §6 PASS** mới xét `CURRENT_STEP.VALUE="8"` theo `rules/PRIME_RULES.md §2`. Pilot 3 group không được chốt STEP. Không chạy nhiệm vụ STEP 9, import Sheet, commit/push/deploy.
 
-**Prime report:** RUN/module/gid, group/case total, hashes, owner, `ASSIGNED_GROUP_AND_SHEET_RANGE`, `GROUP_CASE_INVENTORY_VS_SHEET_MATCH`, `PRIME_SCAFFOLD_CONTROLLER_SERVICE_COUNTS`, `GROUP_METHOD_ENDPOINT_COVERAGE`, `GROUP_SERVICE_BODY_FIDELITY`, `TYPE_STATIC_PACKAGE_MAP`, `CONTENT_ERROR_FIX_AUDIT`, `BLOCKER_RESOLUTION_CATALOG_QA`, `BLOCKED_FAIL_CLOSED`, `COMPILE/TEST/HTTP`, `SHEET/YAML_UNCHANGED`, `OUT_OF_SCOPE_UNCHANGED`, `CURRENT_STEP_BEFORE/AFTER`, BLOCKERS.
+## 6. PRIME — Code Explorer là completion gate cuối STEP 8 (không có worker riêng)
+
+**Thứ tự bắt buộc:** toàn bộ group worker release → Prime QA source fidelity, compile/test/HTTP, blocker catalog và manifest toàn module **PASS** → Prime chạy **Code Explorer DRY_RUN → APPLY → exact readback/QA** → chỉ sau đó mới xét checkpoint `CURRENT_STEP.VALUE="8"`. Nếu STEP 8 Java chưa PASS, không gọi generator; nếu Code Explorer FAIL thì **STEP 8 chưa COMPLETED**, ghi `BLOCKER: STEP8_CODE_EXPLORER`, giữ nguyên Java runtime và trạng thái tiến độ, xử lý đúng nguyên nhân rồi kiểm lại. Không giao AI Worker hoặc chạy riêng STEP 9.
+
+### 6A. Đầu vào và quy tắc filter (deterministic)
+
+- Prime xác minh đúng Gradle module từ Sheet `I3`, `master.json` (`SERVICE_NAME`, `JAVA_BASE_PACKAGE`) và `content/casestudy/vi/casestudy.yml` (đủ `groupID`, `cases[]`; `caseIndex` 1-based). **Không** nhập từng file đích hoặc dự đoán từ câu chữ Case Study.
+- Prime kiểm tra module có **opt-in** `content/code-explorer/casestudy.yml` theo contract canonical sau; nếu chưa có thì tạo đúng file này trong phạm vi Prime, không chỉnh Sheet/YAML Case Study:
+
+  ```yaml
+  version: 1
+  type: CASE_STUDY_EXPLORER
+  ```
+
+- Generator JavaParser đọc `casestudy/controller/Group<g>Controller.java` và `casestudy/service/Group<g>Service.java`, tạo **bản hiển thị** chỉ giữ `executeCase<c>()` của từng case, cùng constructor, fields, annotations và import liên quan. Các class dưới `casestudy/<kind>/group<g>/case<c>/` được giữ theo đường dẫn (không phân tích dependency xuyên module). Nếu có `CaseStudyJvmIsolation`, giữ hạ tầng dùng chung tương ứng. Không dùng AI inference, không refactor hay ghi đè source Java STEP 8.
+- Tạo lại `symbols.json` và `references.json` từ **bytes bản source đã lọc**, không tái sử dụng tọa độ từ runtime gốc. Ctrl+Click/F12 tới symbol được resolve phải đúng file/dòng; unresolved không tạo liên kết giả. Material phục vụ đọc trên Monaco, **không yêu cầu compile độc lập**.
+
+### 6B. Prime chạy task đúng một module sau QA Java
+
+Lấy **Gradle project path thật** từ module đã xác minh, không hardcode OOP cho các module khác. Ví dụ module OOP trong PowerShell:
+
+```powershell
+# Preflight toàn module, không ghi output:
+.\gradlew.bat :module:platform:development:programming:paradigm:object-oriented:generateCaseStudyExplorer -Pmode=DRY_RUN
+
+# Chỉ sau DRY_RUN PASS: ghi material toàn module vào module/build/:
+.\gradlew.bat :module:platform:development:programming:paradigm:object-oriented:generateCaseStudyExplorer -Pmode=APPLY
+```
+
+Không truyền `-PgroupID`/`-PcaseIndex` trong completion gate: task phải quét **tất cả** case từ YAML. Chạy pilot với hai tham số đó chỉ dùng để debug, output nằm riêng `build/code-explorer/casestudy-pilot`, `complete=false`, **không tính STEP 8 PASS** và không được publish.
+
+### 6C. Prime QA material và checkpoint
+
+1. Kết quả `DRY_RUN` = PASS, không ghi file. `APPLY` trả `complete=true`, số case khớp tổng `cases[]` trên YAML, không thiếu/thừa/trùng groupID/caseIndex. `build/code-explorer/casestudy/index.json` phải liệt kê đủ scope.
+2. Mỗi case có `groups/<g>/cases/<c>/index.json`, `symbols.json`, `references.json`, `api-map.json` và `files/`; Controller/Service chỉ có **một** `executeCase<c>` đúng case, class không lẫn `group/case` khác. Kiểm checksum SHA256 của file; file được load trên FE phải đúng byte đã index.
+3. Symbol references Controller → Service → case class resolve đúng; thử ít nhất một case tiêu biểu và case có JVM isolation (nếu có). Không cho unresolved giả PASS. Đối chiếu input Java và test trước/sau generation: **UNCHANGED**, không sửa ngoài `build/` và file opt-in vừa khai báo.
+4. `generatePortalData` có tích hợp task `generatePortalCaseStudyExplorer` để tạo output publish `build/learning-data/java/module/<SERVICE_NAME>/code-explorer/casestudy/` và catalog `caseStudyExplorer`; FE tiếp tục dùng Monaco Code Explorer cũ. **Không mặc định chạy publish/deploy ở STEP 8**, trừ khi đó là phần nghiệm thu/publish được yêu cầu riêng; chạy root task không thay thế QA material per-module trước checkpoint.
+5. **Chỉ Prime** cập nhật/readback `CURRENT_STEP.VALUE="8"` sau khi cả Java QA và Code Explorer QA toàn module PASS, không blocker/worker pending, theo `rules/PRIME_RULES.md §2`; rerun module đã ở STEP cao hơn không ghi lùi. Không suy STEP 9 đã hoàn tất từ kết quả này.
+
+**Prime report:** RUN/module/gid, group/case total, hashes, owner, `ASSIGNED_GROUP_AND_SHEET_RANGE`, `GROUP_CASE_INVENTORY_VS_SHEET_MATCH`, `PRIME_SCAFFOLD_CONTROLLER_SERVICE_COUNTS`, `GROUP_METHOD_ENDPOINT_COVERAGE`, `GROUP_SERVICE_BODY_FIDELITY`, `TYPE_STATIC_PACKAGE_MAP`, `CONTENT_ERROR_FIX_AUDIT`, `BLOCKER_RESOLUTION_CATALOG_QA`, `BLOCKED_FAIL_CLOSED`, `COMPILE/TEST/HTTP`, `CODE_EXPLORER_DRY_RUN`, `CODE_EXPLORER_APPLY`, `CODE_EXPLORER_CASE_COVERAGE`, `CODE_EXPLORER_INDEX_NAVIGATION`, `CODE_EXPLORER_SOURCE_UNCHANGED`, `SHEET/YAML_UNCHANGED`, `OUT_OF_SCOPE_UNCHANGED`, `CURRENT_STEP_BEFORE/AFTER`, BLOCKERS.
