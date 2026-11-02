@@ -175,12 +175,42 @@ jobs:
 
           notes="$(printf 'Rolling Java Learning Data release.\n\nSource commit: `%s`\nZIP SHA-256: `%s`\n\nDownload both assets and verify the checksum before consuming this dataset. The release tag remains fixed; the tag commit is not the source-version authority. Read manifest.json from the ZIP for the authoritative sourceCommit.\n' "${commit_sha}" "${data_sha}")"
 
+          # GitHub's Release asset API can intermittently return HTTP 5xx
+          # while replacing an existing asset. Keep retries bounded, and
+          # re-check main before each attempt so an older run cannot overwrite
+          # data from a newer commit. A partial upload is safe to retry because
+          # --clobber handles both existing and missing assets.
+          upload_with_retry() {
+            local asset="$1"
+            local attempt=1
+            local max_attempts=5
+            local delay=3
+            while true; do
+              current_main="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/main" --jq '.object.sha')"
+              if [[ "${current_main}" != "${commit_sha}" ]]; then
+                echo "::error::Source commit ${commit_sha} is no longer main HEAD (${current_main})."
+                return 1
+              fi
+              if gh release upload "${tag}" "${asset}" --repo "${GITHUB_REPOSITORY}" --clobber; then
+                return 0
+              fi
+              if (( attempt >= max_attempts )); then
+                echo "::error::Failed to upload ${asset} after ${max_attempts} attempts."
+                return 1
+              fi
+              echo "::warning::GitHub Release upload of ${asset} failed (attempt ${attempt}/${max_attempts}); retrying in ${delay}s."
+              sleep "${delay}"
+              attempt=$((attempt + 1))
+              delay=$((delay * 2))
+            done
+          }
+
           if gh release view "${tag}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
             # content_gate already verified the previous Release and proved
             # the generated data changed, so no duplicate ZIP comparison here.
             # ZIP first, checksum last; consumers retry during replacement.
-            gh release upload "${tag}" "${zip}" --repo "${GITHUB_REPOSITORY}" --clobber
-            gh release upload "${tag}" "${checksum}" --repo "${GITHUB_REPOSITORY}" --clobber
+            upload_with_retry "${zip}"
+            upload_with_retry "${checksum}"
             gh release edit "${tag}" \
               --repo "${GITHUB_REPOSITORY}" \
               --title "Java Learning Data" \
