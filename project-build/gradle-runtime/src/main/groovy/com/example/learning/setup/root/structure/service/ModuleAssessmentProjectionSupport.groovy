@@ -64,9 +64,14 @@ final class ModuleAssessmentProjectionSupport {
     }
 
     static void addOutputs(Map<String, String> outputs, File source,
-                           String routeId, String kind, String language) {
+                           String routeId, String kind, String language,
+                           File moduleDirectory = null) {
         Map spec = KINDS[kind]
         List<Map> data = groups(source, kind)
+        Map<Integer, Map<Integer, Map>> codeExplanations = kind == 'casestudy' &&
+                moduleDirectory != null
+                ? PortalCaseStudyCodeExplanationService.load(moduleDirectory, language, data)
+                : [:]
         DumperOptions options = new DumperOptions()
         options.defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
         options.indent = 2
@@ -77,6 +82,14 @@ final class ModuleAssessmentProjectionSupport {
         data.each { Map group ->
             int id = (group.groupID as Number).intValue()
             List items = group[spec.items] as List
+            if (kind == 'casestudy' && codeExplanations[id]) {
+                // Never mutate canonical Case Study YAML/parsed objects.
+                items = items.withIndex().collect { Object item, int index ->
+                    Map explanation = codeExplanations[id][index + 1]
+                    explanation ? new LinkedHashMap(item as Map) +
+                            [codeExplanation: explanation] : item
+                }
+            }
             String relative = "${routeId}/${kind}/${language}/groups/${id}.yml"
             if (outputs.containsKey(relative)) throw new GradleException("Duplicate Portal output: ${relative}")
             outputs[relative] = yaml.dump([(spec.items): items])

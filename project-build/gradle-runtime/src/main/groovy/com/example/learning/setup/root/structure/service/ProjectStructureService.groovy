@@ -12,13 +12,6 @@ import org.yaml.snakeyaml.Yaml
 
 class ProjectStructureService {
 
-    private static final List<String> PORTAL_API_FILES =
-            [
-                    'api-descriptions.yml',
-                    'api-execution.yml',
-                    'controller-description.yml'
-            ]
-
     private static final String TEXT_STRUCTURE_PATH =
             'project-build/gradle-runtime/src/main/resources/structure/module-structure.txt'
 
@@ -350,13 +343,6 @@ ${moduleDirectory.absolutePath}
             node.referenceAvailable =
                     hasAuthoredReference(
                             directory
-                    )
-
-
-            node.apiLanguages =
-                    findApiLanguages(
-                            directory,
-                            moduleLanguages
                     )
 
 
@@ -802,21 +788,6 @@ ${moduleDirectory.absolutePath}
             }
 
 
-            if (!node.apiLanguages.isEmpty()) {
-
-                result.api =
-                        node.apiLanguages
-                                .toList()
-                                .sort()
-                                .collectEntries {
-                                    String language ->
-
-                                        [
-                                                (language): "/module/${resolveRouteId(node)}/api/${language}"
-                                        ]
-                                }
-            }
-
 
             if (!node.quizQuestionCounts.isEmpty()) {
 
@@ -1168,65 +1139,7 @@ ${moduleDirectory.absolutePath}
     }
 
 
-    private static Set<String> findApiLanguages(
-            File moduleDirectory,
-            List<String> moduleLanguages
-    ) {
 
-        File swaggerDirectory =
-                new File(
-                        moduleDirectory,
-                        'src/main/resources/swagger'
-                )
-
-
-        if (!swaggerDirectory.isDirectory()) {
-            return [] as Set<String>
-        }
-
-
-        Set<String> result =
-                new LinkedHashSet<>()
-
-
-        moduleLanguages
-                .each {
-                    String language ->
-
-                        File languageDirectory =
-                                new File(
-                                        swaggerDirectory,
-                                        language
-                                )
-
-                        boolean complete =
-                                PORTAL_API_FILES.every {
-                                    String fileName ->
-
-                                        new File(
-                                                languageDirectory,
-                                                fileName
-                                        ).isFile()
-                                }
-
-
-                        if (complete) {
-
-                            result.add(
-                                    language
-                            )
-                        }
-                }
-
-
-        return result
-    }
-
-
-    /**
-     * The catalog links only languages that have authored chapter questions.
-     * Empty chapter skeletons and legacy central YAML do not count as content.
-     */
     private static Map<String, Integer> findQuestionCounts(
             File moduleDirectory,
             List<String> moduleLanguages,
@@ -1780,7 +1693,6 @@ ${exception.message}
         Set<String> videoLanguages = [] as Set<String>
         Set<String> roadmapLanguages = [] as Set<String>
         boolean referenceAvailable
-        Set<String> apiLanguages = [] as Set<String>
         Map<String, Integer> quizQuestionCounts = [:]
         Map<String, Integer> interviewQuestionCounts = [:]
         Map<String, Integer> caseStudyCounts = [:]

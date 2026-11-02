@@ -93,7 +93,7 @@ README / Knowledge Menu
         ↓
 Knowledge lessons
         ↓
-API Docs / executable evidence when applicable
+Swagger learning metadata / executable evidence when applicable
         ↓
 Swagger documentation when applicable
         ↓
@@ -208,14 +208,13 @@ Learning
 ├── Overview
 ├── Menu
 ├── Knowledge
-├── API Docs
 ├── Quiz
 ├── Interview
 ├── Local Run
 └── Download action
 ```
 
-`Overview`, Menu/Knowledge, Roadmap, Quiz, Interview and API Docs consume validated static projections from the Java data publisher; frontend renders this dataset from Cloudflare Static Assets, with lightweight navigation, module details and counts loaded independently. The `Local Run` tab is enabled in Production for published runnable modules. It uses the site's same-origin Cloudflare Worker `/api/local-run/{build,status,artifact}` API and a browser-side public GitHub Release lookup with authenticated Worker fallback. There is no local Spring adapter and no Cloudflare Pages Functions implementation.
+`Overview`, Menu/Knowledge, Roadmap, Quiz and Interview consume validated static projections from the Java data publisher; frontend renders this dataset from Cloudflare Static Assets, with lightweight navigation, module details and counts loaded independently. The website API Docs tab and its static API projection are retired. Swagger YAML generation, Java mapping scan, Case Study enrichment and module-local Swagger runtime remain supported independently of the website. The `Local Run` tab is enabled in Production for published runnable modules. It uses the site's same-origin Cloudflare Worker `/api/local-run/{build,status,artifact}` API and a browser-side public GitHub Release lookup with authenticated Worker fallback. There is no local Spring adapter and no Cloudflare Pages Functions implementation.
 
 Module sibling order may be customized by an optional `module-order.yml` stored in the parent directory being ordered. It governs direct child directories only. Lower numeric `order` sorts first; equal values fall back to alphabetical name order; missing/null order sorts after ordered children and then alphabetically. Without the file, alphabetical behavior remains unchanged. `generateModuleOrder --path=<path-relative-to-module>` is the explicit root authoring task: it preserves existing human-owned order values, adds newly discovered direct children with null order, and removes stale entries. Ordinary Gradle sync/generation must only read this file. `ProjectStructureService` is the sole consumer that applies the order before producing STRUCTURE/module-catalog projections; Portal code must preserve catalog order rather than reread or reinterpret `module-order.yml`.
 
@@ -252,7 +251,7 @@ module with both children and dashboard
 interaction styling
 → directional color/wave cues are hidden until hover/focus
 → content-bearing/`Real modules` rows do not get a permanent special background merely for qualifying
-→ numeric Knowledge/Quiz/Interview/API badges communicate content availability
+→ numeric Knowledge/Quiz/Interview badges communicate content availability
 → only the active module keeps a persistent selected/highlight state
 
 whole sidebar
@@ -268,8 +267,8 @@ module filter descendant-match
 
 sidebar `Real modules / Module thật` mode
 → this is a Portal content filter, not the repository-level `gradle.properties` real-module identity rule
-→ keep a MODULE when at least one visible learning count is non-zero: Knowledge OR Quiz OR Interview OR API Docs
-→ hide a MODULE only when Knowledge=0 AND Quiz=0 AND Interview=0 AND API Docs=0
+→ keep a MODULE when at least one visible learning count is non-zero: Knowledge OR Quiz OR Interview OR Case Study
+→ hide a MODULE only when Knowledge=0 AND Quiz=0 AND Interview=0 AND Case Study=0
 → keep required GROUP ancestors
 → remove branches with no qualifying descendants
 → never flatten the hierarchy into a plain module list
@@ -300,24 +299,19 @@ Interview
 → reference answers start collapsed and may be expanded independently
 → expanded-answer state remains stable while the panel stays mounted
 
-API Docs
-→ controller + method details default collapsed
-→ explicit Expand all / Collapse all
-→ reference-only; no live execute/debug control in this panel
-
 tab switching
-→ Menu / Knowledge / API Docs / Quiz / Interview are lazy-mounted then kept alive for the current module/language
+→ Menu / Knowledge / Quiz / Interview are lazy-mounted then kept alive for the current module/language
 → preserve the user's latest expand/collapse state when switching tabs
 → changing module/language establishes a new state boundary
 ```
 
-The API Reference notice explains that the docs are for learning/reference only and that running/debugging requires local runtime. Its Download action navigates to the module's `Local Run` tab, which owns the real executable-JAR build/download flow. API Docs remains reference-only; do not reintroduce a placeholder Download popover there or turn API Docs itself into a live execution surface.
-
-Theme selection starts from `prefers-color-scheme` and persists user choice in `localStorage`. Capability colors are semantic and theme-independent: Overview gray, Knowledge blue, Quiz amber, Interview teal, API Docs red, Local Run purple, Download green. Light/Dark changes surrounding surfaces/text/borders, not those semantic identities.
+Theme selection starts from `prefers-color-scheme` and persists user choice in `localStorage`. Capability colors are semantic and theme-independent: Overview gray, Knowledge blue, Quiz amber, Interview teal, Local Run purple, Download green. Light/Dark changes surrounding surfaces/text/borders, not those semantic identities.
 
 Portal frontend styling uses normal CSS files. Avoid inline CSS unless there is a concrete technical reason that cannot be reasonably expressed through classes/stylesheets.
 
 The Portal consumes/aggregates learning capabilities but must not become the source of truth for module metadata, README ownership, Swagger runtime, or Execution Context. Future generated portal data should be a projection from canonical module structure/metadata/resources.
+
+Code Explorer's general Java material contract remains `content/code-explorer/material.yml` with `apiMapping: {source: SWAGGER}`. `CodeExplorerMaterialService` builds `api-map.json` from the module's `src/main/resources/swagger/vi/api-descriptions.yml` and indexed Java symbols; this mapping is independent of the retired Portal API Docs publisher. STEP 8 Case Study Explorer has its own case-scoped source filtering and QA contract in `module-generate-agent/STEP_8.md`; preserve both workflows.
 
 ---
 
@@ -752,7 +746,7 @@ Portal module/catalog data [current]
 → `build/learning-data/java/module-catalog.json`
 
 Portal module-scoped projections [current/future]
-→ canonical README content + localized Knowledge metadata / quiz / Swagger / artifact state
+→ canonical README content + localized Knowledge metadata / quiz / artifact state
 → `build/learning-data/java/module/{ROUTE_ID}/{feature}/...`
 
 Task DSL reference
@@ -780,14 +774,13 @@ build/learning-data/java/module/{ROUTE_ID}/knowledge/...
 build/learning-data/java/module/{ROUTE_ID}/video/{lang}/...
 build/learning-data/java/module/{ROUTE_ID}/quiz/{lang}/question.yml
 build/learning-data/java/module/{ROUTE_ID}/interview/{lang}/question.yml
-build/learning-data/java/module/{ROUTE_ID}/api/{lang}/...
 task.gradle
 application-merged.yml
 generated README/menu fragments
 META-INF/execution-context/source-context.json
 ```
 
-Portal data projections are build-only and must never be copied into a retired Spring Boot portal or edited as authoritative source. `module-catalog.json` stays at the root of `build/learning-data/java`; module-owned projections are namespaced under `build/learning-data/java/module/{ROUTE_ID}/`. Overview and Knowledge are transformed projections; Video is a transformed static projection from authored `content/readme/docs/{lang}/menu/<chapter>/video/video-script.yml`; Quiz and Interview are localized per-chapter YAML projected to Portal JSON/YAML after contract checks; Swagger/API metadata is build-time projection. These outputs must be deterministic/idempotent/write-if-changed. The browser must not parse `module-structure.txt` as canonical data.
+Portal data projections are build-only and must never be copied into a retired Spring Boot portal or edited as authoritative source. `module-catalog.json` stays at the root of `build/learning-data/java`; module-owned projections are namespaced under `build/learning-data/java/module/{ROUTE_ID}/`. Overview and Knowledge are transformed projections; Video is a transformed static projection from authored `content/readme/docs/{lang}/menu/<chapter>/video/video-script.yml`; Quiz and Interview are localized per-chapter YAML projected to Portal JSON/YAML after contract checks. Portal API metadata projection is retired; Swagger generation and runtime use their own existing module resources. These outputs must be deterministic/idempotent/write-if-changed. The browser must not parse `module-structure.txt` as canonical data.
 
 Generated output must prefer:
 
@@ -2241,13 +2234,13 @@ Preserve these unless the user explicitly changes the architecture:
 31. React routes are served by Cloudflare Workers Static Assets, and `/api/local-run/*` is handled by the Cloudflare Worker, not Spring MVC or Cloudflare Pages Functions.
 32. Documentation/learning data remain runtime-independent and must not require a running module Spring Boot application.
 33. UI navigation/order come from derived static catalog projections, not hard-coded module trees; the backend validates the full published catalog.
-34. The sidebar content filter is distinct from the physical Gradle module rule: qualify by nonempty Roadmap or Knowledge/Quiz/Interview/API availability and preserve ancestors.
+34. The sidebar content filter is distinct from the physical Gradle module rule: qualify by nonempty Roadmap or Knowledge/Quiz/Interview/Case Study availability and preserve ancestors.
 35. Sidebar module search distinguishes self-match from descendant-match: self-match keeps the full subtree; descendant-match keeps only the ancestor path. Non-terminal filtered branches remain collapsible; terminal module groups remain picker-based.
 36. Sidebar interaction depends on node capability: non-terminal child-only rows use the whole row for expand/collapse; a terminal GROUP whose direct children are all leaf MODULE nodes uses one hover/click Module Picker instead of inline module rows; mixed GROUP/MODULE parents wrap direct leaf MODULE siblings as presentation-only one-item pickers; MODULE nodes with children are rendered as structural parents with a virtual self-module picker child rather than split-action hybrid rows; dashboard-only modules that are not wrapped still navigate as a whole. Only one picker may be open at once, and its modules are numbered 1..N from their catalog order regardless of whether that order came from `module-order.yml` or alphabetical fallback. Virtual wrappers never change generated catalog identity/count. There is no per-module circular `>` navigation button. Tree state starts expanded and still supports global expand/collapse controls for normal branches.
-37. Portal Menu and API Docs start collapsed by default, but tab switching must preserve the most recent in-memory expand/collapse state for the current module/language instead of remounting/resetting those panels.
+37. Portal Menu starts collapsed by default; tab switching preserves its most recent in-memory expand/collapse state for the current module/language.
 38. Knowledge supports multiple simultaneously expanded sections; opening one section must not implicitly close another. Loaded Markdown remains cached while the panel stays mounted.
-39. Portal API Docs are documentation-only in the current architecture: they render static Swagger metadata and guided `execution` content, not live execute/debug controls. Running/debugging requires downloading/running the module locally or using the module's own runtime tooling.
-40. Portal API controller/method ordering follows README learning relationships when valid: controller order comes from numeric `readmeRelated.file` chapter order, and method order comes from resolved README anchor position; do not replace this with alphabetical/path ordering.
+39. The Portal API Docs tab and API metadata publication are retired; runtime Swagger/OpenAPI, `execution` documentation and Java mapping generation remain supported in module-local development and Local Run.
+40. Swagger controller/method README relationships remain source-owned for local Swagger runtime and enrichment; they are not projected to a Portal API Docs tab.
 41. Quiz and Interview are static learning capabilities owned by module-local localized YAML. Their generated schema-comment blocks are build-owned, while `questions:` content is human-owned and must survive regeneration.
 42. Quiz answer ids `A/B/C/D` are stable identities, not display positions; shuffle only the displayed order once per localized document load and check correctness against the original id.
 43. Interview reference answers are hidden by default and revealed explicitly; Quiz/Interview relation panels must resolve canonical Knowledge/API metadata rather than duplicating content into the question file.

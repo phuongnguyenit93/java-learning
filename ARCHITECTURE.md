@@ -98,7 +98,7 @@ README / Knowledge Menu
         ↓
 Knowledge lessons
         ↓
-API Docs / executable evidence when applicable
+Swagger learning metadata / executable evidence when applicable
         ↓
 Video Script / presentation plan
         ↓
@@ -109,7 +109,7 @@ Interview
 Portal projection
 ```
 
-Roadmap là upstream source-of-truth cho learning order và milestone grouping. README/Menu chỉ triển khai roadmap thành Knowledge section cụ thể; API Docs/runtime evidence, Video Script, Quiz và Interview là downstream presentation/reinforcement/evidence và không được tự mở rộng curriculum. Video đặc biệt chỉ được chuyển Knowledge/evidence thành cách trình bày bằng scene/transition/visual/narration, không trở thành technical source of truth mới.
+Roadmap là upstream source-of-truth cho learning order và milestone grouping. README/Menu chỉ triển khai roadmap thành Knowledge section cụ thể; Swagger learning metadata/runtime evidence, Video Script, Quiz và Interview là downstream presentation/reinforcement/evidence và không được tự mở rộng curriculum. Website Portal đã bỏ tab API Docs nhưng Swagger YAML/generator vẫn phục vụ Java mapping scan, Case Study enrichment và runtime Local Run. Video đặc biệt chỉ được chuyển Knowledge/evidence thành cách trình bày bằng scene/transition/visual/narration, không trở thành technical source of truth mới.
 
 Roadmap có hai optional relation layers nhưng cả hai đều **không phải curriculum source mới**:
 
@@ -478,7 +478,7 @@ Chapter đầu tiên hoặc entry chapter tương đương của một nontrivia
 
 Các Java language/runtime mechanism cũng không tự động trở thành foundational domain concept chỉ vì chúng nằm trong cùng module. Knowledge phải nói rõ mechanism đó đang implement/hỗ trợ concept nào, được đưa vào để comparison, hay chỉ là boundary handoff sang module khác.
 
-Việc một module có API hay không không quyết định module đó có đủ lớn hay hoàn chỉnh. Knowledge + Quiz + Interview có thể tạo thành learning module hoàn chỉnh cho các topic thiên về language/library/concept. API Docs chỉ là practical experiment layer khi module thực sự có runnable API có giá trị học tập.
+Việc một module có API hay không không quyết định module đó có đủ lớn hay hoàn chỉnh. Knowledge + Quiz + Interview có thể tạo thành learning module hoàn chỉnh cho các topic thiên về language/library/concept. Swagger và runnable API là practical experiment layer khi module thực sự có API có giá trị học tập; không yêu cầu Portal API Docs.
 
 Do đó không được đổi một topic tự nhiên thành `SERVLET`/`REACTIVE`, hoặc tạo endpoint giả, chỉ để đạt "đủ bộ" Knowledge/API/Quiz/Interview. Ngược lại, nếu `SERVLET`/`REACTIVE` module có learning API thực sự thì API phải minh họa/chứng minh Knowledge concept và dùng exact README relationship theo Swagger contract.
 
@@ -2305,7 +2305,7 @@ trừ khi architecture contract của artifact đó được thay đổi rõ rà
 | Portal Video | authored `module/**/content/readme/docs/{lang}/menu/<chapter>/video/video-script.yml` hợp lệ | `build/learning-data/java/module/{ROUTE_ID}/video/{lang}/index.json` + `content/{categoryId}/script.json` + catalog `video` path |
 | Portal Quiz | `content/readme/docs/{lang}/menu/<chapter>/quiz/question.yml` chứa câu hỏi hợp lệ | `build/learning-data/java/module/{ROUTE_ID}/quiz/{lang}/index.json` + chapter `question.yml` + catalog Quiz |
 | Portal Interview | `content/readme/docs/{lang}/menu/<chapter>/questions/interview.yml` chứa câu hỏi hợp lệ | `build/learning-data/java/module/{ROUTE_ID}/interview/{lang}/index.json` + chapter `question.yml` + catalog Interview |
-| Portal API metadata | complete `module/**/src/main/resources/swagger/{lang}` four-file set | `build/learning-data/java/module/{ROUTE_ID}/api/{lang}/...` + catalog `api` base path |
+| Code Explorer API mapping | `content/code-explorer/material.yml` với `apiMapping.source=SWAGGER` và `src/main/resources/swagger/vi/api-descriptions.yml` | `CodeExplorerMaterialService` tạo `api-map.json` từ Swagger mappings và Java symbols; không phụ thuộc Portal API Docs |
 | Portal production frontend | React/TypeScript source | Vite `dist` → Spring `classpath:/static` |
 
 ---
@@ -2467,7 +2467,7 @@ Các invariant dưới đây phản ánh architecture hiện tại và nên đư
 31. Browser Local Run sends only module ID and fingerprint; guarded Java workflow resolves its own Gradle path and executes `bootJar`.
 32. Durable Object single-flight and rate limiting protect dispatch; GitHub Actions concurrency is separate and does not guarantee FIFO.
 33. Static-first documentation is independent of module execution and Spring Boot portal hosting.
-34. API Docs consume sanitized, static Swagger metadata; live API execution is a separate capability.
+34. Portal API Docs tab and static API metadata publishing are retired. Swagger resources, scanning/generation, Case Study enrichment, VI/EN translation and module-local runtime remain supported; Code Explorer API mapping continues to use Swagger metadata.
 35. Quiz/Interview module data, schema and metadata remain producer-owned, never hand-authored in frontend.
 36. Do not invent unresolved Knowledge/API relations in frontend projections.
 37. Quiz dùng stable internal answer ids `A/B/C/D`; frontend chỉ shuffle display order một lần khi load document và không dùng display position làm correctness identity.

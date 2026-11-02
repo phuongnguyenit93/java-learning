@@ -66,7 +66,7 @@ class ChapterQuestionProjectionSupport {
                         "content/${kind}/${language}/${kind}.yml")
                 if (moduleSource.isFile()) {
                     ModuleAssessmentProjectionSupport.addOutputs(
-                            outputs, moduleSource, routeId, kind, language)
+                            outputs, moduleSource, routeId, kind, language, module.projectDir)
                     hasQuestions = true
                     return
                 }

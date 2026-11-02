@@ -52,7 +52,7 @@ class PortalQuizProjectionService {
                 if (!(methodEntry instanceof Map)) {
                     reason = 'method signature was not found in api-descriptions.yml'
                 } else if ((methodEntry as Map).usage != true) {
-                    reason = 'API exists but usage is not true, so it is not exposed in Portal API Docs'
+                    reason = 'API exists but usage is not true (inactive Swagger method)'
                 }
             }
         }

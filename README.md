@@ -20,7 +20,7 @@ GitHub Release java-data        # published learning dataset
 learning-platform (repo riêng)  # React + Cloudflare Worker website
 ```
 
-Một **real module** được nhận diện bằng local `gradle.properties`. Metadata/capability chính nằm trong generated/synchronized `master.json`; `MODULE_LANGUAGE` là source of truth chung cho language của README, Swagger, Portal projection và runtime language metadata.
+Một **real module** được nhận diện bằng local `gradle.properties`. Metadata/capability chính nằm trong generated/synchronized `master.json`; `MODULE_LANGUAGE` là source of truth chung cho language của README, Swagger, Portal projection và runtime language metadata. Swagger resources/generator vẫn phục vụ Java mapping scan, Case Study enrichment và Local Run; website Portal không còn tab API Docs hay xuất bản API metadata.
 
 Build convention:
 
@@ -53,7 +53,7 @@ Chi tiết workflow: [`GENERAL_AGENT_RULES.md`](module-generate-agent/GENERAL_AG
 2. Reload Gradle để build system nhận diện và sync metadata.
 3. Cấu hình `MODULE_TYPE`, `SERVICE_NAME`, `JAVA_BASE_PACKAGE`, `MODULE_LANGUAGE` và các capability cần dùng trong `master.json`.
 4. Với learning content, thiết kế và review **Module Roadmap trước README/Knowledge**.
-5. Từ roadmap đã duyệt mới tạo Knowledge Menu/lesson; API Docs, Video, Quiz và Interview đi sau Knowledge.
+5. Từ roadmap đã duyệt mới tạo Knowledge Menu/lesson; Swagger documentation (STEP 9), Video, Quiz và Interview đi sau Knowledge. Swagger tiếp tục phục vụ runtime/Local Run, không tạo tab API Docs trên website.
 6. Reload/run explicit tasks cần thiết; không chỉnh generated output để thay đổi source configuration.
 
 ## Tài liệu
@@ -67,6 +67,8 @@ Chi tiết workflow: [`GENERAL_AGENT_RULES.md`](module-generate-agent/GENERAL_AG
 - [`STEP_4.md`](./module-generate-agent/STEP_4.md) — Knowledge.
 - [`STEP_5.md`](./module-generate-agent/STEP_5.md) — review Knowledge, metadata và Java chapter skeleton.
 - [`STEP_6.md`](./module-generate-agent/STEP_6.md) — 4 Phase Interview, Case Study, Quiz; 11 worker contracts ở [`worker/STEP_6_WORKER/`](./module-generate-agent/worker/STEP_6_WORKER/).
+- [`STEP_8.md`](./module-generate-agent/STEP_8.md) — Case Study Java và Code Explorer.
+- [`STEP_9.md`](./module-generate-agent/STEP_9.md) — AI biên soạn Swagger VI theo group, Prime QA và merge.
 - [`STEP_10.md`](./module-generate-agent/STEP_10.md) — Quiz YAML.
 - [`STEP_11.md`](./module-generate-agent/STEP_11.md) — Related metadata cho Swagger, Quiz, Interview theo chương và Roadmap toàn module.
 - [`STEP_12.md`](./module-generate-agent/STEP_12.md) — Xuất snapshot Google Sheets của module thành Excel offline.
