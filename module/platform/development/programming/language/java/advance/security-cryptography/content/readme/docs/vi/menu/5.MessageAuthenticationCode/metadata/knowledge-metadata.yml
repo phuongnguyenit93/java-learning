@@ -1,0 +1,15 @@
+sections:
+  message-authentication-code-001:
+    difficulty: BASIC
+  message-authentication-code-002:
+    difficulty: INTERMEDIATE
+  message-authentication-code-003:
+    difficulty: INTERMEDIATE
+  message-authentication-code-004:
+    difficulty: ADVANCED
+  message-authentication-code-005:
+    difficulty: ADVANCED
+  message-authentication-code-006:
+    difficulty: ADVANCED
+  message-authentication-code-007:
+    difficulty: ADVANCED

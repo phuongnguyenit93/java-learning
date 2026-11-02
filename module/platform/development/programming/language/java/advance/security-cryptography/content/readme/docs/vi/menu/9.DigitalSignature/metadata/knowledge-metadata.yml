@@ -1,0 +1,19 @@
+sections:
+  digital-signature-001:
+    difficulty: BASIC
+  digital-signature-002:
+    difficulty: INTERMEDIATE
+  digital-signature-003:
+    difficulty: BASIC
+  digital-signature-004:
+    difficulty: ADVANCED
+  digital-signature-005:
+    difficulty: ADVANCED
+  digital-signature-006:
+    difficulty: ADVANCED
+  digital-signature-007:
+    difficulty: ADVANCED
+  digital-signature-008:
+    difficulty: INTERMEDIATE
+  digital-signature-009:
+    difficulty: ADVANCED

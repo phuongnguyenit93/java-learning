@@ -1,0 +1,253 @@
+summaries:
+- id: message-authentication-code-001
+  title: 5.1 MAC chứng minh điều gì khi hai bên cùng giữ một khóa bí mật
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **5.1 MAC chứng minh điều gì khi hai bên cùng giữ một khóa bí mật**
+
+    Khi Alice và Bob cùng giữ một khóa, MAC cho thấy đúng những byte được xác thực phù hợp với khóa chung và khó bị giả mạo bởi người không biết khóa. Bài học giúp giới hạn kết luận về tác giả, tính bí mật, quyền nghiệp vụ và chống phát lại để không nhầm MAC với chữ ký số hoặc TLS.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bằng chứng MAC trong mô hình khóa chung
+
+    1. Bob có thể kết luận điều gì về M và K khi xác minh MAC hợp lệ?
+    2. Vì sao Bob không thể dùng MAC làm bằng chứng độc lập rằng chính Alice tạo thông điệp?
+    3. Những giả định nào về khóa bí mật, thuật toán và phạm vi byte phải đúng để kết quả MAC có ý nghĩa?
+
+    ### Giới hạn và lựa chọn công cụ
+
+    1. Điều gì xảy ra nếu tag bảo vệ amount nhưng bỏ qua currency hoặc recipient?
+    2. Vì sao MAC không tự mã hóa, chống replay hoặc cho phép truy cập tenant khác?
+    3. Khi nào cần kết hợp MAC với TLS, AEAD, chữ ký số và authorization riêng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Diễn giải MAC | Phân tích luồng Alice–Bob và phát biểu chính xác điều tag hợp lệ chứng minh. |
+    | Phân biệt người tạo tag | Giải thích tại sao nhiều chủ thể giữ K không thể quy tác giả bằng MAC đơn lẻ. |
+    | Kiểm tra ranh giới toàn vẹn | Tìm được trường nghiệp vụ nằm ngoài MAC input và nêu tác động của việc sửa trường. |
+    | Đánh giá replay và quyền | Giải thích vì sao một webhook có MAC đúng vẫn cần nonce/idempotency và authorization. |
+    | Lựa chọn primitive | So sánh HMAC, digest, AEAD, TLS và chữ ký số theo thuộc tính bảo mật. |
+- id: message-authentication-code-002
+  title: 5.2 HMAC và khác biệt với băm dữ liệu có nối thêm khóa
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **5.2 HMAC và khác biệt với băm dữ liệu có nối thêm khóa**
+
+    Bài học đào sâu cấu trúc HMAC-SHA256 gồm hai lớp băm có ipad/opad, khác với SHA-256 có nối khóa trước hoặc sau. Người học nhận diện length-extension, tự chứng minh bằng test vector RFC 4231 và sử dụng engine Mac thay cho keyed hash tự chế.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc HMAC và rủi ro keyed hash
+
+    1. SHA-256(message), SHA-256(key nối message) và HMAC-SHA256 khác nhau thế nào về mục tiêu và công thức?
+    2. Block size, digest length, ipad và opad đóng vai trò gì trong HMAC-SHA256?
+    3. Length-extension có thể tác động đến SHA-256 tiền tố khóa như thế nào?
+    4. Vì sao dạng SHA-256(message nối key) không tự động được chứng minh là MAC an toàn?
+
+    ### Đối chiếu implementation Java
+
+    1. RFC 4231 case 1 và case 2 cần đúng những byte khóa, dữ liệu và tag nào?
+    2. Vì sao cùng 32 byte đầu ra không chứng minh HMAC và keyed SHA-256 là một thuật toán?
+    3. Làm thế nào để kiểm tra Mac:HmacSHA256, phân biệt với MessageDigest:SHA-256 và xử lý provider thiếu hỗ trợ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô tả cấu trúc HMAC | Diễn giải quy trình chuẩn hóa khóa và hai lần băm với ipad/opad. |
+    | Phát hiện MAC tự chế | Phân tích sai lầm của keyed hash tiền tố và length-extension. |
+    | Xác minh golden vector | Kiểm RFC 4231 bằng byte input/expected độc lập với implementation. |
+    | Dùng JCA đúng | Chọn Mac, SecretKeySpec và update/doFinal cho HmacSHA256. |
+    | Giải thích kết quả âm | Dự đoán tag khi message/key bị sửa và khi thay đổi cách chia chunk. |
+- id: message-authentication-code-003
+  title: 5.3 Sử dụng Mac với init, update, doFinal và quản lý trạng thái
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **5.3 Sử dụng Mac với init, update, doFinal và quản lý trạng thái**
+
+    Trọng tâm là vòng đời và trạng thái của javax.crypto.Mac khi sử dụng init, update, doFinal và reset. Bài hướng dẫn giữ đúng ranh giới byte của từng thông điệp, xử lý ByteBuffer, streaming, retry và concurrency để không phát hành tag sai.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### State machine của Mac
+
+    1. Mac chuyển trạng thái như thế nào từ getInstance sang init, update, doFinal và reset?
+    2. doFinal(input) tính tag cho byte nào nếu trước đó đã có update(prefix)?
+    3. Reset trước final hoặc init bằng khóa khác làm thay đổi dữ liệu pending thế nào?
+    4. update(ByteBuffer) dùng position và limit ra sao?
+
+    ### Streaming và nhiều request
+
+    1. Vì sao static Mac dùng chung nhiều thread có thể trộn byte và reset chéo?
+    2. Khi đọc file từng khối, vì sao phải update(buffer, 0, n) trước một lần doFinal?
+    3. Nếu stream lỗi giữa chừng hoặc retry, phải xử lý instance Mac như thế nào?
+    4. Những test RFC, chunk, reset và concurrency xác minh các bất biến gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích vòng đời Mac | Dự đoán chính xác trạng thái và tag sau chuỗi lời gọi API. |
+    | Sử dụng ByteBuffer | Chỉ ra byte ở position/limit được MAC và trạng thái buffer sau update. |
+    | Streaming chính xác | Thiết kế xử lý file theo n byte thực đọc và chỉ final khi file hoàn tất. |
+    | Chống trộn request | Sửa mã chia sẻ Mac bằng instance cục bộ và kiểm tra độc lập hai luồng. |
+    | Xử lý retry | Loại dữ liệu pending của lần lỗi khỏi lần tính MAC mới. |
+- id: message-authentication-code-004
+  title: 5.4 Sinh, bảo quản và tách khóa HMAC theo mục đích sử dụng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **5.4 Sinh, bảo quản và tách khóa HMAC theo mục đích sử dụng**
+
+    Bài học về vòng đời khóa HMAC: entropy của SecureRandom, secret manager và HSM, tách purpose/tenant bằng khóa độc lập hoặc HKDF, xác định key ID và rotation. Hiểu rủi ro khi cùng một root hay shared secret bị lộ là tiền đề thiết kế hệ thống có nhiều bên sử dụng MAC.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Sinh khóa và ranh giới tin cậy
+
+    1. 32 byte từ SecureRandom khác gì 32 byte của password về entropy?
+    2. SecretKeySpec, KeyGenerator, secret manager, KMS và HSM có vai trò khác nhau ra sao?
+    3. Vì sao chia một khóa cho session, webhook và download URL mở rộng phạm vi giả mạo khi lộ?
+    4. Nếu SecretKey không cho export bytes, ứng dụng nên thiết kế API MAC thế nào?
+
+    ### HKDF và rotation
+
+    1. Khóa độc lập khác subkey HKDF theo purpose về lợi ích và hậu quả khi lộ root như thế nào?
+    2. IKM, salt, PRK, info và độ dài đầu ra ảnh hưởng gì đến HKDF-SHA256?
+    3. Vì sao context HKDF phải mã hóa không nhập nhằng và gắn đúng tenant/purpose?
+    4. Key v1/v2 cần trạng thái nào khi chuyển phiên bản hoặc thu hồi khẩn cấp?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đánh giá entropy | Phân biệt key length và entropy; chọn nguồn khóa an toàn. |
+    | Thiết kế quyền truy cập khóa | Xác định owner, scope, key ID, quyền KMS/HSM và dữ liệu không được log. |
+    | Tách khóa | Lập sơ đồ khóa riêng theo purpose hoặc derive bằng HKDF và đánh giá sự cố root. |
+    | Kiểm RFC 5869 | Giải thích và đối chiếu vector HKDF cùng sự khác biệt khi đổi salt/info. |
+    | Quản lý rotation | Thiết kế active, verify-only, retire, revoke và cửa sổ chấp nhận khóa cũ. |
+- id: message-authentication-code-005
+  title: 5.5 Thống nhất dữ liệu đầu vào, thứ tự trường và định dạng tag giữa hai bên
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **5.5 Thống nhất dữ liệu đầu vào, thứ tự trường và định dạng tag giữa hai bên**
+
+    Hai hệ thống cùng khóa và cùng HMAC vẫn có thể không xác minh được nếu truyền khác byte. Bài xây dựng hợp đồng canonical encoding: version, domain, thứ tự trường, UTF-8 byte length, integer big-endian và tag Base64URL; sau đó kiểm thử golden vector Java để tránh lỗi tích hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Byte contract và canonicalization
+
+    1. Vì sao hai JSON tương đương có thể có HMAC khác nhau nếu ký raw bytes?
+    2. Vì sao nối tenantId với requestId không ranh giới gây nhập nhằng dữ liệu?
+    3. Length-prefix, thứ tự trường, kiểu số và endian được chốt thế nào cho PAYMENTS-HMAC-V1?
+    4. Unicode, null, missing, chuỗi rỗng và JSON duplicate property cần được quy định ra sao?
+
+    ### Tag wire format và test hai phía
+
+    1. Tag HMAC-SHA256 32 byte biến thành bao nhiêu ký tự hex, Base64 hoặc Base64URL không padding?
+    2. MacWireDemo dùng các byte canonical nào để tạo vector và kiểm trường amount/tenant?
+    3. Vì sao verifier phải decode tag, kiểm tra độ dài, chọn key đúng scope và so byte?
+    4. Khi tag Java khác tag của đối tác, nên kiểm tra byte input, key và encoding theo thứ tự nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế chuẩn hóa byte | Đặc tả thứ tự, UTF-8 length, big-endian và version/domain. |
+    | Phát hiện encoding nhập nhằng | Chứng minh hai bộ field khác nhau có thể cho cùng byte khi nối ngây thơ. |
+    | Đối chiếu vector | Tái tạo canonical hex và tag Base64URL trong MacWireDemo. |
+    | Xác thực wire tag | Kiểm tra canonical encoding và đúng 32-byte tag sau decode. |
+    | Chẩn đoán mismatch | Xác định nguyên nhân từ byte, key, algorithm, tag format hoặc version. |
+    | Phân biệt quyền và toàn vẹn | Ràng buộc tenant/requestId với MAC và kiểm authorization riêng. |
+- id: message-authentication-code-006
+  title: 5.6 Kiểm tra tag, dữ liệu bị sửa, sai khóa và giới hạn cắt ngắn tag
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **5.6 Kiểm tra tag, dữ liệu bị sửa, sai khóa và giới hạn cắt ngắn tag**
+
+    Bài tập trung vào verification khi tag bị sửa, sai khóa, không đúng AAD hoặc bị cắt ngắn. Người học phân biệt HMAC với AES-GCM, đặt tag length cố định theo profile, sử dụng MessageDigest.isEqual và Cipher.doFinal đúng vị trí, rồi thiết kế negative tests từ chối dữ liệu chưa xác thực.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chính sách xác minh và truncation
+
+    1. Tag HMAC và tag AES-GCM khác nhau thế nào về dữ liệu và API xác minh?
+    2. Vì sao policy HMAC-SHA256-128 phải từ chối tag 15 hoặc 17 byte?
+    3. Xác suất giả mạo thay đổi ra sao nếu giảm tag từ 128 bit xuống 64 bit?
+    4. MessageDigest.isEqual giúp giảm timing leak ở phạm vi nào và còn giới hạn gì?
+
+    ### AEAD và negative tests
+
+    1. Nếu ciphertext, key, IV, AAD hoặc tag của GCM sai, Cipher.doFinal phải xử lý như thế nào?
+    2. Vì sao không được sử dụng plaintext giải mã khi AEAD chưa xác minh xong?
+    3. TagCheckHmacDemo và TagCheckGcmDemo chứng minh điều gì với dữ liệu sửa và tag thiếu byte?
+    4. Vì sao webhook tag hợp lệ vẫn chưa được phép thực hiện giao dịch nếu chưa kiểm replay và quyền?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn chính sách tag | Tính bit/byte tag đúng và từ chối mọi độ dài ngoài policy. |
+    | Kiểm HMAC | Sử dụng Mac và MessageDigest.isEqual với tag length cố định. |
+    | Kiểm AES-GCM | Truyền GCMParameterSpec, IV, AAD và kiểm doFinal trước khi dùng plaintext. |
+    | Thiết kế negative suite | Dự đoán thất bại cho sai key, tag, ciphertext, AAD và truncate. |
+    | Phòng downgrade | Chứng minh không thể nhận prefix tùy ý hoặc hạ GCM tag length từ input. |
+    | Phân loại lỗi | Phân biệt false accept, false reject và provider/key mismatch mà không lộ secret. |
+- id: message-authentication-code-007
+  title: 5.7 Phân biệt xác thực thông điệp với chống phát lại bằng nonce hoặc số thứ tự
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **5.7 Phân biệt xác thực thông điệp với chống phát lại bằng nonce hoặc số thứ tự**
+
+    Bài cuối tách thông điệp có MAC hợp lệ khỏi thông điệp còn mới. Người học lựa chọn nonce, challenge hoặc sequence number, xây replay state với TTL và cập nhật nguyên tử, rồi liên hệ với retry/idempotency để tránh tác dụng nghiệp vụ lặp trong hệ phân tán.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nonce và sequence chống replay
+
+    1. Vì sao HMAC đúng với một request cũ vẫn đúng khi kẻ tấn công gửi lại nguyên gói?
+    2. Nonce client, challenge server và sequence number có ưu nhược điểm gì về trạng thái?
+    3. Timestamp đã xác thực giới hạn cửa sổ nào và vì sao một mình nó không chặn replay?
+    4. Strict sequence khác sliding window thế nào khi gói đến lệch thứ tự?
+
+    ### State nguyên tử và idempotency
+
+    1. Vì sao contains rồi put hoặc SELECT rồi INSERT có thể có race giữa hai request?
+    2. Replay key, TTL và unique constraint phải được thiết kế thế nào qua nhiều node và restart?
+    3. Retry, replay và idempotency khác nhau thế nào nếu client dùng nonce mới cho cùng đơn hàng?
+    4. Vì sao ReplayDemo chỉ chứng minh atomic trong một JVM và chưa chứng minh exactly-once nghiệp vụ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tách authentication và freshness | Phân tích một replay với HMAC hợp lệ nhưng replay store phải từ chối. |
+    | Lựa chọn cơ chế | Chọn nonce hoặc sequence theo loại kênh và thứ tự truyền. |
+    | Thiết kế replay state | Xác định scope principal/session/key, nonce và TTL phù hợp. |
+    | Đảm bảo atomic | Đề xuất unique constraint hoặc CAS chặn hai node cùng nhận nonce. |
+    | Tách retry/idempotency | Thiết kế operation ID và response cache tránh side effect lặp. |
+    | Đánh giá demo Java | Giải thích stdout ReplayDemo và giới hạn của ConcurrentHashMap. |

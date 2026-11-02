@@ -1,0 +1,69 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'SASL và GSS-API: từ xác thực đến bảo vệ nhiều tầng'
+roadmapHeading: Lộ trình học SASL, Kerberos và GSS-API
+roadmap:
+- id: sasl-gss-api-001
+  order: 1
+  title: 18.1 SASL giải quyết xác thực trong giao thức ứng dụng như thế nào
+  description: Nắm vai trò khung SASL trong giao thức ứng dụng, phân biệt mechanism, TLS, danh tính và quyền; thử giải thích SMTP AUTH PLAIN.
+  transition:
+    to: sasl-gss-api-002
+    description: Từ hợp đồng ở mức protocol, chuyển sang state machine Java quản lý các token challenge-response của từng mechanism.
+- id: sasl-gss-api-002
+  order: 2
+  title: 18.2 SaslClient, SaslServer và vòng trao đổi challenge-response
+  description: Dùng SaslClient/SaslServer và callback để điều phối từng challenge-response, phân biệt completion cục bộ với thành công giao thức.
+  transition:
+    to: sasl-gss-api-003
+    description: Khi đã điều phối exchange, học cách chọn mechanism có chính sách và phân biệt danh tính đã xác thực với danh tính được ủy quyền.
+- id: sasl-gss-api-003
+  order: 3
+  title: 18.3 Thương lượng mechanism, authentication identity và authorization identity
+  description: Thương lượng mechanism an toàn và phân biệt authcid với authzid; kiểm tra proxy authorization bằng AuthorizeCallback.
+  transition:
+    to: sasl-gss-api-004
+    description: Sau khi biết cơ chế và identity được chọn, xem phiên SASL thực sự bảo vệ payload ở mức auth, auth-int hay auth-conf.
+- id: sasl-gss-api-004
+  order: 4
+  title: '18.4 Quality of protection: auth, auth-int, auth-conf và giới hạn tùy mechanism'
+  description: Phân tích QOP thực nhận, giới hạn mechanism và cách sử dụng wrap/unwrap, framing cùng TLS cho dữ liệu sau xác thực.
+  transition:
+    to: sasl-gss-api-005
+    description: Để hiểu cơ chế bên dưới GSSAPI có thể tạo integrity/privacy, chuyển sang bốn đối tượng cốt lõi của Java GSS-API.
+- id: sasl-gss-api-005
+  order: 5
+  title: 18.5 GSSManager, GSSName, GSSCredential và GSSContext
+  description: Làm chủ vai trò và vòng đời của GSSManager, GSSName, GSSCredential, GSSContext trong một lần bắt tay và xử lý message.
+  transition:
+    to: sasl-gss-api-006
+    description: Từ GSS objects trừu tượng, tìm hiểu hệ thống Kerberos thực cung cấp principal, vé, session key và keytab cho các context đó.
+- id: sasl-gss-api-006
+  order: 6
+  title: 18.6 Kerberos, KDC, service principal, ticket, keytab và quan hệ với Krb5LoginModule
+  description: Giải thích KDC/realm, luồng AS–TGS–AP, TGT/service ticket/keytab và cách JAAS Krb5LoginModule cấp credential cho GSS.
+  transition:
+    to: sasl-gss-api-007
+    description: Sau khi có credential Kerberos đúng, tiến vào xử lý token GSS thực tế và kiểm tra toàn vẹn, mã hóa, replay, thứ tự của từng message.
+- id: sasl-gss-api-007
+  order: 7
+  title: 18.7 Thiết lập ngữ cảnh GSS, wrap, unwrap, MIC và kiểm tra replay hoặc thứ tự
+  description: Thiết lập GSS context rồi bảo vệ từng message bằng wrap/MIC; xét supplementary replay/sequence flags trước khi cấp quyền xử lý.
+  transition:
+    to: sasl-gss-api-008
+    description: Cuối cùng ghép GSS với SPNEGO, HTTP Negotiate, SASL GSSAPI và delegation để xác định ranh giới bảo vệ của kiến trúc nhiều tầng.
+- id: sasl-gss-api-008
+  order: 8
+  title: 18.8 SPNEGO, ủy quyền credential và ranh giới bảo vệ của từng cơ chế
+  description: Ghép SPNEGO, SASL GSSAPI, HTTP Negotiate và TLS; phân tích credential delegation cùng giới hạn tin cậy ở mỗi hop.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh vai trò các bài học
+
+  | Tiêu chí | Bài 1 — 18.1 Nền tảng SASL | 18.2 SASL Java API | 18.3 Mechanism và identity | 18.4 SASL QOP | 18.5 Đối tượng JGSS | 18.6 Kerberos và JAAS | 18.7 GSS message | 18.8 SPNEGO và delegation |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Vấn đề cần giải quyết | Vì sao giao thức cần SASL? | Điều phối challenge-response ra sao? | Ai thực sự xác thực và hành động? | Phiên SASL bảo vệ dữ liệu đến đâu? | JGSS cần các đối tượng nào? | Kerberos lấy và kiểm tra vé thế nào? | GSS bảo vệ từng message ra sao? | SPNEGO/delegation bảo vệ phạm vi nào? |
+  | Trọng tâm riêng | Protocol, mechanism, TLS, authcid/authzid | SaslClient, SaslServer, callback và state | Negotiation, authcid, authzid và AuthorizeCallback | auth/auth-int/auth-conf, wrap và framing | GSSManager, GSSName, GSSCredential, GSSContext | KDC, SPN, TGT, service ticket, keytab, JAAS | wrap/unwrap, MIC, replay, sequence, MessageProp | Negotiate, mechListMIC, delegation, TLS hops |
+  | Hoạt động kiểm chứng | Đọc SMTP AUTH PLAIN, chạy SaslPlainDemo | SaslRoundTripDemo dùng CRAM-MD5 để học API | SaslIdentityDemo, chính sách proxy | SaslQopPolicyDemo và SaslFrameIO | GssCapabilities, GssSetup và token flow | PrincipalDemo, JaasLoginDemo và klist/kvno | GssLesson với duplicate/gap và TokenPipe | SpnegoContextSetup và ma trận boundary |
+  | Sai lầm/rủi ro | Base64 hoặc clientComplete bị hiểu là đã an toàn | Nhầm token rỗng/null hoặc clientComplete với success | Downgrade hoặc cấp quyền theo raw authzid | Tin QOP cấu hình hoặc gửi raw plaintext ngoài layer | Nhầm tạo tên/context với đã xác thực hoặc cấp quyền | Sai SPN/KVNO, lộ keytab, nhầm Login với auth | Bỏ privacy check hoặc chạy side effect từ replay | SSO thành công bị xem là có quyền hoặc mã hóa mọi hop |
+  | Tư duy đạt được | Phân lớp trách nhiệm xác thực | Quản lý trạng thái theo một phiên | Phân biệt bằng chứng danh tính và quyền đại diện | Kiểm tra thuộc tính đã thương lượng ở sink | Mô hình hóa đối tượng và vai trò phiên | Định vị lỗi theo AS, TGS và acceptor | Đánh giá bảo vệ và thứ tự ở từng token | Thiết kế chính sách xác thực theo nhiều lớp |

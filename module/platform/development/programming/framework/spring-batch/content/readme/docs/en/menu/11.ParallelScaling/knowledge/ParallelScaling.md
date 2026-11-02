@@ -1,1 +1,0 @@
-﻿# Parallel processing and scaling

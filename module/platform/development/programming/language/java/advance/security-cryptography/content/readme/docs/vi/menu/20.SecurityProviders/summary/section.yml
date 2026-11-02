@@ -1,0 +1,70 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Provider, phần cứng và bảo đảm an toàn mật mã trong Java
+roadmapHeading: 'Hành trình học chương 20: từ JCA provider đến tuân thủ'
+roadmap:
+- id: security-providers-001
+  order: 1
+  title: 20.1 Đăng ký provider bằng cấu hình hoặc Security API và tác động tới việc chọn dịch vụ
+  description: Khởi đầu bằng registry và cấu hình provider để hiểu cùng lời gọi getInstance được ánh xạ tới dịch vụ nào, khi nào phải chỉ định nhà cung cấp cụ thể.
+  transition:
+    to: security-providers-002
+    description: Khi đã biết Java chọn provider thế nào, cần hiểu metadata dịch vụ và SPI do provider công bố.
+- id: security-providers-002
+  order: 2
+  title: 20.2 Provider.configure, Provider.Service và ranh giới khi mở rộng SPI
+  description: Đi sâu từ việc chọn provider đến cấu hình instance, Provider.Service, SPI và factory để hiểu ranh giới của một triển khai mật mã.
+  transition:
+    to: security-providers-003
+    description: Sau cấu hình Service và SPI, hãy quan sát một provider thực sự làm cầu nối tới native hardware.
+- id: security-providers-003
+  order: 3
+  title: 20.3 SunPKCS11 làm cầu nối tới thư viện PKCS#11 của thiết bị
+  description: Đưa mô hình provider vào phần cứng với SunPKCS11, thư viện native, slot, token và cơ chế PKCS11 thực sự.
+  transition:
+    to: security-providers-004
+    description: Từ kiến trúc SunPKCS11, chuyển sang chọn slot và đăng nhập để truy cập đúng đối tượng trong PKCS11 KeyStore.
+- id: security-providers-004
+  order: 4
+  title: 20.4 Cấu hình slot, token, đăng nhập và truy cập PKCS11 KeyStore
+  description: Cấu hình và xác thực với đúng token, mở PKCS11 KeyStore, đối chiếu alias, chứng chỉ và quyền truy cập khóa.
+  transition:
+    to: security-providers-005
+    description: Đã đọc được key handle trong token, tiếp tục xem Signature và Cipher được phép sử dụng nó ra sao.
+- id: security-providers-005
+  order: 5
+  title: 20.5 Sử dụng private key không xuất được qua Cipher hoặc Signature
+  description: Sử dụng private key opaque cho Signature hoặc Cipher mà không cần xuất raw bytes, đồng thời phân biệt quyền ký và giải mã.
+  transition:
+    to: security-providers-006
+    description: Khi thao tác với opaque key đã rõ, bước kế tiếp là quản trị session, PIN và concurrency trong hoạt động thực.
+- id: security-providers-006
+  order: 6
+  title: 20.6 Quản lý phiên thiết bị, lỗi PIN, token bị tháo và khả năng chạy đồng thời
+  description: 'Quản trị runtime của token: PIN lockout, session, hot-plug, giới hạn concurrency và khôi phục theo generation.'
+  transition:
+    to: security-providers-007
+    description: Giới hạn thiết bị và session là một phần của lựa chọn; cần so sánh toàn diện software, HSM và OS store.
+- id: security-providers-007
+  order: 7
+  title: 20.7 Khác biệt giữa provider phần mềm, HSM và kho khóa của hệ điều hành
+  description: Đặt các cơ chế vừa học cạnh provider phần mềm và kho OS để chọn ranh giới lưu khóa phù hợp threat model và hệ điều hành.
+  transition:
+    to: security-providers-008
+    description: Chọn backend chưa đủ nếu môi trường có tiêu chí tuân thủ; phải đánh giá chứng nhận module, approved mode và evidence.
+- id: security-providers-008
+  order: 8
+  title: 20.8 Phân biệt có hỗ trợ thuật toán với đáp ứng yêu cầu tuân thủ của môi trường
+  description: Kết thúc bằng kiểm chứng khả năng thuật toán khác với module validation và compliance, lập bằng chứng đầy đủ trước khi công bố đạt chính sách.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh và định vị nội dung chương
+
+  | Tiêu chí | Bài 1 — 20.1 Đăng ký | 20.2 SPI | 20.3 Cầu nối | 20.4 Token/KeyStore | 20.5 Opaque key | 20.6 Phiên thiết bị | 20.7 So sánh backend | 20.8 Tuân thủ |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Vai trò trong chương | Quy tắc lựa chọn dịch vụ | Hiện thực Provider và SPI | JCA đến PKCS11 native | Chọn token và đăng nhập | Ký/giải mã không export key | Vận hành token đồng thời | Chọn ranh giới lưu khóa | Chứng minh policy bằng evidence |
+  | Vấn đề chính | Vì sao provider bị chọn khác nhau? | Ai công bố service và tạo SPI? | SunPKCS11 nối được tới đâu? | Alias nào thuộc token nào? | Key handle thực thi phép gì? | Làm gì khi PIN/phiên hỏng? | Backend nào phù hợp mục tiêu? | Chạy được có nghĩa đạt chuẩn không? |
+  | API/cơ chế trọng tâm | Security API, security.provider.N | Provider.configure, Service, *Spi | SunPKCS11, C_Sign, library | PKCS11 KeyStore, PIN, callback | Signature, Cipher, CKA_SIGN | KeyStore.Builder, Semaphore, epoch | PKCS12, PKCS11, Windows-MY | Provider.getServices, CMVP |
+  | Thực hành | ProviderSelectionDemo | ProviderSpiDemo | Pkcs11SignDemo | Pkcs11KeyStoreDemo | CryptoSoftwareDemo/HsmSignatureDemo | TokenSessionDemo | SoftwareProviderDemo/HsmConnectDemo | CapabilityVsCompliance |
+  | Giới hạn cần nhớ | Thứ tự không luôn quyết định sau init | Metadata không thay token capability | Adapter không tự là HSM | Slot index không định danh token | getEncoded null không chứng thực HSM | Không retry PIN hoặc dùng handle cũ | OS store không tự là hardware-backed | Chứng thư module không chứng nhận cả app |
+  | Năng lực đầu ra | Cấu hình và kiểm selection | Đọc/thiết kế SPI contract | Mô tả bridge và config native | Login và tra cứu đúng alias | Chọn API/key permission phù hợp | Thiết kế recovery và backpressure | Đánh giá tradeoff kiến trúc | Lập ma trận PASS/FAIL/UNKNOWN |

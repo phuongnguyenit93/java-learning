@@ -1,0 +1,76 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 13. Chứng thư X.509
+roadmapHeading: Hành trình từ chứng thư và CA đến xác minh, cấp phát và vận hành an toàn
+roadmap:
+- id: x509-certificate-001
+  order: 1
+  title: 13.1 Chứng thư gắn khóa công khai với danh tính và vai trò của CA
+  description: Nhận diện vấn đề public key thiếu nguồn gốc đáng tin; giải thích CA ký TBSCertificate để liên kết khóa với định danh và giới hạn được cấp, đồng thời phân biệt chữ ký, trust và quyền nghiệp vụ.
+  transition:
+    to: x509-certificate-002
+    description: Khi đã biết CA tạo lời xác nhận có chữ ký, cần phân biệt root, intermediate, leaf và tính chất tự ký trong một đường chứng thực.
+- id: x509-certificate-002
+  order: 2
+  title: 13.2 Phân biệt root, intermediate, leaf và chứng thư tự ký
+  description: Phân biệt root, intermediate, leaf và self-issued/self-signed; kiểm chứng root→intermediate→leaf bằng Java PKIX và chứng minh một root lạ không tạo được trust.
+  transition:
+    to: x509-certificate-003
+    description: Sau mô hình phân tầng, cần biết cách đọc đúng byte chứng thư từ hai dạng DER/PEM mà chưa nhầm parsing với trust.
+- id: x509-certificate-003
+  order: 3
+  title: 13.3 Đọc chứng thư bằng CertificateFactory từ DER hoặc PEM
+  description: Parse chứng thư X.509 từ DER nhị phân và PEM Base64 qua CertificateFactory, kiểm fingerprint DER, bundle và ranh giới parser với trust.
+  transition:
+    to: x509-certificate-004
+    description: Khi đã đọc được đối tượng X509Certificate, cần diễn giải chính xác các trường subject, issuer, serial và thời hạn.
+- id: x509-certificate-004
+  order: 4
+  title: 13.4 Subject, issuer, serial number, thời hạn và X500Principal
+  description: Diễn giải subject/issuer DN, serial theo issuer, notBefore/notAfter và X500Principal; kiểm ranh giới so sánh tên và validity với xác minh trust.
+  transition:
+    to: x509-certificate-005
+    description: Khi đã đọc tên và thời gian, tiếp tục với định danh dịch vụ thật sự qua SAN DNS/IP và quy tắc hostname của TLS.
+- id: x509-certificate-005
+  order: 5
+  title: 13.5 Subject Alternative Name và danh tính DNS hoặc địa chỉ IP
+  description: Dùng SAN dNSName/iPAddress để xác định đúng endpoint DNS/IP; phân tích wildcard, CN fallback và vai trò endpoint identification trong JSSE.
+  transition:
+    to: x509-certificate-006
+    description: Khi tên endpoint phù hợp, vẫn phải kiểm certificate có được phép dùng cho vai trò server/client hoặc CA thông qua extensions hay không.
+- id: x509-certificate-006
+  order: 6
+  title: 13.6 KeyUsage, ExtendedKeyUsage, BasicConstraints và extension critical
+  description: Xác minh KeyUsage, EKU, BasicConstraints và critical extensions; thử trường hợp unknown critical bị PKIX từ chối và clientAuth không thay serverAuth.
+  transition:
+    to: x509-certificate-007
+    description: Sau khi hiểu từng constraint, cần phân biệt rõ ba lời gọi checkValidity, verify và kiểm tra tin cậy PKIX trong Java.
+- id: x509-certificate-007
+  order: 7
+  title: 13.7 Phân biệt checkValidity, verify chữ ký chứng thư và kiểm tra độ tin cậy
+  description: Chứng minh validity interval, chữ ký certificate và PKIX trust là ba điều kiện độc lập; phân tích root tự ký, revoked certificate và endpoint identity.
+  transition:
+    to: x509-certificate-008
+    description: Từ việc xác minh certificate, chuyển sang quy trình thực tế tạo CSR và cài certificate reply vào alias private key đúng trong keytool.
+- id: x509-certificate-008
+  order: 8
+  title: 13.8 CSR PKCS#10, phản hồi CA và chuỗi chứng thư trong quy trình keytool
+  description: Tạo CSR PKCS#10 từ PrivateKeyEntry, CA phát hành leaf, nhập reply vào đúng alias và xác minh certificate chain qua keytool/Java.
+  transition:
+    to: x509-certificate-009
+    description: Sau khi tạo và import thành công, cần vận hành một CA thử nghiệm thật sự tách biệt, không để khóa hoặc trust của lab rò sang production.
+- id: x509-certificate-009
+  order: 9
+  title: 13.9 Lập bộ CA thử nghiệm và giữ ranh giới giữa chứng thư thử nghiệm với môi trường thật
+  description: Vận hành CA keytool test có CA/leaf/truststore tách biệt, kiểm âm PKIX và hostname, giữ CA private key và trust anchor ra khỏi production.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh vai trò của các bài học
+
+  | Tiêu chí | Bài 1 — 13.1 | 13.2 | 13.3 | 13.4 | 13.5 | 13.6 | 13.7 | 13.8 | 13.9 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | Binding khóa và danh tính | Vai trò trong path | Đọc byte chứng thư | Đọc metadata | Kiểm tên endpoint | Kiểm quyền trong cert | Tách validity và trust | Luồng cấp và nhập cert | Cô lập CA thử nghiệm |
+  | Vấn đề cần giải quyết | Động cơ PKI, chữ ký CA | Root, intermediate, leaf, self-issued | DER, PEM, PEM bundle | Subject, issuer, serial, validity | DNS SAN, IP SAN, wildcard | KU, EKU, BC, critical | checkValidity, verify, PKIX | CSR, CA reply, key alias | Root/leaf lab, trust boundary |
+  | Công cụ hoặc bằng chứng | Chứng thư X.509, root demo | PKIX root đúng và root lạ | CertificateFactory, SHA-256 DER | X500Principal, BigInteger, Instant | getSubjectAlternativeNames, JSSE | X509Certificate API, PKIX critical test | CertPathValidator, 2 root khác nhau | keytool, PKCS12, CsrChainDemo | keytool lab, LabCaCheck, test âm |
+  | Ranh giới phải giữ | Không tự tin một CA tự ký | Tự ký không đồng nghĩa trusted | Parse được không phải trusted | Không so DN thô hoặc lấy CN làm host | Không fallback CN hay tắt hostname check | CA=true không tự cấp trust | Chữ ký đúng không là trust | Không nhập reply nhầm alias | Không đưa lab root vào production |
+  | Năng lực đầu ra | Giải thích CA ký TBSCertificate | Phân tích hierarchy và trust anchor | Parse và đối chiếu DER/PEM | Đọc DN/time với đúng semantics | Phân tích đúng DNS-ID/IP-ID | Thẩm định extension và purpose | Giải thích các kết quả kiểm tra độc lập | Cài chain giữ đúng private key | Lập CA lab có dọn dẹp và policy |

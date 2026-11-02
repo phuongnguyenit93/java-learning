@@ -1,0 +1,19 @@
+sections:
+  cert-path-001:
+    difficulty: BASIC
+  cert-path-002:
+    difficulty: INTERMEDIATE
+  cert-path-003:
+    difficulty: INTERMEDIATE
+  cert-path-004:
+    difficulty: INTERMEDIATE
+  cert-path-005:
+    difficulty: ADVANCED
+  cert-path-006:
+    difficulty: ADVANCED
+  cert-path-007:
+    difficulty: ADVANCED
+  cert-path-008:
+    difficulty: ADVANCED
+  cert-path-009:
+    difficulty: INTERMEDIATE

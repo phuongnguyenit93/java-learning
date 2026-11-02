@@ -1,0 +1,23 @@
+sections:
+  jsse-001:
+    difficulty: BASIC
+  jsse-002:
+    difficulty: INTERMEDIATE
+  jsse-003:
+    difficulty: INTERMEDIATE
+  jsse-004:
+    difficulty: INTERMEDIATE
+  jsse-005:
+    difficulty: INTERMEDIATE
+  jsse-006:
+    difficulty: ADVANCED
+  jsse-007:
+    difficulty: INTERMEDIATE
+  jsse-008:
+    difficulty: ADVANCED
+  jsse-009:
+    difficulty: ADVANCED
+  jsse-010:
+    difficulty: INTERMEDIATE
+  jsse-011:
+    difficulty: ADVANCED

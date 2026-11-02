@@ -1,0 +1,336 @@
+summaries:
+- id: tls-foundation-001
+  title: 15.1 TLS kết hợp thỏa thuận khóa, chứng thư, chữ ký và mã hóa phiên
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **15.1 TLS kết hợp thỏa thuận khóa, chứng thư, chữ ký và mã hóa phiên**
+
+    TLS kết hợp thỏa thuận khóa (EC)DHE, chứng thư X.509, chữ ký CertificateVerify, xác minh Finished, dẫn xuất HKDF và mã hóa xác thực AEAD; mỗi cơ chế giải quyết một nhiệm vụ khác nhau. Bài học dạy đọc chuỗi tương tác TLS 1.3 có xác thực server và phân biệt ví dụ Java X25519 chỉ minh họa primitive với một handshake JSSE đầy đủ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Liên kết các vai trò mật mã
+
+    1. Key_share tạm thời và public key trong chứng thư khác nhau ra sao, và vì sao shared secret chưa phải traffic key?
+    2. CertificateVerify, Finished và AEAD tag xác thực các dữ liệu, giai đoạn và loại khóa nào?
+    3. Nếu triển khai ECDHE + AES-GCM nhưng bỏ certificate trust/hostname verification, kẻ tấn công có thể làm gì?
+
+    ### Dẫn xuất khóa và giới hạn
+
+    1. HKDF và transcript tham gia dẫn xuất traffic secrets theo từng hướng như thế nào?
+    2. Forward secrecy bị ảnh hưởng thế nào khi dùng PSK-only resumption hoặc 0-RTT?
+
+    ### Thực hành Java
+
+    1. Lab X25519 độc lập chứng minh được gì, còn thiếu những bước nào của TLS?
+    2. Trong handshake loopback, phải kiểm chứng điều gì về trust anchor, hostname, protocol và cipher suite trước khi tin kết quả?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ bản đồ cơ chế | Đặt (EC)DHE, certificate, handshake signature, Finished, HKDF và AEAD vào đúng giai đoạn. |
+    | Phân biệt khóa | Giải thích vì sao private key của certificate không mã hóa trực tiếp TLS 1.3 application records. |
+    | Suy luận ranh giới xác thực | Chỉ ra điều gì hỏng khi bỏ endpoint identification dù kênh còn mã hóa. |
+    | Giải thích thử nghiệm | Đối chiếu X25519 KeyAgreement demo với kết nối JSSE có certificate authentication. |
+    | Đọc handshake | Diễn giải ClientHello, ServerHello, CertificateVerify, Finished và record protection. |
+- id: tls-foundation-002
+  title: 15.2 Luồng bắt tay, xác thực máy chủ và xác thực hai chiều mTLS
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **15.2 Luồng bắt tay, xác thực máy chủ và xác thực hai chiều mTLS**
+
+    Kết nối TLS thông thường xác thực máy chủ với client; mTLS còn xác thực chứng thư và quyền giữ private key của phía client. Bài này theo sát thứ tự thông điệp, keystore/truststore từng bên và lab Java 17 tạo CA, server/client certificate, so sánh one-way TLS và mTLS. Người học phải tách xác thực service identity khỏi phân quyền nghiệp vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Handshake một chiều và hai chiều
+
+    1. ClientHello, ServerHello, Certificate, CertificateVerify, Finished tham gia một full TLS 1.3 handshake theo thứ tự nào?
+    2. Khi có CertificateRequest, server phải kiểm gì ở client certificate và client phải sở hữu khóa nào?
+    3. setNeedClientAuth khác setWantClientAuth ra sao nếu client không gửi chứng thư?
+
+    ### Quyền hạn và xử lý lỗi
+
+    1. Keystore khác truststore ở client và server như thế nào, đặc biệt với serverAuth/clientAuth EKU?
+    2. Tại sao mTLS handshake thành công chưa đồng nghĩa được phép truy cập mọi tenant hoặc endpoint?
+    3. Khi TLS terminate tại proxy, service downstream phải bảo vệ header client identity ra sao?
+
+    ### Lab Java 17
+
+    1. Những ca nào khiến one-way TLS pass còn mTLS fail, và làm sao phân biệt lỗi CA, SAN và thiếu client certificate?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô hình handshake | Vẽ đúng luồng one-way TLS và mTLS, chỉ ra CertificateRequest và client CertificateVerify. |
+    | Cấu hình tin cậy | Chọn đúng server/client keystore, truststore, mục đích certificate và chế độ needClientAuth. |
+    | Kiểm thử JSSE | Lý giải các kết quả success/failure của lab CA, leaf và client-auth. |
+    | Ràng buộc danh tính | Đề xuất mapping certificate identity vào authorization thay vì trust CA là cấp toàn quyền. |
+    | Chẩn đoán tầng proxy | Xác định khi nào principal do proxy truyền sang cần được xác thực lại. |
+- id: tls-foundation-003
+  title: 15.3 TLS 1.2, TLS 1.3 và cách đọc cấu hình giao thức khả dụng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **15.3 TLS 1.2, TLS 1.3 và cách đọc cấu hình giao thức khả dụng**
+
+    Một phiên bản TLS có thể được JDK hỗ trợ nhưng bị policy tắt, hoặc được bật nhưng chưa bao giờ được kết nối chọn. Bài học so sánh TLS 1.2 và 1.3 rồi đi sâu vào supported/enabled/configured/negotiated protocols, JSSE security/system properties, chương trình inventory không mạng và handshake loopback có kiểm chứng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đọc protocol version
+
+    1. TLS 1.2 và 1.3 khác nhau ở key exchange, record protection và tên cipher suite như thế nào?
+    2. Vì sao getSupportedProtocols, getEnabledProtocols và SSLSession.getProtocol có thể đưa ba kết quả khác nhau?
+    3. Làm sao chứng minh hai phía đã đàm phán TLSv1.3 thay vì chỉ cùng công bố supported TLSv1.3?
+
+    ### Cấu hình và chẩn đoán
+
+    1. jdk.tls.disabledAlgorithms và jdk.tls.client.protocols khác setEnabledProtocols ở phạm vi nào?
+    2. Nếu version overlap nhưng handshake fail, nhóm lỗi cipher suite, group, certificate, hostname và signature scheme nào cần kiểm tra?
+    3. Vì sao legacy_version trong TLS 1.3 không thay SSLSession.getProtocol để xác định negotiated protocol?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tầng cấu hình | Phân biệt supported, enabled, disabled và negotiated bằng chứng cứ của từng API. |
+    | So sánh version | Giải thích khác biệt TLS 1.2/1.3 mà không áp quy tắc suite cũ sang phiên bản mới. |
+    | Thực hành inventory | Diễn giải danh sách protocol của JDK và tác động các properties. |
+    | Kiểm thử handshake | Đọc SSLSession sau kết nối thực và chứng minh version được chọn. |
+    | Điều tra lỗi | Lập thứ tự kiểm tra security policy, peer, cipher, group và certificate. |
+- id: tls-foundation-004
+  title: 15.4 Cipher suite và khác biệt về thành phần thương lượng giữa các phiên bản TLS
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **15.4 Cipher suite và khác biệt về thành phần thương lượng giữa các phiên bản TLS**
+
+    Trong TLS 1.2, tên cipher suite thường chứa key exchange/authentication và record cipher; TLS 1.3 chỉ dùng suite để nêu AEAD cùng hash của key schedule. Bài này rèn cách đọc tên theo phiên bản, tách supported_groups/key_share, signature_algorithms, certificate, SNI/ALPN và xác minh bằng hai handshake Java 17.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân tích cipher suite
+
+    1. TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 có phải RSA key transport không, và SHA256 ở cuối tên nghĩa gì?
+    2. TLS_AES_128_GCM_SHA256 trong TLS 1.3 xác định những gì và không xác định group, chữ ký hay certificate nào?
+    3. supported_groups khác key_share ra sao và liên quan gì đến HelloRetryRequest?
+
+    ### Thương lượng và Java
+
+    1. Vì sao không thể dùng suite TLS 1.2 để ép một kết nối TLS 1.3 dù cả hai dùng AES-GCM?
+    2. Tại sao hai peer cùng TLS version vẫn có thể fail vì group, signature scheme hoặc certificate?
+    3. Khi so supported/enabled suites với SSLSession.getCipherSuite của Java, đâu mới là bằng chứng đã negotiated?
+
+    ### Vận hành
+
+    1. ALPN và SNI nằm ngoài tên cipher suite như thế nào, và vì sao pin suite không tự bảo đảm profile an toàn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải nghĩa suite | Phân tích được cấu trúc tên TLS 1.2 và ý nghĩa AEAD/HKDF hash trong TLS 1.3. |
+    | Đọc extensions | Phân biệt cipher_suites, supported_groups, key_share và signature_algorithms. |
+    | Đối chiếu phiên bản | Lý giải vì sao TLS 1.2 suite và TLS 1.3 suite không thể hoán đổi. |
+    | Đọc handshake JSSE | Kiểm kê suites và giải thích negotiated suite/protocol trên hai kết nối thử nghiệm. |
+    | Đề xuất test matrix | Thiết kế ca group/suite/certificate mismatch mà không hạ security policy tùy tiện. |
+- id: tls-foundation-005
+  title: 15.5 Khóa tạm thời, forward secrecy và quan hệ với khóa dài hạn của chứng thư
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **15.5 Khóa tạm thời, forward secrecy và quan hệ với khóa dài hạn của chứng thư**
+
+    Forward secrecy (FS) trả lời tình huống một đối thủ ghi packet hôm nay và trộm private key định danh server ở tương lai. Bài học phân biệt khóa chứng thư, ephemeral X25519/ECDHE, shared secret, traffic secrets và PSK/ticket, so sánh TLS 1.2 RSA transport với ECDHE và các trường hợp resumption, 0-RTT, KeyUpdate trong TLS 1.3.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình thỏa hiệp khóa
+
+    1. Vì sao lộ RSA identity private key sau một phiên có hậu quả khác nhau giữa TLS_RSA và TLS_ECDHE_RSA?
+    2. Khóa định danh, ephemeral private key, CA private key và traffic secret có vai trò/vòng đời khác nhau thế nào?
+    3. Vì sao ephemeral Diffie-Hellman vẫn cần chữ ký hoặc xác thực danh tính để chống người ở giữa?
+
+    ### Ngoại lệ FS
+
+    1. PSK-only và PSK-DHE khác nhau về forward secrecy của handshake nối lại như thế nào?
+    2. 0-RTT có vấn đề replay/FS nào dù phần 1-RTT của phiên có bảo vệ tốt?
+    3. KeyUpdate có tạo một DH exchange mới không và việc lộ session secrets/endpoint memory làm thay đổi lời hứa FS thế nào?
+
+    ### Kiểm chứng
+
+    1. Ví dụ Java X25519 và Ed25519 chứng minh key agreement/chữ ký riêng, nhưng chưa chứng minh TLS an toàn ở đâu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dựng threat model | Dự đoán tác động giải mã traffic cũ khi chỉ identity key bị lộ trong các mode TLS. |
+    | Phân biệt secret | Chỉ ra công dụng và vòng đời của certificate key, ECDHE key, PSK và traffic key. |
+    | Đánh giá resumption | Giải thích FS và replay khác nhau giữa PSK-only, PSK-DHE và 0-RTT. |
+    | Diễn giải Java primitive | Giải thích kết quả lab X25519/Ed25519 và các giới hạn so với JSSE handshake. |
+    | Kiểm toán triển khai | Lựa chọn bằng chứng protocol/mode thực, ticket rotation và secret-lifecycle protections. |
+- id: tls-foundation-006
+  title: 15.6 Phân biệt tin chuỗi chứng thư với xác minh tên máy chủ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **15.6 Phân biệt tin chuỗi chứng thư với xác minh tên máy chủ**
+
+    Chain PKIX dẫn tới CA được tin chưa chứng minh chứng thư thuộc máy chủ client thật sự muốn liên lạc. Bài này chia phép kiểm HTTPS thành trust-chain validation và hostname/IP SAN verification, khảo sát JSSE defaults của HTTPS clients và raw SSLSocket/SSLEngine, cùng lab CA nội bộ có DNS SAN localhost nhưng không có IP SAN 127.0.0.1.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chứng thư và reference identity
+
+    1. Trust anchor/path validation xác minh điều gì, và vì sao root CA do server gửi không trở thành trusted CA?
+    2. Reference hostname/IP lấy từ đâu và cần so với SAN DNS/IP trên leaf theo quy tắc nào?
+    3. Khi path trust pass nhưng hostname mismatch, client HTTPS có được tiếp tục không?
+
+    ### JSSE và lab
+
+    1. Raw SSLSocket/SSLEngine có cần chủ động bật endpoint identification không và khác HTTPS client cấp cao thế nào?
+    2. Vì sao trust CA lab và DNS:localhost có thể pass khi gọi localhost nhưng fail khi gọi 127.0.0.1?
+    3. Vì sao trust-all X509TrustManager hay HostnameVerifier luôn true không phải cách khắc phục chính xác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tách hai phép xác thực | Phân tích độc lập PKIX path trust và SAN hostname verification. |
+    | Giải thích SAN | Dự đoán thành công/thất bại khi DNS SAN và IP reference identity không khớp. |
+    | Cấu hình Java | Chỉ ra vai trò TrustManagerFactory và endpoint identification HTTPS trên JSSE. |
+    | Chẩn đoán đúng nguyên nhân | Phân biệt PKIX, hostname mismatch, EKU/chain/expiry errors và cách sửa. |
+    | Thiết kế test âm tính | Lập ma trận trusted/untrusted CA và matching/mismatching SAN, không tắt xác thực. |
+- id: tls-foundation-007
+  title: 15.7 Session, tái sử dụng phiên và vòng đời kết nối
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **15.7 Session, tái sử dụng phiên và vòng đời kết nối**
+
+    TLS connection, TLS session/resumption state và HTTP request có vòng đời khác nhau. Connection pooling có thể dùng lại socket đang sống; session resumption rút ngắn handshake trên kết nối mới. Bài học khảo sát TLS 1.2 session ID/ticket, TLS 1.3 PSK/NewSessionTicket, 0-RTT, Java SSLSession/SSLSessionContext và theo dõi ở load balancer.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng đời kết nối
+
+    1. HTTP/2 có 40 requests trên một TCP/TLS socket có nghĩa 40 TLS resumptions không?
+    2. Session ID/ticket TLS 1.2 khác PSK/NewSessionTicket TLS 1.3 ra sao?
+    3. SSLSession.invalidate, đóng socket và close_notify có ảnh hưởng giống nhau không?
+
+    ### Resumption và rủi ro
+
+    1. PSK-only/PSK-DHE có giới hạn forward secrecy nào và 0-RTT replay nguy hiểm cho request nào?
+    2. Server restart, ticket-key rotation và session cache hai phía tác động resumption rate thế nào?
+    3. TLS ticket còn hiệu lực có đồng nghĩa application login/session vẫn được phân quyền không?
+
+    ### Java và quan sát
+
+    1. setSessionTimeout/setSessionCacheSize có ý nghĩa gì và không giới hạn những tài nguyên nào?
+    2. Dữ liệu trace/metric nào xác nhận resumed handshake, thay vì suy từ latency hoặc reuse một HttpClient?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt ba vòng đời | Vẽ đúng quan hệ request, TCP/TLS connection và resumption state. |
+    | Giải thích ticket/PSK | Mô tả điều kiện và giới hạn của full/resumed TLS handshakes. |
+    | Đánh giá 0-RTT | Nhận diện request dễ replay và đề xuất idempotency/anti-replay controls. |
+    | Sử dụng JSSE đúng | Giải thích SSLSession, SSLSessionContext và giới hạn của cache inspection. |
+    | Phân tích vận hành | Đọc metrics ở TLS terminator, rotation, pooling và tình huống cache miss. |
+- id: tls-foundation-008
+  title: 15.8 SNI để chọn máy chủ ảo và ALPN để chọn giao thức ứng dụng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **15.8 SNI để chọn máy chủ ảo và ALPN để chọn giao thức ứng dụng**
+
+    SNI chỉ cho TLS server biết virtual host/certificate nào client muốn; ALPN chọn giao thức ứng dụng như h2 hoặc http/1.1 từ danh sách hỗ trợ. Hai extension không thay hostname verification hay authorization. Bài thực hành Java 21 dựng hai virtual hosts chung TLS listener, chọn certificate qua SNI-aware key manager và quan sát ALPN.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thương lượng virtual host và protocol
+
+    1. Vì sao SNI phải có trước HTTP Host/:authority, và SNI của client có phải danh tính đã xác thực không?
+    2. ALPN chọn protocol ID ra sao, và vì sao chọn h2 không tự tạo HTTP/2 parser/handler?
+    3. Trong cùng một IP:port có hai certificates, SNI, SAN, path trust và hostname verification phối hợp thế nào?
+
+    ### Java 21 và vận hành
+
+    1. SSLParameters, SNIHostName, ExtendedSSLSession và X509ExtendedKeyManager điều khiển lựa chọn server alias như thế nào?
+    2. Vì sao lab phải kiểm key type, endpoint hostname và getApplicationProtocol sau handshake?
+    3. Khi SNI bị thiếu/sai hoặc ALPN không có overlap, nên fail-closed và kiểm tra các tầng routing nào?
+
+    ### Bảo mật và proxy
+
+    1. ECH, proxy TLS termination và HTTP/2 connection reuse đặt những giới hạn nào cho SNI/ALPN và tenant separation?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt extension | Xác định đúng SNI cho certificate routing và ALPN cho application protocol. |
+    | Phân tích thứ tự | Giải thích vì sao chọn cert trước HTTP và client vẫn phải verify hostname. |
+    | Đọc JSSE code | Nêu vai trò SNI key manager, SSLParameters và getApplicationProtocol. |
+    | Kiểm thử multi-vhost | Dự đoán kết quả blue/green virtual hosts với hai leaf SAN khác nhau. |
+    | Chẩn đoán fallback | Nêu cách xử lý missing SNI, wrong certificate và ALPN mismatch có kiểm soát. |
+- id: tls-foundation-009
+  title: 15.9 Phân biệt TLS trên luồng với DTLS trên datagram
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **15.9 Phân biệt TLS trên luồng với DTLS trên datagram**
+
+    TLS/TCP bảo vệ một luồng byte có thứ tự; DTLS/UDP bảo vệ datagrams nhưng vẫn chịu mất, lặp và đảo thứ tự gói. Bài học phân biệt application framing, anti-replay, handshake retransmission và packet MTU; giải thích SSLSocket, SSLEngine, UDP I/O trong Java 17 và ranh giới với QUIC/HTTP/3.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Transport và record semantics
+
+    1. Vì sao hai lần TCP write không đồng nghĩa hai lần read, và application phải framing thế nào?
+    2. DTLS bảo vệ datagram nhưng không bảo đảm reliable delivery, in-order hay exactly-once ra sao?
+    3. DTLS anti-replay record có thay thế nghiệp vụ idempotency/deduplication được không?
+
+    ### Java DTLS và network edge cases
+
+    1. SSLEngine khác SSLSocket về transport trách nhiệm gì khi xử lý DTLS/UDP?
+    2. Vì sao handshake DTLS cần retransmission nhưng application datagrams không tự retransmit?
+    3. NEED_UNWRAP_AGAIN, NEED_TASK, packet MTU và spoofing/amplification tạo yêu cầu triển khai nào?
+
+    ### Lựa chọn kiến trúc
+
+    1. Khi nào chọn TLS/TCP, DTLS/UDP hoặc QUIC+TLS 1.3, và vì sao QUIC không phải DTLS?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập bảng semantics | Đối chiếu stream vs datagram về framing, ordering, loss và integrity. |
+    | Thiết kế bảo vệ | Đề xuất limits, anti-replay và app framing/reliability phù hợp. |
+    | Giải thích JSSE | Chỉ ra việc SSLEngine wrap/unwrap không tự cung cấp UDP transport. |
+    | Dự đoán lỗi mạng | Đánh giá packet MTU, retransmission, reordering và NAT trong DTLS. |
+    | Chọn giao thức | Lựa chọn TLS, DTLS hoặc QUIC dựa trên nhu cầu latency, reliable transport và support. |

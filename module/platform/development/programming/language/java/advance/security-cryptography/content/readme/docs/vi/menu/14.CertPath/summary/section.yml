@@ -1,0 +1,77 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 14. Đường dẫn tin cậy
+roadmapHeading: Lộ trình xây dựng, xác minh và vận hành đường dẫn tin cậy trong Java
+roadmap:
+- id: cert-path-001
+  order: 1
+  title: 14.1 Mô hình CertPath, TrustAnchor và chứng thư trung gian
+  description: Thiết lập mô hình leaf, CA trung gian, CertPath và TrustAnchor; chứng minh rằng kiểm chữ ký của một chứng thư khác với xây dựng niềm tin của ứng dụng.
+  transition:
+    to: cert-path-002
+    description: Khi đã biết một đường dẫn hợp lệ trông như thế nào, cần phân biệt engine tìm đường dẫn với engine chỉ kiểm tra một đường dẫn đã có.
+- id: cert-path-002
+  order: 2
+  title: 14.2 Phân biệt xây đường dẫn bằng CertPathBuilder với kiểm tra bằng CertPathValidator
+  description: Phân biệt tìm đường dẫn bằng CertPathBuilder với kiểm một CertPath cố định bằng CertPathValidator, cùng hợp đồng input/output và các tình huống thất bại riêng.
+  transition:
+    to: cert-path-003
+    description: Sau khi chọn đúng engine, cần biết cấu hình chính sách PKIX và tiêu chí chọn chứng thư đích sao cho hành vi xây và kiểm tra đúng kỳ vọng.
+- id: cert-path-003
+  order: 3
+  title: 14.3 Cấu hình PKIXParameters, PKIXBuilderParameters và X509CertSelector
+  description: Học cách cấu hình PKIXParameters, PKIXBuilderParameters và X509CertSelector để điều khiển tập anchor, lựa chọn target và độ dài đường dẫn.
+  transition:
+    to: cert-path-004
+    description: Sau khi xác định được tiêu chí chọn target và chính sách path, cần nguồn certificate/CRL có thể truy vấn mà không nhầm nguồn dữ liệu với nguồn tin cậy.
+- id: cert-path-004
+  order: 4
+  title: 14.4 Thu thập chứng thư hoặc CRL qua CertStore
+  description: Biết thu thập certificate và CRL ứng viên bằng CertStore cùng X509CertSelector/X509CRLSelector, không coi dữ liệu được tìm thấy là trust anchor.
+  transition:
+    to: cert-path-005
+    description: Khi đã có các chứng thư và nguồn chứng cứ cần thiết, phải đánh giá những ràng buộc thời gian, CA, độ dài và mục đích sử dụng trên từng chứng thư.
+- id: cert-path-005
+  order: 5
+  title: 14.5 Kiểm tra thời gian, ràng buộc CA, độ dài đường dẫn và mục đích sử dụng
+  description: Kiểm tra tính hợp lệ theo thời gian, quyền làm CA, pathLenConstraint, KeyUsage và ExtendedKeyUsage thay vì chỉ dựa vào chữ ký chứng thư.
+  transition:
+    to: cert-path-006
+    description: Ngay cả path đủ điều kiện cấu trúc và thời gian cũng có thể chứa chứng thư đã bị thu hồi; cần đưa dữ liệu CRL/OCSP vào chính sách xác minh.
+- id: cert-path-006
+  order: 6
+  title: 14.6 Thu hồi bằng CRL, OCSP và PKIXRevocationChecker
+  description: Tìm hiểu CRL, OCSP và PKIXRevocationChecker, cách xác minh chứng cứ thu hồi và diễn giải trạng thái REVOKED hoặc chưa xác định.
+  transition:
+    to: cert-path-007
+    description: Khi cơ chế kiểm tra thu hồi đã rõ, bài toán khó tiếp theo là quyết định có được tiếp tục xác minh khi OCSP/CRL tạm không khả dụng.
+- id: cert-path-007
+  order: 7
+  title: 14.7 Chính sách khi không lấy được trạng thái thu hồi và hệ quả của SOFT_FAIL
+  description: Đưa ra quyết định hard-fail/soft-fail khi không nhận được trạng thái thu hồi, hiểu chính xác SOFT_FAIL và theo dõi các ngoại lệ được bỏ qua.
+  transition:
+    to: cert-path-008
+    description: Sau khi thiết lập chính sách revocation, cần đọc exception theo reason và vị trí chứng thư để điều tra nguyên nhân thất bại cụ thể.
+- id: cert-path-008
+  order: 8
+  title: 14.8 Phân tích CertPathValidatorException theo vị trí chứng thư và nguyên nhân
+  description: Đọc index, reason, CertPath và cause từ CertPathValidatorException để tìm đúng chứng thư/vấn đề mà không che lỗi bằng cách bỏ kiểm tra.
+  transition:
+    to: cert-path-009
+    description: Khi path PKIX hợp lệ và có thể chẩn đoán lỗi, vẫn phải xác minh certificate thực sự thuộc tên máy chủ đang kết nối.
+- id: cert-path-009
+  order: 9
+  title: '14.9 Giới hạn của PKIX: kiểm tra danh tính máy chủ là một bước riêng'
+  description: Phân biệt PKIX trust path với hostname/IP verification trong TLS, kiểm SAN và bật endpoint identification tại handshake trong Java.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài học về đường dẫn tin cậy
+
+  | Tiêu chí | Bài 1 — 14.1 | 14.2 | 14.3 | 14.4 | 14.5 | 14.6 | 14.7 | 14.8 | 14.9 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên bài | 14.1 Mô hình CertPath, TrustAnchor và chứng thư trung gian | 14.2 Phân biệt xây đường dẫn bằng CertPathBuilder với kiểm tra bằng CertPathValidator | 14.3 Cấu hình PKIXParameters, PKIXBuilderParameters và X509CertSelector | 14.4 Thu thập chứng thư hoặc CRL qua CertStore | 14.5 Kiểm tra thời gian, ràng buộc CA, độ dài đường dẫn và mục đích sử dụng | 14.6 Thu hồi bằng CRL, OCSP và PKIXRevocationChecker | 14.7 Chính sách khi không lấy được trạng thái thu hồi và hệ quả của SOFT_FAIL | 14.8 Phân tích CertPathValidatorException theo vị trí chứng thư và nguyên nhân | 14.9 Giới hạn của PKIX: kiểm tra danh tính máy chủ là một bước riêng |
+  | Vấn đề cần hiểu | Chuỗi chứng thư và điểm neo tin cậy | Tìm path hay kiểm path đã có | Tham số chính sách và chứng thư đích | Tìm intermediate và CRL ứng viên | Validity, CA, path length, KU/EKU | Thu hồi chứng thư và chứng cứ CRL/OCSP | Outage revocation, SOFT_FAIL và rủi ro | Xác định nguyên nhân và vị trí lỗi PKIX | Certificate tin cậy nhưng không đúng hostname |
+  | API hoặc phương pháp trọng tâm | CertPath, TrustAnchor | CertPathBuilder, CertPathValidator | PKIXParameters, PKIXBuilderParameters, X509CertSelector | CertStore, X509CRLSelector | X509Certificate, PKIX constraint checks | PKIXRevocationChecker, CRL, OCSP | SOFT_FAIL, getSoftFailExceptions | CertPathValidatorException, Reason, index | SAN DNS/IP, SSLParameters, JSSE |
+  | Giá trị đối với module | Xác định ranh giới trust và thứ tự chain | Chọn engine và nguồn ứng viên phù hợp | Cấu hình PKIX chính xác theo đầu vào | Cấp dữ liệu cho PKIX mà không nâng thành trust | Loại chain hợp chữ ký nhưng sai quyền/hiệu lực | Phát hiện thu hồi theo chứng cứ hợp lệ | Không biến thiếu trạng thái thành tin cậy mù | Chẩn đoán chính xác thay vì tắt kiểm tra | Chặn TLS peer sai danh tính |
+  | Năng lực tự kiểm chứng | Dựng và giải thích chain leaf–intermediate | Giải thích lỗi build so với validate | Chạy đối chứng trusted và untrusted root | Lọc certificate/CRL và kiểm nguồn | Giải thích các ca lỗi constraint | Thử CRL sạch và CRL revoked | Soạn policy và thử revoked/unreachable | Đối chiếu failure reason và certificate | Test PKIX pass nhưng SAN mismatch |
+  | Tư duy hình thành | Tách tính đúng của chữ ký khỏi niềm tin | Tách tìm kiếm ứng viên khỏi phép kiểm chứng | Tách policy, selector và dữ liệu ứng viên | Phân biệt thu thập với xác thực | Xác minh nhiều điều kiện đồng thời | Không đồng nhất unknown với good | Cân bằng availability dưới giới hạn trust | Truy vết exception có ngữ cảnh | Kết hợp trust chain với endpoint identity |

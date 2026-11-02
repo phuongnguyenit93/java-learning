@@ -1,0 +1,19 @@
+sections:
+  public-key-cryptography-001:
+    difficulty: BASIC
+  public-key-cryptography-002:
+    difficulty: INTERMEDIATE
+  public-key-cryptography-003:
+    difficulty: INTERMEDIATE
+  public-key-cryptography-004:
+    difficulty: INTERMEDIATE
+  public-key-cryptography-005:
+    difficulty: INTERMEDIATE
+  public-key-cryptography-006:
+    difficulty: ADVANCED
+  public-key-cryptography-007:
+    difficulty: ADVANCED
+  public-key-cryptography-008:
+    difficulty: ADVANCED
+  public-key-cryptography-009:
+    difficulty: ADVANCED

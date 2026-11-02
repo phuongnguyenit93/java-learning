@@ -1,0 +1,25 @@
+sections:
+  symmetric-encryption-001:
+    difficulty: BASIC
+  symmetric-encryption-002:
+    difficulty: INTERMEDIATE
+  symmetric-encryption-003:
+    difficulty: INTERMEDIATE
+  symmetric-encryption-004:
+    difficulty: ADVANCED
+  symmetric-encryption-005:
+    difficulty: ADVANCED
+  symmetric-encryption-006:
+    difficulty: INTERMEDIATE
+  symmetric-encryption-007:
+    difficulty: ADVANCED
+  symmetric-encryption-008:
+    difficulty: INTERMEDIATE
+  symmetric-encryption-009:
+    difficulty: ADVANCED
+  symmetric-encryption-010:
+    difficulty: ADVANCED
+  symmetric-encryption-011:
+    difficulty: ADVANCED
+  symmetric-encryption-012:
+    difficulty: ADVANCED

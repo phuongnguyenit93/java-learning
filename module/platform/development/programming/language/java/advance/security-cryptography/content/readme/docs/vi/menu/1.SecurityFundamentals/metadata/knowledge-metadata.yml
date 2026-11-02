@@ -1,0 +1,17 @@
+sections:
+  security-fundamentals-001:
+    difficulty: BASIC
+  security-fundamentals-002:
+    difficulty: INTERMEDIATE
+  security-fundamentals-003:
+    difficulty: BASIC
+  security-fundamentals-004:
+    difficulty: INTERMEDIATE
+  security-fundamentals-005:
+    difficulty: ADVANCED
+  security-fundamentals-006:
+    difficulty: INTERMEDIATE
+  security-fundamentals-007:
+    difficulty: INTERMEDIATE
+  security-fundamentals-008:
+    difficulty: INTERMEDIATE

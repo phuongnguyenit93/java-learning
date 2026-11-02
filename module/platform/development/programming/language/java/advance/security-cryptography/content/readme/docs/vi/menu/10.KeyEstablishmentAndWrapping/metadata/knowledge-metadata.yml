@@ -1,0 +1,19 @@
+sections:
+  key-establishment-and-wrapping-001:
+    difficulty: BASIC
+  key-establishment-and-wrapping-002:
+    difficulty: INTERMEDIATE
+  key-establishment-and-wrapping-003:
+    difficulty: INTERMEDIATE
+  key-establishment-and-wrapping-004:
+    difficulty: ADVANCED
+  key-establishment-and-wrapping-005:
+    difficulty: ADVANCED
+  key-establishment-and-wrapping-006:
+    difficulty: INTERMEDIATE
+  key-establishment-and-wrapping-007:
+    difficulty: ADVANCED
+  key-establishment-and-wrapping-008:
+    difficulty: ADVANCED
+  key-establishment-and-wrapping-009:
+    difficulty: ADVANCED

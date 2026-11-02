@@ -1,0 +1,62 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'Mã xác thực: HMAC, khóa, tag và chống phát lại'
+roadmapHeading: Lộ trình MAC và HMAC trong Java
+roadmap:
+- id: message-authentication-code-001
+  order: 1
+  title: 5.1 MAC chứng minh điều gì khi hai bên cùng giữ một khóa bí mật
+  description: Xác định bằng chứng và giới hạn của MAC với khóa chia sẻ, không suy ra tác giả duy nhất, bí mật dữ liệu, quyền hay chống phát lại.
+  transition:
+    to: message-authentication-code-002
+    description: Từ bảo đảm của MAC, chuyển sang cấu trúc HMAC chuẩn để tránh hash nối khóa tự chế.
+- id: message-authentication-code-002
+  order: 2
+  title: 5.2 HMAC và khác biệt với băm dữ liệu có nối thêm khóa
+  description: Phân tích HMAC-SHA256 với ipad/opad, length-extension của keyed hash và test vector RFC 4231.
+  transition:
+    to: message-authentication-code-003
+    description: Sau khi có primitive HMAC đúng, cần kiểm soát vòng đời đối tượng Mac và byte được xử lý.
+- id: message-authentication-code-003
+  order: 3
+  title: 5.3 Sử dụng Mac với init, update, doFinal và quản lý trạng thái
+  description: Thực hành init, update, doFinal, reset, ByteBuffer và streaming; ngăn dùng chung state Mac giữa request.
+  transition:
+    to: message-authentication-code-004
+    description: MAC đúng về phép toán vẫn phụ thuộc vào khóa đủ mạnh và được quản lý theo scope phù hợp.
+- id: message-authentication-code-004
+  order: 4
+  title: 5.4 Sinh, bảo quản và tách khóa HMAC theo mục đích sử dụng
+  description: Sinh và bảo quản khóa HMAC, tách purpose bằng key độc lập hoặc HKDF và quản lý rotation/thu hồi.
+  transition:
+    to: message-authentication-code-005
+    description: Khi có key đúng, hai phía tiếp tục cần thống nhất từng byte input và định dạng tag.
+- id: message-authentication-code-005
+  order: 5
+  title: 5.5 Thống nhất dữ liệu đầu vào, thứ tự trường và định dạng tag giữa hai bên
+  description: Đặc tả canonical bytes theo version, domain, thứ tự, length prefix, UTF-8, endian và Base64URL của tag.
+  transition:
+    to: message-authentication-code-006
+    description: Từ hợp đồng byte, chuyển sang việc xác minh tag, policy độ dài và negative tests.
+- id: message-authentication-code-006
+  order: 6
+  title: 5.6 Kiểm tra tag, dữ liệu bị sửa, sai khóa và giới hạn cắt ngắn tag
+  description: Xác minh HMAC/AEAD tag, đánh giá truncation, lỗi key/AAD/ciphertext và chặn plaintext chưa xác thực.
+  transition:
+    to: message-authentication-code-007
+    description: Thông điệp đúng tag vẫn có thể là bản phát lại nên cần bước freshness và replay guard.
+- id: message-authentication-code-007
+  order: 7
+  title: 5.7 Phân biệt xác thực thông điệp với chống phát lại bằng nonce hoặc số thứ tự
+  description: Thiết kế nonce, sequence, cửa sổ thời gian, replay state nguyên tử và idempotency giữa nhiều node.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh vai trò các bài học
+
+  | Tiêu chí | Bài 1 — 5.1 Ý nghĩa MAC | 5.2 Cấu trúc HMAC | 5.3 Vòng đời Mac | 5.4 Quản lý khóa | 5.5 Byte và tag | 5.6 Kiểm tag | 5.7 Chống replay |
+  | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Vấn đề chính | MAC chứng minh được gì? | Vì sao chọn HMAC chuẩn? | Cách Mac xử lý đúng state? | Khóa được sinh và phân tách ra sao? | Hai phía ký byte nào? | Tag hỏng hoặc ngắn xử lý thế nào? | Request đúng tag nhưng cũ xử lý thế nào? |
+  | Trọng tâm | Shared key, attribution, integrity | ipad/opad, length extension | init, update, doFinal, reset | Entropy, HKDF, rotation | Canonicalization, encoding | Tag policy, AEAD, negative tests | Nonce, sequence, TTL, atomic state |
+  | Ví dụ chính | SharedKeyMacDemo | HmacVsConcatDemo | MacLifecycleDemo | HmacPurposeDemo, HkdfPurposeDemo | MacWireDemo | TagCheckHmacDemo, TagCheckGcmDemo | ReplayDemo, SequenceGate |
+  | Sai lầm cần tránh | Nhầm MAC với chữ ký và chống replay | Tự chế SHA-256 nối khóa | Trộn state giữa request | Chung secret quá nhiều purpose | Field nhập nhằng, JSON khác bytes | Chấp nhận tag ngắn, bỏ AEAD check | Cache cục bộ, check rồi ghi |
+  | Năng lực | Đánh giá bảo đảm MAC | Kiểm primitive HMAC với RFC | Điều khiển API stateful | Thiết kế vòng đời khóa | Thiết kế wire contract | Xây negative verification tests | Thiết kế replay guard và idempotency |

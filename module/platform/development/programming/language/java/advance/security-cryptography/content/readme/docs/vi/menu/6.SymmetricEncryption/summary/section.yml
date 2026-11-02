@@ -1,0 +1,96 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Mã hóa đối xứng an toàn trong Java
+roadmapHeading: Từ cipher nguyên thủy đến envelope AEAD được xác thực
+roadmap:
+- id: symmetric-encryption-001
+  order: 1
+  title: 6.1 Block cipher, stream cipher, mode và padding
+  description: Phân biệt block/stream, mode, padding và điều kiện xác thực; kiểm tra ví dụ Java nền tảng.
+  transition:
+    to: symmetric-encryption-002
+    description: Đã biết primitive và mode, cần học cách chỉ định phép toán chính xác trong Java.
+- id: symmetric-encryption-002
+  order: 2
+  title: 6.2 Chỉ định đầy đủ transformation thay vì phụ thuộc giá trị mặc định của provider
+  description: Chọn transformation Cipher tường minh, hiểu provider defaults và migration format.
+  transition:
+    to: symmetric-encryption-003
+    description: Sau khi chọn transformation, phải sinh và quản lý key AES hợp lệ.
+- id: symmetric-encryption-003
+  order: 3
+  title: 6.3 Tạo khóa AES bằng KeyGenerator và dựng khóa từ vật liệu hợp lệ
+  description: Sinh, nhập hoặc dẫn xuất khóa AES từ nguồn phù hợp, xác định vòng đời key.
+  transition:
+    to: symmetric-encryption-004
+    description: Có key đúng mới xử lý được vòng đời Cipher và output buffering.
+- id: symmetric-encryption-004
+  order: 4
+  title: 6.4 Chu trình Cipher.init, update, doFinal và tính toán bộ đệm đầu ra
+  description: Xử lý Cipher.init/update/doFinal, buffer, ByteBuffer và ranh giới tag.
+  transition:
+    to: symmetric-encryption-005
+    description: Đã nắm Cipher flow, tiếp theo so sánh an toàn các mode legacy.
+- id: symmetric-encryption-005
+  order: 5
+  title: 6.5 Phân biệt ECB, CBC, CTR và yêu cầu bảo vệ tính toàn vẹn của bản mã
+  description: Phân tích ECB/CBC/CTR, malleability và Encrypt-then-MAC legacy.
+  transition:
+    to: symmetric-encryption-006
+    description: Đã thấy giới hạn mã hóa thuần, cần hiểu AEAD và authentication tag.
+- id: symmetric-encryption-006
+  order: 6
+  title: 6.6 AEAD, AES/GCM/NoPadding và vai trò của authentication tag
+  description: Hiểu AES-GCM AEAD, tag và AAD; thử phát hiện sửa đổi.
+  transition:
+    to: symmetric-encryption-007
+    description: Biết AEAD rồi phải quản lý GCMParameterSpec và nonce cụ thể.
+- id: symmetric-encryption-007
+  order: 7
+  title: 6.7 GCMParameterSpec, độ dài tag và yêu cầu không lặp IV dưới cùng một khóa
+  description: Chọn GCM tag/IV đúng chuẩn và cấp nonce duy nhất trong multiwriter.
+  transition:
+    to: symmetric-encryption-008
+    description: Nonce đã chuẩn, tiếp tục xác thực metadata AAD đúng byte.
+- id: symmetric-encryption-008
+  order: 8
+  title: 6.8 Truyền AAD trước dữ liệu; phân biệt dữ liệu được xác thực với dữ liệu được mã hóa
+  description: Truyền AAD trước dữ liệu, chuẩn hóa metadata byte và bối cảnh tin cậy.
+  transition:
+    to: symmetric-encryption-009
+    description: Hiểu AAD để nghiên cứu AEAD dựa trên ChaCha20 và cấp nonce.
+- id: symmetric-encryption-009
+  order: 9
+  title: 6.9 ChaCha20, ChaCha20-Poly1305 và quản lý nonce
+  description: Dùng ChaCha20/Poly1305 và thiết kế nonce allocator bền vững.
+  transition:
+    to: symmetric-encryption-010
+    description: Hoàn thiện thuật toán và nonce, cần chẩn đoán lỗi xác thực an toàn.
+- id: symmetric-encryption-010
+  order: 10
+  title: 6.10 Xử lý AEADBadTagException, BadPaddingException và bản mã bị cắt
+  description: Xử lý AEADBadTagException/BadPaddingException và ciphertext bị cắt.
+  transition:
+    to: symmetric-encryption-011
+    description: Đã phân loại lỗi, phải kiểm tra stream wrapper có che mất lỗi không.
+- id: symmetric-encryption-011
+  order: 11
+  title: 6.11 Giới hạn của CipherInputStream khi cần phát hiện lỗi xác thực AEAD
+  description: Tránh tin CipherInputStream đọc thành công, xác thực bằng Cipher.doFinal.
+  transition:
+    to: symmetric-encryption-012
+    description: Đã biết ranh giới streaming, cuối cùng thiết kế envelope được xác thực.
+- id: symmetric-encryption-012
+  order: 12
+  title: 6.12 Đóng gói IV, tham số, ciphertext, tag và chỉ sử dụng bản rõ sau khi xác thực thành công
+  description: Đóng gói envelope có version/key ID/nonce/tag và chỉ publish sau xác thực.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh năng lực 12 bài
+
+  | Tiêu chí | Bài 1 — 6.1 Nền tảng | 6.2 Transformation | 6.3 Nguồn khóa | 6.4 Cipher state | 6.5 Mode/EtM | 6.6 AEAD/GCM | 6.7 Nonce/tag | 6.8 AAD | 6.9 ChaCha20 | 6.10 Exceptions | 6.11 Stream wrapper | 6.12 Envelope |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Bản chất | Block, stream, padding | Transformation và provider | Entropy, KeyGenerator, KDF | init/update/doFinal, buffer | ECB/CBC/CTR và EtM | AEAD và tag GCM | GCMParameterSpec và IV | AAD byte serialization | ChaCha20/Poly1305 | Tag lỗi và truncation | CipherInputStream warning | Binary format và publish |
+  | Thao tác chính | So sánh block 16B và stream 17B | Chọn AES/GCM/NoPadding | Sinh/nhập/derive SecretKey | getOutputSize, ByteBuffer | Bit flip, HMAC trước CBC | Tamper ciphertext/tag/AAD | Known vector, nonce allocator | updateAAD trước dữ liệu | Counter, nonce per writer | Catch/validate framing | doFinal trực tiếp, staging | Parse header, verify tag |
+  | Lỗi cần tránh | ECB, nhầm key và block | AES defaults, ECB fallback | Password dùng trực tiếp | Mất output, leak plaintext | Padding oracle, reuse CTR | Không kiểm tag, replay | Lặp IV sau restart | Không xác thực metadata | Nonce trùng nhiều node | Oracle và partial plaintext | Nuốt exception tag | Downgrade, sai keyId |
+  | Kết quả kiểm chứng | Dự đoán output size | Suite rõ ràng, test roundtrip | Key đúng nguồn/cỡ | Buffer đủ và final đúng | Từ chối sửa dữ liệu | Tag sai bị từ chối | Không cấp trùng nonce | AAD chính xác byte | Allocator chịu crash | Fail closed khi cắt gói | Không publish khi stream lỗi | Envelope version 1 hợp lệ |

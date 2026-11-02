@@ -1,0 +1,367 @@
+summaries:
+- id: key-store-001
+  title: 12.1 Mô hình KeyStore và phân biệt với truststore hoặc CertStore
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **12.1 Mô hình KeyStore và phân biệt với truststore hoặc CertStore**
+
+    Đặt các đối tượng lưu khóa và chứng thư vào đúng vai trò của một kết nối TLS/PKIX: kho giữ danh tính của chính mình, kho chứa điểm tin cậy của đối tác và nguồn chứng thư/CRL ứng viên. Phân biệt trách nhiệm của KeyManagerFactory, TrustManagerFactory và CertStore để tránh biến dữ liệu tìm thấy thành một quyết định tin cậy không được cấp phép.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình kho và trách nhiệm
+
+    1. Phân biệt KeyStore API, identity keystore và truststore theo dữ liệu lưu, người dùng dữ liệu và quyền phải bảo vệ như thế nào?
+    2. Vì sao CertStore cung cấp certificate hoặc CRL ứng viên nhưng không tự tạo thêm trust anchor cho PKIX?
+    3. Một PrivateKeyEntry có certificate chain khác thế nào với một TrustedCertificateEntry được dùng làm trust anchor?
+
+    ### Luồng xác minh TLS và mTLS
+
+    4. Trong TLS một chiều và mTLS, KeyManagerFactory, TrustManagerFactory và SSLContext phối hợp ra sao ở từng đầu kết nối?
+    5. Vì sao có trust anchor hợp lệ mà client vẫn cần kiểm tra SAN/hostname, mục đích certificate và chính sách PKIX?
+    6. Một client cần CA nội bộ phải quyết định đưa CA đó vào truststore nào để tránh mở rộng trust sang các dịch vụ khác như thế nào?
+
+    ### Bằng chứng và lỗi thường gặp
+
+    7. Từ hai file PKCS12 identity/trust trong bài lab, xác định bằng những lời gọi Java nào rằng một kho giữ private key và kho còn lại chỉ giữ trusted certificate?
+    8. Khi PKIX path building thất bại, làm sao phân biệt thiếu anchor, thiếu intermediate và vấn đề hostname?
+    9. Vì sao SSLContext khởi tạo thành công chưa đủ để kết luận một TLS handshake đã được xác thực an toàn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ luồng identity và trust | Gắn đúng private key, certificate chain, trust anchor và CertStore vào sơ đồ TLS/mTLS hai phía. |
+    | Phân loại kho và entry | Dùng KeyStore và entry type để chỉ ra kho danh tính, truststore, certificate và CRL ứng viên. |
+    | Thiết lập các manager | Giải thích và thực hiện đúng luồng KeyManagerFactory, TrustManagerFactory và SSLContext trong ví dụ. |
+    | Đánh giá PKIX | Chỉ ra điểm trust anchor, chứng thư trung gian và giới hạn của CertStore trong một bài toán chain validation. |
+    | Chẩn đoán kết nối | Phân tách nguyên nhân lỗi trust path với lỗi danh tính hostname và quyền nghiệp vụ. |
+- id: key-store-002
+  title: 12.2 PrivateKeyEntry, SecretKeyEntry, TrustedCertificateEntry và alias
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **12.2 PrivateKeyEntry, SecretKeyEntry, TrustedCertificateEntry và alias**
+
+    Hình thành năng lực thao tác đúng với ba loại KeyStore.Entry và alias, đặc biệt khi một API trả về kiểu Key chung hoặc certificate của private-key entry. Bài học giúp tránh ép kiểu sai, ghi đè alias, nhầm certificate công khai với khóa riêng và nhầm tên alias với danh tính được xác minh.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ba loại entry và quan hệ với alias
+
+    1. PrivateKeyEntry, SecretKeyEntry và TrustedCertificateEntry khác nhau thế nào về vật liệu khóa, certificate chain và mục đích sử dụng?
+    2. Vì sao isKeyEntry trả true chưa thể kết luận alias chứa private key, còn getCertificate trả non-null chưa chứng minh trusted certificate entry?
+    3. Alias có phạm vi duy nhất và quy tắc hoa/thường như thế nào khi đổi provider hoặc loại KeyStore?
+
+    ### Truy xuất và cập nhật entry
+
+    4. Bạn sẽ dùng entryInstanceOf, getEntry, getKey, getCertificateChain và PasswordProtection theo thứ tự nào để tránh cast sai loại?
+    5. Nếu cần thêm AES secret key vào một PKCS12 đang có identity key, phải kiểm và ghi alias như thế nào để không ghi đè khóa cũ?
+    6. Đổi hoặc xóa alias có thể làm hỏng việc ký, giải mã và cấu hình TLS ra sao?
+
+    ### Thực hành và ranh giới tin cậy
+
+    7. Vì sao ví dụ lưu certificate self-signed thành TrustedCertificateEntry không chứng minh certificate ấy được tin ở production?
+    8. Chương trình Java kiểm chứng ba entry type sau khi store/load lại bằng những phép thử nào?
+    9. Nếu secret key cũ còn dùng giải mã dữ liệu lịch sử, bạn tổ chức versioned alias và key rotation như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện entry | Đối chiếu đúng ba loại entry với key, certificate chain, usages và kết quả isKeyEntry/isCertificateEntry. |
+    | Quản lý alias | Kiểm alias tồn tại, trùng tên/case và lựa chọn getEntry/entryInstanceOf trước khi đọc hoặc ghi. |
+    | Thực hành nhiều entry | Tạo, lưu và nạp lại PKCS12 có private, secret và trusted-certificate entry trong ví dụ Java. |
+    | Phân biệt identity với trust | Giải thích bằng loại entry vì sao certificate trong private-key chain không tự biến thành trust anchor. |
+    | Lập kế hoạch rotation | Nêu thao tác kiểm tra/backup/cập nhật alias để tránh mất khóa hoặc ngừng phục vụ. |
+- id: key-store-003
+  title: 12.3 PKCS12, JKS và các loại kho do provider cung cấp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **12.3 PKCS12, JKS và các loại kho do provider cung cấp**
+
+    Chọn đúng KeyStore type và provider dựa trên loại khóa, khả năng xuất khóa, hệ điều hành, HSM và nhu cầu liên thông. Nhận biết khác biệt thực tế giữa PKCS12, JKS, JCEKS, DKS, PKCS11 và kho OS để không coi phần mở rộng tệp hoặc thành công của một API là bằng chứng tương thích toàn hệ thống.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Type, provider và backing store
+
+    1. KeyStore API, type, provider và backing store khác nhau thế nào, và tại sao không phải mọi KeyStore đều là tệp?
+    2. So sánh PKCS12, JKS và JCEKS theo entry type, cơ chế legacy và khả năng dùng với công cụ ngoài Java ra sao?
+    3. PKCS11, Windows-MY, KeychainStore và DKS khác nhau thế nào về nơi giữ khóa và quyền dùng khóa?
+
+    ### Khả năng hỗ trợ và tính liên thông
+
+    4. Tại sao KeyStore.getDefaultType và tên tệp đuôi .jks/.p12 không đủ để nhận định format thật?
+    5. Nếu PrivateKey.getEncoded trả null ở HSM, bạn cần chọn cách sử dụng khóa qua provider như thế nào?
+    6. Bằng những phép thử nào có thể xác minh provider hỗ trợ SecretKeyEntry, khóa AES và định dạng PKCS12 sau round-trip?
+
+    ### Chuyển đổi và quyết định triển khai
+
+    7. Chọn PKCS12 hay token/HSM cho một dịch vụ ký có yêu cầu key không xuất được dựa trên yếu tố nào?
+    8. Khi chuyển JKS sang PKCS12, vì sao phải đối chiếu alias, keypass, certificate chain và thao tác ký/TLS thực tế?
+    9. Một service chuyển máy từ Windows sang Linux cần rà soát ràng buộc provider/OS store nào để không mất quyền dùng khóa?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh định dạng | Lập bảng quyết định giữa PKCS12, JKS/JCEKS và provider-specific store theo loại entry và lifecycle. |
+    | Kiểm runtime/provider | Dùng API JCA và dữ liệu provider để xác định type được hỗ trợ, không phỏng đoán từ file extension. |
+    | Xác minh giới hạn HSM | Giải thích key handle, PIN, non-exportability và vì sao không được ép private key thành file. |
+    | Chứng minh interoperability | Thực hiện round-trip demo PKCS12/JKS/JCEKS và diễn giải kết quả từ provider đã chạy. |
+    | Lập kế hoạch migration | Thiết lập inventory, backup, kiểm số lượng entry/chain và phép thử crypto/TLS trước cutover. |
+- id: key-store-004
+  title: 12.4 Tạo kho mới, load, store và kiểm tra đúng kiểu entry
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **12.4 Tạo kho mới, load, store và kiểm tra đúng kiểu entry**
+
+    Thực hiện đúng vòng đời tạo mới, mở kho đã có, thêm entry, lưu và đọc lại KeyStore, từ đó tránh lỗi làm mất khóa do load(null) hoặc store trực tiếp đè file gốc. Bài học đặt kiểm tra loại entry và kiểm thử mật khẩu vào quy trình thao tác có thể lặp lại trên Java 17+.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khởi tạo và lưu kho
+
+    1. Vì sao getInstance chọn provider nhưng chưa tạo hay mở một kho đã initialized?
+    2. Phân biệt load(null, password) với load(inputStream, password) và nêu hậu quả của việc dùng nhầm khi file cũ bị lỗi?
+    3. Vì sao setEntry chỉ sửa trạng thái trong RAM còn store mới sinh bytes có thể nạp lại?
+
+    ### Kiểm kiểu và xử lý lỗi
+
+    4. Bạn xác nhận một alias chứa SecretKeyEntry thay vì PrivateKeyEntry hay TrustedCertificateEntry bằng những lời gọi nào?
+    5. Khi load sai store password, getEntry sai entry password hoặc alias không tồn tại, ba trường hợp phải được chẩn đoán khác nhau ra sao?
+    6. Sau khi lưu PKCS12 AES demo, các phép thử nào chứng minh key, alias và số lượng entry không đổi?
+
+    ### Tính bền vững khi vận hành
+
+    7. Nếu tiến trình dừng giữa lúc ghi đè keystore production, loại mất dữ liệu nào có thể xảy ra và bạn giảm rủi ro bằng quy trình nào?
+    8. Khi hai tiến trình cùng sửa file keystore, vì sao cần khóa phiên bản và cách ghi/đổi tệp có kiểm soát?
+    9. Thiết kế test phục hồi từ backup như thế nào để phát hiện kho tải được nhưng khóa bên trong không sử dụng được?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo và nạp kho | Phân biệt chính xác hai đường đi CREATE_NEW với OPEN_EXISTING qua load(null) và load(stream). |
+    | Lưu và kiểm tra lại | Dùng setEntry, store và instance KeyStore mới để round-trip AES key theo Java demo. |
+    | Xác nhận đúng entry | Dùng entryInstanceOf/isKeyEntry để xác minh loại và xử lý alias thiếu không nhầm lỗi password. |
+    | Xử lý lỗi bảo vệ | Phân loại IOException, UnrecoverableEntryException và các lỗi store chưa initialized. |
+    | Bảo đảm cập nhật an toàn | Phác thảo temp file, backup, atomic move và kiểm tra reload trước khi thay kho production. |
+- id: key-store-005
+  title: 12.5 Phân biệt mật khẩu kho với thông tin bảo vệ từng khóa
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **12.5 Phân biệt mật khẩu kho với thông tin bảo vệ từng khóa**
+
+    Phân biệt credential dùng nạp/lưu keystore với protection dùng khôi phục từng private hoặc secret key; hai vai trò có thể cùng mật khẩu nhưng không tương đương về API và quyền. Bài học giúp xử lý lỗi password khi triển khai TLS, đánh giá khả năng per-entry protection của PKCS12/JKS/PKCS11 và lên kế hoạch đổi password khác với xoay vòng key material.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phạm vi mật khẩu và API
+
+    1. Store password dùng trong load/store khác entry password dùng trong getKey/getEntry hoặc KeyManagerFactory.init như thế nào?
+    2. Vì sao tải kho thành công hoặc keytool liệt kê được alias chưa chứng minh private key có thể được mở?
+    3. PasswordProtection và CallbackHandlerProtection biểu diễn những cách cấp thông tin bảo vệ khác nhau ra sao?
+
+    ### Provider và bài thực nghiệm
+
+    4. Trong ví dụ hai AES keys finance/audit, bạn chứng minh mật khẩu từng entry khác nhau bằng những lời gọi và kết quả nào?
+    5. Khi nào keytool PKCS12 có thể không cho dùng keypass khác storepass, dù API Java biểu diễn hai tham số riêng?
+    6. Bạn phân biệt sai storepass, sai keypass, alias trống và provider không hỗ trợ dựa trên vị trí lỗi như thế nào?
+
+    ### Quản lý quyền và vòng đời
+
+    7. Đổi store password, đổi entry password và rotate RSA/AES key material tác động khác nhau đến dữ liệu cũ ra sao?
+    8. Vì sao nhiều keypass trong cùng một process không tự tạo isolation mạnh giữa tenant hoặc service?
+    9. Bạn bảo quản các mật khẩu, backup và thông tin provider như thế nào để tránh lộ secret hoặc mất khả năng khôi phục khóa?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn đúng credential | Gắn storepass với load/store và keypass/protection với getKey/getEntry/KeyManagerFactory. |
+    | Đánh giá provider | Giải thích giới hạn per-entry password của PKCS12/JKS/tooling và thử nghiệm trên type cụ thể. |
+    | Phân tích negative tests | Dự đoán đúng lỗi sai storepass hoặc entrypass từ ví dụ hai khóa AES. |
+    | Chẩn đoán TLS | Tách lỗi nạp file khỏi lỗi khôi phục private key khi KeyManagerFactory khởi tạo. |
+    | Thiết kế key lifecycle | Phân biệt password rotation với key rotation và lập kiểm thử backup/restore tương ứng. |
+- id: key-store-006
+  title: 12.6 Đọc khóa cùng chuỗi chứng thư và kiểm tra alias hoặc mật khẩu sai
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **12.6 Đọc khóa cùng chuỗi chứng thư và kiểm tra alias hoặc mật khẩu sai**
+
+    Đọc đúng private key, chứng thư leaf và chuỗi issuer từ một alias PKCS12, kiểm tra khóa có khớp public key và phân biệt lỗi alias, store password, key password. Hiểu tại sao nhìn thấy certificate chain và kiểm chữ ký leaf vẫn chưa xác lập trust anchor hoặc danh tính bên đối tác.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khóa và certificate chain
+
+    1. Bạn tạo fixture PKCS12 gồm leaf và issuer bằng keytool như thế nào, và chain cần có thứ tự ra sao?
+    2. getCertificate, getCertificateChain và getKey trả những loại dữ liệu khác nhau nào đối với PrivateKeyEntry?
+    3. Vì sao kiểm chữ ký leaf bằng issuer public key không tương đương đã xác minh đường tin cậy PKIX?
+
+    ### Lỗi alias và bảo vệ khóa
+
+    4. Trong Java demo, tại sao containsAlias/isKeyEntry phải được kiểm trước khi cast sang PrivateKey?
+    5. Lỗi alias không tồn tại, sai store password và sai key password xuất hiện ở những bước API nào?
+    6. Bạn xác minh private key tương ứng certificate leaf bằng thao tác ký/xác minh thử như thế nào mà không xuất khóa?
+
+    ### Giới hạn an toàn ứng dụng
+
+    7. Sau khi lấy được chain hai phần tử, muốn dùng cho TLS thật còn cần những kiểm tra trust, SAN, key usage và revocation nào?
+    8. Vì sao độ dài chain bằng hai chỉ là đặc tính fixture, không phải yêu cầu chung của PKIX?
+    9. Để chẩn đoán sự cố container đọc sai alias hoặc password, bạn cần đối chiếu file, provider và secret source như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo fixture chain | Dùng keytool tạo chứng thư leaf do CA lab ký và kiểm tra thứ tự chain hai phần tử. |
+    | Đọc an toàn | Mở PKCS12, chọn alias, kiểm PrivateKey và lấy leaf/issuer qua Java API. |
+    | Đối chiếu cặp khóa | Thực hiện Signature.sign/verify với private key và public key của leaf để xác nhận chúng khớp. |
+    | Phân loại lỗi | Phân biệt missing alias, IOException ở load và UnrecoverableKeyException ở getKey. |
+    | Phân tích PKIX | Giải thích giới hạn của leaf.verify(issuerKey), chain length và sự cần thiết của trust anchor/identity policy. |
+- id: key-store-007
+  title: 12.7 KeyStore.Builder, LoadStoreParameter và bảo vệ mật khẩu trong ứng dụng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **12.7 KeyStore.Builder, LoadStoreParameter và bảo vệ mật khẩu trong ứng dụng**
+
+    Tổ chức việc mở KeyStore và cấp secret theo vòng đời ứng dụng qua Builder, LoadStoreParameter, PasswordProtection và CallbackHandlerProtection. Trọng tâm là độ trễ khi load, cache instance, giới hạn provider, cơ chế destroy password và ảnh hưởng của rotation; không lặp lại bài quản lý alias cơ bản.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Builder và việc mở kho
+
+    1. Các overload KeyStore.Builder.newInstance khác nhau ra sao về nguồn file, provider và việc cache KeyStore?
+    2. Tại sao file Builder chỉ load khi getKeyStore lần đầu và không tự reload khi file/secret rotate?
+    3. Điều gì xảy ra khi gọi getProtectionParameter trước getKeyStore hoặc khi lần load đầu bị lỗi?
+
+    ### Bảo vệ secret và LoadStoreParameter
+
+    4. PasswordProtection clone char[] lúc tạo và destroy bản sao theo cách nào; tại sao Arrays.fill mảng caller vẫn chưa đủ?
+    5. CallbackHandlerProtection khác PasswordProtection ra sao về thời điểm lấy password và vòng đời callback?
+    6. LoadStoreParameter chỉ cung cấp ProtectionParameter, vậy vì sao load(parameters) không tự biết đường dẫn file PKCS12?
+
+    ### Kiến trúc và kiểm chứng
+
+    7. Dùng những phép thử nào để chứng minh file Builder cache cùng KeyStore nhưng load trực tiếp/provider-managed load có semantics khác?
+    8. Một signing service cần đổi key khi có request đang xử lý sẽ tổ chức reload, key version, secret lifecycle và Signature instance như thế nào?
+    9. Bạn chẩn đoán sai password, file vắng mặt, lỗi unsupported provider và protection bị destroy bằng kết quả nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lựa chọn Builder | Chọn overload theo file hoặc provider, dự đoán lazy loading/cache và thời điểm lỗi. |
+    | Dùng LoadStoreParameter | Giải thích contract và chạy demo tạo PKCS12 qua load(parameters) trên provider hỗ trợ. |
+    | Quản lý PasswordProtection | Tách mảng caller với bản sao nội bộ, destroy đúng lúc và tránh làm hỏng Builder chưa load. |
+    | Cấp secret theo nhu cầu | Mô tả và đánh giá CallbackHandler/PasswordCallback so với secret manager hoặc HSM. |
+    | Thiết kế reload an toàn | Lập phương án rotate file/key/SSLContext mà không dùng lại state cũ hoặc lộ password. |
+- id: key-store-008
+  title: 12.8 Tạo, liệt kê, nhập, xuất và chuyển đổi kho bằng keytool
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **12.8 Tạo, liệt kê, nhập, xuất và chuyển đổi kho bằng keytool**
+
+    Thực hiện đầy đủ thao tác CLI với keytool: sinh key pair và secret key, liệt kê alias, xuất public certificate, tạo CSR, nhập CA reply hoặc trusted certificate, và chuyển JKS sang PKCS12. Bài học rèn khả năng phân biệt thao tác chỉ đọc với thao tác làm đổi trust/key material và xác minh kết quả sau migration.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tạo và kiểm kê kho bằng keytool
+
+    1. Những cờ nào xác định storetype, alias, thuật toán, độ dài khóa và credential khi tạo PKCS12 với genkeypair hoặc genseckey?
+    2. Từ output keytool -list -v, bạn phân biệt PrivateKeyEntry, SecretKeyEntry và trustedCertEntry thế nào?
+    3. Vì sao dùng -printcert hoặc -exportcert trên alias private key không có nghĩa đã xuất private key?
+
+    ### CSR, nhập certificate và trust
+
+    4. Quy trình từ certreq tới certificate reply của CA phải gắn với alias private key gốc như thế nào?
+    5. Cùng lệnh importcert nhưng alias mới và alias PrivateKeyEntry đã tồn tại tạo ra hai tác động khác nhau ra sao?
+    6. Trước khi thêm trusted certificate vào truststore, cần kiểm chứng fingerprint và nguồn qua những kênh nào?
+
+    ### Conversion và vận hành
+
+    7. Các tùy chọn src/dest của importkeystore giúp kiểm soát alias và mật khẩu khi chuyển JKS sang PKCS12 như thế nào?
+    8. Tại sao không thể kiểm chứng migration chỉ bằng exit code thành công hoặc đổi phần mở rộng tên tệp?
+    9. Nếu script importkeystore dùng noprompt vào kho có alias trùng, bạn xây quy trình backup, kiểm tra collision và readback thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo và xem KeyStore | Chạy genkeypair/genseckey, list -v với type và alias xác định trong thư mục lab. |
+    | Xuất và kiểm certificate | Dùng exportcert -rfc/printcert để kiểm PEM/fingerprint mà không xuất private key. |
+    | Thao tác CSR và CA reply | Phân biệt certreq, importcert vào alias key có sẵn và nhập trustedCertEntry mới. |
+    | Chuyển định dạng | Dùng importkeystore với src/dest options, kiểm chain/fingerprint và test dùng key sau chuyển. |
+    | Vận hành an toàn | Đặt backup, password input, anti-overwrite và trust-source checks trước thao tác thay keystore. |
+- id: key-store-009
+  title: 12.9 Phạm vi của cacerts, kho tin cậy riêng và tác động khi thay đổi tập CA được tin
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **12.9 Phạm vi của cacerts, kho tin cậy riêng và tác động khi thay đổi tập CA được tin**
+
+    Hiểu tập CA tin cậy hiệu dụng mà một Java TLS client dùng, gồm cacerts của runtime, jssecacerts, trustStore JVM-wide và SSLContext riêng. Phân tích thay đổi tập CA như một thay đổi chính sách bảo mật có ảnh hưởng tới nhiều endpoint, session, môi trường và tenant, để thiết kế rollout, canary và rollback không làm rộng trust ngoài dự kiến.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn trust và phạm vi
+
+    1. Một Java process tìm default JSSE roots từ java.home, jssecacerts, cacerts và javax.net.ssl.trustStore theo điều kiện nào?
+    2. Vì sao đặt custom trustStore chứa riêng private CA không tự tạo hợp của nó với public roots?
+    3. Per-client SSLContext khác JVM-wide truststore ở những điểm nào về phạm vi tác động và quyết định tin cậy?
+
+    ### Thay đổi CA và TLS lifecycle
+
+    4. Khi thêm CA vào truststore, tập chứng thư và hostname có thể được chấp nhận thay đổi ra sao?
+    5. Khi loại bỏ OldRoot hoặc thay bằng NewRoot, bạn lên lịch overlap, cutover và kiểm alternate paths như thế nào?
+    6. Vì sao chỉnh file cacerts hoặc mounted Secret chưa khiến SSLContext, connection pool và session cũ lập tức nạp trust policy mới?
+
+    ### Xác thực và kiểm thử âm
+
+    7. Một certificate có chain đến trusted anchor nhưng SAN sai hostname phải bị xử lý thế nào và kiểm tra ấy khác PKIX ra sao?
+    8. Bạn thiết kế canary có cả endpoint được tin và endpoint CA/hostname sai để chứng minh scope trust tối thiểu thế nào?
+    9. Một lỗi PKIX chỉ xuất hiện trong container dù host curl thành công cần được chẩn đoán qua runtime, provider, chain và cấu hình nào?
+
+    ### Rủi ro vận hành và mTLS
+
+    10. Khi mở rộng truststore xác thực client mTLS, vì sao vẫn phải map certificate identity sang principal và quyền nghiệp vụ?
+    11. Nếu một CA bị nghi compromise, điều gì khiến rollback về bundle cũ có thể không được phép?
+    12. Làm cách nào theo dõi phiên bản trust bundle, JDK vendor và thời điểm reload để phát hiện trust drift giữa các service?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định trust hiệu dụng | Phân tích cấu hình java.home, cacerts/jssecacerts, trustStore và SSLContext theo từng runtime/client. |
+    | Phân tích phạm vi CA | So sánh replace/curated bundle/per-client context và đánh giá mở rộng trust sau khi thêm CA. |
+    | Lập rollout CA | Thiết kế trust overlap, canary, refresh SSLContext/pool và thời điểm loại root cũ. |
+    | Kiểm thử TLS an toàn | Nêu phép thử thành công/thất bại cho chain, SAN, CA không tin và mTLS identity. |
+    | Ứng phó sự cố | Liên hệ việc distrust CA với authorization, session tồn tại, chứng cứ vận hành và rollback có điều kiện. |

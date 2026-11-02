@@ -1,0 +1,320 @@
+summaries:
+- id: security-providers-001
+  title: 20.1 Đăng ký provider bằng cấu hình hoặc Security API và tác động tới việc chọn dịch vụ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **20.1 Đăng ký provider bằng cấu hình hoặc Security API và tác động tới việc chọn dịch vụ**
+
+    Ứng dụng Java có thể gọi cùng một API mật mã nhưng nhận triển khai khác nhau tùy provider đã đăng ký, thứ tự ưu tiên, thuật toán và khóa khi khởi tạo. Bài giúp bạn kiểm soát lựa chọn dịch vụ bằng security properties hoặc Security API, phân biệt pin provider với chọn mặc định, đồng thời tránh cấu hình làm thay đổi ngoài ý muốn toàn JVM.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đăng ký và thứ tự ưu tiên
+
+    1. Provider, JCA engine và SPI đảm nhiệm những bước khác nhau nào từ lời gọi getInstance đến thuật toán thực thi?
+    2. Cấu hình security.provider.N khác gì Security.addProvider và Security.insertProviderAt, đặc biệt về thời điểm hiệu lực và phạm vi JVM?
+    3. Vì sao một dấu bằng và hai dấu bằng trong java.security.properties có tác động khác nhau đến cấu hình bảo mật?
+
+    ### Lựa chọn dịch vụ và kiểm chứng
+
+    1. Khi getInstance không chỉ định provider, những yếu tố nào ngoài vị trí đầu tiên ảnh hưởng việc chọn dịch vụ?
+    2. Truyền tên provider và truyền Provider object khác nhau thế nào về yêu cầu đăng ký toàn cục?
+    3. Vì sao một số Signature, Cipher hoặc Mac chỉ có thể xác định provider cuối cùng sau khi init bằng key?
+
+    ### Thực hành và xử lý lỗi
+
+    1. ProviderSelectionDemo chứng minh điều gì khi DemoB đứng trước DemoA rồi bị remove?
+    2. Khi HSM phải ký bắt buộc, bạn sẽ kiểm tra provider, service, key và cơ chế fallback như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích pipeline JCA | Vẽ mối liên hệ engine, provider registry, Provider.Service và SPI bằng thao tác MessageDigest. |
+    | Cấu hình startup | Phân biệt file security properties bổ sung và thay thế, chỉ ra rủi ro ghi đè provider mặc định. |
+    | Điều chỉnh registry | Dự đoán vị trí, giá trị trả về và ảnh hưởng JVM của addProvider, insertProviderAt, removeProvider. |
+    | Phân tích chọn provider | So sánh getInstance mặc định, theo tên và theo Provider object; kiểm sau init khi cần. |
+    | Kiểm tra thao tác | Giải thích output ProviderSelectionDemo và lập checklist debug provider thực tế. |
+- id: security-providers-002
+  title: 20.2 Provider.configure, Provider.Service và ranh giới khi mở rộng SPI
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **20.2 Provider.configure, Provider.Service và ranh giới khi mở rộng SPI**
+
+    Khi cấu hình provider thông thường không đủ, bạn cần hiểu metadata dịch vụ và ranh giới SPI của Java. Bài đi từ Provider.configure và Provider.Service đến cách đăng ký bằng putService, alias, factory newInstance, supportsParameter và triển khai MessageDigestSpi, đồng thời làm rõ vì sao cấu hình/metadata chưa chứng minh một token thực hiện được mật mã.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới Provider và SPI
+
+    1. Engine API, Provider, Provider.Service và lớp MessageDigestSpi hoặc SignatureSpi khác nhau ở hợp đồng nào?
+    2. Vì sao tên loại service tùy ý không tự tạo ra một JCA engine mới?
+    3. Provider.Service được công bố qua putService khác gì việc chỉ tạo một object Service?
+
+    ### Cấu hình và factory
+
+    1. Provider.configure có thể trả this hoặc object mới; vì sao phải luôn giữ và dùng kết quả trả về?
+    2. newInstance, supportsParameter, alias và attributes cung cấp những khả năng nào và giới hạn kiểm chứng ra sao?
+    3. Provider object chưa đăng ký có thể dùng bằng getInstance như thế nào, và tại sao ServiceLoader không đồng nghĩa global registration?
+
+    ### Thực hành và tích hợp phần cứng
+
+    1. ProviderSpiDemo cho thấy sự khác biệt giữa LessonBase và LessonReady cùng dịch vụ LEARN-SUM32 như thế nào?
+    2. Vì sao đăng ký đúng Signature service trên SunPKCS11 chưa đủ kết luận token có thể ký với private key được cấp?
+    3. Bạn sẽ khoanh vùng lỗi configure, getService, SPI instantiation và backend bằng những quan sát nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân rã SPI | Chỉ ra các lớp engine và SPI tương ứng, giải thích ai tạo và ai sử dụng chúng. |
+    | Đăng ký service | Phác thảo putService với type, algorithm, className, alias và attributes có nghĩa. |
+    | Đọc configure | Dự đoán isConfigured, danh tính provider và hậu quả bỏ qua instance được trả về. |
+    | Đọc Java demo | Giải thích kết quả LEARN-SUM32 cho input abc và lý do MessageDigest dùng được provider object trực tiếp. |
+    | Chẩn đoán tích hợp | Phân loại lỗi metadata, constructor/module, key compatibility, token session và provider policy. |
+- id: security-providers-003
+  title: 20.3 SunPKCS11 làm cầu nối tới thư viện PKCS#11 của thiết bị
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **20.3 SunPKCS11 làm cầu nối tới thư viện PKCS#11 của thiết bị**
+
+    SunPKCS11 không phải HSM, mà là lớp trung gian từ JCA/JCE sang thư viện PKCS#11 native của vendor. Bài xây sơ đồ đường đi của một lần ký, nhận biết slot, token, session và mechanism, rồi hướng dẫn cấu hình library/slot và dùng provider đã configure với KeyStore và Signature mà không xuất private key.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiến trúc cầu nối
+
+    1. JCA/JCE, SunPKCS11, native PKCS11 library, slot và token khác vai trò nhau thế nào?
+    2. Vì sao thấy SunPKCS11 trong Security.getProviders chưa chứng minh đang có HSM hoạt động?
+    3. Thông tin mechanism, object handle và CKA_SIGN quyết định khả năng ký như thế nào?
+
+    ### Cấu hình và chọn token
+
+    1. Trong token.cfg, name, library và slotListIndex biểu thị những giá trị gì?
+    2. slot khác slotListIndex ra sao nếu driver trả danh sách slot IDs không liên tục?
+    3. Vì sao phải dùng Provider.configure trả về và KeyStore.getInstance PKCS11 với provider đã cấu hình?
+
+    ### Ký thử và xử lý sự cố
+
+    1. Pkcs11SignDemo đi từ PIN qua getKey, initSign, sign và verify theo các bước nào?
+    2. Vì sao verify chữ ký bằng certificate không tự chứng minh certificate đã đáng tin?
+    3. Nếu alias hoặc SHA256withRSA không hoạt động, bạn sẽ kiểm tra phần ánh xạ object, PIN, mechanism và token nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô tả bridge | Vẽ đường đi Java Signature đến C_Sign qua SunPKCS11 và thư viện native. |
+    | Đọc PKCS11 config | Xác định library đúng loại, provider name và cơ chế chọn slot theo ID hoặc index. |
+    | Truy cập khóa token | Giải thích load(null,PIN), ánh xạ KeyStore alias và opaque private-key handle. |
+    | Phân tích chương trình | Theo dõi Pkcs11SignDemo và chỉ ra điều kiện thật cần có để in Verification: OK. |
+    | Chẩn đoán sai tầng | Tách lỗi thư viện, slot, token, PIN, alias và mechanism trước khi thay cấu hình. |
+- id: security-providers-004
+  title: 20.4 Cấu hình slot, token, đăng nhập và truy cập PKCS11 KeyStore
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **20.4 Cấu hình slot, token, đăng nhập và truy cập PKCS11 KeyStore**
+
+    Việc kết nối tới đúng HSM đòi hỏi phân biệt slot ID với chỉ số slot, token label với KeyStore alias và xác thực user PIN với thao tác quản trị. Bài hướng dẫn cấu hình SunPKCS11, đọc PKCS11 KeyStore, dùng KeyStore.Builder hoặc protected authentication path khi thích hợp, và kiểm thử read-only để tránh thao tác sai đối tượng thật.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Token identity và định vị khóa
+
+    1. Slot, slotListIndex, token, session và object handle khác nhau thế nào khi nhìn từ KeyStore?
+    2. Vì sao token label, CKA_LABEL và Java KeyStore alias có thể không trùng nhau?
+    3. Khi aliases rỗng hoặc thiếu private key, cần kiểm tra CKA_ID và certificate association thế nào?
+
+    ### Cấu hình và xác thực
+
+    1. File pkcs11.cfg cần tối thiểu thông tin gì và tại sao không được đưa PIN vào đó?
+    2. KeyStore.load(null,pin), KeyStore.Builder với CallbackHandler và protected authentication path khác nhau khi nào?
+    3. User PIN và SO PIN được dùng cho mục đích nào; vì sao không retry nhiều lần khi PIN sai?
+
+    ### Thực hành và giới hạn
+
+    1. Pkcs11KeyStoreDemo xác minh provider, liệt kê alias và thực hiện ký tùy chọn như thế nào?
+    2. Vì sao một lần Signature.verify true không thay kiểm tra trust chain và token identity?
+    3. Những sự kiện nào buộc xem lại session hoặc key handle sau khi thay token hoặc chạy trên JDK khác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn đúng thiết bị | Đối chiếu CK_SLOT_ID, slotListIndex và token identity từ công cụ vendor. |
+    | Thiết kế login | Phân biệt load PIN, callback và PIN-pad; tránh nhầm user/SO PIN. |
+    | Tra cứu KeyStore | Kiểm tra alias, certificate, private-key mapping và quyền sử dụng token. |
+    | Thực hành an toàn | Mô tả cách chạy Pkcs11KeyStoreDemo hoặc keytool -list chỉ đọc mà không sửa khóa. |
+    | Chẩn đoán token | Phân loại lỗi PIN, slot, alias, mechanism và rủi ro sử dụng handle cũ. |
+- id: security-providers-005
+  title: 20.5 Sử dụng private key không xuất được qua Cipher hoặc Signature
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **20.5 Sử dụng private key không xuất được qua Cipher hoặc Signature**
+
+    Khóa riêng không xuất được vẫn có thể được dùng để ký hoặc giải mã thông qua opaque key handle, nhưng quyền và cơ chế của token phải đúng. Bài phân biệt getEncoded null với bằng chứng non-extractable, CKA_SIGN với CKA_DECRYPT, ứng dụng Signature với RSA Cipher, và chỉ ra giới hạn của OAEP/PKCS1Padding trên provider thiết bị.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Key handle và thuộc tính
+
+    1. PrivateKey trong Java khác raw private key bytes thế nào khi provider quản lý key trên HSM?
+    2. CKA_SENSITIVE, CKA_EXTRACTABLE, CKA_NEVER_EXTRACTABLE và CKA_SIGN hoặc CKA_DECRYPT thể hiện bảo đảm nào?
+    3. Vì sao getEncoded trả null không chứng minh khóa chưa từng tồn tại ngoài thiết bị?
+
+    ### Chọn Signature hoặc Cipher
+
+    1. Vì sao ký phải dùng Signature chứ không dùng Cipher.ENCRYPT_MODE với RSA private key?
+    2. Vì sao private RSA key được ký không mặc định được giải mã, và EC/Ed25519 không dùng Cipher RSA?
+    3. Khi RSA-OAEP không được SunPKCS11/JDK expose, tại sao không tự hạ cấp sang PKCS1Padding?
+
+    ### Chạy thử và kiểm soát
+
+    1. CryptoSoftwareDemo và HsmSignatureDemo chứng minh những tính chất khác nhau nào?
+    2. Giải mã dưới HSM có thể trả plaintext về JVM, vậy yêu cầu không xuất private key bảo vệ được và không bảo vệ được điều gì?
+    3. Khi InitSign báo InvalidKeyException với token key, nên điều tra provider, usage, session và mechanism ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích opaque key | Phân biệt object PrivateKey, quyền sử dụng và vật liệu khóa đang cư trú trong thiết bị. |
+    | Chọn đúng API | Ánh xạ ký/xác minh với Signature và mã hóa/giải mã RSA với Cipher theo key type. |
+    | Đọc code | Phân tích chữ ký RSA software và đường ký HSM mà không gọi getEncoded. |
+    | Đánh giá compatibility | Đọc bảng provider và mechanism trước khi quyết định OAEP hoặc xử lý legacy RSA. |
+    | Giảm rủi ro | Thiết kế fail-closed và phân quyền ký/giải mã khi HSM hoặc key handle không khả dụng. |
+- id: security-providers-006
+  title: 20.6 Quản lý phiên thiết bị, lỗi PIN, token bị tháo và khả năng chạy đồng thời
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **20.6 Quản lý phiên thiết bị, lỗi PIN, token bị tháo và khả năng chạy đồng thời**
+
+    Ứng dụng Java dùng token thật phải vận hành cùng login state, giới hạn session, PIN lockout và sự kiện tháo/cắm thiết bị. Bài tập trung vào coordinator, backpressure, epoch invalidation, concurrency gate và xử lý kết quả ký không chắc chắn, để không sử dụng lại handle sai hoặc tự retry làm khóa PIN.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Session và shared state
+
+    1. Native PKCS11 session, login state và Java Signature object có các vòng đời khác nhau ra sao?
+    2. Vì sao logout ở một request có thể làm operation của request khác thất bại?
+    3. Những lỗi CKR_PIN_INCORRECT, CKR_PIN_LOCKED, CKR_SESSION_COUNT và CKR_DEVICE_REMOVED cần những chính sách retry nào?
+
+    ### Đồng thời và thay token
+
+    1. Vì sao library thread-safe không đồng nghĩa một session handle có thể xử lý song song nhiều thao tác?
+    2. Semaphore, queue hữu hạn và kiểm generation trước/sau permit ngăn loại race nào?
+    3. Sau khi token được tháo rồi cắm lại, vì sao phải xác minh identity, invalidate handle và tái login thay vì dùng cache cũ?
+
+    ### Kiểm thử và recovery
+
+    1. TokenSessionDemo minh họa hạn mức hai operation đồng thời và chuyển TOKEN-A sang TOKEN-B ra sao?
+    2. Nếu sign đã hoàn tất trên token nhưng ứng dụng mất kết nối trước khi nhận kết quả, cần idempotency và audit như thế nào?
+    3. Bạn thiết kế fault injection cho PIN lock, session exhaustion và hot-plug mà không gây hại token production ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế lifecycle | Vẽ trạng thái ABSENT, NEEDS_LOGIN, READY và PIN_LOCKED theo sự kiện thật. |
+    | Chọn retry chính xác | Phân loại lỗi PIN, device, session và timeout, chặn automatic retry PIN sai. |
+    | Điều phối concurrency | Áp dụng semaphore, queue bounded và tạo mutable engine mới cho từng operation. |
+    | Kiểm thử mô phỏng | Giải thích output TokenSessionDemo và giới hạn của mô hình không có PKCS11 native. |
+    | Phục hồi đúng token | Thiết kế re-discovery, generation invalidation, health check và chống ký lặp nghiệp vụ. |
+- id: security-providers-007
+  title: 20.7 Khác biệt giữa provider phần mềm, HSM và kho khóa của hệ điều hành
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **20.7 Khác biệt giữa provider phần mềm, HSM và kho khóa của hệ điều hành**
+
+    Tên provider hoặc keystore type không tự mô tả mức độ bảo vệ khóa. Bài so sánh software provider, HSM qua PKCS#11 và Windows/macOS native keystore theo nơi lưu khóa, quyền export, hiệu năng, tính di động, backup và quyền truy cập, để bạn chọn backend đúng threat model thay vì chọn dựa vào API giống nhau.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### So sánh ba backend
+
+    1. JCA engine, security provider, KeyStore và nơi lưu key material khác nhau ở cấp nào?
+    2. Vì sao PKCS12 không tương đương HSM, và một SunPKCS11 provider cũng có thể kết nối soft token?
+    3. Windows-MY, Windows-ROOT và KeychainStore đóng vai trò gì, và vì sao không tự chứng minh TPM hay Secure Enclave?
+
+    ### Lựa chọn theo ứng dụng
+
+    1. Khi nào software AES-GCM phù hợp để mã hóa dữ liệu lớn, còn HSM chỉ quản lý KEK hoặc private signing key?
+    2. OS keystore mang lợi thế và rủi ro gì với user store, machine store và service account?
+    3. Độ trễ, session, quyền export, recovery và triển khai đa OS ảnh hưởng lựa chọn thế nào?
+
+    ### Kiểm chứng và chuyển đổi
+
+    1. SoftwareProviderDemo và HsmConnectDemo khác nhau về prerequisites, nơi sinh khóa và output thế nào?
+    2. Vì sao một PrivateKey handle từ HSM có thể không dùng được với software Signature provider?
+    3. Nếu cần chuyển khóa PKCS12 sang HSM mà không cho phép xuất, cần thay khóa hoặc quy trình migration như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt backend | Giải thích vai trò software provider, HSM token và native OS store với cùng các JCA API. |
+    | Chọn KeyStore đúng | So sánh PKCS12, PKCS11, Windows-MY, Windows-ROOT và KeychainStore theo mục đích. |
+    | Đọc ví dụ | Giải thích SoftwareProviderDemo và HsmConnectDemo không khẳng định mọi private key được hardware-backed. |
+    | Thiết kế kiến trúc | Chọn nơi giữ khóa, nơi xử lý bulk AES và provider tương thích theo threat model. |
+    | Lập kế hoạch migration | Nhận diện các giới hạn export, alias, certificate trust, backup và failover khi đổi backend. |
+- id: security-providers-008
+  title: 20.8 Phân biệt có hỗ trợ thuật toán với đáp ứng yêu cầu tuân thủ của môi trường
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **20.8 Phân biệt có hỗ trợ thuật toán với đáp ứng yêu cầu tuân thủ của môi trường**
+
+    Một thuật toán chạy được trong Java không có nghĩa hệ thống đáp ứng yêu cầu FIPS hoặc chính sách bảo mật cụ thể. Bài tách bốn tầng availability, functionality, cryptographic module validation và environment compliance; hướng dẫn thu thập evidence về provider thật, key provenance, firmware, approved mode, thuật toán và audit trước khi kết luận.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khả năng và bằng chứng
+
+    1. Availability, functionality, module validation và compliance khác nhau về câu hỏi kiểm chứng và phạm vi kết luận như thế nào?
+    2. Vì sao getInstance hoặc round-trip AES-GCM thành công chưa chứng minh đã dùng validated module?
+    3. Algorithm validation ACVP/CAVP và module validation CMVP khác nhau ra sao?
+
+    ### Ranh giới module và policy
+
+    1. Vì sao module chứng nhận FIPS không tự bảo đảm ứng dụng Java đang ở approved mode và mọi key sinh trong đúng boundary?
+    2. Provider Cipher, KeyGenerator và SecureRandom có thể khác nhau gây thiếu bằng chứng ở bước nào?
+    3. Muốn xác nhận FIPS 140 theo thực tế, cần đối chiếu certificate, Security Policy, firmware và caveat thế nào?
+
+    ### Thiết kế kiểm tra và ra quyết định
+
+    1. CapabilityVsCompliance in gì và vì sao dòng Compliance decision vẫn là UNDETERMINED?
+    2. Khi nào báo PASS, FAIL hoặc UNKNOWN dựa trên ma trận yêu cầu và chứng cứ?
+    3. Nếu HSM mất kết nối hoặc application fallback sang software trái policy, phải đặt compliance gate và xử lý thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại bằng chứng | Đặt mỗi kết quả test vào đúng tầng availability, functionality, validation hoặc compliance. |
+    | Đọc kiểm thử | Giải thích stdout và stderr CapabilityVsCompliance và giới hạn của kiểm tra AES-GCM. |
+    | Kiểm tra boundary | Đối chiếu provider thực tế, nguồn key, thiết bị, version và approved mode với Security Policy. |
+    | Xây ma trận đánh giá | Tạo bảng yêu cầu, bằng chứng, trạng thái PASS/FAIL/UNKNOWN và ngày/scope xác nhận. |
+    | Thiết kế gate | Chặn provider fallback, tham số sai, nonce reuse và thiếu audit theo chính sách được duyệt. |

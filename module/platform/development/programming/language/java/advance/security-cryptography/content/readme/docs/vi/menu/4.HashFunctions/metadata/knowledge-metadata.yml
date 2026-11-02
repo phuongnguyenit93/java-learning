@@ -1,0 +1,15 @@
+sections:
+  hash-functions-001:
+    difficulty: BASIC
+  hash-functions-002:
+    difficulty: INTERMEDIATE
+  hash-functions-003:
+    difficulty: INTERMEDIATE
+  hash-functions-004:
+    difficulty: ADVANCED
+  hash-functions-005:
+    difficulty: BASIC
+  hash-functions-006:
+    difficulty: ADVANCED
+  hash-functions-007:
+    difficulty: ADVANCED

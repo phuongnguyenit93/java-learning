@@ -1,0 +1,69 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'Ký JAR và XML trong Java: từ chữ ký đến chính sách tin cậy'
+roadmapHeading: Lộ trình học tám bài ký JAR và XMLDSig
+roadmap:
+- id: jar-xml-signatures-001
+  order: 1
+  title: 19.1 Chữ ký JAR, manifest, digest entry và chuỗi chứng thư của người ký
+  description: Hiểu các lớp manifest, signature file, signature block và phạm vi chữ ký của từng JAR entry.
+  transition:
+    to: jar-xml-signatures-002
+    description: Từ cấu trúc chữ ký, chuyển sang thực hành jarsigner và cách đọc cảnh báo CI.
+- id: jar-xml-signatures-002
+  order: 2
+  title: 19.2 Dùng jarsigner để ký, xác minh và kiểm tra cảnh báo ở chế độ strict
+  description: Ký và xác minh JAR bằng jarsigner, phân loại -strict severe warnings, unsigned entries và signer certificates.
+  transition:
+    to: jar-xml-signatures-003
+    description: Tiếp tục với thời điểm ký, timestamp và cách đánh giá chứng thư đã hết hạn.
+- id: jar-xml-signatures-003
+  order: 3
+  title: 19.3 Timestamp, thời hạn chứng thư và giới hạn của kết quả xác minh JAR
+  description: Đánh giá chứng cứ thời gian TSA, thời hạn signer/TSA và giới hạn của dòng jar verified.
+  transition:
+    to: jar-xml-signatures-004
+    description: Đặt kết quả ký vào ranh giới riêng giữa tính toàn vẹn, trust và quyền chạy mã.
+- id: jar-xml-signatures-004
+  order: 4
+  title: 19.4 Phân biệt tính toàn vẹn gói JAR với độ tin cậy hoặc quyền thực thi của mã
+  description: Phân biệt integrity, signer trust và execution authorization; áp dụng ít quyền ở OS/container thay vì tin chữ ký.
+  transition:
+    to: jar-xml-signatures-005
+    description: Rời định dạng JAR để nhận diện mô hình đối tượng của chữ ký số XML.
+- id: jar-xml-signatures-005
+  order: 5
+  title: 19.5 Mô hình XMLSignatureFactory, SignedInfo, Reference và KeyInfo
+  description: Đọc XMLSignatureFactory, Reference, SignedInfo và KeyInfo để hiểu digest dữ liệu và chữ ký trên SignedInfo.
+  transition:
+    to: jar-xml-signatures-006
+    description: Từ mô hình chuyển sang canonicalization, transforms và ba cách bố trí chữ ký trong XML.
+- id: jar-xml-signatures-006
+  order: 6
+  title: 19.6 Canonicalization, transform và chữ ký detached, enveloped hoặc enveloping
+  description: Chọn chính xác byte canonicalized và Reference cho chữ ký enveloped, detached hoặc enveloping.
+  transition:
+    to: jar-xml-signatures-007
+    description: Dùng các context DOM thực thi việc ký và xác minh, đọc sai khác core/Reference/SignatureValue.
+- id: jar-xml-signatures-007
+  order: 7
+  title: 19.7 Tạo chữ ký XML bằng DOMSignContext và xác minh bằng DOMValidateContext
+  description: Thực hành DOMSignContext/DOMValidateContext, parser an toàn và xác minh đúng node nghiệp vụ.
+  transition:
+    to: jar-xml-signatures-008
+    description: Kết thúc bằng chính sách chọn khóa, giới hạn URI, secure validation và chống signature wrapping.
+- id: jar-xml-signatures-008
+  order: 8
+  title: 19.8 Tách chọn khóa khỏi kiểm tra khóa tin cậy; giới hạn URI tham chiếu và secure validation
+  description: Ràng buộc key trust, URI allowlist, secure validation, ID duy nhất và quyền nghiệp vụ trước khi nhận XML ký số.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh vai trò tám bài học
+
+  | Tiêu chí | Bài 1 — 19.1 Cấu trúc JAR | 19.2 jarsigner strict | 19.3 TSA và thời hạn | 19.4 Trust và quyền chạy | 19.5 Mô hình XMLDSig | 19.6 C14N và ba dạng | 19.7 DOM ký/xác minh | 19.8 Chính sách XMLDSig |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | Manifest, .SF, signature block | Ký, verify, strict warnings | Timestamp, chứng thư, TSA | Integrity, trust, execution | Factory, SignedInfo, Reference | C14N, transform, signature placement | DOMSignContext và DOMValidateContext | KeySelector, URI, secure validation |
+  | Câu hỏi then chốt | Entry nào thực sự có signer? | Exit code và warning nói gì? | Khi cert hết hạn, chữ ký cũ ra sao? | Chữ ký có cấp quyền chạy không? | Chính xác node nào được digest và ký? | Tại sao cùng XML có digest khác? | Khi nào core true hay false? | Ai được ký và node nào được phép dùng? |
+  | Thực hành | InspectJar đọc entry đến EOF | jarsigner -verify -strict | InspectJarEntry đọc Timestamp | JAR chưa ký và JAR đã ký | XmlSignatureModelDemo | XmlDsigDemo ba kiểu | XmlSignatureDemo với Invoice | XmlSignatureBoundariesDemo trusted/outsider |
+  | Rủi ro cần tránh | Tin JAR có signature file là mọi entry ký | Bỏ severe warning hoặc noTimestamp | Tin mtime hay TSA chưa xác thực | Nhầm trusted code với code an toàn | Tin KeyInfo hoặc SignatureValue một mình | Nhầm URI và transform của payload | ID sai, XML parser thiếu hardening | SSRF, wrapping, outsider key, replay |
+  | Năng lực hình thành | Phân tích phạm vi cryptographic integrity | Đưa strict policy vào pipeline | Đánh giá tính hợp lệ theo thời gian | Chọn admission và quyền ít nhất | Thiết kế object graph XMLDSig | Chọn C14N/transforms theo profile | Tạo và xác minh DOM thực tế | Thiết kế verifier XML fail-closed |

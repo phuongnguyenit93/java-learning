@@ -1,0 +1,19 @@
+sections:
+  x509-certificate-001:
+    difficulty: BASIC
+  x509-certificate-002:
+    difficulty: INTERMEDIATE
+  x509-certificate-003:
+    difficulty: INTERMEDIATE
+  x509-certificate-004:
+    difficulty: INTERMEDIATE
+  x509-certificate-005:
+    difficulty: INTERMEDIATE
+  x509-certificate-006:
+    difficulty: ADVANCED
+  x509-certificate-007:
+    difficulty: ADVANCED
+  x509-certificate-008:
+    difficulty: INTERMEDIATE
+  x509-certificate-009:
+    difficulty: ADVANCED

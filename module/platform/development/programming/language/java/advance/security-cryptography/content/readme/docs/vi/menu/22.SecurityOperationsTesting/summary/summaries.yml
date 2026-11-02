@@ -1,0 +1,369 @@
+summaries:
+- id: security-operations-testing-001
+  title: 22.1 Phân biệt security property với system property và cách nạp java.security
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **22.1 Phân biệt security property với system property và cách nạp java.security**
+
+    Bài này giúp người vận hành không nhầm hai không gian cấu hình Java có cú pháp giống nhau nhưng API và hiệu lực khác nhau. Người học đối chiếu System.getProperty với Security.getProperty, hiểu file java.security, cơ chế overlay/thay thế và tại sao cần kiểm tra hành vi thực thay vì chỉ gán giá trị.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân biệt nguồn cấu hình và cách nạp
+
+    1. Security property và system property được quản lý bởi những API nào, tại sao cùng tên vẫn có thể có hai giá trị?
+    2. Vì sao đặt -Djdk.tls.disabledAlgorithms không tự thay được chính sách bảo mật JSSE?
+    3. Dấu bằng đơn và dấu bằng kép trong -Djava.security.properties khác nhau ra sao đối với master configuration?
+    4. Vì sao cần tìm java.home của chính JVM ứng dụng thay vì dùng JAVA_HOME ở shell?
+
+    ### Kiểm chứng thay đổi cấu hình
+
+    1. Security.setProperty tác động gì tới runtime và vì sao consumer đã khởi tạo có thể không dùng giá trị vừa thay?
+    2. Khi overlay ghi đè một danh sách thuật toán bị cấm, cần so sánh phần nào để không vô ý gỡ bảo vệ cũ?
+    3. JDK 24 include khác thế nào với overlay startup ở JDK 17/21 và cần kiểm soát file path ra sao?
+    4. Nếu file đã sửa nhưng TLS không đổi, các phép probe và điều kiện khởi động nào giúp phân biệt nguyên nhân?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc đúng namespace | Dùng System.getProperty và Security.getProperty để chứng minh hai kho thuộc tính tách biệt. |
+    | Phân tích cấu hình khởi động | Giải thích và kiểm tra tác dụng của chế độ overlay so với thay thế toàn bộ security properties. |
+    | Tìm runtime thật | Xác định java.home, master file và JVM flags của chính tiến trình cần kiểm tra. |
+    | Đánh giá cache và hiệu lực | Phân biệt giá trị map đã đổi với hành vi JCA/JSSE đang được sử dụng. |
+    | Thiết kế thay đổi an toàn | Lập trình tự kiểm tra property, test hành vi, rolling restart và rollback không làm yếu policy. |
+- id: security-operations-testing-002
+  title: 22.2 jdk.tls.disabledAlgorithms, jdk.certpath.disabledAlgorithms và chính sách thuật toán
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **22.2 jdk.tls.disabledAlgorithms, jdk.certpath.disabledAlgorithms và chính sách thuật toán**
+
+    Bài học đi sâu vào hai security property kiểm soát thuật toán của TLS/DTLS và đường chứng chỉ PKIX. Người học cần đọc chính xác cấu trúc disabledAlgorithms, phân biệt policy với provider capability và thiết kế bài test handshake/CertPath giữ được các hạn chế bảo mật khi chỉnh cấu hình.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa chính sách thuật toán
+
+    1. jdk.tls.disabledAlgorithms và jdk.certpath.disabledAlgorithms được áp bởi thành phần nào và có thể cùng ảnh hưởng một handshake như thế nào?
+    2. Dấu phẩy, dấu &, keySize, jdkCA, usage TLSServer và denyAfter trong policy có ý nghĩa gì?
+    3. Vì sao một provider còn có SHA1withRSA không chứng minh thuật toán ấy được dùng trong CertPath/TLS?
+    4. Trust anchor, hostname validation và revocation checking khác gì so với algorithm constraints?
+
+    ### Kiểm thử hiệu lực và rollout
+
+    1. Supported, default-enabled và negotiated TLS protocols khác nhau như thế nào?
+    2. Nếu overlay chỉ ghi một phần danh sách disabledAlgorithms, điều gì khiến chính sách tổng thể có thể yếu đi?
+    3. Khi gặp handshake_failure với TLS 1.2, cần chứng cứ nào để phân biệt protocol, cipher, key exchange và CertPath rejection?
+    4. Để tăng ngưỡng RSA/DH an toàn, cần những positive và negative fixtures nào trước khi canary triển khai?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc cú pháp DisabledAlgorithms | Phân tích điều kiện bằng dấu phẩy, &, keySize và usage theo ngữ cảnh TLS/PKIX. |
+    | Phân biệt capability và policy | Giải thích vì sao getInstance hoặc supported protocol không đủ chứng minh được phép sử dụng. |
+    | Phân loại TLS vs CertPath | Chẩn đoán lỗi dựa trên negotiated handshake, trust chain và effective restrictions. |
+    | Đọc/đổi policy đúng phạm vi | So sánh danh sách cấm hiện hành và viết cấu hình mới giữ nguyên các điều kiện đang có. |
+    | Thiết kế compliance tests | Chạy thử các trường hợp cipher/protocol/chain hợp lệ và bị cấm trên đúng runtime. |
+- id: security-operations-testing-003
+  title: 22.3 Kiểm tra thay đổi mặc định theo bản cập nhật JDK thay vì chép cấu hình cũ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **22.3 Kiểm tra thay đổi mặc định theo bản cập nhật JDK thay vì chép cấu hình cũ**
+
+    Bài học hướng dẫn đánh giá các thay đổi mặc định bảo mật theo từng bản vá, vendor và build JDK, thay vì chép file cấu hình cũ để giữ tương thích. Người học tạo snapshot độc lập, so với security contract và đặt CI/canary gates dựa trên hành vi TLS, certificate, provider, KeyStore và chữ ký JAR.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Baseline và sai lệch runtime
+
+    1. Vì sao một bản cập nhật JDK có thể thay đổi TLS, trust anchors, algorithm policy, signed JAR hoặc provider dù code không đổi?
+    2. Cần ghi những metadata nào để snapshot giữa JDK cũ và JDK mới tái lập được?
+    3. Vì sao giữ nguyên java.security của bản cũ có thể làm mất hardening của bản mới?
+    4. JdkSecuritySnapshot đọc những loại giá trị nào và tại sao snapshot chưa chứng minh handshake thực?
+
+    ### Security gates và quyết định triển khai
+
+    1. SecurityProtocolGate chứng minh điều gì về default protocols và điều gì nó chưa chứng minh?
+    2. Ma trận positive/negative nào cần cho TLS, mTLS, CertPath, JAR signing và provider khi upgrade?
+    3. Những thay đổi metadata nào nên được ghi nhận thay vì tự động làm CI fail, và loại vi phạm nào phải chặn release?
+    4. Canary, release notes và rollback được kết hợp thế nào mà không tái bật thuật toán yếu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chụp baseline có nguồn gốc | Thu thập vendor, full build, java.home, provider order và effective security properties. |
+    | So sánh môi trường đúng | Đối chiếu JDK sạch với JDK chạy override và phân loại chênh lệch quan sát được. |
+    | Thiết kế security contract | Xác định test gate cho TLS/PKIX/keystore/signed JAR dựa trên hành vi cần bảo vệ. |
+    | Viết policy gate | Giải thích và triển khai kiểm tra giao thức TLS mặc định không bao gồm danh sách bị cấm. |
+    | Ra quyết định upgrade | Phân loại giữ hardening, sửa dependency, chặn rollout hoặc rollback image theo bằng chứng. |
+- id: security-operations-testing-004
+  title: 22.4 Chẩn đoán bằng javax.net.debug, java.security.debug và nhật ký đã loại bí mật
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **22.4 Chẩn đoán bằng javax.net.debug, java.security.debug và nhật ký đã loại bí mật**
+
+    Bài này xây quy trình tìm lỗi mật mã và TLS bằng trace JSSE, JCA và ứng dụng mà không phơi lộ bí mật. Người học chọn debug flags theo triệu chứng, phân tích root cause trong thứ tự sự kiện, dùng TLS probe có hostname verification và tạo bản ghi allowlist bảo vệ khi chia sẻ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chọn đúng nguồn debug
+
+    1. javax.net.debug và java.security.debug quan sát những tầng nào và khi nào cần kết hợp?
+    2. Với PKIX path building failed, mTLS không gửi client certificate hoặc NoSuchAlgorithmException, nên chọn flag tối thiểu nào?
+    3. Vì sao handshake alert ở cuối không nhất thiết là nguyên nhân đầu tiên?
+    4. TlsProbe cấu hình SSLParameters và endpoint identification ra sao để test hostname thật?
+
+    ### An toàn nhật ký và điều tra
+
+    1. Vì sao redaction của logger ứng dụng không bảo đảm trace của JDK đã sạch?
+    2. Những loại token, key, certificate metadata, payload và debug dump nào cần bị loại khỏi log chia sẻ?
+    3. SafeTlsAuditDemo dùng traceId, stage và exception type như thế nào để giảm rò rỉ?
+    4. Quy trình tái hiện ngắn, tương quan log, lưu raw trace hạn chế và gỡ debug sau sự cố cần những bước nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định tuyến debug | Chọn cờ JSSE/JCA chính xác theo TLS handshake, CertPath, provider, keystore hoặc mTLS. |
+    | Đọc trace có thứ tự | Xác định mốc lỗi đầu tiên trước các alert hậu quả, phân biệt mạng và TLS. |
+    | Kiểm hostname của probe | Sử dụng SSLSocket với endpoint identification phù hợp trước startHandshake. |
+    | Thiết kế log allowlist | Ghi traceId, stage và exception class mà không ghi exception message hoặc secrets. |
+    | Bảo vệ artifact chẩn đoán | Giới hạn debug scope, truy cập/retention raw log, kiểm duyệt trước chia sẻ và loại bỏ flags. |
+    | Tránh bypass bảo mật | Giải thích vì sao trust-all hay tắt hostname verification không phải cách sửa lỗi đúng. |
+- id: security-operations-testing-005
+  title: 22.5 Kiểm thử bằng bộ dữ liệu đã biết kết quả và kiểm tra tương thích giữa provider
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **22.5 Kiểm thử bằng bộ dữ liệu đã biết kết quả và kiểm tra tương thích giữa provider**
+
+    Bài học phân biệt Known Answer Test với self round-trip và kiểm thử tương thích thật giữa hai cryptographic provider. Người học sử dụng vector độc lập SHA-256, HMAC và AES-GCM, ghim tham số/provider khi kiểm tra và báo PASS/FAIL/SKIP chính xác, kể cả khi HSM không có raw key export.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### KAT, round-trip và nguồn expected
+
+    1. Vì sao encrypt/decrypt trên cùng provider không thay được vector KAT độc lập?
+    2. Những byte và kết quả chuẩn của SHA-256 abc, HMAC RFC 4231 và AES-GCM zero-key test case được kiểm tra như thế nào?
+    3. Trong AES-GCM, tag length, IV, AAD và thứ tự ciphertext-tag cần được ghi rõ ra sao?
+    4. Vì sao một KAT đạt không đồng nghĩa chứng nhận FIPS hoặc kiểm chứng toàn bộ thuật toán?
+
+    ### Khả năng tương thích provider
+
+    1. Khi có hai provider A và B, ma trận có hướng A→B và B→A khác gì round-trip nội bộ?
+    2. Vì sao chỉ một provider AES-GCM khả dụng phải ghi SKIP chứ không phải cross-provider PASS?
+    3. RSA-OAEP/PSS, ECDSA DER/P1363 và PKCS#11 key handle làm interop cần kiểm tra những tham số nào?
+    4. Vì sao getInstance thành công chưa đủ để chứng minh init với key/parameter thật được hỗ trợ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đối chiếu known-answer vectors | Kiểm byte-for-byte với expected từ RFC/NIST độc lập. |
+    | Chọn provider tường minh | Ghi implementation thực và chạy KAT với mỗi provider đã đăng ký phù hợp. |
+    | Thử tương thích hai chiều | Xây ma trận encrypt/decrypt hoặc sign/verify A→B và B→A theo wire contract. |
+    | Đánh giá negative cases | Buộc AES-GCM sai ciphertext/tag/AAD thất bại trước khi chấp nhận plaintext. |
+    | Phân loại báo cáo CI | Phân biệt PASS, FAIL, UNSUPPORTED, SKIP và ERROR dựa trên điều kiện môi trường thực. |
+    | Phân tích khác biệt tham số | Nêu rõ OAEP/PSS MGF/salt, ECDSA encoding và HSM key-policy khi gặp mismatch. |
+- id: security-operations-testing-006
+  title: 22.6 Sửa một byte của ciphertext, tag, AAD hoặc chữ ký để kiểm tra đường từ chối
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **22.6 Sửa một byte của ciphertext, tag, AAD hoặc chữ ký để kiểm tra đường từ chối**
+
+    Bài học chuyển kiểm thử mật mã từ happy path sang chứng minh đường từ chối. Người học bắt đầu bằng một fixture hợp lệ rồi clone và lật đúng một bit của ciphertext, authentication tag, AAD, chữ ký hoặc thông điệp đã ký; quan sát kết quả verify/decrypt và bảo đảm không có side effect nghiệp vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế phép thử tamper từng byte
+
+    1. Vì sao phải có positive baseline trước khi sửa một byte và chạy negative test?
+    2. Cần clone mảng và chọn offset thế nào để bảo đảm chỉ đổi một byte trong một trường?
+    3. Sửa ciphertext, tag và AAD của AES-GCM gây kết quả khác gì so với sửa chữ ký hoặc signed message?
+    4. Vì sao ký/mã hóa lại dữ liệu đã sửa làm phép thử mất ý nghĩa kiểm tra tamper?
+
+    ### Đường từ chối của ứng dụng
+
+    1. AEADBadTagException và Signature.verify false biểu thị những kết quả nào, khi nào lỗi khác phải làm test FAIL?
+    2. Vì sao parser từ chối Base64 malformed chưa chứng minh tag verification đã được chạy?
+    3. Những dấu hiệu nào cho thấy plaintext hoặc DB/event đã được dùng trước khi xác thực hoàn tất?
+    4. Với CipherInputStream và giải mã streaming, cần kiểm tra việc xác thực và công bố plaintext thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo negative fixture độc lập | Clone baseline và lật một bit đúng ciphertext/tag/AAD/signature hoặc message. |
+    | Xác minh cryptographic rejection | Dùng Cipher.doFinal và Signature.verify theo đúng boundary API để buộc dữ liệu bị sửa bị từ chối. |
+    | Phân biệt lớp lỗi | Nhận diện format rejection, authentication rejection và provider failure trong báo cáo. |
+    | Kiểm side effects | Assert không có ghi DB, phát event, trả plaintext hoặc đánh dấu success trước xác thực. |
+    | Đưa vào CI | Chuyển test một byte thành JUnit/integration test với tên case và kết quả cụ thể. |
+- id: security-operations-testing-007
+  title: 22.7 Kiểm thử chứng thư hết hạn, sai hostname, thiếu intermediate và CA không tin cậy
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **22.7 Kiểm thử chứng thư hết hạn, sai hostname, thiếu intermediate và CA không tin cậy**
+
+    Bài học thiết kế bộ thử TLS/X.509 có một baseline hợp lệ và bốn ca certificate thất bại độc lập: hết hạn, SAN sai hostname, thiếu intermediate và CA không nằm trong truststore. Người học kiểm soát fixture lab, quan sát wire chain và xác nhận Java client từ chối trong TLS chứ không chỉ báo lỗi mạng/HTTP.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Xác minh chứng thư và mô hình PKIX
+
+    1. Certificate path, trust anchor, validity, key usage và hostname SAN được kiểm tra ở những tầng nào?
+    2. Vì sao chứng thư leaf hết hạn phải được ký bởi CA còn hợp lệ để cô lập lỗi thời gian?
+    3. Missing intermediate khác untrusted CA như thế nào và khi nào AIA/cache làm kết quả không còn xác định?
+    4. Vì sao kết nối tới IP có DNS SAN hoặc dùng CN thay SAN có thể tạo hostname mismatch?
+
+    ### Dựng fixture và kiểm chứng Java/OpenSSL
+
+    1. Những điều kiện nào của baseline OK cần giữ nguyên khi tạo EXP, NAME, CHAIN và ROOT?
+    2. OpenSSL s_client -showcerts với -verify_hostname/-CAfile giúp xác minh những yếu tố khác nhau nào?
+    3. TlsCertificateProbe phải phân biệt SSLException từ xác thực TLS với DNS timeout, TCP refusal và HTTP status ra sao?
+    4. Vì sao pooling/session resumption hoặc proxy TLS có thể làm negative test kiểm sai certificate?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân rã kiểm tra X.509 | Giải thích validation time, SAN, intermediate, trust anchor và chain policy độc lập. |
+    | Thiết kế ma trận fixture | Tạo baseline và bốn biến thể mỗi biến chỉ sai một thuộc tính đã xác định. |
+    | Quan sát chứng thư trên wire | Dùng OpenSSL kiểm chain server thực gửi và trust anchor phía client. |
+    | Thực thi Java TLS negative suite | Sử dụng HttpClient/TrustManagerFactory để xác nhận ACCEPT và TLS REJECT đúng trường hợp. |
+    | Tránh false-positive | Phân biệt lỗi DNS/TCP/HTTP với certificate reject, kiểm SNI, AIA và connection pooling. |
+    | Đề xuất remediation | Sửa fullchain/SAN/expiry/truststore mà không tắt hostname verification hoặc trust manager. |
+- id: security-operations-testing-008
+  title: 22.8 Kiểm thử sai khóa, sai mật khẩu, tham số không khớp và dữ liệu bị cắt
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **22.8 Kiểm thử sai khóa, sai mật khẩu, tham số không khớp và dữ liệu bị cắt**
+
+    Bài này mở rộng negative testing sang sai khóa, password/KDF, tham số AEAD không khớp, keystore lỗi và dữ liệu/envelope bị cắt. Người học phân biệt validation/parsing với JCA crypto failure, thiết kế đọc stream đủ byte và xử lý sai dữ liệu mà không công bố plaintext hoặc fallback thuật toán yếu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các lớp lỗi của khóa, mật khẩu và tham số
+
+    1. Vì sao key AES đúng độ dài nhưng sai byte thường gây tag mismatch, còn key có kích thước sai có thể lỗi ngay tại init?
+    2. Khi PBKDF2 dùng sai password, salt hoặc iterations, vì sao AEADBadTagException không chỉ ra nguyên nhân duy nhất?
+    3. InvalidKeyException, AEADBadTagException, Signature.verify false và SignatureException khác nhau thế nào theo boundary?
+    4. Keystore store password, key-entry password, alias và key type phải được test độc lập ra sao?
+
+    ### Cắt dữ liệu, parser và xử lý an toàn
+
+    1. Vì sao InputStream.available không chứng minh stream đã đọc đủ dữ liệu và readFully được dùng như thế nào?
+    2. Những offset nào cần kiểm tra khi header, salt, IV, ciphertext hoặc tag bị cắt?
+    3. Vì sao AES-CBC thiếu MAC có thể không báo BadPaddingException khi bị sửa và GCM khác gì?
+    4. CipherInputStream, streaming/chunked AEAD và file tạm cần ràng buộc final tag/total chunks thế nào?
+    5. Tại sao việc bắt mọi Exception để báo negative test PASS có thể che lỗi provider/hạ tầng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây ma trận sai key/KDF | Tách negative cases cho key size, key bytes, password, salt, iteration, IV và AAD. |
+    | Phân loại outcome | Gán lỗi parser, invalid parameter, authentication failure và signature failure theo API đúng. |
+    | Kiểm cắt cụt envelope | Tạo fixture tại nhiều offset, kiểm giới hạn length trước allocation và EOF chính xác. |
+    | Bảo vệ AEAD streaming | Chặn sử dụng plaintext và mọi side effect trước khi kiểm tag/điểm kết thúc. |
+    | Phân tích CBC/RSA khác AEAD | Giải thích vì sao padding hợp lệ không chứng minh ciphertext có tính toàn vẹn. |
+    | Quản lý lỗi production | Tách internal diagnostic codes khỏi public oracle và không fallback key/algorithm. |
+- id: security-operations-testing-009
+  title: 22.9 Đo hiệu năng trong khi vẫn bảo toàn nonce, chi phí dẫn xuất và phạm vi dùng khóa
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **22.9 Đo hiệu năng trong khi vẫn bảo toàn nonce, chi phí dẫn xuất và phạm vi dùng khóa**
+
+    Bài này chỉ ra một benchmark mật mã nhanh hơn không có giá trị nếu làm suy yếu quy tắc nonce của AES-GCM, giảm work factor của password KDF hoặc dùng khóa sai scope. Người học tách phép đo primitive khỏi end-to-end, quản lý IV kể cả warmup, đo throughput/latency đúng đơn vị và chuyển sang JMH khi cần kết luận hiệu năng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bất biến an toàn trong benchmark
+
+    1. Vì sao mỗi AES-GCM encrypt dưới cùng key phải dùng IV duy nhất kể cả warmup, retry và benchmark concurrency?
+    2. Nonce prefix+counter ở CryptoPerfSafe tránh trùng trong một process ra sao và vì sao không dùng nguyên mẫu cho cluster?
+    3. Vì sao không được giảm PBKDF2 iterations hoặc Argon2id memory chỉ để có throughput đẹp?
+    4. Key purpose, tenant, cryptoperiod và HSM quota ràng buộc phạm vi thử tải như thế nào?
+
+    ### Thiết kế và đọc kết quả
+
+    1. Primitive benchmark và end-to-end benchmark khác nhau ở chi phí nào được đưa vào timed region?
+    2. ops/s, MiB/s, average latency và p95/p99 phải dựa trên điều kiện số mẫu/threads nào?
+    3. JMH warmup/forks/Blackhole giúp giảm những nguồn sai số nào của phép đo JVM?
+    4. Vì sao ba mẫu PBKDF2 và một vòng tự đo chưa đủ để đưa ra SLA hoặc capacity plan?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đảm bảo IV duy nhất | Kiểm/thiết kế nonce allocator theo key trên warmup, measurement và đồng thời. |
+    | Giữ work factor KDF | Đo PBKDF2/Argon2id đúng tham số được phê duyệt thay vì giảm chi phí bảo vệ. |
+    | Phân tách phạm vi đo | Xác định phần timed gồm init, nonce, I/O, KMS, key lookup hay chỉ primitive. |
+    | Tính và diễn giải metrics | Phân biệt ops/s, MiB/s, trung bình và phân vị p50/p95/p99. |
+    | Thiết kế benchmark tái lập | Đưa JDK/provider/CPU/threads/size/forks/warmup và correctness gate vào báo cáo. |
+    | Đánh giá tối ưu hóa | Loại phương án nhanh nhưng vi phạm nonce, key scope hoặc xác minh tag. |
+- id: security-operations-testing-010
+  title: 22.10 Lập kế hoạch đổi khóa, đổi thuật toán và khôi phục sau sự cố mà không tự hạ mức bảo vệ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **22.10 Lập kế hoạch đổi khóa, đổi thuật toán và khôi phục sau sự cố mà không tự hạ mức bảo vệ**
+
+    Bài cuối biến rotation, di trú thuật toán và khôi phục sự cố thành một runbook bảo vệ trust boundary. Người học phân biệt key ACTIVE/DECRYPT_ONLY/BLOCKED, DEK với KEK, rewrap với re-encrypt, phối hợp consumer/backup và xử lý key compromise mà không tắt tag, trust, chữ ký hay hạ algorithm suite.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng đời khóa và định dạng dữ liệu
+
+    1. Rotation định kỳ, algorithm migration, key compromise và disaster recovery khác nhau về trạng thái tin cậy thế nào?
+    2. ACTIVE, DECRYPT_ONLY, VERIFY_ONLY và BLOCKED cho phép những thao tác nào với dữ liệu mới và cũ?
+    3. DEK và KEK khác vai trò gì, và khi nào rewrap KEK chưa đủ so với re-encrypt payload bằng DEK mới?
+    4. Vì sao envelope cần suite, key ID/version, nonce và authenticated context để giải mã lịch sử đúng policy?
+
+    ### Migration, rollback và incident
+
+    1. Expand–migrate–contract giúp reader và writer chuyển đổi mà không mất dữ liệu như thế nào?
+    2. Một migration job cần CAS, checkpoint, idempotency và atomic metadata updates để tránh ghi đè/cắt mất dữ liệu ra sao?
+    3. Khi khóa hoặc KMS bị lộ/mất, quyết định khôi phục nào là an toàn và giới hạn nào không thể đảo ngược?
+    4. Vì sao rollback ứng dụng không được khôi phục thuật toán/key compromised dù ảnh hưởng availability?
+    5. Những negative tests, restore drills và metric nào chứng minh có thể kết thúc reader/key legacy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập inventory vòng đời | Phân loại key purpose, owner, version, cryptoperiod, consumer và backup dependency. |
+    | Thiết kế key state machine | Cưỡng chế ACTIVE cho ghi mới, DECRYPT_ONLY cho đọc lịch sử và BLOCKED khi thu hồi. |
+    | Quyết định rewrap/reencrypt | Phân biệt thay KEK và thay DEK/suite theo tình huống compromise hoặc định kỳ. |
+    | Xây kế hoạch cutover | Mô tả canary, expand/migrate/contract, key version và rollback không downgrade. |
+    | Thiết kế migration chống mất dữ liệu | Bố trí transaction/CAS, idempotency, checkpoint và test restore backup trước destruction. |
+    | Diễn tập incident recovery | Chạy các tình huống KMS outage, key compromise, token/cert migration và kiểm pass security gates. |

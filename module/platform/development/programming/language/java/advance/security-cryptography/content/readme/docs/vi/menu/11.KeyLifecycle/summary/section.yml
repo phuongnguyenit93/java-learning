@@ -1,0 +1,77 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Vòng đời khóa và bảo vệ vật liệu mật mã trong Java
+roadmapHeading: Hành trình học chương 11 về vòng đời khóa
+roadmap:
+- id: key-lifecycle-001
+  order: 1
+  title: 11.1 Phân loại khóa dữ liệu, khóa bọc khóa và khóa ký theo trách nhiệm
+  description: Đặt đúng trách nhiệm cho DEK bảo vệ dữ liệu, KEK bọc khóa và signing key xác thực nguồn ký; dùng ba phép toán khác nhau để kiểm tra giới hạn của mỗi loại.
+  transition:
+    to: key-lifecycle-002
+    description: Từ phân vai DEK, KEK và khóa ký, chuyển sang quản trị toàn bộ thời gian tồn tại và trạng thái được phép sử dụng của chúng.
+- id: key-lifecycle-002
+  order: 2
+  title: 11.2 Sinh khóa, cấp phát, lưu trữ, sử dụng, luân chuyển và thu hồi
+  description: Theo dõi toàn vòng đời khóa từ tạo, cấp phát, lưu trong KeyStore hoặc KMS đến sử dụng, rotation, thu hồi, lưu chứng cứ và hủy an toàn.
+  transition:
+    to: key-lifecycle-003
+    description: Biết vòng đời và quyền sử dụng rồi, tiếp tục xem vật liệu khóa có thể rò ra source, artifact hoặc log như thế nào.
+- id: key-lifecycle-003
+  order: 3
+  title: 11.3 Không đặt khóa bí mật trong mã nguồn, bản đóng gói hoặc nhật ký
+  description: Ngăn key và credential lọt khỏi ranh giới bảo vệ qua Git history, Java class/JAR, image, pipeline, log và hệ thống quan sát.
+  transition:
+    to: key-lifecycle-004
+    description: Sau khi chặn đường lộ secret, cần gắn key ID và phiên bản vào ciphertext để khóa có thể thay mà dữ liệu lịch sử vẫn đọc được.
+- id: key-lifecycle-004
+  order: 4
+  title: 11.4 Mã định danh khóa, phiên bản khóa và khả năng giải mã dữ liệu cũ
+  description: Thiết kế ciphertext có key reference bất biến và AAD được xác thực để đổi khóa ghi mới nhưng vẫn đọc dữ liệu cũ qua version đúng.
+  transition:
+    to: key-lifecycle-005
+    description: Từ key-version và bản mã có metadata, phát triển kiến trúc envelope hai tầng để luân chuyển KEK hiệu quả.
+- id: key-lifecycle-005
+  order: 5
+  title: 11.5 Envelope encryption và tách khóa dữ liệu khỏi khóa bảo vệ khóa
+  description: Xây envelope với hai tầng DEK và KEK, tách data AAD khỏi wrap AAD để bọc lại DEK mà không thay bản mã payload.
+  transition:
+    to: key-lifecycle-006
+    description: Đã có envelope và cơ chế mã hóa dữ liệu, cần giải quyết tính duy nhất của nonce trong hoạt động đồng thời và khi khởi động lại.
+- id: key-lifecycle-006
+  order: 6
+  title: 11.6 Quản lý IV hoặc nonce khi có nhiều luồng, nhiều tiến trình và khởi động lại
+  description: Bảo đảm nonce không lặp dưới cùng key qua nhiều thread, JVM, node và restart bằng cấp phát nguyên tử, durable commit và fencing.
+  transition:
+    to: key-lifecycle-007
+    description: Sau khi bảo đảm nonce, chuyển sang nơi vật liệu khóa thực sự cư trú và ràng buộc export qua provider hoặc phần cứng.
+- id: key-lifecycle-007
+  order: 7
+  title: 11.7 Khóa có thể xuất so với khóa chỉ được sử dụng thông qua provider
+  description: Phân biệt key exportable trong software với opaque handle chỉ dùng qua provider; đọc đúng KeyStore, PKCS11, encoding và key usage policy.
+  transition:
+    to: key-lifecycle-008
+    description: Từ hiểu key handle và non-exportability, thiết kế khả năng sao lưu, khôi phục và phản ứng với sự cố mất hoặc lộ khóa.
+- id: key-lifecycle-008
+  order: 8
+  title: 11.8 Sao lưu, phục hồi và xử lý sự cố mất hoặc lộ khóa
+  description: Lập kế hoạch backup, restore, RTO/RPO và incident response khi khóa mất hoặc lộ, phân biệt rewrap, re-encrypt và xử lý chữ ký lịch sử.
+  transition:
+    to: key-lifecycle-009
+    description: Kết thúc quản trị key lâu dài bằng cách xem rủi ro cuối cùng của secret trong heap, bản sao, dumps và thông báo lỗi.
+- id: key-lifecycle-009
+  order: 9
+  title: 11.9 Giới hạn giữ bí mật trong byte[], String, heap dump và thông báo lỗi
+  description: Kiểm soát bí mật khi đi vào String, byte array, KeySpec, provider, heap dump và thông báo lỗi; hiểu giới hạn zeroization và kiểm soát leak.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh nội dung các bài học
+
+  | Tiêu chí | Bài 1 — 11.1 Vai trò khóa | 11.2 Vòng đời | 11.3 Rò bí mật | 11.4 Key version | 11.5 Envelope | 11.6 Nonce đa luồng | 11.7 Xuất khóa | 11.8 Phục hồi | 11.9 Secret trong RAM |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên trọng tâm | DEK, KEK, signing key | Tạo đến thu hồi và hủy | Git, build artifact, logs | Key ID và dữ liệu cũ | Hai tầng DEK và KEK | Unique nonce toàn hệ thống | Exportable và opaque | Backup, restore, compromise | Byte array, String, dump, lỗi |
+  | Vấn đề cần hiểu | Một key không cho mọi mục đích | Quyền theo trạng thái và cryptoperiod | Secret rời khỏi ranh giới ở đâu | Chọn đúng key khi version thay | Bọc lại key mà không đổi data | Không tái dùng cặp key và nonce | Handle không đồng nghĩa raw bytes | Khôi phục đúng key và không làm lộ | Zeroization chỉ có phạm vi hạn chế |
+  | Câu hỏi then chốt | Đang bảo vệ dữ liệu hay nguồn ký? | Khi nào ngừng dùng mà vẫn cần đọc? | Dòng secret đi qua đâu khi build và chạy? | Key version nào decrypt record cũ? | Metadata nào phải xác thực ở hai tầng? | Ai cấp nonce sau crash và failover? | getEncoded null bảo đảm điều gì? | Mất key khác lộ key như thế nào? | Buffer nào đã bị xóa thực sự? |
+  | Thực hành chính | KeyRolesDemo và RewrapOnlyDemo | KeyLifecycleDemo với PKCS12 | AllowlistAuditDemo và InMemoryKeyDemo | KeyVersionDemo và kiểm thử AAD | EnvelopeEncryptionDemo và rewrap | ConcurrentGcmNonceDemo cùng durable file | ExportabilityDemo và PKCS12 | KeyBackupRestoreDemo | SecretMemoryDemo và public error |
+  | Rủi ro nổi bật | Nhầm chức năng và blast radius | Xóa sớm key cũ hoặc lạm quyền | Secret trong repo, image hay log | Tráo key ID và mất backup | KEK lộ hoặc metadata thiếu binding | Counter rollback và nonce reuse | Ép export hoặc fallback software | Mất khả năng restore, key compromise | Heap dump và exception chứa secret |
+  | Năng lực đạt được | Phân vai và chọn primitive đúng | Thiết kế runbook lifecycle và rotation | Ngăn rò rỉ trong SDLC và logging | Thiết kế versioned envelope an toàn | Đánh giá two-layer AEAD và CAS | Thiết kế cấp nonce bền vững | Lựa chọn provider theo key custody | Thiết kế DR và incident response | Giảm bản sao và làm sạch error surface |

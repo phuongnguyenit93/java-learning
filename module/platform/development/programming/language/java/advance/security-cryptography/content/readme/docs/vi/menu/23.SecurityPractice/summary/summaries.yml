@@ -1,0 +1,413 @@
+summaries:
+- id: security-practice-001
+  title: 23.1 Xây công cụ tính digest file và xác minh giá trị mong đợi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **23.1 Xây công cụ tính digest file và xác minh giá trị mong đợi**
+
+    Bài thực hành này biến kiến thức về digest thành một công cụ CLI Java dùng được trong quy trình kiểm tra tệp tải về hoặc CI. Người học phải xử lý **đúng byte của file**, đọc streaming không phụ thuộc dung lượng file, parse checksum nghiêm ngặt và trả exit code phân biệt lỗi. Quan trọng hơn, bài yêu cầu chỉ rõ checksum xác minh sự trùng byte với **giá trị mong đợi được tin cậy**, không tự chứng minh danh tính nhà phát hành hay bảo vệ file khỏi thay đổi sau thời điểm kiểm tra.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế digest và dữ liệu đầu vào
+
+    1. Tại sao SHA-256 của file phải tính trên toàn bộ bytes thực đọc thay vì tên file hoặc chuỗi văn bản đã decode?
+    2. Trong FileDigestTool, vì sao vòng lặp phải gọi MessageDigest.update(buffer, 0, n) với số byte đọc thực tế?
+    3. SHA-256 và SHA-512 cho digest bao nhiêu byte và bao nhiêu ký tự hex, và vì sao newline hoặc BOM khiến kết quả thay đổi?
+
+    ### Thiết kế hợp đồng CLI
+
+    1. Hai lệnh digest và verify khác nhau thế nào về đầu vào, output và exit code?
+    2. Công cụ cần phân biệt thế nào giữa MISMATCH, sai cú pháp/chuỗi hex và file không đọc được?
+    3. Tại sao một kiểm tra digest đúng vẫn có thể bị đánh lừa nếu attacker sửa cả file và expected checksum?
+
+    ### Kiểm thử và ranh giới tin cậy
+
+    1. Bạn tạo file ba byte abc và kiểm tra kết quả với vector SHA-256 chuẩn ra sao?
+    2. Vì sao TOCTOU giữa verify và sử dụng artifact cần staging hoặc nguồn immutable?
+    3. Khi chuyển CLI thành HTTP endpoint, đường dẫn file do client nhập và giới hạn tài nguyên cần kiểm soát thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính checksum theo stream | Xây CLI dùng MessageDigest và buffer 64 KiB, chứng minh chỉ băm số byte thực đọc. |
+    | Thiết kế xác minh nghiêm ngặt | Kiểm độ dài hex, allowlist SHA-256/SHA-512 và so digest ở dạng byte. |
+    | Tự động hóa an toàn | Phân biệt và kiểm thử exit code 0/1/2/3 cho thành công, mismatch, input và I/O. |
+    | Đối chiếu test vector | Tạo file abc không BOM/newline, so đúng SHA-256 và kiểm thử thêm một byte khác. |
+    | Phân tích trust/TOCTOU | Nêu khi nào expected digest đáng tin và cách tránh file bị tráo sau verify. |
+- id: security-practice-002
+  title: 23.2 Xây bộ xác thực thông điệp HMAC có ngữ cảnh và cơ chế chống phát lại
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **23.2 Xây bộ xác thực thông điệp HMAC có ngữ cảnh và cơ chế chống phát lại**
+
+    Bài này xây một bộ xác thực HTTP request bằng **HMAC-SHA256 trên bytes đã đóng khung rõ ràng**, ràng buộc method, target, audience, keyId, timestamp, nonce, media type và body. Giá trị học tập nằm ở các cơ chế **chống replay đúng dưới concurrency**, phân biệt MAC với replay store, quyền nghiệp vụ và idempotency. Người học không chỉ tính một tag hợp lệ mà còn phải chứng minh tag bị từ chối khi đổi ngữ cảnh và nonce chỉ được chấp nhận một lần trong toàn cụm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng và MAC
+
+    1. Những trường metadata nào phải có mặt trong canonical request để ngăn proof bị dùng lại ở endpoint hoặc audience khác?
+    2. Vì sao length-prefix 4 byte cho mỗi trường giúp tránh nhập nhằng khi nối dữ liệu và tại sao phải thống nhất raw body bytes?
+    3. Khi verify, vì sao keyId phải tra trong registry server đáng tin và tag phải được so bằng MessageDigest.isEqual?
+
+    ### Freshness và chống phát lại
+
+    1. Với cửa sổ 300 giây, tại sao thời điểm hết hạn nonce lại tính từ signedTimestamp cộng 301 giây thay vì đặt TTL 300 giây kể từ lúc nhận?
+    2. Vì sao chỉ kiểm timestamp chưa ngăn replay và tại sao phải claim nonce nguyên tử sau khi MAC đã hợp lệ?
+    3. Trong 32 request đồng thời cùng nonce, cơ chế ConcurrentHashMap.compute hoặc Redis SET NX cần bảo đảm kết quả nào?
+
+    ### Tầng nghiệp vụ và vận hành
+
+    1. Vì sao kho replay riêng ở mỗi pod và fallback cho qua khi Redis lỗi làm mất bảo đảm chống replay?
+    2. HMAC hợp lệ hoặc replay bị từ chối khác gì với authorization, transaction và idempotency cho việc chuyển tiền?
+    3. Nếu response mất sau khi giao dịch đã ghi, client nên retry an toàn theo hợp đồng nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế canonical request | Đặc tả đầy đủ thứ tự trường và cách length-prefix để signer và verifier tái tạo đúng bytes. |
+    | Cài đặt HMAC có ngữ cảnh | Dùng Mac, SecretKeySpec, SecureRandom và Base64url để ký và kiểm đúng metadata/body. |
+    | Kiểm tra cửa sổ thời gian | Viết test biên ±300 giây, quá hạn và timestamp tương lai. |
+    | Đảm bảo claim nonce nguyên tử | Chứng minh chỉ một request cùng replay key được chấp nhận trong concurrency test. |
+    | Mô hình hóa replay store phân tán | Đề xuất TTL tính từ signed timestamp, namespace key và chính sách fail-closed khi cache lỗi. |
+    | Phân biệt idempotency | Mô tả trường hợp giao dịch commit nhưng response mất và cách retry bằng operation key. |
+- id: security-practice-003
+  title: 23.3 Xây định dạng mã hóa file AEAD có phiên bản và xử lý lỗi xác thực
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **23.3 Xây định dạng mã hóa file AEAD có phiên bản và xử lý lỗi xác thực**
+
+    Bài học này thiết kế một file format AEAD có cấu trúc byte cụ thể thay vì chỉ gọi Cipher.encrypt. Người học dùng **JAED v1** với magic, version, suite, nonce, ciphertext và tag; xác thực header bằng AAD, từ chối format lạ và chỉ công bố plaintext **sau khi toàn bộ tag được kiểm chứng**. Nó còn rèn tư duy về giới hạn file, file tạm, việc di chuyển nguyên tử, quản lý khóa ngoài file và mở rộng streaming nhiều record mà không làm mất tính toàn vẹn của cả file.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế định dạng v1
+
+    1. JAED v1 gồm những offset, kích cỡ trường, magic/version/suite và tag nào?
+    2. Tại sao header 18 byte được đưa nguyên dạng vào AAD và file rỗng hợp lệ vẫn cần 16 byte tag?
+    3. AES-GCM cần giữ bất biến gì về nonce dưới cùng khóa và key không nằm trong file vì sao?
+
+    ### Giải mã an toàn và lỗi
+
+    1. Vì sao không được xuất plaintext từ Cipher.update trước khi xác nhận authentication tag cuối?
+    2. Trong VersionedAeadFileDemo, các lỗi tampering, wrong key, unknown version, file quá lớn và I/O phải tạo ra trạng thái nào?
+    3. Tại sao file chỉ được đưa ra vị trí đích sau khi doFinal thành công, và ATOMIC_MOVE còn giới hạn no-clobber/durability gì?
+
+    ### Phiên bản và file lớn
+
+    1. Khi bổ sung keyId hoặc v2, làm thế nào không lộ key và không tự downgrade thuật toán?
+    2. Một format mã hóa từng chunk phải bind index, length, final marker và unique nonce như thế nào để chống cắt bớt file?
+    3. Vì sao tag hợp lệ không tự ngăn thay bằng phiên bản file cũ hoặc bảo đảm tenant có quyền đọc?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đặc tả envelope v1 | Vẽ layout JAED gồm 18-byte header, 12-byte nonce, AES-GCM tag 16 byte và size limit. |
+    | Thực hiện AEAD đúng thứ tự | Khởi tạo Cipher AES/GCM, updateAAD(header), doFinal và reject tag failure. |
+    | Xây đường xuất bản an toàn | Dùng staged output, cleanup và chỉ publish sau xác thực; diễn giải giới hạn ATOMIC_MOVE. |
+    | Viết ma trận negative tests | Thử tamper ciphertext/tag/AAD, wrong key, unknown version, truncation và file vượt hạn mức. |
+    | Phân tích rotation/versioning | Đề xuất keyId, lookup khóa tin cậy và quy tắc parse v2 mà không hiểu lại format v1. |
+    | Thiết kế streaming có xác thực | Chỉ ra nonce mỗi record, AAD ràng buộc thứ tự và final record bắt buộc. |
+- id: security-practice-004
+  title: 23.4 Xây bộ kiểm tra mật khẩu PBKDF2 hỗ trợ nâng cấp tham số
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **23.4 Xây bộ kiểm tra mật khẩu PBKDF2 hỗ trợ nâng cấp tham số**
+
+    Bài tập thực hành tập trung vào **nâng cấp password verifier PBKDF2 mà không khóa tài khoản hoặc vô tình hạ cấp bảo mật**. Người học phải phân biệt salt, cost, độ dài verifier, format version, dùng tham số **đã lưu** để kiểm mật khẩu cũ rồi mới rehash với salt mới theo policy hiện hành. Phần quan trọng bổ sung là transaction compare-and-swap khi password reset cạnh tranh, và benchmark/rate limit để tránh KDF đắt thành điểm tấn công DoS.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### PBKDF2 và record version
+
+    1. PBKDF2-HMAC-SHA256 giải quyết vấn đề offline guessing nào và vì sao SHA-256 một lần không thay thế được?
+    2. Vì sao record cần lưu scheme, version, iterations, salt và verifier theo format tự mô tả?
+    3. Output 32 byte có làm mật khẩu người dùng đạt 256-bit entropy không, vì sao?
+
+    ### Verify rồi nâng cấp
+
+    1. Vì sao phải verify với cost và salt cũ trước, thay vì dùng ngay iteration mới để so?
+    2. Khi nào upgradedRecord được đề xuất và vì sao password sai tuyệt đối không được ghi verifier mới?
+    3. Tại sao migration phải sinh salt mới, không rehash từ old digest và không giảm chiều tham số cũ đã cao hơn policy?
+
+    ### Tích hợp vận hành
+
+    1. CAS dựa trên credential version ngăn nguy cơ gì khi login trùng thời điểm password reset?
+    2. Các tham số lab 12000/24000 khác baseline production tham khảo 600000 iterations như thế nào?
+    3. Nếu provider PBKDF2 thiếu, record hỏng hoặc account legacy dùng scheme khác thì dịch vụ cần xử lý ra sao?
+    4. Bạn kiểm tra Unicode/normalization và vòng đời char[] khi verify thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc format verifier | Parse và kiểm scheme, version, iterations, salt, output length với giới hạn tài nguyên. |
+    | Triển khai PBKDF2 có salt | Dùng SecretKeyFactory, PBEKeySpec, salt SecureRandom và so byte phù hợp. |
+    | Đổi policy không hạ cấp | Verify bằng tham số cũ, rehash từ password đúng với salt mới và max(old,target). |
+    | Kiểm chứng luồng login | Chạy bài test wrong/correct/no-upgrade, kiểm record mới verify đúng. |
+    | Ngăn race với CAS | Đề xuất câu UPDATE kèm credential version và xử lý khi affected row bằng 0. |
+    | Benchmark và triển khai | Phân biệt lab cost/production cost, đánh giá latency, rate limit và adapter migration. |
+- id: security-practice-005
+  title: 23.5 Tạo và xác minh chữ ký tài liệu bằng khóa lấy từ PKCS12 KeyStore
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **23.5 Tạo và xác minh chữ ký tài liệu bằng khóa lấy từ PKCS12 KeyStore**
+
+    Bài này thực hành ký một tệp bằng **private key lấy từ PKCS12 KeyStore**, lưu chữ ký rời rồi xác minh với public key trong chứng thư X.509 xuất riêng. Người học nắm sự khác nhau giữa container khóa, thuật toán Signature, byte tài liệu được ký và quyết định **tin tưởng người ký**. Bài không tự nhận đã xây hệ thống PKIX hoặc timestamp; mục đích là hoàn thành đúng các bước keytool, JCA signing và negative verification, đồng thời biết những chính sách còn thiếu cho production.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### KeyStore và phạm vi ký
+
+    1. PKCS12 chứa những entry gì và vì sao alias docsign không tự chứng minh danh tính người ký?
+    2. Tại sao KeyStore.getKey cần trả PrivateKey cho initSign còn bên verify chỉ cần certificate public?
+    3. SHA256withRSA dùng Hash bên trong Signature như thế nào, và vì sao không cần tự hash tài liệu trước rồi gửi digest cho signer?
+
+    ### Quy trình và kiểm chứng
+
+    1. Bạn tạo RSA-3072 PrivateKeyEntry, xuất signer-cert.pem mà không xuất private key bằng keytool ra sao?
+    2. DocumentSignatureTool dùng Signature.update theo stream để ký chính xác bytes và vì sao thay LF thành CRLF có thể làm verify sai?
+    3. Bạn dự đoán output/exit code khi tài liệu gốc, tài liệu bị sửa hoặc public certificate của khóa khác được verify như thế nào?
+
+    ### Trust và giới hạn
+
+    1. Vì sao Signature.verify true trên self-signed certificate chưa khẳng định signer được tổ chức chấp thuận?
+    2. Nếu cần ký PDF có giá trị pháp lý hoặc lưu chữ ký dài hạn, còn cần chuẩn, timestamp, certificate lifecycle và policy nào?
+    3. Vì sao private key/keystore password không được đưa vào command line, Git hoặc log?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vận hành keytool | Tạo PKCS12 RSA key entry, kiểm alias/KeyUsage và xuất X.509 certificate công khai. |
+    | Ký detached signature | Dùng KeyStore, PrivateKey và Signature.update/sign để tạo file chữ ký rời trên bytes tài liệu. |
+    | Xác minh độc lập | Dùng CertificateFactory, X509Certificate và Signature.initVerify để xác minh tài liệu bằng PEM. |
+    | Viết negative tests | Đổi bytes tài liệu và thay certificate, ghi nhận INVALID/đường lỗi đúng. |
+    | Phân biệt crypto và trust | Giải thích vì sao signature khớp không tương đương PKIX, signer authorization hoặc trusted timestamp. |
+    | Quản lý vật liệu khóa | Nêu quyền file, secret handling, rotation và tác động khi private key bị lộ. |
+- id: security-practice-006
+  title: 23.6 Thực nghiệm KeyAgreement hoặc DHKEM và phân tích phần xác thực còn thiếu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **23.6 Thực nghiệm KeyAgreement hoặc DHKEM và phân tích phần xác thực còn thiếu**
+
+    Bài này cho thấy **tạo chung secret không đồng nghĩa xác thực người ở đầu kia**. Người học chạy X25519 KeyAgreement/HKDF giữa Alice và Bob, chủ động mô phỏng Mallory thay public key để tạo hai leg secret, rồi bổ sung **Ed25519 identity key đã tin cậy** và transcript signature để bác bỏ mạo danh. Phần DHKEM/HPKE Base, PSK, Auth, AuthPSK dùng để phân tích thuộc tính bảo mật thực sự và những giới hạn key confirmation, KCI, replay và forward secrecy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thoả thuận khóa và KDF
+
+    1. KeyAgreement X25519 thực hiện các pha nào, trả về secret gì và không xác thực đối tác vì sao?
+    2. Tại sao shared secret cần HKDF-Extract/Expand với info/transcript có nhãn và thứ tự public keys rõ ràng?
+    3. PublicKey.getEncoded khác wire format raw X25519 như thế nào?
+
+    ### MITM và xác thực danh tính
+
+    1. Trong X25519IdentityLab, vì sao attackerKnowsClientLeg và attackerKnowsServerLeg cùng true mà hai leg key lại khác nhau?
+    2. Tại sao key confirmation bằng HMAC chỉ chứng minh có đúng leg secret mà không chứng minh Bob là peer?
+    3. Chữ ký Ed25519 của Bob cần bao phủ những trường transcript nào và được verify bằng public key lấy từ đâu?
+
+    ### DHKEM, HPKE và ranh giới
+
+    1. HPKE Base khác PSK/Auth/AuthPSK ở bằng chứng xác thực sender/recipient nào?
+    2. Vì sao một implementation tự ghép X25519 + HMAC + AES-GCM không mặc định tương thích RFC 9180?
+    3. Thời điểm lộ ephemeral key, identity signing key hay recipient static KEM key ảnh hưởng forward secrecy và KCI ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo khóa phiên | Chạy X25519 KeyAgreement và HKDF để Alice/Bob nhận cùng session key trên đường trung thực. |
+    | Minh họa MITM | Dự đoán ba kết quả attacker leg keys và chứng minh thay public key phá identity assurance. |
+    | Kiểm tra trusted transcript | Dùng Ed25519 identity signature trên transcript và reject chữ ký attacker bằng pinned key. |
+    | Đối chiếu HPKE modes | Giải thích bảo đảm và giới hạn sender authentication của Base, PSK, Auth, AuthPSK. |
+    | Đánh giá key compromise | Phân tích ephemeral/long-term key compromise, forward secrecy và KCI có điều kiện. |
+    | Thiết kế fail-closed AKE | Đề xuất binding roles, nonce, suites, transcript và xác minh trước application data. |
+- id: security-practice-007
+  title: 23.7 Tạo chuỗi chứng thư thử nghiệm rồi xây và kiểm tra đường dẫn PKIX
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **23.7 Tạo chuỗi chứng thư thử nghiệm rồi xây và kiểm tra đường dẫn PKIX**
+
+    Bài thực hành này làm rõ cách **PKIX xây và kiểm chứng đường tin cậy của certificate**: tạo root–intermediate–leaf bằng keytool, đưa các certificate công khai vào CertStore và chỉ định TrustAnchor được tin từ trước, rồi gọi CertPathBuilder và CertPathValidator. Các phép thử sai root, hết hạn và thiếu intermediate giúp hiểu rằng certificate ký đúng hoặc xuất hiện trong kho ứng viên **không tự trở thành trusted**, và PKIX path validity vẫn khác hostname/authorization.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc chứng thư
+
+    1. Root CA, intermediate, leaf và trust anchor khác nhau như thế nào trong chuỗi lab ba tầng?
+    2. BasicConstraints CA:true/pathLen, KeyUsage keyCertSign, EKU serverAuth và SAN quy định điều gì?
+    3. Vì sao certificate self-signed của intermediate tạo lúc genkeypair không được dùng thay certificate do root ký?
+
+    ### Java PKIX builder và validator
+
+    1. X509CertSelector, CertStore, TrustAnchor và PKIXBuilderParameters cùng giải bài toán tìm đường theo vai trò nào?
+    2. Vì sao built CertPath trong bài có hai certificate dù lab có ba certificate?
+    3. Khi nào dùng CertPathValidator thay vì CertPathBuilder và thứ tự certificate leaf-to-intermediate cần ra sao?
+
+    ### Thử lỗi và policy
+
+    1. Bạn tạo unrelated root và kiểm chứng trường hợp wrong trust anchor bị từ chối như thế nào?
+    2. Nếu đặt thời điểm validate sau NotAfter của leaf, kết quả cần là gì và có cần đợi thời gian thật không?
+    3. Bật setRevocationEnabled(false) giúp lab offline nhưng bỏ thiếu thuộc tính bảo mật nào ở production?
+    4. Vì sao một path PKIX valid không đồng nghĩa server hostname/SAN đúng hoặc ứng dụng cấp quyền API?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo chuỗi CA bằng keytool | Phát hành root, CSR intermediate/leaf và certificate chain với extension CA/KU/EKU/SAN đúng. |
+    | Chọn trust anchor | Phân biệt root đã tin với certificate chỉ là ứng viên trong CertStore. |
+    | Xây và validate CertPath | Sử dụng CertPathBuilder/Validator PKIX, đọc path length và trust anchor kết quả. |
+    | Chạy negative tests | Chứng minh wrong root và expired leaf bị từ chối, giải thích missing intermediate/CA constraints. |
+    | Thiết kế revocation policy | Nêu khi nào cần CRL/OCSP và tác động của cấu hình revocation disabled trong lab. |
+    | Tách endpoint identity | Giải thích vì sao hostname validation thuộc lớp HTTPS/JSSE chứ không tự đến từ CertPath. |
+- id: security-practice-008
+  title: 23.8 Thiết lập kết nối Java mTLS và kiểm thử các tình huống handshake thất bại
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **23.8 Thiết lập kết nối Java mTLS và kiểm thử các tình huống handshake thất bại**
+
+    Bài này thiết lập **mutual TLS bằng JSSE cho một client và server Java** rồi chạy năm phép thử xác thực: kết nối hợp lệ, thiếu client certificate, server không được tin, hostname sai và hai phía không có TLS version chung. Người học phải cấu hình đúng hai identity keystore và hai truststore, dùng needClientAuth và bật endpoint identification rõ ràng cho SSLSocket. Bài nhấn mạnh phân biệt handshake failure với quyền API sau khi có TLS.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### mTLS và vật liệu danh tính
+
+    1. TLS một chiều khác mutual TLS ở chiều kiểm tra chứng chỉ nào?
+    2. KeyManagerFactory, TrustManagerFactory, SSLContext và SSLParameters thực hiện những vai trò gì?
+    3. Vì sao server cần trust certificate client, client cần trust certificate server, còn private key chỉ nằm ở phía chủ sở hữu?
+
+    ### Cấu hình JSSE và năm test
+
+    1. Khi nào dùng setNeedClientAuth thay vì setWantClientAuth, và vì sao thiếu client cert phải làm phiên bị từ chối?
+    2. Vì sao raw SSLSocket cần setEndpointIdentificationAlgorithm(HTTPS) để tránh tin sai hostname?
+    3. Năm phép thử MutualTlsLab chứng minh sự cố trust, client auth, hostname và protocol negotiation ra sao?
+
+    ### Tầng ứng dụng và chẩn đoán
+
+    1. Vì sao cần kiểm tra server-side client principal và request-response thực tế, đặc biệt khi TLS 1.3 alert đến không đồng bộ?
+    2. Một client có certificate hợp lệ nhưng thiếu quyền xóa báo cáo phải bị chặn ở tầng nào?
+    3. Khi handshake lỗi, bạn chọn javax.net.debug, java.security.debug hay kiểm tra keytool ở bước nào mà không tắt validation?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Provision keystore/truststore | Tạo server.p12/client.p12 cùng server-trust/client-trust, kiểm các certificate và mục đích EKU. |
+    | Cấu hình mTLS JSSE | Khởi tạo SSLContext từ key/trust managers, bắt buộc client auth và hostname verification. |
+    | Kiểm thử handshake | Chạy valid-mtls, missing-client-cert, untrusted-server, hostname-mismatch và protocol-mismatch. |
+    | Diễn giải thất bại | Phân biệt SSLHandshakeException với lỗi keystore load và authorization ở tầng HTTP. |
+    | Ánh xạ workload identity | Lấy verified client principal sau handshake và kiểm quyền thao tác theo policy riêng. |
+    | Chẩn đoán an toàn | Dùng JSSE/certpath debug có giới hạn, kiểm SAN/chain và không dùng trust-all. |
+- id: security-practice-009
+  title: 23.9 Phân tích một cấu hình hoặc đoạn mã mật mã sai và nêu căn cứ sửa
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **23.9 Phân tích một cấu hình hoặc đoạn mã mật mã sai và nêu căn cứ sửa**
+
+    Bài này là một bài **security code review có bằng chứng**, bắt đầu từ mã AES-CBC có khóa hardcoded, IV zero và SHA-256 không khóa gắn cạnh ciphertext. Người học phải chỉ ra cơ chế gây hại, thay bằng AEAD với nonce mới, tag và AAD tenant/record, rồi lập test âm và kế hoạch migration dữ liệu legacy. Bài cố ý sử dụng lại kiến thức AES-GCM nhưng dưới góc độ đánh giá thiết kế sai và chứng minh sửa đúng, không phải một hướng dẫn mã hóa file mới.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bóc tách mã sai
+
+    1. Vì sao AES-128 có đủ 16 byte vẫn thiếu an toàn khi key xuất hiện dưới dạng literal trong source?
+    2. CBC với IV toàn số không lộ đặc điểm gì khi mã hóa nhiều plaintext cùng tiền tố?
+    3. Vì sao SHA-256(ciphertext) được lưu cạnh ciphertext không thể bảo vệ chống attacker sửa được cả hai?
+
+    ### Bản sửa AEAD và ngữ cảnh
+
+    1. Bản sửa cần dùng nonce mới, AES-GCM tag, AAD tenant/record và version/keyId như thế nào để tránh tráo bản ghi?
+    2. Tại sao AES-GCM doFinal lỗi phải từ chối hoàn toàn, không trả plaintext rỗng hoặc fallback sang CBC?
+    3. Vì sao test round-trip thành công không chứng minh key management, nonce uniqueness hoặc resistance to tampering?
+
+    ### Review và migration
+
+    1. Bạn thiết kế kiểm thử khác key, khác AAD, sửa tag, đổi version và nhiều instance để chứng minh từng bất biến nào?
+    2. Tại sao không thể giải mã ciphertext CBC cũ bằng GCM sau khi chỉ thay getInstance, và có rủi ro gì khi legacy dữ liệu không được MAC?
+    3. Một báo cáo PR tốt nối dấu hiệu code, tác động, căn cứ và test thực nghiệm ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tìm dấu hiệu mật mã sai | Chỉ rõ key literal, IV cố định, CBC không xác thực và digest không khóa trong snippet. |
+    | Lập luận nguyên nhân và rủi ro | Giải thích rò mẫu, tampering, key exposure và ngữ cảnh tenant bị tráo bằng threat model. |
+    | Thiết kế bản sửa AES-GCM | Đề xuất header version, fresh nonce, AAD server-derived, tag và managed key. |
+    | Xây negative test | Kiểm chứng lỗi khi tag/key/context/version sai, không chỉ round-trip. |
+    | Lập kế hoạch migration legacy | Mô tả decoder CBC cũ có kiểm soát, re-encrypt AEAD, rollout và tắt đường cũ. |
+    | Viết review có thể audit | Trình bày finding → impact → fix → validation cho một đoạn code/config cụ thể. |
+- id: security-practice-010
+  title: 23.10 Tự đánh giá bằng lựa chọn cơ chế cho dữ liệu, danh tính và ranh giới tin cậy cụ thể
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **23.10 Tự đánh giá bằng lựa chọn cơ chế cho dữ liệu, danh tính và ranh giới tin cậy cụ thể**
+
+    Bài tự đánh giá cuối chương buộc người học lựa chọn **cơ chế theo tài sản, danh tính, đối thủ và ranh giới tin cậy** thay vì ghi tên thuật toán. Trên hệ thống SaaS giả định Sổ Cái với browser, gateway, Invoice API, DB, queue, partner webhook, auditor và KMS/HSM, người học giải 10 quyết định có đáp án, dựng negative tests và tự chấm theo rubric 40 điểm. Trọng tâm là kết hợp đúng mật mã với object-level authorization, replay defense, vòng đời khóa và quyền sử dụng key.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Threat model và quyết định cơ chế
+
+    1. Bạn lập mẫu đánh giá asset, principal, attacker, trust boundary, goal, mechanism, key lifecycle và negative test cho một luồng nào?
+    2. Vì sao các yêu cầu giữ bí mật, toàn vẹn, xác thực, phân quyền, chống replay và sẵn sàng không được thay thế bằng một primitive duy nhất?
+    3. Hệ thống Sổ Cái có những ranh giới nào giữa browser, gateway, Invoice API, DB, queue, partner và HSM?
+
+    ### Giải mười tình huống tổng hợp
+
+    1. Vì sao access token hợp lệ không cho phép user tenant-alpha duyệt hóa đơn tenant-beta?
+    2. Khi nào chọn Argon2id, AES-GCM cùng AAD, TLS/mTLS, HMAC hay chữ ký số với public key độc lập?
+    3. Tại sao webhook có HMAC đúng vẫn cần messageId, freshness và nghiệp vụ idempotent?
+    4. Vì sao HSM key không xuất được vẫn có thể bị lạm dụng để ký nếu thiếu policy và quyền gọi SIGN?
+
+    ### Kiểm chứng và tự chấm
+
+    1. Bạn đề xuất sáu test âm ở những lớp nào cho đổi tenant, sửa tag, token hết hạn, thay tài liệu, replay và service identity sai?
+    2. Khi xoay KEK/DEK hoặc signing key, lúc nào rewrap, re-encrypt và giữ chứng cứ chữ ký lịch sử?
+    3. Theo rubric 0–4 điểm mỗi câu, câu trả lời muốn đạt điểm 4 cần chứng minh những điều gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập bảng lựa chọn cơ chế | Liên kết asset/danh tính/ranh giới/threat với security goal và công cụ Java. |
+    | Phân biệt cryptography và authorization | Giải thích bằng case tenant chéo, JWT có chữ ký và AAD đúng nhưng vẫn phải kiểm quyền. |
+    | Thiết kế đa lớp | Chọn TLS/mTLS, password hashing, AEAD, MAC, Signature, token validation và KMS/HSM theo ngữ cảnh. |
+    | Lập kế hoạch key lifecycle | Đề xuất key version, KEK/DEK rewrap, re-encryption, revoke và lưu xác minh chữ ký lịch sử. |
+    | Viết negative test matrix | Xác định tầng thực thi, kết quả từ chối và bằng chứng cho ít nhất sáu failure scenarios. |
+    | Tự chấm và bảo vệ giải pháp | Đối chiếu 10 câu với rubric 40 điểm và sửa các thiếu sót trước security review. |

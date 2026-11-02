@@ -1,0 +1,307 @@
+summaries:
+- id: cert-path-001
+  title: 14.1 Mô hình CertPath, TrustAnchor và chứng thư trung gian
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **14.1 Mô hình CertPath, TrustAnchor và chứng thư trung gian**
+
+    Một chứng thư X.509 có chữ ký toán học hợp lệ chưa đủ để được ứng dụng tin. Bài này giúp người học mô hình hóa đường đi từ chứng thư đích qua CA trung gian tới trust anchor đã được phê duyệt, rồi dùng API CertPath của Java để kiểm tra ranh giới giữa dữ liệu chứng thư và quyết định tin cậy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất của đường dẫn tin cậy
+
+    1. Vì sao việc xác minh chữ ký trên chứng thư leaf không tự chứng minh rằng leaf đáng tin?
+    2. CertPath sắp xếp leaf và intermediate theo thứ tự nào; vì sao trust anchor không phải một phần tử bắt buộc của đường dẫn?
+    3. Root CA tự ký khác TrustAnchor do ứng dụng cấu hình như thế nào?
+
+    ### Đọc và thực nghiệm trong Java
+
+    1. Khi tạo CertPath từ CertificateFactory, cần cung cấp danh sách chứng thư theo thứ tự nào và điều gì xảy ra nếu thiếu intermediate?
+    2. Bằng cách nào ứng dụng cấu hình tập TrustAnchor độc lập với chứng thư mà đối tác gửi?
+    3. Thử nghiệm keytool và CertPathValidator minh họa được những lỗi gì khi path không đủ mắt xích hoặc thứ tự sai?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích quan hệ PKI | Vẽ được chuỗi leaf → intermediate → root được tin cậy; phân loại đúng chứng thư đích, CA trung gian và TrustAnchor. |
+    | Xây dựng CertPath | Tạo được CertPath từ các X509Certificate theo thứ tự leaf trước và giải thích vì sao không đưa root anchor vào path thông thường. |
+    | Xác lập nguồn tin cậy | Chỉ ra vì sao TrustAnchor phải đến từ chính sách/truststore được quản trị, không mặc nhiên từ certificate do peer gửi. |
+    | Kiểm tra và chẩn đoán | Diễn giải kết quả lab khi thiếu intermediate, đảo thứ tự hoặc dùng root không phù hợp mà không bỏ kiểm tra PKIX. |
+    | Nhận diện ranh giới | Giải thích vì sao path hợp lệ vẫn cần kiểm mục đích sử dụng, danh tính endpoint và chính sách ứng dụng. |
+- id: cert-path-002
+  title: 14.2 Phân biệt xây đường dẫn bằng CertPathBuilder với kiểm tra bằng CertPathValidator
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **14.2 Phân biệt xây đường dẫn bằng CertPathBuilder với kiểm tra bằng CertPathValidator**
+
+    CertPathBuilder và CertPathValidator cùng thuộc PKIX nhưng giải hai bài toán khác nhau: tìm một chuỗi phù hợp từ certificate ứng viên, hoặc kiểm tra chính chuỗi đã được cung cấp. Bài này giúp chọn API đúng cho đầu vào của hệ thống và giải thích vì sao kết quả xây path, validate path hay thiếu intermediate có thể khác nhau.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng của hai engine
+
+    1. Đầu vào, đầu ra và trách nhiệm của CertPathBuilder khác CertPathValidator ở điểm nào?
+    2. Vì sao CertStore chứa intermediate ứng viên không được coi là truststore?
+    3. PKIXCertPathBuilderResult mang lại những dữ kiện nào ngoài danh sách certificate của path?
+
+    ### Thiết kế và kiểm thử path
+
+    1. Nếu bên gửi chỉ cung cấp leaf nhưng repository có nhiều intermediate, engine nào có thể tìm đường nối về anchor?
+    2. Khi nhận sẵn CertPath nhưng thứ tự hoặc chứng thư trung gian sai, CertPathValidator có tự tìm một chain khác không?
+    3. Trong lab có root, intermediate và leaf, cần kiểm tra những tình huống âm nào để phân biệt thiếu nguồn ứng viên với sai chính sách tin cậy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn API theo đầu vào | Nêu được khi nào dùng builder để tìm path và khi nào dùng validator để kiểm một path đã có. |
+    | Cấu hình xây đường dẫn | Ghép X509CertSelector, CertStore và PKIXBuilderParameters để builder chọn chứng thư đích và intermediate hợp lệ. |
+    | Kiểm chứng path đã biết | Tạo PKIXParameters với trust anchors đúng rồi gọi CertPathValidator cho chuỗi leaf → intermediate. |
+    | Phân loại lỗi | Giải thích được khác biệt giữa không xây được đường dẫn, đường dẫn đưa sẵn không hợp lệ và trust anchor không phù hợp. |
+    | Áp dụng chính sách | Nêu lý do không được tự tắt thu hồi hay bỏ xác minh hostname chỉ để làm PKIX pass. |
+- id: cert-path-003
+  title: 14.3 Cấu hình PKIXParameters, PKIXBuilderParameters và X509CertSelector
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **14.3 Cấu hình PKIXParameters, PKIXBuilderParameters và X509CertSelector**
+
+    Để PKIX đánh giá đúng, hệ thống phải cấu hình trust anchors, thời điểm kiểm tra, danh sách CertStore, giới hạn độ dài đường dẫn và tiêu chí tìm leaf. Bài này đi sâu vào cách phối hợp PKIXParameters, PKIXBuilderParameters và X509CertSelector trong Java, tránh nhầm một phép lọc candidate với phép xác thực danh tính hoặc niềm tin.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa từng tham số
+
+    1. PKIXParameters diễn đạt những chính sách nào cho việc kiểm tra một path đã có?
+    2. PKIXBuilderParameters bổ sung điều kiện gì so với PKIXParameters, và targetCertConstraints được dùng ở bước nào?
+    3. X509CertSelector lọc chứng thư bằng subject, certificate, BasicConstraints hay ExtendedKeyUsage thế nào mà vẫn chưa chứng minh hostname?
+
+    ### Cấu hình và thử nghiệm có đối chứng
+
+    1. Làm thế nào kết hợp tập TrustAnchor, CertStore, selector và setMaxPathLength để build một path root–intermediate–leaf?
+    2. Khi thay trusted root bằng root khác, kết quả build/validate phải thay đổi như thế nào?
+    3. Nếu đặt validation date hoặc giới hạn số intermediate không phù hợp, lỗi đến từ cấu hình nào và cần chẩn đoán ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt đối tượng cấu hình | Giải thích được vai trò riêng của PKIXParameters, PKIXBuilderParameters và X509CertSelector trong các pha validate/build. |
+    | Lắp chính sách PKIX | Thiết lập trust anchors, validation date, CertStore và max path length đúng với cấu trúc CA của lab. |
+    | Chọn certificate đích | Dùng selector để lọc leaf theo thuộc tính được dạy và chỉ ra giới hạn của việc lọc so với hostname verification. |
+    | Kiểm thử không đáng tin | Dự đoán hoặc tái hiện kết quả thất bại khi dùng CA sai hoặc thiếu intermediate phù hợp. |
+    | Rà soát an toàn | Phân biệt root trong truststore với root do peer cung cấp, và giải thích vì sao phải bổ sung revocation/mục đích TLS. |
+- id: cert-path-004
+  title: 14.4 Thu thập chứng thư hoặc CRL qua CertStore
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **14.4 Thu thập chứng thư hoặc CRL qua CertStore**
+
+    Không phải lúc nào đối tác cũng gửi đủ chứng thư trung gian hoặc danh sách thu hồi. Bài này hướng dẫn dùng CertStore và các selector X.509 để tra cứu certificate/CRL từ Collection hoặc nguồn ngoài; đồng thời giữ ranh giới giữa kết quả tìm kiếm, tính mới và tính hợp lệ của chứng thư hay CRL.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn và bộ lọc dữ liệu
+
+    1. CertStore khác KeyStore và TrustAnchor ở trách nhiệm nào?
+    2. X509CertSelector và X509CRLSelector tìm đối tượng theo tiêu chí nào; setSubject, setIssuer và setDateAndTime ảnh hưởng kết quả ra sao?
+    3. Việc CertStore trả về một CRL hoặc intermediate có chứng minh được object đó đáng tin không?
+
+    ### Tích hợp PKIX và giới hạn nguồn ngoài
+
+    1. Làm sao tạo CertStore loại Collection từ certificate và CRL trong bộ nhớ, rồi dùng getCertificates/getCRLs?
+    2. Cần gắn CertStore vào PKIXBuilderParameters hoặc PKIXParameters khi nào?
+    3. Vì sao chữ ký, thời hạn, issuer, scope của CRL và chính sách mạng/caching phải được kiểm tra ngoài việc thu thập?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế nguồn ứng viên | Phân biệt được CertStore tìm certificate/CRL với KeyStore chứa khóa và TrustAnchor thể hiện quyết định tin cậy. |
+    | Viết bộ lọc X.509 | Sử dụng X509CertSelector và X509CRLSelector để diễn đạt subject, issuer, thời gian hay tiêu chí lọc phù hợp. |
+    | Thao tác Collection CertStore | Tạo và truy vấn kho Collection với certificate và CRL như trong lab Java 17+. |
+    | Kết nối nguồn với PKIX | Bổ sung CertStore vào builder/validator parameters và giải thích ai quyết định tính hợp lệ của path. |
+    | Đánh giá rủi ro dữ liệu ngoài | Liệt kê được kiểm tra cần có cho CRL, caching, LDAP/AIA/CDP và chính sách tài nguyên mạng. |
+- id: cert-path-005
+  title: 14.5 Kiểm tra thời gian, ràng buộc CA, độ dài đường dẫn và mục đích sử dụng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **14.5 Kiểm tra thời gian, ràng buộc CA, độ dài đường dẫn và mục đích sử dụng**
+
+    Một chứng thư có đường ký hợp lệ vẫn có thể đã hết hiệu lực, không được phép làm CA, vi phạm độ dài path hoặc không được cấp cho mục đích TLS tương ứng. Bài này đi sâu vào cách các ràng buộc thời gian, BasicConstraints, pathLenConstraint, KeyUsage, ExtendedKeyUsage và một số ràng buộc mở rộng ảnh hưởng đến quyết định PKIX.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ràng buộc PKIX và quan hệ nhân quả
+
+    1. notBefore/notAfter được kiểm ở thời điểm nào và vì sao không thể mặc định hệ thống có đồng hồ hoặc chứng cứ thời gian hoàn hảo?
+    2. BasicConstraints và keyCertSign kết hợp thế nào để xác định certificate có thể đóng vai trò CA?
+    3. pathLenConstraint đếm điều gì; tại sao không được lấy nó làm số phần tử CertPath bất kỳ?
+
+    ### Mục đích sử dụng và kiểm thử
+
+    1. KeyUsage và ExtendedKeyUsage khác nhau ra sao khi kiểm chứng certificate ký CA, TLS server hay TLS client?
+    2. Vì sao gọi X509Certificate.checkValidity hoặc đọc getBasicConstraints không tương đương xác minh PKIX hoàn chỉnh?
+    3. Cần kiểm các tình huống âm nào khi path hợp lệ về chữ ký nhưng sai thời gian, CA, key usage hoặc mục đích?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đánh giá thời gian chứng thư | Phân tích notBefore/notAfter và chọn validation date thích hợp trong kịch bản được dạy. |
+    | Kiểm tra vai trò CA | Đọc BasicConstraints, pathLenConstraint và KeyUsage, giải thích khả năng ký certificate và giới hạn CA trung gian. |
+    | Đánh giá certificate đích | So sánh KeyUsage với EKU theo mục đích sử dụng và không đồng nhất các extension này với hostname. |
+    | Thiết kế đối chứng | Dựng hoặc phân tích các fixture root/leaf/intermediate có thời hạn, CA/path length hoặc mục đích không hợp lệ. |
+    | Tách tầng xác minh | Chỉ ra phần thuộc PKIX validator, phần thuộc JSSE/TLS và phần thuộc chính sách ứng dụng. |
+- id: cert-path-006
+  title: 14.6 Thu hồi bằng CRL, OCSP và PKIXRevocationChecker
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **14.6 Thu hồi bằng CRL, OCSP và PKIXRevocationChecker**
+
+    Chứng thư chưa hết hạn vẫn có thể bị CA thu hồi. Bài này giúp phân biệt CRL và OCSP, cách Java dùng PKIXRevocationChecker, cách cung cấp CRL và cách diễn giải trạng thái tốt, bị thu hồi hoặc chưa xác định; qua đó xây luồng kiểm tra revocation phù hợp với trust path.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bằng chứng thu hồi
+
+    1. CRL và OCSP cung cấp bằng chứng gì; thông tin issuer/responder, chữ ký, thisUpdate/nextUpdate và freshness cần được hiểu ra sao?
+    2. Vì sao phát hiện serial trong một CRL chưa đủ nếu chưa xác minh tính hợp lệ của chính CRL?
+    3. Trong PKIX, sự khác biệt giữa REVOKED và UNDETERMINED_REVOCATION_STATUS là gì?
+
+    ### Cấu hình và kiểm chứng qua Java
+
+    1. PKIXRevocationChecker được lấy từ CertPathValidator như thế nào; PREFER_CRLS và NO_FALLBACK tác động ra sao?
+    2. Làm thế nào dùng CertStore để cung cấp CRL cho phép xác minh path bằng dữ liệu offline?
+    3. Cần kiểm những trường hợp nào khi CRL sạch, CRL thu hồi, không có chứng cứ hoặc responder không khả dụng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh phương thức thu hồi | Giải thích ưu/nhược và cách cập nhật trạng thái của CRL và OCSP theo mục đích xác minh. |
+    | Cấu hình checker | Tạo PKIXRevocationChecker và lựa chọn tùy chọn phù hợp mà không coi kiểm tra thu hồi là mặc định luôn thành công. |
+    | Thực hiện lab offline | Kết hợp CertStore chứa CRL với PKIX validator để phân biệt chứng thư còn dùng được và bị thu hồi. |
+    | Diễn giải trạng thái | Chỉ rõ khác biệt giữa chứng thư đã bị thu hồi và không thể xác định trạng thái, kể cả khi network lỗi. |
+    | Rà soát tích hợp TLS | Giải thích vì sao PKIX thủ công và revocation checking trong TLS/JSSE cần cấu hình/kiểm chứng theo từng môi trường. |
+- id: cert-path-007
+  title: 14.7 Chính sách khi không lấy được trạng thái thu hồi và hệ quả của SOFT_FAIL
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **14.7 Chính sách khi không lấy được trạng thái thu hồi và hệ quả của SOFT_FAIL**
+
+    OCSP responder hoặc CRL distribution point có thể mất kết nối đúng lúc cần xác minh chứng thư. Bài này tập trung vào hậu quả bảo mật của hard-fail và soft-fail, giới hạn chính xác của PKIXRevocationChecker.Option.SOFT_FAIL và cách vận hành cache, timeout, retry, báo động mà không đánh đồng không có kết quả với chứng thư tốt.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quyết định khi thiếu trạng thái thu hồi
+
+    1. Hard-fail và soft-fail khác nhau ra sao về tính khả dụng, rủi ro bị lợi dụng và phạm vi chấp nhận?
+    2. Vì sao SOFT_FAIL không có nghĩa bỏ qua certificate đã được xác nhận là REVOKED?
+    3. Những reason hoặc lỗi xác minh nào không thể được giải quyết chỉ bằng việc cho phép soft-fail?
+
+    ### Tùy chọn checker và vận hành
+
+    1. SOFT_FAIL, NO_FALLBACK, PREFER_CRLS, ONLY_END_ENTITY kết hợp với nhau như thế nào?
+    2. getSoftFailExceptions cho phép phân biệt kết quả tốt với trường hợp bỏ qua lỗi xác định trạng thái bằng cách nào?
+    3. Nếu OCSP/CRL outage kéo dài, nên thiết kế cache, timeout, retry, cảnh báo và quy trình khôi phục ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đề xuất chính sách thu hồi | Lập được bảng lựa chọn hard-fail hoặc soft-fail có điều kiện dựa vào mức rủi ro và tác động availability. |
+    | Cấu hình SOFT_FAIL | Sử dụng đúng PKIXRevocationChecker.Option.SOFT_FAIL và kiểm getSoftFailExceptions để không diễn giải sai kết quả. |
+    | Phân loại lỗi | Phân biệt REVOKED, UNDETERMINED và lỗi PKIX khác, không coi mọi lỗi mạng hay bảo mật như nhau. |
+    | Xây kế hoạch outage | Phác thảo chính sách timeout, cache chứng cứ còn hiệu lực, fallback được cho phép và hệ thống cảnh báo. |
+    | Thiết kế kiểm thử | Dự đoán đầu ra các tình huống responder unreachable và CRL đã xác nhận thu hồi trong hai bài lab. |
+- id: cert-path-008
+  title: 14.8 Phân tích CertPathValidatorException theo vị trí chứng thư và nguyên nhân
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **14.8 Phân tích CertPathValidatorException theo vị trí chứng thư và nguyên nhân**
+
+    Thông báo lỗi PKIX thường bị bọc qua JSSE hoặc thư viện và có thể che mất chứng thư nào bị từ chối. Bài này hướng dẫn đọc CertPathValidatorException qua getIndex, getReason, getCertPath, getCause và context policy, từ đó xác định lỗi do thời gian, chữ ký, CA, path length, revocation hay trust anchor mà không tự tắt kiểm tra.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mổ xẻ cấu trúc exception
+
+    1. getIndex có ý nghĩa gì trong thứ tự leaf → intermediate; khi nào index có thể là -1?
+    2. BasicReason và PKIXReason phân biệt các nhóm lỗi nào, và vì sao không dùng getMessage làm mã lỗi ổn định?
+    3. getCertPath và cause chain giúp tìm nguồn lỗi khi exception bị bọc trong handshake/TLS ra sao?
+
+    ### Chẩn đoán bằng đối chứng
+
+    1. Làm sao ánh xạ index về X509Certificate đúng mà không gây lỗi ngoài biên?
+    2. Trong lab năm kết quả PKIX, dấu hiệu nào phân biệt EXPIRED, INVALID_SIGNATURE, REVOKED hoặc NO_TRUST_ANCHOR?
+    3. Cần ghi những dữ liệu chẩn đoán nào để đủ truy vết nhưng không lộ vật liệu khóa hay thông tin nhạy cảm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải mã lỗi PKIX | Trích đúng Reason, index, CertPath và cause khi xử lý CertPathValidatorException. |
+    | Xác định mắt xích lỗi | Ánh xạ index với leaf/intermediate và xử lý trường hợp index=-1 an toàn. |
+    | Phân nhóm nguyên nhân | Tách lỗi thời hạn, chữ ký, CA constraints, trust anchor, thu hồi hoặc thuật toán theo enum reason thay vì chuỗi message. |
+    | Chẩn đoán lỗi bọc | Theo dõi nguyên nhân từ TLS/JSSE wrapper tới exception gốc mà không bỏ qua verification. |
+    | Kiểm thử và quan sát | Diễn giải các ca lab đối chứng và thiết kế log có cấu trúc, che thông tin nhạy cảm. |
+- id: cert-path-009
+  title: '14.9 Giới hạn của PKIX: kiểm tra danh tính máy chủ là một bước riêng'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **14.9 Giới hạn của PKIX: kiểm tra danh tính máy chủ là một bước riêng**
+
+    Một certificate có đường PKIX hợp lệ vẫn có thể thuộc một máy chủ khác. Bài này giúp người học tách việc xác minh chuỗi tin cậy khỏi kiểm tra hostname/IP theo SAN, sau đó thiết lập endpoint identification đúng trong Java HTTPS và JSSE để không chấp nhận chứng thư hợp lệ nhưng sai đích.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai phép kiểm độc lập
+
+    1. PKIX path validation đã chứng minh được điều gì, và vì sao chưa đủ để khẳng định endpoint là hostname đang gọi?
+    2. DNS SAN type 2 và IP SAN type 7 khác nhau thế nào khi URL sử dụng DNS name hay IP literal?
+    3. Vì sao không nên tự tin CN, wildcard tùy tiện hoặc SNI như sự thay thế cho hostname verification?
+
+    ### Tích hợp Java TLS và kiểm thử
+
+    1. Với SSLSocket, setEndpointIdentificationAlgorithm("HTTPS") của SSLParameters phải được cấu hình ở bước nào?
+    2. HttpClient/HTTPS API cấp cao và X509ExtendedTrustManager hỗ trợ xác minh trust/endpoint theo các lớp nào?
+    3. Làm thế nào thiết kế test certificate có PKIX hợp lệ nhưng SAN không khớp để chứng minh kết nối bị từ chối?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tách điều kiện tin cậy | Phân biệt trust path hợp lệ với endpoint identity, chỉ rõ vì sao cả hai đều cần đạt trong HTTPS. |
+    | Đọc danh tính SAN | Kiểm tra được tình huống DNS SAN, IP SAN và wildcard với hostname/IP mong đợi. |
+    | Cấu hình SSLSocket | Đặt SSLParameters.setEndpointIdentificationAlgorithm("HTTPS") trước handshake và giải thích kết quả. |
+    | Thiết kế test chống sai host | Tạo hoặc mô phỏng ca trust chain hợp lệ nhưng SAN sai, yêu cầu kết nối bị từ chối. |
+    | Rà soát triển khai | Chỉ ra nguy cơ bỏ kiểm hostname, dùng CN/SNI sai vai trò hoặc tự viết permissive TrustManager. |

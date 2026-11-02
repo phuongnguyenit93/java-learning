@@ -186,8 +186,9 @@ module
 │       │   │   │   └── jconsole
 │       │   │   └── thread-dump
 │       │   │       └── jstack
-│       │   └── management-console
-│       │       └── hawtio [HAWTIO]
+│       │   ├── management-console
+│       │   │   └── hawtio [HAWTIO]
+│       │   └── micrometer
 │       ├── runtime
 │       │   └── servlet-container
 │       │       ├── jetty
@@ -376,9 +377,16 @@ module
     │   ├── programming
     │   │   ├── framework
     │   │   │   ├── project-reactor
+    │   │   │   │   ├── core
+    │   │   │   │   └── netty
     │   │   │   ├── spring-ai
+    │   │   │   │   ├── core
+    │   │   │   │   ├── rag
+    │   │   │   │   └── tools-mcp
     │   │   │   ├── spring-amqp
-    │   │   │   ├── spring-batch [SPRING_BATCH] : Spring Batch job and step processing, chunk-oriented processing, restartability, fault tolerance and scaling
+    │   │   │   ├── spring-batch
+    │   │   │   │   ├── core-processing
+    │   │   │   │   └── scaling-operations
     │   │   │   ├── spring-boot
     │   │   │   │   ├── fundamentals
     │   │   │   │   ├── externalized-configuration
@@ -391,14 +399,26 @@ module
     │   │   │   │   ├── native-image
     │   │   │   │   └── integration
     │   │   │   ├── spring-cloud
+    │   │   │   │   ├── configuration
+    │   │   │   │   ├── contract
+    │   │   │   │   ├── core
+    │   │   │   │   ├── data-flow
     │   │   │   │   ├── function
-    │   │   │   │   └── gateway
+    │   │   │   │   ├── gateway
+    │   │   │   │   ├── kubernetes
+    │   │   │   │   ├── provider-integration
+    │   │   │   │   ├── service-broker
+    │   │   │   │   ├── service-communication
+    │   │   │   │   ├── stream
+    │   │   │   │   └── task
     │   │   │   ├── spring-data
-    │   │   │   │   ├── jdbc [SPRING_DATA_JDBC] : Spring Data JDBC aggregate-oriented relational persistence, repositories, mapping and transactions
-    │   │   │   │   ├── jpa [SPRING_JPA] - [DEPEND]
-    │   │   │   │   ├── mongodb [SPRING_DATA_MONGODB] : Spring Data MongoDB repositories, mapping, queries, aggregation, transactions and reactive integration
-    │   │   │   │   ├── r2dbc [SPRING_DATA_R2DBC] : Spring Data R2DBC reactive relational access, repositories, mapping, transactions and backpressure-aware database workflows
-    │   │   │   │   └── redis [SPRING_DATA_REDIS] : Spring Data Redis templates, repositories, serialization, caching, pub-sub and reactive access
+    │   │   │   │   ├── commons
+    │   │   │   │   ├── elasticsearch
+    │   │   │   │   ├── jpa
+    │   │   │   │   ├── mongo-db
+    │   │   │   │   ├── non-relational
+    │   │   │   │   ├── relational
+    │   │   │   │   └── rest
     │   │   │   ├── spring-framework
     │   │   │   │   ├── core-container [SPRING_CORE_CONTAINER] : Spring Core Container, bean management, dependency injection, scopes, environment, profiles, conditional registration and configuration composition
     │   │   │   │   ├── validation-data-binding [SPRING_VALIDATION_DATA_BINDING] : Spring Framework validation, data binding, type conversion, formatting and Bean Validation integration
@@ -423,8 +443,10 @@ module
     │   │   │   │   ├── pattern
     │   │   │   │   └── runtime
     │   │   │   ├── spring-kafka
+    │   │   │   │   ├── messaging
+    │   │   │   │   └── reliability-operations
     │   │   │   ├── spring-ldap
-    │   │   │   ├── spring-modulith [SPRING_MODULITH] : Spring Modulith application modules, structural verification, module events, testing, observability and documentation
+    │   │   │   ├── spring-modulith
     │   │   │   ├── spring-rest-docs
     │   │   │   ├── spring-security
     │   │   │   │   ├── authentication
@@ -434,12 +456,12 @@ module
     │   │   │   │   ├── oauth2-oidc
     │   │   │   │   ├── reactive
     │   │   │   │   └── servlet
-    │   │   │   ├── spring-session [SPRING_SESSION] : Spring Session externalized HTTP session management, repositories, Redis/JDBC backing stores and Spring Security integration
+    │   │   │   ├── spring-session
     │   │   │   ├── spring-shell
     │   │   │   ├── spring-web-flow
     │   │   │   ├── spring-web-services
     │   │   │   └── springdoc
-    │   │   │       └── openapi [SPRINGDOC_OPENAPI] : Springdoc OpenAPI knowledge and examples for documenting Spring web APIs
+    │   │   │       └── openapi
     │   │   ├── language
     │   │   │   ├── domain-specific-language [DOMAIN_SPECIFIC_LANGUAGE] : Domain-Specific Language concepts, design, parsing and execution models
     │   │   │   └── java

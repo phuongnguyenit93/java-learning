@@ -1,0 +1,342 @@
+summaries:
+- id: digital-signature-001
+  title: 9.1 Chữ ký số bảo vệ tính toàn vẹn và xác thực nguồn dữ liệu như thế nào
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **9.1 Chữ ký số bảo vệ tính toàn vẹn và xác thực nguồn dữ liệu như thế nào**
+
+    Bài học đặt nền tảng để nhận ra chữ ký số thực sự bảo vệ phần dữ liệu nào và điều gì làm bằng chứng về nguồn gửi đáng tin cậy. Qua luồng ký/xác minh bằng Ed25519, người học phân biệt kết quả mật mã với niềm tin dành cho khóa và tránh kỳ vọng chữ ký sẽ mã hóa hoặc ngăn phát lại thông điệp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế toàn vẹn và nguồn dữ liệu
+
+    1. Chữ ký bất đối xứng ràng buộc chính xác chuỗi byte của thông điệp với cặp khóa như thế nào?
+    2. Bằng chứng tính toàn vẹn khác gì so với việc chỉ gửi kèm mã băm SHA-256 không có khóa?
+    3. Khi một chữ ký xác minh thành công, điều gì chứng minh người ký nắm khóa riêng và điều gì chưa xác nhận được danh tính?
+
+    ### Thiết kế thông điệp và giới hạn bảo vệ
+
+    1. Trong yêu cầu thanh toán, các trường nào phải được ký để kẻ tấn công không thể thay đổi ý nghĩa giao dịch?
+    2. Vì sao một chữ ký hợp lệ không che giấu nội dung, tự ngăn replay hoặc cấp quyền xử lý yêu cầu?
+    3. Khi hệ thống xoay vòng khóa ký, bên nhận phải tìm và kiểm tra public key theo chính sách nào?
+    4. Vì sao lưu hash và tin public key do người gửi tự đính kèm không đủ để xác thực nguồn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích luồng chữ ký | Vẽ và thuyết minh quá trình ký bằng private key, xác minh bằng public key và điểm cần dùng khóa đáng tin. |
+    | Chứng minh toàn vẹn | Chạy ví dụ Ed25519 rồi thay một byte của message hoặc signature để dự đoán kết quả verify. |
+    | Xác định phạm vi byte ký | Lập danh sách field và metadata bắt buộc phải nằm trong thông điệp được ký cho một tình huống nghiệp vụ. |
+    | Phân biệt các bảo đảm | Đánh giá riêng integrity, source authentication, confidentiality, replay và authorization trong một kiến trúc. |
+    | Đánh giá niềm tin với khóa | Chỉ ra vì sao khóa tự khai không đủ và đề xuất cách ràng buộc key ID với nguồn được tin. |
+- id: digital-signature-002
+  title: 9.2 Chu trình Signature.initSign, update, sign và initVerify, verify
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **9.2 Chu trình Signature.initSign, update, sign và initVerify, verify**
+
+    Bài học chuyển từ nguyên lý chữ ký sang thao tác cụ thể với engine `java.security.Signature` có trạng thái. Người học phải khởi tạo đúng chiều ký/xác minh, nạp đủ dữ liệu theo thứ tự và hiểu việc một engine được reset sau `sign()` hoặc `verify()` để không gây ra chữ ký sai hay lỗi trạng thái.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Trạng thái và thứ tự lời gọi
+
+    1. Vì sao cần gọi initSign hoặc initVerify trước update và sign hoặc verify?
+    2. Phân biệt vai trò của getInstance, initSign, initVerify, update, sign và verify trong cùng một chu trình như thế nào?
+    3. Vì sao không nên chia sẻ một đối tượng Signature có trạng thái giữa nhiều luồng xử lý độc lập?
+
+    ### Thông điệp theo nhiều chunk
+
+    1. Điều kiện nào làm nhiều lần update tương đương ký một mảng byte duy nhất?
+    2. Thay đổi thứ tự header/body hoặc thiếu một chunk ảnh hưởng thế nào đến verify?
+    3. Sau một lần sign hoặc verify, cần thực hiện gì để ký hoặc xác minh một thông điệp khác?
+
+    ### Tham số và lỗi API
+
+    1. Với RSASSA-PSS, phải cố định những tham số nào trước khi ký và xác minh?
+    2. Phân biệt trường hợp verify trả false với SignatureException do sử dụng engine sai trạng thái ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tổ chức state machine | Xếp đúng trình tự các lời gọi JCA cho cả signing và verification. |
+    | Ký dữ liệu phân đoạn | Chạy mẫu RSA-PSS với header và body được update riêng nhưng tạo một chữ ký duy nhất. |
+    | Kiểm tra chu trình tái sử dụng | Giải thích kết quả hai lần verify và hành vi sau khi engine kết thúc thao tác. |
+    | Phát hiện lỗi byte và trạng thái | Thử đổi thứ tự chunk hoặc gọi update khi chưa init và phân loại kết quả. |
+    | Đặt ranh giới API | Chỉ ra trách nhiệm của Signature và trách nhiệm ngoài API về key trust, encoding và replay. |
+- id: digital-signature-003
+  title: 9.3 Phân biệt ký bằng khóa riêng với mã hóa bằng khóa công khai
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **9.3 Phân biệt ký bằng khóa riêng với mã hóa bằng khóa công khai**
+
+    Bài học phân biệt hai mục tiêu rất dễ nhầm: chữ ký chứng minh nguồn gốc/toàn vẹn bằng private key của người ký, còn mã hóa khóa công khai giúp chỉ người có private key của người nhận giải mã. Ví dụ Ed25519 và RSA-OAEP cho thấy ai cũng có thể mã hóa bằng public key của Bob mà không nhờ đó trở thành Alice.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân vai khóa và mục tiêu bảo mật
+
+    1. Alice dùng private key và public key nào khi ký rồi gửi thông điệp cho Bob?
+    2. Trong RSA-OAEP, khóa của ai được dùng để mã hóa và khóa của ai dùng để giải mã?
+    3. Vì sao chữ ký số không nên được diễn giải là mã hóa bằng private key?
+    4. Vì sao khả năng mã hóa tới Bob không tự xác minh danh tính của người gửi?
+
+    ### Lựa chọn API và kiến trúc
+
+    1. JCA Signature và JCE Cipher giải quyết hai tác vụ khác nhau như thế nào?
+    2. Tại sao RSA-OAEP cần thống nhất digest và MGF1 digest, cũng như giới hạn kích thước bản rõ?
+    3. Khi cần vừa giữ bí mật vừa xác thực người gửi, nên phối hợp ký, AEAD/hybrid encryption và xác minh khóa theo ngữ cảnh nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại thao tác bất đối xứng | Gắn đúng khóa, thuật toán và mục tiêu cho ký, xác minh, mã hóa và giải mã. |
+    | Thực hành hai primitive | Chạy ví dụ Ed25519 và RSA-OAEP để quan sát dữ liệu sửa bị từ chối và bản rõ được khôi phục. |
+    | Đánh giá tính xác thực của mã hóa | Giải thích kết quả khi người lạ sử dụng public key của Bob để mã hóa. |
+    | Lựa chọn cấu hình OAEP | Chỉ ra các tham số digest/MGF và điều kiện độ dài cần đồng nhất. |
+    | Thiết kế luồng an toàn | Phác thảo luồng vừa bảo mật bí mật vừa xác minh nguồn, bao gồm trust của public key. |
+- id: digital-signature-004
+  title: 9.4 RSA PKCS#1 v1.5, RSASSA-PSS, ECDSA và EdDSA
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **9.4 RSA PKCS#1 v1.5, RSASSA-PSS, ECDSA và EdDSA**
+
+    Bài học so sánh sâu bốn họ chữ ký RSA PKCS#1 v1.5, RSA-PSS, ECDSA và EdDSA trên cùng bài toán. Người học phải lựa chọn profile theo kiểu khóa, hash, salt hoặc nonce, dạng chữ ký và giới hạn provider, thay vì kết luận rằng mọi thuật toán có khóa bất đối xứng đều tương thích.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế và đánh đổi của bốn scheme
+
+    1. RSASSA-PKCS1-v1_5 khác RSA-PSS ở cách encoding và vai trò của salt như thế nào?
+    2. Vì sao ECDSA phụ thuộc tính đúng đắn/bí mật của nonce khi ký?
+    3. Ed25519 khác ECDSA về cách sử dụng hash/nonce và tính xác định của chữ ký như thế nào?
+    4. Loại khóa RSA, EC hoặc EdDSA và tên thuật toán JCA cần khớp ra sao?
+
+    ### Liên thông định dạng và profile
+
+    1. Vì sao chữ ký ECDSA dạng DER và P1363 không thể đưa trực tiếp cho cùng một verifier đang chờ dạng còn lại?
+    2. Những thông số nào của RSA-PSS phải thống nhất giữa Java và hệ thống đối tác?
+    3. Khi ánh xạ RS256, PS256, ES256 và EdDSA từ JOSE sang JCA, cần kiểm tra cả algorithm và wire format nào?
+
+    ### Khả năng hoạt động và an toàn
+
+    1. Khi nào lựa chọn một scheme được quyết định bởi yêu cầu tương thích thay vì chỉ bởi tên thuật toán hiện đại?
+    2. Vì sao không được chia sẻ Signature instance giữa các request có khóa và thông điệp khác nhau?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh signature schemes | Giải thích bằng cơ chế các khác biệt của PKCS1-v1_5, PSS, ECDSA và Ed25519. |
+    | Chọn cấu hình theo ngữ cảnh | Đề xuất scheme phù hợp khi cần tương thích hệ thống cũ, profile PSS hoặc chữ ký gọn. |
+    | Chạy ma trận chữ ký | Thực hiện chương trình ký/xác minh cả bốn scheme và xác nhận thông điệp sửa bị từ chối. |
+    | Phân tích tương thích | Nhận dạng khi sai PSS salt, chữ ký ECDSA DER/P1363 hoặc map JOSE/JCA không đồng nhất. |
+    | Đánh giá rủi ro triển khai | Chỉ ra tác động của nonce ECDSA, giới hạn provider và việc dùng chung engine có trạng thái. |
+- id: digital-signature-005
+  title: 9.5 PSSParameterSpec, digest, MGF1 và độ dài salt của chữ ký
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **9.5 PSSParameterSpec, digest, MGF1 và độ dài salt của chữ ký**
+
+    Bài học đi sâu vào profile RSA-PSS thay vì dừng ở tên `RSASSA-PSS`. Người học kiểm tra đầy đủ các trường của `PSSParameterSpec`, vai trò riêng của digest thông điệp và digest MGF1, giới hạn salt theo modulus và sai khác giữa Java, OpenSSL, JOSE hoặc chứng thư.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc RSA-PSS
+
+    1. Năm thành phần của PSSParameterSpec tác động đến encoding và verification như thế nào?
+    2. Digest của thông điệp khác MGF1 digest ở vai trò nào, và vì sao chúng không nhất thiết có cùng tên?
+    3. Salt làm gì trong EMSA-PSS và vì sao cùng khóa/message thường tạo được các chữ ký khác nhau?
+    4. Từ emBits, emLen và hLen, suy ra giới hạn tối đa sLen của một RSA modulus cụ thể như thế nào?
+
+    ### Cấu hình và kiểm thử JCA
+
+    1. Cần đặt profile PSS ở đâu trong chu trình Signature để hai phía xử lý cùng parameters?
+    2. Điều gì xảy ra khi verifier đặt saltLength hoặc MGF1 digest khác signer?
+    3. Vì sao không nên tự băm message rồi đưa digest vào Signature RSASSA-PSS thông thường?
+    4. Trong JWS PS256 và tích hợp OpenSSL, phải chốt parameter profile ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc và diễn giải PSSParameterSpec | Phân biệt từng trường digest, MGF, MGF parameters, salt length và trailer. |
+    | Tính ngân sách salt | Tính giới hạn sLen từ modulus và hash, giải thích vì sao sLen quá dài bị loại. |
+    | Ký và xác minh profile cụ thể | Chạy Java RSA-PSS SHA-256/MGF1-SHA256/salt 32 byte và đọc parameters thực. |
+    | Thử sai cấu hình | Thay salt length hoặc MGF digest ở verifier, dự đoán false hay lỗi xử lý. |
+    | Chuẩn hóa liên thông | Viết hồ sơ tham số đầy đủ cho một giao thức ký liên hệ với JWS/OpenSSL. |
+- id: digital-signature-006
+  title: 9.6 Thống nhất dữ liệu ký và tránh băm hai lần khi API đã kết hợp digest
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **9.6 Thống nhất dữ liệu ký và tránh băm hai lần khi API đã kết hợp digest**
+
+    Bài học xây dựng hợp đồng byte mà chữ ký thực sự bao phủ, kể cả khi hai hệ thống tuần tự hóa cùng một đối tượng theo cách khác nhau. Người học thực hành canonicalization, domain separation và thấy rõ lỗi băm hai lần khi dùng một thuật toán `Signature` vốn đã kết hợp digest.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dữ liệu chính xác được ký
+
+    1. Vì sao hai JSON có cùng ý nghĩa nghiệp vụ nhưng khác byte lại cho kết quả verify khác nhau?
+    2. Để tránh hai tổ hợp trường tạo cùng chuỗi nối, cần thêm độ dài, schema hoặc phân tách có ràng buộc như thế nào?
+    3. Cần thống nhất UTF-8, Unicode normalization, số tiền, ngày giờ và thứ tự trường trong hợp đồng ra sao?
+    4. Domain separation và version ngăn chữ ký bị diễn giải sai giữa các action hoặc tenant như thế nào?
+
+    ### Digest tích hợp và lỗi double hash
+
+    1. `SHA256withRSA` xử lý digest nội bộ như thế nào khi nhận `Signature.update(message)`?
+    2. Điều gì thay đổi nếu truyền `SHA256(message)` vào `Signature.update` rồi verify bằng message gốc?
+    3. Vì sao Ed25519 pure không nên được thay bằng việc tự SHA-256 message trước khi ký?
+
+    ### Interop và xử lý khối dữ liệu
+
+    1. Cách ký dữ liệu stream bằng nhiều lần update có giữ nguyên ý nghĩa byte ký không?
+    2. API KMS/HSM nhận prehashed digest khác với API Signature thông thường ở hợp đồng đầu vào như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế canonical payload | Mô tả một định dạng byte có length prefix, thứ tự field, encoding và định danh ngữ cảnh. |
+    | Phát hiện double hashing | Chạy SigningBytesDemo và lý giải ba trường hợp verify với message gốc/digest. |
+    | Đảm bảo tương thích serialization | Xây test vector cho hai cách biểu diễn BigDecimal, Unicode hoặc JSON. |
+    | Phân biệt giao diện ký | Xác định lúc nào API tự băm và lúc nào API yêu cầu digest đã tính sẵn. |
+    | Bảo vệ ngữ cảnh ứng dụng | Đề xuất domain separation, version và chính sách key ID trong định dạng ký. |
+- id: digital-signature-007
+  title: 9.7 Định dạng chữ ký ECDSA DER và P1363 khi trao đổi với hệ thống khác
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **9.7 Định dạng chữ ký ECDSA DER và P1363 khi trao đổi với hệ thống khác**
+
+    Bài học giải quyết lỗi liên thông khi phép toán ECDSA đúng nhưng hai hệ thống trao đổi chữ ký khác encoding. Người học đọc cấu trúc ASN.1 DER, kích thước fixed-width của P1363, thực hiện conversion có kiểm tra chuẩn tắc và áp dụng dạng raw cho JWS ES256/384/512.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biểu diễn chữ ký ECDSA
+
+    1. Vì sao kết quả toán học ECDSA là cặp (r,s) nhưng byte chữ ký DER và P1363 lại khác nhau?
+    2. Trong ASN.1 DER, quy tắc INTEGER dương, byte 00 và độ dài tối thiểu cần được kiểm tra như thế nào?
+    3. Độ dài mỗi thành phần P1363 được tính từ bậc nhóm, kể cả P-521, ra sao?
+    4. Vì sao chữ ký có cùng cặp số (r,s) nhưng hai encoding không thể tráo trực tiếp ở verifier?
+
+    ### Chuyển đổi chặt chẽ
+
+    1. Những kiểm tra nào cần có khi chuyển DER sang P1363 và khi chuyển ngược?
+    2. Vì sao cần từ chối dữ liệu DER không canonical, dư byte hoặc r/s nằm ngoài miền hợp lệ?
+    3. Low-S và canonical DER giống và khác nhau ở khía cạnh nào?
+
+    ### Liên thông JWS
+
+    1. JWS ES256 sử dụng byte chữ ký P1363 ra sao và khác DER mặc định của Java như thế nào?
+    2. Để xác minh signing input trong JWS, cần cố định hash, curve, Base64URL và đúng chuỗi byte nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải mã hai encoding | Mô tả DER SEQUENCE và P1363 r-s fixed-width bằng ví dụ byte cụ thể. |
+    | Tính kích thước P1363 | Tính 64, 96 và 132 byte lần lượt cho P-256, P-384 và P-521. |
+    | Thực hành conversion | Chạy bộ chuyển DER/P1363 kiểm tra r/s, minimal DER, trailing bytes và verification. |
+    | Chuẩn hóa giao thức ES256 | Giải thích tại sao JWS dùng raw P1363 và cách chọn JCA inP1363Format. |
+    | Chẩn đoán lỗi liên thông | Phân biệt sai curve, hash, message bytes và signature encoding. |
+- id: digital-signature-008
+  title: 9.8 Phân biệt chữ ký sai, dữ liệu sai định dạng và ngoại lệ khi xác minh
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **9.8 Phân biệt chữ ký sai, dữ liệu sai định dạng và ngoại lệ khi xác minh**
+
+    Bài học giúp phân biệt chữ ký kiểm tra ra `false` với lỗi parse, sai key/thuật toán hoặc ngoại lệ từ `Signature.verify`. Việc phân tầng lỗi cho phép chẩn đoán đúng nguyên nhân mà vẫn từ chối yêu cầu theo hướng fail-closed, tránh nuốt exception và tránh tạo oracle tiết lộ thông tin cho bên ngoài.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kết quả ở từng tầng
+
+    1. Khi nào Signature.verify trả true hoặc false, và khi nào ném SignatureException?
+    2. Tại sao lỗi Base64URL, DER public key hoặc loại khóa không được gộp nhầm vào kết quả chữ ký sai?
+    3. Vì sao sai thuật toán hoặc sai tham số RSA-PSS có thể biểu hiện khác nhau giữa provider?
+    4. Phân loại thế nào khi dữ liệu ký bị thay đổi hoặc chữ ký bị cắt/truncate?
+
+    ### Xử lý an toàn và kiểm thử
+
+    1. Vì sao catch Exception rồi trả true là lỗi fail-open nghiêm trọng?
+    2. Thông tin nào nên ghi log để chẩn đoán mà không biến endpoint thành signature oracle?
+    3. Trong một luồng xác minh có nhiều bước, kiểm tra kích thước, format, key trust và policy theo thứ tự nào?
+    4. Bảng test nào giúp phân biệt sai message, sai public key, DER/P1363 và lỗi state của engine?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tầng lỗi xác minh | Vẽ đường parse input, decode, load trusted key, initVerify, update và verify với từng nhóm lỗi. |
+    | Viết xử lý fail-closed | Thiết kế nhánh trả quyết định từ chối an toàn cho false và exception. |
+    | Chạy ví dụ lỗi Java | Tái hiện lỗi Base64, InvalidKeySpecException, InvalidKeyException và SignatureException. |
+    | Đối chiếu profile chữ ký | Phân biệt lỗi do PSS params với sai byte message hoặc ECDSA encoding. |
+    | Lập ma trận kiểm thử | Mô tả ca chấp nhận/từ chối và thông tin chẩn đoán an toàn cho API xác minh. |
+- id: digital-signature-009
+  title: 9.9 Giới hạn của verify thành công khi khóa công khai chưa được gắn với danh tính tin cậy
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **9.9 Giới hạn của verify thành công khi khóa công khai chưa được gắn với danh tính tin cậy**
+
+    Bài cuối khép lại ranh giới an toàn của chữ ký số: `verify == true` chỉ khẳng định quan hệ toán học giữa signature, message và public key, chưa xác nhận ai sở hữu khóa hoặc có quyền yêu cầu hành động. Người học phải thiết kế cách gắn public key với danh tính tin cậy và kiểm tra policy về mục đích, ngữ cảnh, phiên bản khóa và replay.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa thật của verify thành công
+
+    1. Vì sao kẻ tấn công có thể tự ký message rồi verify thành công bằng chính public key do họ đưa?
+    2. Cryptographic verification và identity authentication khác nhau ở điều kiện tin cậy nào?
+    3. Vì sao một khóa được xác thực vẫn có thể không được phép ký cho tenant hoặc action cụ thể?
+    4. Replay có thể vẫn verify true dù request lặp lại phải bị từ chối theo nghiệp vụ như thế nào?
+
+    ### Thiết lập nguồn public key đáng tin
+
+    1. Trusted key registry, SPKI pinning và X.509 PKIX ràng buộc danh tính theo các giả định khác nhau như thế nào?
+    2. Vì sao chỉ parse chứng thư hay đọc public key từ JWT header không đủ để cấp tin cậy?
+    3. Trong hệ thống cập nhật khóa, key ID, source và policy xoay vòng phải được kiểm soát từ đâu?
+
+    ### Kiểm tra thông điệp theo ngữ cảnh
+
+    1. Trước khi chấp nhận request có chữ ký hợp lệ, cần kiểm tra version, audience, purpose, nonce/timestamp và quyền thế nào?
+    2. Vì sao miền dữ liệu ký, canonicalization và context phải khớp với chính ý định sử dụng của hệ thống?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích giới hạn verify | Phân biệt tính đúng mật mã với identity, authority và tính mới của request. |
+    | Mô phỏng giả mạo danh tính | Chạy demo trusted key và attacker key để thấy hai chữ ký tự thân đều verify được nhưng policy chỉ chấp nhận khóa pinned. |
+    | Thiết kế trust binding | Đề xuất registry/pinning hoặc PKIX validation cùng bước kiểm tra đúng identity. |
+    | Chống key confusion | Xác định cách chọn key ID và algorithm policy từ tập đáng tin, không để request tự quyết định. |
+    | Thiết kế luồng chấp nhận | Xếp đúng thứ tự kiểm tra bytes, key trust, signature, context, replay và authorization. |

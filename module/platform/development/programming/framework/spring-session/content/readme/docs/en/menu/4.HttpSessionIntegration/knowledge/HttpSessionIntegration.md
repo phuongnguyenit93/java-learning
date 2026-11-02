@@ -1,1 +1,0 @@
-﻿# HttpSession integration

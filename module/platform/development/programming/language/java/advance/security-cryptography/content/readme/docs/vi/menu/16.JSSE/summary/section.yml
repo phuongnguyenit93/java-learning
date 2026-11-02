@@ -1,0 +1,91 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'JSSE và TLS trong Java: từ định danh đến vận hành an toàn'
+roadmapHeading: Lộ trình 11 bài học của chương JSSE
+roadmap:
+- id: jsse-001
+  order: 1
+  title: 16.1 Vai trò của SSLContext, KeyManagerFactory và TrustManagerFactory
+  description: Nhận diện các vai trò nền tảng của SSLContext, KeyManagerFactory và TrustManagerFactory, phân biệt danh tính của mình với niềm tin dành cho đối tác.
+  transition:
+    to: jsse-002
+    description: Sau khi hiểu ai quản lý identity và trust, chuyển sang lắp private key, certificate chain và CA tin cậy thành SSLContext chạy thật.
+- id: jsse-002
+  order: 2
+  title: 16.2 Khởi tạo SSLContext từ khóa riêng, chuỗi chứng thư và tập CA tin cậy
+  description: Biến private key, certificate chain và CA tin cậy thành SSLContext hoạt động, rồi kiểm bằng handshake TLS thật.
+  transition:
+    to: jsse-003
+    description: Khi context đã có credentials và trust policy, học điều chỉnh protocol, cipher suites, SNI, ALPN và endpoint identification ở từng kết nối.
+- id: jsse-003
+  order: 3
+  title: 16.3 SSLParameters cho protocol, cipher suite, SNI, ALPN và endpoint identification
+  description: Điều chỉnh tham số một kết nối TLS và phân biệt hỗ trợ, bật, thương lượng, SNI, ALPN cùng xác minh hostname.
+  transition:
+    to: jsse-004
+    description: Từ tham số kết nối, chuyển sang thời điểm TCP, tạo SSL socket và quyết định khi nào handshake thực sự chạy.
+- id: jsse-004
+  order: 4
+  title: 16.4 SSLSocket, SSLServerSocket và điều khiển thời điểm handshake
+  description: Làm chủ thời điểm handshake trên SSLSocket và SSLServerSocket, hiểu rõ TCP connection khác TLS channel đã xác thực.
+  transition:
+    to: jsse-005
+    description: Khi biết lúc nào handshake chạy, quyết định server yêu cầu hay chỉ đề nghị chứng thư của client trong mTLS.
+- id: jsse-005
+  order: 5
+  title: 16.5 Yêu cầu hoặc đề nghị chứng thư phía khách bằng needClientAuth và wantClientAuth
+  description: Áp dụng chính sách client certificate bắt buộc hoặc tùy chọn, xác minh kết quả handshake và identity trong mTLS.
+  transition:
+    to: jsse-006
+    description: Để xử lý nhiều certificate và chính sách X.509 tùy ngữ cảnh, tiếp theo đào sâu extended key/trust managers.
+- id: jsse-006
+  order: 6
+  title: 16.6 X509ExtendedKeyManager chọn alias và X509ExtendedTrustManager kiểm tra đối tác
+  description: Xử lý chọn alias và thẩm định chứng thư X.509 theo socket/engine mà vẫn bảo toàn các kiểm tra của provider.
+  transition:
+    to: jsse-007
+    description: Mang chính sách identity/trust vừa thiết kế vào hai HTTP clients tiêu chuẩn Java với phạm vi cấu hình và hostname khác nhau.
+- id: jsse-007
+  order: 7
+  title: 16.7 HttpsURLConnection, HttpClient và ranh giới cấu hình SSLContext hoặc xác minh hostname
+  description: Tích hợp SSLContext/trust/hostname với HttpsURLConnection và HttpClient, hiểu hệ quả của global defaults và redirects.
+  transition:
+    to: jsse-008
+    description: Rời HTTP client cấp cao để điều khiển TLS không phụ thuộc socket bằng SSLEngine và state machine.
+- id: jsse-008
+  order: 8
+  title: 16.8 SSLEngine với wrap, unwrap, delegated task và quản lý trạng thái handshake
+  description: Điều phối wrap/unwrap, ByteBuffer và delegated tasks của SSLEngine qua state machine độc lập với socket.
+  transition:
+    to: jsse-009
+    description: Sau khi nắm luồng engine, xử lý đúng các trạng thái thiếu byte/thiếu buffer và đóng TLS an toàn.
+- id: jsse-009
+  order: 9
+  title: 16.9 Xử lý BUFFER_UNDERFLOW, BUFFER_OVERFLOW, đóng kết nối và tài nguyên bộ đệm
+  description: Giải quyết underflow/overflow, TLS close_notify, resource budgets và backpressure trong vòng đời SSLEngine.
+  transition:
+    to: jsse-010
+    description: Từ lỗi trạng thái/bộ đệm, quay sang nguyên tắc kiểm chứng trust và hostname không được bỏ qua ở bất kỳ ứng dụng TLS nào.
+- id: jsse-010
+  order: 10
+  title: 16.10 Tránh cấu hình tin mọi chứng thư hoặc bỏ qua kiểm tra hostname trong ví dụ ứng dụng
+  description: Nhận diện và loại bỏ trust-all/hostname bypass, dùng CA và SAN kiểm chứng rõ ở cả bài lab lẫn code review.
+  transition:
+    to: jsse-011
+    description: Kết thúc bằng một quy trình chẩn đoán SSLHandshakeException dựa trên bằng chứng thay vì tắt bảo vệ.
+- id: jsse-011
+  order: 11
+  title: 16.11 Chẩn đoán SSLHandshakeException, lỗi chứng thư và lỗi không có cấu hình chung
+  description: Chẩn đoán SSLHandshakeException bằng chứng cứ từ TLS stages, PKIX, negotiation, mTLS, JDK và network.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh mục tiêu các bài JSSE
+
+  | Tiêu chí | Bài 1 — 1. 16.1 | 2. 16.2 | 3. 16.3 | 4. 16.4 | 5. 16.5 | 6. 16.6 | 7. 16.7 | 8. 16.8 | 9. 16.9 | 10. 16.10 | 11. 16.11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên bài | 16.1 Vai trò của SSLContext, KeyManagerFactory và TrustManagerFactory | 16.2 Khởi tạo SSLContext từ khóa riêng, chuỗi chứng thư và tập CA tin cậy | 16.3 SSLParameters cho protocol, cipher suite, SNI, ALPN và endpoint identification | 16.4 SSLSocket, SSLServerSocket và điều khiển thời điểm handshake | 16.5 Yêu cầu hoặc đề nghị chứng thư phía khách bằng needClientAuth và wantClientAuth | 16.6 X509ExtendedKeyManager chọn alias và X509ExtendedTrustManager kiểm tra đối tác | 16.7 HttpsURLConnection, HttpClient và ranh giới cấu hình SSLContext hoặc xác minh hostname | 16.8 SSLEngine với wrap, unwrap, delegated task và quản lý trạng thái handshake | 16.9 Xử lý BUFFER_UNDERFLOW, BUFFER_OVERFLOW, đóng kết nối và tài nguyên bộ đệm | 16.10 Tránh cấu hình tin mọi chứng thư hoặc bỏ qua kiểm tra hostname trong ví dụ ứng dụng | 16.11 Chẩn đoán SSLHandshakeException, lỗi chứng thư và lỗi không có cấu hình chung |
+  | Vấn đề trung tâm | Ba trách nhiệm JSSE | Nạp key/chain/CA vào context | Chính sách và negotiation | Thời điểm TLS handshake | Client authentication policy | Extended manager callbacks | Tích hợp HTTPS clients | TLS engine state machine | Buffer và TLS closure | Xác thực peer TLS an toàn | Phân loại lỗi TLS có bằng chứng |
+  | Thực hành hoặc bằng chứng | Sơ đồ identity/trust và SSLEngine cấu hình | Lab PKCS#12, CA ký leaf và TLS handshake | Cấu hình SSLParameters và ma trận E2E | Explicit/implicit loopback và listener | Lab bốn tổ hợp need/want và certificate | Decorator và mTLS có chọn alias | Loopback HTTPS với hai Java APIs | Hai SSLEngine giao tiếp qua RAM | Probe lỗi buffer và in-memory shutdown | Test pass/fail theo CA và SAN | Runbook và JSSE/certpath debug |
+  | Giá trị trong chương | Đặt nền cho mọi TLS API | Cấu hình TLS có bằng chứng thực thi | Kiểm soát kết nối theo policy | Thiết lập socket an toàn | Phân biệt TLS acceptance và identity | Giữ kiểm tra ngữ cảnh đầy đủ | Chọn scope TLS theo client | Nền tảng TLS nonblocking | TLS NIO bền vững dưới lỗi | Ngăn MITM do trust bypass | Xử lý incident an toàn |
+  | Tư duy hình thành | Phân vai đối tượng trước thao tác | Từ vật liệu khóa tới kết nối | Tách capability khỏi thực thi | Suy luận theo timeline kết nối | Lập ma trận hành vi mTLS | Ủy quyền đúng API overload | Phân lớp HTTP/TLS rõ ràng | Điều phối trạng thái và tiến triển | Sửa nguyên nhân trạng thái | Kiểm chứng cả trust và tên | Suy luận nguyên nhân theo lớp |
+  | Lỗi cần tránh | Đồng nhất keystore, truststore và SSLContext | Có certificate nhưng không có private key | Coi SNI/ALPN là xác thực hostname | Nhầm TCP connect với TLS đã xác thực | Tưởng wantClientAuth chấp nhận cert sai | Wrapper bỏ qua trust check theo socket | Dùng trust-all hoặc đổi default toàn JVM | Bỏ NEED_TASK hoặc mất partial bytes | Clear mất bytes hoặc bỏ close_notify | Trust mọi certificate hoặc bỏ hostname | Sửa handshake bằng bypass trust |

@@ -1,0 +1,364 @@
+summaries:
+- id: jsse-001
+  title: 16.1 Vai trò của SSLContext, KeyManagerFactory và TrustManagerFactory
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **16.1 Vai trò của SSLContext, KeyManagerFactory và TrustManagerFactory**
+
+    Bài mở đầu đặt ba trách nhiệm cốt lõi của JSSE vào đúng vị trí: KeyManagerFactory cung cấp danh tính và private key của bên mình, TrustManagerFactory thiết lập cách kiểm chứng peer, còn SSLContext phối hợp các manager để tạo socket hoặc engine TLS. Nắm sự phân vai này giúp đọc cấu hình HTTPS/mTLS mà không nhầm thành công của SSLContext.init với một lần xác minh certificate hoặc hostname thực tế.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân vai và dữ liệu đầu vào
+
+    1. KeyManagerFactory, TrustManagerFactory và SSLContext lần lượt giải quyết ba câu hỏi nào trong một TLS handshake?
+    2. Identity keystore có PrivateKeyEntry khác truststore chứa TrustedCertificateEntry ra sao, và vì sao một certificate-only entry không đủ chứng minh danh tính server?
+    3. Vì sao tên alias của keystore không phải danh tính TLS được peer chấp thuận?
+
+    ### Luồng kết nối và ranh giới tin cậy
+
+    1. Client HTTPS và server TLS cần key manager/trust manager nào khi chỉ xác thực server, và thay đổi gì khi dùng mTLS?
+    2. Vì sao gọi SSLContext.init thành công chưa chứng minh chain, SAN/hostname và authorization đã được kiểm tra?
+    3. Khi client gặp PKIX path building failed, bạn sẽ xác định trách nhiệm của manager nào trước khi sửa cấu hình?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại trách nhiệm JSSE | Vẽ sơ đồ identity keystore → KeyManagerFactory, truststore → TrustManagerFactory, hai luồng vào SSLContext và kết nối TLS. |
+    | Nhận diện local identity/trust | Phân tích một tập KeyStore.Entry và kết luận trường hợp nào có thể làm server credential, trường hợp nào là trust anchor. |
+    | Đọc cấu hình TLS một chiều và mTLS | Chỉ ra các manager cần có ở client/server trong hai tình huống và điểm cấu hình client certificate. |
+    | Kiểm tra ranh giới xác minh | Giải thích vì sao tạo SSLContext và cấu hình SSLEngine chưa thay thế handshake, chain validation hay hostname identification. |
+- id: jsse-002
+  title: 16.2 Khởi tạo SSLContext từ khóa riêng, chuỗi chứng thư và tập CA tin cậy
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **16.2 Khởi tạo SSLContext từ khóa riêng, chuỗi chứng thư và tập CA tin cậy**
+
+    Bài thực hành chuyển mô hình JSSE sang vật liệu thực: private key, leaf/intermediate certificate chain, trust anchors và PKCS#12. Bạn học chuỗi thao tác KeyStore.load → khởi tạo key/trust factories → SSLContext.init, dùng CA demo cấp chứng thư cho localhost, thực hiện handshake và phân biệt lỗi certificate/chain/hostname. Đây là kỹ năng dựng cấu hình TLS có thể kiểm chứng mà không nới lỏng trust.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn khóa và chuỗi tin cậy
+
+    1. Một identity keystore cần chứa những gì để server trình chứng thư, và thứ tự certificate chain có ý nghĩa gì?
+    2. Vì sao đưa một intermediate certificate vào truststore dưới vai trò CA đáng tin có thể thay đổi chính sách tin cậy?
+    3. Store password, key password và public CA certificate khác nhau như thế nào trong quá trình khởi tạo?
+
+    ### Từ cấu hình đến phép thử thật
+
+    1. Các bước gọi KeyStore, KeyManagerFactory, TrustManagerFactory và SSLContext nào biến file PKCS#12 thành TLS server/client?
+    2. Làm thế nào dùng keytool tạo CA, leaf SAN localhost, truststore riêng rồi chứng minh handshake đạt với cấu hình đúng?
+    3. Bạn sẽ chẩn đoán thế nào khi SSLContext.init thành công nhưng handshake thất bại do thiếu private key, sai CA hoặc hostname?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chuẩn bị vật liệu TLS | Tạo CA và server identity thử nghiệm với private key, CSR, leaf SAN, chain và truststore đúng vai trò. |
+    | Lắp SSLContext đúng chuỗi API | Nạp PKCS#12, khởi tạo factories và tạo SSLContext có identity/trust riêng, không trộn store hoặc key password. |
+    | Kiểm chứng handshake | Chạy client/server TLS loopback và xác nhận protocol, chain, identity theo kết quả handshake thay vì kết quả init. |
+    | Khoanh vùng lỗi vật liệu khóa | Phân biệt lỗi load store, recover private key, trust anchor, SAN và certificate rotation trong tình huống thực. |
+- id: jsse-003
+  title: 16.3 SSLParameters cho protocol, cipher suite, SNI, ALPN và endpoint identification
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **16.3 SSLParameters cho protocol, cipher suite, SNI, ALPN và endpoint identification**
+
+    Bài phân biệt khả năng TLS mà JDK hỗ trợ, cấu hình đang bật, điều thực sự thương lượng và danh tính endpoint được xác minh. SSLParameters là lớp điều chỉnh theo kết nối cho phiên bản giao thức, cipher suites, SNI, ALPN và hostname verification; mỗi tham số phục vụ một câu hỏi bảo mật khác nhau. Người học biết đặt chính sách trước handshake và tránh suy từ một lựa chọn cấu hình thành kết quả giao thức.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chính sách TLS và negotiation
+
+    1. Supported, enabled, configured và negotiated protocols/cipher suites khác nhau thế nào khi đọc Java TLS API?
+    2. TLS 1.2 và TLS 1.3 khác nhau ra sao trong ý nghĩa tên cipher suite, và vì sao không nên bật toàn bộ supported suites?
+    3. SNI và ALPN trao đổi những thông tin gì, và vì sao chúng không thay thế xác minh certificate/hostname?
+
+    ### Cấu hình và bằng chứng kết nối
+
+    1. Bạn dùng SSLParameters như thế nào để cấu hình protocol, cipher suites, SNI, ALPN và endpoint identification trước handshake?
+    2. Vì sao việc setEndpointIdentificationAlgorithm(HTTPS) quan trọng với SSLSocket hoặc SSLEngine client cấp thấp?
+    3. Một test chỉ in giá trị SSLParameters còn thiếu những bằng chứng E2E nào để chứng minh negotiation và identity đúng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc chính sách protocol và cipher | So sánh tập supported/enabled và lý giải lựa chọn allowlist TLS theo provider và phiên bản. |
+    | Phân biệt SNI, ALPN, endpoint identity | Vẽ luồng client gửi server name, thương lượng protocol ứng dụng và xác minh SAN hostname độc lập. |
+    | Cấu hình SSLParameters | Tạo SSLEngine client có thiết lập protocol, cipher, SNI/ALPN và HTTPS endpoint identification hợp lệ. |
+    | Thiết kế kiểm thử TLS E2E | Nêu ca thành công/thất bại cho cipher, SAN, ALPN và phiên bản sau khi handshake thật. |
+- id: jsse-004
+  title: 16.4 SSLSocket, SSLServerSocket và điều khiển thời điểm handshake
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **16.4 SSLSocket, SSLServerSocket và điều khiển thời điểm handshake**
+
+    Bài cho thấy TCP connect/accept khác với TLS handshake được xác thực. SSLSocket có thể handshake khi được gọi tường minh bằng startHandshake hoặc do I/O kích hoạt; SSLServerSocket chỉ chấp nhận connection rồi trả socket riêng. Khi hiểu checkpoint cấu hình trước handshake, bạn có thể đặt timeout, listener, certificate validation và xử lý I/O theo đúng thứ tự, tránh gửi dữ liệu trước khi tin cậy peer.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thời điểm và trạng thái
+
+    1. TCP connect, SSLServerSocket.accept và SSLSocket.startHandshake khác nhau tại thời điểm và trách nhiệm nào?
+    2. Lời gọi I/O đầu tiên có thể kích hoạt handshake ngầm ra sao, và vì sao getSession có thể gây bất ngờ?
+    3. HandshakeCompletedListener cho biết điều gì, và tại sao sự kiện handshake không thay thế authorization?
+
+    ### Thực hành server/client TLS
+
+    1. Bạn cấu hình protocol, endpoint identification, timeout và needClientAuth ở đâu trước khi handshake bắt đầu?
+    2. Lab so sánh explicit và implicit handshake chứng minh bằng tín hiệu nào rằng TLS đã thiết lập và dữ liệu ứng dụng đã truyền?
+    3. Khi client/server cùng chờ đọc hoặc peer đóng giữa handshake, bạn chẩn đoán timeout và quản lý tài nguyên thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân rã kết nối TCP và TLS | Vẽ timeline explicit/implicit handshake, chỉ đúng mốc TLS và authorization. |
+    | Thiết lập socket an toàn | Cấu hình SSLSocket/SSLServerSocket trước handshake và chạy loopback với certificate được trust. |
+    | Giải thích kết quả thử nghiệm | Đối chiếu listener, TLS session và byte exchange để đánh giá kết nối, không chỉ dựa vào TCP connect. |
+    | Xử lý lỗi vòng đời | Đề xuất timeout, đóng socket và cách phát hiện deadlock khi hai phía cùng đợi I/O. |
+- id: jsse-005
+  title: 16.5 Yêu cầu hoặc đề nghị chứng thư phía khách bằng needClientAuth và wantClientAuth
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **16.5 Yêu cầu hoặc đề nghị chứng thư phía khách bằng needClientAuth và wantClientAuth**
+
+    Bài đi vào chính sách xác thực client certificate tại TLS server. setNeedClientAuth(true) là yêu cầu bắt buộc, còn setWantClientAuth(true) là đề nghị tùy chọn; điều này thay đổi kết quả khi client không có certificate, nhưng certificate gửi lên vẫn phải được trust kiểm chứng. Người học quan sát bốn kịch bản handshake, đọc SSLSession và tách việc xác thực certificate khỏi quyền nghiệp vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa need và want
+
+    1. NeedClientAuth, wantClientAuth và không yêu cầu client certificate khác nhau thế nào trong một TLS server?
+    2. Khi wantClientAuth=true nhưng client không có chứng thư, tại sao TLS có thể thành công mà identity phía client vẫn chưa xác thực?
+    3. Vì sao wantClientAuth không có nghĩa chấp nhận client certificate sai CA, hết hạn hoặc thiếu key tương ứng?
+
+    ### Cấu hình và xác minh mTLS
+
+    1. Bạn đặt need/want ở SSLServerSocket, SSLSocket server mode, SSLParameters và SSLEngine như thế nào trước handshake?
+    2. Bạn sẽ đọc SSLSession và ánh xạ client certificate sang principal/quyền nghiệp vụ ra sao để xử lý cả nhánh anonymous?
+    3. Bốn ca want/need cùng tình huống có/không có certificate tạo thành test matrix với kết quả khác nhau như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình mức yêu cầu client cert | Đặt need/want phù hợp trên API JSSE và chỉ ra trạng thái loại trừ nhau. |
+    | Dự đoán kết quả bắt tay | Giải thích từng trường hợp client không có certificate, có certificate được trust, hoặc gửi certificate không hợp lệ. |
+    | Kiểm tra peer authentication | Dùng SSLSession xác định có client certificate đã xác minh và không coi TLS thành công là authorization. |
+    | Thiết kế mTLS theo rủi ro | Lựa chọn cần/want cho route quản trị hay public route và xây test âm tương ứng. |
+- id: jsse-006
+  title: 16.6 X509ExtendedKeyManager chọn alias và X509ExtendedTrustManager kiểm tra đối tác
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **16.6 X509ExtendedKeyManager chọn alias và X509ExtendedTrustManager kiểm tra đối tác**
+
+    Bài giải thích khi JSSE cần lựa chọn alias linh hoạt hoặc kiểm tra certificate phụ thuộc ngữ cảnh socket/engine. X509ExtendedKeyManager chọn local identity; X509ExtendedTrustManager xác minh peer và có overload mang thông tin handshake. Một decorator an toàn phải ủy quyền đúng các overload, tránh fallback trust-all hoặc bỏ qua endpoint checks; đồng thời tách lựa chọn certificate khỏi authorization.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ cảnh chọn key và kiểm trust
+
+    1. KeyType, issuers, SNI và handshake session ảnh hưởng tới chọn alias của X509ExtendedKeyManager thế nào?
+    2. X509ExtendedTrustManager khác X509TrustManager ở các overload socket/SSLEngine quan trọng nào?
+    3. Vì sao gọi delegate.checkServerTrusted(chain, authType) thay cho overload nhận socket có thể làm mất kiểm tra ngữ cảnh?
+
+    ### Tùy biến an toàn và xác minh
+
+    1. Khi bọc key/trust manager, bạn phải giữ hành vi và các method nào để không tạo đường chấp nhận chứng thư ngoài ý muốn?
+    2. Nếu server có nhiều alias/tenant, bạn sẽ mô tả điều kiện chọn certificate và xử lý không có alias phù hợp ra sao?
+    3. Lab mTLS chứng minh lựa chọn alias và kiểm tra danh tính đối tác như thế nào trên TLS 1.3?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân vai extended managers | Giải thích đường chọn local key/certificate và đường kiểm peer trust theo socket/engine. |
+    | Thiết kế decorator đúng overload | Liệt kê và ủy quyền đủ các method của X509ExtendedKeyManager/X509ExtendedTrustManager, không làm yếu kiểm PKIX/hostname. |
+    | Phân tích chọn alias đa ngữ cảnh | Đề xuất chính sách theo SNI, key type, issuer và security provider, với nhánh fail-closed. |
+    | Kiểm thử quyết định trust | Chạy hoặc thiết kế test mTLS với sai CA, sai SAN, nhiều alias và certificate lifecycle. |
+- id: jsse-007
+  title: 16.7 HttpsURLConnection, HttpClient và ranh giới cấu hình SSLContext hoặc xác minh hostname
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **16.7 HttpsURLConnection, HttpClient và ranh giới cấu hình SSLContext hoặc xác minh hostname**
+
+    Bài so sánh ranh giới cấu hình HTTPS trong HttpsURLConnection và java.net.http.HttpClient. Cùng một SSLContext không làm hai API đồng nhất về lifetime, TLS hooks, redirects và proxy. Người học dùng CA localhost để kiểm chứng request HTTPS, giữ hostname verification, thiết lập trust per client và phân tích vì sao cấu hình global gây ảnh hưởng tới endpoint không liên quan.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu hình HTTPS ở hai API
+
+    1. HttpsURLConnection và HttpClient khác nhau ra sao về SSLContext, phạm vi cấu hình, lifecycle và cách sử dụng?
+    2. Custom TrustManager/SSLContext và hostname verification là hai phần nào của điều kiện chấp nhận HTTPS peer?
+    3. Vì sao setDefaultSSLSocketFactory hoặc thay đổi JVM default SSLContext có thể gây ảnh hưởng rộng hơn kết nối đang sửa?
+
+    ### Điều tra endpoint và request
+
+    1. Bạn sẽ cấu hình hai HTTP clients trỏ tới local HTTPS CA test mà không dùng trust-all hoặc HostnameVerifier luôn true như thế nào?
+    2. Tại sao HttpClient không cung cấp setHostnameVerifier công khai, và cần xử lý thế nào khi certificate SAN không đúng host?
+    3. Redirect, proxy, SNI và SSRF có thể đưa request tới endpoint khác dù TLS với endpoint đó hoàn toàn hợp lệ ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh hai HTTP TLS clients | Chọn đúng API và phạm vi SSLContext theo lifetime, redirects, proxy và kiểu request. |
+    | Cấu hình HTTPS theo trust domain | Tạo client dùng CA kiểm chứng cho endpoint nội bộ mà không thay global defaults. |
+    | Kiểm thử CA/SAN an toàn | Đối chiếu kết quả với đúng CA, sai CA và sai hostname ở cả HttpsURLConnection/HttpClient. |
+    | Nhận diện ranh giới tầng HTTP | Phân biệt trust, hostname, URL target, redirect và authorization; chỉ ra nơi cần kiểm soát riêng. |
+- id: jsse-008
+  title: 16.8 SSLEngine với wrap, unwrap, delegated task và quản lý trạng thái handshake
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **16.8 SSLEngine với wrap, unwrap, delegated task và quản lý trạng thái handshake**
+
+    SSLEngine tách xử lý TLS khỏi vận chuyển bytes qua socket, nên ứng dụng phải điều phối wrap, unwrap, trạng thái handshake, delegated tasks, ByteBuffer và backpressure. Bài cung cấp một engine state machine chạy giữa client/server qua bộ nhớ để thấy rõ byte được tiêu thụ, sinh ra và chuyển giao. Đây là nền cho NIO/Selector hoặc event loop TLS đúng giao thức.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### State machine và dữ liệu TLS
+
+    1. SSLEngine.wrap và unwrap phân biệt application bytes với network bytes như thế nào?
+    2. SSLEngineResult.Status và HandshakeStatus độc lập ra sao, và vì sao bytesProduced=0 không đồng nghĩa engine không tiến triển?
+    3. NEED_WRAP, NEED_UNWRAP và NEED_TASK buộc event loop thực hiện các thao tác khác nhau thế nào?
+
+    ### Vòng lặp và tính tiến triển
+
+    1. Bạn bố trí flip, compact, partial write và dữ liệu network còn lại thế nào để không mất TLS records?
+    2. Lab hai SSLEngine trong RAM khép kín handshake và chuyển plaintext qua ciphertext bằng những bước nào?
+    3. Tại sao delegated tasks và backpressure phải có chính sách scheduling, timeout và resource limits trong triển khai nonblocking?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô hình hóa SSLEngine | Vẽ state machine cho NEED_WRAP/UNWRAP/TASK và giải thích từng result status. |
+    | Vận hành bốn luồng buffer | Theo dõi network/application buffers, số byte consumed/produced, flip/compact và partial writes. |
+    | Xây TLS driver in-memory | Diễn giải hoặc chạy hai SSLEngine trao đổi handshake, TLS application data và close_notify. |
+    | Phân tích nonblocking I/O | Thiết kế cách chuyển engine states thành Selector interest ops, delegated task scheduling và backpressure. |
+- id: jsse-009
+  title: 16.9 Xử lý BUFFER_UNDERFLOW, BUFFER_OVERFLOW, đóng kết nối và tài nguyên bộ đệm
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **16.9 Xử lý BUFFER_UNDERFLOW, BUFFER_OVERFLOW, đóng kết nối và tài nguyên bộ đệm**
+
+    Bài đi sâu vào phản ứng cụ thể khi SSLEngine báo BUFFER_UNDERFLOW, BUFFER_OVERFLOW hoặc CLOSED và khi peer kết thúc stream đột ngột. Người học phân biệt packet buffer với application buffer, tính mức tăng dung lượng, bảo toàn bytes còn lại, flush close_notify và quản lý giới hạn bộ nhớ/backpressure. Các phép thử chủ động gây overflow/underflow bổ sung cho state machine tổng thể của bài trước.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bộ đệm và lỗi trạng thái
+
+    1. Vì sao BUFFER_UNDERFLOW không nhất thiết là TLS record lỗi và cần làm gì với bytes đã nhận nhưng chưa đủ?
+    2. BUFFER_OVERFLOW trong wrap khác unwrap ở buffer đích nào và cách giải phóng hoặc mở rộng ra sao?
+    3. SSLSession.getPacketBufferSize và getApplicationBufferSize có nghĩa gì đối với quyết định capacity và resource limits?
+
+    ### Đóng kết nối và vận hành
+
+    1. closeOutbound, wrap close_notify, flush network bytes và closeInbound cần được phối hợp theo thứ tự nào?
+    2. Vì sao EOF khi chưa nhận close_notify khác với một TLS shutdown hoàn chỉnh và có thể là truncation?
+    3. Bạn sẽ kiểm thử fragment, partial writes, buffer growth, backpressure và bộ nhớ per connection thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Sửa underflow đúng cách | Mô phỏng record thiếu byte, giữ phần chưa tiêu thụ và đọc thêm mà không clear mất dữ liệu. |
+    | Sửa overflow đúng buffer | Dùng session buffer requirements để flush hoặc grow network/application output có giới hạn. |
+    | Đóng TLS sạch | Mô tả trao đổi close_notify và phân biệt normal shutdown với premature EOF/truncation. |
+    | Lập kế hoạch tài nguyên | Tính tổng buffer per connection, đặt cap/timeout, phân tích pooling và backpressure trên tải cao. |
+- id: jsse-010
+  title: 16.10 Tránh cấu hình tin mọi chứng thư hoặc bỏ qua kiểm tra hostname trong ví dụ ứng dụng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **16.10 Tránh cấu hình tin mọi chứng thư hoặc bỏ qua kiểm tra hostname trong ví dụ ứng dụng**
+
+    Bài củng cố điều kiện tối thiểu của HTTPS: certificate chain phải được tin cậy và certificate identity phải khớp host/IP đích. Trust-all manager hoặc HostnameVerifier luôn true có thể khiến kênh được mã hóa nhưng peer bị giả mạo; bài hướng dẫn thiết lập CA test riêng, tạo chứng thư SAN đúng và thực hiện cả test đúng/sai CA và hostname mà không phá cấu hình bảo mật.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai phép xác minh không thể bỏ
+
+    1. Vì sao một TLS connection được mã hóa nhưng dùng trust-all vẫn dễ bị kẻ đứng giữa giả mạo?
+    2. Chain trust tới CA và hostname/IP SAN kiểm hai điều kiện độc lập như thế nào?
+    3. Sai SAN DNS, SAN IP hoặc wildcard có thể tạo tình huống kiểm chứng nào dù certificate còn hạn?
+
+    ### Phòng chống cấu hình không an toàn
+
+    1. Bạn dựng root CA và leaf localhost trong lab để kiểm chứng cả kết nối hợp lệ lẫn wrong-CA/wrong-host như thế nào?
+    2. Vì sao không nên sửa lỗi PKIX bằng cách import bừa chứng thư, tắt hostname verification hoặc thay global trust-all?
+    3. Trong code review, bạn tìm API hoặc dấu hiệu nào cho thấy chứng thư hoặc hostname đang bị bỏ qua?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện bypass TLS identity | Chỉ rõ tác hại của empty checkServerTrusted, trust-all và HostnameVerifier luôn true. |
+    | Cấu hình truststore đúng scope | Tạo CA/SAN thử nghiệm và kết nối an toàn bằng trust policy riêng, không nới rộng cacerts. |
+    | Kiểm chứng hai điều kiện AND | Thực hiện ca đúng CA/hostname, sai CA và sai SAN để khẳng định nhánh lỗi hoạt động. |
+    | Review thay đổi bảo mật | Đề xuất cách sửa khi handshake fail mà không làm yếu authentication, đồng thời giữ test âm trong CI. |
+- id: jsse-011
+  title: 16.11 Chẩn đoán SSLHandshakeException, lỗi chứng thư và lỗi không có cấu hình chung
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **16.11 Chẩn đoán SSLHandshakeException, lỗi chứng thư và lỗi không có cấu hình chung**
+
+    Bài cuối biến kiến thức JSSE thành quy trình xử lý sự cố: xác định đúng endpoint và phía báo lỗi, đọc cause chain/alert, phân biệt PKIX/hostname, protocol/cipher negotiation, client certificate và transport, rồi đối chiếu cấu hình thực tế. Người học dùng keytool, JSSE/certpath debug và lab offline để tìm nguyên nhân mà không phá security policy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân nhóm SSLHandshakeException
+
+    1. Tại sao alert handshake_failure nhận từ peer không đủ để kết luận lỗi certificate hay cipher suite?
+    2. PKIX path building failed, SAN mismatch, no available authentication scheme và không có giao protocol/cipher dẫn tới các hướng kiểm tra khác nhau ra sao?
+    3. Vì sao TLS 1.3 cipher suite không tự xác định toàn bộ scheme xác thực/certificate?
+
+    ### Điều tra có bằng chứng
+
+    1. Bạn sẽ lần từ DNS/TCP, TLS termination, JSSE debug và cause chain tới truststore, key manager, ALPN/SNI như thế nào?
+    2. Các lệnh keytool và debug flags nào giúp kiểm chứng chain, SAN, validity và cấu hình mà không log bí mật ngoài ý muốn?
+    3. Khi một ứng dụng Java fail nhưng browser thành công, bạn xây runbook nào để so runtime/truststore/proxy mà vẫn giữ test âm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại tầng lỗi | Tách network/TCP, TLS handshake, PKIX, hostname và HTTP/application bằng bằng chứng quan sát. |
+    | Đọc JSSE failure evidence | Đối chiếu exception/cause chain, TLS alert, debug trace và vai trò hai phía để nêu giả thuyết có thể kiểm. |
+    | Kiểm tra cấu hình thực | Dùng keytool, protocol/suite preflight và chứng thư để so truststore, identity và negotiation. |
+    | Xây runbook phòng tái phát | Đề xuất sửa đúng certificate/CA/hostname/policy, kiểm thử âm và tiêu chí đóng incident không dùng trust-all. |

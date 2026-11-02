@@ -1,0 +1,315 @@
+summaries:
+- id: public-key-cryptography-001
+  title: 8.1 Khóa công khai, khóa riêng và quan hệ với mã hóa hoặc chữ ký số
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **8.1 Khóa công khai, khóa riêng và quan hệ với mã hóa hoặc chữ ký số**
+
+    Hiểu chính xác **khóa công khai và khóa riêng giữ vai trò gì** trong hai thao tác khác nhau: mã hóa cho người nhận và ký số để bên khác xác minh. Bài dùng `Cipher` RSA-OAEP và `Signature` RSA-PSS để cho thấy luồng encrypt/decrypt khác sign/verify.
+
+    Người học cũng phải phân biệt bí mật dữ liệu, toàn vẹn, nguồn gốc, trust của public key và replay. Một cặp khóa hợp lệ không tự chứng minh danh tính chủ khóa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cặp khóa và tính chất bảo mật
+
+    1. Alice gửi dữ liệu bí mật cho Bob thì dùng public/private key của ai ở mỗi bước và vì sao?
+    2. Alice ký thông điệp để Bob kiểm tra thì các bước sign/verify dùng khóa nào?
+    3. Vì sao chữ ký số không phải phép “mã hóa bằng khóa riêng” và không làm nội dung bí mật?
+
+    ### Đọc mã Java và đánh giá rủi ro
+
+    1. Trong Java, vì sao RSA-OAEP phải dùng `Cipher` còn RSA-PSS dùng `Signature` với tham số rõ ràng?
+    2. Nếu ciphertext giải mã được hoặc chữ ký xác minh được, còn cần những gì để tin danh tính người gửi và chặn replay?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt luồng khóa | Trình bày được encrypt bằng public key người nhận và sign bằng private key người ký với hai sơ đồ khác nhau. |
+    | Sử dụng engine Java đúng vai trò | Giải thích ví dụ RSA-OAEP/RSA-PSS với `Cipher`, `Signature` và bộ tham số minh bạch. |
+    | Phân tích tính bảo mật | Nêu được giới hạn về sender authentication, confidentiality và replay của từng thao tác. |
+    | Kiểm tra public-key trust | Nêu được cơ chế chứng chỉ, key pinning hoặc trust registry để gắn khóa với identity. |
+- id: public-key-cryptography-002
+  title: 8.2 Tạo cặp khóa bằng KeyPairGenerator với kích thước hoặc bộ tham số rõ ràng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **8.2 Tạo cặp khóa bằng KeyPairGenerator với kích thước hoặc bộ tham số rõ ràng**
+
+    Thực hành **sinh khóa theo tham số chủ động** bằng `KeyPairGenerator` thay vì dùng provider defaults: RSA-3072 và public exponent F4, EC `secp256r1`, Ed25519 và X25519 theo `NamedParameterSpec`.
+
+    Người học kiểm chứng khóa đã sinh bằng modulus, named curve, phép sign/verify và key agreement; hiểu vai trò `SecureRandom`, provider, HSM và giới hạn của việc xuất private key.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tạo khóa bằng API rõ ràng
+
+    1. `KeyPairGenerator` khác `KeyFactory` và `KeyGenerator` ở mục đích, input và output như thế nào?
+    2. `RSAKeyGenParameterSpec(3072, F4)` nêu rõ điều gì mà `initialize(3072)` có thể để provider quyết định?
+    3. Vì sao `ECGenParameterSpec("secp256r1")` đáng tin hơn một lời gọi `initialize(256)` khi giao thức quy định P-256?
+
+    ### Cơ chế đặc thù và vận hành
+
+    1. Vì sao Ed25519 sinh khóa cho chữ ký còn X25519 cho key agreement, dù cùng có số 25519?
+    2. Dựa vào kết quả của demo, làm sao kiểm tra modulus, exponent, field size, chữ ký và shared secret?
+    3. Khi nào cần xem xét `SecureRandom`, provider được đăng ký, tính non-exportable và chính sách HSM?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình RSA keygen | Sinh RSA-3072, F4 và kiểm tra modulus/exponent thực tế. |
+    | Sinh EC/Ed25519/X25519 | Chọn parameter spec theo curve/name và giải thích đúng mục đích của khóa. |
+    | Kiểm thử khóa sinh ra | Chạy phép sign/verify, XDH agreement và diễn giải các kết luận lẫn giới hạn. |
+    | Kiểm soát key lifecycle | Phân biệt khả năng sinh khóa với nghĩa vụ bảo vệ, phân phối và xoay vòng khóa. |
+- id: public-key-cryptography-003
+  title: '8.3 RSA, EC, EdDSA và XDH: phân biệt mục đích của từng họ thuật toán'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **8.3 RSA, EC, EdDSA và XDH: phân biệt mục đích của từng họ thuật toán**
+
+    Tạo **bản đồ lựa chọn primitive** khi cần RSA encryption/signature, EC/ECDSA/ECDH, EdDSA signature hoặc XDH key agreement. Bài phân biệt kiểu khóa, tên scheme và Java engine (`Cipher`, `Signature`, `KeyAgreement`) để tránh áp khóa sai chức năng.
+
+    Qua ví dụ trên cả bốn họ, người học thấy raw DH shared secret phải qua KDF và được ràng buộc transcript/peer identity; chỉ trao đổi khóa chưa tự chống MITM hay bảo đảm forward secrecy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân loại và chọn engine
+
+    1. RSA, EC, EdDSA và XDH khác nhau thế nào về loại khóa và chức năng mà JCA cung cấp?
+    2. Trường hợp nào cần RSA-OAEP, RSA-PSS, ECDSA, ECDH, Ed25519 hoặc X25519?
+    3. Tại sao không thể đưa khóa X25519 vào `Signature` hoặc khóa Ed25519 vào `KeyAgreement` rồi chỉ sửa tên thuật toán?
+
+    ### Giao thức sau primitive
+
+    1. Hai phía tính cùng raw DH secret đã xác thực peer chưa; cần thêm kỹ thuật nào để chống MITM?
+    2. Vì sao phải dẫn xuất session key bằng HKDF thay vì cắt raw secret làm AES key?
+    3. Khi đánh giá một protocol, forward secrecy phụ thuộc những lựa chọn nào ngoài việc gọi X25519?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập bảng lựa chọn thuật toán | Ánh xạ RSA/EC/EdDSA/XDH tới encryption, signature, agreement và engine đúng. |
+    | Kiểm chứng bốn họ trong Java | Giải thích RSA-OAEP/PSS, ECDSA/ECDH, Ed25519/X25519 của `KeyFamilyDemo`. |
+    | Nhận diện MITM và KDF | Mô tả xác thực peer, transcript, HKDF và AEAD sau ECDH/X25519. |
+    | Thiết kế phù hợp hệ sinh thái | Nhận xét về curve, signature encoding, key usage, HSM/provider và giao thức hiện có. |
+- id: public-key-cryptography-004
+  title: 8.4 Chuyển đổi khóa bằng KeyFactory và KeySpec
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **8.4 Chuyển đổi khóa bằng KeyFactory và KeySpec**
+
+    Hiểu **`KeyFactory` chuyển khóa đã có giữa `KeySpec` và key object** như thế nào, khác với sinh khóa bằng `KeyPairGenerator`. Bài đối chiếu `X509EncodedKeySpec`, `PKCS8EncodedKeySpec` với `RSAPublicKeySpec`, rồi thử round-trip RSA, EC, Ed25519 và import SPKI PEM.
+
+    Đặc biệt, `translateKey` không tự chuyển thuật toán hoặc ép khóa HSM xuất bytes, và việc parse được public key chưa xác thực được danh tính chủ khóa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đối tượng và chiều chuyển đổi
+
+    1. `generatePublic`, `generatePrivate`, `getKeySpec` và `translateKey` làm việc theo các chiều biến đổi nào?
+    2. EncodedKeySpec khác spec toán học như `RSAPublicKeySpec` ở nội dung và mục đích nào?
+    3. Khi dùng `KeyFactory("RSA")` cho SPKI chứa khóa EC, loại lỗi nào là hợp lý và vì sao?
+
+    ### Khóa thực tế và bảo mật
+
+    1. Một `BEGIN PUBLIC KEY` PEM phải qua những bước nào để trở thành `PublicKey` hợp lệ?
+    2. Khi private key của HSM có `getEncoded()==null`, ứng dụng phải thực hiện crypto operation thế nào?
+    3. Vì sao KeyFactory import thành công vẫn chưa giải quyết trust, quyền dùng khóa hoặc vòng đời private key?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chuyển khóa qua KeySpec | Tái tạo RSA public/private từ SPKI/PKCS#8 và kiểm tra đúng bằng phép ký/xác minh. |
+    | Dùng spec toán học | Trích RSA modulus/exponent bằng `RSAPublicKeySpec` và tránh xuất private components. |
+    | Nhập PEM public key | Kiểm tra label, Base64 decode thành DER, dựng `X509EncodedKeySpec` đúng thuật toán. |
+    | Xử lý lỗi và opaque key | Nhận diện `InvalidKeySpecException`, provider mismatch và trường hợp khóa không export được. |
+- id: public-key-cryptography-005
+  title: 8.5 Nhập, xuất khóa công khai X.509 SubjectPublicKeyInfo và khóa riêng PKCS#8
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **8.5 Nhập, xuất khóa công khai X.509 SubjectPublicKeyInfo và khóa riêng PKCS#8**
+
+    Thực hành **xuất và nhập khóa chuẩn giữa Java và hệ thống ngoài**: public key theo SPKI, private key theo PKCS#8, byte DER và văn bản PEM. Bài có RSA/EC round-trip bằng `getEncoded()`, `Base64`, `KeyFactory`, kiểm tra chữ ký và thử sai cấu trúc.
+
+    Người học phân biệt `PRIVATE KEY` với `ENCRYPTED PRIVATE KEY`, làm quen `EncryptedPrivateKeyInfo`/PBE, chuyển đổi legacy PKCS#1/SEC1 và chính sách bảo vệ private bytes khi chia sẻ file.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### SPKI, PKCS#8 và các lớp bao
+
+    1. SPKI và PKCS#8 chứa loại vật liệu khóa nào, và vì sao `X509EncodedKeySpec` không phải parser X.509 certificate?
+    2. Vì sao không thể đưa DER PKCS#1, SEC1 hoặc encrypted PKCS#8 trực tiếp vào spec khác định dạng?
+    3. Làm thế nào đi từ key object qua DER, PEM, DER trở lại và kiểm chứng được round-trip bằng Java?
+
+    ### Nhập xuất và bảo vệ khóa
+
+    1. Các nhãn `PUBLIC KEY`, `PRIVATE KEY`, `ENCRYPTED PRIVATE KEY`, `CERTIFICATE` dẫn đến parser/API nào?
+    2. `EncryptedPrivateKeyInfo`, password KDF và PBE phải được xử lý theo thứ tự nào trước `KeyFactory.generatePrivate`?
+    3. Khi xuất private PEM để tương tác với OpenSSL, cần kiểm soát input size, file permissions, log, provider và trust thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo SPKI/PKCS#8 round-trip | Sinh RSA/EC, xuất DER và PEM, nhập trở lại rồi xác minh chữ ký. |
+    | Đọc đúng key container | Phân biệt SPKI, PKCS#8, encrypted PKCS#8, PKCS#1, SEC1 và certificate. |
+    | Hiểu bảo vệ PKCS#8 | Trình bày lớp `EncryptedPrivateKeyInfo`, PBE và những giới hạn liên thông giữa providers. |
+    | Thiết kế nhập/xuất an toàn | Giới hạn tệp, kiểm PEM, bảo vệ private key và xác thực nguồn public key. |
+- id: public-key-cryptography-006
+  title: 8.6 Phân biệt DER, PEM, khóa thô, khóa mã hóa và chứng thư
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **8.6 Phân biệt DER, PEM, khóa thô, khóa mã hóa và chứng thư**
+
+    Phân biệt **các tầng định dạng và niềm tin**: raw key, ASN.1 structure, DER encoding, PEM armor, encrypted/wrapped key, PKCS#12 container và X.509 certificate. Bài giúp chọn parser tương ứng cho từng đối tượng, thay vì dựa vào đuôi `.pem`/`.der` hoặc nhầm Base64 với encryption.
+
+    Phần riêng nổi bật là phân biệt certificate parse, kiểm chữ ký issuer và **PKIX trust path validation**, gồm chain, trust anchor, SAN, validity, KU/EKU và key lifecycle.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc và encoding
+
+    1. DER, PEM, raw key, SPKI, PKCS#8 và certificate nằm ở những tầng cấu trúc nào?
+    2. Vì sao raw Ed25519 32 byte không thể đưa trực tiếp vào `X509EncodedKeySpec`, dù đều nói đến public key?
+    3. `ENCRYPTED PRIVATE KEY`, key được wrap và PKCS#12 khác nhau về dữ liệu và khả năng bảo vệ nào?
+
+    ### Certificate trust và quản trị
+
+    1. Một certificate tự ký parse được và tự verify được nhưng vì sao vẫn chưa đủ để chấp nhận HTTPS identity?
+    2. Cần kiểm tra trust anchor, chain, SAN, KU/EKU, validity và key usage như thế nào?
+    3. Khi file có nhiều PEM block hoặc khóa non-exportable, làm sao nhận diện đúng loại, parser và quyền sử dụng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc đúng phân lớp dữ liệu | Phân loại raw/ASN.1/DER/PEM/encrypted/container/certificate và chọn Java API phù hợp. |
+    | Tách parsing khỏi trust | Giải thích `CertificateFactory`, issuer signature và PKIX validation là các bước riêng. |
+    | Thiết kế ingest phức tạp | Xây dựng quy trình cho multiple PEM blocks, PKCS#12, legacy key, HSM và policy input. |
+    | Phân tích key/cert lifecycle | So sánh PEM, PKCS#12, HSM/KMS về storage, quyền, rotation và trust. |
+- id: public-key-cryptography-007
+  title: 8.7 RSA-OAEP, giới hạn kích thước bản rõ và mô hình mã hóa lai
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **8.7 RSA-OAEP, giới hạn kích thước bản rõ và mô hình mã hóa lai**
+
+    Biết vì sao **RSAES-OAEP chỉ xử lý plaintext ngắn**, tính được `mLen <= k - 2*hLen - 2` và chuyển sang **hybrid encryption**: dùng RSA-OAEP bọc CEK ngẫu nhiên, AES-GCM mã hóa/xác thực payload lớn.
+
+    Bài hướng dẫn envelope có version, wrapped CEK, nonce, ciphertext/tag, AAD, key ID; thực hành message 2.000 byte và negative tests sai OAEP label, ciphertext bị sửa, input RSA vượt giới hạn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### OAEP và envelope
+
+    1. Vì sao RSA-2048 + OAEP SHA-256 chỉ mã hóa trực tiếp được 190 byte, và modulus 4096 có giúp mã hóa file lớn không?
+    2. Trong mô hình hybrid, RSA-OAEP, AES-GCM, CEK, nonce, AAD và authentication tag nhận vai trò nào?
+    3. Envelope phải mang những tham số OAEP, version, key ID và metadata gì để decrypt đúng?
+
+    ### Kiểm thử và giới hạn an toàn
+
+    1. Vì sao phải từ chối khi thay ciphertext/tag hoặc OAEP label, và khi nào không được dùng plaintext?
+    2. Tại sao decrypt envelope thành công không xác minh người gửi và cũng không tự chặn replay?
+    3. Khi RSA private key bị lộ về sau, vì sao envelope cũ không tự có forward secrecy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính giới hạn OAEP | Áp dụng k, hLen và công thức để tính số byte message tối đa và ciphertext size. |
+    | Giải thích RSA + AES-GCM | Trình bày và thử RSA wrap 32-byte CEK, AES-GCM encrypt payload, lưu nonce/tag/AAD. |
+    | Thử âm tính về tham số và integrity | Lý giải sai label, sửa tag/ciphertext và dữ liệu vượt OAEP limit. |
+    | Đánh giá thiết kế ứng dụng | Nêu yêu cầu public-key trust, sender authentication, replay protection và key retention. |
+- id: public-key-cryptography-008
+  title: 8.8 Cấu hình OAEPParameterSpec, digest, MGF1 và label thống nhất giữa hai phía
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **8.8 Cấu hình OAEPParameterSpec, digest, MGF1 và label thống nhất giữa hai phía**
+
+    Tập trung vào **tham số giao thức RSA-OAEP để các implementation tương thích**: OAEP hash, MGF algorithm, MGF1 hash và label bytes là các thành phần riêng. `OAEPParameterSpec` giúp đặt tường minh, tránh giả định rằng `OAEPWithSHA-256AndMGF1Padding` luôn dùng MGF1-SHA256.
+
+    Bài có ví dụ kiểm `Cipher.getParameters()` và ma trận lỗi khi đổi MGF1, OAEP digest hoặc một byte label; ứng dụng cần contract version/encoding và xử lý lỗi giải mã không làm lộ oracle.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa từng tham số
+
+    1. Bốn trường `OAEPParameterSpec` nêu gì, và vì sao OAEP SHA-256 không tự quyết định MGF1 digest?
+    2. `OAEPParameterSpec.DEFAULT` có OAEP hash, MGF1 hash và label thế nào?
+    3. `PSource.PSpecified.DEFAULT` khác label UTF-8 `app:v1` ra sao khi so byte?
+
+    ### Liên thông Java và đối tác
+
+    1. Làm sao đọc lại tham số thực tế từ `Cipher.getParameters()` để kiểm hợp đồng OAEP?
+    2. Vì sao sai MGF1, đổi digest hay thay một byte label làm RSA-OAEP decrypt fail?
+    3. Một bản ghi truyền liên ngôn ngữ phải thỏa thuận key encoding, Base64, version, params và error policy thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình OAEP minh bạch | Viết spec SHA-256, MGF1-SHA256, PSource label và giải thích độc lập từng thông số. |
+    | Kiểm tra hiệu lực tham số | Đọc và đối chiếu OAEP digest, MGF1 digest, label bytes/hex từ runtime. |
+    | Thiết kế phép thử tương thích | Lập test đúng/sai MGF1, label, digest, key và giới hạn 190/191 byte. |
+    | Chống downgrade/oracle | Đặc tả contract version, key ID, data encoding và lỗi giải mã không tiết lộ chi tiết. |
+- id: public-key-cryptography-009
+  title: 8.9 Giới hạn của việc dùng thuật toán bất đối xứng thay cho mã hóa dữ liệu khối lớn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **8.9 Giới hạn của việc dùng thuật toán bất đối xứng thay cho mã hóa dữ liệu khối lớn**
+
+    Đánh giá **chi phí thực tế khi mã hóa dữ liệu lớn**: một file 1 MiB bị chia thành 5.519 khối RSA-OAEP, tạo 1.412.864 byte ciphertext cùng hàng nghìn phép toán khóa riêng. Thiết kế thay thế là RSA-OAEP bọc DEK ngắn và AES-GCM mã hóa file.
+
+    Bài đi xa hơn ở **streaming AEAD, xác minh tag trước khi công bố plaintext, authenticated chunking** gắn thứ tự/final marker, nhiều người nhận, rewrap/key rotation và các lựa chọn ECDH/KEM/HPKE.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dữ liệu lớn và chi phí
+
+    1. Vì sao 1 MiB cần 5.519 RSA-OAEP operations và tạo 1.412.864 byte RSA ciphertext nếu chia thành khối 190 byte?
+    2. Cùng file, vì sao hybrid RSA-wrap DEK + AES-GCM chỉ cần 1.048.860 byte chưa header?
+    3. ECDH, X25519, KEM/HPKE và AEAD khác nhau ra sao về bảo vệ khóa phiên và byte payload?
+
+    ### Streaming và vận hành
+
+    1. Khi giải mã streaming GCM, vì sao không được phát plaintext trước khi toàn bộ authentication tag hợp lệ?
+    2. Một format chunk AEAD phải ràng buộc nonce, sequence, file ID, total length hoặc final marker thế nào?
+    3. Nếu có nhiều recipients hay key rotation, cần tổ chức DEK, wrapped-key list, key ID và metadata được xác thực ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định lượng RSA bulk overhead | Tính số RSA operations, kích thước ciphertext và so sánh với hybrid 1 MiB. |
+    | Áp dụng envelope vào file lớn | Giải thích RSA bọc DEK 32 byte, AES-GCM với nonce/tag/AAD và kiểm tra tampering. |
+    | Thiết kế authenticated streaming | Mô tả staging plaintext đến khi tag hợp lệ và kiểm tra sequence/finalization của chunks. |
+    | Đánh giá vận hành | Phân tích KMS/HSM throughput, đa người nhận, rewrap/rotation, public-key trust và key lifetime. |

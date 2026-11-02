@@ -1,0 +1,298 @@
+summaries:
+- id: x509-certificate-001
+  title: 13.1 Chứng thư gắn khóa công khai với danh tính và vai trò của CA
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **13.1 Chứng thư gắn khóa công khai với danh tính và vai trò của CA**
+
+    Một public key có thể được bất kỳ ai tạo ra, vì vậy ứng dụng cần bằng chứng về việc khóa đó gắn với danh tính nào. Bài học đặt nền cho vai trò CA, nội dung được ký trong TBSCertificate, trách nhiệm thẩm định của issuer và quyết định tin cậy độc lập của bên xác minh.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Liên kết khóa và danh tính
+
+    1. Vì sao nhận được một public key chưa đủ để biết đang giao tiếp với đúng dịch vụ?
+    2. CA ký toàn bộ phần nào của chứng thư X.509 và điều đó bảo vệ đồng thời những trường thông tin nào?
+    3. Private key của subject khác gì private key mà CA dùng để ký certificate?
+
+    ### Vai trò và ranh giới tin cậy
+
+    1. CA, RA, subject và relying party chịu những trách nhiệm nào trong chu trình cấp chứng thư?
+    2. Vì sao một chứng thư tự ký có chữ ký đúng vẫn có thể bị client từ chối?
+    3. Sau khi chứng thư có path hợp lệ, vì sao vẫn cần kiểm endpoint identity và authorization?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích binding | Dùng một kịch bản giả mạo public key để lý giải cách chữ ký CA bảo vệ subject, SPKI và extensions. |
+    | Phân định trách nhiệm | Mô tả được đường applicant → CA/RA → certificate → verifier và nguồn gốc trust anchor. |
+    | Phân biệt kiểm tra | Đọc kết quả Java CertificateFactory, checkValidity, verify và chỉ ra hai quyết định trust/hostname chưa được đánh giá. |
+    | Đánh giá rủi ro | Giải thích được vì sao thay SAN sau khi ký, tự tin root lạ hoặc đồng nhất chứng thư với quyền truy cập là sai. |
+- id: x509-certificate-002
+  title: 13.2 Phân biệt root, intermediate, leaf và chứng thư tự ký
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **13.2 Phân biệt root, intermediate, leaf và chứng thư tự ký**
+
+    Một chuỗi X.509 có thể chứa nhiều CA và leaf, nhưng vị trí trong path và việc tự ký là những khái niệm khác nhau. Bài học dùng root, intermediate, leaf, self-issued/self-signed và PKIX để xác định vai trò và đường tới trust anchor được chấp nhận.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân tầng và tính chất chữ ký
+
+    1. Vai trò của root, intermediate và leaf khác nhau thế nào khi xác thực dịch vụ?
+    2. Vì sao Subject bằng Issuer chỉ gợi ý self-issued mà không đủ kết luận self-signed?
+    3. BasicConstraints CA=true và pathLen giới hạn những đường cấp chứng thư nào?
+
+    ### Xây và xác minh đường tin cậy
+
+    1. Vì sao từng lời gọi verify thành công vẫn chưa cho phép kết luận path PKIX được tin?
+    2. Trong Java, vì sao CertPath chứa leaf rồi intermediate nhưng không chứa trust anchor ở cuối?
+    3. Một root tự ký không liên quan có thể hợp thức hóa chain bằng cách nào, và PKIX phải phản ứng ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân vai certificate | Phân loại đúng root, intermediate, leaf và self-signed theo path và chữ ký trong các ví dụ. |
+    | Đọc constraint | Giải thích CA=true/CA=false, keyCertSign và pathLen=0 khi cấp leaf. |
+    | Thực hành PKIX | Dựng root → intermediate → leaf trong lab, kiểm chữ ký liên kết và validate với root đúng/sai. |
+    | Phân tích trust | Giải thích vì sao root do peer gửi hoặc root tự ký không tự thành trust anchor. |
+- id: x509-certificate-003
+  title: 13.3 Đọc chứng thư bằng CertificateFactory từ DER hoặc PEM
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **13.3 Đọc chứng thư bằng CertificateFactory từ DER hoặc PEM**
+
+    Trong thực tế chứng thư có thể đến dưới dạng DER nhị phân, PEM Base64 hoặc bundle nhiều chứng thư. Bài học giúp sử dụng CertificateFactory của Java để parse đúng, đọc metadata, phân biệt lỗi định dạng với lỗi trust và không tự xây parser PEM thiếu an toàn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mã hóa và dữ liệu nguồn
+
+    1. DER và PEM mô tả cùng một chứng thư theo hai hình thức byte khác nhau như thế nào?
+    2. Vì sao không thể dùng Files.readString để đọc DER như văn bản UTF-8?
+    3. Đuôi .cer hoặc .crt có đủ để xác định encoding của certificate không?
+
+    ### Java CertificateFactory và giới hạn
+
+    1. Khi nào dùng generateCertificate và khi nào dùng generateCertificates cho PEM bundle hoặc PKCS#7?
+    2. Vì sao SHA-256 của cert.getEncoded có thể trùng giữa DER và PEM trong khi checksum file thô khác nhau?
+    3. Một certificate parse thành công nhưng bị JSSE từ chối vì lý do trust nào có thể xảy ra?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc đúng định dạng | Viết chương trình Java 17+ nạp một DER hoặc PEM qua CertificateFactory và truy xuất X509Certificate. |
+    | Xử lý bundle | Dùng generateCertificates và diễn giải vì sao collection chưa phải path hợp lệ. |
+    | Kiểm chứng tương đương | So sánh getEncoded của hai certificate parse từ DER/PEM và tính fingerprint DER đúng cách. |
+    | Phân loại lỗi | Phân biệt IOException, CertificateException và lỗi xác minh path mà không tự ý tin chứng thư. |
+- id: x509-certificate-004
+  title: 13.4 Subject, issuer, serial number, thời hạn và X500Principal
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **13.4 Subject, issuer, serial number, thời hạn và X500Principal**
+
+    Các trường metadata X.509 thường bị dùng nhầm làm bằng chứng danh tính hoặc quyền truy cập. Bài học hướng dẫn đọc subject, issuer, serial, notBefore/notAfter, xử lý DN có cấu trúc qua X500Principal và giới hạn của checkValidity.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tên X.500 và định danh certificate
+
+    1. Subject DN khác issuer DN như thế nào và vì sao issuer name trùng chưa chứng minh issuer thực sự ký?
+    2. Vì sao không được tách DN bằng String.split dấu phẩy khi có escaped RDN hoặc AVA đa giá trị?
+    3. Serial của X.509 có tính duy nhất trong phạm vi nào và khác SERIALNUMBER attribute của DN ra sao?
+
+    ### Thời hạn và API Java
+
+    1. X500Principal.getEncoded khác X509Certificate.getEncoded ở chỗ nào?
+    2. checkValidity() và checkValidity(Date) phát hiện hai lỗi thời gian nào, và những kiểm tra bảo mật nào chúng không làm?
+    3. Vì sao Date được chuyển sang Instant khi báo cáo validity giữa các hệ thống khác múi giờ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc DN có cấu trúc | Trích xuất subject/issuer bằng X500Principal và giải thích escaped comma, canonical equality và RDN. |
+    | Định danh certificate | Dùng BigInteger serial kèm issuer, phân biệt nó với subject SERIALNUMBER và fingerprint. |
+    | Kiểm tra validity | Viết thử nghiệm trước notBefore, giữa khoảng hiệu lực, sau notAfter và phân biệt exception. |
+    | Tránh suy diễn trust | Chỉ ra giới hạn của subject CN, issuer DN và checkValidity khi xác thực HTTPS. |
+- id: x509-certificate-005
+  title: 13.5 Subject Alternative Name và danh tính DNS hoặc địa chỉ IP
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **13.5 Subject Alternative Name và danh tính DNS hoặc địa chỉ IP**
+
+    Dù chain được CA tin cậy ký, client HTTPS vẫn có thể kết nối nhầm dịch vụ nếu SAN không khớp tên đích. Bài học tách DNS SAN khỏi IP SAN, phân tích wildcard/CN và cách để JSSE kiểm endpoint identity đúng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Reference identity và SAN
+
+    1. Khi client truy cập bằng hostname rồi DNS phân giải ra IP, phải đối chiếu DNS-ID hay IP-ID và vì sao?
+    2. Vì sao SAN dNSName chứa ký tự 192.0.2.10 không thay được SAN iPAddress?
+    3. Với wildcard *.svc.example.test, trường hợp một, không, và hai nhãn bên trái được xử lý thế nào?
+
+    ### Java TLS và nguy cơ bỏ kiểm tên
+
+    1. getSubjectAlternativeNames trả về kiểu dữ liệu nào cho type 2 và type 7, và kết quả đọc chứng minh điều gì?
+    2. Vì sao RFC 9525 không coi subject CN là nguồn thay thế cho DNS-ID hiện đại?
+    3. Khi dùng SSLSocket mức thấp, vì sao phải cấu hình SSLParameters endpoint identification thay vì tự viết so chuỗi SAN?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt DNS/IP | Đối chiếu đúng SAN type 2 và type 7 với reference identity của một URI. |
+    | Phân tích wildcard | Chứng minh những DNS name không được khớp bằng suffix-only và giải thích quy tắc một nhãn. |
+    | Đọc SAN bằng Java | Dùng getSubjectAlternativeNames để quan sát DNS/IP metadata mà không tuyên bố đã validate trust. |
+    | Cấu hình TLS | Chỉ ra cách giữ endpoint identification trên JSSE và từ chối cert sai host dù path PKIX hợp lệ. |
+- id: x509-certificate-006
+  title: 13.6 KeyUsage, ExtendedKeyUsage, BasicConstraints và extension critical
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **13.6 KeyUsage, ExtendedKeyUsage, BasicConstraints và extension critical**
+
+    Chứng thư có chữ ký hợp lệ vẫn có thể không hợp lệ cho vai trò cần dùng. Bài học giải thích KeyUsage bit flags, ExtendedKeyUsage OID, BasicConstraints CA/pathLen và quy tắc xử lý critical extensions, kèm thực nghiệm PKIX có OID không nhận diện.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phạm vi sử dụng khóa và quyền CA
+
+    1. Các bit KeyUsage digitalSignature, keyEncipherment và keyCertSign có vai trò khác nhau thế nào?
+    2. Khi cả KU và EKU hiện diện, vì sao certificate chỉ có clientAuth không được mặc nhiên dùng làm TLS server?
+    3. BasicConstraints CA=true và pathLen=0 cho phép và cấm những dạng certificate path nào?
+
+    ### Critical extensions và thực nghiệm
+
+    1. Vì sao unknown critical extension phải làm PKIX từ chối còn unknown non-critical có thể được bỏ qua?
+    2. getExtensionValue trả dữ liệu DER được bọc như thế nào, và vì sao nên dùng API typed cho KU/EKU/BC?
+    3. Vì sao generic PKIX pass không có nghĩa phép kiểm server-purpose hay hostname đã đạt?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải mã chính sách extension | Đọc KU bits, EKU OIDs và BasicConstraints bằng X509Certificate API đúng kiểu. |
+    | Xác định issuer/leaf role | Giải thích và phát hiện certificate CA=false nhưng bị dùng ký chứng thư hoặc leaf sai EKU. |
+    | Kiểm critical | Tạo lab certificate có custom critical/noncritical OID và lý giải kết quả PKIX. |
+    | Liên hệ protocol | Phân biệt path validation tổng quát với serverAuth/hostname validation thực tế. |
+- id: x509-certificate-007
+  title: 13.7 Phân biệt checkValidity, verify chữ ký chứng thư và kiểm tra độ tin cậy
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **13.7 Phân biệt checkValidity, verify chữ ký chứng thư và kiểm tra độ tin cậy**
+
+    checkValidity, verify chữ ký và PKIX path validation trả lời ba câu hỏi khác nhau, nhưng thường bị gộp thành một biến trusted. Bài học dùng mã Java và các root không liên quan để chứng minh khoảng hiệu lực, chữ ký và trust anchor là các phép kiểm độc lập.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giới hạn của từng API
+
+    1. checkValidity(Date) kiểm tra điều kiện nào và vì sao không phát hiện certificate bị thu hồi?
+    2. verify(issuerPublicKey) thành công có chứng minh public key của issuer đáng tin hay không, vì sao?
+    3. CertPathValidator và CertPathBuilder khác nhau thế nào về đầu vào và nhiệm vụ?
+
+    ### Phân tích tình huống PKIX/TLS
+
+    1. Vì sao một certificate tự ký của kẻ lạ có thể vượt qua validity và signature nhưng vẫn bị từ chối trong PKIX?
+    2. Điều gì xảy ra khi intermediate hết hạn nhưng leaf còn hạn?
+    3. Vì sao PKIX pass vẫn không thay hostname verification và chứng minh sở hữu private key trong TLS handshake?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt ba tầng | Mô tả kết quả và giới hạn của checkValidity, verify và PKIX trong cùng tình huống. |
+    | Thử trust anchor | Dùng CertPathValidator kiểm path với trust anchor phù hợp rồi so với root không liên quan. |
+    | Xử lý lỗi | Khoanh vùng expired/notYetValid, invalid signature, untrusted chain và wrong hostname đúng tầng. |
+    | Tránh bypass | Phân tích vì sao trust-all, peer-provided TrustAnchor và tắt revocation tùy tiện làm sai mô hình bảo mật. |
+- id: x509-certificate-008
+  title: 13.8 CSR PKCS#10, phản hồi CA và chuỗi chứng thư trong quy trình keytool
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **13.8 CSR PKCS#10, phản hồi CA và chuỗi chứng thư trong quy trình keytool**
+
+    Một server cần giữ private key tạo CSR và nhận certificate reply đúng public key vào cùng alias; nếu import sai, KeyStore không còn identity dùng được. Bài học dẫn qua PKCS#10, CA ký leaf, chain, keytool import và xác minh bằng Java.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### CSR và CA-issued reply
+
+    1. CSR PKCS#10 chứa gì và vì sao chữ ký applicant không tự chứng minh quyền sở hữu domain?
+    2. Vì sao CA được quyền từ chối requested SAN/EKU và cần kiểm chính certificate đã phát hành?
+    3. Private key, leaf certificate, intermediate và root trust anchor được bố trí ở đâu?
+
+    ### Alias, chain và chẩn đoán
+
+    1. Vì sao phải import CA reply vào đúng PrivateKeyEntry alias đã sinh CSR thay vì một alias mới?
+    2. Làm sao phát hiện public keys in reply and keystore don't match và sửa đúng giai đoạn?
+    3. Vì sao keytool import báo thành công vẫn chưa chứng minh client ngoài hệ thống sẽ trust chain và hostname?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thực hiện quy trình keytool | Sinh keypair PKCS12, CSR PKCS#10, nhận leaf do CA ký, import root và reply theo đúng alias. |
+    | Kiểm identity | Dùng Java KeyStore/Signature kiểm private key khớp public key trong leaf và chain theo thứ tự. |
+    | Đánh giá certificate reply | Kiểm SAN, EKU, issuer, serial, CA path và PKIX tới root đã phê duyệt. |
+    | Chẩn đoán import | Giải thích lỗi missing intermediate, wrong alias, wrong key pair và nguồn trust anchor không đáng tin. |
+- id: x509-certificate-009
+  title: 13.9 Lập bộ CA thử nghiệm và giữ ranh giới giữa chứng thư thử nghiệm với môi trường thật
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **13.9 Lập bộ CA thử nghiệm và giữ ranh giới giữa chứng thư thử nghiệm với môi trường thật**
+
+    Việc tự tạo root CA bằng keytool tạo ra quyền cấp chứng thư rất lớn trong phạm vi client tin root đó. Bài học hướng dẫn lập lab root/leaf/truststore riêng, giữ mật khẩu và private key, kiểm thử âm và ngăn CA thử nghiệm lan sang truststore hoặc hệ thống production.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế CA lab có ranh giới
+
+    1. Vì sao chỉ tạo root CA tự ký không khiến nó được mọi client Java tin?
+    2. Root, leaf, identity keystore và client truststore nên nằm ở phạm vi nào để không rò trust?
+    3. Vì sao phải giới hạn SAN vào localhost/loopback và dùng mật khẩu tương tác trong phòng lab?
+
+    ### Kiểm thử âm và kết thúc vòng đời
+
+    1. Những negative tests nào chứng minh truststore mặc định từ chối CA lab và sai hostname vẫn bị từ chối?
+    2. Nếu root signing key bị lộ, vì sao chỉ đổi password PKCS12 chưa đủ để khôi phục tin cậy?
+    3. Khi kết thúc lab, cần thu hồi/loại bỏ những key, truststore, mounts và cấu hình nào để không ảnh hưởng production?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dựng lab CA an toàn | Dùng keytool tạo root CA, CSR, leaf serverAuth/SAN localhost và truststore client riêng. |
+    | Xác minh đường dẫn | Viết Java CertPathValidator kiểm root được chọn, SAN/extension, và nêu giới hạn của revocation-disabled lab. |
+    | Thử ranh giới trust | Thiết kế kiểm thử root lạ, sai hostname, lỗi EKU và truststore mặc định không chứa root lab. |
+    | Quản lý vòng đời | Mô tả kế hoạch gỡ trust, xử lý compromise root và ngăn lây private key/CA lab sang production. |

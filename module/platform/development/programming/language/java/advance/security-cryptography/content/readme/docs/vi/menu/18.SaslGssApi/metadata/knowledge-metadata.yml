@@ -1,0 +1,17 @@
+sections:
+  sasl-gss-api-001:
+    difficulty: BASIC
+  sasl-gss-api-002:
+    difficulty: INTERMEDIATE
+  sasl-gss-api-003:
+    difficulty: INTERMEDIATE
+  sasl-gss-api-004:
+    difficulty: ADVANCED
+  sasl-gss-api-005:
+    difficulty: INTERMEDIATE
+  sasl-gss-api-006:
+    difficulty: ADVANCED
+  sasl-gss-api-007:
+    difficulty: ADVANCED
+  sasl-gss-api-008:
+    difficulty: ADVANCED

@@ -1,0 +1,83 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Vận hành, kiểm thử và khôi phục mật mã Java
+roadmapHeading: Lộ trình kiểm chứng từ cấu hình đến phục hồi an toàn
+roadmap:
+- id: security-operations-testing-001
+  order: 1
+  title: 22.1 Phân biệt security property với system property và cách nạp java.security
+  description: Phân biệt security properties với system properties, biết nạp java.security từ runtime thực và không nhầm overlay với replace.
+  transition:
+    to: security-operations-testing-002
+    description: Từ nguồn nạp cấu hình, nghiên cứu hai chính sách thuật toán của TLS và PKIX mà JVM thực sự thi hành.
+- id: security-operations-testing-002
+  order: 2
+  title: 22.2 jdk.tls.disabledAlgorithms, jdk.certpath.disabledAlgorithms và chính sách thuật toán
+  description: Đọc cú pháp disabledAlgorithms và phân tích ranh giới TLS/CertPath so với capability, trust và hostname verification.
+  transition:
+    to: security-operations-testing-003
+    description: Chính sách hiệu lực có thể đổi sau mỗi bản cập nhật JDK nên cần lập baseline và kiểm thử hồi quy có nguồn gốc rõ.
+- id: security-operations-testing-003
+  order: 3
+  title: 22.3 Kiểm tra thay đổi mặc định theo bản cập nhật JDK thay vì chép cấu hình cũ
+  description: Chụp và đối chiếu mặc định bảo mật theo vendor/build JDK, đánh giá security contract bằng positive/negative gates và canary.
+  transition:
+    to: security-operations-testing-004
+    description: Khi một kiểm tra hoặc handshake không đạt, bước kế tiếp là thu bằng chứng từ đúng trace và log mà không lộ bí mật.
+- id: security-operations-testing-004
+  order: 4
+  title: 22.4 Chẩn đoán bằng javax.net.debug, java.security.debug và nhật ký đã loại bí mật
+  description: Chẩn đoán TLS, CertPath và provider với javax.net.debug, java.security.debug cùng bản ghi allowlist, xác định mốc lỗi đầu tiên.
+  transition:
+    to: security-operations-testing-005
+    description: Sau khi biết quan sát hệ thống, cần các golden vectors và kiểm thử liên thông để tách lỗi implementation khỏi lỗi tích hợp.
+- id: security-operations-testing-005
+  order: 5
+  title: 22.5 Kiểm thử bằng bộ dữ liệu đã biết kết quả và kiểm tra tương thích giữa provider
+  description: Dùng KAT độc lập cho SHA-256, HMAC và AES-GCM, sau đó kiểm tra tương thích provider A↔B và phân biệt PASS/FAIL/SKIP.
+  transition:
+    to: security-operations-testing-006
+    description: Vector dương không chứng minh đường từ chối, vì vậy cần chủ động làm sai từng byte ciphertext, tag, AAD và chữ ký.
+- id: security-operations-testing-006
+  order: 6
+  title: 22.6 Sửa một byte của ciphertext, tag, AAD hoặc chữ ký để kiểm tra đường từ chối
+  description: Tạo từng negative fixture bằng cách sửa một byte sau baseline và khẳng định Crypto/API không chấp nhận plaintext hay side effect.
+  transition:
+    to: security-operations-testing-007
+    description: Đường từ chối của mật mã phải được tiếp nối bằng các trường hợp chứng thư X.509 sai trust, thời hạn và danh tính.
+- id: security-operations-testing-007
+  order: 7
+  title: 22.7 Kiểm thử chứng thư hết hạn, sai hostname, thiếu intermediate và CA không tin cậy
+  description: Tạo TLS/X.509 lab với expired, wrong hostname, missing intermediate và untrusted CA; kiểm chứng wire chain và Java client.
+  transition:
+    to: security-operations-testing-008
+    description: Ngoài chứng thư, lỗi thực tế còn nằm ở key, password/KDF, parameter mismatch hoặc dữ liệu lưu trữ bị cắt cụt.
+- id: security-operations-testing-008
+  order: 8
+  title: 22.8 Kiểm thử sai khóa, sai mật khẩu, tham số không khớp và dữ liệu bị cắt
+  description: Kiểm thử sai khóa, mật khẩu, salt, IV, AAD và ciphertext bị cắt, tách lỗi parser khỏi lỗi xác thực và bảo vệ AEAD streaming.
+  transition:
+    to: security-operations-testing-009
+    description: Khi các kiểm thử chức năng và từ chối đạt, có thể đo hiệu năng nhưng phải giữ nguyên nonce, work factor và phạm vi khóa.
+- id: security-operations-testing-009
+  order: 9
+  title: 22.9 Đo hiệu năng trong khi vẫn bảo toàn nonce, chi phí dẫn xuất và phạm vi dùng khóa
+  description: Đo AES-GCM và PBKDF2 đúng invariants về IV duy nhất, KDF cost, key scope, môi trường và thống kê benchmark.
+  transition:
+    to: security-operations-testing-010
+    description: Cuối cùng cần chuẩn bị khả năng đổi khóa, chuyển thuật toán và phục hồi sự cố mà không phá những invariants vừa kiểm thử.
+- id: security-operations-testing-010
+  order: 10
+  title: 22.10 Lập kế hoạch đổi khóa, đổi thuật toán và khôi phục sau sự cố mà không tự hạ mức bảo vệ
+  description: Lập kế hoạch cryptoperiod, key states, DEK/KEK, rewrap/reencrypt, cutover, restore và incident recovery mà không fallback yếu.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh mười năng lực vận hành và kiểm thử
+
+  | Tiêu chí | Bài 1 — 22.1 Properties | 22.2 TLS/PKIX policy | 22.3 JDK updates | 22.4 Debug & logs | 22.5 KAT/interop | 22.6 Tamper test | 22.7 X.509 fixtures | 22.8 Failure matrix | 22.9 Benchmark | 22.10 Rotation/DR |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Câu hỏi trọng tâm | Cấu hình bảo mật nạp từ đâu? | Thuật toán nào bị cấm khi nào? | Bản JDK mới đổi bảo mật gì? | Lỗi nằm ở tầng nào? | Provider có đúng chuẩn và tương thích? | Dữ liệu sửa có bị từ chối? | Certificate sai có bị từ chối? | Sai key/parameter/truncated data ra sao? | Tối ưu có giữ mức an toàn? | Thay key/algorithm và phục hồi thế nào? |
+  | Bằng chứng học tập | Property probes, overlay | Effective policy, TLS/PKIX tests | Security snapshot và CI gates | Trace mục tiêu, log allowlist | RFC/NIST vectors, cặp provider | Byte mutation và no side effects | Root/leaf chain và SAN fixture | Negative envelope/KDF tests | Nonce allocator, KDF timings | Versioned keyring, migration runbook |
+  | API/công cụ chính | System và Security, java.security | SSLContext, PKIX, disabledAlgorithms | JdkSecuritySnapshot, jarsigner | javax.net.debug, TlsProbe | Mac, Cipher, Provider, KAT | Cipher.doFinal, Signature.verify | HttpClient, OpenSSL, TrustManager | PBKDF2, KeyStore, readFully | CryptoPerfSafe, JMH | KMS, KeyGenerator, AES-GCM, CAS |
+  | Sai lầm cần tránh | Nhầm namespace hay replace master | Chép policy ngắn làm gỡ constraint | Đồng nhất diff với hành vi | Bật all và chia sẻ raw trace | Tự tạo expected từ chính code | Ký lại sau khi tamper | Tắt hostname/trust validation | Chấp nhận lỗi cấu hình là PASS | Reuse IV hoặc giảm KDF cost | Rollback về key/suite bị cấm |
+  | Kết quả mong đợi | Probe cấu hình đúng runtime | Policy và handshake được xác minh | Upgrade gate có bằng chứng | Điều tra được mà không lộ secret | KAT độc lập và interop thật | Reject dữ liệu sửa không side effect | Reject chứng thư sai nguyên nhân | Phân loại lỗi và cắt cụt an toàn | Benchmark đúng security invariants | Cutover, restore và revoke có kiểm soát |

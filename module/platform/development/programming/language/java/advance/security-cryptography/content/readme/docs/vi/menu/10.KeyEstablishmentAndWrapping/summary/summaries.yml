@@ -1,0 +1,381 @@
+summaries:
+- id: key-establishment-and-wrapping-001
+  title: 10.1 Phân biệt trao đổi khóa, thỏa thuận khóa, bọc khóa và đóng gói khóa
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **10.1 Phân biệt trao đổi khóa, thỏa thuận khóa, bọc khóa và đóng gói khóa**
+
+    Bài học giúp đặt đúng tên và chọn đúng công cụ khi hai đầu cần thiết lập bí mật hoặc khi hệ thống phải bảo vệ một DEK đã tồn tại. Phân biệt được các cơ chế ngay từ đầu sẽ tránh việc dùng KEM thay key wrapping, gửi nhầm secret lên mạng, hoặc tưởng một phép tính khóa đã là giao thức có xác thực.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khái niệm và đầu vào
+
+    1. Key exchange có phạm vi thế nào so với một phép Diffie–Hellman?
+    2. Điều gì làm cho key agreement khác với key transport, khi xét bên nào chọn bí mật?
+    3. Vì sao thao tác wrap cần DEK đã có, còn encapsulate thông thường tạo secret mới?
+    4. Làm thế nào phân biệt DEK, KEK, raw shared secret và traffic key khi đọc một sơ đồ?
+
+    ### Java API và tình huống
+
+    1. Bạn sẽ chọn API nào trong Java 17 hoặc Java 21 cho agreement, wrap và KEM, vì sao?
+    2. Nếu cần lưu DEK của file vào KMS, bạn thiết kế đường đi của DEK và KEK ra sao?
+    3. Khi gửi file mã hóa cho người nhận có public key, thông tin nào được truyền và thông tin nào phải giữ kín?
+
+    ### Giới hạn an toàn
+
+    1. Vì sao sự thành công của KeyAgreement hay KEM chưa chứng minh danh tính peer?
+    2. Bằng cách nào một encapsulation có cùng số byte với secret vẫn không được dùng làm khóa AES?
+    3. Đâu là điều kiện để wrapped DEK của một tenant không bị thay bằng blob hợp lệ của tenant khác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại cơ chế | Gán đúng key exchange, agreement, transport, wrapping và encapsulation cho năm tình huống theo bí mật đầu vào và kết quả. |
+    | Nhận diện vật liệu khóa | Ghi chú đúng vai trò DEK, KEK, session key và public/private key trên một luồng dữ liệu. |
+    | Ánh xạ sang Java | Chọn đúng KeyAgreement, Cipher.WRAP_MODE/UNWRAP_MODE hoặc KEM và nêu yêu cầu JDK. |
+    | Phân tích sơ đồ truyền tin | Vẽ đường đi public key, shared secret, wrapped DEK và encapsulation mà không gửi raw secret. |
+    | Chọn thiết kế cho file mã hóa | Giải thích vì sao DEK nên mã hóa dữ liệu, KEK bọc DEK và metadata phải được kiểm tra riêng. |
+    | Đánh giá giới hạn | Chỉ ra thiếu peer authentication, KDF, AEAD và chống replay trong một demo primitive đơn lẻ. |
+- id: key-establishment-and-wrapping-002
+  title: 10.2 DH, ECDH, X25519 và X448 trong mô hình KeyAgreement
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **10.2 DH, ECDH, X25519 và X448 trong mô hình KeyAgreement**
+
+    Bốn họ thuật toán đều có thể tạo bí mật chung bằng KeyAgreement nhưng khác nhóm toán học, tham số, biểu diễn khóa và độ mạnh. Bài học tạo cơ sở chọn thuật toán tương thích, chạy thử đối xứng Alice–Bob, kiểm tra peer key trước khi dùng và dẫn xuất key thay vì lấy raw secret làm traffic key.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhóm toán học và thuật toán
+
+    1. Finite-field DH với tham số p và g khác ECDH trên P-256 như thế nào?
+    2. Điều gì phân biệt X25519 và X448 với ECDH dùng ECGenParameterSpec?
+    3. Kích thước shared secret 256, 32 và 56 byte xuất hiện theo điều kiện nào, và vì sao không thể coi đó là security strength tương ứng?
+    4. Tại sao hai bên DH không thể tự chọn hai nhóm p/g khác nhau rồi mong có chung secret?
+
+    ### Thực hành Java
+
+    1. Chuỗi gọi KeyPairGenerator và KeyAgreement nào sinh ra cùng secret cho mỗi họ thuật toán?
+    2. Khi đọc SPKI DER từ mạng, tại sao không được nhầm với raw X25519 hoặc X448 bytes?
+    3. HKDF cần các trường salt, info và transcript như thế nào để hai phía tạo cùng AES key?
+
+    ### Xác thực và lựa chọn
+
+    1. Bạn kiểm tra group, curve, public value và trường hợp all-zero XDH ra sao?
+    2. Vì sao equal=true giữa hai secret vẫn chưa là bằng chứng chống MITM?
+    3. Khi nào chọn P-256, X25519, X448 hoặc DH/FFDHE theo yêu cầu liên thông và chính sách?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh thuật toán | Phân biệt nhóm hữu hạn, elliptic curve, X25519/X448 theo p/g, curve, key type và output bytes. |
+    | Tạo thử nghiệm | Chạy KeyAgreement cho bốn họ và diễn giải kết quả đúng byte mà không in secret. |
+    | Kiểm tra khóa nhận | Nhận diện sai curve, sai encoding SPKI/raw, public value bất thường và nhóm không được phép. |
+    | Dẫn xuất khóa | Thiết kế HKDF info với nhãn, vai trò và transcript thay cho cắt raw shared secret. |
+    | Đánh giá tin cậy peer | Giải thích được tình huống MITM dù bốn phép tính đều hoàn thành hợp lệ. |
+    | Lựa chọn vận hành | Lập luận lựa chọn nhóm theo provider, interop, độ mạnh và threat model. |
+- id: key-establishment-and-wrapping-003
+  title: 10.3 Chu trình init, doPhase, generateSecret và kiểm tra khóa của đối tác
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **10.3 Chu trình init, doPhase, generateSecret và kiểm tra khóa của đối tác**
+
+    Một KeyAgreement có trạng thái: tạo engine, init bằng private key cục bộ, xử lý public key đối tác và cuối cùng nhận raw secret. Bài học giúp đọc đúng vòng đời API, tách validation kỹ thuật khỏi xác thực danh tính và phát hiện lỗi state, encoding hoặc chia sẻ engine giữa các request.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### State machine
+
+    1. Bốn bước getInstance, init, doPhase và generateSecret thay đổi trạng thái thế nào?
+    2. Trong trao đổi hai bên, vì sao doPhase nhận peer public key và lastPhase=true?
+    3. Nếu gọi generateSecret trước doPhase hoặc gọi lặp ngay sau lần generateSecret trước sẽ xảy ra điều gì?
+    4. Reset trạng thái engine khác gì việc sinh ephemeral private key mới?
+
+    ### Public key validation
+
+    1. KeyFactory với X509EncodedKeySpec chứng minh điều gì và chưa chứng minh điều gì?
+    2. Bạn phân biệt yêu cầu kiểm tra DH p/g, ECDH point và X25519 all-zero như thế nào?
+    3. Vì sao một public key hoàn toàn hợp lệ về toán học vẫn có thể thuộc Mallory?
+
+    ### Kiểm thử và sử dụng
+
+    1. Làm thế nào thiết kế demo để chứng minh trusted pin từ trước và phát hiện public key bị tráo?
+    2. Vì sao không chia sẻ một KeyAgreement instance cho hai session đồng thời?
+    3. Sau khi có raw shared secret, bước nào cần thực hiện trước khi dùng cho AES hoặc key wrapping?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Điều khiển API | Viết đúng state machine với private cục bộ, public peer và cờ lastPhase. |
+    | Đọc lỗi trạng thái | Dự đoán IllegalStateException, InvalidKeyException và ShortBufferException ở tình huống phù hợp. |
+    | Kiểm tra biểu diễn | Parse SPKI DER và đối chiếu thuật toán/curve theo policy. |
+    | Phân lớp xác minh | Tách validation format, giá trị khóa và xác thực identity qua pin hoặc certificate. |
+    | Kiểm thử MITM | Giải thích được khi key giả vẫn tạo secret hợp lệ nhưng bị pin từ chối. |
+    | Quản lý key phiên | Quy định engine riêng, private ephemeral mới và KDF trước khi dùng traffic key. |
+- id: key-establishment-and-wrapping-004
+  title: 10.4 Bí mật chung, bước dẫn xuất khóa, ngữ cảnh sử dụng và tách khóa theo mục đích
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **10.4 Bí mật chung, bước dẫn xuất khóa, ngữ cảnh sử dụng và tách khóa theo mục đích**
+
+    Cùng một shared secret có thể phục vụ nhiều vai trò, hướng truyền và key hierarchy, nhưng dùng trực tiếp hoặc tái sử dụng key làm tăng rủi ro nhầm ngữ cảnh và trùng nonce. Bài học đào sâu HKDF Extract/Expand, schema transcript, domain separation, key schedule, known-answer vectors và kết hợp AES-GCM/AESWrap.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### HKDF và vật liệu khóa
+
+    1. IKM, PRK và OKM có vai trò gì trong HKDF và trường nào cần giữ kín?
+    2. HKDF-Extract và HKDF-Expand với HMAC-SHA256 thực hiện những bước nào?
+    3. Vì sao HKDF không thay thế password KDF và không làm tăng entropy của password yếu?
+    4. Làm thế nào kiểm chứng phép Expand bằng RFC 5869 test vector 42 byte?
+
+    ### Ngữ cảnh và phân tách
+
+    1. Bạn encode transcript để tránh hai bộ trường khác nhau tạo cùng chuỗi byte như thế nào?
+    2. Vì sao KDF info cần protocol, suite, role, purpose và transcript hash?
+    3. Để tách c2s, s2c, MAC, confirmation và wrap, bạn đặt nhãn và kích thước khóa ra sao?
+
+    ### Vận hành và xác thực
+
+    1. AES-GCM nonce phải được quản lý như thế nào dưới mỗi traffic key và mỗi hướng?
+    2. Khi nào KEK nên đến từ KMS/HSM thay vì secret phiên X25519 ephemeral?
+    3. Vì sao transcript hash trong HKDF chưa đủ để bảo đảm peer authentication hoặc chống replay?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tái hiện HKDF | Triển khai Extract/Expand đúng counter, giới hạn L và xác nhận vector RFC 5869. |
+    | Thiết kế key schedule | Tạo nhãn riêng cho c2s, s2c, MAC, confirmation và wrap từ cùng PRK. |
+    | Ràng buộc ngữ cảnh | Xây schema transcript canonical có length prefix, suite, roles và key purpose. |
+    | Kiểm tra tính tách biệt | Chứng minh hai bên cùng nhãn có key giống nhau, đổi nhãn/context làm output khác. |
+    | Phối hợp primitive | Dùng AES-GCM với AAD/nonce và AESWrap với KEK tách biệt trong cùng demo. |
+    | Đánh giá lifecycle | Phân tích rekey, nonce uniqueness và lý do KEK lưu trữ dài hạn cần key management riêng. |
+- id: key-establishment-and-wrapping-005
+  title: 10.5 Xác thực đối tác để tránh đánh tráo khóa trong quá trình thỏa thuận
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **10.5 Xác thực đối tác để tránh đánh tráo khóa trong quá trình thỏa thuận**
+
+    Diffie–Hellman có thể hoàn thành đúng toán học ngay khi kẻ đứng giữa thay public key. Bài này chuyển trọng tâm từ key computation sang trusted identity: chứng thư, pinning, Ed25519 ký transcript, freshness, TLS 1.3 và các phép thử chống MITM, unknown-key-share hay downgrade.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tin cậy danh tính
+
+    1. Vì sao hash public key nhận cùng một gói tin không chứng minh khóa thuộc Bob?
+    2. Certificate chain hợp lệ cần những kiểm tra nào để khớp expected hostname hoặc service identity?
+    3. Pinning và TOFU khác nhau ra sao ở lần kết nối đầu tiên?
+    4. Authentication và authorization có những trách nhiệm tách biệt nào?
+
+    ### Transcript và chữ ký
+
+    1. Những trường version, suite, role, identity, nonce và ephemeral keys nào cần nằm trong transcript?
+    2. Một signature trên public key riêng lẻ có rủi ro replay hoặc role confusion gì?
+    3. Bạn dùng Ed25519 identity signing key và X25519 ephemeral key như thế nào mà không nhầm hai vai trò?
+    4. Vì sao Finished MAC mà thiếu authenticated identity vẫn không chống MITM?
+
+    ### Các phép thử an toàn
+
+    1. Bạn kiểm thử key substitution, impostor signature và fresh challenge để phát hiện lỗi gì?
+    2. Unknown-key-share, downgrade và forward secrecy đặt ra yêu cầu gì với giao thức?
+    3. Khi dùng TLS 1.3/mTLS, peer trust và application authorization cần kiểm tra độc lập ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ tấn công MITM | Mô phỏng hai shared secrets Alice–Mallory và Mallory–Bob dù DH hoạt động đúng. |
+    | Xác thực public key | So sánh pinning, PKI/SAN, TOFU và PSK theo gốc tin cậy. |
+    | Thiết kế transcript | Liệt kê và encode đúng roles, identities, suite, nonces và ephemeral keys trước khi ký. |
+    | Kiểm chứng chữ ký | Giải thích tại sao key impostor hoặc modified key share làm Signature.verify thất bại. |
+    | Phân tích giao thức | Tách authentication, key confirmation, replay protection và authorization trong TLS. |
+    | Lập bộ thử nghiệm | Tạo negative tests cho substituted key, wrong identity, replay, downgrade và cert sai SAN. |
+- id: key-establishment-and-wrapping-006
+  title: 10.6 Cipher.WRAP_MODE, UNWRAP_MODE và thuật toán bọc khóa
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **10.6 Cipher.WRAP_MODE, UNWRAP_MODE và thuật toán bọc khóa**
+
+    Key wrapping bảo vệ một DEK đã có dưới KEK, phục vụ lưu trữ, trao đổi và rotation. Bài học hướng dẫn contract Cipher.wrap/unwrap, phân biệt AES-KW/AES-KWP/RSA-OAEP, xử lý non-exportable key, metadata, quyền KMS/HSM và phát hiện wrapped blob bị hỏng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các chế độ và thuật toán
+
+    1. WRAP_MODE/UNWRAP_MODE khác ENCRYPT_MODE/DECRYPT_MODE ở input và output như thế nào?
+    2. Trong unwrap, wrappedKeyAlgorithm và wrappedKeyType mô tả khóa nào?
+    3. Điều kiện độ dài và tính toàn vẹn của AES-KW khác AES-KWP ra sao?
+    4. Vì sao RSA-OAEP cần thống nhất OAEP digest, MGF1 digest và label?
+
+    ### Key và envelope
+
+    1. Khi nào getEncoded trả null, và KMS/HSM có thể wrap non-exportable key như thế nào?
+    2. Bạn thiết kế envelope gồm wrappedDEK, kekId, nonce, ciphertext và metadata nào?
+    3. Vì sao AESWrap không xác thực tự động tenantId hoặc recordId?
+
+    ### Vận hành và kiểm thử
+
+    1. Tại sao đổi KEK có thể chỉ cần rewrap DEK nhưng đổi DEK có thể cần mã hóa lại dữ liệu?
+    2. Bạn phân biệt quyền wrap, unwrap và đọc dữ liệu theo policy như thế nào?
+    3. Nếu wrapped blob hợp lệ nhưng payload GCM sai tag, hệ thống phải từ chối ở lớp nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Sử dụng Cipher | Viết đúng wrap(Key) và unwrap(bytes, algorithm, keyType) với mode phù hợp. |
+    | So sánh phương án | Lựa chọn AESWrap, AESWrapPad hoặc RSA-OAEP theo key type, kích thước và provider. |
+    | Kiểm thử key integrity | Xác minh round-trip DEK, tampered AES-KW bytes và sai OAEP label bị từ chối. |
+    | Thiết kế envelope | Liệt kê metadata, algorithm, key ID, nonce, ciphertext và nơi phải xác thực context. |
+    | Đánh giá KMS | Giải thích non-exportable key, tách quyền wrap/unwrap, rotation, backup và recovery. |
+    | Kiểm tra quyền | Phân biệt unwrap success, payload authentication và authorization trước khi cấp plaintext. |
+- id: key-establishment-and-wrapping-007
+  title: 10.7 API KEM từ Java 21 với Encapsulator, Decapsulator và thông điệp đóng gói
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **10.7 API KEM từ Java 21 với Encapsulator, Decapsulator và thông điệp đóng gói**
+
+    Java 21 bổ sung abstraction KEM độc lập với KeyAgreement và Cipher.wrap. Bài học yêu cầu đọc đúng object contract của Encapsulator, Encapsulated, Decapsulator, tham số, kích thước, provider và biến KEM shared secret thành key dùng với AES-GCM mà không nhầm với encapsulation công khai.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### API và kiểu dữ liệu
+
+    1. KEM, Encapsulator, Encapsulated và Decapsulator đảm nhiệm những thao tác khác nhau nào?
+    2. Ba thuộc tính key(), encapsulation() và params() có kiểu và mức độ bí mật nào?
+    3. secretSize() và encapsulationSize() trả đơn vị gì, có đồng nhất không?
+    4. Overload encapsulate(from, to, algorithm) có semantics byte range ra sao?
+
+    ### Dẫn xuất và mã hóa
+
+    1. Bạn xây luồng KEM → HKDF → AES-GCM từ public recipient key đến giải mã payload như thế nào?
+    2. Khi nào cần dùng updateAAD cho header và encapsulation, và nonce được quản lý ra sao?
+    3. Vì sao DHKEM kết hợp HKDF và GCM minh họa chưa mặc nhiên tương thích HPKE RFC 9180?
+
+    ### Lỗi và khả năng triển khai
+
+    1. Sai chiều dài encapsulation khác gì sửa một byte nhưng vẫn đúng length?
+    2. Java 17 thiếu API nào, và chọn provider cho KEM trong Java 21 phải kiểm tra điều gì?
+    3. Tại sao thành công của decapsulate không thể được dùng làm bằng chứng sender authentication?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Gọi KEM Java 21 | Tạo recipient keypair, Encapsulator, Encapsulated và Decapsulator theo đúng hợp đồng. |
+    | Phân biệt dữ liệu | Chỉ ra đâu là SecretKey bí mật, encapsulation công khai và params tùy chọn. |
+    | Xử lý kích thước | Kiểm soát secretSize, encapsulationSize, from/to và input bị cắt. |
+    | Xây envelope mẫu | Kết hợp KEM secret, HKDF context, AES-GCM nonce/AAD/tag để giải mã đúng. |
+    | Kiểm tra provider | Phân tích JDK 21, DHKEM/X25519, non-exportable key và profile hỗ trợ. |
+    | Đánh giá bảo mật | Giải thích giới hạn của base KEM về sender identity, replay và HPKE compatibility. |
+- id: key-establishment-and-wrapping-008
+  title: 10.8 Thực nghiệm DHKEM và phân biệt khóa sinh ra với dữ liệu encapsulation
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **10.8 Thực nghiệm DHKEM và phân biệt khóa sinh ra với dữ liệu encapsulation**
+
+    Bài thực nghiệm đi sâu vào DHKEM(X25519, HKDF-SHA256): cùng 32 byte nhưng shared secret là bí mật còn encapsulation là ephemeral public key được serialize để gửi. Qua phép thử Java 21 và AEAD, người học nhận diện đúng dữ liệu truyền, dữ liệu giữ kín, lỗi truncation và giới hạn của base KEM.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế DHKEM
+
+    1. DHKEM tạo ephemeral key và raw DH như thế nào trước khi dẫn xuất shared secret?
+    2. Tại sao kem_context và LabeledExtract/LabeledExpand của RFC 9180 cần đúng thứ tự?
+    3. Vì sao secretSize và encapsulationSize đều có thể là 32 byte mà hai output hoàn toàn khác mục đích?
+    4. Encapsulation của DHKEM X25519 khác SPKI DER của recipient public key như thế nào?
+
+    ### Java 21 experiment
+
+    1. Trong DhkemExperiment, byte nào được gửi cho receiver và byte nào tuyệt đối không được log?
+    2. Vì sao KEM shared secret vẫn cần application HKDF với nhãn mục đích trước khi dùng AES-GCM?
+    3. Bạn sẽ tái hiện một negative test cho ciphertext hỏng và encapsulation thiếu một byte ra sao?
+
+    ### Khả năng xác thực và tích hợp
+
+    1. Vì sao wrong private key có thể cho secret khác thay vì exception decapsulation?
+    2. Khi nào phải xác thực recipient public key và bổ sung sender authentication?
+    3. Dựa vào đâu kết luận demo chưa phải HPKE protocol hoàn chỉnh hoặc chưa có forward secrecy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích RFC 9180 | Vẽ luồng DHKEM với ephemeral sender key, kem_context và KDF tạo shared secret. |
+    | Phân biệt hai output | Nhận diện KEM secret với encapsulation qua type, nơi sử dụng, độ dài và độ bí mật. |
+    | Chạy thử Java 21 | Viết/diễn giải DhkemExperiment với kết quả secret match và encapsulation transport. |
+    | Dẫn xuất và bảo vệ dữ liệu | Kết hợp shared secret với HKDF-AES-GCM và giải thích vai trò AAD. |
+    | Kiểm thử lỗi | Dự đoán truncated encapsulation, sửa payload và sai key tác động ra sao. |
+    | Đánh giá giới hạn | Giải thích base mode, giả định private key tĩnh, sender trust và interop vectors. |
+- id: key-establishment-and-wrapping-009
+  title: 10.9 Quan hệ giữa cơ chế nguyên thủy và một giao thức hoàn chỉnh có xác thực
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **10.9 Quan hệ giữa cơ chế nguyên thủy và một giao thức hoàn chỉnh có xác thực**
+
+    Bài cuối tổng hợp các primitives đã học thành bức tranh giao thức: cùng shared secret chưa đủ nếu peer sai, AEAD tag không chống replay và key wrap không thay policy. Qua ví dụ MITM, transcript, key confirmation và TLS 1.3/JSSE, người học đánh giá được từng lớp bắt tay, bảo vệ bản ghi và authorization.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các lớp giao thức
+
+    1. Primitive KeyAgreement, KEM, wrap, Signature, HKDF và AEAD cung cấp chức năng nào và còn thiếu chức năng nào?
+    2. Một authenticated handshake cần ràng buộc identity, roles, suite, key shares và transcript ra sao?
+    3. Key confirmation/Finished khác gì peer authentication và application authorization?
+    4. Vì sao nối các API Java hoạt động đúng chưa tự tạo một protocol đúng?
+
+    ### Java 21 và chứng cứ
+
+    1. Trong UnauthenticatedDhDemo, vì sao Alice và Bob đều chia sẻ key với Mallory thay vì với nhau?
+    2. Trong AuthenticatedChannelDemo, signer key được tin cậy từ đâu và việc sửa ephemeral key bị phát hiện thế nào?
+    3. HKDF context và AEAD AAD kiểm tra những phần nào của phiên và bản ghi?
+
+    ### Tấn công và lựa chọn công nghệ
+
+    1. Tại sao thay nonce/counter hoặc replay request có thể gây hại dù tag AEAD hợp lệ?
+    2. Unknown-key-share, downgrade và forward secrecy cần những ràng buộc nào?
+    3. Khi nào nên chọn TLS 1.3/JSSE, HPKE hoặc KMS wrap thay vì tự tạo handshake?
+    4. Sau khi TLS hoặc mTLS thành công, quyết định quyền resource phải nằm ở đâu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đánh giá sơ đồ giao thức | Vẽ đủ trust, negotiation, agreement/KEM, transcript, KDF, Finished, record protection và application policy. |
+    | Phân tích MITM | Mô phỏng hai phiên của Mallory và giải thích vì sao primitive vẫn trả kết quả thành công. |
+    | Chứng minh ràng buộc | Phân tích chữ ký Ed25519 trusted key, transcript hash và key confirmation qua hai demo. |
+    | Phát hiện lỗi kiến trúc | Đánh giá replay, downgrade, unknown-key-share, nonce reuse và certificate identity mismatch. |
+    | Lựa chọn thư viện | Lập luận dùng TLS 1.3/JSSE, HPKE hoặc KMS/HSM theo vấn đề cụ thể. |
+    | Thiết kế kiểm thử | Lập ma trận negative tests cho handshake, record AEAD, authorization và idempotency. |

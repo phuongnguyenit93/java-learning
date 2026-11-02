@@ -1,0 +1,78 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Key Establishment and Wrapping — Learning Roadmap
+roadmapHeading: Lộ trình thỏa thuận, bọc khóa, KEM và giao thức xác thực
+roadmap:
+- id: key-establishment-and-wrapping-001
+  order: 1
+  title: 10.1 Phân biệt trao đổi khóa, thỏa thuận khóa, bọc khóa và đóng gói khóa
+  description: Đặt nền tảng bằng việc phân biệt key exchange, key agreement, key transport, key wrapping và KEM theo secret đầu vào và dữ liệu đầu ra.
+  transition:
+    to: key-establishment-and-wrapping-002
+    description: Từ bản đồ khái niệm, học các họ thuật toán DH và ECDH cụ thể để chọn đúng nhóm và khóa.
+- id: key-establishment-and-wrapping-002
+  order: 2
+  title: 10.2 DH, ECDH, X25519 và X448 trong mô hình KeyAgreement
+  description: Thực hành DH, ECDH P-256, X25519 và X448 qua KeyAgreement, đồng thời so sánh params, encoding và shared secret.
+  transition:
+    to: key-establishment-and-wrapping-003
+    description: Sau khi biết từng thuật toán, làm chủ state machine init, doPhase và generateSecret cùng peer-key validation.
+- id: key-establishment-and-wrapping-003
+  order: 3
+  title: 10.3 Chu trình init, doPhase, generateSecret và kiểm tra khóa của đối tác
+  description: Rèn thứ tự KeyAgreement, kiểm tra key type, nhóm, all-zero secret và khác biệt giữa parse thành công với danh tính đáng tin.
+  transition:
+    to: key-establishment-and-wrapping-004
+    description: Raw shared secret chỉ mới là vật liệu khóa; tiếp theo cần HKDF, transcript và nhãn tách mục đích.
+- id: key-establishment-and-wrapping-004
+  order: 4
+  title: 10.4 Bí mật chung, bước dẫn xuất khóa, ngữ cảnh sử dụng và tách khóa theo mục đích
+  description: Dẫn xuất key bằng HKDF Extract/Expand, tách c2s, s2c, MAC và KEK với ngữ cảnh được đóng khung rõ.
+  transition:
+    to: key-establishment-and-wrapping-005
+    description: Đã biết derive đúng key, tiếp tục xác thực public key của đối tác để tránh trao secret nhầm người.
+- id: key-establishment-and-wrapping-005
+  order: 5
+  title: 10.5 Xác thực đối tác để tránh đánh tráo khóa trong quá trình thỏa thuận
+  description: Bảo vệ handshake bằng trusted identity keys, chứng thư hoặc pinning và chữ ký Ed25519 trên transcript.
+  transition:
+    to: key-establishment-and-wrapping-006
+    description: Từ xác thực đối tác, chuyển sang bảo vệ một DEK đã có bằng Cipher wrap/unwrap và key hierarchy.
+- id: key-establishment-and-wrapping-006
+  order: 6
+  title: 10.6 Cipher.WRAP_MODE, UNWRAP_MODE và thuật toán bọc khóa
+  description: Bọc và mở bọc DEK bằng AES-KW, AES-KWP, RSA-OAEP hoặc KMS theo key type, metadata và quyền.
+  transition:
+    to: key-establishment-and-wrapping-007
+    description: Sau key wrapping, học KEM Java 21 vì encapsulation tạo secret mới khác với wrap DEK sẵn có.
+- id: key-establishment-and-wrapping-007
+  order: 7
+  title: 10.7 API KEM từ Java 21 với Encapsulator, Decapsulator và thông điệp đóng gói
+  description: Làm chủ KEM API Java 21, Encapsulator, Encapsulated, Decapsulator, params, size và hybrid KEM–KDF–AEAD.
+  transition:
+    to: key-establishment-and-wrapping-008
+    description: Khi API đã rõ, thí nghiệm DHKEM để quan sát secret bí mật và encapsulation công khai bằng dữ liệu thực.
+- id: key-establishment-and-wrapping-008
+  order: 8
+  title: 10.8 Thực nghiệm DHKEM và phân biệt khóa sinh ra với dữ liệu encapsulation
+  description: Đối chiếu RFC 9180 DHKEM với output 32-byte secret/capsule, chạy kiểm thử ciphertext và encapsulation bị hỏng.
+  transition:
+    to: key-establishment-and-wrapping-009
+    description: Cuối cùng, kết nối các primitive thành một giao thức hoàn chỉnh có identity, transcript, Finished và record protection.
+- id: key-establishment-and-wrapping-009
+  order: 9
+  title: 10.9 Quan hệ giữa cơ chế nguyên thủy và một giao thức hoàn chỉnh có xác thực
+  description: Đánh giá authenticated key exchange hoàn chỉnh với MITM, transcript signatures, HKDF, AEAD, replay, TLS 1.3 và authorization.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài học
+
+  | Tiêu chí | Bài 1 — 10.1 Khái niệm | 10.2 Các họ DH | 10.3 Vòng đời KA | 10.4 Key schedule | 10.5 Xác thực peer | 10.6 Bọc khóa | 10.7 API KEM | 10.8 DHKEM lab | 10.9 Giao thức |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | Phân loại cơ chế | So sánh DH, ECDH, X25519, X448 | State machine và validation | HKDF và phân tách key | MITM và trusted identity | DEK/KEK và Cipher wrap | Các object KEM Java 21 | Secret so với encapsulation | Ghép primitives thành AKE |
+  | API hoặc chuẩn | KeyAgreement, Cipher, KEM | KeyPairGenerator và KeyAgreement | init, doPhase, generateSecret | HMAC HKDF, GCM, AESWrap | Signature Ed25519, PKI, TLS | WRAP_MODE, UNWRAP_MODE, OAEP | KEM, Encapsulator, Decapsulator | DHKEM RFC 9180, AES-GCM | TLS 1.3, JSSE, Finished |
+  | Sản phẩm học tập | Sơ đồ chọn cơ chế | So sánh bốn loại shared secret | Luồng tính secret và kiểm key peer | Key schedule c2s, s2c, KEK | Transcript được ký và tin cậy | DEK được wrap và rewrap | Encapsulation và secret đúng loại | Demo DHKEM và tag validation | Sơ đồ end-to-end được xác thực |
+  | Thực hành chủ đạo | Java 21 demo ba API | Java 17 bốn họ DH | Java 17 pin và lifecycle | Java 17 HKDF vector và AES | Java 17 X25519 cộng Ed25519 | Java 17 AESWrap cộng RSA-OAEP | Java 21 KEM cộng AEAD | Java 21 DHKEM experiment | Java 21 demo MITM và authenticated |
+  | Sai lầm phải nhận ra | Đồng nhất wrap với KEM | Nhầm curve hoặc raw public format | Tin peer chỉ vì doPhase chạy | Dùng chung raw secret cho mọi key | Tin certificate hoặc fingerprint tự khai | Tin AESWrap bảo vệ tenant metadata | Gửi secret thay vì encapsulation | Dùng encapsulation làm AES key | Cho rằng crypto đúng là protocol an toàn |
+  | Kiểm chứng | Phân loại input và output | Hai phía sinh secret bằng nhau | Reject key giả hoặc sai state | Khác label tạo khác key | Thay key/identity làm signature fail | Tamper wrapped blob bị từ chối | Truncation và GCM tag bị từ chối | Secret matching và capsule size | Finished, replay, downgrade, quyền |
+  | Cấp độ | BASIC | INTERMEDIATE | INTERMEDIATE | ADVANCED | ADVANCED | INTERMEDIATE | ADVANCED | ADVANCED | ADVANCED |

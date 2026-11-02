@@ -1,0 +1,77 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'Kiến trúc JCA: engine, provider và vận hành an toàn'
+roadmapHeading: Từ phân tầng JCA đến thiết kế tương thích và đồng thời
+roadmap:
+- id: jca-architecture-001
+  order: 1
+  title: 2.1 Mô hình engine class, SPI và security provider
+  description: Làm rõ engine class, SPI và provider bằng sơ đồ ủy nhiệm và một provider checksum đồ chơi, phân biệt API ứng dụng với mã triển khai.
+  transition:
+    to: jca-architecture-002
+    description: Sau khi nắm cấu trúc, cần hiểu tại sao một lời gọi getInstance lại chọn provider này thay vì provider khác.
+- id: jca-architecture-002
+  order: 2
+  title: 2.2 Lấy dịch vụ qua getInstance và lựa chọn provider theo thứ tự ưu tiên
+  description: Thử ba overload getInstance, thứ tự provider, ưu tiên theo thuật toán và thời điểm chốt implementation qua thí nghiệm hai provider giáo dục.
+  transition:
+    to: jca-architecture-003
+    description: Khi biết cơ chế chọn, phải đọc đúng tên thuật toán, alias và transformation để yêu cầu không trỏ nhầm dịch vụ.
+- id: jca-architecture-003
+  order: 3
+  title: 2.3 Tra cứu tên thuật toán chuẩn, alias và phạm vi hỗ trợ của từng provider
+  description: Phân biệt standard algorithm name, alias cục bộ, service type và transformation; kiểm thử trực tiếp alias và AES-GCM trên từng provider.
+  transition:
+    to: jca-architecture-004
+    description: Tên đã chuẩn hóa chưa nói lên một Java SE implementation có bắt buộc cung cấp thuật toán ấy hay không.
+- id: jca-architecture-004
+  order: 4
+  title: 2.4 Phân biệt API bắt buộc của Java SE với thuật toán do một JDK cung cấp
+  description: Tách Java SE API, standard names, tập thuật toán bắt buộc trên Java SE 17 và phần mở rộng cụ thể của JDK/provider.
+  transition:
+    to: jca-architecture-005
+    description: Đã hiểu phạm vi cam kết, bước tiếp theo là khảo sát chính runtime và metadata của các dịch vụ hiện hữu.
+- id: jca-architecture-005
+  order: 5
+  title: 2.5 Khám phá Provider.Service và danh sách thuật toán đang có trong tiến trình
+  description: Dùng ProviderExplorer và Provider.Service để lập catalog provider, type, algorithm, implementation class; phân tầng bằng chứng từ descriptor tới phép toán.
+  transition:
+    to: jca-architecture-006
+    description: Khi đã xác định implementation, cần quản lý đúng các tham số mà engine sử dụng và phải lưu cùng bản mã.
+- id: jca-architecture-006
+  order: 6
+  title: 2.6 AlgorithmParameterSpec, AlgorithmParameters và việc lưu tham số thuật toán
+  description: Thao tác AlgorithmParameterSpec và AlgorithmParameters, encode/decode tham số AES-GCM, bảo toàn AAD và thiết kế record lưu trữ có version.
+  transition:
+    to: jca-architecture-007
+    description: Tham số đúng chưa đủ nếu ứng dụng sử dụng engine sai vòng đời hoặc tái dùng IV sau khi kết thúc phép toán.
+- id: jca-architecture-007
+  order: 7
+  title: 2.7 Vòng đời khởi tạo, cập nhật, kết thúc và tái sử dụng đối tượng mật mã
+  description: Kiểm soát vòng đời init, update, digest/doFinal, sign/verify, reset/re-init và giới hạn an toàn nonce AES-GCM.
+  transition:
+    to: jca-architecture-008
+    description: Biết trạng thái đúng giúp phân loại ngoại lệ phát sinh ở bước lookup, khởi tạo hoặc xác thực thông điệp.
+- id: jca-architecture-008
+  order: 8
+  title: 2.8 Xử lý NoSuchAlgorithmException, NoSuchProviderException và lỗi tham số
+  description: Phân tích NoSuchAlgorithmException, NoSuchProviderException, lỗi tham số/khóa và AEADBadTagException; tránh fallback hạ cấp bảo mật.
+  transition:
+    to: jca-architecture-009
+    description: Sau khi xử lý một phép toán riêng lẻ, cần chứng minh tương thích giữa môi trường và tránh race khi nhiều tác vụ chạy đồng thời.
+- id: jca-architecture-009
+  order: 9
+  title: 2.9 Tính tương thích và trạng thái thay đổi khi dùng dịch vụ mật mã đồng thời
+  description: 'Tổng hợp interoperability và concurrency: byte format, key handle, per-task engine ownership, SecureRandom, IV uniqueness xuyên node và test vectors.'
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh vai trò từng bài trong chương
+
+  | Tiêu chí | Bài 1 — 2.1 Engine/SPI | 2.2 getInstance | 2.3 Tên/alias | 2.4 Java SE/JDK | 2.5 Service catalog | 2.6 Tham số | 2.7 Vòng đời | 2.8 Ngoại lệ | 2.9 Đồng thời |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Vấn đề chính | API, SPI và provider khác gì? | Provider nào được chọn? | Tên nào được nhận? | Cái gì được Java SE bảo đảm? | JVM đang công bố gì? | Lưu/khôi phục tham số thế nào? | Engine ở trạng thái nào? | Lỗi phát sinh ở bước nào? | Các tác vụ và hệ thống có tương thích? |
+  | Thao tác trọng tâm | Viết toy SPI và đọc Service | Thay thứ tự provider | Kiểm alias và Cipher factory | Tra chuẩn Java SE 17 | Duyệt metadata service | GCM parameter round-trip | init-update-final và re-init | Tách lỗi lookup/init/tag | Stress test và cấp IV |
+  | Ví dụ đặc trưng | JcaSpiProviderDemo | ProviderPriorityDemo | JcaProviderLookup | JcaAvailability | ProviderExplorer | GcmParametersRoundTrip | AesGcmLifecycleDemo | GcmFailureDemo | ConcurrentGcmDemo |
+  | Bẫy dễ mắc | Nhầm engine với SPI | Pin sai hoặc fallback HSM | Alias không portable | Tên chuẩn không là minimum | Descriptor chưa là chạy được | Mất IV, tag hoặc AAD | Tái dùng key và IV GCM | Nuốt tag failure, hạ cấp | Dùng chung mutable engine |
+  | Giá trị cho dự án | Phân định trách nhiệm kiến trúc | Chọn provider có chủ ý | Đảm bảo tên và transformation | Chọn baseline tương thích | Chụp catalog runtime thật | Thiết kế format lưu trữ | Giữ ranh giới message | Fail fast và fail closed | Thiết kế concurrency an toàn |
+  | Tư duy hình thành | Trừu tượng và triển khai | Chính sách lựa chọn | Chuẩn tên và phạm vi | Đặc tả khác deployment | Bằng chứng theo mức | Byte contract và bảo toàn | State machine và nonce | Phân loại nguyên nhân | Ownership và interoperability |

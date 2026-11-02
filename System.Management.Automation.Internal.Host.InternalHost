@@ -1,0 +1,47 @@
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.List;
+import jdk.jshell.JShell;
+import jdk.jshell.Snippet;
+import jdk.jshell.SnippetEvent;
+
+public final class EmbeddedShellDemo {
+    public static void main(String[] args) throws Exception {
+        Path libraryClasses = Path.of(args[0]).toAbsolutePath();
+        ByteArrayOutputStream capturedOut = new ByteArrayOutputStream();
+        ByteArrayOutputStream capturedErr = new ByteArrayOutputStream();
+
+        try (PrintStream snippetOut = new PrintStream(capturedOut, true, StandardCharsets.UTF_8);
+             PrintStream snippetErr = new PrintStream(capturedErr, true, StandardCharsets.UTF_8);
+             JShell shell = JShell.builder()
+                     .in(new ByteArrayInputStream("Ada\n".getBytes(StandardCharsets.UTF_8)))
+                     .out(snippetOut)
+                     .err(snippetErr)
+                     .compilerOptions("-Xlint:deprecation")
+                     .remoteVMOptions("-Ddemo.mode=embedded")
+                     .build()) {
+            shell.addToClasspath(libraryClasses.toString());
+            check(shell, "import demo.lib.TextTools;");
+            check(shell, "System.out.println(TextTools.transform(\"java\"));");
+            check(shell, "System.out.println(\"mode=\" + System.getProperty(\"demo.mode\"));");
+            check(shell, "System.out.println(\"input=\" + new java.util.Scanner(System.in).nextLine());");
+            check(shell, "System.err.println(\"snippet-warning\");");
+        }
+
+        System.out.println("snippet stdout:");
+        System.out.print(capturedOut.toString(StandardCharsets.UTF_8).replace("\r\n", "\n"));
+        System.out.println("snippet stderr:");
+        System.out.print(capturedErr.toString(StandardCharsets.UTF_8).replace("\r\n", "\n"));
+    }
+
+    private static void check(JShell shell, String source) {
+        List<SnippetEvent> events = shell.eval(source);
+        if (events.isEmpty() || events.stream().anyMatch(e ->
+                e.status() != Snippet.Status.VALID || e.exception() != null)) {
+            throw new IllegalStateException("JShell eval failed: " + source);
+        }
+    }
+}

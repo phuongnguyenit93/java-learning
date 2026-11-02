@@ -1,0 +1,76 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Mật khẩu và dẫn xuất khóa
+roadmapHeading: Lộ trình bảo vệ mật khẩu và dẫn xuất khóa trong Java
+roadmap:
+- id: password-key-derivation-001
+  order: 1
+  title: 7.1 Phân biệt lưu bộ kiểm tra mật khẩu với mã hóa dữ liệu bằng khóa từ mật khẩu
+  description: Phân biệt password verifier để xác thực danh tính với khóa dẫn xuất từ password để mã hóa và khôi phục dữ liệu.
+  transition:
+    to: password-key-derivation-002
+    description: Từ hai mục đích lưu trữ, xem vì sao mật khẩu dễ đoán vẫn bị thử ngoại tuyến dù hash mạnh.
+- id: password-key-derivation-002
+  order: 2
+  title: 7.2 Vì sao băm nhanh một lần không đủ cho mật khẩu có entropy thấp
+  description: Giải thích entropy thấp, hash nhanh, tấn công offline và vai trò riêng của salt với work factor.
+  transition:
+    to: password-key-derivation-003
+    description: Khi đã xác định cần password KDF, cần lưu salt, cost, độ dài kết quả và version đúng hợp đồng.
+- id: password-key-derivation-003
+  order: 3
+  title: 7.3 Vai trò của salt, số vòng lặp, độ dài đầu ra và phiên bản cấu hình
+  description: Hiểu độc lập salt, iterations, output length và phiên bản KDF để xác minh đúng record cũ và nâng cấp an toàn.
+  transition:
+    to: password-key-derivation-004
+    description: Tiếp theo hiện thực các tham số đó qua SecretKeyFactory và PBEKeySpec của Java.
+- id: password-key-derivation-004
+  order: 4
+  title: 7.4 PBKDF2 qua SecretKeyFactory và PBEKeySpec
+  description: Thực hiện PBKDF2 bằng Java và kiểm chứng test vectors, cách dùng PBEKeySpec cùng trách nhiệm với password buffer.
+  transition:
+    to: password-key-derivation-005
+    description: Từ API dẫn xuất riêng lẻ, chuyển sang lưu trữ, đọc, xác minh và nâng cấp password record hoàn chỉnh.
+- id: password-key-derivation-005
+  order: 5
+  title: 7.5 Tạo, lưu và kiểm tra bản ghi mật khẩu với đầy đủ tham số
+  description: Thiết kế record có schema tự mô tả, parser được giới hạn và quy trình tạo, verify, đổi hoặc nâng cấp password.
+  transition:
+    to: password-key-derivation-006
+    description: Khi cấu trúc record đã đúng, đo hiệu năng và triển khai rehash khi policy thay đổi.
+- id: password-key-derivation-006
+  order: 6
+  title: 7.6 Hiệu chỉnh chi phí tính toán và nâng cấp tham số khi xác thực lại
+  description: Hiệu chỉnh cost theo tải thực tế và rehash-on-login có cập nhật điều kiện, kiểm soát race cùng nguy cơ DoS.
+  transition:
+    to: password-key-derivation-007
+    description: Sau khi vận hành verifier, so sánh password-derived encryption key với khóa ngẫu nhiên cho dữ liệu.
+- id: password-key-derivation-007
+  order: 7
+  title: 7.7 Phân biệt password-based encryption với khóa sinh ngẫu nhiên
+  description: Lựa chọn PBE, khóa sinh ngẫu nhiên, AES-GCM và envelope encryption với DEK/KEK theo nhu cầu recovery và rotation.
+  transition:
+    to: password-key-derivation-008
+    description: Thiết kế khóa đúng cần đi cùng kiểm soát thời gian sống của plaintext password trong JVM.
+- id: password-key-derivation-008
+  order: 8
+  title: 7.8 Xử lý char[], clearPassword và giới hạn của việc xóa dữ liệu nhạy cảm trên JVM
+  description: Quản lý char[] và bản sao PBEKeySpec, dùng clearPassword phù hợp và đánh giá giới hạn xóa bí mật trên JVM.
+  transition:
+    to: password-key-derivation-009
+    description: Sau quản lý bộ nhớ, cần bảo đảm password được chuyển thành cùng chuỗi byte khi Java và các nền tảng khác xác minh.
+- id: password-key-derivation-009
+  order: 9
+  title: 7.9 Tương thích charset, Unicode và quy tắc chuyển đổi mật khẩu giữa các hệ thống
+  description: Định nghĩa password profile Unicode/charset có version, dùng golden vectors và migration tương thích Java/Python/JavaScript.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài học trong chương
+
+  | Tiêu chí | Bài 1 — 7.1 Verifier / PBE | 7.2 Entropy và hash | 7.3 Tham số KDF | 7.4 API PBKDF2 | 7.5 Password record | 7.6 Hiệu chỉnh cost | 7.7 PBE / random key | 7.8 Bộ nhớ JVM | 7.9 Unicode và charset |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Câu hỏi chính | Xác minh hay khôi phục plaintext? | Vì sao SHA-256 một lần quá nhanh? | KDF dùng salt, cost, length, version thế nào? | Java gọi PBKDF2 ra sao? | Lưu và verify record nào? | Cost nào phù hợp và nâng cấp thế nào? | Khóa sinh từ đâu và được quản lý thế nào? | Password sống ở đâu trong RAM? | Từ ký tự tới byte có nhất quán không? |
+  | Khái niệm trọng tâm | Verifier, PBE, AEAD, DEK/KEK | Entropy, offline guessing, salt | Iterations, outputBits, version | SecretKeyFactory, PBEKeySpec, PRF | Schema, parser, verify, migration | Benchmark, SLO, CAS, rehash | CSPRNG, nonce, AES-GCM, key wrap | char[], clone, clearPassword, GC | UTF-8, UTF-16, NFC, profile |
+  | Thực hành chính | So sánh hai mô hình lưu trữ | Mô phỏng đoán hash và PBKDF2 | Đọc record theo version | Chạy test vector PBKDF2 | Tạo, lưu và kiểm tra verifier | Đo latency, cập nhật nguyên tử | Thử PBE và random AES key | Quan sát bản sao và wipe buffer | Đối chiếu golden vectors đa nền tảng |
+  | Ranh giới an toàn | Không dùng verifier làm key | Salt không tăng entropy | Bit khác byte; không sửa cost cũ | Demo iterations thấp không dùng thật | Không tin record chưa validate | Kiểm soát DoS và race | PBE vẫn chịu offline guessing | Zeroization không tuyệt đối | Không đổi normalization ngầm |
+  | Năng lực chứng minh | Chọn mô hình theo recovery | Phân biệt online và offline | Version hóa tham số | Triển khai PBKDF2 đúng API | Thiết kế record bền vững | Vận hành rehash an toàn | Chọn kiến trúc mã hóa | Giảm lưu giữ secret | Giữ tương thích mật khẩu |

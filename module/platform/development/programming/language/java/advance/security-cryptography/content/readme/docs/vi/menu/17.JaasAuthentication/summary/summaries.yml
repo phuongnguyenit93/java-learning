@@ -1,0 +1,307 @@
+summaries:
+- id: jaas-authentication-001
+  title: 17.1 Phân biệt xác thực danh tính với quyết định phân quyền trong ứng dụng
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **17.1 Phân biệt xác thực danh tính với quyết định phân quyền trong ứng dụng**
+
+    Một người dùng được xác thực không tự động có quyền đọc mọi tài nguyên. Bài này đặt JAAS vào bước xác lập danh tính, rồi tách quyết định quyền trên actor, action, resource và context. Qua ví dụ Java 17, RBAC/ABAC, tenant scoping và BOLA/IDOR, người học phải chứng minh login thành công vẫn có thể bị từ chối hợp lệ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai quyết định khác nhau
+
+    1. Authentication và authorization trả lời những câu hỏi nào, và vì sao đăng nhập thành công chưa đủ để đọc hóa đơn của người khác?
+    2. Subject/Principal mô tả identity thế nào, và vì sao một role do client tự khai chưa phải quyền tin cậy?
+    3. RBAC và ABAC khác nhau ở cách xét quyền gắn với resource và context như thế nào?
+
+    ### Ranh giới API và kiểm thử
+
+    1. Làm sao áp dụng actor, action, resource, context để chặn IDOR/BOLA và rò dữ liệu giữa tenants?
+    2. Vì sao request chưa xác thực và request đã xác thực nhưng không đủ quyền cần được xử lý khác nhau?
+    3. Với lab Java 17, cần kiểm thử gì khi quyền bị thu hồi giữa hai request hoặc ownership resource thay đổi?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tách AuthN/AuthZ | Phân tích ví dụ login đúng nhưng truy cập resource bị từ chối, giải thích quyết định theo hai tầng. |
+    | Thiết kế policy | Xác định actor, action, resource, context và điều kiện deny-by-default cho một API. |
+    | Chống BOLA | Tìm và sửa điều kiện truy cập thiếu owner/tenant trong tình huống cụ thể. |
+    | Đánh giá mô hình quyền | Chọn RBAC hoặc ABAC có lý do dựa trên mục tiêu tài nguyên. |
+    | Kiểm thử | Thiết kế ca login sai, đủ/thiếu quyền và truy cập cross-tenant với kết quả dự kiến. |
+- id: jaas-authentication-002
+  title: 17.2 Subject, Principal và public hoặc private credentials
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **17.2 Subject, Principal và public hoặc private credentials**
+
+    JAAS dùng Subject để chứa nhiều Principal cùng public và private credentials; nó không đơn giản là một username hoặc cờ isLoggedIn. Bài tập Java 17 giúp người học hiểu ba tập hợp, tập backed so với typed snapshot, giới hạn setReadOnly, credential Destroyable và việc LoginModule commit/logout danh tính.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc Subject
+
+    1. Subject và Principal khác nhau về chức năng gì, và một Subject có thể mang nhiều định danh không?
+    2. Public credential và private credential khác nhau ra sao, và vì sao tên gọi không tự mã hóa hay bảo vệ bí mật?
+    3. getPrincipals() khác getPrincipals(Class) thế nào về thay đổi Set gốc?
+
+    ### Read-only và credential lifecycle
+
+    1. setReadOnly ngăn thay đổi nào, và vì sao secret object vẫn có thể thay đổi hoặc bị destroy?
+    2. Trong lab, duplicate Principal và bản sao typed Set cho kết quả gì, tại sao?
+    3. Khi LoginModule commit và logout, ai sở hữu những Principal hoặc credential được thêm vào Subject?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tạo Subject | Tạo Subject với Principal và hai loại credential, mô tả ba Set. |
+    | Phân tích Set | Đối chiếu thay đổi live Set với typed filtering. |
+    | Hiểu read-only | Tái hiện thao tác sửa bị chặn mà không suy ra object secret bất biến. |
+    | Dọn secret | Diễn giải destroy/clear của một Destroyable credential và giới hạn zeroization. |
+    | Phân tích commit | So sánh trạng thái Subject trước login, sau commit và logout. |
+- id: jaas-authentication-003
+  title: 17.3 LoginContext, Configuration và mô hình LoginModule có thể thay thế
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **17.3 LoginContext, Configuration và mô hình LoginModule có thể thay thế**
+
+    JAAS cho phép thay cơ chế xác thực mà caller vẫn dùng LoginContext. Bài này phân tích Configuration theo application name, các LoginModule được liệt kê cùng flag/options, và hai pha xác thực. Người học dùng chương trình Java và file JAAS để thấy rõ khi nào module được tải, khi nào Principal được commit và tại sao một module thành công chưa đủ bảo đảm toàn stack.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Điều phối cấu hình
+
+    1. LoginContext, Configuration, AppConfigurationEntry và LoginModule đảm nhận phần nào trong một login attempt?
+    2. Tên application entry dùng để chọn cấu hình như thế nào và vì sao không phải tên provider thuật toán?
+    3. Vì sao module cần chờ commit trước khi thêm Principal vào Subject?
+
+    ### Thay module và kiểm lỗi
+
+    1. Có thể đổi từ Configuration viết trong Java sang jaas.conf thế nào mà không sửa caller?
+    2. Một module required fail trước sufficient pass ảnh hưởng thế nào tới kết quả chung?
+    3. Khi thay backend xác thực, phải giữ ổn định hợp đồng callback, state và các quy tắc fail-closed gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô hình hóa kiến trúc | Vẽ đường LoginContext → Configuration → LoginModule → Subject với trách nhiệm chính xác. |
+    | Cấu hình | Soạn AppConfigurationEntry hoặc JAAS file trỏ tới module và flag phù hợp. |
+    | Giải thích lifecycle | Chỉ ra state tạm trong login và state được commit sau thành công chung. |
+    | Phân tích stack | Dự đoán kết quả hai module với required/sufficient và thứ tự khác nhau. |
+    | Kiểm thử khả năng thay thế | Đề xuất test module thiếu, callback sai và credential fail mà không cấp identity. |
+- id: jaas-authentication-004
+  title: 17.4 CallbackHandler tách thu thập thông tin đăng nhập khỏi cơ chế xác thực
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **17.4 CallbackHandler tách thu thập thông tin đăng nhập khỏi cơ chế xác thực**
+
+    Một LoginModule không nên tự gọi Console hoặc lấy trực tiếp HTTP request để xác thực. CallbackHandler trao đổi qua NameCallback và PasswordCallback để ứng dụng chọn UI/nguồn secret còn module tập trung xác minh. Bài học giải thích PasswordCallback.clearPassword, quyền sở hữu các bản char[], UnsupportedCallbackException, IOException và các ca kiểm thử Java 17 tách ba lớp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thu thập và xác minh
+
+    1. CallbackHandler.handle(Callback[]) làm gì và tại sao handler không phải nơi quyết định mật khẩu đúng?
+    2. NameCallback khác PasswordCallback ở kiểu dữ liệu nào, và cờ echoOn có mã hóa password không?
+    3. Vì sao module tự đọc System.in/HTTP request khiến nó khó thay thế và kiểm thử?
+
+    ### An toàn và các nhánh lỗi
+
+    1. Cần clone và clear char[] tại những ranh giới nào giữa input, handler, callback và verifier?
+    2. Callback không được hỗ trợ hoặc nguồn credentials lỗi phải tạo ngoại lệ nào và được xử lý fail-closed ra sao?
+    3. Bộ test handler, verifier và LoginContext độc lập cần chứng minh những trường hợp gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tách trách nhiệm | Giải thích handler chỉ cấp dữ liệu, LoginModule mới xác minh. |
+    | Viết handler | Xử lý NameCallback/PasswordCallback và ném UnsupportedCallbackException khi cần. |
+    | Bảo vệ char[] | Chỉ đúng thời điểm xóa password ở từng object theo quyền sở hữu. |
+    | Xử lý lỗi | Phân biệt IOException, UnsupportedCallbackException và LoginException. |
+    | Thử adapter | Đề xuất thay nguồn input trong handler mà không sửa module xác thực. |
+- id: jaas-authentication-005
+  title: 17.5 Vòng đời initialize, login, commit, abort và logout của LoginModule
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **17.5 Vòng đời initialize, login, commit, abort và logout của LoginModule**
+
+    LoginModule hoạt động theo vòng đời hai pha: login kiểm credential nhưng chưa công bố identity; commit thêm state khi tổng thể đạt, còn abort/logout dọn theo ownership. Bài này đi sâu initialize, login, commit, abort và logout, với ví dụ Java 21 mô phỏng ca thành công, thất bại và module thứ hai required fail.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các pha và trạng thái
+
+    1. initialize, login, commit, abort và logout nhận trách nhiệm nào trong luồng JAAS?
+    2. Vì sao login true chưa được phép thêm Principal khi module required phía sau chưa pass?
+    3. Nếu module A login thành công nhưng toàn stack fail, abort cần dọn state gì?
+
+    ### Tính nhất quán và cleanup
+
+    1. Vì sao logout không được clear toàn bộ Principal/credential Set của Subject chung?
+    2. Khi commit thất bại một phần hoặc Subject đã read-only, module cần xử lý rollback ra sao?
+    3. Ba kịch bản lab giúp suy luận commit, abort và logout đã tác động Subject như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ lifecycle | Trình bày flow initialize → login → commit/abort → logout cho nhánh pass/fail. |
+    | Quản lý state tạm | Thiết kế login chưa chèn Principal trước commit. |
+    | Dọn state | Viết cleanup chỉ loại state do module thêm và hủy secret phù hợp. |
+    | Áp dụng flags | Giải thích ca một module pass nhưng stack bị required fail. |
+    | Thử tình huống biên | Xác định kiểm thử commit một phần, module skipped và Subject read-only. |
+- id: jaas-authentication-006
+  title: 17.6 required, requisite, sufficient, optional và phối hợp nhiều LoginModule
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **17.6 required, requisite, sufficient, optional và phối hợp nhiều LoginModule**
+
+    REQUIRED, REQUISITE, SUFFICIENT và OPTIONAL không chỉ gắn nhãn mức quan trọng; chúng điều khiển thứ tự, dừng sớm, thành công tổng thể và commit/abort. Qua ma trận tám trường hợp cùng lab password/OTP, bài giúp người học tìm cấu hình MFA sai như đổi OTP thành OPTIONAL hoặc dùng SUFFICIENT khiến bước bắt buộc bị bỏ qua.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tổng hợp stack và short-circuit
+
+    1. Required fail và requisite fail khác nhau ở việc tiếp tục những module nào?
+    2. Sufficient pass được phép dừng sớm khi nào, và có thể bù lỗi required trước đó không?
+    3. Một LoginModule trả false khác việc ném LoginException thế nào trong kết quả tổng thể?
+
+    ### Thiết kế MFA an toàn
+
+    1. Vì sao chuyển OTP từ REQUIRED sang OPTIONAL có thể tạo đường bypass ngay cả khi password vẫn đúng?
+    2. Để thể hiện chính sách password AND OTP hoặc hai phương thức OR, nên chọn flags và thứ tự thế nào?
+    3. Cần những ca kiểm thử nào cho required fail, sufficient pass, requisite fail, optional-only và OTP sai?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính control flags | Dự đoán overall result với nhiều module pass/fail/ignore theo thứ tự. |
+    | Xác định short-circuit | Chỉ rõ module bị bỏ qua khi requisite fail hoặc sufficient pass hợp lệ. |
+    | Phòng MFA bypass | Sửa stack có OTP OPTIONAL thành ràng buộc xác thực bắt buộc. |
+    | Diễn giải state | Dự đoán commit/abort khi module riêng pass nhưng stack fail. |
+    | Thiết kế regression | Đặt ma trận test đủ phát hiện thay đổi một flag làm suy yếu policy. |
+- id: jaas-authentication-007
+  title: 17.7 Subject.current, Subject.callAs và cách đọc mã cũ sử dụng doAs
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **17.7 Subject.current, Subject.callAs và cách đọc mã cũ sử dụng doAs**
+
+    Subject.current và Subject.callAs (từ Java 18) giúp ràng buộc danh tính với phạm vi thực thi, trong khi mã cũ thường dùng doAs và getSubject qua AccessControlContext. Bài này giải thích nested scopes, xử lý exception, executor thread pool, thay đổi JDK 24+ khi Security Manager bị loại bỏ và lý do gắn Subject không tự xác thực hay phân quyền.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Version và phạm vi động
+
+    1. Subject.current và Subject.callAs xuất hiện từ Java mấy, và khác gì doAs/getSubject legacy?
+    2. Scope Alice → Bob → Alice và callAs(null) ảnh hưởng current subject như thế nào?
+    3. Khi Callable ném exception, callAs và context restoration xử lý điều gì?
+
+    ### Migrate và async
+
+    1. Vì sao Subject.getSubject(AccessController.getContext()) không dùng được trên JDK 24+?
+    2. Khi submit task vào executor đã có worker threads, cần truyền và bind Subject vào task ra sao?
+    3. Vì sao Subject.current khác null không chứng minh caller đã được xác thực hay có quyền thực hiện action?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định phiên bản | Phân biệt API Java 17, Java 18 và thay đổi hành vi JDK 24. |
+    | Mô phỏng scope | Dự đoán Subject.current qua nested callAs và exception. |
+    | Migrate legacy | Thay doAs/getSubject bằng callAs/current theo JDK target phù hợp. |
+    | Truyền async context | Đề xuất bind Subject tường minh bên trong executor task. |
+    | Giữ authZ riêng | Giải thích vì sao callAs không tự làm permission check. |
+- id: jaas-authentication-008
+  title: 17.8 Quản lý credential, Subject chỉ đọc và xử lý LoginException
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **17.8 Quản lý credential, Subject chỉ đọc và xử lý LoginException**
+
+    Đăng nhập JAAS phải bảo vệ cả thông tin xác thực và danh tính sau commit: mật khẩu trong char[], private credential, SessionCredential hủy được, Subject chỉ đọc và các lỗi LoginException. Bài học đi vào quyền sở hữu secret, tại sao setReadOnly quá sớm cản trở logout, lựa chọn identity snapshot và cách ứng dụng từ chối an toàn khi login/commit lỗi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng đời credential
+
+    1. Principal, public credential và private credential khác nhau về mục đích và độ nhạy thế nào?
+    2. PasswordCallback.clearPassword, Arrays.fill và Destroyable.destroy xóa những bản sao nào, và còn giới hạn gì?
+    3. Subject.setReadOnly chặn thay đổi gì, vì sao không đồng nghĩa session revocation hoặc hủy credential?
+
+    ### Thất bại và cleanup
+
+    1. FailedLoginException, AccountExpiredException và CredentialExpiredException giúp phân loại lỗi thế nào?
+    2. Khi commit lỗi một phần hoặc login fail, ai phải dọn Principal/credential và state được tạo?
+    3. Khi nào nên giữ live Subject mutable cho logout nhưng cấp read-only identity snapshot ra ngoài?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Bảo vệ password | Đặt cleanup cho char[] và PasswordCallback đúng lifecycle. |
+    | Hủy credential | Thử destroy và đánh giá isDestroyed/secret access. |
+    | Đánh giá read-only | Phân biệt khóa cấu trúc Subject với hủy secret hoặc logout. |
+    | Xử lý LoginException | Dự đoán và phản hồi an toàn cho các nhánh failed/expired/technical error. |
+    | Thiết kế cleanup | Kiểm thử rollback khi login/commit/logout lỗi và so sánh identity snapshot. |
+- id: jaas-authentication-009
+  title: 17.9 Ranh giới giữa cấu hình JAAS với mô hình security provider của JCA
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **17.9 Ranh giới giữa cấu hình JAAS với mô hình security provider của JCA**
+
+    JAAS và JCA cùng thuộc Java Security nhưng chọn hai loại extension khác nhau. Cấu hình JAAS quyết định các LoginModule dùng để xác thực; JCA Security Provider cung cấp thuật toán và dịch vụ như MessageDigest, Signature. Bài này chỉ ra điểm giao Configuration.getInstance có provider SPI riêng mà không biến LoginModule thành JCA service, đồng thời hướng dẫn chẩn đoán lỗi đúng lớp bằng Java 17.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai cơ chế mở rộng
+
+    1. LoginContext và JAAS Configuration khác Security/Provider của JCA ở trách nhiệm nào?
+    2. Tại sao Security.addProvider không tự thay LoginModule đăng nhập trong JAAS?
+    3. Configuration.getInstance có liên hệ provider gì và vì sao không tương đương một LoginModule là JCA provider?
+
+    ### Định vị sự cố
+
+    1. Khi thiếu application entry hoặc class LoginModule không tải được, nên kiểm phần cấu hình nào?
+    2. Khi MessageDigest hoặc Signature báo thuật toán/provider không tồn tại, nên xem danh sách JCA providers như thế nào?
+    3. Lab JAAS login và chọn JCA MessageDigest cho thấy hai cơ chế có thể hoạt động độc lập ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tách JAAS/JCA | Lập bảng hai pipeline xác thực và thuật toán với API tương ứng. |
+    | Giải thích điểm giao SPI | Đặt Configuration.getInstance provider vào đúng vai trò. |
+    | Thực hành hai luồng | Chạy/diễn giải một JAAS login và một JCA provider lookup độc lập. |
+    | Chẩn đoán lỗi | Phân loại lỗi login config/module và NoSuchAlgorithmException theo tầng. |
+    | Giữ permission riêng | Giải thích không có cơ chế provider nào tự cấp quyền API nghiệp vụ. |

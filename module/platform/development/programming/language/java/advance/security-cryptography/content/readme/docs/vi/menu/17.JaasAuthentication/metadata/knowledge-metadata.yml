@@ -1,0 +1,19 @@
+sections:
+  jaas-authentication-001:
+    difficulty: BASIC
+  jaas-authentication-002:
+    difficulty: BASIC
+  jaas-authentication-003:
+    difficulty: INTERMEDIATE
+  jaas-authentication-004:
+    difficulty: INTERMEDIATE
+  jaas-authentication-005:
+    difficulty: INTERMEDIATE
+  jaas-authentication-006:
+    difficulty: ADVANCED
+  jaas-authentication-007:
+    difficulty: ADVANCED
+  jaas-authentication-008:
+    difficulty: ADVANCED
+  jaas-authentication-009:
+    difficulty: INTERMEDIATE

@@ -1,0 +1,77 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 12. KeyStore
+roadmapHeading: Lộ trình từ mô hình KeyStore đến quản trị phạm vi tin cậy
+roadmap:
+- id: key-store-001
+  order: 1
+  title: 12.1 Mô hình KeyStore và phân biệt với truststore hoặc CertStore
+  description: Xây bản đồ KeyStore API, kho danh tính, truststore, CertStore, và luồng KeyManager/TrustManager/PKIX để biết đâu là dữ liệu khóa và đâu là quyết định tin cậy.
+  transition:
+    to: key-store-002
+    description: Đã định vị nơi chứa identity, trust anchor và CertStore; tiếp theo phải biết đúng loại entry và alias để truy cập các thành phần đó.
+- id: key-store-002
+  order: 2
+  title: 12.2 PrivateKeyEntry, SecretKeyEntry, TrustedCertificateEntry và alias
+  description: Phân biệt PrivateKeyEntry, SecretKeyEntry và TrustedCertificateEntry; thao tác alias/entryInstanceOf và nhận diện rủi ro ghi đè hoặc nhầm loại.
+  transition:
+    to: key-store-003
+    description: Phân biệt được ba loại entry và alias; bước kế tiếp là chọn store type/provider thực sự hỗ trợ các entry và môi trường chạy.
+- id: key-store-003
+  order: 3
+  title: 12.3 PKCS12, JKS và các loại kho do provider cung cấp
+  description: So sánh PKCS12, JKS, JCEKS, DKS, PKCS11 và kho hệ điều hành theo provider, loại entry, tính liên thông và khả năng xuất khóa.
+  transition:
+    to: key-store-004
+    description: Sau khi chọn PKCS12 hoặc provider phù hợp, cần tự tạo, load, lưu và kiểm tra lại kho theo vòng đời đúng.
+- id: key-store-004
+  order: 4
+  title: 12.4 Tạo kho mới, load, store và kiểm tra đúng kiểu entry
+  description: Thực hiện khởi tạo kho mới, load kho hiện có, setEntry, store/reload và chẩn đoán lỗi với quy trình lưu file an toàn.
+  transition:
+    to: key-store-005
+    description: Đã thao tác được load/store; tiếp theo phải phân biệt credential mở kho với thông tin bảo vệ từng khóa.
+- id: key-store-005
+  order: 5
+  title: 12.5 Phân biệt mật khẩu kho với thông tin bảo vệ từng khóa
+  description: Tách store password khỏi key/entry protection, thử per-entry credentials và thiết kế bảo quản, rotation, phục hồi các bí mật.
+  transition:
+    to: key-store-006
+    description: Khi xác định được storepass và entry protection, cần áp dụng vào việc lấy private key cùng certificate chain và xử lý lỗi thực tế.
+- id: key-store-006
+  order: 6
+  title: 12.6 Đọc khóa cùng chuỗi chứng thư và kiểm tra alias hoặc mật khẩu sai
+  description: Đọc private key, leaf và issuer chain của PKCS12, xác minh cặp khóa và phân biệt wrong alias, wrong storepass, wrong keypass với PKIX trust.
+  transition:
+    to: key-store-007
+    description: Đọc khóa/chain và phân loại lỗi đã rõ; bước kế tiếp tổ chức lazy loading, callback và lifecycle password trong ứng dụng.
+- id: key-store-007
+  order: 7
+  title: 12.7 KeyStore.Builder, LoadStoreParameter và bảo vệ mật khẩu trong ứng dụng
+  description: Dùng Builder, LoadStoreParameter, CallbackHandlerProtection, PasswordProtection và hiểu cache/lazy load/destroy khi ứng dụng rotate secret.
+  transition:
+    to: key-store-008
+    description: Hiểu Builder và protection giúp dùng keytool đúng quyền để tạo, nhập, xuất và chuyển kho một cách kiểm chứng được.
+- id: key-store-008
+  order: 8
+  title: 12.8 Tạo, liệt kê, nhập, xuất và chuyển đổi kho bằng keytool
+  description: Dùng keytool để sinh, liệt kê, export certificate, tạo CSR, import certificate/CA reply và chuyển JKS sang PKCS12 có kiểm tra kết quả.
+  transition:
+    to: key-store-009
+    description: 'Quản lý khóa bằng CLI dẫn đến quyết định quan trọng: nguồn CA đáng tin nào được nạp và tác động của mỗi thay đổi truststore.'
+- id: key-store-009
+  order: 9
+  title: 12.9 Phạm vi của cacerts, kho tin cậy riêng và tác động khi thay đổi tập CA được tin
+  description: Xác định CA trust scope từ cacerts tới per-client SSLContext, đánh giá root add/remove, rollover, TLS session reload, negative tests và mTLS.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh định hướng các bài học
+
+  | Tiêu chí | Bài 1 — 12.1: Mô hình | 12.2: Entry | 12.3: Format | 12.4: Lifecycle | 12.5: Password | 12.6: Chain | 12.7: Builder | 12.8: keytool | 12.9: CA trust |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | Identity/trust/CertStore | 3 entry + alias | Type và provider | load/store đúng | Storepass vs keypass | Private key + chain | Lazy load + secret | CLI và chuyển kho | Trust scope và CA rollover |
+  | Tình huống | TLS/mTLS và PKIX | Chọn đúng entry | PKCS12 hay HSM | Tạo/lưu/nạp lại | Sai credential | Chain 2 phần tử | Builder và callback | CSR và import | Public/private CA |
+  | Bằng chứng thực hành | JSSE managers + CertStore | 3 loại entry | Provider matrix | AES round-trip | 2 AES keypass | Sign/verify leaf | Builder cache/destroy | keytool list/import | Scoped SSLContext |
+  | Lỗi cần phân biệt | Ứng viên khác trust anchor | Alias khác identity | Đuôi file khác format | load null mất file cũ | Storepass khác keypass | Alias lỗi khác PKIX | Builder không hot reload | exportcert khác export key | Custom store thay roots |
+  | Quyết định sau bài | Chọn nguồn identity và trust | Định danh đúng entry | Chọn backend phù hợp | Lưu an toàn có backup | Phân quyền secret | Kiểm khóa và certificate | Quản trị vòng đời loader | Nhập/xuất có kiểm soát | Rollout và distrust CA |
+  | Mức độ suy luận | Liên hệ nhiều hệ thống | Phân loại và thao tác | Đánh đổi tương thích | Thao tác cơ sở | Credential policy | Kiểm chain và lỗi | Provider/lifecycle sâu | Quy trình vận hành | Kiến trúc trust đa client |

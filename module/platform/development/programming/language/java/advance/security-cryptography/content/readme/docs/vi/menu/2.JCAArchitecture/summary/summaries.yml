@@ -1,0 +1,352 @@
+summaries:
+- id: jca-architecture-001
+  title: 2.1 Mô hình engine class, SPI và security provider
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **2.1 Mô hình engine class, SPI và security provider**
+
+    Bài học đặt nền cho toàn bộ chương: ứng dụng gọi một engine API thống nhất, nhưng implementation mật mã được cung cấp qua SPI và security provider. Nếu nhầm ba vai trò này, bạn sẽ khó chẩn đoán lỗi chọn dịch vụ, thiết kế tích hợp HSM hoặc hiểu vì sao cùng lời gọi chạy trên các runtime khác nhau.
+
+    Thông qua `JcaEngineLookup` và provider checksum giáo dục, người học nhìn được đường đi từ `getInstance` tới `Provider.Service` và các phương thức `engine...` mà không lẫn ví dụ giả với mật mã an toàn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiến trúc và hợp đồng
+
+    1. Vì sao JCA tách engine class khỏi implementation SPI và provider?
+    2. Phân biệt `MessageDigest`, `MessageDigestSpi`, `Provider` và `Provider.Service` bằng trách nhiệm cụ thể như thế nào?
+    3. Cặp service type và algorithm được dùng ở khâu nào trong việc tạo engine?
+
+    ### Thực hành và giới hạn
+
+    1. Khi nào overload `getInstance(algorithm, Provider)` không cần đăng ký provider toàn cục?
+    2. Ví dụ `EDU-CHECKSUM32` mô phỏng được phần nào của JCA và vì sao không thể dùng làm hàm băm bảo mật?
+    3. Có thể kiểm tra provider và lớp SPI thực tế mà không khởi tạo trực tiếp lớp triển khai bằng cách nào?
+    4. Tại sao `getInstance` thành công chưa đảm bảo một phép ký hoặc mã hóa thực tế thành công?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân định kiến trúc | Vẽ và giải thích chuỗi engine API → đăng ký `Provider.Service` → SPI implementation. |
+    | Tra cứu dịch vụ | Dùng `getProvider` và `getService` đối chiếu engine SHA-256 đang chạy với provider thực tế. |
+    | Thực nghiệm SPI | Phân tích chương trình provider checksum, chỉ ra từng `engineUpdate/engineDigest` và kết quả `000000c6`. |
+    | Quyết định provider | Nêu được lúc nào truyền đối tượng provider riêng và lúc nào không nên sửa registry JVM. |
+    | Đánh giá an toàn | Giải thích tại sao dịch vụ xuất hiện trong JCA không tự chứng minh thuật toán hoặc cách sử dụng an toàn. |
+- id: jca-architecture-002
+  title: 2.2 Lấy dịch vụ qua getInstance và lựa chọn provider theo thứ tự ưu tiên
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **2.2 Lấy dịch vụ qua getInstance và lựa chọn provider theo thứ tự ưu tiên**
+
+    Bài học giải quyết quyết định cụ thể của ứng dụng khi gọi `getInstance`: để JCA tự chọn implementation theo chính sách runtime, khóa vào tên provider đã đăng ký, hay truyền một đối tượng provider riêng. Việc chọn sai có thể khiến ứng dụng lệ thuộc vendor, không sử dụng được khóa HSM hoặc âm thầm chuyển sang implementation ngoài chính sách.
+
+    Qua bảng ưu tiên và thí nghiệm hai provider giáo dục, người học kiểm chứng tác động của `insertProviderAt`, `removeProvider`, policy ưu tiên theo thuật toán và việc chọn provider trễ khi engine cần khóa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Factory overload và ưu tiên
+
+    1. Ba overload của `MessageDigest.getInstance` khác nhau về yêu cầu provider và phạm vi fallback như thế nào?
+    2. Trong danh sách P1/P2/P3, làm sao suy ra provider ứng viên theo đúng service type và algorithm?
+    3. Vì sao thứ tự `Security.getProviders()` có thể không phản ánh provider mà `getProvider()` quan sát được?
+
+    ### Thời điểm lựa chọn và xử lý lỗi
+
+    1. Khi nào `Signature` có thể hoãn chọn provider đến `initSign/initVerify` và tác dụng phụ của `getProvider()` sớm là gì?
+    2. Thí nghiệm `ProviderPriorityDemo` chứng minh gì khi A đứng trước B rồi bị gỡ?
+    3. Vì sao thiếu provider theo tên khác với thiếu thuật toán trong một provider đã tồn tại?
+
+    ### Quyết định triển khai
+
+    1. Khi nào nên để JCA tự chọn thay vì khóa `SUN`, `SunJCE` hoặc provider khác?
+    2. Nếu yêu cầu HSM/PKCS#11 bắt buộc mà provider lỗi, vì sao không được fallback tự động?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh overload | Chọn đúng dạng `getInstance` theo yêu cầu di động, provider pin hoặc đối tượng chưa đăng ký. |
+    | Dự đoán thứ tự | Phân tích danh sách provider và dự đoán kết quả trước/sau `insertProviderAt/removeProvider`. |
+    | Kiểm tra lựa chọn thật | Đối chiếu `Security.getProviders`, `Provider.Service` và `engine.getProvider` sau khởi tạo thích hợp. |
+    | Tách ngoại lệ | Phân biệt `NoSuchProviderException` với `NoSuchAlgorithmException` trong ba kiểu gọi. |
+    | Thiết kế fail-closed | Lập quyết định không fallback khi chính sách yêu cầu provider hoặc thiết bị cụ thể. |
+- id: jca-architecture-003
+  title: 2.3 Tra cứu tên thuật toán chuẩn, alias và phạm vi hỗ trợ của từng provider
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **2.3 Tra cứu tên thuật toán chuẩn, alias và phạm vi hỗ trợ của từng provider**
+
+    Bài tập trung vào lỗi khó nhìn khi tra cứu tên: tên thuật toán chuẩn, alias cục bộ, service type, OID và `Cipher` transformation không phải cùng một khái niệm. Kỹ sư có thể thấy tên được liệt kê trong provider nhưng vẫn không dùng được một transformation hoặc khóa mong muốn.
+
+    Bạn sẽ biết kết hợp `Security.getAlgorithms`, `Provider.getService` và factory thực tế để kiểm tra từng provider, đồng thời tránh hiểu nhầm alias hoặc catalog dịch vụ là cam kết tương thích.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tên và phạm vi
+
+    1. Tên thuật toán chuẩn khác alias do một provider đăng ký như thế nào?
+    2. Vì sao `SHA-256`, `HmacSHA256`, `SHA256withRSA` không thể tráo đổi cho nhau?
+    3. Vì sao `Cipher.getInstance("AES")` không đủ xác định mode và padding?
+
+    ### Khám phá và kiểm chứng
+
+    1. `Security.getAlgorithms`, `Provider.getServices` và `getService(type,name)` cung cấp những bằng chứng khác nhau nào?
+    2. Vì sao `getService("Cipher", "AES/GCM/NoPadding") == null` không đủ để kết luận AES-GCM không được hỗ trợ?
+    3. Làm sao kiểm tra alias `SHA256` chỉ trong provider đã chọn mà không suy rộng sang toàn JVM?
+    4. Những bước nào cần qua để từ tên được quảng bá đi đến chứng minh thao tác mã hóa thành công?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn tên đúng | Ghép đúng engine, standard name, alias và transformation cho digest, MAC, signature và cipher. |
+    | Kiểm thử alias | So sánh `getService` và `getInstance` với tên chuẩn và tên alias trên một provider. |
+    | Khảo sát transformation | Thử `Cipher.getInstance("AES/GCM/NoPadding", p)` theo từng provider và giải thích catalog khác với factory. |
+    | Phân tầng hỗ trợ | Tách khả năng được quảng bá, tạo engine và `init/doFinal` với khóa/tham số thực tế. |
+    | Chẩn đoán liên môi trường | Liệt kê thông tin JDK/provider/tên thuật toán cần ghi để tái hiện sai lệch. |
+- id: jca-architecture-004
+  title: 2.4 Phân biệt API bắt buộc của Java SE với thuật toán do một JDK cung cấp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **2.4 Phân biệt API bắt buộc của Java SE với thuật toán do một JDK cung cấp**
+
+    Bài giải quyết nhầm lẫn thường gặp giữa **API Java SE có sẵn**, **tên thuật toán đã chuẩn hóa**, **tập implementation tối thiểu bắt buộc** và **dịch vụ mở rộng của một JDK/provider cụ thể**. Chọn nhầm chuẩn tương thích khiến ứng dụng chỉ chạy được trên một bản JDK dù mã vẫn biên dịch trên Java SE.
+
+    Người học sử dụng bảng yêu cầu Java SE 17 và chương trình `JcaAvailability` để tách bảo đảm của đặc tả khỏi quan sát runtime; từ đó xác định phụ thuộc kỹ thuật trước khi phát hành.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bốn tầng của hợp đồng
+
+    1. Có engine API chuẩn thì có thể suy ra mọi algorithm name hợp lệ đều bắt buộc hỗ trợ không?
+    2. Phần `Standard Algorithm Names` khác `Security Algorithm Implementation Requirements` ở mục đích nào?
+    3. Vì sao yêu cầu tối thiểu Java SE áp dụng cho implementation tổng thể mà không áp dụng riêng mọi provider?
+
+    ### Ra quyết định trên Java SE 17
+
+    1. SHA-256, AES/GCM/NoPadding với AES-128 và PKCS12 minh họa tính bắt buộc như thế nào?
+    2. Vì sao `SHA3-256` hoặc `ChaCha20-Poly1305` có thể hiện diện trên Oracle JDK 17 nhưng không thuộc tập tối thiểu Java SE 17?
+    3. Nếu `getInstance` thành công nhưng `init` không chấp nhận khóa, điều đó có chứng minh Java SE không tuân thủ không?
+    4. Cần ghi lại và kiểm thử những gì khi ứng dụng phụ thuộc thuật toán mở rộng của provider?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc đặc tả | Tìm riêng danh sách tên chuẩn và bảng mức triển khai tối thiểu của đúng phiên bản Java SE. |
+    | Đánh giá tính di động | Phân loại một cặp engine/algorithm là API chuẩn, bắt buộc tối thiểu hay extension runtime. |
+    | Thực nghiệm runtime | Giải thích đầu ra của `JcaAvailability`, gồm provider thật và khả năng có/không có SHA3-256. |
+    | Thiết kế dependency | Mô tả JDK/provider tối thiểu và test vận hành cần thiết cho thuật toán ngoài tập bắt buộc. |
+    | Chọn thuật toán có trách nhiệm | Phân biệt tương thích đặc tả với việc thuật toán như SHA-1 hoặc ECB có phù hợp bảo mật hay không. |
+- id: jca-architecture-005
+  title: 2.5 Khám phá Provider.Service và danh sách thuật toán đang có trong tiến trình
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **2.5 Khám phá Provider.Service và danh sách thuật toán đang có trong tiến trình**
+
+    Bài biến khái niệm `Provider.Service` thành kỹ năng khám phá thực tế trên JVM: liệt kê provider theo thứ tự đăng ký, xem service type, thuật toán, implementation class và metadata tùy chọn. Nhờ đó bạn có thể lập bản đồ khả năng runtime để gỡ lỗi deployment mà không tự sửa cấu hình provider.
+
+    Trọng tâm là **độ tin cậy của bằng chứng khám phá**: danh mục được quảng bá không đồng nghĩa factory tạo được instance, chưa nói đến khởi tạo bằng khóa/tham số hay tính an toàn của thuật toán.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Metadata của registry
+
+    1. `Security.getProviders()` và `Provider.getServices()` khác nhau về đối tượng, thứ tự và phạm vi thông tin như thế nào?
+    2. `Provider.Service.getType/getAlgorithm/getClassName/getAttribute` cho biết những gì và không bảo đảm điều gì?
+    3. Vì sao không nên tự new lớp triển khai ghi trong `getClassName`?
+
+    ### Thực hành khám phá
+
+    1. Làm sao dùng `ProviderExplorer` để lọc `MessageDigest`, `Signature`, `Cipher` hoặc toàn bộ service?
+    2. Vì sao alias và `Cipher` transformation không nhất thiết xuất hiện thành những dòng riêng trong danh sách dịch vụ?
+    3. Ba mức kiểm chứng từ descriptor đến factory và phép toán thật khác nhau như thế nào?
+    4. Một snapshot provider từ laptop có thể dùng để kết luận về JVM production khi nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập catalog runtime | Chạy `ProviderExplorer`, phân nhóm và sắp thứ tự service theo từng provider mà không làm đổi registry. |
+    | Đọc service descriptor | Trích xuất type, algorithm, class, provider và attribute tùy chọn, xử lý giá trị null. |
+    | Xác thực khả năng sử dụng | Thử factory/`init` trên provider cụ thể và diễn giải khác biệt giữa catalog với thao tác thực. |
+    | Chẩn đoán alias/transformation | Phân biệt `getService` với việc kiểm tra full `Cipher.getInstance`. |
+    | Đánh giá giới hạn | Giải thích vì sao snapshot, service list hoặc thuật toán cũ có mặt không đủ chứng minh tương thích/an toàn. |
+- id: jca-architecture-006
+  title: 2.6 AlgorithmParameterSpec, AlgorithmParameters và việc lưu tham số thuật toán
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **2.6 AlgorithmParameterSpec, AlgorithmParameters và việc lưu tham số thuật toán**
+
+    Bài giải thích tham số thuật toán tồn tại độc lập với khóa và cần được mang theo ciphertext/signature khi thuật toán yêu cầu. Nếu chỉ lưu key hoặc chỉ nhớ tên thuật toán, ứng dụng có thể không giải mã được dữ liệu ở phiên bản hay provider khác.
+
+    Người học thao tác `AlgorithmParameterSpec` có kiểu, `AlgorithmParameters` có khả năng encode/decode, kiểm tra round-trip AES-GCM với AAD và xây dựng định dạng lưu dữ liệu có version, key ID, nonce và tag rõ ràng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế JCA và tham số
+
+    1. `AlgorithmParameterSpec` khác `AlgorithmParameters` và `AlgorithmParameterGenerator` như thế nào?
+    2. Vì sao `GCMParameterSpec` phải chứa độ dài tag tính bằng bit cùng IV, còn `IvParameterSpec` không đủ mô tả mọi mode?
+    3. Khi nào có thể dùng `Cipher.getParameters()` và vì sao giá trị đó không chứa khóa bí mật?
+
+    ### Lưu trữ và round-trip
+
+    1. Quy trình encode tham số bằng `AlgorithmParameters.getEncoded` rồi khôi phục bằng `init(bytes)` diễn ra thế nào?
+    2. Vì sao dữ liệu AES-GCM cần lưu nonce, ciphertext kèm tag, key ID và quy tắc tạo AAD?
+    3. Trong `GcmParametersRoundTrip`, thay AAD làm gì xảy ra ở `doFinal` và vì sao?
+    4. Khi chia sẻ bản mã qua nhiều provider, nên chọn field-level format hay parameter encoding dựa trên tiêu chí nào?
+
+    ### Ranh giới an toàn
+
+    1. Vì sao nonce GCM không được lặp dưới cùng khóa, dù nonce không cần bí mật?
+    2. Vì sao không được dùng `toString` hoặc object serialization như hợp đồng lưu trữ tham số lâu dài?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn spec đúng | Chọn `GCMParameterSpec`, `IvParameterSpec` hoặc `PSSParameterSpec` theo contract algorithm. |
+    | Round-trip tham số | Giải thích và chạy quy trình `Cipher.getParameters → getEncoded → AlgorithmParameters.init` trong ví dụ. |
+    | Phân tích xác thực AEAD | Dự đoán và kiểm tra `AEADBadTagException` khi AAD/IV/tag/ciphertext không khớp. |
+    | Thiết kế dữ liệu lưu | Phác thảo record có version, transformation, key ID, nonce/tag và AAD, không lưu khóa cạnh bản mã. |
+    | Đánh giá tương thích | Đề xuất test các provider/format và lý do không phụ thuộc `toString` hoặc encoding ngầm định. |
+- id: jca-architecture-007
+  title: 2.7 Vòng đời khởi tạo, cập nhật, kết thúc và tái sử dụng đối tượng mật mã
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **2.7 Vòng đời khởi tạo, cập nhật, kết thúc và tái sử dụng đối tượng mật mã**
+
+    Bài đi sâu vào **trạng thái mutable theo từng phép mật mã** của các engine JCA/JCE. Một đối tượng đã tạo bằng `getInstance` chưa chắc đã có khóa/chế độ; `update` và `doFinal`/`sign`/`digest` có ý nghĩa khác nhau; tái sử dụng sai có thể khiến kết quả sai hoặc gây lặp nonce AES-GCM.
+
+    Người học chạy các ví dụ Hash/HMAC, Cipher GCM và Signature để xác nhận quy tắc reset, re-init, xử lý lỗi và quyền sở hữu đối tượng theo từng message.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng đời theo engine
+
+    1. `getInstance`, `init`, `update` và thao tác final khác nhau ở giai đoạn nào?
+    2. Sau `MessageDigest.digest` và `Mac.doFinal`, engine và khóa hiện có ở trạng thái nào?
+    3. Sau `Signature.sign/verify`, khi nào có thể xử lý message mới và khi nào phải đổi chế độ bằng `initSign/initVerify`?
+
+    ### Cipher và an toàn dữ liệu
+
+    1. Tại sao `Cipher.doFinal` reset trạng thái không có nghĩa được tái dùng key/IV AES-GCM để mã hóa message mới?
+    2. Vì sao `Cipher.update` có thể trả null hoặc ít byte hơn kỳ vọng, và nên ghép dữ liệu ra sao?
+    3. Vì sao plaintext GCM chưa qua xác thực tag không được đưa vào nghiệp vụ?
+
+    ### Lỗi và tái sử dụng
+
+    1. Khi một thao tác thất bại, vì sao phải khởi tạo lại hoặc tạo instance mới trước lần tiếp theo?
+    2. Điểm nào khiến tái sử dụng cùng một engine cho nhiều thread khác với dùng lại tuần tự trong một thread?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích state | Dự đoán state engine trước/sau init, update, final và reset với nhiều loại JCA. |
+    | Thử nghiệm Hash/HMAC | Giải thích output `digestReset/macReset` khi xử lý hai thông điệp liên tiếp. |
+    | Vận hành AES-GCM | Thực hiện re-init và AAD/tag verification đúng, từ chối dữ liệu bị sửa. |
+    | Tái sử dụng Signature | Giải thích cách ký/xác minh nhiều message với cùng key mà không trộn buffer. |
+    | Chẩn đoán vòng đời | Liên hệ `IllegalStateException`, `InvalidKeyException`, tag failure với thao tác/hậu trạng thái tương ứng. |
+- id: jca-architecture-008
+  title: 2.8 Xử lý NoSuchAlgorithmException, NoSuchProviderException và lỗi tham số
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **2.8 Xử lý NoSuchAlgorithmException, NoSuchProviderException và lỗi tham số**
+
+    Bài giúp kỹ sư định vị lỗi mật mã theo **đúng giai đoạn**: lookup algorithm/provider, init bằng khóa/tham số và thao tác hoặc xác thực dữ liệu. Nếu gom mọi ngoại lệ thành một lỗi chung, ứng dụng khó sửa đúng nguyên nhân và rất dễ vô tình fallback sang thuật toán hoặc provider kém an toàn.
+
+    Hai chương trình `JcaLookupDemo` và `GcmFailureDemo` cho phép quan sát ngoại lệ lookup, lỗi tham số và sai authentication tag để thiết kế fail-fast, fail-closed và log chẩn đoán phù hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân loại lỗi
+
+    1. `NoSuchAlgorithmException` và `NoSuchProviderException` khác nhau về nguyên nhân và overload `getInstance` nào ném?
+    2. `NoSuchPaddingException`, `InvalidKeyException` và `InvalidAlgorithmParameterException` thường xảy ra ở giai đoạn nào?
+    3. Vì sao `GeneralSecurityException` không bao gồm mọi lỗi runtime như `ProviderException`?
+
+    ### Chẩn đoán và an toàn
+
+    1. Trong `GcmFailureDemo`, vì sao sửa tag gây `AEADBadTagException` thay vì lỗi thiếu thuật toán?
+    2. Tại sao không nên retry bằng MD5, ECB hoặc provider không được duyệt chỉ để tránh lỗi?
+    3. Làm sao phân biệt lỗi deployment, input không hợp lệ và xác thực bản tin thất bại?
+    4. Những thông tin nào có thể ghi log nội bộ để debug mà không rò key, plaintext hay stack trace ra client?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định vị giai đoạn lỗi | Lập bảng lookup → init → doFinal và chỉ ra loại ngoại lệ điển hình tại từng bước. |
+    | So sánh overload | Chỉ ra trường hợp thiếu tên provider, thiếu service trong provider hoặc null/empty argument. |
+    | Thực nghiệm negative test | Chạy lookup và AES-GCM tamper demo, giải thích output từ exception thực tế. |
+    | Thiết kế fail-closed | Đề xuất chính sách không fallback xuống thuật toán hoặc provider ngoài hợp đồng bảo mật. |
+    | Xây dựng telemetry | Phân tách thông báo lỗi công khai với thông tin chẩn đoán đã lọc ở log tin cậy. |
+- id: jca-architecture-009
+  title: 2.9 Tính tương thích và trạng thái thay đổi khi dùng dịch vụ mật mã đồng thời
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **2.9 Tính tương thích và trạng thái thay đổi khi dùng dịch vụ mật mã đồng thời**
+
+    Bài kết hợp hai rủi ro sản xuất: **sự không tương thích byte/thuật toán/provider giữa các dịch vụ** và **sự trộn trạng thái mutable khi nhiều thread dùng JCA/JCE**. Cả hai có thể gây lỗi tag/chữ ký khó tái hiện; trong AES-GCM, race của bộ cấp nonce còn đe dọa bảo mật ngay cả khi mỗi task dùng Cipher riêng.
+
+    Qua hai ví dụ chạy song song với test vector và bộ cấp IV bằng `AtomicLong`, người học phân tích ownership theo tác vụ, định dạng envelope có version/key ID/AAD và giới hạn của giải pháp nonce chỉ an toàn trong một JVM đơn lẻ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tương thích giao thức
+
+    1. Vì sao cùng tên `AES/GCM/NoPadding` vẫn chưa chứng minh hai hệ thống giải mã được dữ liệu của nhau?
+    2. Những yếu tố nào của wire format, key format, AAD, signature encoding và provider phải được thống nhất?
+    3. Vì sao `Key.getEncoded` có thể trả null và HSM key handle không dễ chuyển provider?
+
+    ### Concurrency và lifecycle
+
+    1. Vì sao mỗi `MessageDigest/Mac/Signature/Cipher` stateful phải có ownership theo task, khác với `SecureRandom`?
+    2. Tại sao `synchronized` từng phương thức không bảo vệ chuỗi `init → update → doFinal`?
+    3. Các ví dụ `ConcurrentJcaStateDemo` và `ConcurrentGcmDemo` chứng minh điều gì, và không thể chứng minh điều gì chỉ từ một lần chạy?
+
+    ### Nonce và kiểm thử
+
+    1. Vì sao `AtomicLong` bảo đảm IV khác nhau trong JVM minh họa nhưng không tự bảo đảm toàn cluster và qua restart?
+    2. Làm sao thiết kế test cross-provider, negative tag/AAD, race, restart và key rotation để xác nhận hợp đồng thực tế?
+    3. Một lỗi `AEADBadTagException` dưới tải cao có thể do những nguồn gốc nào ngoài race?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích interoperability | Lập danh sách thuật toán, tham số, byte encoding, key ID, signature format và version bắt buộc cho hợp đồng liên dịch vụ. |
+    | Thiết kế ownership | Chỉ ra engine mutable nào phải tách theo request và giải thích ngoại lệ thread-safety của `SecureRandom`. |
+    | Kiểm chứng đồng thời | Phân tích kết quả 32/32 test vector cùng luồng tác vụ và giới hạn của stress test. |
+    | Quản lý nonce GCM | Giải thích invariant (key, IV), vùng an toàn của `AtomicLong` và nhu cầu phối hợp xuyên node/restart. |
+    | Thiết kế bộ test | Phân tách compatibility, lifecycle, tamper, concurrency, key rotation và performance tests. |

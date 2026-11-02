@@ -1,1 +1,0 @@
-﻿# JDBC-backed sessions

@@ -783,7 +783,7 @@ enum ModuleListEnum {
             'SERVLET',
             'A service of microservice app . This service store inventory info',
             false,
-            ['SPRING_JPA', 'GLOBAL_EXCEPTION_HANDLER', 'EUREKA_CLIENT']
+            ['GLOBAL_EXCEPTION_HANDLER', 'EUREKA_CLIENT']
     ),
 
     JACKSON(
@@ -1359,7 +1359,7 @@ enum ModuleListEnum {
             'SERVLET',
             'A service of microservice app . This service to handle order from user',
             false,
-            ['SPRING_JPA', 'EUREKA_CLIENT', 'GLOBAL_EXCEPTION_HANDLER']
+            ['EUREKA_CLIENT', 'GLOBAL_EXCEPTION_HANDLER']
     ),
 
     PRODUCT_SERVICE(
@@ -1686,30 +1686,12 @@ enum ModuleListEnum {
             []
     ),
 
-    SPRINGDOC_OPENAPI(
-            'module:platform:development:programming:framework:springdoc:openapi',
-            'module/platform/development/programming/framework/springdoc/openapi',
-            'LIBRARY',
-            'Springdoc OpenAPI knowledge and examples for documenting Spring web APIs',
-            false,
-            []
-    ),
-
     SPRING_ACTUATOR(
             'project-build:springboot-runtime:actuator',
             'project-build/springboot-runtime/actuator',
             'LIBRARY',
             'Runtime dependency wrapper for Spring Boot Actuator',
             true,
-            []
-    ),
-
-    SPRING_BATCH(
-            'module:platform:development:programming:framework:spring-batch',
-            'module/platform/development/programming/framework/spring-batch',
-            'LIBRARY',
-            'Spring Batch job and step processing, chunk-oriented processing, restartability, fault tolerance and scaling',
-            false,
             []
     ),
 
@@ -1749,42 +1731,6 @@ enum ModuleListEnum {
             []
     ),
 
-    SPRING_DATA_JDBC(
-            'module:platform:development:programming:framework:spring-data:jdbc',
-            'module/platform/development/programming/framework/spring-data/jdbc',
-            'LIBRARY',
-            'Spring Data JDBC aggregate-oriented relational persistence, repositories, mapping and transactions',
-            false,
-            []
-    ),
-
-    SPRING_DATA_MONGODB(
-            'module:platform:development:programming:framework:spring-data:mongodb',
-            'module/platform/development/programming/framework/spring-data/mongodb',
-            'LIBRARY',
-            'Spring Data MongoDB repositories, mapping, queries, aggregation, transactions and reactive integration',
-            false,
-            []
-    ),
-
-    SPRING_DATA_R2DBC(
-            'module:platform:development:programming:framework:spring-data:r2dbc',
-            'module/platform/development/programming/framework/spring-data/r2dbc',
-            'LIBRARY',
-            'Spring Data R2DBC reactive relational access, repositories, mapping, transactions and backpressure-aware database workflows',
-            false,
-            []
-    ),
-
-    SPRING_DATA_REDIS(
-            'module:platform:development:programming:framework:spring-data:redis',
-            'module/platform/development/programming/framework/spring-data/redis',
-            'LIBRARY',
-            'Spring Data Redis templates, repositories, serialization, caching, pub-sub and reactive access',
-            false,
-            []
-    ),
-
     SPRING_DEVTOOL(
             'project-build:springboot-runtime:devtools',
             'project-build/springboot-runtime/devtools',
@@ -1803,15 +1749,6 @@ enum ModuleListEnum {
             []
     ),
 
-    SPRING_JPA(
-            'module:platform:development:programming:framework:spring-data:jpa',
-            'module/platform/development/programming/framework/spring-data/jpa',
-            'LIBRARY',
-            '',
-            true,
-            []
-    ),
-
     SPRING_MESSAGING(
             'module:platform:development:programming:framework:spring-framework:messaging',
             'module/platform/development/programming/framework/spring-framework/messaging',
@@ -1821,29 +1758,11 @@ enum ModuleListEnum {
             []
     ),
 
-    SPRING_MODULITH(
-            'module:platform:development:programming:framework:spring-modulith',
-            'module/platform/development/programming/framework/spring-modulith',
-            'LIBRARY',
-            'Spring Modulith application modules, structural verification, module events, testing, observability and documentation',
-            false,
-            []
-    ),
-
     SPRING_REACTIVE(
             'module:platform:development:programming:framework:spring-framework:reactive',
             'module/platform/development/programming/framework/spring-framework/reactive',
             'REACTIVE',
             'Spring WebFlux streaming, context propagation and blocking-boundary learning experiments',
-            false,
-            []
-    ),
-
-    SPRING_SESSION(
-            'module:platform:development:programming:framework:spring-session',
-            'module/platform/development/programming/framework/spring-session',
-            'LIBRARY',
-            'Spring Session externalized HTTP session management, repositories, Redis/JDBC backing stores and Spring Security integration',
             false,
             []
     ),

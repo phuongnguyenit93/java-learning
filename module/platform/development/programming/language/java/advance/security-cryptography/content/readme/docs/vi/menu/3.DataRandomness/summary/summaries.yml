@@ -1,0 +1,279 @@
+summaries:
+- id: data-randomness-001
+  title: 3.1 Chuyển String thành byte[] với charset xác định và quy tắc chuẩn hóa dữ liệu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **3.1 Chuyển String thành byte[] với charset xác định và quy tắc chuẩn hóa dữ liệu**
+
+    Một ký tự nhìn giống nhau chưa chắc tạo cùng byte. Bài này giúp người học thiết lập quy tắc chuyển String ↔ byte[] có charset và chính sách chuẩn hóa nhất quán, phát hiện Unicode/UTF-8 lỗi và tránh việc bên ký, bên xác minh hoặc hệ thống phân quyền diễn giải dữ liệu khác nhau.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Từ ký tự đến byte
+
+    1. Vì sao String.length(), số code point và độ dài byte UTF-8 có thể khác nhau với cùng một chuỗi?
+    2. Hai dạng Unicode của Café có thể tạo những dãy byte nào và vì sao NFC đưa chúng về cùng một biểu diễn?
+    3. Khi nào phải dùng StandardCharsets.UTF_8 và CharsetEncoder hoặc CharsetDecoder ở chế độ REPORT?
+
+    ### Chính sách chuẩn hóa và bảo mật
+
+    1. Vì sao NFC và NFKC không thể áp dụng tùy tiện cho mọi tên, mật khẩu và định danh?
+    2. Nếu đối tác ký raw JSON body, tại sao việc parse rồi serialize hoặc normalize trước khi verify có thể làm chữ ký không khớp?
+    3. Làm sao xây golden vector và version cho quy tắc canonicalization dùng giữa nhiều ngôn ngữ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt đơn vị Unicode và byte | Tính UTF-16 code unit, code point và byte UTF-8 của ví dụ có ký tự ghép hoặc emoji, chỉ ra chỗ cắt dữ liệu nguy hiểm. |
+    | Chuẩn hóa có điều kiện | So sánh NFC/NFKC trên cặp code point tương đương và giải thích vì sao không tự chuẩn hóa mật khẩu hay raw signed body. |
+    | Mã hóa/giải mã nghiêm ngặt | Viết và kiểm thử encoder/decoder UTF-8 dùng REPORT để từ chối surrogate lẻ và byte hỏng. |
+    | Định nghĩa canonical byte contract | Đặc tả charset, form, thứ tự trường, ranh giới byte và quy tắc version cho HMAC/chữ ký/AAD. |
+    | Kiểm thử liên hệ thống | Lập golden vector Unicode và giải thích kết quả digest khác nhau khi input byte khác nhau. |
+- id: data-randomness-002
+  title: 3.2 Base64, HexFormat và sự khác biệt giữa biểu diễn dữ liệu với bảo vệ bí mật
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **3.2 Base64, HexFormat và sự khác biệt giữa biểu diễn dữ liệu với bảo vệ bí mật**
+
+    Base64 và hex làm byte dễ lưu trong JSON, URL hoặc log chẩn đoán, nhưng hoàn toàn không giữ bí mật. Bài học hướng dẫn chọn đúng biến thể Base64/HexFormat, tính kích thước biểu diễn, round-trip byte và từ chối định dạng sai trước khi chuyển sang tầng xác thực hoặc giải mã thật.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biểu diễn và kích thước
+
+    1. Vì sao Base64/hex decode được mà không cần key, và khác AES-GCM, SHA-256, HMAC ở mục tiêu nào?
+    2. Ba byte đầu vào tạo bao nhiêu ký tự Base64 và hex, padding Base64 thể hiện điều gì?
+    3. Base64 Basic, URL-safe, MIME khác nhau ở bảng ký tự, xuống dòng và mức độ chấp nhận input ra sao?
+
+    ### Java API và ranh giới an toàn
+
+    1. Làm sao dùng java.util.Base64 và HexFormat để round-trip các byte FB FF 00 mà không mất dữ liệu?
+    2. Tại sao new String(ciphertext, UTF_8) và ghi secret dưới dạng Base64 vào log đều sai về mục đích?
+    3. Nếu một JWT/JWS hay ciphertext JSON được Base64URL decode thành công thì những kiểm tra nào vẫn bắt buộc?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lựa chọn biểu diễn | Chọn Basic, URL-safe, MIME hoặc hex theo vị trí lưu/truyền và giải thích overhead theo byte. |
+    | Round-trip Java 17+ | Viết thao tác Base64 và HexFormat encode/decode, xác nhận byte gốc được giữ nguyên. |
+    | Kiểm tra parser | Từ chối chuỗi Base64/hex sai, đặt giới hạn kích thước trước/sau decode và chọn decoder đúng giao thức. |
+    | Phân biệt cơ chế bảo vệ | Chỉ ra vì sao encoding không thêm secrecy, integrity, authentication hay quyền. |
+    | Bảo vệ dữ liệu nhạy cảm | Nhận diện JWT payload, Authorization Basic, token/secret và tránh logging dù đã được encode. |
+- id: data-randomness-003
+  title: 3.3 Phân biệt số bit, số byte, độ dài khóa và độ dài đầu ra
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **3.3 Phân biệt số bit, số byte, độ dài khóa và độ dài đầu ra**
+
+    Khi API ghi 128, 256 hoặc 2048, người lập trình phải xác định đó là bit của khóa/modulus, byte của digest/tag, hay ký tự hex/Base64. Bài học luyện phân tích đơn vị và kích thước cho AES, RSA, SHA-256, HMAC và GCM để tránh sai schema, buffer và đánh giá độ an toàn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đơn vị và vật liệu khóa
+
+    1. Làm sao chuyển n bit thành số byte tối thiểu và vì sao String.length() không đo byte UTF-8?
+    2. Vì sao AES-256 cần 32 byte key nhưng AES luôn có block size 16 byte?
+    3. Tại sao RSA-2048 có modulus 256 byte nhưng X.509/PKCS#8 encoded key thường dài hơn?
+
+    ### Độ dài kết quả và độ mạnh
+
+    1. SHA-256 xuất ra bao nhiêu byte, hex/Base64 dài bao nhiêu ký tự, và vì sao chống va chạm không bằng 256 bit?
+    2. Trong AES-GCM với nonce 12 byte và tag 128 bit, Cipher.doFinal của plaintext 5 byte trả bao nhiêu byte?
+    3. Vì sao key HmacSHA256 64 byte không khiến full MAC dài 64 byte và key bit length không tự chứng minh entropy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chuyển đơn vị chuẩn | Tính bit/byte và phân biệt kB với KiB, ký tự ASCII, UTF-16 unit và UTF-8 byte. |
+    | Kiểm tra tham số JCA | Đọc KeyGenerator.init, GCMParameterSpec, Mac.getMacLength và MessageDigest.digest theo đúng đơn vị. |
+    | Lập bảng kích thước định dạng | Tính kích thước digest, tag, nonce và overhead hex/Base64 của một envelope. |
+    | Giải thích strength | So sánh số bit modulus RSA, curve strength và bit entropy khóa mà không đồng nhất chúng. |
+    | Kiểm chứng code | Chạy ví dụ đo AES/HMAC/SHA và giải thích kết quả ổn định theo định dạng. |
+- id: data-randomness-004
+  title: 3.4 Vai trò của entropy; phân biệt SecureRandom với Random và ThreadLocalRandom
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **3.4 Vai trò của entropy; phân biệt SecureRandom với Random và ThreadLocalRandom**
+
+    Một chuỗi nhìn ngẫu nhiên có thể bị đoán khi seed/thuật toán không phù hợp. Bài này giải thích entropy và min-entropy, đối chiếu Random, ThreadLocalRandom với SecureRandom, rồi hướng dẫn chọn nguồn ngẫu nhiên cho mô phỏng, token, salt, OTP và nonce theo mức đối kháng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Entropy và bộ sinh
+
+    1. Vì sao một dãy có phân bố đẹp vẫn không chứng minh khó dự đoán mật mã?
+    2. Min-entropy của OTP sáu chữ số đều xấp xỉ bao nhiêu, và vì sao cần giới hạn thử?
+    3. Random(seed), ThreadLocalRandom và SecureRandom khác nhau thế nào ở tính tái lập, concurrency và bảo mật?
+
+    ### Chọn đúng ứng dụng
+
+    1. Vì sao Math.random hoặc Random không dùng tạo reset token, còn Random(seed) lại phù hợp cho test?
+    2. Sinh 32 byte CSPRNG rồi Base64URL thành 43 ký tự có làm tăng entropy không?
+    3. Nonce AES-GCM sinh từ SecureRandom có tự bảo đảm không trùng trong toàn bộ vòng đời key không?
+    4. Nên kiểm thử contract RNG bằng những quan sát nào thay vì bắt output bí mật cố định?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích entropy | Ước lượng min-entropy theo không gian đoán và phân biệt số bit đầu ra với độ bất định thực. |
+    | Chọn generator | Chỉ định Random, ThreadLocalRandom hay SecureRandom cho từng use case kèm lý do. |
+    | Phát token mẫu | Sinh đúng số byte bằng SecureRandom, encode Base64URL và kiểm tra định dạng không log secret. |
+    | Thiết kế OTP/nonce | Nêu yêu cầu TTL, rate limit hoặc uniqueness theo ngữ cảnh chứ không chỉ dựa vào RNG. |
+    | Kiểm chứng hành vi | Phân biệt assert deterministic sequence của Random với shape/contract của SecureRandom. |
+- id: data-randomness-005
+  title: 3.5 Tạo byte ngẫu nhiên, seed, reseed và tác động của seed có thể dự đoán
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **3.5 Tạo byte ngẫu nhiên, seed, reseed và tác động của seed có thể dự đoán**
+
+    Sau khi biết chọn SecureRandom, người học cần hiểu engine được seed ở đâu, thời điểm tự seed và tác động của việc gọi setSeed trước lần sử dụng đầu tiên. Bài đào sâu sinh byte, seed/reseed từ provider, rủi ro timestamp/VM snapshot và cách xác minh capability DRBG mà không tự thêm entropy giả.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Seed và tính khó đoán
+
+    1. Khác nhau giữa seed, trạng thái, entropy và byte đầu ra của CSPRNG như thế nào?
+    2. Vì sao băm timestamp thành 256 bit không thể tạo 256 bit entropy bí mật?
+    3. Tại sao gọi SecureRandom.setSeed(time) trước lần nextBytes đầu tiên có thể làm hệ thống yếu hơn?
+    4. Random(123L) minh họa được tính tái lập gì, và vì sao không suy cùng quy luật cho mọi SecureRandom provider?
+
+    ### Reseed và vòng đời
+
+    1. nextBytes, generateSeed, getSeed, setSeed và reseed khác nhau ra sao?
+    2. Khi nào reseed có thể block hoặc ném UnsupportedOperationException, và vì sao không gọi cho mỗi token?
+    3. Làm sao kiểm tra capability DRBG bằng getParameters và đánh giá rủi ro clone/restore VM?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Sinh byte bảo mật | Tạo token 32 byte bằng SecureRandom và xác minh kích thước/Base64URL mà không công bố secret. |
+    | Phân tích seed yếu | Vạch ra không gian đoán của timestamp/PID và giải thích rủi ro khi self-seeding bị bỏ qua. |
+    | Quản lý reseed | Phân biệt setSeed của caller với entropy reseed do provider cấp và kiểm tra hỗ trợ. |
+    | Đánh giá DRBG | Đọc capability từ getParameters, phân biệt reseed với prediction resistance. |
+    | Thiết kế test/triển khai | Đề xuất test vòng đời và xử lý restore VM/entropy theo provider thay vì giả định chung. |
+- id: data-randomness-006
+  title: 3.6 getInstanceStrong, DRBG và khả năng chặn của nguồn ngẫu nhiên
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **3.6 getInstanceStrong, DRBG và khả năng chặn của nguồn ngẫu nhiên**
+
+    Không nên suy từ chữ strong hay DRBG rằng một bộ sinh luôn tốt hơn hoặc không chặn. Bài này giúp người học chọn SecureRandom theo security properties/provider, yêu cầu strength và reseed/PR qua DrbgParameters, rồi đo riêng thời gian khởi tạo, lần sinh đầu và các lần tiếp theo trước khi quyết định về vận hành.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lựa chọn engine và DRBG
+
+    1. getInstanceStrong tra cứu security property nào và vì sao nhà cung cấp thực tế có thể khác giữa các JDK?
+    2. Khác biệt giữa new SecureRandom, getInstanceStrong và getInstance DRBG với tham số cụ thể là gì?
+    3. DRBG instantiate, generate và reseed liên quan thế nào đến entropy source?
+    4. RESEED_ONLY khác PR_AND_RESEED, và vì sao requested capability có thể khác effective capability?
+
+    ### Blocking và vận hành
+
+    1. Những bước nextBytes, generateSeed, reseed hoặc lần khởi tạo đầu có thể block khi nào?
+    2. Làm sao đo latency khởi tạo, first nextBytes và steady-state để không đổ lỗi sai cho entropy?
+    3. Nếu provider không đáp ứng strength, reseed hoặc PR yêu cầu, xử lý fail closed thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc cấu hình security | Tra securerandom.strongAlgorithms và giải thích provider được getInstanceStrong chọn. |
+    | Khởi tạo DRBG có chính sách | Yêu cầu strength/capability và kiểm tra getParameters hiệu lực trước reseed/PR. |
+    | Quan sát blocking | Thiết kế phép đo init/first/second nextBytes có ghi provider/algorithm và không log bí mật. |
+    | Ra quyết định vận hành | So sánh độ trễ, khả năng block và chính sách bảo mật trước khi chọn strong/DRBG. |
+    | Xử lý lỗi triển khai | Nêu hành vi khi NoSuchAlgorithmException hoặc capability thiếu mà không fallback sang Random. |
+- id: data-randomness-007
+  title: 3.7 Phân biệt salt, IV, nonce, challenge và token ngẫu nhiên
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **3.7 Phân biệt salt, IV, nonce, challenge và token ngẫu nhiên**
+
+    Những byte cùng được sinh bởi SecureRandom có nhiệm vụ và vòng đời khác nhau. Bài hướng dẫn phân biệt salt, IV, nonce, challenge và bearer token theo yêu cầu về tính duy nhất, khó đoán, bí mật và sử dụng lại, sau đó áp dụng vào password KDF, AES-GCM, xác thực chống replay và reset token.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất từng loại giá trị
+
+    1. Salt được lưu cùng password verifier vì sao không cần bí mật, và vì sao vẫn cần password KDF có cost?
+    2. IV của CBC và nonce AES-GCM khác nhau thế nào ở yêu cầu khó đoán, kích thước và không lặp?
+    3. Một bộ đếm có thể dùng làm nonce cho giao thức nào, và vì sao không thể thay IV CBC tùy ý?
+    4. Vì sao cùng một giá trị 32 byte khi công khai có thể làm challenge nhưng khi giữ kín có thể làm bearer token?
+
+    ### Từ giao thức đến triển khai
+
+    1. Challenge cần gắn với những ngữ cảnh, trạng thái và chứng cứ mật mã nào để chống replay?
+    2. Vì sao một reset token nên có TTL, scope, lưu verifier và consume atomically?
+    3. Vì sao có thể dùng fast hash kiểm tra token CSPRNG entropy cao nhưng không dùng SHA-256 thuần cho mật khẩu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại dữ liệu ngẫu nhiên | Điền đúng thuộc tính công khai/bí mật, uniqueness và vòng đời cho năm giá trị. |
+    | Thiết kế password verifier | Tạo salt riêng bằng CSPRNG, mô tả PBKDF2/cost và quá trình xác minh với salt đã lưu. |
+    | Kiểm soát AES-GCM nonce | Mô tả quản lý nonce 12 byte dưới cùng key, tag/AAD và chống reuse nhiều node. |
+    | Xây challenge flow | Ràng buộc user/session/action/expiry, verify chữ ký/MAC rồi consume atomically. |
+    | Bảo vệ bearer token | Thiết kế token CSPRNG, verifier lưu server-side, thời hạn và thu hồi phù hợp. |
+- id: data-randomness-008
+  title: 3.8 Thiết kế định dạng dữ liệu có phiên bản, độ dài và mã định danh thuật toán
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **3.8 Thiết kế định dạng dữ liệu có phiên bản, độ dài và mã định danh thuật toán**
+
+    Ciphertext một mình không đủ thông tin để lưu trữ hoặc giải mã trong tương lai. Bài cuối chương dùng byte, phép đo độ dài, nonce và AES-GCM đã học để đặc tả một binary envelope có magic, version, suite ID, key ID, giới hạn chiều dài và AAD, rồi kiểm chứng parser từ chối bản ghi hỏng/tampered và nâng cấp có kiểm soát.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định dạng và parser
+
+    1. Vì sao phải tách magic, version, suite_id, key_id, nonce và body_length thay vì đoán thuật toán từ file?
+    2. Đặc tả JENC v1 dùng những offset, big-endian và giới hạn byte nào để parser không nhập nhằng?
+    3. Vì sao phải kiểm tra chiều dài, phép cộng và exact-consumption trước khi cấp phát và giải mã?
+    4. Tại sao nhận trực tiếp chuỗi Cipher transformation từ file có thể tạo đường downgrade nguy hiểm?
+
+    ### Xác thực và tiến hóa
+
+    1. Vì sao header kể cả length/key ID phải nằm trong AAD của AES-GCM?
+    2. Khi sửa nonce/tag hoặc cắt mất byte cuối, parser hay tag sẽ từ chối ở bước nào?
+    3. Làm sao đưa suite mới, v2 hoặc key rotation vào schema mà không thay ý nghĩa của ID cũ?
+    4. Vì sao AEAD tag hợp lệ vẫn không tự phát hiện replay/rollback?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đặc tả envelope | Viết byte layout với field offset, length bound, version/suite và endianness rõ ràng. |
+    | Triển khai AEAD v1 | Ghép authenticated header làm AAD, ciphertext và tag vào bản ghi giải mã được. |
+    | Bảo vệ parser | Từ chối malformed, truncated, unknown suite và trailing bytes trước công bố plaintext. |
+    | Kiểm thử tampering | Chứng minh byte nonce/tag bị đổi và file bị cắt đều được từ chối. |
+    | Lập kế hoạch nâng cấp | Mô tả chính sách suite registry, key_id/rotation, version mới và không fallback yếu. |

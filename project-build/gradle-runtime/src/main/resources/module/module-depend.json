@@ -5,12 +5,6 @@
             "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
         ]
     },
-    "SPRING_JPA": {
-        "DESCRIBE": "",
-        "api": [
-            "org.springframework.boot:spring-boot-starter-data-jpa"
-        ]
-    },
     "FLEXMARK_MARKDOWN": {
         "DESCRIBE": ""
     },

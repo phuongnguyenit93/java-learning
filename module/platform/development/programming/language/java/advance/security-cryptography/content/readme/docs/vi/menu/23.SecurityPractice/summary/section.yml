@@ -1,0 +1,83 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Thực hành tổng hợp Java Security & Cryptography
+roadmapHeading: Từ công cụ mật mã đơn lẻ tới bảo vệ nhiều ranh giới
+roadmap:
+- id: security-practice-001
+  order: 1
+  title: 23.1 Xây công cụ tính digest file và xác minh giá trị mong đợi
+  description: Xây CLI SHA-256/SHA-512 streaming với checksum input được kiểm tra nghiêm ngặt, exit codes và phân biệt digest với nguồn tin cậy.
+  transition:
+    to: security-practice-002
+    description: Chuyển từ kiểm tra trùng byte của artifact sang xác thực thông điệp có khóa và chống phát lại request.
+- id: security-practice-002
+  order: 2
+  title: 23.2 Xây bộ xác thực thông điệp HMAC có ngữ cảnh và cơ chế chống phát lại
+  description: Từ checksum không khóa sang HMAC-SHA256 ràng buộc HTTP context, thời gian, nonce và replay claim nguyên tử toàn cụm.
+  transition:
+    to: security-practice-003
+    description: Sau khi biết ràng buộc message bằng MAC, thực hành mã hóa có xác thực cả nội dung lẫn metadata của file.
+- id: security-practice-003
+  order: 3
+  title: 23.3 Xây định dạng mã hóa file AEAD có phiên bản và xử lý lỗi xác thực
+  description: Đóng gói AES-GCM trong file JAED v1 có header AAD, tag, version, staging output và đường từ chối khi xác thực lỗi.
+  transition:
+    to: security-practice-004
+    description: Từ bảo vệ file cần giải mã sang kiểm tra mật khẩu một chiều và nâng cấp verifier theo policy.
+- id: security-practice-004
+  order: 4
+  title: 23.4 Xây bộ kiểm tra mật khẩu PBKDF2 hỗ trợ nâng cấp tham số
+  description: Lưu verifier PBKDF2 có scheme/cost/salt, kiểm password theo tham số cũ và rehash có CAS khi policy tăng.
+  transition:
+    to: security-practice-005
+    description: Từ secret dùng cho password verifier sang thao tác private key ký chứng từ và public key verification.
+- id: security-practice-005
+  order: 5
+  title: 23.5 Tạo và xác minh chữ ký tài liệu bằng khóa lấy từ PKCS12 KeyStore
+  description: Dùng PKCS12 private key để ký file detached bằng Signature và xác minh từ chứng thư X.509 mà không nhầm verify với trust.
+  transition:
+    to: security-practice-006
+    description: Từ chữ ký có trust binding tìm hiểu shared-secret key agreement vốn thiếu xác thực peer.
+- id: security-practice-006
+  order: 6
+  title: 23.6 Thực nghiệm KeyAgreement hoặc DHKEM và phân tích phần xác thực còn thiếu
+  description: Thực nghiệm X25519/HKDF và MITM, xác thực Ed25519 transcript, đối chiếu DHKEM/HPKE và forward secrecy.
+  transition:
+    to: security-practice-007
+    description: Từ khái niệm trusted public key đi vào đường chứng thư CA/PKIX để thiết lập trust có kiểm tra.
+- id: security-practice-007
+  order: 7
+  title: 23.7 Tạo chuỗi chứng thư thử nghiệm rồi xây và kiểm tra đường dẫn PKIX
+  description: Tạo root–intermediate–leaf X.509, xây và validate CertPath PKIX với trust anchor chính xác và negative tests.
+  transition:
+    to: security-practice-008
+    description: Từ PKIX offline đưa chứng thư và trust anchors vào phiên TLS xác thực hai phía.
+- id: security-practice-008
+  order: 8
+  title: 23.8 Thiết lập kết nối Java mTLS và kiểm thử các tình huống handshake thất bại
+  description: Thiết lập mTLS client/server qua JSSE, truststore/keystore hai chiều, xác minh hostname và thử handshake failure.
+  transition:
+    to: security-practice-009
+    description: Sau khi thao tác crypto và TLS thực tế, học cách review những đoạn code sai theo căn cứ kiểm thử.
+- id: security-practice-009
+  order: 9
+  title: 23.9 Phân tích một cấu hình hoặc đoạn mã mật mã sai và nêu căn cứ sửa
+  description: Review mã AES-CBC sai key/IV/hash rồi lập bản sửa AEAD có AAD, test và migration dữ liệu cũ.
+  transition:
+    to: security-practice-010
+    description: Cuối cùng, kết hợp các lab riêng thành một quyết định an ninh đa ranh giới và tự đánh giá thiết kế.
+- id: security-practice-010
+  order: 10
+  title: 23.10 Tự đánh giá bằng lựa chọn cơ chế cho dữ liệu, danh tính và ranh giới tin cậy cụ thể
+  description: Đánh giá tích hợp Sổ Cái theo dữ liệu, identity, trust boundaries, key lifecycle, replay và bài test âm có rubric.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh nội dung các bài thực hành
+
+  | Tiêu chí | Bài 1 — 23.1 Digest | 23.2 HMAC replay | 23.3 AEAD file | 23.4 PBKDF2 | 23.5 PKCS12 signer | 23.6 DHKEM/MITM | 23.7 PKIX chain | 23.8 mTLS | 23.9 Code review | 23.10 Capstone |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Bài toán chính | Kiểm file trùng digest tham chiếu | Xác thực request và ngăn nonce dùng lại | Mã hóa file có tag/header/version | Kiểm mật khẩu và nâng policy | Ký tài liệu bằng private key từ keystore | Thỏa thuận key chưa chắc đúng peer | Xây/validate đường trust X.509 | TLS bắt buộc chứng thư cả hai bên | Phát hiện lỗi thiết kế CBC/key/IV/hash | Chọn cơ chế theo tài sản và trust boundary |
+  | Nơi dạy chính | MessageDigest stream, HexFormat, exit codes | Length-prefix MAC, time window, shared replay store | JAED byte layout, Cipher AAD, atomic publish | Scheme, salt, iterations, rehash, CAS | KeyStore/Signature detached file, X.509 public key | X25519, HKDF, MITM, signed transcript, HPKE modes | CertPathBuilder/Validator, CA constraints, revocation | SSLContext, needClientAuth, hostname check | Security review findings, AEAD fix, legacy migration | Multi-tenant authz, HSM/KMS, replay, 40-point rubric |
+  | Đầu ra thực hành | FileDigestTool.java và vector abc | HmacReplayDemo.java và concurrency tests | VersionedAeadFileDemo.java và tamper tests | Pbkdf2UpgradeDemo.java và upgraded verifier | DocumentSignatureTool.java, signer.p12 và .sig | X25519IdentityLab.java với attacker leg keys | PkixLab.java cùng root/intermediate/leaf PEM | MutualTlsLab.java, identity/trust PKCS12 | CryptoReviewDemo.java và bảng findings | Decision template, 10 answers và negative matrix |
+  | Negative test tiêu biểu | Sai hex, mismatch, file thiếu và TOCTOU | Body/audience đổi, replay, TTL, Redis fail | Tag sai, key sai, unknown version, truncation | Wrong password, malformed verifier, CAS race | Tài liệu bị sửa, cert sai, alias/password sai | Public key MITM, wrong signer, transcript thay | Unrelated root, expired leaf, missing CA | Missing cert, untrusted peer, hostname, TLS mismatch | Fixed nonce, sai AAD, tamper, migration | Tenant chéo, JWT sai, webhook replay, ký trái quyền |
+  | Ranh giới cần tránh nhầm | MATCH không chứng minh nhà phát hành | MAC không thay quyền hay idempotency | AEAD không chống rollback hoặc cấp quyền | Password hashing không thay login protection | Signature.verify không tự tin certificate | Shared secret không chứng minh peer identity | Path trust không tự so SAN/hostname | mTLS không tự cấp quyền object | AES round-trip không chứng minh an toàn | Một primitive không bảo vệ cả hệ thống |

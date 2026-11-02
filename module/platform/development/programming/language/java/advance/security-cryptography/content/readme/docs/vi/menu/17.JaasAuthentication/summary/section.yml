@@ -1,0 +1,77 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 17. Xác thực JAAS
+roadmapHeading: Lộ trình từ xác thực JAAS đến quản lý Subject và ranh giới JCA
+roadmap:
+- id: jaas-authentication-001
+  order: 1
+  title: 17.1 Phân biệt xác thực danh tính với quyết định phân quyền trong ứng dụng
+  description: Phân biệt JAAS authentication với authorization nghiệp vụ trên từng tài nguyên, role và tenant.
+  transition:
+    to: jaas-authentication-002
+    description: Sau khi tách quyền khỏi đăng nhập, cần xem JAAS lưu danh tính và credential vào Subject như thế nào.
+- id: jaas-authentication-002
+  order: 2
+  title: 17.2 Subject, Principal và public hoặc private credentials
+  description: Làm rõ Subject, Principal, public/private credentials, live Sets và read-only/Destroyable.
+  transition:
+    to: jaas-authentication-003
+    description: Từ dữ liệu identity, chuyển sang LoginContext/Configuration để cắm các LoginModule có thể thay thế.
+- id: jaas-authentication-003
+  order: 3
+  title: 17.3 LoginContext, Configuration và mô hình LoginModule có thể thay thế
+  description: Tổ chức pluggable authentication qua LoginContext, Configuration và các LoginModule theo entry/flags.
+  transition:
+    to: jaas-authentication-004
+    description: Khi cấu hình module đã rõ, cần tách khâu lấy thông tin đăng nhập ra khỏi cơ chế kiểm tra credential.
+- id: jaas-authentication-004
+  order: 4
+  title: 17.4 CallbackHandler tách thu thập thông tin đăng nhập khỏi cơ chế xác thực
+  description: Sử dụng CallbackHandler để thu thập Name/PasswordCallback an toàn và giữ verifier độc lập với giao diện.
+  transition:
+    to: jaas-authentication-005
+    description: Tiếp theo cần biết LoginModule thay đổi Subject ở pha nào và rollback state khi cả stack thất bại.
+- id: jaas-authentication-005
+  order: 5
+  title: 17.5 Vòng đời initialize, login, commit, abort và logout của LoginModule
+  description: Lần theo lifecycle hai pha của LoginModule và cách commit/abort/logout đảm bảo state Subject nhất quán.
+  transition:
+    to: jaas-authentication-006
+    description: Hiểu được lifecycle rồi, người học cần kiểm soát thứ tự và short-circuit của bốn LoginModule flags.
+- id: jaas-authentication-006
+  order: 6
+  title: 17.6 required, requisite, sufficient, optional và phối hợp nhiều LoginModule
+  description: Thử bốn JAAS control flags, thứ tự module và chính sách MFA với các ca short-circuit và bypass.
+  transition:
+    to: jaas-authentication-007
+    description: Sau khi tạo Subject đã xác thực, cần truyền danh tính đó theo phạm vi thực thi hiện đại và hiểu các thay đổi API qua JDK.
+- id: jaas-authentication-007
+  order: 7
+  title: 17.7 Subject.current, Subject.callAs và cách đọc mã cũ sử dụng doAs
+  description: Hiểu Subject.current/callAs từ Java 18, nested scope, async context và migration khỏi getSubject/doAs cũ.
+  transition:
+    to: jaas-authentication-008
+    description: Context identity được gắn đúng vẫn cần quản lý credential, state read-only và lỗi đăng nhập trước khi đưa vào production.
+- id: jaas-authentication-008
+  order: 8
+  title: 17.8 Quản lý credential, Subject chỉ đọc và xử lý LoginException
+  description: Quản lý mật khẩu, Destroyable, Subject read-only và LoginException theo vòng đời login–commit–abort–logout.
+  transition:
+    to: jaas-authentication-009
+    description: Sau phần bảo vệ identity/credential, phân biệt JAAS LoginModule với JCA Security Provider để không sửa nhầm cấu hình.
+- id: jaas-authentication-009
+  order: 9
+  title: 17.9 Ranh giới giữa cấu hình JAAS với mô hình security provider của JCA
+  description: Kết nối chương qua ranh giới JAAS LoginModule/Configuration và JCA Security Provider/service SPI.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh chín bài học JAAS
+
+  | Tiêu chí | Bài 1 — 17.1 | 17.2 | 17.3 | 17.4 | 17.5 | 17.6 | 17.7 | 17.8 | 17.9 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên bài | 17.1 Phân biệt xác thực danh tính với quyết định phân quyền trong ứng dụng | 17.2 Subject, Principal và public hoặc private credentials | 17.3 LoginContext, Configuration và mô hình LoginModule có thể thay thế | 17.4 CallbackHandler tách thu thập thông tin đăng nhập khỏi cơ chế xác thực | 17.5 Vòng đời initialize, login, commit, abort và logout của LoginModule | 17.6 required, requisite, sufficient, optional và phối hợp nhiều LoginModule | 17.7 Subject.current, Subject.callAs và cách đọc mã cũ sử dụng doAs | 17.8 Quản lý credential, Subject chỉ đọc và xử lý LoginException | 17.9 Ranh giới giữa cấu hình JAAS với mô hình security provider của JCA |
+  | Vấn đề cần giải quyết | Đã login nhưng chưa được quyền | Subject giữ gì sau xác thực | Gắn cứng verifier vào ứng dụng | Handler bị lẫn với verifier | State login tạm bị công bố quá sớm | Flag sai dẫn tới bypass MFA | Mất/nhầm current Subject qua thread | Credential tồn tại quá lâu, lỗi logout | Nhầm JAAS module và JCA provider |
+  | API/cơ chế trọng tâm | LoginContext, RBAC, ABAC | Subject, Principal, Destroyable | LoginContext, Configuration, LoginModule | CallbackHandler, Name/PasswordCallback | initialize, login, commit, abort, logout | REQUIRED, REQUISITE, SUFFICIENT, OPTIONAL | Subject.current, callAs, doAs | Destroyable, setReadOnly, LoginException | LoginContext, Configuration, Security/Provider |
+  | Giá trị trong chương | Tránh BOLA/IDOR và sai trust boundary | Không lẫn identity và secret | Đổi cơ chế xác thực có kiểm soát | Thu thập secret tách biệt và testable | Rollback identity khi xác thực chung fail | Đảm bảo điều kiện xác thực bắt buộc | Migrate JDK và tránh context leak | Dọn secret và không cấp identity sau lỗi | Không sửa nhầm lớp cấu hình |
+  | Thực hành/kiểm chứng | Phân tích actor/action/resource/context | Thử live Set, typed Set, read-only | Chạy in-memory config và jaas.conf | Thay handler, thử callback lỗi | Trace ba nhánh lifecycle | Dự đoán ma trận và OTP OPTIONAL | Thử nested scopes và executor | So sánh live Subject và snapshot | Đối chiếu login với MessageDigest |
+  | Tư duy hình thành | Identity khác permission | Container không phải vault | Tách orchestration khỏi plugin | Mỗi boundary có ownership riêng | Phân biệt pending và committed | Cấu hình là security policy | Identity scope không phải authorization | Read-only không phải zeroization | Mỗi provider phục vụ một hợp đồng |

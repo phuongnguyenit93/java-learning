@@ -1,0 +1,76 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'Chữ ký số trong Java: từ nguyên lý đến xác minh tin cậy'
+roadmapHeading: Lộ trình học chữ ký số
+roadmap:
+- id: digital-signature-001
+  order: 1
+  title: 9.1 Chữ ký số bảo vệ tính toàn vẹn và xác thực nguồn dữ liệu như thế nào
+  description: Giải thích ý nghĩa chữ ký số, tính toàn vẹn, nguồn dữ liệu và các giới hạn của việc xác minh bằng public key.
+  transition:
+    to: digital-signature-002
+    description: Khi đã hiểu chữ ký bảo vệ điều gì, học cách dùng đúng chu trình Signature của JCA để tạo và kiểm tra chữ ký trên byte thật.
+- id: digital-signature-002
+  order: 2
+  title: 9.2 Chu trình Signature.initSign, update, sign và initVerify, verify
+  description: Thực hành state machine của java.security.Signature, nạp chunk đúng thứ tự và phân biệt lỗi trạng thái với kết quả xác minh.
+  transition:
+    to: digital-signature-003
+    description: Sau khi làm chủ API ký, cần tách đúng chữ ký với mã hóa bất đối xứng để không dùng nhầm khóa và primitive.
+- id: digital-signature-003
+  order: 3
+  title: 9.3 Phân biệt ký bằng khóa riêng với mã hóa bằng khóa công khai
+  description: Tách signing và public-key encryption theo khóa, API và mục tiêu bảo mật, tránh cách hiểu ký là mã hóa bằng private key.
+  transition:
+    to: digital-signature-004
+    description: Khi đã biết mình cần chữ ký, bước kế tiếp là chọn đúng scheme ký trong RSA, ECDSA và EdDSA theo các ràng buộc triển khai.
+- id: digital-signature-004
+  order: 4
+  title: 9.4 RSA PKCS#1 v1.5, RSASSA-PSS, ECDSA và EdDSA
+  description: So sánh cấu trúc, tham số, đặc tính bảo mật và khả năng liên thông của bốn signature scheme phổ biến.
+  transition:
+    to: digital-signature-005
+    description: Sau bức tranh nhiều scheme, đi sâu RSA-PSS để hiểu vì sao digest, MGF1 và độ dài salt phải được coi là một profile duy nhất.
+- id: digital-signature-005
+  order: 5
+  title: 9.5 PSSParameterSpec, digest, MGF1 và độ dài salt của chữ ký
+  description: Giải thích sâu PSSParameterSpec, digest/MGF1, salt và giới hạn modulus để tránh lỗi tương thích chữ ký RSA-PSS.
+  transition:
+    to: digital-signature-006
+    description: Khi các tham số thuật toán đã thống nhất, cần đảm bảo hai phía ký và xác minh đúng cùng biểu diễn byte và không băm hai lần.
+- id: digital-signature-006
+  order: 6
+  title: 9.6 Thống nhất dữ liệu ký và tránh băm hai lần khi API đã kết hợp digest
+  description: Xây dựng hợp đồng canonical bytes, domain separation và ngăn băm hai lần trong JCA hoặc API ký từ xa.
+  transition:
+    to: digital-signature-007
+    description: Khi dữ liệu cần ký đã ổn định, cần thống nhất chính những byte chữ ký được trao đổi, đặc biệt với ECDSA DER và P1363.
+- id: digital-signature-007
+  order: 7
+  title: 9.7 Định dạng chữ ký ECDSA DER và P1363 khi trao đổi với hệ thống khác
+  description: Hiểu và kiểm thử ECDSA ASN.1 DER so với P1363, chuyển đổi r-s an toàn và tích hợp JWS ES256.
+  transition:
+    to: digital-signature-008
+    description: Sau khi thống nhất encoding và thuật toán, bước kế tiếp là phân loại đúng nguyên nhân khi phép xác minh vẫn không thành công.
+- id: digital-signature-008
+  order: 8
+  title: 9.8 Phân biệt chữ ký sai, dữ liệu sai định dạng và ngoại lệ khi xác minh
+  description: Phân loại false, malformed input, key/provider exceptions trong luồng Signature.verify và thiết kế xử lý fail-closed.
+  transition:
+    to: digital-signature-009
+    description: Sau khi biết xác minh chạy đúng và hiểu các loại lỗi, cần xác định khóa công khai dùng để verify có thực sự thuộc danh tính được tin hay không.
+- id: digital-signature-009
+  order: 9
+  title: 9.9 Giới hạn của verify thành công khi khóa công khai chưa được gắn với danh tính tin cậy
+  description: Đặt verify thành công vào mô hình identity trust, PKIX/pinning, key rotation, replay và quyền nghiệp vụ.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh vai trò các bài học
+
+  | Tiêu chí | Bài 1 — 9.1 Nguyên lý | 9.2 Chu trình JCA | 9.3 Ký và mã hóa | 9.4 Các scheme | 9.5 PSS chi tiết | 9.6 Byte ký | 9.7 ECDSA format | 9.8 Phân loại lỗi | 9.9 Tin cậy khóa |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Vấn đề cần giải quyết | Chữ ký chứng minh điều gì? | Dùng Signature theo thứ tự nào? | Ký khác mã hóa công khai ra sao? | Chọn và cấu hình scheme nào? | PSS bị sai tham số nào? | Hai phía có ký cùng byte không? | Vì sao ECDSA khác format? | Verify thất bại do nguyên nhân nào? | Verify true đã đủ tin người ký chưa? |
+  | Trọng tâm kiến thức | Integrity, nguồn gửi, public key và giới hạn | initSign, update, sign, initVerify, verify và state | Khóa của người ký, khóa người nhận và Signature/Cipher | RSA-v1.5, RSA-PSS, ECDSA, EdDSA | PSSParameterSpec, MGF1, salt, modulus | Canonicalization, digest tích hợp, prehash | ASN.1 DER, raw P1363, ES256 | false, format error, SignatureException | SPKI pinning, PKIX, identity và policy |
+  | Thực hành đánh giá được | Ed25519 ký rồi sửa message | RSA-PSS nhiều update và verify hai lượt | Ed25519 signing đối chiếu RSA-OAEP | Ma trận Java ký/verify bốn scheme | RSA-PSS sửa salt và MGF để test | SigningBytesDemo với double hashing | Java chuyển DER/P1363 và test P-521 | Mô phỏng verify false và exception | Attacker key cũng verify nhưng policy từ chối |
+  | Rủi ro cần tránh | Tin public key tự khai hoặc nhầm chữ ký với mã hóa | Nhầm trạng thái hoặc trộn byte giữa các phiên | Dùng sai primitive hoặc đánh đồng mã hóa với xác thực | Trộn scheme, khóa, tham số hoặc format | Dựa vào mặc định provider hoặc tự prehash | Serialize khác nhau hoặc băm hai lần | Nhận sai encoding hoặc DER không chuẩn | Nuốt exception hoặc lộ error oracle | Tin khóa do payload tự khai |
+  | Tư duy hình thành | Phân biệt bằng chứng mật mã và niềm tin | Kiểm soát API stateful và chuỗi thao tác | Chọn công cụ theo mục tiêu bảo mật | Đánh đổi bảo mật và khả năng tương thích | Ràng buộc một profile mật mã hoàn chỉnh | Đặc tả dữ liệu ký cấp giao thức | Kiểm tra biểu diễn wire có thể liên thông | Chẩn đoán theo tầng và fail-closed | Tách chứng minh mật mã khỏi danh tính và quyền |

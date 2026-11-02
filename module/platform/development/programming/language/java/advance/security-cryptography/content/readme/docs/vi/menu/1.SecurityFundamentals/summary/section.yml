@@ -1,0 +1,69 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Nền tảng an toàn thông tin và mật mã Java
+roadmapHeading: Lộ trình học Nền tảng
+roadmap:
+- id: security-fundamentals-001
+  order: 1
+  title: 1.1 An toàn thông tin và mật mã giải quyết những vấn đề nào trong ứng dụng Java
+  description: Định vị tài sản, mục tiêu CIA, authentication, authorization và giới hạn của các cơ chế mật mã trong nghiệp vụ Java.
+  transition:
+    to: security-fundamentals-002
+    description: Từ nhu cầu an toàn chuyển sang mô hình có tài sản, đối thủ, DFD và ranh giới tin cậy cụ thể.
+- id: security-fundamentals-002
+  order: 2
+  title: 1.2 Mô hình đe dọa, tài sản cần bảo vệ và ranh giới tin cậy
+  description: Xây DFD/STRIDE và các kịch bản BOLA, gắn mỗi trust boundary với kiểm soát, phép thử và rủi ro còn lại.
+  transition:
+    to: security-fundamentals-003
+    description: Từ kiểm kê rủi ro sang phân biệt các thuộc tính bảo mật để tránh dùng một biện pháp thay cho biện pháp khác.
+- id: security-fundamentals-003
+  order: 3
+  title: 1.3 Phân biệt tính bí mật, tính toàn vẹn, xác thực và phân quyền
+  description: Tách rạch ròi confidentiality, integrity, authentication và authorization trên cùng request, kể cả việc HMAC đúng nhưng người gọi sai quyền.
+  transition:
+    to: security-fundamentals-004
+    description: Khi mục tiêu đã rõ, chọn đúng primitive mật mã và tách encoding khỏi cơ chế bảo mật.
+- id: security-fundamentals-004
+  order: 4
+  title: 1.4 Phân biệt mã hóa, hàm băm, MAC, chữ ký số và mã hóa biểu diễn
+  description: Phân biệt encryption, hash, MAC, digital signature và encoding bằng điều kiện khóa, kết quả, hạn chế và một demo primitive thống nhất.
+  transition:
+    to: security-fundamentals-005
+    description: Từ từng phép toán đơn lẻ tiến tới quan hệ giữa khóa, tham số, giao thức và danh tính mà giao thức phải ràng buộc.
+- id: security-fundamentals-005
+  order: 5
+  title: 1.5 Quan hệ giữa khóa, thuật toán, tham số, giao thức và danh tính
+  description: Gắn khóa, thuật toán, tham số, giao thức và identity bằng TLS 1.3 và phép thử thay khóa công khai không đáng tin.
+  transition:
+    to: security-fundamentals-006
+    description: Chuyển những ràng buộc của giao thức thành lựa chọn kiểm soát cho dữ liệu đang truyền, đang lưu và đang dùng.
+- id: security-fundamentals-006
+  order: 6
+  title: 1.6 Bảo vệ dữ liệu khi truyền, khi lưu trữ và trong bộ nhớ
+  description: Thiết kế bảo vệ dữ liệu qua transit, at rest và in-use, chú ý TLS termination, envelope KMS và plaintext trong JVM.
+  transition:
+    to: security-fundamentals-007
+    description: Từ vòng đời dữ liệu xác định API, provider, keystore, PKI và công cụ Java chịu trách nhiệm cho từng lớp.
+- id: security-fundamentals-007
+  order: 7
+  title: 1.7 Bản đồ JCA, JCE, JSSE, JAAS, PKI và các công cụ của JDK
+  description: Định vị JCA/JCE, JSSE, JAAS, PKI và bộ công cụ JDK theo engine, provider, identity và thao tác vận hành.
+  transition:
+    to: security-fundamentals-008
+    description: Áp bản đồ công nghệ vào việc chọn JDK 21, đối chiếu API theo release và kiểm tra provider của máy đang chạy.
+- id: security-fundamentals-008
+  order: 8
+  title: 1.8 Môi trường thực hành Java 21 và cách đối chiếu API với phiên bản JDK
+  description: Thiết lập JDK 21 và xác minh API Since, --release, toolchain và khả năng provider thật bằng ví dụ tái hiện.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh nội dung các bài trong chương
+
+  | Tiêu chí | Bài 1 — 1.1 Bài toán bảo mật | 1.2 Mô hình đe dọa | 1.3 Bốn thuộc tính | 1.4 Năm kỹ thuật | 1.5 Năm thành phần | 1.6 Ba trạng thái dữ liệu | 1.7 Bản đồ Java Security | 1.8 Môi trường Java 21 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Câu hỏi trung tâm | Cần bảo vệ gì và mật mã giúp tới đâu? | Ai tấn công qua ranh giới nào? | Bí mật, toàn vẹn, xác thực và quyền khác gì? | Cần encrypt, hash, MAC, sign hay encode? | Đúng key, params, protocol và identity chưa? | Dữ liệu lộ ở transit, rest hay JVM heap? | Engine nào thuộc JCA, JSSE, JAAS hay PKI? | API nào có trong release và provider nào chạy? |
+  | Nơi dạy chính | Security goals, risk và lựa chọn lớp bảo vệ | DFD, STRIDE, BOLA, residual risk | Authn so với authz, HMAC so với quyền | Primitive comparison và CryptoPrimitivesDemo | Key usage, TLS transcript và trusted public key | TLS termination, envelope KMS, in-use exposure | Provider, KeyStore, KeyManager, JAAS, keytool | JAVA_HOME, javac --release, KEM Since 21 |
+  | Bằng chứng học tập | Phân loại webhook, backup và quyền đơn hàng | DFD cùng kịch bản chéo tenant có test âm | Request tài liệu và HmacAuthorizationDemo | Hash, HMAC, AES-GCM, Ed25519 và Base64 cùng dữ liệu | IdentityBindingDemo từ chối khóa của attacker | Phát hiện tag bị sửa, mô hình DEK/KEK, hạn chế Arrays.fill | SecurityApiMapDemo và thao tác truststore/JAR | ApiProbe, VersionGate, ProviderProbe |
+  | Giới hạn dễ nhầm | Thuật toán mạnh không thay chính sách truy cập | TLS và mã hóa DB không sửa lỗi BOLA | Token hợp lệ không cấp quyền mọi object | Base64 và hash không xác thực nguồn | verify true không xác nhận signer đáng tin | Mã hóa at rest không bảo vệ plaintext trong RAM | Có lớp Java không có nghĩa mọi provider hỗ trợ | Build pass không bảo đảm runtime có thuật toán |
+  | Năng lực sau bài | Nêu mục tiêu và bài kiểm thử cần có | Ưu tiên mối đe dọa và xác minh kiểm soát | Đặt authn/authz đúng tầng | Chọn primitive theo khóa và bảo đảm | Thiết kế protocol có key/identity binding | Bảo vệ dữ liệu ở cả ba trạng thái | Tra đúng API, cert và công cụ JDK | Tái hiện và khoanh vùng lỗi version/provider |

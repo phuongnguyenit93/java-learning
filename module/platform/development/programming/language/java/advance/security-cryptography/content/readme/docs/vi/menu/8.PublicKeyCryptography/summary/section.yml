@@ -1,0 +1,76 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Khóa công khai trong Java
+roadmapHeading: Lộ trình từ cặp khóa đến mã hóa dữ liệu lớn
+roadmap:
+- id: public-key-cryptography-001
+  order: 1
+  title: 8.1 Khóa công khai, khóa riêng và quan hệ với mã hóa hoặc chữ ký số
+  description: Hiểu khóa công khai/riêng, cách encryption và signature dùng khóa ngược vai trò, kiểm tra RSA-OAEP/PSS và yêu cầu trust public key.
+  transition:
+    to: public-key-cryptography-002
+    description: Từ vai trò khóa tiến sang sinh đúng keypair và kiểm chứng thuật toán, tham số, provider.
+- id: public-key-cryptography-002
+  order: 2
+  title: 8.2 Tạo cặp khóa bằng KeyPairGenerator với kích thước hoặc bộ tham số rõ ràng
+  description: Tạo RSA, EC, Ed25519, X25519 theo modulus, named curve và RNG rõ ràng; kiểm chứng provider cùng mục đích khóa.
+  transition:
+    to: public-key-cryptography-003
+    description: Sau khi biết sinh khóa, cần chọn đúng họ RSA/EC/EdDSA/XDH cho phép toán ứng dụng.
+- id: public-key-cryptography-003
+  order: 3
+  title: '8.3 RSA, EC, EdDSA và XDH: phân biệt mục đích của từng họ thuật toán'
+  description: Chọn RSA-OAEP/PSS, ECDSA/ECDH, Ed25519, X25519 theo nhiệm vụ; phân biệt Cipher, Signature, KeyAgreement và KDF.
+  transition:
+    to: public-key-cryptography-004
+    description: Đã chọn primitive, học cách dựng và chuyển đổi khóa hiện có qua KeyFactory/KeySpec.
+- id: public-key-cryptography-004
+  order: 4
+  title: 8.4 Chuyển đổi khóa bằng KeyFactory và KeySpec
+  description: Thực hiện chuyển đổi key object, KeySpec và DER qua KeyFactory; nhận diện key handle, provider và quyền export.
+  transition:
+    to: public-key-cryptography-005
+    description: Hiểu KeySpec sẽ giúp xuất/nhập đúng SPKI public và PKCS#8 private dưới DER/PEM.
+- id: public-key-cryptography-005
+  order: 5
+  title: 8.5 Nhập, xuất khóa công khai X.509 SubjectPublicKeyInfo và khóa riêng PKCS#8
+  description: Nhập xuất public SPKI và private PKCS#8 qua DER/PEM, phân biệt encrypted PKCS#8, legacy formats và trust.
+  transition:
+    to: public-key-cryptography-006
+    description: Từ nhập/xuất chuẩn, mở rộng sang nhận diện raw, encrypted key và certificate trust.
+- id: public-key-cryptography-006
+  order: 6
+  title: 8.6 Phân biệt DER, PEM, khóa thô, khóa mã hóa và chứng thư
+  description: Nhận diện raw key, ASN.1, DER, PEM, encrypted key, PKCS#12 và X.509 certificate; phân biệt parsing với PKIX trust.
+  transition:
+    to: public-key-cryptography-007
+    description: Sau khi xác thực đúng public key và định dạng, áp RSA-OAEP cho CEK nhỏ và hybrid envelope.
+- id: public-key-cryptography-007
+  order: 7
+  title: 8.7 RSA-OAEP, giới hạn kích thước bản rõ và mô hình mã hóa lai
+  description: Áp công thức RSA-OAEP plaintext limit và thiết kế hybrid RSA-wrapped CEK/AES-GCM envelope có nonce, AAD, tag.
+  transition:
+    to: public-key-cryptography-008
+    description: Đã dựng hybrid, cần cấu hình OAEP digest/MGF1/label chính xác để liên thông giữa hai bên.
+- id: public-key-cryptography-008
+  order: 8
+  title: 8.8 Cấu hình OAEPParameterSpec, digest, MGF1 và label thống nhất giữa hai phía
+  description: Thống nhất OAEP digest, MGF1 digest, label bytes và key/ciphertext encoding; chạy các phép thử tương thích và lỗi.
+  transition:
+    to: public-key-cryptography-009
+    description: Tham số OAEP thống nhất là tiền đề chọn mô hình mã hóa dữ liệu lớn, streaming và lifecycle.
+- id: public-key-cryptography-009
+  order: 9
+  title: 8.9 Giới hạn của việc dùng thuật toán bất đối xứng thay cho mã hóa dữ liệu khối lớn
+  description: Định lượng chi phí RSA cho file lớn; dùng hybrid AEAD streaming, chunk integrity, multi-recipient và key rotation.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh các bài học về khóa công khai
+
+  | Tiêu chí | Bài 1 — 8.1 Vai trò khóa | 8.2 Sinh khóa | 8.3 Chọn họ | 8.4 KeyFactory/KeySpec | 8.5 SPKI/PKCS#8 | 8.6 DER, PEM, certificate | 8.7 RSA-OAEP hybrid | 8.8 OAEP parameters | 8.9 Mã hóa bulk |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | Encrypt và sign theo vai trò | KeyPairGenerator và tham số | Phân biệt RSA/EC/EdDSA/XDH | KeyFactory, KeySpec | SPKI/PKCS#8 nhập xuất | Format và certificate trust | OAEP limit, envelope | OAEP digest, MGF1, label | Bulk file, streaming |
+  | Java API | Cipher, Signature, KeyPair | KeyPairGenerator, SecureRandom | Cipher, Signature, KeyAgreement | KeyFactory, EncodedKeySpec | X509EncodedKeySpec, PKCS8EncodedKeySpec | CertificateFactory, KeyStore, PKIX | RSA-OAEP, AES/GCM/NoPadding | OAEPParameterSpec, MGF1ParameterSpec | KeyGenerator, AES-GCM, HPKE |
+  | Bằng chứng thực hành | RSA-OAEP decrypt và RSA-PSS verify | RSA modulus/curve, EdDSA/XDH | Sáu phép thử đúng key family | KeySpec round-trip, PEM import | RSA/EC DER-PEM round-trip | Certificate parse khác trust | 2.000-byte AES-GCM và tamper | Wrong digest/MGF1/label | 1 MiB, 5.519 RSA operations |
+  | Giới hạn | Signature không giữ bí mật | Provider defaults không là policy | DH cần KDF và peer authentication | Key parse không tự xác thực identity | Base64/PEM không mã hóa private key | DER/PEM không tự mang trust | RSA-2048 OAEP SHA-256 tối đa 190 byte | Label là byte, MGF1 hash độc lập | Không dùng plaintext trước khi xác thực tag |
+  | Vai trò trong chương | Nền tảng khóa | Sinh vật liệu khóa đúng | Chọn primitive đúng mục đích | Chuyển biểu diễn bằng Java | Liên thông key file | Nhận diện container và trust | Xây hybrid confidentiality | Thống nhất tham số liên hệ thống | Kiến trúc file lớn và vận hành |

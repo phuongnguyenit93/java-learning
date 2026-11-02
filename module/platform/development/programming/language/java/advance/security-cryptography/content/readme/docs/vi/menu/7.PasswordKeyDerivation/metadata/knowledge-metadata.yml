@@ -1,0 +1,19 @@
+sections:
+  password-key-derivation-001:
+    difficulty: INTERMEDIATE
+  password-key-derivation-002:
+    difficulty: BASIC
+  password-key-derivation-003:
+    difficulty: INTERMEDIATE
+  password-key-derivation-004:
+    difficulty: INTERMEDIATE
+  password-key-derivation-005:
+    difficulty: ADVANCED
+  password-key-derivation-006:
+    difficulty: ADVANCED
+  password-key-derivation-007:
+    difficulty: ADVANCED
+  password-key-derivation-008:
+    difficulty: ADVANCED
+  password-key-derivation-009:
+    difficulty: ADVANCED

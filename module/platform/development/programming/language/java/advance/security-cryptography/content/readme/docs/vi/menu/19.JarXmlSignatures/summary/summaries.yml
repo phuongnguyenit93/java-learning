@@ -1,0 +1,316 @@
+summaries:
+- id: jar-xml-signatures-001
+  title: 19.1 Chữ ký JAR, manifest, digest entry và chuỗi chứng thư của người ký
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **19.1 Chữ ký JAR, manifest, digest entry và chuỗi chứng thư của người ký**
+
+    Một JAR đã ký không có nghĩa toàn bộ ZIP đã được bảo vệ hay nhà phát hành mặc nhiên đáng tin. Bài học bóc tách lớp manifest, signature file, signature block và certificate chain, sau đó cho đọc từng JarEntry đến EOF để thấy lúc nào Java mới có thông tin signer. Nắm cấu trúc giúp giải thích tại sao sửa một class bị phát hiện nhưng thêm resource chưa ký vẫn có thể tồn tại.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc và phạm vi chữ ký
+
+    1. Digest của một entry trong MANIFEST.MF khác gì digest của section manifest trong tệp .SF?
+    2. Signature block .RSA hoặc .EC có nhiệm vụ gì và có lưu private key của người ký không?
+    3. Vì sao thêm entry sau khi ký không nhất thiết làm hỏng chữ ký của các entry đã ký trước đó?
+
+    ### Xác minh và danh tính signer
+
+    1. Vì sao cần đọc hết JarEntry trước khi gọi getCodeSigners hoặc getCertificates?
+    2. Certificate chain nhúng trong chữ ký và trust anchor do verifier chọn khác nhau như thế nào?
+
+    ### Thực hành và giới hạn
+
+    1. Khi kiểm tra signed.jar với jarsigner, cần quan sát những dấu hiệu nào ở entry đã ký và cảnh báo của công cụ?
+    2. Làm sao kiểm tra từng entry và phân biệt lỗi sửa nội dung, entry unsigned với certificate self-signed?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích chuỗi kiểm tra JAR | Vẽ mối liên kết entry digest trong manifest, digest của .SF và chữ ký của signature block. |
+    | Đọc phạm vi bảo vệ | Phân tích JAR có class và resource thêm sau ký để chỉ ra entry nào được xác minh. |
+    | Thao tác Java JAR API | Chạy InspectJar, đọc hết input của JarEntry rồi thống kê CodeSigner và certificate chain. |
+    | Đánh giá trust ban đầu | Phân biệt phép xác minh chữ ký với quyết định tin certificate của signer. |
+    | Nhận diện thay đổi bất hợp lệ | Dự đoán kết quả khi sửa entry đã ký so với khi thêm entry chưa ký. |
+- id: jar-xml-signatures-002
+  title: 19.2 Dùng jarsigner để ký, xác minh và kiểm tra cảnh báo ở chế độ strict
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **19.2 Dùng jarsigner để ký, xác minh và kiểm tra cảnh báo ở chế độ strict**
+
+    Công cụ jarsigner có thể báo jar verified trong khi nhiều điều kiện phát hành vẫn không đạt. Bài học hướng dẫn tạo PKCS12 signer, ký bản JAR cuối, xác minh với -verbose -certs -strict và đọc mã thoát theo từng nhóm cảnh báo. Mục tiêu là biết xây pipeline phát hành có khả năng chặn chứng thư không hợp lệ, signer sai, entry unsigned hoặc thuật toán yếu thay vì chỉ dò một dòng thông báo thành công.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy trình ký và xác minh
+
+    1. Vì sao nên đóng gói artifact xong trước khi gọi jarsigner và dùng -signedjar để giữ bản gốc?
+    2. Các tham số -digestalg, -sigalg, -verify, -verbose và -certs giải quyết việc gì khác nhau?
+
+    ### Strict warnings và exit code
+
+    1. -strict ảnh hưởng đến exit code và severe warnings ra sao mà không thay đổi phép toán chữ ký?
+    2. Vì sao mã thoát 4 cần đọc log chi tiết và mã severe có thể được OR với các bit khác?
+    3. Tại sao noTimestamp có thể không khiến -strict trả nonzero dù chính sách phát hành vẫn cần TSA?
+
+    ### CI và xử lý sự cố
+
+    1. Nếu có self-signed signer nhưng digest vẫn hợp lệ, CI nên phân loại nguyên nhân nào?
+    2. Nếu một resource được thêm sau khi ký, làm thế nào kiểm tra cảnh báo hasUnsignedEntry và ngăn phát hành?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ký JAR bằng JDK | Tạo keystore thử nghiệm, ký hello-unsigned.jar thành hello-signed.jar và kiểm tra manifest/signature files. |
+    | Đọc kết quả jarsigner | Giải thích cờ s, m, k và phân biệt certificate warnings với lỗi sửa entry. |
+    | Áp dụng strict policy | Chạy -verify -strict, thu exit code tức thời và phân tích severe bitmask cùng cảnh báo noTimestamp. |
+    | Xây gate phát hành | Đề xuất chuỗi build, sign, verify, publish với kiểm tra signer, trust và entry scope. |
+    | Chẩn đoán lỗi | Phân loại alias sai, badKeyUsage, disabledAlg và hasUnsignedEntry trước khi chọn hướng khắc phục. |
+- id: jar-xml-signatures-003
+  title: 19.3 Timestamp, thời hạn chứng thư và giới hạn của kết quả xác minh JAR
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **19.3 Timestamp, thời hạn chứng thư và giới hạn của kết quả xác minh JAR**
+
+    Thời hạn certificate của signer và thời gian có bằng chứng ký là hai đại lượng khác nhau. Bài học tập trung vào timestamp được TSA ký, cách đánh giá chữ ký lịch sử khi certificate hết hạn, độ tin cậy của TSA, revocation và các giới hạn của jarsigner. Một timestamp đúng không chữa integrity bị hỏng, signer không đáng tin hay entry unsigned; người học cần biết xét từng yếu tố trước khi chấp nhận bản phát hành.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### TSA và thời điểm ký
+
+    1. Timestamp mật mã theo RFC 3161 khác gì file mtime, ngày build hoặc ngày ghi trong manifest?
+    2. Khi certificate signer đã hết hạn lúc kiểm tra, timestamp TSA đáng tin ở thời điểm còn hạn có thể thay đổi kết luận ra sao?
+    3. Nếu TSA token hoặc certificate TSA không đáng tin, hệ quả đối với chứng cứ thời gian là gì?
+
+    ### Kiểm tra chứng thư và cảnh báo
+
+    1. Vì sao việc signer certificate bị thu hồi cần xét cả lý do và thời điểm theo policy?
+    2. Tại sao -verify -strict vẫn chưa bảo đảm có timestamp khi noTimestamp là informational warning?
+    3. Trong JAR có entry thêm sau ký, cần kiểm tra phạm vi ký như thế nào bên cạnh timestamp?
+
+    ### Ứng dụng Java và chấp nhận artifact
+
+    1. Vì sao JarEntry.getCodeSigners có thể null trước khi dữ liệu entry được đọc đầy đủ?
+    2. Khi CodeSigner.getTimestamp trả null, điều đó ảnh hưởng gì đến đánh giá tính hợp lệ theo thời gian?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích timestamp | Phân biệt token TSA có chữ ký với metadata thời gian thông thường và đánh giá giá trị của bằng chứng lịch sử. |
+    | Đánh giá hạn chứng thư | Phân tích các kịch bản signer còn hạn, hết hạn, bị thu hồi và chứng thư TSA không được tin. |
+    | Thao tác jarsigner | Kiểm tra -verify -strict -certs, ghi nhận cảnh báo có/không timestamp và exit code. |
+    | Đọc API theo entry | Chạy InspectJarEntry, đọc entry tới EOF rồi nhận diện CodeSigner và Timestamp. |
+    | Tạo policy phát hành | Quy định cách chấp nhận JAR theo trust chain, entry coverage, thời gian và thuật toán. |
+- id: jar-xml-signatures-004
+  title: 19.4 Phân biệt tính toàn vẹn gói JAR với độ tin cậy hoặc quyền thực thi của mã
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **19.4 Phân biệt tính toàn vẹn gói JAR với độ tin cậy hoặc quyền thực thi của mã**
+
+    Chữ ký hợp lệ chỉ xác nhận tính toàn vẹn trong phạm vi được ký bằng một khóa; nó không trao quyền chạy hoặc chứng minh mã sạch. Bài học tách ba quyết định integrity, signer trust và execution authorization, đối chiếu hành vi JAR trước/sau ký và chỉ ra quyền thực tế của JVM gắn với tài khoản hệ điều hành, container và chính sách triển khai. Tư duy này ngăn việc chấp nhận một artifact nguy hiểm chỉ vì thấy jar verified.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ba ranh giới kiểm soát
+
+    1. Tại sao một chữ ký JAR xác minh thành công không có nghĩa publisher được chấp nhận hoặc mã không có lỗ hổng?
+    2. Nếu entry chưa ký được thêm vào archive, có thể kết luận điều gì về các entry đã ký và phần code mới?
+
+    ### Quyền thực thi của chương trình
+
+    1. Vì sao JAR chưa ký vẫn có thể chạy với java -jar trong môi trường bình thường?
+    2. Các quyền đọc file, mở socket và truy cập secret của chương trình đến từ đâu thay vì từ chữ ký?
+    3. Sự thay đổi SecurityManager trên JDK 24 ảnh hưởng thế nào đến thiết kế sandbox dựa vào java.policy cũ?
+
+    ### Quy trình triển khai
+
+    1. Tại sao cần kiểm tra trust anchor, signer identity và mục đích chứng thư tách biệt với chữ ký toán học?
+    2. Ngoài jarsigner, những kiểm soát nào giúp hạn chế rủi ro của phụ thuộc hoặc plugin nguy hiểm khi chạy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại kết luận bảo mật | Với một JAR mẫu, tách các bằng chứng về integrity, trust và execution privileges. |
+    | Thử unsigned/signed JAR | Chạy ứng dụng trước và sau ký để xác nhận chữ ký không quyết định quyền được thực thi. |
+    | Xác minh signer theo policy | Đề xuất kiểm tra public key/certificate chain và publisher mong đợi trước khi nhận artifact. |
+    | Thiết kế chạy ít quyền | Nêu cách hạn chế OS user, container, network và secrets cho một JAR hợp lệ. |
+    | Nhận diện giới hạn nền tảng | Giải thích vì sao không dựa vào SecurityManager để cô lập mã không tin cậy trên JDK hiện đại. |
+- id: jar-xml-signatures-005
+  title: 19.5 Mô hình XMLSignatureFactory, SignedInfo, Reference và KeyInfo
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **19.5 Mô hình XMLSignatureFactory, SignedInfo, Reference và KeyInfo**
+
+    JSR 105 có nhiều thành phần vì chữ ký XML phải chỉ rõ tài nguyên được băm, hợp đồng SignedInfo được ký và khóa dùng xác minh. Bài học gắn XMLSignatureFactory, Reference, SignedInfo và KeyInfo vào luồng ký/kiểm tra trên DOM, giải thích hai tầng DigestValue và SignatureValue. Bài demo sửa Amount sau ký cho thấy SignedInfo có thể còn đúng nhưng Reference digest bị sai, đồng thời nhấn mạnh KeyInfo chỉ là gợi ý tìm khóa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình dữ liệu XMLDSig
+
+    1. Reference URI, Transforms, DigestMethod và DigestValue mô tả điều gì trong một chữ ký XML?
+    2. Vì sao SignatureValue được tạo trên canonicalized SignedInfo chứ không đơn giản ký trực tiếp toàn bộ file XML?
+    3. DigestMethod cho Reference khác SignatureMethod trong SignedInfo ở điểm nào?
+
+    ### Tạo và xác minh bằng JSR 105
+
+    1. XMLSignatureFactory.getInstance DOM và DOMSignContext đảm nhận bước nào của việc tạo chữ ký?
+    2. Khi Amount bị sửa sau ký, vì sao SignatureValue có thể vẫn đúng nhưng core validation phải thất bại?
+
+    ### Khóa và phần tử được ký
+
+    1. KeyValue trong KeyInfo có đủ để xác lập danh tính đối tác ký XML không?
+    2. Khi dùng Reference tới #id, vì sao ứng dụng phải đăng ký thuộc tính ID và ràng buộc phần tử được ký với dữ liệu sử dụng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ mô hình XMLDSig | Mô tả cấu trúc XMLSignature gồm SignedInfo, các Reference, SignatureValue và KeyInfo. |
+    | Tách hai lớp kiểm tra | Giải thích Reference digest khác SignatureValue và trường hợp kết quả lõi thất bại. |
+    | Dựng chữ ký DOM | Chạy XmlSignatureModelDemo để ký XML và quan sát valid trước và sau sửa Amount. |
+    | Phân tích URI và ID | Lựa chọn URI rỗng hay #id theo phạm vi ký và giải thích yêu cầu đăng ký ID. |
+    | Đánh giá nguồn khóa | Nêu vì sao KeyInfo chưa phải trust policy và cần public key được xác thực độc lập. |
+- id: jar-xml-signatures-006
+  title: 19.6 Canonicalization, transform và chữ ký detached, enveloped hoặc enveloping
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **19.6 Canonicalization, transform và chữ ký detached, enveloped hoặc enveloping**
+
+    Không chỉ thuật toán, cách canonicalize XML, thứ tự transforms và vị trí Signature quyết định chính xác byte được ký. Bài học phân biệt inclusive/exclusive C14N, ba dạng enveloped, detached, enveloping và kiểm chứng cả ba bằng JSR 105. Trọng tâm là chọn đúng Reference URI và transform cho payload, hiểu khi nào một thay đổi whitespace/namespace vẫn làm digest sai và tránh tin nhầm một phần tử XML chưa được ký.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Canonicalization và transform
+
+    1. C14N chuẩn hóa những khác biệt cú pháp nào và vì sao không thể coi mọi thay đổi format XML là vô hại?
+    2. CanonicalizationMethod của SignedInfo khác transform canonicalization của Reference về dữ liệu đầu vào ra sao?
+    3. Tại sao thứ tự enveloped-signature transform rồi C14N không nên đảo tùy tiện?
+
+    ### Ba kiểu bố trí chữ ký
+
+    1. Enveloped, detached và enveloping khác nhau thế nào về vị trí Signature so với dữ liệu được ký?
+    2. Vì sao detached signature vẫn có thể nằm trong cùng file XML với payload được bảo vệ?
+    3. Với ds:Object được tham chiếu bằng #object-1, ứng dụng cần xử lý Object nào sau khi verify?
+
+    ### Thực hành và ranh giới bảo mật
+
+    1. Khi XmlDsigDemo sửa Amount sau ký, cần dự đoán kết quả Reference và core validation thế nào?
+    2. Vì sao ký một Payload bằng #data-1 không mặc nhiên bảo vệ toàn bộ Envelope hoặc mọi Payload có cùng tên?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lựa chọn C14N | Giải thích phạm vi của inclusive/exclusive C14N và tránh kỳ vọng normalize cả nội dung nghiệp vụ. |
+    | Thiết kế transforms | Chọn Reference URI và transforms phù hợp cho ba dạng chữ ký XML. |
+    | Chạy thí nghiệm XMLDSig | Thực hiện XmlDsigDemo và đối chiếu kết quả verify ba kiểu cùng trường hợp thay đổi Amount. |
+    | Kiểm tra định danh nút | Đăng ký ID đúng và chỉ ra dữ liệu thực sự được Reference bảo vệ. |
+    | Chẩn đoán sai digest | Phân biệt lỗi Reference do canonicalization, namespace, URI với lỗi SignatureValue. |
+- id: jar-xml-signatures-007
+  title: 19.7 Tạo chữ ký XML bằng DOMSignContext và xác minh bằng DOMValidateContext
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **19.7 Tạo chữ ký XML bằng DOMSignContext và xác minh bằng DOMValidateContext**
+
+    DOMSignContext chỉ định khóa riêng và nơi chèn Signature; DOMValidateContext chỉ định node Signature cùng public key tin cậy khi kiểm tra. Bài học hiện thực hóa một chữ ký enveloped tới Invoice có ID, đọc kết quả core, SignatureValue và Reference riêng biệt, rồi mở rộng sang parse XML không tin cậy và chống signature wrapping. Đây là kỹ năng đưa đối tượng XMLDSig đã học thành luồng ký và xác minh có thể kiểm thử.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ký dữ liệu XML bằng DOM
+
+    1. DOMSignContext chứa những thông tin nào để XMLSignature.sign chèn chữ ký đúng chỗ?
+    2. Vì sao Invoice có thuộc tính Id cần setIdAttributeNS ở cả khâu ký và xác minh?
+
+    ### Xác minh và chẩn đoán
+
+    1. DOMValidateContext cần nhận node nào và khóa kiểm tra từ nguồn nào?
+    2. Tại sao sau khi Amount đổi, SignatureValue có thể true nhưng Reference và core đều false?
+    3. Khi DOM thay đổi sau một lần validate, vì sao cần tạo context và XMLSignature mới để kiểm lại?
+
+    ### An toàn với dữ liệu ngoài
+
+    1. Những tính năng parser nào phải tắt hoặc giới hạn trước khi nhận XML từ mạng?
+    2. Tại sao core=true vẫn chưa đủ nếu ứng dụng dùng Invoice khác với node được Reference xác minh?
+    3. Nếu KeyInfo chứa certificate, cần thêm các bước trust và authorization nào trước khi nhận invoice?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ký XML bằng DOMSignContext | Chạy XmlSignatureDemo với RSA-SHA256, ID và enveloped transform để sinh chữ ký. |
+    | Xác minh bằng DOMValidateContext | Nạp trustedPublicKey, đăng ký ID, bật secure validation rồi đối chiếu kết quả core. |
+    | Phân biệt lỗi theo lớp | Đọc riêng SignatureValue.validate và Reference.validate để xác định ảnh hưởng của sửa dữ liệu. |
+    | Bảo vệ XML parser | Viết cấu hình namespace-aware, chặn DTD/external entities và fail closed khi hardening không được hỗ trợ. |
+    | Chống dùng nhầm node | Ràng buộc Invoice, Signature, ID và Reference đã xác minh trước khi xử lý nghiệp vụ. |
+- id: jar-xml-signatures-008
+  title: 19.8 Tách chọn khóa khỏi kiểm tra khóa tin cậy; giới hạn URI tham chiếu và secure validation
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **19.8 Tách chọn khóa khỏi kiểm tra khóa tin cậy; giới hạn URI tham chiếu và secure validation**
+
+    Kẻ tấn công có thể tạo XML mang chữ ký toán học hợp lệ bằng khóa của họ, ép resolver truy cập file/HTTP hoặc lợi dụng chữ ký trên node cũ để thay nội dung nghiệp vụ. Bài học cuối ghép KeySelector, trust policy, URIDereferencer, secure validation, parser hardening và signed-data binding thành bộ kiểm soát nhất quán. Demo với hai khóa trusted/outsider và URI nội bộ giúp chứng minh vì sao chỉ validate=true chưa đủ để chấp nhận giao dịch.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lựa chọn và tin cậy khóa
+
+    1. Một KeyValue do XML tự khai có thể cho validate=true nhưng vì sao chưa chứng minh signer được phép ký?
+    2. KeySelector chọn ứng viên khóa khác gì PKIX/pinning và ánh xạ quyền theo tenant?
+    3. Với nhiều chứng thư ứng viên, làm sao tránh chọn nhầm signer ngoài chính sách?
+
+    ### Giới hạn URI và thuật toán
+
+    1. Vì sao cần cả kiểm tra Reference.getURI lẫn URIDereferencer allowlist trước dereference?
+    2. Các loại URI file, HTTP, #xpointer và RetrievalMethod có thể mở những bề mặt tấn công nào?
+    3. Secure validation của JDK hạn chế những cơ chế nguy hiểm nào và còn bỏ ngỏ các điều kiện nghiệp vụ gì?
+
+    ### Cấu trúc XML và wrapping
+
+    1. Làm sao đảm bảo phần tử Payment mà nghiệp vụ xử lý chính là nút được ký, đúng namespace/ID/vị trí?
+    2. Vì sao duplicate ID hoặc một Payment giả mới vẫn nguy hiểm ngay cả khi SignatureValue đúng?
+    3. Parser cần được cấu hình thế nào để tránh XXE trước khi XMLDSig hoạt động?
+
+    ### Tự kiểm thử lớp bảo vệ
+
+    1. Vì sao outsiderMathValid=true nhưng outsiderAccepted=false là kết quả mong muốn của demo?
+    2. Những negative tests nào chứng minh URI ngoài, ký sai node, thuật toán yếu hoặc tắt secureValidation bị chặn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế trust policy | Xác định key pin hoặc PKIX/trust anchor và signer identity/role thay vì tin KeyInfo tự khai. |
+    | Kiểm soát Reference và URI | Kiểm tra một Reference đúng ID, đúng transform và viết URIDereferencer chỉ cho URI nội bộ. |
+    | Áp dụng secure validation | Bật và kiểm tra chính sách JDK, nêu các ràng buộc vẫn phải do ứng dụng thực thi. |
+    | Chống XML signature wrapping | Kiểm tra ID duy nhất, cấu trúc DOM và dùng chính Payment đã được xác minh. |
+    | Chạy test trusted/outsider | Thực hiện XmlSignatureBoundariesDemo và giải thích bốn kết quả boolean của nó. |
+    | Thiết kế negative-test matrix | Tạo các ca phá trust, URI, cấu trúc, thuật toán và replay để chứng minh hệ thống từ chối đúng nguyên nhân. |

@@ -1,0 +1,271 @@
+summaries:
+- id: hash-functions-001
+  title: 4.1 Tính một chiều, tiền ảnh và va chạm của hàm băm mật mã
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **4.1 Tính một chiều, tiền ảnh và va chạm của hàm băm mật mã**
+
+    Ba bài toán bảo mật của hàm băm nhìn có vẻ giống nhau nhưng khác điều kiện mà kẻ tấn công được lựa chọn. Bài học giúp người đọc phân biệt tiền ảnh, tiền ảnh thứ hai và va chạm, từ đó chọn mức an ninh phù hợp khi dùng digest, rút ngắn đầu ra hoặc đánh giá dữ liệu đã được ký. Ví dụ Java về collision của tiền tố 16 bit cho thấy giới hạn của cách diễn giải một kết quả băm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ba bài toán của hàm băm
+
+    1. Khi chỉ biết digest mục tiêu, bài toán tìm preimage khác gì với việc phải thay một thông điệp đã cố định?
+    2. Vì sao quyền tự chọn cả hai thông điệp làm bài toán collision khác second preimage?
+    3. Tại sao va chạm tồn tại về toán học nhưng tìm một va chạm hữu ích vẫn có thể không khả thi?
+
+    ### Mức an ninh và dữ liệu đầu vào
+
+    1. Với digest n bit lý tưởng, vì sao birthday bound đưa độ khó tìm collision về cỡ 2^(n/2)?
+    2. Nếu chỉ giữ 16 bit đầu của SHA-256, một cặp tiền tố trùng có chứng minh SHA-256 bị phá không?
+    3. Vì sao mật khẩu ít entropy không được bảo vệ ở mức 256 bit chỉ nhờ SHA-256?
+
+    ### Tự kiểm chứng và áp dụng
+
+    1. Khi chạy HashFundamentalsDemo, cần đọc kết quả nào để phân biệt digest đầy đủ với tiền tố 16 bit?
+    2. Tại sao hash khớp với SHA-256 do chính nguồn bị xâm nhập công bố vẫn chưa chứng minh được nhà phát hành?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại mục tiêu tấn công | Nhận một kịch bản và chỉ rõ preimage, second preimage hay collision cùng điều kiện đầu vào bị cố định. |
+    | Ước lượng độ khó | Giải thích chênh lệch giữa 2^n và 2^(n/2), áp dụng cho digest 256 bit hoặc digest rút ngắn. |
+    | Diễn giải phép thử Java | Chạy HashFundamentalsDemo và chứng minh va chạm 16 bit không phải va chạm SHA-256 đầy đủ. |
+    | Xác định byte đã băm | Phân tích khác biệt UTF-8, newline và độ dài digest giữa hai phép băm. |
+    | Đánh giá giới hạn bảo mật | Nêu cơ chế bảo vệ nguồn digest và lý do cần password KDF thay SHA-256 trực tiếp cho mật khẩu. |
+- id: hash-functions-002
+  title: 4.2 MessageDigest với SHA-2, SHA-3 và việc kiểm tra khả năng hỗ trợ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **4.2 MessageDigest với SHA-2, SHA-3 và việc kiểm tra khả năng hỗ trợ**
+
+    Java dùng JCA để cung cấp SHA-2 và SHA-3 qua các security providers. Bài học hướng dẫn chọn đúng standard algorithm name, tạo MessageDigest, kiểm tra thuật toán có được đăng ký, có tạo instance được và có qua test vector hay không. Người học tránh nhầm cùng 256 bit với cùng thuật toán và biết xử lý một runtime thiếu SHA3-256 mà không fallback trái hợp đồng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân biệt thuật toán
+
+    1. SHA-256 và SHA3-256 khác nhau thế nào dù cùng xuất digest 256 bit?
+    2. Vì sao SHA-512/256 không đồng nghĩa lấy 256 bit đầu của SHA-512?
+
+    ### Khả năng hỗ trợ của JCA
+
+    1. Tên thuật toán có trong Standard Algorithm Names khác thế nào với provider thực sự tạo được MessageDigest?
+    2. Làm thế nào kiểm tra provider đăng ký SHA3-256, tạo instance từ đúng provider đó và đối chiếu test vector?
+    3. Vì sao không nên suy ra provider được chọn chỉ từ tên thuật toán hoặc thứ tự hiển thị?
+
+    ### Tính tái lập và hợp đồng dữ liệu
+
+    1. Một cặp service nhận cùng văn bản nhưng cho digest khác nhau thì nên kiểm tra những byte nào?
+    2. Nếu thuật toán bắt buộc không được cung cấp, vì sao phải fail fast thay vì đổi từ SHA3-256 sang SHA-256?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn tên chuẩn | Dùng đúng tên SHA-2 và SHA-3 trong MessageDigest.getInstance và phân biệt các biến thể cùng độ dài. |
+    | Kiểm tra provider | Chạy HashFamiliesDemo, ghi nhận các provider đăng ký và thực sự thực thi SHA3-256. |
+    | Xác minh kết quả | Đối chiếu SHA-256 và SHA3-256 của UTF-8 abc với test vector chuẩn. |
+    | Thiết kế xử lý thiếu thuật toán | Tạo luồng kiểm tra capability và fail fast khi thuật toán theo hợp đồng không sẵn có. |
+    | Quy định dữ liệu đầu vào | Nêu quy tắc UTF-8, byte và algorithm identifier để hai đầu hệ thống tạo cùng digest. |
+- id: hash-functions-003
+  title: 4.3 Chu trình update, digest, reset và xử lý dữ liệu nhiều phần
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **4.3 Chu trình update, digest, reset và xử lý dữ liệu nhiều phần**
+
+    MessageDigest là engine có trạng thái: update đưa các byte nối tiếp vào thông điệp, digest chốt kết quả rồi tự reset, còn reset bỏ dữ liệu chưa chốt. Bài học dùng các overload, ByteBuffer và InputStream để làm rõ ranh giới byte được tiêu thụ và việc xử lý nhiều phần. Nắm vững vòng đời này giúp tránh hash nhầm buffer, ghép state hai thông điệp hoặc dùng chung instance giữa các thread.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng đời của engine
+
+    1. Sau update phần a rồi digest phần bc, Java trả SHA-256 của thông điệp nào và state ở trạng thái gì?
+    2. Nếu gọi reset giữa hai phần thông điệp, byte trước reset còn ảnh hưởng digest không?
+    3. Overload digest(byte[]) khác digest(byte[],offset,len) ở vai trò mảng truyền vào thế nào?
+
+    ### ByteBuffer và ranh giới
+
+    1. MessageDigest.update(ByteBuffer) đọc vùng nào theo position và limit, và position thay đổi ra sao?
+    2. Tại sao hai cách chia cùng chuỗi abc thành a+bc và ab+c cho cùng digest, nhưng hai cặp trường khác nghĩa cũng có thể bị nhập nhằng?
+
+    ### Luồng và sử dụng an toàn
+
+    1. Vì sao phải truyền n byte thực đọc từ InputStream vào update thay vì toàn bộ buffer?
+    2. Tại sao không chia sẻ một MessageDigest có state cho hai tác vụ đồng thời?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô tả vòng đời | Vẽ và giải thích chuỗi update, digest, reset khi tính hai thông điệp liên tiếp. |
+    | Dùng đúng overload | Phân biệt digest nhận input với digest ghi output và xác minh offset/len bằng DigestLifecycleDemo. |
+    | Kiểm soát ByteBuffer | Thiết lập position/limit và chứng minh update chỉ tiêu thụ vùng remaining. |
+    | Xử lý stream nhiều phần | Viết phương thức đọc InputStream đến EOF, update đúng số byte, final một lần và giữ digest ổn định qua các kích thước chunk. |
+    | Ngăn state bị trộn | Đề xuất ownership của MessageDigest theo từng task và xác định hậu quả khi digest/reset gọi sai thời điểm. |
+- id: hash-functions-004
+  title: 4.4 Băm file lớn bằng luồng hoặc ByteBuffer
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **4.4 Băm file lớn bằng luồng hoặc ByteBuffer**
+
+    Băm file nhiều GiB đòi hỏi xử lý đúng byte với bộ nhớ giới hạn, đọc được trường hợp rỗng và cuối buffer không đủ chunk. Bài học đặt InputStream cạnh FileChannel với ByteBuffer, kiểm thử cùng file bằng hai đường đọc và cảnh báo file bị sửa trong khi hash. Nhờ đó, người học có thể xây công cụ kiểm tra artifact có độ tin cậy và phân biệt hash khớp với nguồn dữ liệu thực sự đáng tin.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế bộ nhớ và I/O
+
+    1. Vì sao Files.readAllBytes có thể gây lỗi khi file lớn, còn đọc chunk giữ bộ nhớ theo kích thước buffer?
+    2. Nếu read chỉ trả 19 byte trong buffer 64 KiB, thao tác update nào giữ digest đúng?
+
+    ### NIO và kiểm thử biên
+
+    1. FileChannel.read, ByteBuffer.flip, MessageDigest.update và clear cần xuất hiện theo thứ tự nào?
+    2. Các độ dài 0, 1, 65535, 65536 và 65537 byte giúp phát hiện lỗi cụ thể gì?
+    3. Tại sao map toàn bộ file nhiều GiB vào một MappedByteBuffer Java 17 có thể không phù hợp?
+
+    ### Tính nhất quán và tin cậy
+
+    1. Nếu InputStream và FileChannel băm cùng đường dẫn nhưng digest khác, điều gì ngoài thuật toán có thể đã xảy ra?
+    2. Vì sao expected digest phải đến từ nguồn đáng tin và việc hash file đang thay đổi gây rủi ro TOCTOU?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Băm file không giữ toàn bộ trong RAM | Chạy FileSha256Demo theo InputStream và FileChannel, giải thích tính O(B) của bộ nhớ đệm. |
+    | Xử lý ByteBuffer chính xác | Mô phỏng state position/limit qua read, flip, update và clear để phát hiện byte thừa. |
+    | Kiểm thử biên file | Chạy HashBoundaryCheck và chứng minh bảy kích thước file cho kết quả thống nhất. |
+    | Phân tích file lớn và nguồn thay đổi | Đánh giá giới hạn map, direct buffer, tính nhất quán và đề xuất bản snapshot bất biến. |
+    | Xác minh artifact | So sánh digest file với manifest tin cậy, giải thích khi nào same=true chưa đủ để xác thực phát hành. |
+- id: hash-functions-005
+  title: 4.5 Phân biệt checksum, Object.hashCode và digest mật mã
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **4.5 Phân biệt checksum, Object.hashCode và digest mật mã**
+
+    Checksum, Object.hashCode và digest mật mã đều thường được gọi là hash nhưng phục vụ các hợp đồng khác nhau. Bài học đặt CRC32/CRC32C/Adler32 cạnh equals-hashCode của Java và SHA-256, chỉ ra va chạm trong HashMap được xử lý bằng equals chứ không tạo danh tính duy nhất. Phân biệt đúng ba công cụ giúp chọn API theo lỗi ngẫu nhiên, cấu trúc dữ liệu hay đối thủ chủ động.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Checksum và digest
+
+    1. CRC32 khác CRC32C ở điểm nào dù cùng trả về 32 bit và có thể hoán đổi trong cùng một giao thức không?
+    2. Tại sao checksum phát hiện lỗi vô ý nhưng không chống người sửa dữ liệu rồi tính lại giá trị kiểm tra?
+
+    ### Hợp đồng đối tượng trong Java
+
+    1. Hợp đồng equals và hashCode bắt buộc chiều suy luận nào, và chiều ngược lại có đúng không?
+    2. Vì sao Aa và BB cùng String.hashCode mà HashMap vẫn lưu hai khóa khác nhau?
+    3. Điều gì xảy ra nếu trường tham gia hashCode của một key bị sửa sau khi đưa vào HashMap?
+
+    ### Chọn cơ chế phù hợp
+
+    1. Khi nào dùng SHA-256 thay CRC32 hoặc hashCode để định danh nội dung?
+    2. Nếu file và digest từ cùng nguồn có thể bị chiếm, cần thêm cơ chế tin cậy nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt ba loại hash | Chọn checksum, hashCode hoặc digest theo mô hình lỗi và mục tiêu ứng dụng. |
+    | Áp dụng hợp đồng Java | Phân tích va chạm String.hashCode, phép equals và map có khóa bất biến. |
+    | Đọc kiểm thử JDK | Chạy ChecksumHashDigestDemo, giải thích từng giá trị CRC32, CRC32C, Adler32 và SHA-256 của abc. |
+    | Thiết kế định dạng byte | Lựa chọn canonical serialization khi cần digest bền vững của object. |
+    | Xác minh nguồn nội dung | Chỉ ra giới hạn checksum/digest công khai và đề xuất digest có nguồn tin cậy, HMAC hoặc chữ ký. |
+- id: hash-functions-006
+  title: 4.6 So sánh digest bằng MessageDigest.isEqual và phạm vi bảo đảm của API
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **4.6 So sánh digest bằng MessageDigest.isEqual và phạm vi bảo đảm của API**
+
+    So sánh digest hoặc HMAC tag có thể lộ vị trí byte sai nếu code tự viết dừng sớm. Bài học phân tích MessageDigest.isEqual, hợp đồng so sánh byte và Implementation Note về thời gian, kể cả null, mảng rỗng, cùng reference hay độ dài khác. Ví dụ HmacSHA256 cho thấy API so sánh phù hợp chỉ là một bước trong quy trình có key, canonical byte, kiểm tra tag và chống replay.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ngữ nghĩa của phép so sánh
+
+    1. Vì sao ==, byte[].equals và Arrays.equals khác MessageDigest.isEqual khi kiểm tra byte của digest?
+    2. Một vòng for trả false ở byte sai đầu có thể tạo timing side-channel như thế nào?
+
+    ### Phạm vi cam kết của API
+
+    1. Implementation Note của isEqual cho phép thời gian phụ thuộc vào độ dài đối số thứ nhất ra sao?
+    2. Vì sao null, mảng rỗng, cùng reference và đường xử lý bên ngoài phép so sánh không thể được suy luận là constant-time tuyệt đối?
+
+    ### Xác minh HMAC trong ứng dụng
+
+    1. Vì sao bên nhận phải tự tính expected HMAC bằng khóa bí mật thay vì tin plain digest do client gửi?
+    2. Vì sao cần từ chối tag sai độ dài và đặt expected tag được tính lại ở đối số thứ nhất của isEqual?
+    3. HMAC hợp lệ có tự chặn replay hoặc tạo authorization không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh byte đúng API | Chỉ ra lỗi của == và byte[].equals, dùng MessageDigest.isEqual để so sánh các digest độc lập. |
+    | Phân tích timing-risk | Giải thích điểm rò rỉ của early exit và các điều kiện giới hạn Implementation Note. |
+    | Kiểm tra input cho tag | Từ chối tag null hoặc sai độ dài trước khi so sánh full HmacSHA256. |
+    | Chạy phép thử HMAC | Thực hiện DigestCompareDemo và dự đoán kết quả khi sửa message, tag hay cắt tag. |
+    | Đánh giá giao thức xác thực | Mô tả nhu cầu key management, canonicalization, anti-replay và authorization ngoài isEqual. |
+- id: hash-functions-007
+  title: 4.7 Giới hạn của digest công khai trước dữ liệu bị thay thế và mật khẩu yếu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **4.7 Giới hạn của digest công khai trước dữ liệu bị thay thế và mật khẩu yếu**
+
+    SHA-256 công khai phát hiện thay đổi chỉ khi digest tham chiếu đáng tin; đối thủ thay được cả file lẫn checksum thì có thể tính lại hash mà không phá thuật toán. Tương tự, SHA-256(password) không chống dò mật khẩu yếu từ verifier bị lộ. Bài học kết hợp mô hình đe dọa, HMAC/chữ ký và password KDF có salt, work factor, record format, cost migration để người học chọn đúng cơ chế bảo vệ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Giới hạn của digest công khai
+
+    1. Vì sao thay file kèm giá trị SHA-256 mới không phải là một cuộc tấn công tìm collision?
+    2. Khi nguồn digest tham chiếu không được bảo vệ, làm thế nào xác thực nội dung với HMAC hoặc chữ ký số?
+    3. Vì sao HMAC hay chữ ký hợp lệ vẫn có thể cần chống replay hoặc rollback?
+
+    ### Mật khẩu và password KDF
+
+    1. Vì sao SHA-256 nhanh và mật khẩu ít entropy khiến tấn công đoán offline khả thi?
+    2. Salt, work factor và pepper đóng vai trò gì và thành phần nào phải giữ bí mật?
+    3. Argon2id, scrypt, bcrypt và PBKDF2 khác nhau ở chi phí và ràng buộc triển khai nào?
+
+    ### Xác minh và vận hành
+
+    1. Vì sao bản ghi PBKDF2 cần lưu scheme, rounds, salt và derived hash?
+    2. Khi nâng work factor hoặc thay thuật toán, vì sao cần rehash lúc có mật khẩu hợp lệ hoặc reset thay vì chuyển trực tiếp từ hash cũ?
+    3. Nếu cost nhận từ bản ghi bị sửa thành giá trị cực lớn, verifier cần bảo vệ mình thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện đe dọa thay dữ liệu | Phân tích ví dụ file và digest bị thay đồng thời, phân biệt với collision attack. |
+    | Chọn cơ chế xác thực | Nêu khi nào dùng digest đáng tin, HMAC khóa chung, chữ ký số hoặc AEAD. |
+    | Giải thích đoán mật khẩu offline | Chứng minh rằng phép SHA-256 nhanh không biến PIN/mật khẩu phổ biến thành bí mật mạnh. |
+    | Tạo verifier PBKDF2 | Chạy PasswordStorageDemo để tạo salt ngẫu nhiên, lưu scheme/rounds/salt/hash và xác minh đúng/sai. |
+    | Đánh giá cost và migration | Thiết kế giới hạn cost, khả năng nâng cấp verifier và bảo vệ tài nguyên khi nhiều request đồng thời. |
+    | Vận hành kho mật khẩu | Lập chính sách chống lộ DB, lưu pepper tách biệt khi dùng, hạn chế online guesses và tránh log plaintext. |

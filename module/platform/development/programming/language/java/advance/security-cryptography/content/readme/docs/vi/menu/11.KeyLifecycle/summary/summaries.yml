@@ -1,0 +1,359 @@
+summaries:
+- id: key-lifecycle-001
+  title: 11.1 Phân loại khóa dữ liệu, khóa bọc khóa và khóa ký theo trách nhiệm
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **11.1 Phân loại khóa dữ liệu, khóa bọc khóa và khóa ký theo trách nhiệm**
+
+    Phân loại đúng DEK, KEK và khóa ký giúp tránh việc dùng một bí mật cho nhiều nhiệm vụ, xác định tài sản được bảo vệ và chọn thao tác mật mã đúng. Bài kết nối ba vai trò bằng ví dụ AES-GCM, AES Key Wrap và RSA-PSS, từ đó lý giải khi nào cần mã hóa, bọc khóa, ký và thay từng loại khóa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và phạm vi trách nhiệm
+
+    1. DEK, KEK và private signing key bảo vệ những đối tượng nào và vì sao không nên hoán đổi nhiệm vụ?
+    2. Vì sao AES-GCM tag không tự chứng minh danh tính bên gửi như chữ ký được xác minh qua public key đáng tin?
+    3. Key ID và public verification key mang ý nghĩa gì, và tại sao chúng không tự cấp quyền truy cập?
+
+    ### Thiết kế envelope và luân chuyển khóa
+
+    1. Trong một envelope có AAD, wrapped DEK và signature, những trường nào phải được xác thực và bằng cách nào?
+    2. Khi KEK thay đổi nhưng DEK còn an toàn, phần nào của envelope có thể rewrap mà không re-encrypt payload?
+    3. Vì sao thay wrapped DEK hoặc key ID trong envelope đã ký đòi hỏi xem xét việc ký lại?
+
+    ### Thực hành và xử lý sự cố
+
+    1. Trong KeyRolesDemo, DEK, KEK và signing key đi qua những API Java nào và tạo ra những kết quả gì?
+    2. Nếu DEK, KEK hoặc private signing key bị lộ riêng lẻ, phạm vi ảnh hưởng và hướng khắc phục khác nhau thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân vai khóa | Chỉ ra đúng DEK, KEK, private signing key và public verification key trong một thiết kế lưu tài liệu. |
+    | Mô hình envelope | Vẽ đường đi plaintext, ciphertext, wrapped DEK, nonce, AAD và signature mà không trộn chức năng. |
+    | Đọc chương trình | Giải thích các bước AES-GCM, AESWrap, RSASSA-PSS và kết quả tamper check trong KeyRolesDemo. |
+    | Phân tích rotation | Phân biệt rewrap KEK với thay DEK và thay signing key theo đúng dữ liệu bị tác động. |
+    | Phân tích sự cố | Xác định vì sao KEK lộ có thể ảnh hưởng nhiều DEK và vì sao rewrap không xóa được dữ liệu từng bị giải mã. |
+- id: key-lifecycle-002
+  title: 11.2 Sinh khóa, cấp phát, lưu trữ, sử dụng, luân chuyển và thu hồi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **11.2 Sinh khóa, cấp phát, lưu trữ, sử dụng, luân chuyển và thu hồi**
+
+    Một phép mã hóa thành công không chứng minh khóa được quản lý an toàn trong nhiều năm. Bài hướng dẫn toàn chu trình từ thiết kế mục đích, tạo và cấp phát khóa tới lưu trữ, cryptoperiod, sử dụng, rotation, revoke và destroy, đồng thời xử lý sự khác nhau giữa ngừng mã hóa mới và duy trì khả năng đọc dữ liệu cũ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các giai đoạn và trạng thái khóa
+
+    1. Các trạng thái pre-activation, active, decrypt-only, compromised và destroyed khác nhau về quyền thao tác thế nào?
+    2. Tại sao originator-usage period có thể kết thúc trước recipient-usage period của cùng khóa?
+    3. Đối với DEK, KEK, HMAC key và private signing key, các phụ thuộc lịch sử khác nhau ra sao?
+
+    ### Sinh, lưu trữ và cấp phát
+
+    1. Khi tạo khóa AES hoặc cặp khóa ký trong Java, cần kiểm soát random source, purpose, exportability và môi trường thế nào?
+    2. KeyStore PKCS12, KMS và HSM cung cấp những khả năng và giới hạn khác nhau nào về quản lý, quyền và recovery?
+    3. Làm sao phân tách key administrator, runtime service và auditor để giảm quyền quá rộng?
+
+    ### Rotation và ứng cứu
+
+    1. Thiết kế reader-first rollout từ v1 sang v2 thế nào để không mất khả năng decrypt dữ liệu cũ?
+    2. Revoke, disable, rewrap, re-encrypt và destroy khác nhau ở điểm nào khi khóa nghi bị lộ?
+    3. Vì sao xóa alias trong KeyLifecycleDemo không chứng minh mọi bản sao khóa đã được hủy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quản lý trạng thái | Lập state transition và allowed operations cho một key theo cryptoperiod và rủi ro. |
+    | Provisioning an toàn | Chọn cách sinh, cấp quyền, lưu trữ, backup và ghi audit phù hợp DEK, KEK hoặc signing key. |
+    | Mô phỏng rotation | Đọc và chạy KeyLifecycleDemo, lý giải bản ghi v1 vẫn đọc sau khi v2 active. |
+    | Lập runbook | Thiết kế chuyển đổi encrypt-new/decrypt-old, rewrap hoặc re-encrypt có kiểm chứng và rollback. |
+    | Xử lý compromise | Phân biệt rút quyền sử dụng với thu hồi key material đã bị sao chép và xác định bước incident response. |
+- id: key-lifecycle-003
+  title: 11.3 Không đặt khóa bí mật trong mã nguồn, bản đóng gói hoặc nhật ký
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **11.3 Không đặt khóa bí mật trong mã nguồn, bản đóng gói hoặc nhật ký**
+
+    Bí mật thường bị lộ trước khi thuật toán mật mã được gọi hoặc sau khi code đã chạy: trong Git history, class/JAR, image layers, CI artifacts, logger và tracing. Bài giúp kiểm soát toàn đường đi của credential từ source, build tới runtime, thực hành audit logging theo allowlist và quy trình thu hồi khi phát hiện secret thật bị nhúng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn gốc rò rỉ
+
+    1. Vì sao private repository, static final, Base64, obfuscation và gitignore không đủ bảo vệ secret đã được commit?
+    2. Những đường nào khiến secret từ source hoặc cấu hình lọt vào class file, JAR, Docker layer và CI artifacts?
+    3. Tại sao HTTP wire logs, toString, exception messages và APM dễ phát tán token hoặc key ngoài vùng tin cậy?
+
+    ### Kiến trúc cấp phát và audit
+
+    1. Workload identity kết hợp secret manager hoặc KMS khác gì so với đặt raw secret trong JAR hoặc Docker ENV?
+    2. Những trường metadata nào có thể được đưa vào allowlist audit event mà không cần ghi key hoặc token?
+    3. Vì sao environment variable giúp tách cấu hình nhưng không bảo đảm bí mật không lộ qua process diagnostics?
+
+    ### Phát hiện và ứng cứu
+
+    1. Phải kiểm tra những phạm vi nào khi secret scanner báo hit trong repo, artifact hoặc log?
+    2. Nếu một API token đã bị commit rồi xóa ở HEAD, vì sao vẫn cần xem xét revoke hoặc rotate và rà soát bản sao lịch sử?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện đường leak | Lập bản đồ source, pipeline, JAR/image, log, dump và telemetry có thể chứa credential. |
+    | Sửa thiết kế | Thay hard-coded secret bằng key reference và runtime workload identity theo quyền tối thiểu. |
+    | Log an toàn | Giải thích AllowlistAuditDemo và kiểm soát output chỉ chứa event metadata được duyệt. |
+    | Kiểm thử artifact | Đề xuất secret scanning và kiểm tra bytecode, resources, image layers cùng CI logs. |
+    | Xử lý sự cố | Lập thứ tự revoke, rotate, kiểm tra clone/history và cập nhật consumer mà không phát tán lại secret. |
+- id: key-lifecycle-004
+  title: 11.4 Mã định danh khóa, phiên bản khóa và khả năng giải mã dữ liệu cũ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **11.4 Mã định danh khóa, phiên bản khóa và khả năng giải mã dữ liệu cũ**
+
+    Khi đổi khóa, ciphertext cũ không tự chuyển sang khóa mới. Bài tập trung vào key ID bất biến, phân biệt version của vật liệu khóa với format và data schema, xác thực metadata bằng AES-GCM AAD, chọn đúng key khi đọc và thiết kế migration, rollback, chống tráo tenant/record mà không đánh mất dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Versioning và định dạng ciphertext
+
+    1. Key ID, key version, envelope format version và document schema version có vai trò độc lập như thế nào?
+    2. Vì sao bản mã lưu alias current thay vì tham chiếu key generation bất biến có thể mất khả năng giải mã về sau?
+    3. Những byte nào của header phải tham gia AAD để chặn sửa key ID, nonce hoặc metadata bảo mật?
+
+    ### Đọc và di trú dữ liệu cũ
+
+    1. Reader nên kiểm quyền tenant và chọn key được cấp phép từ registry trước khi gọi decrypt thế nào?
+    2. New-writes-only rotation, lazy migration, batch re-encryption và KEK rewrap khác nhau về dependency với khóa cũ ra sao?
+    3. Vì sao migration cần compare-and-swap và không được chỉ sửa key ID trên bản mã AES-GCM?
+
+    ### Thử nghiệm lỗi và khôi phục
+
+    1. KeyVersionDemo chứng minh điều gì khi đổi key ID, tenant AAD, ciphertext và GCM tag?
+    2. Vì sao phục hồi một ciphertext cũ còn có tag hợp lệ không đủ chứng minh đó là revision mới nhất?
+    3. Sau rollback writer hoặc restore backup, những key versions nào bắt buộc vẫn khả dụng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế định dạng | Đặc tả envelope có format version, immutable key ref, nonce, ciphertext/tag và AAD không mơ hồ. |
+    | Giải mã đúng khóa | Xây policy decrypt theo key version, tenant và quyền truy cập, từ chối header không được cấp phép. |
+    | Đánh giá thử nghiệm | Giải thích các negative tests key ID, AAD, tag và record thiếu khóa trong KeyVersionDemo. |
+    | Di trú an toàn | Lập kế hoạch re-encrypt với nonce mới, CAS, checkpoint và rollback không làm hỏng bản gốc. |
+    | Bảo đảm lịch sử | Kiểm kê key dependencies trong archive/backup và nêu điều kiện chỉ được retire khóa khi không còn dữ liệu cần đọc. |
+- id: key-lifecycle-005
+  title: 11.5 Envelope encryption và tách khóa dữ liệu khỏi khóa bảo vệ khóa
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **11.5 Envelope encryption và tách khóa dữ liệu khỏi khóa bảo vệ khóa**
+
+    Envelope encryption chia hai ranh giới mật mã: DEK dùng AES-GCM để bảo vệ payload, KEK bọc DEK và được quản lý tập trung. Bài phát triển cấu trúc envelope có hai cơ chế xác thực, AAD riêng cho data và wrapping, quy trình rewrap KEK mà không thay ciphertext dữ liệu, cùng kiểm soát concurrency, KMS và sự cố lộ khóa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai tầng bảo vệ
+
+    1. DEK và KEK khác nhau thế nào về quyền sử dụng, phạm vi, nơi lưu và tác động nếu bị lộ?
+    2. Trong envelope có data nonce/tag và wrapped-DEK nonce/tag, mỗi tầng xác thực điều gì?
+    3. Vì sao wrap AAD có thể chứa KEK ID nhưng data AAD nên ổn định qua rewrap nếu muốn giữ nguyên ciphertext?
+
+    ### Phép thử và kỹ thuật triển khai
+
+    1. EnvelopeEncryptionDemo tạo DEK, encrypt payload, wrap DEK, unwrap và rewrap bằng các API nào?
+    2. Những kiểm thử sai KEK, sai object ID, sửa ciphertext/tag và wrapped DEK chứng minh giới hạn gì?
+    3. Khi cập nhật wrapped DEK, key ID và wrap metadata cho một object, vì sao cần thao tác nguyên tử hoặc CAS?
+
+    ### KMS, sự cố và vòng đời
+
+    1. Vì sao KEK không export được khỏi KMS nhưng plaintext DEK vẫn có thể xuất hiện trong ứng dụng?
+    2. Khi chỉ đổi KEK định kỳ khác với tình huống KEK hoặc DEK bị lộ, bước rewrap và re-encrypt cần chọn ra sao?
+    3. Xác thực authorization tenant và trusted key mapping phải diễn ra ở đâu trước khi unwrap?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ hai tầng envelope | Phân tách DEK, KEK, wrapped DEK, data ciphertext/tag và các metadata cần lưu. |
+    | Định nghĩa AAD | Thiết kế data AAD và wrap AAD để xác thực đúng object, tenant, purpose và hỗ trợ rewrap. |
+    | Đọc Java demo | Dự đoán kết quả đúng/sai khi sửa tag, KEK, object ID và giải thích vì sao rewrap giữ data bytes. |
+    | Thiết kế migration | Viết kế hoạch rewrap có CAS, key version, quota và khả năng khôi phục/rollback. |
+    | Đánh giá sự cố | Nêu trường hợp đổi KEK không đủ, cần tạo DEK mới và re-encrypt payload. |
+- id: key-lifecycle-006
+  title: 11.6 Quản lý IV hoặc nonce khi có nhiều luồng, nhiều tiến trình và khởi động lại
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **11.6 Quản lý IV hoặc nonce khi có nhiều luồng, nhiều tiến trình và khởi động lại**
+
+    Tính an toàn của AES-GCM phụ thuộc việc không dùng lại cùng cặp key và nonce trên mọi thread, JVM, node và sau restart. Bài chuyển từ khái niệm IV sang thiết kế allocator nguyên tử, counter/range lease bền vững, fixed-field namespace, crash recovery, failover, fencing và invocation limits; đây là bài toán hệ phân tán chứ không chỉ tạo mảng 12 byte.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Yêu cầu của từng chế độ mã hóa
+
+    1. AES-GCM, CTR, ChaCha20-Poly1305 và CBC khác nhau ở yêu cầu unique hoặc unpredictable IV như thế nào?
+    2. Vì sao AAD khác hoặc GCM tag dài không cứu được việc tái sử dụng cùng cặp key và nonce?
+    3. Nonce ngẫu nhiên 96 bit và fixed-field cộng invocation counter tạo ra những rủi ro khác nhau nào?
+
+    ### Đồng thời và bền vững
+
+    1. AtomicLong bảo đảm điều gì trong một JVM và vì sao không thể phối hợp nhiều process/region dùng cùng key?
+    2. Vì sao phải commit high-water mark trước encrypt, đốt bỏ range sau crash và không reset counter khi restart?
+    3. Range leasing, fixed namespace theo writer và fencing token giải quyết những race hoặc split-brain nào?
+
+    ### Thực hành và vận hành
+
+    1. ConcurrentGcmNonceDemo kiểm chứng 1600 thao tác khác nonce như thế nào và giới hạn phép thử là gì?
+    2. DurableGcmSequenceDemo dùng FileLock, force và checksum để minh họa gì, và những rủi ro filesystem/rollback nào vẫn chưa giải quyết?
+    3. Phải làm gì nếu backup restore khiến counter có thể lùi mà key cũ vẫn đang dùng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích mode | Phân biệt unique nonce của GCM/CTR với IV unpredictable của CBC, không áp sai một allocator. |
+    | Thiết kế allocator | Mô hình hóa cấp nonce an toàn cho thread, process, node và key epoch. |
+    | Lập kế hoạch durability | Chỉ ra đúng thứ tự reserve, commit, encrypt và xử lý crash/retry không tái cấp nonce. |
+    | Kiểm thử code | Giải thích output của ConcurrentGcmNonceDemo và DurableGcmSequenceDemo cùng các giới hạn. |
+    | Xử lý sự cố | Chọn fail-closed hoặc rotation sang key material mới khi không chứng minh được trạng thái nonce. |
+- id: key-lifecycle-007
+  title: 11.7 Khóa có thể xuất so với khóa chỉ được sử dụng thông qua provider
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **11.7 Khóa có thể xuất so với khóa chỉ được sử dụng thông qua provider**
+
+    Giao diện Key hoặc SecretKey giống nhau không chứng minh key bytes có thể trích xuất hoặc thật sự cư trú trong HSM. Bài so sánh khóa software exportable với opaque handle qua provider, cách đọc getFormat/getEncoded, RAW/X.509/PKCS#8, KeyStore PKCS12 so với PKCS11, và quyền sign/decrypt/wrap của backend.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khả năng xuất và định dạng khóa
+
+    1. getAlgorithm, getFormat và getEncoded cung cấp loại thông tin gì và vì sao getEncoded trả null không phải bằng chứng có HSM?
+    2. RAW của AES, X.509 của public key và PKCS#8 của private key khác nhau thế nào khi export/import?
+    3. Vì sao xóa byte array do getEncoded trả về không hủy key object gốc hoặc mọi bản sao trong provider?
+
+    ### Provider, KeyStore và policy
+
+    1. PKCS12 và PKCS11 khác nhau thế nào về nơi lưu key và bảo vệ khả năng export?
+    2. Tại sao một SecretKey tự viết trả null không thể giả làm HSM-backed key được provider chấp nhận?
+    3. Các thuộc tính non-extractable, sensitive, sign, decrypt và wrap biểu diễn những ràng buộc độc lập nào?
+
+    ### Thiết kế và ứng cứu
+
+    1. ExportabilityDemo và Pkcs12ExportabilityDemo cho thấy những giả định nào sai về khả năng xuất khóa?
+    2. Nếu key opaque không được software provider hiểu hoặc token mất kết nối, ứng dụng nên xử lý và báo lỗi ra sao?
+    3. Muốn private signing key chưa từng rời HSM, tại sao không được sinh ở software rồi import?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc Key API | Phân loại getFormat/getEncoded và nhận biết RAW, X.509, PKCS#8 cùng giới hạn bảo mật. |
+    | Đọc ví dụ | Giải thích việc xóa một bản copy không hủy AES key và PKCS12 có thể trả raw secret. |
+    | Chọn kiến trúc | Đánh giá software key, PKCS12, PKCS11/HSM và cloud KMS theo custody, IAM và backup. |
+    | Xử lý provider | Chẩn đoán key type/provider mismatch và lỗi export/operation không được phép. |
+    | Thiết kế ít rò khóa | Đề xuất API sign/decrypt dùng key ID hoặc handle thay vì truyền raw private key bytes. |
+- id: key-lifecycle-008
+  title: 11.8 Sao lưu, phục hồi và xử lý sự cố mất hoặc lộ khóa
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **11.8 Sao lưu, phục hồi và xử lý sự cố mất hoặc lộ khóa**
+
+    Mất khả năng truy cập khóa, mất vĩnh viễn vật liệu khóa và lộ khóa là ba sự cố có cách xử lý khác nhau. Bài xây recovery plan cho DEK, KEK, private signing key và KMS/HSM, liên hệ key versions với snapshot/ciphertext, bảo vệ backup bằng quorum, kiểm RTO/RPO và chọn rewrap, re-encrypt hay revoke theo phạm vi bị ảnh hưởng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bảo toàn khả năng khôi phục
+
+    1. Vì sao còn ciphertext nhưng mất mọi DEK hoặc KEK cần thiết có thể làm dữ liệu không thể phục hồi?
+    2. DEK, KEK, private signing key, public certificate và ephemeral key cần backup/retention khác nhau như thế nào?
+    3. Một gói recovery cần giữ những metadata nào về IV, tag, AAD, key version và wrapped DEK?
+
+    ### Bảo vệ backup và thực hiện restore
+
+    1. Vì sao replication, backup bất biến, quorum và kiểm thử restore giải quyết những rủi ro khác nhau?
+    2. Muốn restore PKCS12 hoặc HSM-backed key trong môi trường sạch, phải kiểm quyền, nguồn backup, alias/password và trạng thái policy ra sao?
+    3. RTO, RPO và cryptoperiod ảnh hưởng thế nào đến kế hoạch giữ key phiên bản cũ và diễn tập DR?
+
+    ### Phản ứng khi nghi bị lộ
+
+    1. Vì sao mất key không có dấu hiệu compromise không nhất thiết phải re-encrypt toàn bộ dữ liệu?
+    2. Nếu KEK hoặc DEK đã lộ, khi nào rewrap không đủ và phải thay DEK, mã hóa lại payload?
+    3. Vì sao cần đánh giá trust của chữ ký cũ, backup snapshot và nonce counter khi xử lý compromise hoặc restore?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập key recovery inventory | Liệt kê key material, version, KDF/AEAD metadata, wrapped keys và dependencies cần cho recovery. |
+    | Thiết kế DR | Phân quyền backup/restore, quorum, môi trường sạch, integrity check và diễn tập đáp ứng RTO/RPO. |
+    | Thực hành PKCS12 | Giải thích kết quả KeyBackupRestoreDemo khi phục hồi đúng key, sai entry password và dùng sai key. |
+    | Phân tích sự cố | Phân biệt unavailable, irrecoverable và compromised; chọn containment, rewrap, re-encrypt hoặc revoke. |
+    | Ra quyết định retention | Nêu khi nào được destroy key cũ mà không phá khả năng khôi phục archive/backup hợp lệ. |
+- id: key-lifecycle-009
+  title: 11.9 Giới hạn giữ bí mật trong byte[], String, heap dump và thông báo lỗi
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **11.9 Giới hạn giữ bí mật trong byte[], String, heap dump và thông báo lỗi**
+
+    Một bí mật có thể thoát khỏi ranh giới dự kiến dù AES/HMAC vẫn đúng chuẩn: String, byte array, KeySpec, provider, heap dump, APM và exception đều có thể tạo bản sao. Bài phân tích lifecycle bộ nhớ, giới hạn của zeroization trong JVM, quản lý dump và cách tách thông báo lỗi công khai khỏi chẩn đoán nhạy cảm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biểu diễn và bản sao bí mật
+
+    1. Vì sao gán String bằng null không chứng minh password đã được xóa, trong khi char[] hoặc byte[] chỉ cho phép ghi đè mảng sở hữu?
+    2. SecretKeySpec, PBEKeySpec, getEncoded và các provider có thể tạo thêm bản sao key/password theo đường nào?
+    3. Vì sao ByteBuffer.clear không phải thao tác zeroization và direct buffer cũng không phải một HSM?
+
+    ### Heap dump, log và xử lý lỗi
+
+    1. Heap dump, core dump, stack trace, APM và request logging có thể sao chép secret trước khi Arrays.fill chạy thế nào?
+    2. Public error response và internal telemetry nên chứa những gì để không lộ token, khóa hoặc trạng thái giải mã?
+    3. Vì sao trả lỗi khác nhau cho từng bước unwrap/tag hoặc so sánh HMAC bằng String có thể tạo oracle?
+
+    ### Thực hành và thiết kế kiểm chứng
+
+    1. SecretMemoryDemo chứng minh điều gì khi caller xóa char[] nhưng PBEKeySpec vẫn cho KDF chạy?
+    2. Làm sao dùng finally, clearPassword và cleanup để giảm lifetime nhưng không khẳng định xóa tuyệt đối toàn JVM?
+    3. Khi nào nên hạn chế xuất long-term key vào Java heap và chuyển sang provider-backed KMS/HSM?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích memory data flow | Vẽ đường đi của password/key qua mảng, String, KeySpec, provider, dump và telemetry. |
+    | Kiểm soát cleanup | Phân biệt xóa caller-owned buffer, PBEKeySpec.copy và những bản sao không có quyền xóa. |
+    | Thực hành an toàn | Giải thích kết quả SecretMemoryDemo về KDF, SecretKeySpec, HMAC và public error. |
+    | Thiết kế error mapping | Đề xuất public error code và internal diagnostic hạn chế thông tin, giảm nguy cơ oracle. |
+    | Đánh giá vận hành | Đặt ACL, encryption, retention và security QA cho heap/core dump, log/APM và incident response. |

@@ -1,0 +1,385 @@
+summaries:
+- id: symmetric-encryption-001
+  title: 6.1 Block cipher, stream cipher, mode và padding
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **6.1 Block cipher, stream cipher, mode và padding**
+
+    Phân biệt primitive AES có block 16 byte với stream cipher ChaCha20 dùng keystream để không nhầm thuật toán, mode, padding và tag. Bài tạo nền tảng chọn AEAD thay vì tin rằng mã hóa thành công đã xác thực dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Block và stream
+
+    1. AES-256 có kích thước block và key bao nhiêu byte, vì sao hai số đó khác nhau?
+    2. Vì sao ChaCha20 mã hóa 17 byte không cần padding, còn phép AES/ECB/NoPadding từ chối 17 byte?
+    3. Nếu stream cipher tái sử dụng cùng keystream dưới một khóa, hai ciphertext cho đối thủ thông tin gì?
+
+    ### Mode và xác thực
+
+    1. ECB lộ mẫu lặp như thế nào so với CBC, CTR và GCM?
+    2. Padding của CBC giải quyết độ dài ra sao và vì sao NoPadding không chứng minh có hoặc không có tag?
+    3. Key, IV, counter, AAD và tag đóng vai trò gì, và vì sao AEAD vẫn cần anti-replay?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại thuật toán | Giải thích bằng sơ đồ block 16 byte và stream XOR. |
+    | Tính kích thước | Dự đoán CBC padding cho 11/16/17 byte và stream output cho 17 byte. |
+    | Thử Java | Chạy BlockVsStreamDemo, đối chiếu 6 dòng stdout và giải thích lỗi block size. |
+- id: symmetric-encryption-002
+  title: 6.2 Chỉ định đầy đủ transformation thay vì phụ thuộc giá trị mặc định của provider
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **6.2 Chỉ định đầy đủ transformation thay vì phụ thuộc giá trị mặc định của provider**
+
+    Tránh hành vi không dự đoán được khi chỉ yêu cầu Cipher.getInstance("AES") và để provider chọn mode/padding. Bài dạy định nghĩa transformation đầy đủ và các tham số AEAD, cùng cách di chuyển định dạng ciphertext legacy mà không vô tình fallback sang ECB.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu hình transformation
+
+    1. Tại sao AES là tên thuật toán nhưng chưa phải một transformation Cipher đầy đủ?
+    2. Vì sao AES/ECB/PKCS5Padding tuy rõ mode vẫn có thể không an toàn?
+    3. Tại sao KeyGenerator.getInstance("AES") không cần ba phần giống Cipher?
+
+    ### Kiểm thử và chuyển đổi
+
+    1. Với AES/GCM/NoPadding cần thêm những key, nonce, AAD, tag và metadata nào?
+    2. Khi Cipher.getAlgorithm báo AES, vì sao chưa xác định chắc mode cũ?
+    3. Làm thế nào thiết kế reader legacy và writer AEAD có version, tránh thử ngẫu nhiên các mode?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lựa chọn Cipher | Phân tích transformation và provider; chọn AES/GCM/NoPadding có lý do. |
+    | Xác minh AEAD | Chạy thử round-trip, ciphertext và AAD tampering. |
+    | Di trú dữ liệu | Lập reader/writer theo version, không thay mode một cách mù quáng. |
+- id: symmetric-encryption-003
+  title: 6.3 Tạo khóa AES bằng KeyGenerator và dựng khóa từ vật liệu hợp lệ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **6.3 Tạo khóa AES bằng KeyGenerator và dựng khóa từ vật liệu hợp lệ**
+
+    Tạo key AES an toàn là điều kiện của mọi mode: raw key đủ số byte chưa có nghĩa entropy đúng và password không phải key. Bài dạy KeyGenerator, SecretKeySpec, PBKDF2 với salt/cost và quản lý vòng đời key.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn key AES
+
+    1. AES-128/192/256 tương ứng 16/24/32 byte thế nào?
+    2. KeyGenerator tạo entropy khác SecretKeySpec gắn tên cho byte đã có ra sao?
+    3. Vì sao decode Base64/hex trước khi kiểm raw AES key length?
+
+    ### Password và vòng đời
+
+    1. Vì sao password.getBytes hay SHA-256 trực tiếp không thay một password KDF?
+    2. PBKDF2 salt, iteration và độ dài output ảnh hưởng việc tái tạo key thế nào?
+    3. Nếu SecretKey.getEncoded trả null hoặc Arrays.fill xóa mảng gốc, có thể kết luận điều gì về các bản sao key?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Sinh AES key | Dùng KeyGenerator.init với số bit rõ. |
+    | Kiểm tra key nguồn | Nhập SecretKeySpec từ raw bytes 16/24/32 và từ chối 17 byte. |
+    | Dẫn xuất an toàn | Chạy PBKDF2 test cùng input/khác salt; xác định thông số phải lưu. |
+- id: symmetric-encryption-004
+  title: 6.4 Chu trình Cipher.init, update, doFinal và tính toán bộ đệm đầu ra
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **6.4 Chu trình Cipher.init, update, doFinal và tính toán bộ đệm đầu ra**
+
+    Cipher có trạng thái nên update có thể đệm byte, doFinal mới hoàn tất padding/tag; cấp mảng đầu ra theo input length là dễ sai. Bài hướng dẫn getOutputSize, số byte thực ghi, ByteBuffer và ranh giới plaintext chưa xác thực.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng đời và bộ đệm
+
+    1. Cipher đi qua init/update/doFinal như thế nào và vì sao không init giữa các chunk?
+    2. Vì sao getOutputSize là cận trên chứ không phải số byte chắc chắn sinh ở từng update?
+    3. Khi xử lý ByteBuffer, position/limit/remaining và số byte đã viết liên hệ thế nào?
+
+    ### Kết thúc và lỗi
+
+    1. Với GCM 128-bit tag và plaintext 16 byte thì ciphertext+tag dài bao nhiêu?
+    2. ShortBufferException khác BadPaddingException và AEADBadTagException khi xử lý lại ra sao?
+    3. Vì sao không phát plaintext GCM update trước khi doFinal kiểm tag thành công?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Quản lý Cipher | Thực hiện init, updateAAD, nhiều update và doFinal đúng trạng thái. |
+    | Tính buffer | Dùng getOutputSize, cộng số byte return và tránh ghi byte dư. |
+    | Kiểm chứng streaming | Thử chunk/ByteBuffer và bảo đảm không publish output chưa xác thực. |
+- id: symmetric-encryption-005
+  title: 6.5 Phân biệt ECB, CBC, CTR và yêu cầu bảo vệ tính toàn vẹn của bản mã
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **6.5 Phân biệt ECB, CBC, CTR và yêu cầu bảo vệ tính toàn vẹn của bản mã**
+
+    ECB lộ khối lặp, CBC có thể bị IV bit flip và padding oracle, CTR có nguy cơ keystream reuse/bit flip. Bài dùng các phép thử cụ thể để chứng minh decrypt được không đồng nghĩa dữ liệu nguyên vẹn, và dạy Encrypt-then-MAC an toàn cho CBC legacy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### So sánh các mode
+
+    1. ECB lộ mẫu ciphertext của hai plaintext block giống nhau thế nào?
+    2. CBC sửa IV làm thay đổi plaintext block đầu ra sao và lỗi padding trở thành oracle khi nào?
+    3. CTR trùng counter block hoặc bị lật bit ciphertext tạo hệ quả gì?
+
+    ### Thiết kế xác thực
+
+    1. Một packet Encrypt-then-MAC phải phủ những byte header, IV và ciphertext nào?
+    2. Vì sao kiểm HMAC trước decrypt CBC và dùng key riêng cho MAC?
+    3. Tại sao MAC/AEAD không tự chống replay, và cần state hoặc sequence nào bổ sung?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chứng minh malleability | Chạy ModeComparisonDemo kiểm ECB repeat, CBC/CTR bit flip. |
+    | Đánh giá giao thức CBC | Xác định padding oracle và trình bày Encrypt-then-MAC verify trước decrypt. |
+    | Chọn AEAD | Lý giải khi nào thay CBC/CTR thuần bằng GCM thay vì chỉ tăng độ dài khóa. |
+- id: symmetric-encryption-006
+  title: 6.6 AEAD, AES/GCM/NoPadding và vai trò của authentication tag
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **6.6 AEAD, AES/GCM/NoPadding và vai trò của authentication tag**
+
+    AES-GCM cung cấp mã hóa có xác thực: tag gắn ciphertext/AAD với khóa và nonce, còn plaintext chỉ được chấp nhận khi tag hợp lệ. Bài diễn giải tính chất AEAD, thử các bản ghi bị sửa hoặc sai key, và làm rõ replay/authorization là nhiệm vụ riêng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### AEAD và tag
+
+    1. Confidentiality và integrity khác nhau ra sao trong GCM?
+    2. Tag kiểm được những thành phần nào và AEADBadTagException buộc xử lý plaintext thế nào?
+    3. Với nonce 12, plaintext 23 và tag 16 byte, packet có bao nhiêu byte?
+
+    ### AAD và giới hạn
+
+    1. AAD ràng buộc tenant và version dù không mã hóa bằng cách nào?
+    2. Tag còn hợp lệ khi gửi lại gói cũ không, và điều đó nói gì về replay?
+    3. Làm thế nào thử thay ciphertext, tag, AAD, nonce và key mà không lộ secret trong log?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô hình hóa GCM | Vẽ K/N/P/AAD/C/T và chỉ ra phần mã hóa/xác thực. |
+    | Kiểm thử tag | Chạy AeadGcmDemo, dự đoán packet length và các trường hợp bị từ chối. |
+    | Giữ giới hạn ứng dụng | Nêu những bước anti-replay, authorization và key management ngoài AEAD. |
+- id: symmetric-encryption-007
+  title: 6.7 GCMParameterSpec, độ dài tag và yêu cầu không lặp IV dưới cùng một khóa
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **6.7 GCMParameterSpec, độ dài tag và yêu cầu không lặp IV dưới cùng một khóa**
+
+    GCMParameterSpec có tag length tính bằng bit và IV tính bằng byte; constructor hợp lệ không bảo đảm nonce độc nhất. Bài đi sâu known-answer vector, độ dài tag theo NIST và thiết kế cấp nonce không trùng qua nhiều node, restart, rollback.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thông số API
+
+    1. GCMParameterSpec(128, iv12) dùng đơn vị gì cho hai tham số?
+    2. Việc getIV sao chép mảng ngăn lỗi gì, còn provider cần kiểm tra gì ở init?
+    3. Vì sao không hạ tag xuống 32/64 bit cho mọi ứng dụng dù constructor có thể nhận giá trị?
+
+    ### Nonce qua vòng đời key
+
+    1. Tái dùng key/IV khi encrypt hai message làm hỏng những thuộc tính GCM nào?
+    2. Cấp nonce trên nhiều writer/qua restart cần prefix, counter và trạng thái bền vững ra sao?
+    3. Known-answer vector zero key/IV giúp kiểm điều gì và vì sao không dùng cho dữ liệu thật?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dùng API đúng | Đặt tag 128 bit, nonce 12 byte, kiểm getTLen và getIV. |
+    | Test chuẩn | Chạy GcmKnownAnswerDemo và đối chiếu vector hex ciphertext/tag. |
+    | Thiết kế uniqueness | Đề xuất allocator per key tránh prefix/counter trùng sau crash. |
+- id: symmetric-encryption-008
+  title: 6.8 Truyền AAD trước dữ liệu; phân biệt dữ liệu được xác thực với dữ liệu được mã hóa
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **6.8 Truyền AAD trước dữ liệu; phân biệt dữ liệu được xác thực với dữ liệu được mã hóa**
+
+    AAD là metadata được xác thực nhưng không mã hóa, nên byte serialization và thứ tự updateAAD có ý nghĩa như tag. Bài dạy truyền toàn bộ AAD trước payload, bảo vệ header/tenant bằng byte canonical và tránh tin metadata chưa xác thực.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phạm vi bảo vệ
+
+    1. Dữ liệu nào đi vào plaintext, AAD và dữ liệu nằm ngoài tag trong một record?
+    2. Vì sao sửa AAD khiến tag thất bại trong khi AAD vẫn có thể công khai?
+    3. Dùng tenant trong AAD vì sao vẫn phải kiểm authorization và replay riêng?
+
+    ### Thứ tự và encoding
+
+    1. Vì sao mọi updateAAD phải chạy trước update hoặc doFinal của payload?
+    2. Khi ghép trường biến độ dài, vì sao cần length prefix hoặc canonical encoding?
+    3. Khác charset/thứ tự JSON làm thay byte AAD và xác minh thất bại thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại dữ liệu | Chỉ ra metadata phải mã hóa, chỉ xác thực hoặc không được tag bảo vệ. |
+    | Gọi đúng Java API | Thực hành updateAAD trước doFinal trên cả encrypt/decrypt. |
+    | Kiểm thử header | Chạy AadGcmDemo đổi AAD, IV, ciphertext và xác nhận bị từ chối. |
+- id: symmetric-encryption-009
+  title: 6.9 ChaCha20, ChaCha20-Poly1305 và quản lý nonce
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **6.9 ChaCha20, ChaCha20-Poly1305 và quản lý nonce**
+
+    ChaCha20 là stream cipher dùng keystream còn ChaCha20-Poly1305 là AEAD dùng one-time Poly1305 key. Bài đi sâu block counter, nonce, Java ParameterSpec và bộ cấp sequence bền vững khi có nhiều worker, retry, crash/restore.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### ChaCha20 và Poly1305
+
+    1. ChaCha20 khác ChaCha20-Poly1305 về tag, AAD và tính toàn vẹn như thế nào?
+    2. Block counter số 0 và từ 1 dùng cho mục đích gì trong ChaCha20-Poly1305?
+    3. Vì sao stream ChaCha20 dùng ChaCha20ParameterSpec nhưng AEAD dùng IvParameterSpec?
+
+    ### Tính duy nhất nonce
+
+    1. Message sequence khác block counter ra sao và khi nào keystream có thể trùng?
+    2. Nếu hai pod dùng cùng key/prefix và tự bắt đầu counter bằng 0, thiết kế allocator phải thay đổi thế nào?
+    3. Nonce đã reserve nhưng crash xảy ra thì có được tái cấp khi retry hoặc restore backup không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thử API ChaCha | Chạy hai demo ChaCha20 thuần và Poly1305, so sánh tamper detection. |
+    | Kiểm counter demo | Giải thích prefix+sequence và AtomicLong trong NonceCounterDemo. |
+    | Thiết kế vận hành | Vẽ allocator bền vững có key ID, writer prefix, tránh rollback/wrap. |
+- id: symmetric-encryption-010
+  title: 6.10 Xử lý AEADBadTagException, BadPaddingException và bản mã bị cắt
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **6.10 Xử lý AEADBadTagException, BadPaddingException và bản mã bị cắt**
+
+    Các exception AEADBadTagException, BadPaddingException và lỗi ciphertext bị cắt không luôn chỉ ra cùng nguyên nhân. Bài hướng dẫn kiểm tra envelope length, catch đúng thứ tự và fail closed không lộ padding oracle hoặc plaintext chưa xác thực.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân loại lỗi
+
+    1. AEADBadTagException kế thừa từ lớp nào và catch nên xếp thứ tự thế nào?
+    2. CBC BadPaddingException có chứng minh integrity không và có thể bị khai thác oracle ra sao?
+    3. Vì sao sai key, nonce, AAD và cắt tag có thể cùng báo lỗi xác thực?
+
+    ### Framing và ranh giới
+
+    1. Với version 1, nonce 12, tag 16 byte, minimum envelope bao nhiêu byte?
+    2. Vì sao cắt một byte nhưng vẫn trên minimum có thể chỉ được phát hiện tại doFinal?
+    3. Làm sao bảo đảm không có side effect khi update trả plaintext trước tag verification?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại Java exception | Xếp catch đúng và xử lý riêng lỗi parser, GCM tag, CBC padding. |
+    | Kiểm thử negative | Chạy AeadFailuresDemo kiểm tag, nonce, AAD, truncated, version. |
+    | Thiết kế fail-closed | Từ chối toàn bộ plaintext và chuẩn hóa lỗi public. |
+- id: symmetric-encryption-011
+  title: 6.11 Giới hạn của CipherInputStream khi cần phát hiện lỗi xác thực AEAD
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **6.11 Giới hạn của CipherInputStream khi cần phát hiện lỗi xác thực AEAD**
+
+    CipherInputStream có thể che exception kiểm tra integrity nên readAllBytes/close chạy bình thường chưa chứng minh tag GCM hợp lệ. Bài sử dụng Cipher.doFinal trực tiếp và thiết kế staging cho file lớn để ngăn plaintext bị publish trước final authentication.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Semantics CipherInputStream
+
+    1. JavaDoc nói CipherInputStream có thể làm gì với BadPaddingException khi integrity check thất bại?
+    2. Vì sao InputStream đọc hết mà không ném IOException không chứng minh AEAD tag hợp lệ?
+    3. Trường hợp nào wrapper vẫn tiện lợi nhưng không nên dùng làm ranh giới tin cậy?
+
+    ### Thiết kế xác thực
+
+    1. Khi payload nhỏ, vì sao Cipher.doFinal trực tiếp rõ kết quả hơn?
+    2. Với file lớn, cách ly output update như thế nào cho đến khi doFinal thành công?
+    3. Vì sao muốn publish từng chunk sớm cần record AEAD độc lập và bảo vệ thứ tự/EOF?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc API contract | Giải thích failure semantics của CipherInputStream từ JavaDoc. |
+    | Test doFinal | Chạy AeadDoFinalDemo với tag, AAD và truncation sai. |
+    | Staging an toàn | Đề xuất tạm lưu cách ly và commit cuối; chứng minh sink không nhận dữ liệu giả. |
+- id: symmetric-encryption-012
+  title: 6.12 Đóng gói IV, tham số, ciphertext, tag và chỉ sử dụng bản rõ sau khi xác thực thành công
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **6.12 Đóng gói IV, tham số, ciphertext, tag và chỉ sử dụng bản rõ sau khi xác thực thành công**
+
+    Bài tích hợp toàn chương bằng envelope AES-GCM có magic, version, key ID, nonce, ciphertext, tag và AAD được ràng buộc. Người học xây format byte với quota/allowlist, chọn key có quyền, xác thực tag rồi mới parse/publish plaintext; đánh giá rotation, streaming và replay.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Byte format và tag
+
+    1. Envelope AES-GCM phải giữ những trường gì để decrypt sau key rotation?
+    2. Header 22 byte, plaintext 13 byte, tag 16 byte vì sao tạo 51 byte envelope?
+    3. Vì sao parse key ID/version từ header chưa chứng minh chúng đáng tin trước tag verification?
+
+    ### Vận hành và toàn vẹn
+
+    1. Làm thế nào đưa header và context đúng byte vào AAD để ngăn tráo tenant/document?
+    2. Nếu tag sai ở cuối khi update đã trả bytes, điều gì phải tránh đối với HTTP/DB/event?
+    3. Khi di trú key hoặc giải mã file lớn theo chunk, cần thêm chính sách nonce, version, staging và completeness nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế envelope | Định nghĩa offset/length/version/keyId/nonce/ciphertext/tag. |
+    | Kiểm thử Java | Chạy GcmEnvelopeDemo và kiểm 51 byte cùng các ca từ chối. |
+    | Vận hành an toàn | Mô tả giới hạn payload, quyền key, staging/commit và key rotation. |

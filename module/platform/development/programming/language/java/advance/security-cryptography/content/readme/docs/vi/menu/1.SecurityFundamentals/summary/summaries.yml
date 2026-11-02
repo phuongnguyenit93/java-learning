@@ -1,0 +1,315 @@
+summaries:
+- id: security-fundamentals-001
+  title: 1.1 An toàn thông tin và mật mã giải quyết những vấn đề nào trong ứng dụng Java
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **1.1 An toàn thông tin và mật mã giải quyết những vấn đề nào trong ứng dụng Java**
+
+    Bài mở đầu xác định **vấn đề bảo mật của một ứng dụng Java** trước khi gọi API mật mã. Người học phải chọn mục tiêu theo dữ liệu, bên tấn công và ranh giới; phân biệt điều mật mã có thể cung cấp với phân quyền, tính sẵn sàng và vận hành. Các tình huống đơn hàng, đăng nhập và webhook giúp giải thích vì sao phối hợp nhiều lớp bảo vệ quan trọng hơn việc chọn một thuật toán mạnh.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tài sản và mục tiêu
+
+    1. Với một ứng dụng đặt hàng Java, bạn xác định các tài sản, đối thủ và điểm vượt ranh giới tin cậy như thế nào?
+    2. Tại sao bộ ba CIA phải được bổ sung bằng xác thực, phân quyền và truy vết khi thiết kế API?
+    3. Khi nào cần bảo vệ bí mật dữ liệu, khi nào cần xác minh nguồn thông điệp và khi nào cần chống phát lại?
+
+    ### Chọn cơ chế và giới hạn
+
+    1. Vì sao HTTPS không ngăn một người dùng đã xác thực đọc đơn hàng không thuộc quyền mình?
+    2. Đối với mật khẩu, dữ liệu lưu, webhook và bản phát hành phần mềm, bạn chọn cơ chế tương ứng nào và còn trách nhiệm nào?
+    3. Một phép kiểm âm nào cho thấy AES-GCM, HMAC hoặc kiểm soát phân quyền thực sự bảo vệ đúng mục tiêu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích nhu cầu an toàn | Lập bảng tài sản, đối thủ, mục tiêu CIA và ranh giới cho luồng đăng nhập–thanh toán. |
+    | Phân biệt công cụ mật mã | Chọn và giải thích giới hạn của AES-GCM, SHA-256, HMAC, chữ ký số, password hashing và TLS. |
+    | Đặt bảo vệ đúng tầng | Chỉ ra vì sao xác thực và authorization phải đứng riêng với mã hóa và kiểm tag. |
+    | Thiết kế phép thử | Nêu kiểm thử thay bản mã, giả webhook, replay và đọc đơn hàng khác chủ để quan sát lớp từ chối. |
+    | Dự kiến quản lý khóa | Mô tả nơi lưu, quyền dùng, rotation và xử lý mất/lộ khóa của một nghiệp vụ. |
+- id: security-fundamentals-002
+  title: 1.2 Mô hình đe dọa, tài sản cần bảo vệ và ranh giới tin cậy
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **1.2 Mô hình đe dọa, tài sản cần bảo vệ và ranh giới tin cậy**
+
+    Bài này hướng dẫn chuyển một yêu cầu chung chung như “bảo vệ tài liệu” thành **mô hình đe dọa kiểm chứng được**. Người học mô tả tài sản và kẻ tấn công, vẽ data-flow diagram, đánh dấu trust boundary, dùng STRIDE và abuse case, rồi gắn từng nguy cơ với kiểm soát, phép thử và rủi ro còn lại. Trọng tâm là cấu trúc phân tích, không phải chọn thuật toán trước.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khái niệm và phạm vi
+
+    1. Bạn phân biệt tài sản, tác nhân đe dọa, điểm yếu, rủi ro và rủi ro còn lại bằng ví dụ API tài liệu như thế nào?
+    2. Một DFD cho Java API, DB, object storage và KMS cần ghi những thành phần và ranh giới nào?
+    3. Vì sao cùng mạng nội bộ hoặc cùng VPC vẫn có thể chứa nhiều trust boundary?
+
+    ### Tìm và ưu tiên mối đe dọa
+
+    1. Với từng nhóm STRIDE, bạn viết một kịch bản có tiền điều kiện và hậu quả cụ thể ra sao?
+    2. Khi người dùng đổi documentId để đọc tài liệu khác tenant, vì sao đây là BOLA và TLS không sửa được?
+    3. Bạn ưu tiên các kịch bản theo tác động, khả năng xảy ra, quyền của attacker và kiểm soát sẵn có như thế nào?
+
+    ### Kiểm chứng và duy trì
+
+    1. Vì sao phải kiểm tra authorization trước khi truy xuất hoặc giải mã tài liệu?
+    2. Bạn chuyển một kịch bản đe dọa thành bài test âm và ghi lại rủi ro còn lại như thế nào?
+    3. Những thay đổi hệ thống nào buộc cập nhật mô hình đe dọa thay vì chỉ rà soát một lần?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập threat model | Tạo bảng tài sản, actor, các giả định và điểm vào/ra cho một endpoint tài liệu. |
+    | Vẽ DFD và trust boundary | Mô tả các luồng client–API–storage–KMS và nơi danh tính/quyền được xác minh. |
+    | Phân tích STRIDE | Viết kịch bản spoofing, tampering, information disclosure và elevation kèm hậu quả thực tế. |
+    | Định vị BOLA | Giải thích đường khai thác ID chéo tenant và vị trí kiểm tra đối tượng trước decrypt. |
+    | Ưu tiên và chứng minh kiểm soát | Ghi owner, residual risk và test âm cho mỗi nguy cơ ưu tiên. |
+- id: security-fundamentals-003
+  title: 1.3 Phân biệt tính bí mật, tính toàn vẹn, xác thực và phân quyền
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **1.3 Phân biệt tính bí mật, tính toàn vẹn, xác thực và phân quyền**
+
+    Bài này rèn khả năng **tách bạch bốn thuộc tính** dễ bị gộp làm một: bí mật của dữ liệu, toàn vẹn của thông điệp, xác thực danh tính và phân quyền đối tượng. Qua một request tài liệu và ví dụ HMAC kết hợp policy chủ sở hữu, người học thấy việc kiểm MAC thành công khác hoàn toàn với quyết định cho Bob đọc tài liệu của Alice.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất bốn thuộc tính
+
+    1. Bí mật, toàn vẹn, authentication và authorization trả lời bốn câu hỏi riêng nào?
+    2. Vì sao chữ A của bộ ba CIA không đồng nghĩa authentication?
+    3. Hash, HMAC, chữ ký và AES-GCM cung cấp chứng cứ gì và có giới hạn nào khi chứng minh người gửi?
+
+    ### Một request qua nhiều lớp
+
+    1. Một token xác thực hợp lệ còn cần bước nào trước khi cho đọc tài liệu của tenant khác?
+    2. Khi nào server trả 401, 403 hoặc 404 theo chính sách không tiết lộ tài nguyên?
+    3. Vì sao HMAC đúng không cho phép bỏ policy kiểm tra owner và vai trò?
+
+    ### Áp dụng và sai lầm
+
+    1. Chương trình HmacAuthorizationDemo chứng minh điều gì qua hai lần verify và hai quyết định canRead?
+    2. Một thông điệp được ký đúng vẫn có thể bị phát lại trong điều kiện nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại yêu cầu | Gắn mỗi rủi ro vào đúng thuộc tính confidentiality, integrity, authentication hoặc authorization. |
+    | Giải thích lớp TLS/crypto | Chỉ ra dữ liệu nào TLS/AEAD/MAC bảo vệ và điều mà chúng không tự bảo đảm. |
+    | Đặt kiểm tra quyền đúng chỗ | Mô tả luồng principal tin cậy, đọc metadata, kiểm tra object/tenant rồi mới trả bản rõ. |
+    | Phân tích HMAC và policy | Dự đoán kết quả của message bị sửa và user không sở hữu document trong ví dụ Java. |
+    | Thiết kế kiểm thử âm | Nêu test token sai, đổi ownerId/tenantId và request phát lại để chứng minh các lớp không bị nhầm. |
+- id: security-fundamentals-004
+  title: 1.4 Phân biệt mã hóa, hàm băm, MAC, chữ ký số và mã hóa biểu diễn
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **1.4 Phân biệt mã hóa, hàm băm, MAC, chữ ký số và mã hóa biểu diễn**
+
+    Bài học đặt **năm kỹ thuật cạnh nhau** để người học lựa chọn chính xác theo mục tiêu: encryption che nội dung, hash tạo digest, MAC xác thực bằng khóa chia sẻ, chữ ký số cho xác minh khóa công khai, còn encoding chỉ đổi biểu diễn. Ví dụ Java một dữ liệu đi qua cả năm thao tác cho thấy kết quả và hạn chế khác nhau, tránh dùng Base64 hay SHA-256 làm bảo mật giả.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đặc tính và ranh giới
+
+    1. Với cùng một thông điệp, kết quả của encryption, hash, HMAC, signature và Base64 khác nhau như thế nào?
+    2. Vì sao SHA-256 của file chỉ giúp chống sửa có chủ đích khi digest kỳ vọng đến từ nguồn tin cậy?
+    3. Vì sao HMAC không phù hợp khi bên thứ ba cần xác minh nhưng không được phép tạo tag?
+
+    ### Thông số và biểu diễn
+
+    1. AES-GCM ràng buộc khóa, nonce, tag và AAD ra sao, và hậu quả của nonce reuse là gì?
+    2. Vì sao chuỗi Base64 của ciphertext khác với việc bản thân Base64 làm dữ liệu bí mật?
+    3. Với Ed25519, tại sao verify true chưa đủ để tin danh tính người ký?
+
+    ### Thực hành JCA
+
+    1. Bạn giải thích kết quả SHA-256, HMAC altered, AES-GCM restored, Ed25519 altered và Base64 decoded trong CryptoPrimitivesDemo ra sao?
+    2. Trong trường hợp webhook, file phát hành và dữ liệu backup, bạn chọn primitive nào và phải kết hợp kiểm soát gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn đúng primitive | Đưa ra lựa chọn có lý do cho năm yêu cầu bảo mật/biểu diễn cụ thể. |
+    | Phân biệt tính chất đầu ra | Giải thích vì sao encoding không bảo mật và hash/MAC/chữ ký không che nội dung. |
+    | Áp dụng AES-GCM | Nhận diện key, nonce duy nhất, AAD, tag và hành vi khi xác thực dữ liệu lỗi. |
+    | Phân tích HMAC và chữ ký | Giải thích shared secret so với private/public key và điều kiện tin cậy public key. |
+    | Đọc ví dụ Java | Giải thích từng dòng stdout và thay đổi input khiến MAC/chữ ký xác minh thất bại. |
+    | Thiết kế định dạng truyền tải | Chỉ ra khi nào byte tag, signature và ciphertext cần Base64 hoặc hex mà không nhầm với encryption. |
+- id: security-fundamentals-005
+  title: 1.5 Quan hệ giữa khóa, thuật toán, tham số, giao thức và danh tính
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **1.5 Quan hệ giữa khóa, thuật toán, tham số, giao thức và danh tính**
+
+    Bài này đi sâu hơn mức gọi tên thuật toán: một kết quả bảo mật phải liên kết **đúng khóa, đúng thuật toán, đúng tham số, đúng giao thức và đúng danh tính**. Phân tích TLS 1.3, AAD, nonce, các quy tắc ký thông điệp và phép thử thay khóa công khai cho thấy vì sao chữ ký hợp lệ về mặt toán học vẫn có thể sai người gửi hoặc sai quyền nghiệp vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Năm thành phần phụ thuộc nhau
+
+    1. Mỗi thành phần khóa, thuật toán, tham số, giao thức và danh tính trả lời câu hỏi gì khi bảo vệ một lệnh thanh toán?
+    2. Khác biệt giữa khóa phiên, khóa ký dài hạn, keyId, nonce, salt, tag, AAD và HKDF info là gì?
+    3. Trong TLS 1.3, những bước nào liên kết thuật toán, key-share, transcript và identity của server?
+
+    ### Identity binding và protocol
+
+    1. Vì sao chữ ký của attacker vẫn verify true với public key của chính attacker nhưng không được chấp nhận như chữ ký của server được tin?
+    2. Bạn chọn khóa xác minh từ đâu để tránh key substitution hoặc algorithm confusion?
+    3. Vì sao AES-GCM tag hay chữ ký hợp lệ không tự chống replay, và giao thức phải bổ sung gì?
+
+    ### Thực hành và vận hành
+
+    1. Trong IdentityBindingDemo, hai dòng kết quả khác nhau chứng minh lỗi thiết kế nào?
+    2. Bạn thiết kế canonical bytes, key version, AAD và chính sách quyền ra sao cho lệnh chuyển tiền liên service?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập mô hình năm lớp | Phân tích một luồng nghiệp vụ thành key, algorithm, parameters, protocol và identity được kiểm tra. |
+    | Chẩn đoán sai tham số | Dự đoán lỗi khi dùng nonce sai, AAD khác, tag không khớp hoặc signature key sai. |
+    | Giải thích TLS 1.3 | Phân biệt TLS cipher suite, key exchange, certificate signature và traffic keys. |
+    | Ngăn key substitution | Phân tích phép thử Ed25519 với khóa không đáng tin và đề xuất registry/certificate/authorization. |
+    | Thiết kế freshness | Bổ sung messageId, thời hạn, canonicalization và idempotency cho protocol thanh toán. |
+    | Hoạch định vòng đời khóa | Xác định mục đích, quyền, phiên bản và hậu quả lộ/rotate/thu hồi các loại key. |
+- id: security-fundamentals-006
+  title: 1.6 Bảo vệ dữ liệu khi truyền, khi lưu trữ và trong bộ nhớ
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **1.6 Bảo vệ dữ liệu khi truyền, khi lưu trữ và trong bộ nhớ**
+
+    Bài này đặt dữ liệu vào **ba thời điểm tồn tại khác nhau**: đang truyền qua nhiều kết nối, đang nằm ở DB/backup và đang được xử lý trong JVM. Người học xác định ranh giới của TLS, các lớp encryption at rest, envelope KMS và giới hạn của việc xóa bộ nhớ; từ đó thiết kế kiểm soát không bỏ sót plaintext ở heap, log, dump hay chặng mạng nội bộ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dòng đời dữ liệu và các điểm lộ
+
+    1. Khi một trường nhạy cảm đi từ browser qua API đến DB và backup, nó ở những trạng thái nào và điểm nào có thể xuất hiện plaintext?
+    2. TLS client–gateway có bảo vệ chặng gateway–service–DB và log không, vì sao?
+    3. Mã hóa volume/database khác mã hóa cấp trường của ứng dụng ở đối thủ và quyền nào?
+
+    ### Lưu trữ và khóa
+
+    1. Một envelope dùng DEK/KEK và KMS cần mang metadata phiên bản/nonce/tag/AAD thế nào để khôi phục được?
+    2. Tại sao backup đã mã hóa vẫn cần tách quyền khóa, rotation và kiểm thử restore?
+    3. Trong ví dụ AesGcmDemo, phép thử sửa tag và sai AAD phải có kết quả gì?
+
+    ### Bộ nhớ và vận hành
+
+    1. Vì sao Java String, heap dump, direct buffer và GC làm zeroization tuyệt đối khó bảo đảm?
+    2. Bạn giảm số bản plaintext, kiểm soát log/dump và quyền runtime bằng những cách nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ data lifecycle | Đánh dấu riêng transit, rest và in-use cho cùng một trường nhạy cảm. |
+    | Chọn TLS theo từng chặng | Xác định TLS termination, hostname/certificate verification và mTLS nội bộ khi phù hợp. |
+    | Thiết kế encryption at rest | Phân biệt volume encryption với AES-GCM cấp ứng dụng kèm keyId, nonce, tag và AAD. |
+    | Phân tích envelope KMS | Giải thích DEK/KEK, IAM, rotation, rewrap và nguy cơ khi mất khóa. |
+    | Giảm phơi lộ trong JVM | Đề xuất hạn chế String/buffer, cache, dump, tracing/log và nêu giới hạn Arrays.fill. |
+    | Đặt phép thử âm | Nêu kiểm tra sai tag, lộ backup, mất KMS và rò plaintext ở log/dump. |
+- id: security-fundamentals-007
+  title: 1.7 Bản đồ JCA, JCE, JSSE, JAAS, PKI và các công cụ của JDK
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **1.7 Bản đồ JCA, JCE, JSSE, JAAS, PKI và các công cụ của JDK**
+
+    Bài này là **bản đồ công nghệ bảo mật Java** để tìm đúng API và đúng công cụ: JCA/provider, các engine JCE hiện được tích hợp, JSSE/TLS, JAAS/Subject, PKI/X.509 và keytool/jarsigner. Trọng tâm là phân biệt vai trò và đường nối giữa các lớp; ví dụ Java quan sát provider của engine, không lặp lại thí nghiệm primitive.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiến trúc và API
+
+    1. JCA, JCE, JSSE, JAAS và PKI khác nhau ở trách nhiệm và API nào?
+    2. Engine getInstance chọn provider như thế nào và vì sao có class Cipher không bảo đảm một transformation khả dụng ở mọi JDK?
+    3. KeyStore danh tính khác truststore ở mục đích sử dụng dù có chung định dạng ra sao?
+
+    ### Danh tính và chứng chỉ
+
+    1. Trong TLS/mTLS, KeyManager và TrustManager thực hiện hai chiều kiểm tra nào?
+    2. JAAS LoginContext, LoginModule và Subject khác gì với TLS authentication hoặc policy phân quyền API?
+    3. Certificate chain, SAN và trust anchor liên hệ thế nào khi client quyết định tin một server?
+
+    ### Công cụ và thực hành
+
+    1. Khi nào dùng keytool, jarsigner, java.security.debug và javax.net.debug để điều tra vấn đề?
+    2. SecurityApiMapDemo cho biết những gì về engine provider và package JSSE/JAAS, và không chứng minh điều gì?
+    3. Vì sao không nhập certificate lạ vào truststore hoặc tắt hostname verification chỉ để hết exception?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn đúng API | Ánh xạ yêu cầu hash, MAC, encrypt, sign, TLS, JAAS login và PKIX tới lớp Java tương ứng. |
+    | Giải thích provider | Quan sát kết quả engine resolution và phân biệt API có mặt với provider có thuật toán. |
+    | Phân tích TLS identity | Chỉ ra đúng chức năng KeyManager, TrustManager, certificate và SAN. |
+    | Quản lý key material | Thiết kế thao tác keytool cho identity store và truststore local không xuất private key. |
+    | Kiểm tra artifact có chữ ký | Phân tích vai trò jarsigner và giới hạn giữa chữ ký hợp lệ với signer đáng tin. |
+    | Chẩn đoán đúng tầng | Chọn debug/options thích hợp mà không bỏ qua kiểm chứng certificate và quyền. |
+- id: security-fundamentals-008
+  title: 1.8 Môi trường thực hành Java 21 và cách đối chiếu API với phiên bản JDK
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **1.8 Môi trường thực hành Java 21 và cách đối chiếu API với phiên bản JDK**
+
+    Bài kết của phần nền tảng biến kiến thức thành **môi trường thực hành Java 21 có thể tái hiện**. Người học phải nhận diện JDK của terminal, IDE và build tool; dùng tài liệu Java 21, trường Since, javac --release và kiểm thử provider thật để không nhầm lớp API tồn tại với thuật toán có thể chạy trong sản phẩm.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Môi trường và công cụ
+
+    1. Bạn kiểm tra java, javac, jshell, JAVA_HOME và runtime thực tế đang dùng phiên bản JDK nào như thế nào?
+    2. Vì sao JDK trong terminal có thể khác JDK của IDE, Gradle, Maven hoặc container?
+    3. Cần cấu hình toolchain hoặc maven.compiler.release thế nào để xuất class phù hợp Java 21?
+
+    ### Đối chiếu API theo release
+
+    1. Đọc Javadoc Java 21 của một API, bạn kiểm trường Since ở lớp và phương thức, module và chữ ký thế nào?
+    2. Tại sao HexFormat có thể biên dịch với --release 17 nhưng javax.crypto.KEM cần --release 21?
+    3. Khác biệt giữa --source/--target và --release là gì, và khi nào xảy ra UnsupportedClassVersionError?
+
+    ### Provider và thực nghiệm
+
+    1. ApiProbe và ProviderProbe kiểm chứng được những điều gì và không chứng minh điều gì về bảo mật thực tế?
+    2. Vì sao một tên thuật toán chuẩn và một lớp Cipher hiện diện vẫn có thể dẫn đến NoSuchAlgorithmException ở runtime khác?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết lập JDK 21 | Xác minh java/javac/jshell, JAVA_HOME, PATH và các tầng IDE/build/runtime sử dụng đúng JDK. |
+    | Biên dịch có kiểm soát | Chạy ApiProbe với javac --release 21, giải thích version runtime và format digest SHA-256. |
+    | Tra tài liệu đúng bản | Ghi package, Since, module, signature và release tối thiểu cho HexFormat, KEM và một API tự chọn. |
+    | Kiểm thử compatibility | Giải thích vì sao VersionGate fail với --release 17 và chạy với --release 21. |
+    | Xác minh provider tại runtime | Dùng ProviderProbe để ghi tên provider thực tế cho SHA-256 và AES/GCM. |
+    | Khoanh vùng lỗi công cụ | Phân biệt API missing, class-file mismatch, classpath/module lỗi và algorithm/provider thiếu. |

@@ -1,0 +1,363 @@
+summaries:
+- id: java-secure-coding-001
+  title: 21.1 Giới hạn bảo vệ của type safety, bytecode verification và đóng gói bằng module
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **21.1 Giới hạn bảo vệ của type safety, bytecode verification và đóng gói bằng module**
+
+    Java kiểm tra kiểu, bytecode và quyền truy cập module, nhưng code hợp lệ vẫn có thể đọc file hoặc gọi mạng bằng quyền tiến trình. Bài học giúp phân biệt chức năng, giới hạn của ba lớp bảo vệ, diễn giải lỗi JVM và chọn ranh giới bảo vệ thực khi tải thư viện hoặc plugin.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### An toàn kiểu và bytecode
+
+    1. Runtime cast và thao tác ghi mảng sai kiểu bị JVM từ chối như thế nào?
+    2. Vì sao bytecode verification kiểm tra stack và luồng điều khiển nhưng không phát hiện lỗi phân quyền nghiệp vụ?
+    3. VerifyError, IllegalAccessError và ClassCastException khác nhau ở giai đoạn và nguyên nhân nào?
+
+    ### JPMS và giới hạn của sandbox
+
+    1. requires, exports và opens thay đổi readability, public API và deep reflection như thế nào?
+    2. Vì sao Class.forName có thể tìm được class nhưng trySetAccessible vẫn trả false?
+    3. Khi dùng --add-opens, điều gì thay đổi và điều gì không thay đổi về type safety?
+    4. Vì sao class loader và JPMS không tự hạn chế filesystem, network hoặc quyền của plugin?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh lớp bảo vệ | Lập bảng type safety, verification và JPMS với ví dụ thao tác chặn được, không chặn được. |
+    | Kiểm chứng runtime | Chạy demo cast và ArrayStoreException, lý giải output mà không nhầm với authorization. |
+    | Cấu hình JPMS | Viết module-info với requires/exports/opens và dự đoán kết quả reflection trước, sau khi mở package. |
+    | Chẩn đoán JVM | Phân biệt lỗi VerifyError, IllegalAccessError và InaccessibleObjectException theo hành vi và nguyên nhân. |
+    | Đánh giá threat model | Đề xuất quyền OS và kiểm soát nguồn plugin khi Java type/module boundary không đáp ứng sandbox. |
+- id: java-secure-coding-002
+  title: 21.2 Kiểm tra dữ liệu tại ranh giới tin cậy trước khi cấp phát hoặc thực hiện thao tác
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **21.2 Kiểm tra dữ liệu tại ranh giới tin cậy trước khi cấp phát hoặc thực hiện thao tác**
+
+    Dữ liệu đầu vào hợp lệ về cú pháp vẫn có thể làm tràn kích thước, tiêu RAM hoặc yêu cầu thao tác trái quyền. Bài này dạy xây đường đi từ raw data qua kiểm tra định dạng, ý nghĩa, ngân sách tài nguyên và principal/ownership, rồi mới cấp phát hoặc thay đổi trạng thái thực.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểm tra và giới hạn trước sử dụng
+
+    1. Trust boundary xuất hiện ở request, queue, cache hay database trong những tình huống nào?
+    2. Vì sao Content-Length và độ dài ZIP chỉ là metadata chưa đủ tin cậy để cấp phát?
+    3. Làm sao dùng long, multiplyExact và kiểm tra offset/length để tránh overflow?
+    4. Vì sao phải giới hạn byte thực khi đọc stream và ngưỡng trước parser?
+
+    ### Quyền và thao tác thực
+
+    1. DocumentId đúng định dạng nhưng thuộc tenant khác có được xóa không, vì sao?
+    2. Path/URL/SQL cần xác thực đích và quyền tại sink như thế nào?
+    3. Khi quyền, đường dẫn hoặc object mutable thay đổi giữa check và use, có thể dùng snapshot, transaction hoặc conditional operation thế nào?
+    4. Thiết kế ca test nào chứng minh input bị từ chối không tạo side effect?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Định nghĩa input contract | Tách kiểm tra syntax, semantics, budget và authorization cho một API. |
+    | Cấp phát có kiểm soát | Tính tổng byte bằng số học an toàn và từ chối trước khi tạo buffer. |
+    | Streaming đúng giới hạn | Đếm số byte thực, hủy staging và xử lý trường hợp vượt ngưỡng. |
+    | Chặn side effect trái phép | Thiết kế quyền owner/tenant và conditional write gần điểm thay đổi tài nguyên. |
+    | Kiểm thử biên tin cậy | Xây test số âm, overflow, vượt quota, sai tenant, thiếu quyền và không có thao tác sau reject. |
+- id: java-secure-coding-003
+  title: 21.3 Chống injection bằng API có tham số và tách dữ liệu khỏi lệnh hoặc biểu thức
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **21.3 Chống injection bằng API có tham số và tách dữ liệu khỏi lệnh hoặc biểu thức**
+
+    Injection xảy ra khi giá trị do bên ngoài cung cấp bị parser hiểu thành lệnh hoặc biểu thức. Bài hướng dẫn giữ syntax cố định, bind dữ liệu qua PreparedStatement, filterArgs, XPathVariableResolver và dùng argv/allowlist đúng mục đích; đồng thời nhận diện những rủi ro còn lại về quyền và tài nguyên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### SQL và các cú pháp động
+
+    1. Vì sao một PreparedStatement vẫn không an toàn nếu username bị nối vào SQL trước khi prepare?
+    2. Vì sao placeholder JDBC không thay được tên bảng, cột hoặc ORDER BY?
+    3. LIKE wildcard và danh sách IN cần xử lý giá trị, cú pháp và giới hạn phần tử ra sao?
+    4. Khi nào ORM, stored procedure hoặc query builder vẫn có injection?
+
+    ### Interpreter khác SQL
+
+    1. ProcessBuilder truyền argv tách biệt giải quyết vấn đề nào nhưng còn argument injection gì?
+    2. LDAP filterArgs và XPath variable khác việc nối chuỗi filter/expression thế nào?
+    3. Khi nào dùng Pattern.quote hoặc một tập expression cố định thay vì parse regex hay SpEL từ user?
+    4. Vì sao câu truy vấn đã bind đúng vẫn cần kiểm tra quyền theo tài nguyên?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Sửa SQL injection | Chuyển query nối giá trị thành JDBC parameter binding và đối chiếu kết quả với input chứa cú pháp. |
+    | Quản lý query động | Ánh xạ lựa chọn ORDER BY hoặc field sang fragment cố định do app sở hữu. |
+    | Tách giá trị khỏi interpreter | Dùng filterArgs, XPath variables, argv và regex literal theo đúng ngữ cảnh. |
+    | Kiểm thử khai thác cú pháp | Dự đoán kết quả payload SQL/LDAP/XPath/regex không làm đổi cấu trúc câu lệnh. |
+    | Phân biệt defense layers | Trình bày lý do input validation, least privilege và authorization vẫn cần sau parameterization. |
+- id: java-secure-coding-004
+  title: 21.4 Đường dẫn, tệp tạm, symlink và điều kiện tranh chấp khi truy cập tài nguyên
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **21.4 Đường dẫn, tệp tạm, symlink và điều kiện tranh chấp khi truy cập tài nguyên**
+
+    Tên tệp chỉ là tham chiếu có thể đổi giữa lúc kiểm tra và dùng. Bài đào sâu path traversal, symlink/hardlink, tệp tạm và TOCTOU; lựa chọn Path/Files API theo chính sách quyền, dùng thao tác tạo nguyên tử và xử lý sự khác biệt của filesystem provider.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đường dẫn và tham chiếu
+
+    1. Path.normalize, startsWith và toRealPath khác nhau về lexical containment và file thực tế thế nào?
+    2. Vì sao check chuỗi startsWith không an toàn và Path.startsWith vẫn chưa chặn symlink?
+    3. NOFOLLOW_LINKS tại entry cuối có chặn parent symlink hoặc hard link không?
+    4. Vì sao exists rồi write tạo race trong hệ thống có actor khác?
+
+    ### Tệp tạm và thao tác file an toàn
+
+    1. CREATE_NEW bảo đảm điều gì so với check-then-create, và giới hạn nào còn tồn tại?
+    2. Files.createTempFile và permission khi tạo giúp tránh pre-create/rò dữ liệu thế nào?
+    3. SecureDirectoryStream dùng directory handle giảm những rủi ro nào, và lúc nào phải fail closed?
+    4. ATOMIC_MOVE có bảo đảm không ghi đè và dữ liệu bền vững sau mất điện không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích đường dẫn | Đọc path trên Windows/Linux, xác định absolute, traversal, root và provider-specific alias. |
+    | Thiết kế thao tác file | Chọn CREATE_NEW, NOFOLLOW_LINKS và directory handle cho rủi ro cụ thể. |
+    | Bảo vệ scratch/temp | Tạo staging trong directory riêng có quyền phù hợp và dọn dẹp có kiểm soát. |
+    | Đánh giá atomic publication | Giải thích atomicity khác no-clobber, durability và authorization. |
+    | Kiểm thử cạnh tranh | Thiết kế test symlink, path traversal, rename race và file canary bên ngoài vùng cho phép. |
+- id: java-secure-coding-005
+  title: 21.5 Giới hạn kích thước, độ sâu, thời gian và tài nguyên để tránh từ chối dịch vụ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **21.5 Giới hạn kích thước, độ sâu, thời gian và tài nguyên để tránh từ chối dịch vụ**
+
+    DoS có thể bắt nguồn từ một JSON quá sâu, ZIP nở lớn, regex tốn CPU hoặc nghìn request nhỏ tích tụ đồng thời. Bài này biến kích thước, độ sâu, thời gian, số job và tài nguyên OS thành ngân sách có thể giám sát, từ chối và thu hồi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Input và parser limits
+
+    1. Vì sao body nhỏ vẫn tạo lượng XML/ZIP/graph rất lớn sau xử lý?
+    2. Phải giới hạn byte trước và sau giải nén, số element và depth ở thời điểm nào?
+    3. Vì sao parser sâu hoặc ReDoS không thể được bảo vệ chỉ bằng max body bytes?
+
+    ### Thời gian, đồng thời và cleanup
+
+    1. Connect timeout, idle timeout và end-to-end deadline khác nhau như thế nào?
+    2. Tại sao Future.cancel(true) không phải hard kill cho mọi tác vụ?
+    3. Vì sao newFixedThreadPool vẫn nguy hiểm do queue mặc định và cách thêm backpressure?
+    4. Một request đúng quota nhưng nhiều request cùng lúc vẫn có thể làm cạn những tài nguyên nào?
+    5. Cần kiểm thử và dọn staging/permit thế nào khi vượt limit giữa chừng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế multi-axis budgets | Đặt ngưỡng byte, depth, CPU, wall-clock, concurrency, disk cho endpoint cụ thể. |
+    | Kiểm soát stream và unzip | Đếm byte thực trước/sau nén và dừng trước khi cấp phát hay ghi vượt ngưỡng. |
+    | Cấu hình parser | Giới hạn depth/element/token trước khi tạo full object tree. |
+    | Lan truyền deadline | Giải thích timeout, interrupt, retry cap và điều kiện cần OS isolation. |
+    | Chống queue saturation | Dùng bounded pool, semaphore và rejection/backpressure khi đạt hạn mức. |
+    | Kiểm thử tài nguyên | Thiết kế ca limit-1/limit/limit+1, sâu/nén/timeouts và kiểm tra cleanup. |
+- id: java-secure-coding-006
+  title: 21.6 Defensive copy, dữ liệu thay đổi được và việc để lộ tham chiếu có quyền
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **21.6 Defensive copy, dữ liệu thay đổi được và việc để lộ tham chiếu có quyền**
+
+    private final không làm một mảng trở nên bất biến khi caller còn giữ alias. Bài này hướng dẫn copy tại biên vào/ra, phân biệt unmodifiable view và snapshot, xử lý nested mutable objects/records, và tránh trả reference có quyền quản trị cho bên không được phép.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Aliasing và snapshot
+
+    1. Vì sao private final byte[] vẫn bị thay đổi từ alias bên ngoài?
+    2. Copy ở constructor và getter khác nhau về bảo vệ inbound/outbound ra sao?
+    3. List.copyOf khác Collections.unmodifiableList và shallow copy khác deep copy thế nào?
+    4. Record chứa byte[] hoặc ByteBuffer readonly có tự trở thành immutable không?
+
+    ### Capability và concurrency
+
+    1. Vì sao một reference đến AdminService hoặc Connection đồng nghĩa có thể trao quyền thao tác?
+    2. Trả privileged object qua interface đọc có ngăn downcast chắc chắn không?
+    3. Vì sao copy rồi validate tốt hơn validate rồi copy nhưng concurrent mutation vẫn cần ownership/lock?
+    4. Khi copy secret trong memory, phải đánh đổi gì về số bản sao và vòng đời bí mật?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chứng minh aliasing | Chạy demo sửa input và getter để so sánh unsafe/safe objects. |
+    | Viết defensive API | Snapshot dữ liệu mutable lúc nhận và trả giá trị an toàn lúc công bố. |
+    | Bảo vệ cấu trúc lồng nhau | Phân biệt List.copyOf container và deep-copy từng mutable element. |
+    | Thiết kế capability giới hạn | Thay getter service quyền cao bằng facade chỉ có operation tối thiểu. |
+    | Kiểm thử invariant | Tạo test inbound/outbound/nested mutation và snapshot ở biên nhiều thread. |
+- id: java-secure-coding-007
+  title: 21.7 Deserialization, ObjectInputFilter và giới hạn của danh sách lớp được phép
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **21.7 Deserialization, ObjectInputFilter và giới hạn của danh sách lớp được phép**
+
+    ObjectInputStream có thể gọi hook của lớp và dựng object graph trước khi phép cast root xảy ra. Bài này chỉ rõ cách giảm bề mặt native deserialization bằng allowlist đóng, giới hạn depth/refs/array/bytes, hiểu ba trạng thái filter và chính sách factory, đồng thời ưu tiên schema-based format khi dữ liệu không tin cậy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Filter trong lúc deserialize
+
+    1. Vì sao cast sau readObject không chặn được class có deserialization hooks?
+    2. ALLOWED, REJECTED và UNDECIDED khác nhau ra sao, và tại sao whitelist pattern không có !* chưa đóng?
+    3. ObjectInputFilter quan sát class, mảng, depth, refs, bytes như thế nào và tại sao không thấy mọi String?
+
+    ### Hạn chế thực tế và cấu hình
+
+    1. Vì sao class được phép vẫn có thể có hook nguy hiểm hoặc field sai quy tắc?
+    2. Stream-specific, JVM-wide và context factory khác nhau ra sao; vì sao bộ lọc local có thể thay global?
+    3. Vì sao maxbytes filter không thay input framing, timeout và concurrency?
+    4. Làm sao thử nghiệm từ chối class lạ, array quá lớn và dữ liệu không hợp lệ mà không bỏ filter?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập mô hình deserialize | Phân tích class resolution, object graph, hooks và validation hậu đọc. |
+    | Viết allowlist đóng | Thiết lập pattern có !* hoặc custom filter và kiểm soát UNDECIDED. |
+    | Giới hạn tài nguyên | Giải thích maxdepth/maxrefs/maxarray/maxbytes kết hợp frame cap. |
+    | Xác minh filter factory | Kiểm tra đường áp dụng stream/global/factory theo phiên bản runtime. |
+    | Kiểm thử negative | Phân biệt accepted, unexpected class, oversize array và field invalid mà không có side effect. |
+- id: java-secure-coding-008
+  title: 21.8 Cấu hình JAXP secure processing và kiểm soát truy cập tài nguyên XML bên ngoài
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **21.8 Cấu hình JAXP secure processing và kiểm soát truy cập tài nguyên XML bên ngoài**
+
+    Một XML không tin cậy có thể khiến parser tự đọc file, gọi mạng hoặc tiêu tốn tài nguyên qua DTD/schema/stylesheet. Bài này dạy cấu hình fail-closed riêng cho từng JAXP factory/processor, khóa external access và kiểm thử XXE/SSRF/DoS.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### XML security properties
+
+    1. FEATURE_SECURE_PROCESSING bảo vệ những khía cạnh gì nhưng vì sao chưa đủ cấm external access?
+    2. ACCESS_EXTERNAL_DTD, SCHEMA và STYLESHEET phân định đường tải tài nguyên nào?
+    3. Vì sao setExpandEntityReferences(false) chưa thay việc cấm DOCTYPE hoặc external entity?
+    4. StAX dùng SUPPORT_DTD, external entities và resolver khác DOM/SAX như thế nào?
+
+    ### Factory, resolver và test
+
+    1. SchemaFactory và Validator cần bị cấu hình tại giai đoạn nào để ngăn schema include/import?
+    2. XSLT import/include và document() có thể tải tài nguyên qua những giai đoạn nào?
+    3. Dùng XML Catalog hoặc resolver allowlist thế nào khi nghiệp vụ cần một schema ngoài?
+    4. Khi provider không hỗ trợ security feature, vì sao fail closed thay vì parse mặc định?
+    5. Kiểm thử dùng canary file và server giả chứng minh không có truy cập ngoài thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cấu hình DOM/SAX/StAX | Áp đặt FSP, cấm DTD và external entities, đặt EAP tại đúng factory. |
+    | Khóa validation/transform | Thiết lập SchemaFactory/Validator và TransformerFactory/Transformer cùng resolvers. |
+    | Giới hạn XML chi phí | Dùng entity/depth/byte/time limits tương thích provider/JDK. |
+    | Cho phép ngoại lệ an toàn | Thiết kế catalog/URI allowlist thay quyền đọc mọi file và HTTP. |
+    | Kiểm chứng secure JAXP | Chạy test XXE, XSD, XSLT external references và cấu hình unsupported. |
+- id: java-secure-coding-009
+  title: 21.9 SecurityManager, Policy, Permission và AccessController trong mã cũ đã deprecated
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **21.9 SecurityManager, Policy, Permission và AccessController trong mã cũ đã deprecated**
+
+    Code cũ có thể vẫn biên dịch nhưng SecurityManager đã deprecated for removal từ JDK 17 và bị vô hiệu hóa vĩnh viễn từ JDK 24. Bài này kiểm tra hành vi Policy/Permission/AccessController, xác định nhánh bỏ kiểm tra hoặc luôn ném exception và di trú sang authorization hay OS isolation theo đúng threat model.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Legacy permission model
+
+    1. SecurityManager, Policy, Permission, ProtectionDomain và AccessController từng kiểm tra quyền ra sao?
+    2. Deprecated for removal, permanently disabled và removed có nghĩa khác nhau thế nào từ JDK 17 đến 25?
+    3. getSecurityManager, setSecurityManager, doPrivileged, checkPermission và Policy.getPolicy hành xử thế nào trên JDK 24+?
+    4. Permission.implies có chứng minh caller được cấp quyền thực tế hay không?
+
+    ### Audit và migration
+
+    1. Vì sao if getSecurityManager()!=null có thể bỏ kiểm tra còn checkPermission trực tiếp luôn ném trên JDK 24+?
+    2. jdeprscan, search source và compiler warnings giúp xác định những phụ thuộc nào và bỏ sót trường hợp gì?
+    3. Khi nào gỡ được wrapper doPrivileged mà không mất security boundary?
+    4. Vì sao authorization của principal khác với hạn chế file/network cho plugin không tin cậy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập bản đồ API legacy | Nêu hành vi SecurityManager/Policy/AccessController theo đúng phiên bản JDK. |
+    | Phân loại lỗi migration | Tách call sites fail-open, fail-closed và compatibility wrappers. |
+    | Quét deprecated APIs | Kết hợp code search, jdeprscan, -Xlint:removal và integration test. |
+    | Thiết kế authorization mới | Dùng principal/owner/role đáng tin để thay policy check có ý nghĩa nghiệp vụ. |
+    | Nghiệm thu nâng cấp | Chứng minh startup và negative authorization/isolation paths vẫn được bảo vệ. |
+- id: java-secure-coding-010
+  title: 21.10 Cách ly tiến trình, quyền hệ điều hành và bảo vệ bí mật khi xử lý mã không tin cậy
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **21.10 Cách ly tiến trình, quyền hệ điều hành và bảo vệ bí mật khi xử lý mã không tin cậy**
+
+    Một JAR không tin cậy có thể sử dụng mọi quyền OS của process dù bytecode hoàn toàn hợp lệ. Bài cuối chương thiết kế control plane và worker cách ly, giới hạn UID, mount, network, CPU/RAM/PID, output và deadline, giữ bí mật ở broker và kiểm thử ranh giới thực thi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới thực thi
+
+    1. Vì sao bytecode verifier, class loader, ProcessBuilder và signed JAR đều không tạo sandbox đầy đủ?
+    2. Control plane, scheduler, worker, quarantine và result validator nên tách trách nhiệm thế nào?
+    3. Vì sao annotation processor, Maven/Gradle plugin hoặc build script cũng cần chạy trong boundary?
+    4. UID, ACL, read-only mount, network deny, seccomp và cgroup ngăn rủi ro nào riêng biệt?
+
+    ### Quota, secrets và vận hành
+
+    1. Vì sao -Xmx và kill một PID không bao trọn native memory hay descendants?
+    2. Container chia sẻ kernel khác VM/microVM ở giới hạn cô lập nào?
+    3. Secret lộ qua env, argv, mount, image, log và metadata service thế nào?
+    4. Broker nên thực hiện privileged actions thay vì giao token cho worker ra sao?
+    5. Những negative tests nào xác nhận file/network/quota/cleanup trên Linux, Windows và Kubernetes?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế kiến trúc worker | Vẽ luồng job từ upload tới sandbox và result validation với trust boundary rõ ràng. |
+    | Giảm quyền OS | Chọn identity, mount, network, capability và policy phù hợp threat model. |
+    | Áp hạn mức độc lập JVM | Thiết lập CPU/RAM/PIDs/disk/time/stdout caps và thu hồi toàn process group. |
+    | Bảo vệ thông tin nhạy cảm | Phân tích secrets qua env, file, network và chuyển thao tác đặc quyền về broker. |
+    | So sánh isolation | Nêu rủi ro còn lại của process, container và VM/microVM. |
+    | Kiểm thử thực địa | Đề xuất negative tests file/network, fork/CPU/output, timeout và cleanup. |

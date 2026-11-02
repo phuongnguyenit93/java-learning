@@ -831,6 +831,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </ul>
 </details>
 </li>
+<li>
+  <a href='./module/infrastructure/system/observability/micrometer'>🪄 micrometer</a>
+</li>
 </ul>
 </details>
 </li>
@@ -1658,16 +1661,49 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/programming/framework'>📁 framework</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/programming/framework/project-reactor'>🪄 project-reactor</a>
+<details>
+  <summary><b><a href='./module/platform/development/programming/framework/project-reactor'>📁 project-reactor</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/framework/project-reactor/core'>🪄 core</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-ai'>🪄 spring-ai</a>
+  <a href='./module/platform/development/programming/framework/project-reactor/netty'>🪄 netty</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/platform/development/programming/framework/spring-ai'>📁 spring-ai</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-ai/core'>🪄 core</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-ai/rag'>🪄 rag</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-ai/tools-mcp'>🪄 tools-mcp</a>
+</li>
+</ul>
+</details>
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-amqp'>🪄 spring-amqp</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-batch'>🪄 spring-batch</a>
+<details>
+  <summary><b><a href='./module/platform/development/programming/framework/spring-batch'>📁 spring-batch</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-batch/core-processing'>🪄 core-processing</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-batch/scaling-operations'>🪄 scaling-operations</a>
+</li>
+</ul>
+</details>
 </li>
 <li>
 <details>
@@ -1711,10 +1747,40 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/programming/framework/spring-cloud'>📁 spring-cloud</a></b></summary>
 <ul>
 <li>
+  <a href='./module/platform/development/programming/framework/spring-cloud/configuration'>🪄 configuration</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-cloud/contract'>🪄 contract</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-cloud/core'>🪄 core</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-cloud/data-flow'>🪄 data-flow</a>
+</li>
+<li>
   <a href='./module/platform/development/programming/framework/spring-cloud/function'>🪄 function</a>
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-cloud/gateway'>🪄 gateway</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-cloud/kubernetes'>🪄 kubernetes</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-cloud/provider-integration'>🪄 provider-integration</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-cloud/service-broker'>🪄 service-broker</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-cloud/service-communication'>🪄 service-communication</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-cloud/stream'>🪄 stream</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-cloud/task'>🪄 task</a>
 </li>
 </ul>
 </details>
@@ -1724,19 +1790,25 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/programming/framework/spring-data'>📁 spring-data</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-data/jdbc'>🪄 jdbc</a>
+  <a href='./module/platform/development/programming/framework/spring-data/commons'>🪄 commons</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-data/elasticsearch'>🪄 elasticsearch</a>
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-data/jpa'>🪄 jpa</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-data/mongodb'>🪄 mongodb</a>
+  <a href='./module/platform/development/programming/framework/spring-data/mongo-db'>🪄 mongo-db</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-data/r2dbc'>🪄 r2dbc</a>
+  <a href='./module/platform/development/programming/framework/spring-data/non-relational'>🪄 non-relational</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-data/redis'>🪄 redis</a>
+  <a href='./module/platform/development/programming/framework/spring-data/relational'>🪄 relational</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-data/rest'>🪄 rest</a>
 </li>
 </ul>
 </details>
@@ -1819,7 +1891,17 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </details>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-kafka'>🪄 spring-kafka</a>
+<details>
+  <summary><b><a href='./module/platform/development/programming/framework/spring-kafka'>📁 spring-kafka</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-kafka/messaging'>🪄 messaging</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-kafka/reliability-operations'>🪄 reliability-operations</a>
+</li>
+</ul>
+</details>
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-ldap'>🪄 spring-ldap</a>

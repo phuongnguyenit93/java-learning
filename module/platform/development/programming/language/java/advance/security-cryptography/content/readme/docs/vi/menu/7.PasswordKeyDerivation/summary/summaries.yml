@@ -1,0 +1,298 @@
+summaries:
+- id: password-key-derivation-001
+  title: 7.1 Phân biệt lưu bộ kiểm tra mật khẩu với mã hóa dữ liệu bằng khóa từ mật khẩu
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **7.1 Phân biệt lưu bộ kiểm tra mật khẩu với mã hóa dữ liệu bằng khóa từ mật khẩu**
+
+    Mật khẩu có thể dùng để kiểm tra người đăng nhập hoặc để dẫn xuất khóa phục hồi dữ liệu mã hóa. Hai mục đích có hồ sơ lưu trữ, cơ chế khôi phục và hậu quả rò rỉ khác nhau. Bài giúp phân biệt password verifier với khóa PBE, chọn đúng KDF, AEAD và tránh dùng verifier công khai làm khóa mã hóa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai mục tiêu bảo mật
+
+    1. Vì sao đăng nhập chỉ cần so sánh verifier, còn giải mã dữ liệu phải tái tạo khóa và xác thực ciphertext?
+    2. Đổi hoặc reset password của tài khoản có tự mở được dữ liệu mã hóa bởi password cũ không, và vì sao?
+    3. Một server nắm khóa giải mã độc lập với password có thể khẳng định chỉ người dùng giải mã được dữ liệu không?
+
+    ### Thiết kế khóa và metadata
+
+    1. Salt của verifier, salt của PBE và nonce AES-GCM khác nhau về mục đích và quy tắc sử dụng thế nào?
+    2. Tại sao sử dụng trực tiếp stored password verifier làm AES key tạo lỗ hổng khi database bị lộ?
+    3. Khi nào mô hình random DEK và password-derived KEK giúp việc đổi mật khẩu hoặc recovery dễ kiểm soát hơn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt verifier và PBE | Vẽ riêng luồng đăng ký/verify và mã hóa/giải mã, chỉ ra đầu vào, output và thứ phải lưu. |
+    | Thiết kế hồ sơ dữ liệu | Đề xuất schema verifier và ciphertext envelope với salt, KDF params, nonce, tag, version đúng vai trò. |
+    | Đánh giá rủi ro tái sử dụng khóa | Phân tích tác động của việc dùng stored verifier để mở ciphertext khi kẻ tấn công sao chép database. |
+    | Lập kế hoạch recovery | Giải thích hệ quả quên hoặc đổi password và lựa chọn direct PBE hay wrapped DEK theo threat model. |
+- id: password-key-derivation-002
+  title: 7.2 Vì sao băm nhanh một lần không đủ cho mật khẩu có entropy thấp
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **7.2 Vì sao băm nhanh một lần không đủ cho mật khẩu có entropy thấp**
+
+    Độ mạnh của SHA-256 không làm một mật khẩu dễ đoán trở thành bí mật mạnh. Khi kẻ tấn công có bản sao password hash, họ có thể thử ứng viên offline không bị rate limit của server. Bài cho phép suy luận từ entropy, salt và chi phí mỗi phép thử để chọn password KDF thay vì băm nhanh một lần.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Entropy và tấn công offline
+
+    1. Vì sao SHA-256 có 256 bit output không làm PIN sáu chữ số có 256 bit entropy?
+    2. Đối thủ đã lấy được salt và verifier thực hiện một vòng offline guessing như thế nào?
+    3. Salt riêng cho từng tài khoản ngăn việc dùng lại bảng hash nhưng vì sao vẫn không chặn việc đoán một mật khẩu yếu?
+
+    ### Bảo vệ phù hợp từng mối đe dọa
+
+    1. Hash nhanh, hash nhanh có salt và password hashing có work factor khác nhau về chi phí thử mật khẩu thế nào?
+    2. Vì sao Argon2id hoặc PBKDF2 phù hợp hơn một sơ đồ tự chế lặp SHA-256?
+    3. Đối với online guessing và offline guessing, rate limiting, MFA, mật khẩu mạnh và KDF giải quyết các phần nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Suy luận entropy | Ước tính số ứng viên và mức entropy của PIN, giải thích không thể suy độ mạnh từ chiều dài hash. |
+    | Phân tích offline attack | Mô phỏng lấy verifier rồi thử ứng viên mà không truy cập endpoint đăng nhập. |
+    | Phân biệt salt và cost | Diễn giải demo SHA-256 có/không salt và lý do phải chọn password KDF chuyên dụng. |
+    | Lựa chọn phòng vệ | Đề xuất biện pháp riêng cho tấn công online và offline với lý do có thể kiểm tra. |
+- id: password-key-derivation-003
+  title: 7.3 Vai trò của salt, số vòng lặp, độ dài đầu ra và phiên bản cấu hình
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **7.3 Vai trò của salt, số vòng lặp, độ dài đầu ra và phiên bản cấu hình**
+
+    Password KDF cần lưu đủ tham số để hai lần tính có thể cho đúng cùng verifier và để các bản ghi cũ vẫn xác minh được khi hệ thống đổi chính sách. Bài phân biệt salt, iterations, output length và version; luyện tư duy nâng cấp mà không làm mất khả năng đăng nhập hoặc giải mã.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa bốn nhóm tham số
+
+    1. Salt ngẫu nhiên riêng cho từng record ngăn rủi ro gì và vì sao không cần giữ bí mật?
+    2. Iterations ảnh hưởng chi phí tính toán ra sao, và tại sao không thể suy độ an toàn chỉ từ con số này?
+    3. PBEKeySpec dùng keyLength theo bit; chuyển đổi 256 bit sang byte và Base64 cần lưu ý điều gì?
+
+    ### Version và nâng cấp an toàn
+
+    1. Một password verifier cần lưu algorithm, cost, salt, output length và version như thế nào để đọc được nhiều năm sau?
+    2. Vì sao dùng current iterations để verify record cũ có thể khiến password đúng bị từ chối?
+    3. Thay salt hoặc cost khi dẫn xuất khóa AES có nguy cơ gì so với rehash verifier sau xác thực thành công?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Diễn giải tham số | Giải thích tác dụng riêng của salt, iterations, outputBits và config version bằng một ví dụ PBKDF2. |
+    | Thiết kế record tự mô tả | Liệt kê và phân biệt trường phải lưu để verify bằng chính thông số đã tạo record. |
+    | Xử lý upgrade | Mô tả verify theo tham số cũ trước khi rehash với salt và chính sách mới. |
+    | Đánh giá vận hành | Chỉ ra rủi ro cost quá lớn, sai đơn vị keyLength và mất khóa khi sửa metadata PBE. |
+- id: password-key-derivation-004
+  title: 7.4 PBKDF2 qua SecretKeyFactory và PBEKeySpec
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **7.4 PBKDF2 qua SecretKeyFactory và PBEKeySpec**
+
+    Java cung cấp SecretKeyFactory và PBEKeySpec để thực hiện PBKDF2 với salt, PRF, iteration count và chiều dài đầu ra có hợp đồng rõ ràng. Bài giúp biến khái niệm thành code có thể kiểm chứng bằng test vector, đồng thời phân biệt dẫn xuất verifier với dẫn xuất khóa AES và xử lý password buffer đúng quyền sở hữu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế PBKDF2 và API Java
+
+    1. PBKDF2 kết hợp password, salt, PRF, iterations và derived-key length để tạo đầu ra như thế nào?
+    2. SecretKeyFactory và PBEKeySpec đảm nhiệm hai trách nhiệm gì khi gọi PBKDF2WithHmacSHA256?
+    3. Vì sao PBEKeySpec dùng keyLength bằng bit và cần truyền 256 để lấy 32 byte?
+
+    ### Kiểm thử và sử dụng đúng mục đích
+
+    1. Test vector PBKDF2 có một hoặc hai vòng giúp phát hiện sai thuật toán, encoding hoặc tham số như thế nào?
+    2. Khi tạo và verify record từ Java, phải lưu metadata nào, so sánh byte ra sao và clearPassword lúc nào?
+    3. Nếu dùng output PBKDF2 làm khóa mã hóa thay vì verifier, vòng đời bảo vệ khóa và khả năng giải mã khác nhau như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cài đặt PBKDF2 | Dùng SecretKeyFactory và PBEKeySpec để dẫn xuất bytes với salt, iterations và keyLength theo bit. |
+    | Kiểm chứng bằng vector | Chạy ví dụ và đối chiếu chính xác kết quả hex của PBKDF2-HMAC-SHA256 đã công bố. |
+    | Tạo và verify record | Dùng lại đúng tham số lưu trong record và kiểm tra verifier bằng API so sánh byte phù hợp. |
+    | Quản lý password | Đặt PBEKeySpec.clearPassword trong finally và giải thích giới hạn khi dọn các bản sao char[]. |
+- id: password-key-derivation-005
+  title: 7.5 Tạo, lưu và kiểm tra bản ghi mật khẩu với đầy đủ tham số
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **7.5 Tạo, lưu và kiểm tra bản ghi mật khẩu với đầy đủ tham số**
+
+    Một password verifier phải xác minh được trong nhiều phiên bản hệ thống, với dữ liệu lưu có thể thiếu hoặc sai. Bài ghép schema, random salt, cost, parser giới hạn, so sánh verifier và chu trình nâng cấp thành bản ghi hoàn chỉnh, tránh phụ thuộc tham số mặc định hoặc chấp nhận đầu vào không đáng tin.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tạo và xác minh record
+
+    1. Những trường nào cần lưu trong password record để phân biệt format version, algorithm, salt, cost và derived verifier?
+    2. Khi đăng ký, đổi hoặc reset mật khẩu, bước tạo salt mới và cấp quyền thay record khác nhau ra sao?
+    3. Vì sao khi login phải dùng thông số record đã lưu thay vì áp current policy ngay từ đầu?
+
+    ### Phòng lỗi và nâng cấp
+
+    1. Parser phải từ chối phiên bản lạ, Base64 lỗi, salt thiếu và work factor vượt giới hạn như thế nào?
+    2. Làm thế nào xử lý password sai, tài khoản không tồn tại và lỗi nội bộ mà không rò bí mật qua phản hồi?
+    3. Khi verify thành công record PBKDF2 cũ, quy trình chuyển sang profile mạnh hơn và tránh race cần điều kiện gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế schema verifier | Đề xuất record tự mô tả có format, thuật toán, work factor, salt, output length và verifier. |
+    | Xây luồng create/verify | Trình bày việc sinh salt mới, derive bằng stored parameters và so sánh kết quả đúng cách. |
+    | Xác thực dữ liệu lưu | Thiết kế bounds, allowlist và xử lý lỗi cho record không đáng tin trước khi chạy KDF. |
+    | Nâng cấp record | Giải thích cách rehash sau login đúng bằng salt mới và cập nhật có kiểm soát. |
+- id: password-key-derivation-006
+  title: 7.6 Hiệu chỉnh chi phí tính toán và nâng cấp tham số khi xác thực lại
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **7.6 Hiệu chỉnh chi phí tính toán và nâng cấp tham số khi xác thực lại**
+
+    Work factor tăng chi phí offline guessing nhưng cũng tiêu tốn tài nguyên của dịch vụ đăng nhập. Bài hướng dẫn benchmark theo latency và concurrency, chọn ngân sách CPU/RAM, xác minh hash bằng tham số cũ rồi rehash với policy mới sau lần đăng nhập đúng, đồng thời tránh ghi đè thay đổi cùng lúc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đo lường và lựa chọn cost
+
+    1. Vì sao benchmark PBKDF2 trên một laptop đơn lẻ chưa đủ để quyết định p95 và concurrency của production?
+    2. Iterations PBKDF2 khác time, memory và parallelism của Argon2id ra sao?
+    3. Cần đo những thông số nào để chọn cost phù hợp với SLO mà vẫn chống được abuse?
+
+    ### Rehash và cập nhật đồng thời
+
+    1. Tại sao chỉ được nâng cấp hash sau khi verify đúng password bằng cost và algorithm đã lưu trong record cũ?
+    2. Hai request login cùng rehash hoặc một request đến sau password reset tạo race dữ liệu gì?
+    3. Dùng compare-and-set hay UPDATE có điều kiện phải kiểm tra số dòng bị thay đổi như thế nào để bảo vệ record mới?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập kế hoạch calibration | Định nghĩa thí nghiệm có warmup, nhiều mẫu, p50/p95, tải đồng thời và ngân sách CPU/RAM. |
+    | Thiết kế rehash on login | Mô tả verify legacy, tạo salt mới, áp current policy và ghi bản mới sau khi xác thực đúng. |
+    | Xử lý race trong database | Phân tích câu lệnh UPDATE có điều kiện và hành vi khi affected rows bằng 0. |
+    | Giảm nguy cơ DoS | Đề xuất giới hạn cost đầu vào, concurrency, rate limit và kế hoạch rollout. |
+- id: password-key-derivation-007
+  title: 7.7 Phân biệt password-based encryption với khóa sinh ngẫu nhiên
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **7.7 Phân biệt password-based encryption với khóa sinh ngẫu nhiên**
+
+    Khóa 256 bit dẫn xuất từ password yếu không có cùng entropy với khóa được sinh bởi bộ sinh ngẫu nhiên mật mã, dù đều dùng được trong AES-GCM. Bài đặt PBE cạnh random-key encryption và envelope encryption để lựa chọn đúng nguồn khóa, metadata, khả năng recovery và chính sách rotation.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn khóa và ciphertext
+
+    1. Vì sao PBKDF2 output 256 bit không biến mật khẩu sáu chữ số thành khóa có 256 bit entropy?
+    2. PBE kết hợp password KDF và AES-GCM phải lưu những gì để giải mã lại và xác nhận authentication tag?
+    3. Khi nào khóa sinh từ KeyGenerator hoặc SecureRandom loại bỏ được giới hạn đoán password ngoại tuyến?
+
+    ### Kiến trúc và vòng đời khóa
+
+    1. DEK, KEK và wrapped DEK đảm nhiệm những bước nào trong envelope encryption?
+    2. Với file offline, dữ liệu backend và tài liệu dùng chung, tiêu chí nào quyết định dùng PBE trực tiếp hay random key?
+    3. Đổi password hoặc nâng cost KDF khác gì với rewrap DEK và rotate DEK?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh entropy nguồn khóa | Giải thích sự khác nhau về không gian đoán của password-derived key và khóa ngẫu nhiên. |
+    | Thiết kế AES-GCM envelope | Chỉ ra vai trò riêng của salt KDF, cost, nonce, ciphertext, tag, AAD và version. |
+    | Lựa chọn kiến trúc | Phân tích tình huống PBE, random DEK, KEK hoặc KMS/HSM kèm trade-off recovery. |
+    | Lập kế hoạch rotation | Đề xuất quy trình rewrap DEK hay giải mã và mã hóa lại khi đổi password hoặc thay khóa. |
+- id: password-key-derivation-008
+  title: 7.8 Xử lý char[], clearPassword và giới hạn của việc xóa dữ liệu nhạy cảm trên JVM
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **7.8 Xử lý char[], clearPassword và giới hạn của việc xóa dữ liệu nhạy cảm trên JVM**
+
+    Password có thể để lại nhiều bản sao trong String, char[], UI, PBEKeySpec, provider và framework. Bài giúp lập bản đồ ownership, dùng clearPassword và Arrays.fill đúng chỗ và giải thích vì sao GC, JIT hay heap dump khiến zeroization trên JVM không thể được bảo đảm tuyệt đối.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vòng đời và các bản sao password
+
+    1. Vì sao char[] cho phép giảm thời gian giữ bí mật nhưng không tự làm password miễn nhiễm với heap dump?
+    2. PBEKeySpec có copy password đầu vào không, getPassword trả về kiểu bản sao nào và clearPassword xóa những gì?
+    3. Khi caller, API và thư viện giữ các buffer khác nhau, ai chịu trách nhiệm xóa từng bản sao trong cả nhánh exception?
+
+    ### Giới hạn môi trường thực
+
+    1. Vì sao Arrays.fill hoặc System.gc không chứng minh tất cả dấu vết password đã biến mất khỏi bộ nhớ JVM?
+    2. Console.readPassword, JPasswordField và HTTP framework khác nhau về số bản sao nhạy cảm có thể phát sinh thế nào?
+    3. Cần kiểm tra logs, telemetry, heap dumps và vật liệu key của provider theo threat model nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Theo dấu bản sao secret | Vẽ đường đi password từ input qua PBEKeySpec và các buffer phát sinh để chỉ ra owner. |
+    | Dọn buffer trong finally | Dùng clearPassword và Arrays.fill cho những mảng có quyền kiểm soát sau khi hoàn thành KDF. |
+    | Giải thích zeroization giới hạn | Phân tích GC, JIT, String và heap dump để tránh cam kết xóa toàn bộ bộ nhớ. |
+    | Đánh giá vận hành | Đề xuất nguyên tắc không log secret và giảm lưu giữ password qua framework. |
+- id: password-key-derivation-009
+  title: 7.9 Tương thích charset, Unicode và quy tắc chuyển đổi mật khẩu giữa các hệ thống
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **7.9 Tương thích charset, Unicode và quy tắc chuyển đổi mật khẩu giữa các hệ thống**
+
+    Hai password nhìn giống nhau có thể khác byte trước khi đi vào KDF khi hệ thống dùng UTF-16, UTF-8, Unicode normalization hoặc quy tắc chuyển đổi khác nhau. Bài giúp định nghĩa profile có version, thiết kế golden vectors giữa Java/Python/JavaScript và migration an toàn cho record cũ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Unicode, normalization và độ dài
+
+    1. UTF-16 code unit, Unicode code point, grapheme cluster và byte UTF-8 khác nhau thế nào khi đo password?
+    2. Vì sao é dựng sẵn và e cộng dấu tổ hợp có thể sinh verifier khác nhau nếu không có cùng normalization profile?
+    3. NFC khác NFKC ra sao, và vì sao không âm thầm trim, lowercase hay bỏ dấu password?
+
+    ### Tương thích và chuyển đổi
+
+    1. Một password profile cần quy định những bước nào từ strict transport decoding tới Unicode, normalization, encoding và KDF?
+    2. Golden vectors phải đối chiếu những chuỗi mẫu và dãy byte nào để tìm khác biệt giữa Java, Python và JavaScript?
+    3. Vì sao migration phải verify theo profile legacy đã ghi nhận trước khi tạo verifier mới và không nên thử bừa nhiều profile?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh cách đếm Unicode | Đo code units, code points và bytes cho chuỗi có dấu hoặc emoji rồi giải thích chênh lệch. |
+    | Thiết kế password profile | Viết hợp đồng strict decoding, normalization, charset, algorithm và version có thể triển khai nhất quán. |
+    | Lập golden vectors | Đối chiếu bytes trước/sau NFC và output KDF giữa các hệ thống trên dữ liệu thử vô hại. |
+    | Lập kế hoạch migration | Giải thích verify legacy trước rồi rehash bằng profile mới, tránh mở rộng tập password được chấp nhận. |

@@ -1,0 +1,289 @@
+summaries:
+- id: sasl-gss-api-001
+  title: 18.1 SASL giải quyết xác thực trong giao thức ứng dụng như thế nào
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **18.1 SASL giải quyết xác thực trong giao thức ứng dụng như thế nào**
+
+    Bài học giải thích vì sao SMTP, IMAP, LDAP hay một giao thức ứng dụng khác cần một khung tích hợp xác thực thay vì tự thiết kế mật mã. Người học nhìn được ranh giới giữa protocol, SASL mechanism, TLS và quyết định phân quyền; ví dụ PLAIN làm rõ rằng Base64 và trạng thái hoàn tất phía client không chứng minh một phiên đã an toàn hay được server chấp nhận.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nền tảng và luồng trao đổi
+
+    1. SASL tách nhiệm vụ giữa giao thức ứng dụng và cơ chế xác thực bằng cách nào?
+    2. Các bước từ quảng bá mechanism tới server báo thành công diễn ra theo thứ tự nào, và vì sao không có một khung lệnh SASL dùng chung cho mọi giao thức?
+    3. Vì sao `client.isComplete()` hoặc một response Base64 không tự chứng minh phiên đã xác thực thành công?
+
+    ### Lựa chọn mechanism và ranh giới bảo vệ
+
+    1. Trong SMTP PLAIN, các byte authzid, authcid và password được sắp xếp ra sao, và vì sao phải có TLS đã xác minh?
+    2. SCRAM-SHA-256, SCRAM-SHA-256-PLUS, GSSAPI và EXTERNAL dựa trên những bằng chứng xác thực hoặc lớp bảo vệ khác nhau như thế nào?
+    3. Tại sao SASL thành công vẫn không đồng nghĩa dữ liệu được mã hóa hoặc người dùng có toàn bộ quyền nghiệp vụ?
+    4. Nếu client phải nâng cấp STARTTLS, vì sao cần kiểm tra lại capabilities và cấm fallback sang cơ chế yếu ngoài chính sách?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân lớp kiến trúc | Vẽ được giao thức ứng dụng, SASL mechanism, TLS và authorization theo đúng vai trò. |
+    | Phân tích một luồng xác thực | Đọc luồng SMTP AUTH PLAIN và chỉ ra phần byte SASL, phần lệnh giao thức và điều kiện chấp nhận phiên. |
+    | Đánh giá mechanism | Giải thích lý do chọn hoặc từ chối PLAIN, SCRAM, GSSAPI hay EXTERNAL trong một bối cảnh cụ thể. |
+    | Phân biệt danh tính và quyền | Đánh giá trường hợp authcid đúng nhưng authzid không được ủy quyền và chỉ ra quyết định server phù hợp. |
+    | Nhận diện downgrade | Xây checklist yêu cầu TLS, cơ chế được phép, giới hạn token và phản hồi cuối từ server. |
+- id: sasl-gss-api-002
+  title: 18.2 SaslClient, SaslServer và vòng trao đổi challenge-response
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **18.2 SaslClient, SaslServer và vòng trao đổi challenge-response**
+
+    Bài học biến cấu trúc SASL thành vòng trao đổi có trạng thái bằng `SaslClient`, `SaslServer`, `Sasl` và `CallbackHandler`. Qua demo CRAM-MD5 được giới hạn để học API, người học phân biệt initial response, challenge, response, `null` với byte rỗng, kết quả server và cách quản lý vòng đời; không lấy cơ chế cũ làm khuyến nghị production.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đối tượng và state machine
+
+    1. `SaslClient`, `SaslServer`, `Sasl` và `CallbackHandler` chịu trách nhiệm gì trong cùng một phiên?
+    2. `hasInitialResponse()` quyết định ai gửi dữ liệu đầu tiên ra sao, và khi nào một response `null` khác response dài 0 byte?
+    3. Vì sao phải xử lý cả `isComplete()` của mechanism và thông báo SUCCESS/FAILURE của giao thức?
+    4. Làm thế nào để chuyển đúng byte token qua một giao thức có Base64 hoặc length-prefix mà không làm hỏng dữ liệu?
+
+    ### Mô phỏng và kiểm soát lỗi
+
+    1. Demo CRAM-MD5 một JVM chạy theo chuỗi gọi client/server nào và vì sao chỉ nên dùng nó để học state machine?
+    2. Các callback Name, Password và Authorize khác nhau ở chỗ nào khi server xác nhận danh tính và quyền đại diện?
+    3. Nếu một provider thiếu mechanism hoặc số vòng vượt giới hạn, ứng dụng phải kết thúc và dọn trạng thái ra sao?
+    4. Sau khi SASL hoàn tất, điều kiện nào cho phép đọc QOP hoặc gọi wrap/unwrap?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Điều phối trao đổi SASL | Viết sơ đồ lời gọi `evaluateChallenge` và `evaluateResponse` với điều kiện kết thúc đúng. |
+    | Kiểm tra token và trạng thái | Chỉ ra khác biệt `null`, mảng rỗng, client complete và kết quả SUCCESS của server. |
+    | Mô phỏng client/server | Chạy SaslRoundTripDemo, đọc số vòng trao đổi và authorization ID đạt được. |
+    | Cài đặt callback hợp lệ | Phân loại NameCallback, PasswordCallback và AuthorizeCallback theo phía dùng và yêu cầu từ chối. |
+    | Đảm bảo vòng đời phiên | Đề xuất giới hạn rounds, token size, timeout và dispose khi thất bại. |
+- id: sasl-gss-api-003
+  title: 18.3 Thương lượng mechanism, authentication identity và authorization identity
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **18.3 Thương lượng mechanism, authentication identity và authorization identity**
+
+    Bài học đào sâu quyền quyết định trong lúc chọn SASL mechanism và hai danh tính authcid/authzid. Người học phải tránh downgrade, không tin authzid do client tự khai, kiểm tra việc `AuthorizeCallback` cho phép một identity đại diện identity khác, rồi tách quyền đại diện khỏi quyền truy cập tài nguyên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thương lượng và chọn cơ chế
+
+    1. Ai quảng bá, ai chọn và ai kiểm tra danh sách SASL mechanism khi giao thức ứng dụng thực hiện negotiation?
+    2. Nếu server công bố PLAIN nhưng client yêu cầu SCRAM hoặc GSSAPI, chính sách allowlist và khả năng provider ảnh hưởng lựa chọn thế nào?
+    3. Vì sao thay đổi capabilities giữa kết nối chưa TLS và sau STARTTLS có thể tạo nguy cơ downgrade?
+
+    ### Danh tính xác thực và danh tính sử dụng
+
+    1. Authcid, requested authzid và effective authorization identity khác nhau ở nguồn gốc và ý nghĩa nào?
+    2. Vì sao Kerberos principal có realm không nên được cắt hoặc so sánh như username không có tenant?
+    3. Khi `svc-report` yêu cầu `reports-reader`, server cần điều kiện nào để cấp quyền đại diện; vì sao `alice` yêu cầu `admin` phải thất bại nếu không có rule?
+    4. AuthorizeCallback trả quyết định theo từng cặp danh tính như thế nào, và vì sao điều này không thay RBAC/ACL cho tài nguyên?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lựa chọn mechanism theo policy | Thiết kế bảng giao giữa quảng bá, hỗ trợ provider và allowlist để dự đoán cơ chế được chọn. |
+    | Phân biệt danh tính | Diễn giải authcid, requested authzid và effective authzid từ một phiên LDAP/IMAP. |
+    | Kiểm tra delegation identity | Chạy SaslIdentityDemo và giải thích kết quả self-authorization và proxy được cho phép/từ chối. |
+    | Xử lý canonical identity | Đặt quy tắc realm/tenant/principal mapping tránh người dùng trùng tên nhận sai quyền. |
+    | Tách xác thực khỏi phân quyền | Lập flow verify credentials → map identity → authorize đại diện → kiểm tra tài nguyên. |
+- id: sasl-gss-api-004
+  title: '18.4 Quality of protection: auth, auth-int, auth-conf và giới hạn tùy mechanism'
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **18.4 Quality of protection: auth, auth-int, auth-conf và giới hạn tùy mechanism**
+
+    Bài học tập trung vào lớp bảo vệ dữ liệu sau xác thực. Người học phải đọc QOP đã thương lượng thay vì tin vào giá trị cấu hình, phân biệt `auth`, `auth-int`, `auth-conf`, biết mechanism nào không có security layer, và chỉ truyền payload qua `wrap/unwrap` cùng framing hợp lệ khi QOP đáp ứng yêu cầu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa QOP và khả năng mechanism
+
+    1. `auth`, `auth-int` và `auth-conf` cung cấp bảo đảm nào và vì sao integrity không phải confidentiality?
+    2. Vì sao `Sasl.QOP="auth-conf,auth-int"` chỉ là yêu cầu ưu tiên, không phải kết quả đã thương lượng?
+    3. PLAIN, SCRAM, EXTERNAL và GSSAPI khác nhau như thế nào ở khả năng cung cấp security layer?
+    4. Một phiên PLAIN+TLS có QOP auth nhưng vẫn có mã hóa transport có mâu thuẫn không?
+
+    ### Vận hành security layer
+
+    1. Tại sao phải kiểm tra `isComplete()` rồi `getNegotiatedProperty(Sasl.QOP)` trước khi gửi dữ liệu?
+    2. Khi QOP là auth-int hoặc auth-conf, phía gửi và phía nhận dùng wrap/unwrap và prefix độ dài 4 byte thế nào?
+    3. Sasl.MAX_BUFFER và Sasl.RAW_SEND_SIZE giúp bảo vệ giới hạn kích thước payload ra sao?
+    4. Nếu unwrap lỗi, QOP thấp hơn yêu cầu hoặc thư viện đã làm framing, ứng dụng nên quyết định gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đánh giá mức bảo vệ | Đọc ma trận cơ chế/QOP và xác định security layer có integrity, confidentiality hay không. |
+    | Áp dụng policy QOP | Chạy SaslQopPolicyDemo và dự đoán ACCEPT/REJECT khi thay nhu cầu bảo mật. |
+    | Đặt ngưỡng sau handshake | Viết điều kiện lấy negotiated QOP từ SaslClient và từ chối mức không đủ. |
+    | Thiết kế framing đúng | Diễn giải SaslFrameIO gồm length prefix, protected bytes, maxFrameBytes và unwrap. |
+    | Chống hiểu nhầm TLS | So sánh bảo vệ SASL security layer với TLS và chỉ rõ phạm vi byte được mỗi lớp bảo vệ. |
+- id: sasl-gss-api-005
+  title: 18.5 GSSManager, GSSName, GSSCredential và GSSContext
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **18.5 GSSManager, GSSName, GSSCredential và GSSContext**
+
+    Bài học nối SASL GSSAPI với API GSS trực tiếp trong Java. Người học xác định `GSSManager` tạo gì, `GSSName` biểu diễn peer ra sao, `GSSCredential` cấp quyền khởi tạo/chấp nhận context thế nào và `GSSContext` quản lý token/thuộc tính bảo vệ; từ đó tránh nhầm việc tạo đối tượng với xác thực thành công.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bốn đối tượng và danh tính
+
+    1. `GSSManager`, `GSSName`, `GSSCredential` và `GSSContext` liên kết với nhau như thế nào?
+    2. Dạng host-based `HTTP@api.example.com` khác Kerberos service principal `HTTP/api.example.com@REALM` ở điểm nào?
+    3. Các vai trò INITIATE_ONLY, ACCEPT_ONLY và INITIATE_AND_ACCEPT của credential có tác động gì?
+    4. Tại sao `getMechs()` có Kerberos OID hoặc tạo được `GSSName` không chứng minh đã có ticket hay service key?
+
+    ### Thiết lập context và bảo vệ message
+
+    1. Initiator và acceptor tạo GSSContext bằng overload nào, rồi trao token đến khi established ra sao?
+    2. Vì sao requestMutualAuth, requestInteg, requestConf chỉ là mong muốn và cần kiểm tra các get*State() sau handshake?
+    3. Khi nào sử dụng wrap/unwrap và khi nào dùng MIC, và điều gì nằm ngoài phạm vi bảo vệ token GSS?
+    4. Vì sao GSSContext phải gắn một phiên và credential/context cần dispose đúng vòng đời?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Ghép đúng đối tượng | Lập bản đồ tên, credential và context với phương thức factory của GSSManager. |
+    | Phân biệt tên dịch vụ | Chuyển đổi theo ý nghĩa giữa host-based GSSName và service principal Kerberos mà không tự cắt realm tùy tiện. |
+    | Chọn đúng credential role | Chỉ ra cấu hình INITIATE_ONLY hay ACCEPT_ONLY trong ví dụ client/server. |
+    | Phác thảo handshake | Đọc GssSetup/GssTokenFlow và mô tả việc truyền final token, kiểm tra established và chính sách. |
+    | Bảo vệ message có điều kiện | Phân biệt MIC với wrap/unwrap và cách kiểm tra getPrivacy()/getIntegState(). |
+- id: sasl-gss-api-006
+  title: 18.6 Kerberos, KDC, service principal, ticket, keytab và quan hệ với Krb5LoginModule
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **18.6 Kerberos, KDC, service principal, ticket, keytab và quan hệ với Krb5LoginModule**
+
+    Bài học đi xuống hạ tầng Kerberos để giải thích KDC/realm, luồng AS–TGS–AP, TGT/service ticket, session key, service principal và keytab. Người học cấu hình `Krb5LoginModule` cho initiator/acceptor, hiểu vai trò của Subject/JAAS và khoanh vùng lỗi SPN, KVNO, enctype hay ticket cache mà không đồng nhất login thành công với xác thực dịch vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hạ tầng Kerberos và vòng đời ticket
+
+    1. KDC, realm, client principal và service principal có trách nhiệm khác nhau như thế nào?
+    2. Hãy giải thích tuần tự AS-REQ/AS-REP, TGS-REQ/TGS-REP và AP-REQ/AP-REP theo khóa, vé và danh tính mỗi phía sử dụng?
+    3. TGT khác service ticket, session key và keytab ở nơi lưu, phạm vi dùng và thời hạn thế nào?
+    4. Vì sao service principal, DNS, KVNO và enctype phải tương thích giữa client, KDC và keytab service?
+
+    ### JAAS/Krb5LoginModule và vận hành
+
+    1. Khi nào chọn useTicketCache, useKeyTab, storeKey, doNotPrompt và isInitiator=false?
+    2. Một Subject sau login có thể chứa KerberosPrincipal, KerberosTicket hoặc KeyTab như thế nào?
+    3. Vì sao LoginContext.login() thành công vẫn không chứng minh GSS/SASL/HTTP server đã xác thực và cho phép truy cập?
+    4. Khi gặp KRB_AP_ERR_MODIFIED, lỗi clock skew hoặc TGS không tìm thấy service, nên khoanh vùng bước nào trước?
+    5. Làm thế nào để bảo vệ keytab và phối hợp key rotation khi có nhiều instance?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ sơ đồ Kerberos | Mô tả đầy đủ luồng AS–TGS–AP và chỉ ra ticket/session key ở từng bước. |
+    | So sánh credential stores | Giải thích khác biệt TGT, service ticket, ticket cache và keytab theo hai vai initiator/acceptor. |
+    | Đọc cấu hình JAAS | Chọn option Krb5LoginModule cho client daemon và server nhận ticket. |
+    | Chẩn đoán lỗi hạ tầng | Phân loại lỗi TGT, service ticket, SPN/keytab/KVNO, realm và clock skew theo điểm thất bại. |
+    | Bảo vệ credential | Nêu các kiểm soát quyền file, rotation và tránh log secret cho keytab/Subject. |
+- id: sasl-gss-api-007
+  title: 18.7 Thiết lập ngữ cảnh GSS, wrap, unwrap, MIC và kiểm tra replay hoặc thứ tự
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **18.7 Thiết lập ngữ cảnh GSS, wrap, unwrap, MIC và kiểm tra replay hoặc thứ tự**
+
+    Bài học tiếp nối một GSS context đã được thiết lập để giải quyết bảo vệ từng thông điệp. Người học chọn wrap/unwrap hoặc MIC, đối chiếu cờ integrity/confidentiality và trạng thái replay/sequence sau nhận token, áp giới hạn frame, rồi kết hợp authorization/idempotency trước side effect.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Handshaking và tính năng bảo vệ
+
+    1. Initiator/acceptor trao đổi các output token của initSecContext/acceptSecContext tới lúc nào, kể cả final token sau established?
+    2. Hai hướng wrap/unwrap và getMIC/verifyMIC khác nhau về byte trên dây và tính bí mật thế nào?
+    3. Vì sao MessageProp yêu cầu privacy không chứng minh provider thực sự mã hóa payload?
+    4. GSS requestReplayDet/requestSequenceDet liên hệ thế nào với getReplayDetState/getSequenceDetState?
+
+    ### Replay, thứ tự và vận chuyển
+
+    1. Các cờ duplicate, old, unseq, gap sau unwrap/verifyMIC mang ý nghĩa nào và chính sách strict sequence nên xử lý ra sao?
+    2. Vì sao phát lại request qua một GSS context mới vẫn cần idempotency ở tầng ứng dụng?
+    3. Một length-prefixed TokenPipe phải làm gì khi token quá giới hạn, sai framing hoặc peer dừng giữa handshake?
+    4. Vì sao phải kiểm tra GSSException, token flags, identity và quyền trước khi thực hiện thao tác nghiệp vụ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Điều phối context và token | Mô phỏng thứ tự initSecContext/acceptSecContext và giới hạn kích thước token. |
+    | Chọn API bảo vệ | Phân biệt kết quả wrap có/không privacy so với MIC giữ plaintext riêng. |
+    | Kiểm tra replay/order | Chạy phần policy trong GssLesson và phân tích normal, duplicate, gap theo strict/relaxed. |
+    | Thiết kế fail-closed | Xếp kiểm tra frame, unwrap/MIC, supplementary flags, authorization trước side effect. |
+    | Kết hợp idempotency | Đề xuất xử lý request trùng nghiệp vụ ngoài phạm vi replay của context GSS. |
+- id: sasl-gss-api-008
+  title: 18.8 SPNEGO, ủy quyền credential và ranh giới bảo vệ của từng cơ chế
+  summary: |
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **18.8 SPNEGO, ủy quyền credential và ranh giới bảo vệ của từng cơ chế**
+
+    Bài học kết hợp những lớp đã học để phân biệt SPNEGO thương lượng GSS mechanism, HTTP Negotiate vận chuyển token, SASL GSSAPI thương lượng QOP và TLS bảo vệ từng hop. Người học xét credential delegation qua frontend/backend có điều kiện, kiểm tra trạng thái sau handshake và không suy quyền nghiệp vụ hoặc sự bảo mật toàn kết nối từ việc SSO thành công.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### SPNEGO và phân lớp cơ chế
+
+    1. SPNEGO dùng NegTokenInit, NegTokenResp và mechListMIC để chọn cơ chế GSS và giảm nguy cơ sửa danh sách cơ chế thế nào?
+    2. SPNEGO khác Kerberos, HTTP Negotiate và SASL GSSAPI ở trách nhiệm nào?
+    3. Vì sao `requestConf(true)` và HTTP Authorization: Negotiate không tự mã hóa HTTP body?
+    4. Cách phân biệt OID SPNEGO với OID Kerberos và kiểm tra mechanism đã thương lượng sau context established là gì?
+
+    ### Credential delegation và nhiều hop
+
+    1. Khi Alice xác thực với frontend, những điều kiện nào mới cho phép service nhận delegated GSSCredential để gọi backend?
+    2. Vì sao SASL authzid không tương đương GSS credential delegation và token cho service A không nên chuyển nguyên sang service B?
+    3. Các bước kiểm tra getCredDelegState, getDelegCred, service principal backend và quyền ứng dụng cần thực hiện theo thứ tự nào?
+    4. Trong hệ thống có reverse proxy, TLS, GSS wrap, channel binding và application authorization bảo vệ những phạm vi nào?
+    5. Khi không có delegation hoặc mechanism không đủ mức bảo vệ, ứng dụng phải fail closed thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích thương lượng SPNEGO | Mô tả token negotiation, MIC bảo vệ danh sách cơ chế và kiểm tra mechanism thực tế. |
+    | Phân biệt security boundaries | Lập bảng phạm vi GSS, SASL, HTTP Negotiate, TLS và authorization. |
+    | Đánh giá delegation | Phân tích luồng Alice → frontend → backend và điều kiện không được đại diện người dùng. |
+    | Kiểm tra policy Java | Diễn giải SpnegoContextSetup, request flags/get*State và cách nhận delegated credential ở acceptor. |
+    | Thiết kế kiểm thử nhiều tầng | Đề xuất ca downgrade, SPN sai, QOP thấp, TLS termination và backend từ chối quyền. |

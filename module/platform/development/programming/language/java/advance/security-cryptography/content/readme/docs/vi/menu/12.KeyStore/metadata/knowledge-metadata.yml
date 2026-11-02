@@ -1,0 +1,19 @@
+sections:
+  key-store-001:
+    difficulty: INTERMEDIATE
+  key-store-002:
+    difficulty: BASIC
+  key-store-003:
+    difficulty: INTERMEDIATE
+  key-store-004:
+    difficulty: BASIC
+  key-store-005:
+    difficulty: INTERMEDIATE
+  key-store-006:
+    difficulty: INTERMEDIATE
+  key-store-007:
+    difficulty: ADVANCED
+  key-store-008:
+    difficulty: INTERMEDIATE
+  key-store-009:
+    difficulty: ADVANCED

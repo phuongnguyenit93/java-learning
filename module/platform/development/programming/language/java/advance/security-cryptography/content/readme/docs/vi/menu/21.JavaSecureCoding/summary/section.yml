@@ -1,0 +1,83 @@
+version: 1
+type: LEARNING_ROADMAP
+title: An toàn mã Java
+roadmapHeading: 'Lộ trình học: Từ giới hạn JVM đến secure coding và cách ly mã không tin cậy'
+roadmap:
+- id: java-secure-coding-001
+  order: 1
+  title: 21.1 Giới hạn bảo vệ của type safety, bytecode verification và đóng gói bằng module
+  description: Phân biệt type safety, bytecode verifier, JPMS và giới hạn của sandbox trong cùng JVM.
+  transition:
+    to: java-secure-coding-002
+    description: Từ giới hạn JVM, chuyển sang kiểm tra dữ liệu chưa tin trước cấp phát và thao tác.
+- id: java-secure-coding-002
+  order: 2
+  title: 21.2 Kiểm tra dữ liệu tại ranh giới tin cậy trước khi cấp phát hoặc thực hiện thao tác
+  description: Kiểm tra syntax, semantics, byte budgets, quyền và side effect tại trust boundary.
+  transition:
+    to: java-secure-coding-003
+    description: Dữ liệu hợp lệ vẫn có thể thành câu lệnh khi đi vào interpreter; cần parameter binding.
+- id: java-secure-coding-003
+  order: 3
+  title: 21.3 Chống injection bằng API có tham số và tách dữ liệu khỏi lệnh hoặc biểu thức
+  description: Tách dữ liệu khỏi SQL, argv, LDAP, XPath, regex/EL; chỉ cho chọn cú pháp cố định.
+  transition:
+    to: java-secure-coding-004
+    description: Sau interpreter là ranh giới file, nơi path và symlink có thể thay đổi giữa kiểm tra và mở.
+- id: java-secure-coding-004
+  order: 4
+  title: 21.4 Đường dẫn, tệp tạm, symlink và điều kiện tranh chấp khi truy cập tài nguyên
+  description: Giảm path traversal, symlink và TOCTOU bằng policy, CREATE_NEW và directory handles.
+  transition:
+    to: java-secure-coding-005
+    description: Dữ liệu/file đúng quyền vẫn có thể làm cạn tài nguyên nếu thiếu ngân sách đa chiều.
+- id: java-secure-coding-005
+  order: 5
+  title: 21.5 Giới hạn kích thước, độ sâu, thời gian và tài nguyên để tránh từ chối dịch vụ
+  description: Áp byte/depth/time/concurrency budgets, bounded queues, deadlines và cleanup cho DoS.
+  transition:
+    to: java-secure-coding-006
+    description: Bảo vệ tài nguyên chưa bảo vệ trạng thái object khỏi alias hoặc tham chiếu quyền cao.
+- id: java-secure-coding-006
+  order: 6
+  title: 21.6 Defensive copy, dữ liệu thay đổi được và việc để lộ tham chiếu có quyền
+  description: Tách immutable data snapshots và capability-limited APIs, chống aliasing và rò quyền.
+  transition:
+    to: java-secure-coding-007
+    description: Khi dữ liệu tạo object graph bằng native deserialize, phải lọc lớp và chi phí trước khi cast.
+- id: java-secure-coding-007
+  order: 7
+  title: 21.7 Deserialization, ObjectInputFilter và giới hạn của danh sách lớp được phép
+  description: Giới hạn native deserialization với ObjectInputFilter, closed allowlist và graph metrics.
+  transition:
+    to: java-secure-coding-008
+    description: Tiếp tục khóa XML parser và những đường resolve external DTD/schema/XSLT.
+- id: java-secure-coding-008
+  order: 8
+  title: 21.8 Cấu hình JAXP secure processing và kiểm soát truy cập tài nguyên XML bên ngoài
+  description: Cấu hình FSP, EAP, DTD và resolver cho DOM/SAX/StAX/XSD/XSLT, kiểm thử XXE.
+  transition:
+    to: java-secure-coding-009
+    description: Sau JAXP, cần xem lại các SecurityManager/Permission checks di sản đã đổi hành vi.
+- id: java-secure-coding-009
+  order: 9
+  title: 21.9 SecurityManager, Policy, Permission và AccessController trong mã cũ đã deprecated
+  description: Đọc hành vi API bảo mật cũ từ JDK 17–25, phân loại fail-open/closed khi nâng runtime.
+  transition:
+    to: java-secure-coding-010
+    description: Cuối chương thay sandbox Java cũ bằng OS process isolation và cơ chế giữ secrets ở broker.
+- id: java-secure-coding-010
+  order: 10
+  title: 21.10 Cách ly tiến trình, quyền hệ điều hành và bảo vệ bí mật khi xử lý mã không tin cậy
+  description: Thiết kế worker ít quyền với policy filesystem/network, resource quotas và broker không chia sẻ secrets.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh mười bài học trong chương
+
+  | Tiêu chí | Bài 1 — 21.1 JVM | 21.2 Validation | 21.3 Injection | 21.4 Files | 21.5 DoS | 21.6 Copy | 21.7 Deserialize | 21.8 JAXP | 21.9 Legacy SM | 21.10 Isolation |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | Type/module | Input kiểm tra | Data vs syntax | Filesystem race | Budgets | Object alias | Object graph | XML external | Legacy migration | Worker isolation |
+  | Trust boundary | Class/module | Input→side effect | Value→parser | Path→OS | Work→CPU/RAM | Ref→owner | Bytes→object | XML→resource | JDK→policy | Host→worker |
+  | API chính | JPMS/verifier | Math exact | JDBC/LDAP/XPath | Files/Path | Future/queue | List.copyOf | ObjectInputFilter | FSP/EAP | Policy/AccessController | Process/cgroup |
+  | Lỗi điển hình | Nhầm sandbox | Overflow/ACL | Injection | Symlink/TOCTOU | Zip bomb/queue | Lộ capability | UNDECIDED | XXE/XSD | JDK24 fail-open | Worker rò key |
+  | Thực hành | Cast/reflection | Bounded allocation | Parameter tests | CREATE_NEW | Depth/time tests | Mutation tests | Filter reject | XXE negatives | Migration tests | OS negative tests |

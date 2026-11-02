@@ -43,12 +43,14 @@ class DependencySetupPlugin
 
 
         // ====================================================
-        // Wait for every project configuration
+        // Wait until this project's build.gradle has configured
+        // implementationModule.serviceList, but register dependencies
+        // before the global projectsEvaluated listeners can resolve
+        // compileClasspath (and lock implementation).
         // ====================================================
 
         project
-                .gradle
-                .projectsEvaluated {
+                .afterEvaluate {
 
                     String serviceList =
                             extension

@@ -1,0 +1,69 @@
+version: 1
+type: LEARNING_ROADMAP
+title: Dữ liệu và ngẫu nhiên
+roadmapHeading: 'Lộ trình học: Từ byte chuẩn đến entropy và định dạng dữ liệu có xác thực'
+roadmap:
+- id: data-randomness-001
+  order: 1
+  title: 3.1 Chuyển String thành byte[] với charset xác định và quy tắc chuẩn hóa dữ liệu
+  description: Chuẩn hóa dữ liệu Unicode có mục đích, chỉ định charset UTF-8 và kiểm tra encoding nghiêm ngặt để mọi bên thống nhất byte vào mật mã.
+  transition:
+    to: data-randomness-002
+    description: Khi đã có byte đúng và nhất quán, học cách mang byte qua các kênh văn bản bằng Base64 hoặc hex mà không nhầm với bảo mật.
+- id: data-randomness-002
+  order: 2
+  title: 3.2 Base64, HexFormat và sự khác biệt giữa biểu diễn dữ liệu với bảo vệ bí mật
+  description: Biểu diễn byte bằng Base64 Basic, URL-safe, MIME và HexFormat; nhận diện encoding không tạo secrecy, integrity hay authentication.
+  transition:
+    to: data-randomness-003
+    description: Sau khi biểu diễn được byte, cần tính chính xác bit, byte, kích thước khóa và độ dài digest/tag để không lỗi cấu trúc.
+- id: data-randomness-003
+  order: 3
+  title: 3.3 Phân biệt số bit, số byte, độ dài khóa và độ dài đầu ra
+  description: Tính và diễn giải kích thước bit/byte, AES/RSA key, digest, MAC/tag và chi phí encoding mà không nhầm độ dài với mức an toàn.
+  transition:
+    to: data-randomness-004
+    description: Số bit của output không nói lên tính khó đoán; tiếp theo học entropy và chọn đúng generator theo mục đích.
+- id: data-randomness-004
+  order: 4
+  title: 3.4 Vai trò của entropy; phân biệt SecureRandom với Random và ThreadLocalRandom
+  description: Phân biệt entropy và các bộ sinh Random, ThreadLocalRandom, SecureRandom; chọn nguồn phù hợp cho mô phỏng, token và nonce.
+  transition:
+    to: data-randomness-005
+    description: Khi đã biết dùng SecureRandom, cần hiểu seed ban đầu, reseed và rủi ro nguồn seed có thể đoán.
+- id: data-randomness-005
+  order: 5
+  title: 3.5 Tạo byte ngẫu nhiên, seed, reseed và tác động của seed có thể dự đoán
+  description: Phân tích self-seeding, setSeed, generateSeed, reseed, DRBG capability và nguy cơ timestamp hoặc VM snapshot.
+  transition:
+    to: data-randomness-006
+    description: Sau vòng đời seed, chuyển sang lựa chọn provider strong/DRBG theo chính sách và đo hiện tượng chờ entropy.
+- id: data-randomness-006
+  order: 6
+  title: 3.6 getInstanceStrong, DRBG và khả năng chặn của nguồn ngẫu nhiên
+  description: Đọc strongAlgorithms, cấu hình DRBG strength/capability và đo blocking ở giai đoạn khởi tạo, generate hoặc reseed.
+  transition:
+    to: data-randomness-007
+    description: Khi có byte ngẫu nhiên đúng, phải gắn từng giá trị với vai trò salt, IV, nonce, challenge hoặc bearer token.
+- id: data-randomness-007
+  order: 7
+  title: 3.7 Phân biệt salt, IV, nonce, challenge và token ngẫu nhiên
+  description: Phân biệt salt, IV, nonce, challenge và bearer token theo secrecy, uniqueness, unpredictability, thời hạn và xác minh.
+  transition:
+    to: data-randomness-008
+    description: Cuối cùng đóng gói các byte, nonce và metadata vào định dạng có phiên bản để lưu trữ và xác thực tin cậy.
+- id: data-randomness-008
+  order: 8
+  title: 3.8 Thiết kế định dạng dữ liệu có phiên bản, độ dài và mã định danh thuật toán
+  description: Đặc tả và kiểm thử binary envelope v1 có magic, version, suite ID, key ID, length, nonce, AES-GCM AAD và chống parser ambiguity.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh vai trò tám bài học trong chương
+
+  | Tiêu chí | Bài 1 — 3.1 Charset/Unicode | 3.2 Base64/Hex | 3.3 Kích thước | 3.4 Entropy/RNG | 3.5 Seed/Reseed | 3.6 Strong/DRBG | 3.7 Giá trị ngẫu nhiên | 3.8 Binary envelope |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | String, UTF-8, NFC | Biểu diễn binary-to-text | Bit, byte, key, tag | Nguồn bất định và chọn RNG | Vòng đời trạng thái ngẫu nhiên | Chính sách provider và độ trễ | Vai trò và vòng đời từng giá trị | Version, suite, length, AAD |
+  | API/công cụ | StandardCharsets, Normalizer | Base64, HexFormat | Byte.SIZE, JCA/JCE lengths | Random, ThreadLocalRandom, SecureRandom | setSeed, generateSeed, reseed | getInstanceStrong, DrbgParameters | PBKDF2, AES-GCM, challenge/token | ByteBuffer, Cipher, GCMParameterSpec |
+  | Câu hỏi kiểm chứng | Hai chuỗi giống hình có cùng byte? | Dữ liệu decode được có bí mật? | 128 là bit của trường nào? | Output trông random có khó đoán? | Seed có thực sự đủ entropy? | Provider nào và chặn ở bước nào? | Giá trị có cần bí mật hay duy nhất? | Bản ghi có thể parse và xác thực? |
+  | Lỗi cần tránh | Charset mặc định, normalize sai | Coi Base64 là encryption | Nhầm 256 bit thành 256 byte | Dùng Random cho credential | Seed timestamp trước tự seed | Strong luôn nhanh, PR miễn phí | Lặp GCM nonce, replay challenge | Length không bound, downgrade suite |
+  | Kết quả thực hành | Golden UTF-8/NFC vectors | Base64 và hex round-trip | Đo digest, MAC, key và GCM | Chọn RNG và token 32 byte | Review seed yếu và DRBG reseed | Đo init/first/next latency | Thiết kế salt, nonce, token flow | Đọc/ghi JENC v1 và test tampering |

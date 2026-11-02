@@ -1,0 +1,62 @@
+version: 1
+type: LEARNING_ROADMAP
+title: 'Hàm băm trong Java: từ thuộc tính đến sử dụng an toàn'
+roadmapHeading: Lộ trình học 7 bài về hàm băm
+roadmap:
+- id: hash-functions-001
+  order: 1
+  title: 4.1 Tính một chiều, tiền ảnh và va chạm của hàm băm mật mã
+  description: Phân biệt ba mức kháng tấn công của hàm băm và đánh giá collision theo birthday bound.
+  transition:
+    to: hash-functions-002
+    description: Từ thuộc tính trừu tượng, chuyển sang tên SHA-2/SHA-3 và engine thật trên JDK.
+- id: hash-functions-002
+  order: 2
+  title: 4.2 MessageDigest với SHA-2, SHA-3 và việc kiểm tra khả năng hỗ trợ
+  description: Chọn và xác minh SHA-2/SHA-3 theo JCA provider, standard names và test vector.
+  transition:
+    to: hash-functions-003
+    description: Sau khi có engine phù hợp, cần kiểm soát vòng đời đưa byte vào digest.
+- id: hash-functions-003
+  order: 3
+  title: 4.3 Chu trình update, digest, reset và xử lý dữ liệu nhiều phần
+  description: Làm chủ update, digest, reset, ByteBuffer và việc nạp dữ liệu nhiều phần.
+  transition:
+    to: hash-functions-004
+    description: Áp dụng state machine đã hiểu để xử lý file lớn bằng stream và NIO.
+- id: hash-functions-004
+  order: 4
+  title: 4.4 Băm file lớn bằng luồng hoặc ByteBuffer
+  description: Băm file lớn với buffer cố định, kiểm thử biên và kiểm soát nguồn đang thay đổi.
+  transition:
+    to: hash-functions-005
+    description: Từ fingerprint của file, phân biệt cơ chế kiểm lỗi và hash của đối tượng Java.
+- id: hash-functions-005
+  order: 5
+  title: 4.5 Phân biệt checksum, Object.hashCode và digest mật mã
+  description: Chọn đúng checksum, hashCode hoặc digest khi thiết kế dữ liệu và Java collections.
+  transition:
+    to: hash-functions-006
+    description: Khi đã chọn cryptographic digest, cần biết cách so sánh tag hạn chế rò rỉ timing.
+- id: hash-functions-006
+  order: 6
+  title: 4.6 So sánh digest bằng MessageDigest.isEqual và phạm vi bảo đảm của API
+  description: Dùng MessageDigest.isEqual có chủ đích, hiểu phạm vi timing và xác minh HMAC.
+  transition:
+    to: hash-functions-007
+    description: Cuối cùng xét hai thất bại ở mức hệ thống mà so sánh digest đúng vẫn không ngăn được.
+- id: hash-functions-007
+  order: 7
+  title: 4.7 Giới hạn của digest công khai trước dữ liệu bị thay thế và mật khẩu yếu
+  description: Đánh giá việc thay file kèm checksum và mật khẩu dễ đoán, chọn HMAC, chữ ký hoặc password KDF.
+  transition: null
+comparisonMarkdown: |-
+  ## 2. So sánh vai trò các bài học
+
+  | Tiêu chí | Bài 1 — 4.1 Tính chất mật mã | 4.2 Thuật toán và provider | 4.3 Vòng đời MessageDigest | 4.4 Băm file lớn | 4.5 Ba loại hash | 4.6 isEqual và timing | 4.7 Giới hạn digest và mật khẩu |
+  | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Trọng tâm | Tiền ảnh, tiền ảnh thứ hai, va chạm | SHA-2/SHA-3 và khả năng provider | State của update, digest, reset | InputStream, FileChannel và file lớn | CRC, equals/hashCode và digest | So sánh tag byte và timing | Nguồn digest, HMAC, password KDF |
+  | Câu hỏi cần giải quyết | Tấn công được chọn thông điệp nào? | Runtime cung cấp đúng thuật toán không? | Mỗi byte vào state lúc nào và digest reset khi nào? | Làm sao băm toàn file đúng byte với RAM giới hạn? | Khi nào CRC hoặc hashCode không phù hợp? | So sánh byte có lộ vị trí sai khác không? | Làm sao chống thay digest và đoán mật khẩu offline? |
+  | Thực hành chính | HashFundamentalsDemo và collision 16 bit | HashFamiliesDemo cùng test vector | DigestLifecycleDemo và InputStream update | FileSha256Demo và HashBoundaryCheck | ChecksumHashDigestDemo và HashMap collision | DigestCompareDemo với HmacSHA256 | PublicDigestDemo và PasswordStorageDemo |
+  | Lỗi cần tránh | Đồng nhất collision với preimage hoặc hash với encryption | Đổi ngầm SHA3-256 thành SHA-256 | Digest sớm, reset sai, nhầm ByteBuffer limit | Băm thừa buffer hoặc file thay đổi trong lúc đọc | Dùng hashCode làm fingerprint, CRC làm xác thực | Dùng == hay tin constant-time cho cả endpoint | Tin checksum do attacker cấp hoặc lưu SHA-256(password) |
+  | Giá trị khi áp dụng | Chọn security level, hiểu birthday bound | Chọn API/provider và xử lý thiếu capability | Quản lý state chính xác theo thông điệp | Kiểm thử hash file lớn và tính toàn vẹn | Chọn công cụ đúng theo loại dữ liệu/đe dọa | Xác minh tag với giới hạn thời gian phù hợp | Thiết kế xác thực nguồn và verifier mật khẩu |
