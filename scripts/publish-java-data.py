@@ -33,6 +33,7 @@ CASE_SOURCE_RE = re.compile(
 # Temporarily exclude cross-module Knowledge search from Java data releases.
 DISABLED_SEARCH_PREFIX = "search/knowledge-search."
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+ROUTE_ID_RE = re.compile(r"^[A-Z0-9][A-Z0-9_-]{0,127}$")
 ARCHIVE_NAME = "java-learning-data.zip"
 
 
@@ -190,8 +191,8 @@ def validate(directory):
             fail(f"Invalid catalog node: {node!r}")
         if node.get("kind") == "MODULE":
             module_id = node.get("routeId")
-            if not isinstance(module_id, str) or not module_id:
-                fail(f"MODULE without routeId: {node.get('id')}")
+            if not isinstance(module_id, str) or not ROUTE_ID_RE.fullmatch(module_id):
+                fail(f"Invalid routeId in catalog: {module_id!r} for {node.get('id')}")
             if module_id in seen_modules:
                 fail(f"Duplicate routeId in catalog: {module_id}")
             seen_modules.add(module_id)

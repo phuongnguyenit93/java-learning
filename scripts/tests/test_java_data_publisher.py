@@ -175,6 +175,28 @@ class JavaDataPublisherTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Missing referenced asset"):
             publisher.validate(self.data)
 
+    def test_invalid_module_route_ids_are_rejected_before_release(self):
+        catalog_file = self.data / "module-catalog.json"
+        original = json.loads(catalog_file.read_text(encoding="utf-8"))
+        for invalid in ("externalized-configuration", "fundamentals", "BAD/ID", "A" * 129):
+            with self.subTest(route_id=invalid):
+                catalog = json.loads(json.dumps(original))
+                catalog["root"]["children"][0]["routeId"] = invalid
+                self.write_json(catalog_file, catalog)
+                with self.assertRaisesRegex(ValueError, "Invalid routeId in catalog"):
+                    publisher.validate(self.data)
+        self.write_json(catalog_file, original)
+
+    def test_duplicate_module_route_ids_are_rejected(self):
+        catalog_file = self.data / "module-catalog.json"
+        catalog = json.loads(catalog_file.read_text(encoding="utf-8"))
+        duplicate = json.loads(json.dumps(catalog["root"]["children"][0]))
+        duplicate["id"] = "another-module"
+        catalog["root"]["children"].append(duplicate)
+        self.write_json(catalog_file, catalog)
+        with self.assertRaisesRegex(ValueError, "Duplicate routeId in catalog: EXAMPLE"):
+            publisher.validate(self.data)
+
     def test_missing_lazy_loaded_knowledge_is_rejected(self):
         (self.knowledge / "content" / "lesson.md").unlink()
         with self.assertRaisesRegex(ValueError, "Missing referenced asset"):

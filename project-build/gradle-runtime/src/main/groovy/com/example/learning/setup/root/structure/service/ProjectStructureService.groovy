@@ -873,11 +873,22 @@ ${moduleDirectory.absolutePath}
     private static String resolveRouteId(
             StructureNode node
     ) {
-
-        return node.serviceName != null &&
-                !node.serviceName.isBlank()
+        // An unfinished module can have an empty SERVICE_NAME. Its leaf name
+        // is not a safe route identifier: e.g. both Spring Boot and Spring
+        // Security have a "fundamentals" module, and lowercase/hyphenated
+        // names are rejected by the frontend navigation builder. Derive a
+        // deterministic, unique-by-path identifier without editing master.json.
+        String routeId = node.serviceName != null && !node.serviceName.isBlank()
                 ? node.serviceName
-                : node.name
+                : node.id.replaceAll('[^A-Za-z0-9]+', '_')
+                        .replaceAll('^_+|_+$', '')
+                        .toUpperCase(Locale.ROOT)
+
+        if (!(routeId ==~ /[A-Z0-9][A-Z0-9_-]{0,127}/)) {
+            throw new GradleException(
+                    "Invalid Portal routeId '${routeId}' for module '${node.path}'")
+        }
+        return routeId
     }
 
 
