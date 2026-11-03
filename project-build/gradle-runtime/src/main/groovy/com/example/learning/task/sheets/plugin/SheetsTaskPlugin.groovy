@@ -42,12 +42,16 @@ class SheetsTaskPlugin
         ].each { String taskName, String operation ->
             project.tasks.register(taskName, ModuleTranslationAuditTask) { task ->
                 task.group = 'sheets'
-                task.description = 'STEP 14: ' + operation +
+                task.description = 'STEP 11: ' + operation +
                         ' translation files (never translates text or writes Google Sheets).'
                 task.operation.convention(operation)
                 task.mode.convention(project.providers.gradleProperty('translationMode')
                         .orElse('DRY_RUN'))
                 task.runId.convention(project.providers.gradleProperty('translationRunId')
+                        .orElse(''))
+                task.workerMode.convention(project.providers.gradleProperty('translationWorkerMode')
+                        .orElse('NORMAL'))
+                task.workerCount.convention(project.providers.gradleProperty('translationWorkerCount')
                         .orElse(''))
             }
         }

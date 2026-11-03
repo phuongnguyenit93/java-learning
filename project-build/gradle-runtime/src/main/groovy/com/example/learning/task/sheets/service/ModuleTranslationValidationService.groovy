@@ -26,7 +26,7 @@ class ModuleTranslationValidationService {
         String target = decode(en)
         if (type in ['README', 'INTRODUCTION']) {
             markdown(source, target)
-        } else if (type ==~ /QUIZ|INTERVIEW|SUMMARY_QUESTIONS|ROADMAP|REFERENCE|VIDEO|SUMMARY_SECTION|SUMMARY_LESSONS|SWAGGER_.+/) {
+        } else if (type ==~ /QUIZ|INTERVIEW|MODULE_QUIZ|MODULE_INTERVIEW|MODULE_CASE_STUDY|SUMMARY_QUESTIONS|ROADMAP|REFERENCE|VIDEO|SUMMARY_SECTION|SUMMARY_LESSONS|SWAGGER_.+/) {
             yaml(type, source, target)
         } else {
             throw new GradleException('Unknown translation type: ' + type)
@@ -143,7 +143,9 @@ class ModuleTranslationValidationService {
             if ((a as String).trim() && !(b as String).trim()) {
                 throw new GradleException('Translated scalar was erased: ' + path)
             }
-            if ((type == 'SUMMARY_LESSONS' && path.endsWith('.summary')) ||
+            if ((type == 'MODULE_CASE_STUDY' &&
+                    path ==~ /caseStudy\[\d+\]\.cases\[\d+\]\.code/) ||
+                    (type == 'SUMMARY_LESSONS' && path.endsWith('.summary')) ||
                     (type == 'SUMMARY_SECTION' && (path == 'comparisonMarkdown' ||
                             path ==~ /roadmap\[\d+\]\.description/ ||
                             path ==~ /roadmap\[\d+\]\.transition\.description/))) {
@@ -165,6 +167,12 @@ class ModuleTranslationValidationService {
                         path ==~ /roadmap\[\d+\]\.(title|description|transition\.description)/
             case 'QUIZ':
                 return path ==~ /questions\[\d+\]\.(question|answers\[\d+\]\.(answer|explanation))/
+            case 'MODULE_QUIZ':
+                return path ==~ /quiz\[\d+\]\.(groupName|questions\[\d+\]\.(question|answers\[\d+\]\.(answer|explanation)))/
+            case 'MODULE_INTERVIEW':
+                return path ==~ /interviewQuestion\[\d+\]\.(groupName|questions\[\d+\]\.(question|knowledge|answer))/
+            case 'MODULE_CASE_STUDY':
+                return path ==~ /caseStudy\[\d+\]\.(groupName|cases\[\d+\]\.(situation|resolve|knowledge|code))/
             case 'INTERVIEW':
                 return path ==~ /questions\[\d+\]\.(question|answer)/
             case 'SUMMARY_QUESTIONS':

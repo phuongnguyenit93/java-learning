@@ -14,9 +14,9 @@ ambiguous, stop as BLOCKER; do not invent data.
 
 - The existing `Template` Google Sheet tab for native formatting, dropdowns,
   row sizing and conditional colors.
-- STEP 12 `content/sheet/vi/module.xlsx` for the exact chapter and lesson rows.
-- Authored module EN YAML/Markdown from STEP 14 for actual English content.
-- Reviewed `content/reference/en/references.yml` from STEP 14 for the EN tab's Reference L3; `content/reference/vi/references.yml` remains the VI source.
+- STEP 13 `content/sheet/vi/module.xlsx` for the exact chapter and lesson rows.
+- Authored module EN YAML/Markdown translated by STEP 11 and verified at STEP 14.
+- Reviewed `content/reference/en/references.yml` translated at STEP 11 and verified at STEP 14 for Reference L3; `content/reference/vi/references.yml` remains the VI source.
 - The same spreadsheet as VI; EN gets a separate tab and a stable gid.
 
 Do not touch Java code/tests, module EN content, VI content, the Template tab,
@@ -28,7 +28,7 @@ than being pushed into Sheet cells.
 
 1. Read `GENERAL_AGENT_RULES.md`, all `rules/`, STEP 15 and current module-info
    mapping. Confirm STEP 14 fully completed and readback on the VI gid.
-2. Verify VI tab `I3` exact module root-relative path, `CURRENT_STEP.VALUE = "14"` in module `master.json`; verify STEP 12 offline VI Excel has exactly one worksheet,
+2. Verify VI tab `I3` exact module root-relative path, `CURRENT_STEP.VALUE = "14"` in module `master.json`; verify STEP 13 offline VI Excel has exactly one worksheet,
    correct `I3` and final VI menu row mapping.
 3. Validate the Google-native `Template`: 700+ rows, **at least A:AC (29 columns)** (extra legacy columns are preserved), Difficulty
    dropdown BASIC/INTERMEDIATE/ADVANCED at O20/O21/O700, and three
@@ -84,7 +84,7 @@ All default to `DRY_RUN`; only `APPLY` mutates Sheets or local files.
    text or invalid YAML. Validate Reference `references[]` schema, item order and
    source URLs; write EN L3 from `content/reference/en/references.yml`, without
    substituting the Vietnamese L3 snapshot. A missing or untranslated EN Reference
-   that contains VI prose is a STEP 14 QA blocker, not material for code translation.
+   that contains VI prose is a STEP 14 QA blocker (translation source is STEP 11), not material for code translation.
    Đọc `menu/<chapter>/knowledge/<file>.md`, metadata tại
    `menu/<chapter>/metadata/knowledge-metadata.yml`, và Interview/Quiz tại
    `menu/<chapter>/questions/{interview,summary}.yml` và `menu/<chapter>/quiz/question.yml` của ngôn ngữ EN.
@@ -169,6 +169,6 @@ Các task `syncModule*ToExcel` cũ đọc nội dung EN đã có và ghi **chỉ
 | `syncModuleVideoToExcel` | Video theo chương → `X:AA` (tùy chọn sau FINAL) |
 | `syncModuleContentToExcel` | Gộp các nguồn cũ trên vào một workbook EN |
 
-- Các task dùng snapshot VI của STEP 12 làm baseline nếu chưa có Excel EN, không ghi Excel VI và giữ format/merged cells/dropdown có thể bảo toàn. `APPLY` ghi file tạm, xác minh I3 và worksheet rồi atomic replace **chỉ** `content/sheet/en/module.xlsx`. Chia các YAML/Knowledge dài theo giới hạn ô; quá 32.767 ký tự thì **fail**, không cắt dữ liệu.
+- Các task dùng snapshot VI của STEP 13 làm baseline nếu chưa có Excel EN, không ghi Excel VI và giữ format/merged cells/dropdown có thể bảo toàn. `APPLY` ghi file tạm, xác minh I3 và worksheet rồi atomic replace **chỉ** `content/sheet/en/module.xlsx`. Chia các YAML/Knowledge dài theo giới hạn ô; quá 32.767 ký tự thì **fail**, không cắt dữ liệu.
 - Roadmap `dependsOn`, `relatedKnowledge`, `relatedModules` và Swagger không có cột đầy đủ trong Excel; YAML EN vẫn là canonical. Không nhập ngược Excel để tái tạo EN YAML. Legacy relation `readmeRelated.file` và layout câu hỏi theo chapter có thể không tương thích với `anchorList` toàn module — gặp mismatch phải dừng, không đoán nội dung.
 - Với workflow chuẩn, chỉ dùng `publishModuleEnSheet` ở mục 2. Không gọi `importExcelFromModuleSheet`, `syncModuleContentToExcel` hoặc từng `syncModule*ToExcel` để thay bước Clone/Sync/Verify/Export chính thức.

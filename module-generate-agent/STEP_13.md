@@ -1,61 +1,70 @@
-# STEP 13 — LEGACY CONTRACT (chức năng clone đã chuyển sang STEP 10)
-
-> **QUY TẮC MỚI CÓ HIỆU LỰC:** Bắt đầu từ workflow cập nhật, việc clone và **CLEAN toàn bộ thư mục EN đích rồi FILL nguyên cây VI** thuộc **STEP 10 Prime-only**, xem `STEP_10.md`. **KHÔNG thực hiện task `cloneModuleViToEn` tại STEP 13 nữa.** STEP 13 sẽ là bước QA đồng bộ VI/EN read-only trước STEP 14; phần hướng dẫn lịch sử bên dưới **đã bị thay thế, không được thi hành** cho tới khi hợp đồng STEP 13 read-only được viết lại. Không tự cập nhật `CURRENT_STEP.VALUE = "13"` chỉ vì chạy lại clone.
-
----
+# STEP 13 — PRIME ONLY: Export một tab Google Sheets thành `content/sheet/vi/module.xlsx`
 
 
 
-**Summary and Reference clone:** STEP 13 clones the VI `summary/section.yml` (**directly authored as YAML in STEP 5 parent AC**) and `summaries.yml` (generated from child AC Markdown) under each chapter to EN, excluding Video. Validate root `section.yml` schema, `roadmap[]` ID/order/transition, `comparisonMarkdown` GFM table, root `summaries`, child counts/order/IDs and Knowledge mapping before APPLY. It also clones `content/reference/vi/references.yml` to `content/reference/en/references.yml` **byte-for-byte as untranslated staging**. STEP 14 translates only the EN Reference `title`/`description`, preserving `url` and item order.
 
-## 0. Mục tiêu và ranh giới
+## 0. Mục tiêu và phạm vi
 
-- STEP 13 diễn ra **sau STEP 12, trước STEP 14**. Mục tiêu: xóa lệch cấu trúc EN cũ, thay bằng bản clone chính xác của VI theo technical identity để worker STEP 14 **chỉ dịch văn bản**, không phải tái tạo structure. **Video là ngoại lệ loại theo FILE, dù nằm trong subtree Docs**: không clone/ghi đè/xóa `content/readme/docs/{vi,en}/menu/<chapter>/video/video-script.yml`; Video xử lý hoàn toàn trong optional steps sau STEP_FINAL.
-- **Prime-only**, không giao worker, không dịch tự động, không tạo Google Sheets EN hoặc Excel EN (để dành STEP 15).
-- **Không clone** Java source/test, build config, `master.json`, `content/sheet/{vi,en}/module.xlsx`, JSON Portal đã generate hoặc source ở module khác. Reference clone chỉ ghi đúng `content/reference/en/references.yml`, giữ nguyên file VI.
-- **Chỉ dùng task module-local** `cloneModuleViToEn` ở `project-build/gradle-runtime`. Không dùng các Sheet importer để tái tạo EN và không gọi task dịch.
-- Bản EN sau STEP 13 **vẫn là tiếng Việt**. STEP 14 mới dịch nội dung.
+STEP 13 lưu snapshot Excel offline đúng tab VI sau QA. STEP 6/7 dùng dữ liệu module-wide Interview P:R, Case Study S:U và Quiz V:W ở các hàng đã xác minh; không dùng importer Quiz/Interview legacy theo chương. **STEP 10 clone EN; STEP 11 dịch EN; STEP 12 QA/enrich relation.** Video optional sau FINAL. STEP 13 không dịch EN.
 
-## 1. Prime preflight
+- **Prime tự thực hiện toàn bộ, KHÔNG giao worker**; STEP 13 không có worker rule, không spawn hoặc đánh thức worker để export.
+- **Dùng task đã có**: `:<EXACT_MODULE_GRADLE_PATH>:exportModuleSheetToExcel`. Không viết exporter mới, không tự dùng Google Sheets download cả workbook, không dùng `generateModuleContentFromSheetByFiles`, các importer khác hay task import ngược Excel lên Sheet.
+- Nguồn: **một tab** được xác minh từ `module-generate-info.txt` (workbook URL + gid). Đích duy nhất: `<I3>/content/sheet/vi/module.xlsx`, chứa **đúng một worksheet**. Không tạo `content/sheet/en/module.xlsx` ở STEP 13.
+- Google Sheets là **nguồn dữ liệu**; Excel chỉ là snapshot offline, không thay thế Sheet/README/YAML canonical. **Không sửa bất kỳ nội dung hoặc trạng thái nào trên Google Sheets.** Khi STEP 13 hoàn tất, Prime chỉ cập nhật `CURRENT_STEP.VALUE = "13"` trong `master.json`.
+- Không tự commit/push, tạo PR, chuyển sang STEP 14 hoặc upload/sao chép `module.xlsx` sang nơi khác. File Excel đã bị ignore bằng `**/content/sheet/*/module.xlsx` trong `.gitignore`.
 
-1. Đọc đầy đủ `module-generate-agent/GENERAL_AGENT_RULES.md`, toàn bộ `module-generate-agent/rules/`, file STEP này và `module-generate-info.txt`. Xác nhận module I3 hợp lệ, source VI đã nghiệm thu STEP 11 và STEP 12.
-2. Xác nhận không có worker/actor đang ghi vào VI hoặc EN; không có tiến trình STEP 14 đang dịch EN.
-3. Kiểm tra bốn vùng source VI: `content/readme/docs/vi/` (`BASE.md`, `LIST.md`, `menu/<chapter>/knowledge/*.md`, `metadata/knowledge-metadata.yml`, `questions/interview.yml`, `questions/summary.yml` nếu có, `quiz/question.yml` bên trong chapter), `content/roadmap/vi/`, `src/main/resources/swagger/vi/` và `content/reference/vi/references.yml`. **Không kiểm kê/cloning Video hay các Portal output `content/interview/` / `content/quiz/`.**
-4. Mỗi subtree EN tương ứng là **đích bị thay thế toàn bộ**. Khi VI optional không tồn tại, EN cũ của thành phần đó bị dọn. Reference EN cũng là đích riêng có backup; nếu Reference VI không có thì không tự tạo Reference dịch giả. Knowledge và metadata của từng chapter VI phải đủ dữ liệu mới được APPLY.
-5. Nếu đã dịch EN ở STEP 14, **KHÔNG chạy lại STEP 13** vì nó sẽ thay toàn bộ bản dịch.
+## 1. Prime preflight bắt buộc
 
-## 2. Task và quy trình
+1. Đọc **toàn văn** `module-generate-agent/GENERAL_AGENT_RULES.md`, liệt kê và đọc **toàn bộ** `module-generate-agent/rules/` (đặc biệt `PRIME_RULES.md`), đọc file STEP 13 này và `module-generate-agent/module-generate-info.txt`. Đây là **Prime-only**, không có hợp đồng bốn dòng cho worker.
+2. Từ TXT lấy `Excel Page URL` và chính xác mapping **tên module → sheet id (gid)**; xác minh spreadsheet ID, tên tab, gid và URL gốc. Không nhầm workbook ID với gid, không lấy tab lân cận hoặc `Template`, không hardcode URL từ session cũ. Nếu mapping trùng/xung đột → `BLOCKER: SHEET MAPPING`.
+3. Đọc tab đích: `A1`, `B1`, `I3`, header và vùng dữ liệu cần kiểm kê. Đọc riêng `CURRENT_STEP.VALUE` từ `master.json` đã xác minh theo I3; chứng minh STEP 12 hoàn tất bằng nguồn/đầu ra thật, không chỉ tin metadata. Nếu worker hoặc thao tác ghi Sheet đang hoạt động, dừng để tránh snapshot nửa chừng.
+4. Xác minh `I3` **khớp chính xác root-relative path** của **một module Gradle thật nằm trong `java-learning/module/`**, có task `exportModuleSheetToExcel` được đăng ký. Đối chiếu task Gradle path được khai báo trong settings/module; **không suy diễn từ tên tab**. Không cho phép đường dẫn vượt module/junction/symlink tới nơi khác; importer/exporter phải tự xác minh I3 lần nữa. Sai → `BLOCKER: MODULE I3 MISMATCH`.
+5. Kiểm tra file đích đã tồn tại hay chưa; nếu đã có, ghi lại size, hash SHA-256, modification time và trạng thái local để phát hiện thay đổi đồng thời trước APPLY. Không xóa file cũ trước; task có cơ chế ghi file tạm, kiểm tra rồi atomic replace. **Không ghi đè bản Excel người dùng đang chỉnh sửa** hoặc file không rõ ownership; nếu có xung đột → `BLOCKER: EXISTING OFFLINE SNAPSHOT`.
+6. Kiểm tra task setup và quyền Google ADC (service dùng Sheets API read-only), JDK/Gradle tương thích. Không hardcode credential/token, không tự đổi cấu hình hệ thống hoặc dùng Google Sheets write scope cho export. Nếu task hoặc xác thực không chạy được → `BLOCKER: XLSX EXPORT CONFIG`.
 
-Chạy từ repository root, thay đúng Gradle module path:
+## 2. Task module-local có sẵn (không tạo service mới)
 
-```powershell
-.\gradlew.bat :<MODULE_GRADLE_PATH>:cloneModuleViToEn -PsheetMode=DRY_RUN --console=plain
-```
+Nguồn code để Prime đối chiếu nếu task lỗi hoặc drift:
 
-- DRY_RUN: không ghi EN, không thay Excel, không tác động Google Sheets; trả danh sách **4 vùng clone** (gồm Reference), số file và thay đổi dự kiến.
-- Validation **trước APPLY**: README anchors, metadata nằm trong từng chapter, `LIST.md` (đổi link vi/menu → en/menu và heading VI → EN), Roadmap schema/relatedKnowledge, `<chapter>/quiz/question.yml` và `<chapter>/questions/interview.yml` theo schema và related trong chính chapter; `<chapter>/questions/summary.yml` (nếu có) theo schema Summary Questions với **chỉ question/answer, không có related**; Swagger YAML + `readmeRelated`; Reference `references[]` giữ đúng `title`, `url`, `description`, thứ tự, schema và URL. Video không thuộc gate này. Relation không có target chắc chắn sẽ **FAIL**, không đoán bằng AI hay đổi anchor/ID.
-- Vấn đề trong VI phải xử lý ở nguồn (đặc biệt STEP 11), QA rồi chạy DRY_RUN lại.
-- Khi DRY_RUN PASS, chạy cùng task, đổi `-PsheetMode=APPLY`.
+- `project-build/gradle-runtime/src/main/groovy/com/example/learning/task/sheets/task/ExportModuleSheetToExcelTask.groovy`
+- `project-build/gradle-runtime/src/main/groovy/com/example/learning/task/sheets/service/ModuleSheetExcelExportService.groovy`
+
+Chạy ở **root `java-learning`**, thay đủ **ba placeholder** (`<EXACT_MODULE_GRADLE_PATH>`, `<SPREADSHEET_ID>`, `<GID>`). Sử dụng PowerShell hoặc terminal tương đương; URL tab có `#gid` **phải được quote**.
 
 ```powershell
-.\gradlew.bat :<MODULE_GRADLE_PATH>:cloneModuleViToEn -PsheetMode=APPLY --console=plain
+.\gradlew.bat :<EXACT_MODULE_GRADLE_PATH>:exportModuleSheetToExcel `
+  "-PfileURL=https://docs.google.com/spreadsheets/d/<SPREADSHEET_ID>/edit" `
+  "-PsheetURL=https://docs.google.com/spreadsheets/d/<SPREADSHEET_ID>/edit#gid=<GID>" `
+  -Planguage=vi `
+  -PsheetMode=DRY_RUN `
+  --console=plain
 ```
 
-- APPLY staging trong `<MODULE>/build/step13-staging/` (Git-ignored), kiểm tra đầy đủ, recheck VI/EN không thay đổi đồng thời rồi mới thay từng subtree.
-- EN cũ được di chuyển sang `<MODULE>/build/step13-backups/<RUN_ID>/` trước khi thay. Nếu có lỗi commit, task rollback; khi rollback không đầy đủ phải báo đường dẫn phục hồi thủ công. **Giữ backup EN cũ sau khi task PASS**.
-- Readback so sánh **toàn bộ file/bytes** EN mới với bản clone. Chạy lại khi chưa dịch và VI không đổi cho kết quả `UNCHANGED`.
-- Ngoại lệ: `LIST.md` EN đổi **chỉ** heading ngôn ngữ và link `content/readme/docs/vi/menu/` thành `en/menu/`. Reference EN cùng các file khác giữ nguyên bytes từ VI ở STEP 13; việc hiện chữ Việt tại EN là trạng thái chờ STEP 14.
+- **DRY_RUN mặc định**: yêu cầu exit code 0, log `[SHEET-XLSX] DRY_RUN`, `module`, `tab/gid`, `language=vi`, `cells`, `unsupported-dropdowns`, `output` đúng; không được thay `module.xlsx` ở lượt này. `DRY_RUN` **chưa phải** hoàn thành STEP.
+- **APPLY**: chỉ khi DRY_RUN PASS và nguồn không thay đổi, chạy **chính xác cùng task/tham số**, đổi **duy nhất** `-PsheetMode=APPLY`. Yêu cầu exit code 0 và `[SHEET-XLSX] EXPORTED`; task tự tạo file tạm, reopen bằng Apache POI, kiểm tra worksheet/cell count và atomic replace.
+- Không gọi task root, không xuất cả workbook, không dùng `importExcelFromModuleSheet` (task đó tạo tab **mới** trên Google Sheets, hoàn toàn không thuộc STEP 13).
+- Nếu cấu hình task bằng Gradle DSL thay vì CLI, dùng extension `exportModuleSheetToExcel { fileURL = '<spreadsheet-url>'; sheetURL = '<tab-url#gid>'; language = 'vi' }`. `task.gradle` được generate chỉ là ví dụ DSL, không tự chạy; phải cấu hình ở Gradle thực thi hoặc truyền các thuộc tính CLI như trên. File URL và tab URL phải cùng spreadsheet.
 
-## 3. Completion gate
+## 3. QA snapshot Excel sau APPLY — bắt buộc
 
-- DRY_RUN = PASS; APPLY = `CLONED` hoặc `UNCHANGED`; không có blocker.
-- VI không bị sửa, tất cả EN được quản lý khớp VI về file, anchor, metadata, schema và related; LIST EN trỏ đúng EN.
-- Excel VI/EN (nếu tồn tại), Java/test, Reference **VI** và Portal generated không đổi; Reference EN khớp bytes với VI và có rollback khi bị thay.
-- Xác minh backup/staging/Git status, không có staging ngoài `build/`. **Không** commit/push hoặc chạy STEP 14.
-- **Prime** xác minh đúng module qua I3, snapshot `master.json`, cập nhật **`CURRENT_STEP.VALUE = "13"` trong `master.json`** khi tất cả gate PASS và exact readback nguyên văn. Task Gradle **không tự cập nhật Google Sheets**.
-- Báo cáo: `MODULE_I3`, `VI_FOLDERS`, `EN_REPLACED`, `FILES`, `REFERENCE_VI_EN_SHA256`, `RELATED_QA`, `DRY_RUN`, `APPLY`, `BACKUP_PATH`, `ROLLBACK`, `READBACK`, `CURRENT_STEP.VALUE_READBACK`, `GIT_STATUS`, `BLOCKER`.
+Prime phải **tự mở và kiểm tra file offline**, không chỉ tin exit code hoặc dòng `EXPORTED`:
 
-## 4. Phân ranh với STEP 14/15
+1. Đường dẫn **chính xác** `<I3>/content/sheet/vi/module.xlsx`, file `.xlsx` hợp lệ, không phải file rỗng; mở được bằng Apache POI/openpyxl hoặc trình đọc XLSX phù hợp. **Đúng 1 worksheet**, tên trùng tab/gid đã xác minh. Không có worksheet khác trong workbook.
+2. Đối chiếu tổng ô được xuất với log `cells`, hàng/cột có dữ liệu thực, các mốc `A1`, `B1`, `I3`, `A17:B17`, `A19:B19`, Menu Cấp 1/Cấp 2, `C:N` Knowledge, `O` Difficulty, `P:S` Interview, `T:W` Quiz, `X:AA` Video, `AC` Summary, nếu nguồn có. Vùng trống hợp lệ không phải lý do tự sinh dữ liệu. So sánh snapshot với nguồn Sheet bằng giá trị effective; **không yêu cầu Excel chứa tiến độ master.json**.
+3. Kiểm tra **newline/Unicode**, rich text cơ bản/format quan trọng, freeze panes, merged cells, note, row height, column width và dropdown cơ bản; báo rõ `unsupported-dropdowns` từ task. Nếu dropdown quan trọng (đặc biệt Difficulty `O`) bị mất/không tương thích, `BLOCKER: XLSX VALIDATION LOSS` hoặc giải trình và nhận xác nhận rõ trước khi coi là bản sao đạt yêu cầu. Không mặc định mọi định dạng Google-only đều có thể tái hiện trong Excel.
+4. **Formula:** task lưu **giá trị đã tính (effective/cached)**, không giữ công thức live. So sánh theo giá trị hiển thị/effective, không đòi formula gốc còn tồn tại. Nếu công thức lỗi/chưa resolve, text dài hơn **32.767 ký tự mỗi ô**, lỗi đọc Sheets hoặc giới hạn Excel thì task phải FAIL; **không cắt bớt/truncated**, không tự thay công thức.
+   Task chỉ dùng quyền Google Sheets **read-only**; unsupported dropdowns được đếm trong log. Không thể đảm bảo tái tạo các tính năng định dạng riêng của Google Sheets (ví dụ smart chips). File Excel là snapshot tĩnh, không phải nguồn để cập nhật ngược module.
+5. Sau APPLY, đọc lại Google Sheet hoặc snapshot nguồn đã xác thực: **không thay đổi bất kỳ nội dung/tiến độ Sheet nào**, không chạm Template hoặc module khác. Xác minh `.xlsx` vẫn bị Git ignore. Nếu bất kỳ QA fail: giữ bằng chứng/hash, **không ghi `CURRENT_STEP.VALUE`**.
 
-- STEP 14: worker dịch EN nhưng giữ nguyên technical identity: filename, anchors, IDs, methodSignature, correctAnswerId, Java code, input/output và metadata. **Không tự gọi cloneModuleViToEn**.
-- STEP 15: task `publishModuleEnSheet` clone tab `Template` sang tab EN có gid ổn định, dùng VI Excel và nội dung EN để ghi các ô bằng code, kiểm tra readback rồi export chính tab EN sang `content/sheet/en/module.xlsx`. Không dùng AI, không tạo tab mới từ Excel.
+## 4. Completion gate: update master.json only
+
+After Sheet export DRY_RUN/APPLY and ALL Excel QA PASS, Prime reads `<I3>/master.json`, verifies `CURRENT_STEP.TYPE = "string"`, confirms no concurrent edit and updates only `CURRENT_STEP.VALUE = "13"`. Exact readback is required, theo `rules/PRIME_RULES.md` `2.
+
+**Never update the source Sheet or exported Excel progress cell**, and **do not export Excel a second time** just to write a STEP value. The xlsx is a data snapshot, not the source of STEP status. If master.json write/readback fails, report `BLOCKER: CURRENT_STEP_UPDATE`; keep the validated XLSX intact for safe recovery.
+
+## 5. Resume, giới hạn và báo cáo Prime
+
+- Nếu session dừng giữa chừng, **kiểm tra thực tế** source gid/I3/CURRENT_STEP.VALUE, file đích, mtime/hash và log/checkpoint trước khi chạy lại. Không mặc định file đang có là bản mới, không APPLY lại chỉ vì lượt trước mất tool output. Phân biệt `DRY_RUN_ONLY`, `EXPORTED_WAITING_MASTER_UPDATE`, `COMPLETE` và `BLOCKER`.
+- Lúc nào cũng bảo toàn nội dung Google Sheets, không thay đổi data validation/notes/formats trực tiếp trên Sheet, không chỉnh README/Swagger/Roadmap/Quiz/Interview/Video. Không đọc/ghi module khác. Nếu user chỉ yêu cầu chạy thử (trial), **không cập nhật CURRENT_STEP.VALUE = "13"** hoặc coi toàn STEP đã xong.
+- Báo cáo bắt buộc: `MODULE_I3`, `TAB_NAME`, `TAB_GID`, `SOURCE_URL`, `OUTPUT_PATH`, `SOURCE_CURRENT_STEP.VALUE`, `DRY_RUN_STATUS`, `APPLY_STATUS`, `XLSX_WORKSHEETS`, `SOURCE/EXPORTED_CELLS`, `UNSUPPORTED_DROPDOWNS`, `FORMULA_SNAPSHOT`, `FILE_HASH`, `EXCEL_QA`, `CURRENT_STEP.VALUE_READBACK`, `FINAL_EXPORT`, `GIT_STATUS`, `BLOCKER`.
+- **Không commit/push** hoặc tự chạy STEP 14. STEP 13 chỉ tạo **một file Excel offline của đúng module**, bị Git ignore theo thiết kế.

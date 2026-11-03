@@ -1,97 +1,74 @@
-# STEP 11 — PRIME ONLY: Enrich Related metadata (Swagger / Quiz / Interview / Roadmap)
+# STEP 11 — Translation VI → EN (Prime + typed workers)
 
+**Thứ tự mới:** STEP 10 clone VI→EN; **STEP 11 dịch EN**; STEP 12 enrich relation; STEP 13 export VI Excel; STEP 14 QA VI/EN read-only; STEP 15 publish EN. Không chạy lại clone sau khi dịch EN.
 
+## 0. Prime sở hữu hàng đợi và phân quyền
 
-## 0. Mục đích và ranh giới
+Prime đọc `GENERAL_AGENT_RULES.md`, toàn bộ `rules/`, STEP này, xác minh module qua Sheet gid/I3 và STEP 10 đã PASS thật + `master.json.CURRENT_STEP.VALUE="10"`. Chỉ Prime lập inventory/manifest, tạo job, giao file + rule, nhận báo cáo, QA toàn bộ và cập nhật `CURRENT_STEP.VALUE="11"` sau khi hoàn thành. Worker **không** tự chọn file/đọc module khác, không tự nhận job mới, không ghi VI/Sheet/Java/master hoặc commit/deploy.
 
-STEP 11 chạy **sau STEP 10**, khi Knowledge, API/Swagger, Quiz và Interview của đúng module đã được tạo/QA. Đây là bước **liên kết nội dung đã tồn tại**, không phải bước tạo, viết lại hay cải thiện bài học. **Video đã chuyển thành STEP_OPTIONAL_VIDEO và STEP_OPTIONAL_VIDEO_TRANSLATE, chỉ chạy sau STEP_FINAL khi được yêu cầu; không phải prerequisite của STEP 11.**
+**Hai mode:**
+- `NORMAL MODE` (mặc định): tối đa **3 worker đồng thời**.
+- `SPECIAL MODE`: số worker **N phải được user chỉ định rõ khi giao lệnh** trong session. Thiếu N, N không phải số nguyên dương, hay mâu thuẫn → **`BLOCKER: SPECIAL_MODE_WORKER_COUNT_REQUIRED`** (hoặc `WORKER_MODE_CONFLICT`), dừng **trước khi spawn/giao job**; tuyệt đối không dùng mặc định 3. N chỉ áp dụng session đó; không lưu thành cấu hình toàn dự án.
 
-- **Một worker = một Menu Cấp 1, một lượt xử lý cả Swagger + Quiz + Interview** thuộc chương. Không chia ba worker theo ba loại tài liệu.
-- **Worker chỉ đề xuất** metadata liên kết trong staging riêng chương; **không sửa Google Sheets, YAML chính, README hay Java**. Prime lập danh mục, xác định ownership, kiểm tra độc lập, và **duy nhất Prime** áp dụng thay đổi sau khi mọi chương QA PASS.
-- Prime xử lý riêng Roadmap `relatedKnowledge`, `relatedModules` ở **mức toàn module/cross-module**. Không giao Roadmap cho worker từng chương.
-- Đích là **100% item/field liên quan được kiểm tra**; không ép 100% field phải có giá trị. Quan hệ không có bằng chứng thì để trống, có lý do `NO_MATCH`; nghi vấn thì `REVIEW`/BLOCKER. Không liên kết theo độ giống tên đơn thuần.
-- Scope mặc định là **đúng module tại I3** và **VI nguồn từ Sheet**. Ngôn ngữ khác (EN, ...) chỉ xử lý khi file Knowledge/Swagger/question tương ứng hiện hữu và xác định ownership rõ; không dịch relation từ VI sang EN theo suy đoán. Không đổi video/script, code, câu hỏi/đáp án, metadata review, số lượng/thứ tự.
-- Không tự động commit/push, không chạy STEP khác. **STEP 11 này là hợp đồng vận hành; không khẳng định đã tồn tại task enrichment/merge tự động.** Nếu thiếu cơ chế APPLY an toàn, báo blocker; không giả định hàm đã có.
+Prime spawn từng worker một, kiểm tra trạng thái rồi mới spawn tiếp, không vượt số ACTIVE đồng thời. **Worker xử lý xong một job → báo cáo Prime và kết thúc**; không tự điền job tiếp theo, không tiếp tục ở SLEEPING để chờ lệnh. Prime QA job, giải phóng ownership, rồi giao lượt kế tiếp từ hàng đợi (worker/phiên mới), cho đến khi hết tất cả job. Nếu worker FAILED, chỉ giao lại phạm vi lỗi sau khi kiểm tra hash/ownership.
 
-## 1. Prime preflight và danh mục dùng lại code hiện có
+## 1. Loại job, số file và file rule
 
-1. Đọc **toàn văn** `module-generate-agent/GENERAL_AGENT_RULES.md`, liệt kê/đọc **mọi file** `module-generate-agent/rules/`, file Prime này, `worker/STEP_11_WORKER.md`, và `module-generate-info.txt`. Pool Mode A = tối đa 3 (ACTIVE+SLEEPING) mặc định; Mode B = N nếu user chỉ định trong session; reuse SLEEPING trước, spawn từng worker một theo `rules/PRIME_RULES.md`.
-2. Từ TXT xác minh URL/gid/tên tab, `A1`, `B1`, `I3`, `CURRENT_STEP:CURRENT_STEP.VALUE`. I3 phải nằm trong `java-learning/module/`, trùng module Gradle thật; không đoán theo tên sheet. Kiểm tra STEP trước hoàn tất bằng **dữ liệu thực** (không chỉ tin CURRENT_STEP.VALUE lịch sử), không có chỉnh sửa đang diễn ra ở nguồn.
-3. Lập ledger **toàn bộ** Menu Cấp 1 từ `A19:B<last>`. `A<PARENT>` là chương; `B<PARENT>` là filename; child Knowledge từ `B<CHILD>` và `C:N`. Xác nhận README tại `content/readme/docs/<language>/menu/<chapter>/knowledge/<filename>`; Quiz/Interview từng chương có thể nằm tại `<chapter>/quiz/question.yml` hoặc `<chapter>/questions/interview.yml`. Chương chưa có file câu hỏi là `NOT_APPLICABLE`, không tự tạo câu hỏi.
-4. **Tái sử dụng parser/projection sẵn có**, không viết lại parser anchor: `ReadmeKnowledgeParser`, `PortalKnowledgeProjectionService` (category `id`, `sourcePath`, section `id`/title), Swagger YAML canonical tại `src/main/resources/swagger/{vi,en}/` cho Controller/method mapping, `PortalQuizProjectionService` và `PortalInterviewProjectionService`. Có thể đọc đầu ra `generatePortalData` cho các capability còn được publish nếu đã được tạo **và đối chiếu freshness với source**; task này là generator toàn repo, không phải một hàm danh mục riêng cho STEP 11, **không tự chạy** khi chỉ cần kiểm kê. Swagger relation luôn lấy từ YAML canonical vì Portal API Docs projection đã ngừng; nếu projection khác không có hoặc cũ, parse nguồn canonical bằng service hiện hữu. Không dùng projection làm nơi ghi.
-5. Tạo lookup chỉ đọc **theo language**: `Knowledge (sourcePath, categoryId, sectionId/anchor, title)`; `API (ControllerName, methodSignature, usage, description)`; `Quiz (id, parent chapter, text)`; `Interview (parent chapter, ordinal, fingerprint của question+answer)`; và catalog `module routeId` cho `relatedModules`. `ReadmeKnowledgeParser` loại anchor giả bên trong code fence; không lấy anchor từ tiêu đề trống, không tự bịa id. Kiểm tra trùng/missing key và namespace module/language trước khi giao.
-6. **Nguồn Quiz/Interview VI là YAML chuẩn hóa trên Google Sheets**: Quiz `T<PARENT>:W<PARENT>`, Interview `P<PARENT>:S<PARENT>` (ghép liên tiếp **không separator**, mỗi ô tối đa 30.000 Unicode code points). Đối chiếu câu hỏi/đáp án/ID với `content/readme/docs/vi/menu/<chapter>/quiz/question.yml` hoặc `content/readme/docs/vi/menu/<chapter>/questions/interview.yml` của **đúng chương**. Có drift hoặc Sheet chưa normalize → `BLOCKER: SHEET MODULE DRIFT`; Quiz dùng `id`, Interview dùng `parentRow + ordinal trong chương + SHA-256(question, answer)`.
-7. Mapping Swagger: lấy **ControllerName + exact methodSignature + `path`** từ `swagger/{vi,en}/api-descriptions.yml`, xác minh source path/chapter package hiện có và `usage` của method. Một Controller chỉ được gán một owner; shared/cross-chapter Controller chưa được giải quyết → `BLOCKER: CROSS_CHAPTER_OWNERSHIP`. Worker không sửa shared YAML chính.
-8. Kiểm tra dữ liệu đang có và SHA-256 của các nguồn Sheet vùng đọc, Markdown/section IDs, Swagger vi/en, module Quiz/Interview vi/en, Roadmap vi/en. **Không làm mất relation được người viết điền sẵn**; relation hợp lệ đã có là `KEEP`, relation sai/xung đột là `REVIEW`, không tự ghi đè.
-
-## 2. Phạm vi relation chính xác
-
-| Nguồn | Field có thể enrichment | Đích có nghĩa |
+| Job | Phạm vi EN độc quyền | Rule |
 | --- | --- | --- |
-| `swagger/<lang>/controller-description.yml` | `<Controller>.readmeRelated.file` | Đường dẫn README chương trong **cùng language** |
-| `swagger/<lang>/api-descriptions.yml` | `<Controller>.<method>.readmeRelated.file/anchor` | `file` chương (có thể kế thừa controller); anchor **section** chính xác của API method |
-| `content/readme/docs/<lang>/menu/<chapter>/quiz/question.yml` | `questions[].readmeRelated.anchor`, `apiRelated{controller,methodSignature}` | Section Knowledge trong chính chương / method API thực sự giải thích câu hỏi |
-| `content/readme/docs/<lang>/menu/<chapter>/questions/interview.yml` | Hai relation như Quiz | Bài Knowledge / API giúp trả lời câu hỏi |
-| `content/roadmap/<lang>/roadmap.yml` | `roadmap[].relatedKnowledge[]`, `relatedModules[]` | Category ID **cùng module** / `routeId` của module đích |
+| Knowledge | **1** `content/readme/docs/en/menu/<chapter>/knowledge/<name>.md` (hoặc legacy root Knowledge nếu có) | `worker/STEP_11_WORKER_KNOWLEDGE.md` |
+| Summary | **2 file cùng Menu Cấp 1**: `summary/section.yml` và `summary/summaries.yml` | `worker/STEP_11_WORKER_SUMMARY.md` |
+| Common | **1 job**, gồm `BASE.md` + `content/reference/en/references.yml` + `content/roadmap/en/roadmap.yml` (nếu nguồn VI có) | `worker/STEP_11_WORKER_COMMON.md` |
+| Quiz | **Toàn bộ** `content/quiz/en/quiz.yml` | `worker/STEP_11_WORKER_QUIZ.md` |
+| Interview | **Toàn bộ** `content/interview/en/interview.yml` | `worker/STEP_11_WORKER_INTERVIEW.md` |
+| Case Study | **Toàn bộ** `content/casestudy/en/casestudy.yml` | `worker/STEP_11_WORKER_CASE_STUDY.md` |
+| Swagger Controller | **1** `swagger/en/controller-description.yml` | `worker/STEP_11_WORKER_SWAGGER_CONTROLLER.md` |
+| Swagger Descriptions | **1** `swagger/en/api-descriptions.yml` | `worker/STEP_11_WORKER_SWAGGER_DESCRIPTIONS.md` |
+| Swagger Execution | **1** `swagger/en/api-execution.yml` | `worker/STEP_11_WORKER_SWAGGER_EXECUTION.md` |
+| Swagger Cases | **1** `swagger/en/api-cases.yml` | `worker/STEP_11_WORKER_SWAGGER_CASES.md` |
 
-- Quiz/Interview chỉ lưu `readmeRelated.anchor` trong YAML nguồn; `readmeRelated.file` được Portal tự tính từ chapter + anchor, **không đề xuất hay ghi field này về Sheet**. `apiRelated` vẫn có `controller` và `methodSignature` đồng thời hoặc cùng trống. Nếu cần Knowledge chương khác → `REVIEW: CROSS_CHAPTER_QUESTION`, không lách ownership.
-- Swagger Controller relation chỉ có `file`; Swagger method relation có `anchor` và có thể kế thừa `file` từ Controller. Khi file method trống phải kiểm tra được inherited file; nếu chưa rõ, đề xuất cả file+anchor. Bảo toàn VI/EN độc lập, kể cả method `usage: false` (không tự bật usage hay tạo link Portal tới inactive API).
-- `relatedKnowledge` của Roadmap trỏ **category ID**, **không phải section anchor**; `relatedModules` trỏ **routeId** có thực, không tạo module ID từ display name. Chúng không thay đổi thứ tự học hoặc `dependsOn`.
-- Với Quiz/Interview, Normalize mặc định `readmeRelated.anchor: ''` (chưa liên kết). Khi không có anchor phù hợp, `NO_MATCH` **không được bịa anchor**; không cần tự tạo filename. Đã có anchor phải tồn tại duy nhất trong `knowledge/` của chương khi Projector chạy.
-- Relation đã có và đúng → `KEEP`. Không có đích thật sự phù hợp → `NO_MATCH` (không ghi). Không chắc chắn/sai/ngoài chapter ownership → `REVIEW` và Prime xử lý; **chỉ `SET` vào field trống hoặc cặp còn thiếu hợp lệ** sau QA. Không ép quota, không dùng matching tên một mình.
+Swagger thuộc `src/main/resources/swagger/en/`. Introduction `BASE.md` thuộc `content/readme/docs/en/`. Không dịch `LIST.md`, `knowledge-metadata.yml`, Excel, metadata kỹ thuật, Java/test, VI, hay Video (Video thuộc `STEP_OPTIONAL_VIDEO_TRANSLATE` sau FINAL). Không dùng Quiz/Interview legacy per-chapter thay cho ba YAML module-wide của STEP 6/7.
 
-## 3. Staging không tranh chấp / không tạo metadata ảo
+Mỗi rule worker riêng phải ghi **trách nhiệm, file ownership, whitelist, blacklist, cấu trúc bất biến, kiểm tra trước/sau, báo cáo và blocker**. Worker phải đọc đúng **một rule** Prime chỉ định, không tự chọn rule khác.
 
-Prime chọn `<RUN_ID>` duy nhất, tạo:
+## 2. Baseline, manifest và preflight
 
-`<MODULE_ROOT>/build/step11/<RUN_ID>/_prime-manifest.yml` (chỉ Prime)
+Chạy từ repository root với module Gradle path đã xác minh:
 
-`<MODULE_ROOT>/build/step11/<RUN_ID>/_seed/<CHAPTER_KEY>/input.yml` (Prime ghi, Worker chỉ đọc)
-
-`<MODULE_ROOT>/build/step11/<RUN_ID>/chapters/<CHAPTER_KEY>/proposal.yml` (**chỉ Worker owner ghi**)
-
-`build/` đã được Git ignore; không nằm trong `src/main/resources` nên không đóng gói Swagger. Không xóa staging của session trước nếu chưa kiểm tra manifest, hash và trạng thái. `CHAPTER_KEY` do Prime chuẩn hóa từ chapter định danh đã xác minh, không cho path traversal.
-
-`input.yml` chỉ chứa **dữ liệu chương được giao**: chapter/language IDs, filepath/source hashes, nội dung Knowledge (đúng chương), các question Quiz/Interview thuộc chương kèm identity/fingerprint, Controller/method thuộc chương và những relation hiện có; kèm **lookup chỉ-định-danh toàn module** cho Knowledge/anchor/API và module routeId để cân nhắc liên kết ngoài chương. **Không cấp toàn bộ nội dung chương khác, YAML file dùng chung, dữ liệu module khác, credentials, manifest hoặc chỉnh sửa của worker khác**. Nếu context thêm là cần thiết mà vượt ownership → Worker `REVIEW`, Prime thẩm định; không tự mở ngoài scope.
-
-### Hợp đồng giao worker — đúng bốn dòng định vị
-
-```text
-<URL_TAB_DUNG_GID>
-A1, B1, I3, A<PARENT>, B<PARENT>, P<PARENT>:S<PARENT>, T<PARENT>:W<PARENT>
-READ: <ABSOLUTE_STEP11_SEED_CHAPTER_DIR> | WRITE: <ABSOLUTE_STEP11_CHAPTER_PROPOSAL_FILE>
-/java-learning/module-generate-agent/worker/STEP_11_WORKER.md
+```powershell
+.\gradlew.bat :<MODULE_GRADLE_PATH>:prepareModuleTranslation -PtranslationRunId=<RUN_ID> -PtranslationMode=DRY_RUN -PtranslationWorkerMode=NORMAL --console=plain
+.\gradlew.bat :<MODULE_GRADLE_PATH>:prepareModuleTranslation -PtranslationRunId=<RUN_ID> -PtranslationMode=APPLY -PtranslationWorkerMode=NORMAL --console=plain
 ```
 
-Prime **không** gửi nội dung nguồn, gợi ý relation, nhận xét QA hay tóm tắt quy tắc. Worker tự đọc toàn văn file riêng và `input.yml` đã được Prime tách theo chương; tọa độ Sheet là định danh nguồn, **không trao quyền ghi Sheet**. Worker chỉ ghi file proposal của mình. Không cho worker sửa `_seed`, `_prime-manifest`, shared YAML, Google Sheets, Gradle hoặc source.
+Nếu user chọn SPECIAL và đã nêu N thì thay `-PtranslationWorkerMode=SPECIAL -PtranslationWorkerCount=<N>` trong **cả hai lệnh**. Mode SPECIAL thiếu N phải bị chặn từ bước dispatch, không thực thi âm thầm như NORMAL.
 
-## 4. Worker làm một lượt, Prime nghiệm thu độc lập
+DRY_RUN chỉ kiểm kê; APPLY chỉ tạo `build/step11/<RUN_ID>/manifest.json` với `files[]`, `jobs[] (id,rule,files)`, `workerMode,maxWorkers` và snapshot `baseline/` (không dịch/ghi EN). Kiểm source VI/EN bytes sau STEP 10, cặp file, schema và SHA-256; `LIST.md` là protected exception do STEP 10 sửa link sang EN. Nếu manifest tồn tại, **không PREPARE lại** hoặc clone lại; resume từ baseline và trạng thái job. VI drift/ownership chồng chéo/thiếu cặp Summary → BLOCKER.
 
-1. Worker kiểm tra snapshot chapter/identity/hash; đọc Knowledge và nội dung API/Quiz/Interview **từ seed được cấp**, xem xét toàn bộ trường related hiện có. Mỗi item/field có đúng một quyết định `SET / KEEP / NO_MATCH / REVIEW` và lý do ngắn; `SET` có target cụ thể và bằng chứng liên quan. Không soạn lại content.
-2. Worker ghi **duy nhất** `proposal.yml` theo format của `worker/STEP_11_WORKER.md`, parse/readback nguyên bản, báo số audited/SET/KEEP/NO_MATCH/REVIEW rồi `SLEEPING`. Prime không coi report là QA PASS.
-3. Prime kiểm tra **tất cả** target trong seed có decision; không có item lạ/duplicate/outside ownership; giải quyết conflict của nhiều worker (ví dụ cùng Controller) và kiểm tra độc lập bằng source thật: file/anchor tồn tại, exact signature, `usage`, path/module/language, ý nghĩa mapping. Không ghi nếu thiếu source hoặc proposal chưa rõ.
-4. Chỉ khi **toàn tab** xong, writer giải phóng, QA PASS và không còn blocker, Prime chuẩn bị **semantic diff chỉ các field related**, checksum trước/sau và rollback checkpoint. `NO_MATCH` là kết quả hợp lệ, `REVIEW` chưa giải quyết là blocker cho các field thuộc scope. Nếu chỉ thử một vài chương → báo `TRIAL_ONLY`, **không áp dụng snapshot toàn module/không cập nhật CURRENT_STEP.VALUE**.
+## 3. Prime giao việc — file + worker rule chính xác
 
-## 5. Áp dụng — Prime ONLY, theo nguồn sở hữu
+```text
+MODULE=<VERIFIED_I3> | RUN_ID=<MANIFEST_RUN_ID> | JOB_ID=<MANIFEST_JOB_ID>
+MODE=<NORMAL|SPECIAL> | MAX_WORKERS=<N> | OWNER=<WORKER_ID>
+EN_FILES=<FULL_ABSOLUTE_EN_PATH_LIST_FROM_JOB> | EXPECTED_SHA256=<ONE_HASH_PER_FILE>
+WORKER_RULE=/java-learning/module-generate-agent/worker/STEP_11_WORKER_<TYPE>.md
+```
 
-**Gate trước mọi APPLY:** Prime kiểm tra toàn bộ khả năng ghi nguồn (Sheet/Swagger/EN) **và khả năng bảo toàn Roadmap relation** đối với phạm vi STEP này. Nếu `BLOCKER: ROADMAP_RELATION_PERSISTENCE` hay thiếu cách ghi/rollback an toàn, **chỉ giữ proposal/read-only QA trong staging, không bắt đầu ghi từng phần vào Sheet hoặc module**. Không cố chạy task chưa tồn tại.
+Prime cấp **đường dẫn đầy đủ**, không phải `...` hoặc tên folder để worker tự tìm. Mỗi job có **duy nhất một rule**. Quyền đọc/ghi EN chỉ trong `EN_FILES`; worker được đọc toàn văn rule được giao. EN chứa bản VI clone là nguồn để dịch. Không cấp quyền worker ghi manifest/backup, file ngoài scope hay VI. Prime quản lý ledger `PENDING → ASSIGNED → REPORTED → QA_PASS` hoặc `REVIEW/BLOCKER` và SHA trước/sau.
 
-**VI Quiz / Interview: Google Sheets là source of truth.** Prime ghép proposal vào **đúng item** của YAML trong `T:W` / `P:S` hàng cha tương ứng; sửa *chỉ* `readmeRelated.anchor`/`apiRelated`, giữ nguyên từng scalar khác (`id/question/answer/answers/correctAnswerId`), thứ tự, count, nguồn người viết và metadata ô. Preflight entered value/formula, effective/formatted, note/validation/chips và fingerprint trước ghi. Ghi batch đúng ô thuộc ownership (chia lại ≤30.000 Unicode mỗi ô, ghép không separator), exact readback YAML đã sửa. Nếu thay đổi đồng thời/không bảo toàn → BLOCKER, không ghi mù. **Không sửa trực tiếp file `<chapter>/quiz/question.yml` hoặc `<chapter>/questions/interview.yml`** làm nguồn chính.
+## 4. Quy tắc chung mọi worker
 
-**Summary Questions độc lập:** YAML nguồn Interview P:S hiện có thêm `summaryQuestions[]`; STEP 11 chỉ được enrich `questions[]` Interview và **bắt buộc bảo toàn byte-equivalent nội dung/giá trị, số lượng, thứ tự của toàn bộ `summaryQuestions[]`**, không gán related cho Summary. Importer phải giữ `questions/summary.yml`; không được dùng serializer/merge chỉ ghi `questions[]` làm mất Summary.
+Dịch đầy đủ **mọi field hiển thị thuộc whitelist** theo rule; không rút gọn/thêm ví dụ/sửa nguồn VI hoặc suy diễn đáp án. Giữ nguyên mọi YAML key/root/ID/groupID/anchorList, correctAnswerId, Java code fence/inline code/class/method/path, link URL, relation, technical request/response/status, metadata, table/list/heading và số item/thứ tự. Câu/đoạn không rõ → REVIEW cho Prime. File lớn xử lý tuần tự từng section/group/Controller **trong ownership độc quyền của worker đó**, ghi/checkpoint an toàn không mất nội dung.
 
-- Chạy **module-local** `generateModuleInterviewFromSheetByLocation` và `generateModuleQuizFromSheetByLocation` từng task `-PsheetMode=DRY_RUN` → QA snapshot diff → `APPLY` khi an toàn; verify output/schema/count/relations exact. Không dùng `ByFiles` hay importer tổng hợp. Không giả định có `en` Sheet: các file EN do người biên soạn quản lý phải được thay **chỉ relation** với snapshot/ownership riêng, hoặc `NOT_APPLICABLE/REVIEW` khi không thể gán chapter an toàn.
-- **Swagger VI/EN**: Prime cập nhật duy nhất `readmeRelated` ở `controller-description.yml` và `api-descriptions.yml` (theo language tương ứng); bảo toàn các key khác và tất cả 10 Swagger YAML ngoài phạm vi. Lập bản trước/sau, YAML parse/validate, QA target, kiểm tra hash nguồn vẫn khớp, backup file gốc, APPLY có rollback khi lỗi và exact readback. không chạm `api-execution`, `api-cases`, `api-params`.
-- Sau Sheet+module+Swagger, validate projection/Portal relation bằng các validator hiện có; có thể **chạy task projection phù hợp để kiểm tra** nếu không động vào dữ liệu nguồn ngoài phạm vi. Warning unresolved link hoặc `usage:false` phải được phân loại chính xác, không coi warning là proof của link đúng.
+Worker parse/readback **toàn bộ từng file**, kiểm tra schema/cấu trúc/ký tự còn tiếng Việt trong whitelist, checksum protected fields và coverage `TRANSLATABLE_ITEMS/TRANSLATED_ITEMS`; báo `COMPLETED/REVIEW/BLOCKER`, SHA trước/sau và lỗi. **Báo Prime rồi kết thúc**, không tự mở job khác hoặc nâng master.
 
-### Roadmap là phase riêng và có blocker kỹ thuật hiện tại
+## 5. Prime QA và completion
 
-Prime đọc `roadmap/vi|en/roadmap.yml`, Knowledge index và module catalog, kiểm tra/enrich `relatedKnowledge` và `relatedModules` ở mức milestone. **Không để worker chương sửa Roadmap**.
+Prime chạy:
 
-**Quan trọng:** `RoadmapSheetImportService.syncRoadmap` hiện **thay thế cả thư mục `content/roadmap/vi/`**, còn `convertRoadmap` chỉ dựng `id/title/purpose/objectives` từ F:H; không bảo toàn `relatedKnowledge/relatedModules` ở module YAML. Vì vậy **không APPLY Roadmap VI enrichment rồi tuyên bố bền vững**. Cần có cơ chế source/persistence được xác minh và kiểm thử (ví dụ bổ sung nguồn relation riêng hoặc importer hỗ trợ bảo toàn theo ID, với quyết định sở hữu rõ ràng). **STEP 11 chưa tự triển khai cơ chế đó**; nếu chưa có → `BLOCKER: ROADMAP_RELATION_PERSISTENCE`, không chạy Roadmap importer và **không nâng CURRENT_STEP.VALUE** khi Roadmap nằm trong phạm vi. Roadmap EN chỉ thay relation khi file có thật và ranh giới sở hữu/persistence đã được xác minh.
+```powershell
+.\gradlew.bat :<MODULE_GRADLE_PATH>:validateModuleTranslation -PtranslationRunId=<RUN_ID> --console=plain
+```
 
-## 6. Resume, completion và báo cáo
+Task read-only so VI, baseline và EN technical identity. `PENDING` = chưa dịch; `STRUCTURE_PASS_NEEDS_SEMANTIC_QA` = **chưa** chứng minh đúng nghĩa; Prime QA riêng dịch không sai/thiếu ý và thuật ngữ Java. Quiz 86, Interview 120, Case Study 156 chỉ là số lượng OOP minh họa, không hardcode cho module khác. Worker báo xong hoặc queue trống chưa phải PASS.
 
-- Sau gián đoạn, Prime đối chiếu manifest `RUN_ID`, source hash Sheet/repo, seed/proposal, trạng thái từng phase và snapshot đích **trước khi resume**. Không làm lại batch đã APPLY hay xóa staging khi chưa readback. Nếu đã cập nhật Sheet mà import module lỗi, giữ checkpoint/backup, khôi phục hoặc tiếp tục có đối chiếu, **không overwrite chỉnh sửa mới của người khác**.
-- `COMPLETED` chỉ khi: toàn bộ Menu Cấp 1 thuộc scope đã audited, không `REVIEW` chưa giải quyết, relation `SET` đều exact target/correct semantics, source of truth không bị phá, VI và EN (nơi có khả năng áp dụng) QA, Roadmap phase persistence PASS hoặc `NOT_APPLICABLE` có căn cứ, importer module & Swagger readback PASS, các metadata/content khác nguyên vẹn, không còn writer/blocker. Sau đó Prime mới xác minh `CURRENT_STEP=Current STEP`, cập nhật `CURRENT_STEP.VALUE = "11" và đọc lại như `rules/PRIME_RULES.md`.
-- Báo cáo: `MODULE_I3`, `TAB_GID`, `SESSION_WORKER_MODE`, `MAX_WORKERS`, `CHAPTERS_TOTAL/AUDITED`, `RELATIONS_AUDITED/SET/KEEP/NO_MATCH/REVIEW`, `LANGUAGES`, `SHEET_QA/SYNC`, `SWAGGER_MERGE`, `ROADMAP_PERSISTENCE`, `DIFF/PRESERVATION`, `READBACK`, `CURRENT_STEP.VALUE`, `BLOCKERS`, `GIT_STATUS`. Không tự commit/push.
+Chỉ sau khi **mọi job** có `QA_PASS` hoặc `SKIP_NO_TRANSLATABLE_TEXT` hợp lệ, không còn worker/writer/PENDING/REVIEW/BLOCKER, VI/Sheet/Java/Video bất biến và cấu trúc/YAML/relations/semantics PASS, Prime mới ghi **duy nhất** `master.json.CURRENT_STEP.VALUE="11"` và exact readback. Không tự chạy STEP 12, commit/push/deploy. Báo `MODULE_I3,GID,RUN_ID,MODE,MAX_WORKERS,TOTAL_FILES,TOTAL_JOBS,QA_PASS,PENDING,REVIEW,BLOCKER,STRUCTURE_QA,SEMANTIC_QA,CURRENT_STEP_READBACK`.

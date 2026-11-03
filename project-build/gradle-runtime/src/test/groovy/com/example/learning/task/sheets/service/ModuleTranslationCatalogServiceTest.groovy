@@ -51,7 +51,7 @@ class ModuleTranslationCatalogServiceTest {
 
 
     @Test
-    void preparesOneJobPerFileAndValidatesOnlyTranslatableFields() {
+    void preparesModuleWideWorkerJobsAndValidatesOnlyTranslatableFields() {
         Map f = fixture()
         def service = new ModuleTranslationCatalogService()
         Map dry = service.execute(f.root as File, f.module as File, 'trial', 'PREPARE', false)
@@ -62,12 +62,21 @@ class ModuleTranslationCatalogServiceTest {
                 'trial', 'PREPARE', true)
         assertEquals('PREPARED', prepared.status)
         assertTrue((prepared.manifest as File).isFile())
+        assertEquals(5, prepared.jobCount)
+        assertEquals('NORMAL', prepared.workerMode)
+        assertEquals(3, prepared.maxWorkers)
+        Map common = (prepared.jobs as List<Map>).find { it.id == 'COMMON' }
+        assertEquals(3, (common.files as List).size())
+        assertEquals('STEP_11_WORKER_COMMON.md', common.rule)
+        assertEquals(1, (prepared.jobs as List<Map>).count {
+            it.rule == 'STEP_11_WORKER_CASE_STUDY.md'
+        })
         assertEquals('module/demo', new groovy.json.JsonSlurper()
                 .parse(prepared.manifest as File).module)
-        assertEquals('STEP_13_CLONED', new groovy.json.JsonSlurper()
+        assertEquals('STEP_10_CLONED', new groovy.json.JsonSlurper()
                 .parse(prepared.manifest as File).baselinePhase)
         File quiz = new File(f.module as File,
-                'content/readme/docs/en/menu/1.Basic/quiz/question.yml')
+                'content/quiz/en/quiz.yml')
         quiz.setText(quiz.getText('UTF-8').replace('Câu hỏi', 'English question')
                 .replace('Giải thích', 'Explanation'), 'UTF-8')
         File doc = new File(f.module as File,
@@ -81,11 +90,111 @@ class ModuleTranslationCatalogServiceTest {
         assertEquals(7, checked.total)
         assertEquals(2, checked.translated)
         assertEquals(5, checked.pending)
+        assertEquals(5, checked.jobCount)
         assertTrue(checked.semanticQaRequired)
         File snapshot = new File(f.module as File,
-                'build/step14/trial/baseline/content/readme/docs/en/menu/1.Basic/quiz/question.yml')
+                'build/step11/trial/baseline/content/quiz/en/quiz.yml')
         assertTrue(snapshot.getText('UTF-8').contains('Câu hỏi'))
         assertFalse(snapshot.getText('UTF-8').contains('English question'))
+    }
+
+    @Test
+    void workerModesRequireExplicitPositiveCountForSpecialAndNormalCapsAtThree() {
+        Map f = fixture()
+        def service = new ModuleTranslationCatalogService()
+        assertEquals(3, service.execute(f.root as File, f.module as File,
+                'mode-normal', 'PREPARE', false).maxWorkers)
+        assertEquals(2, service.execute(f.root as File, f.module as File,
+                'mode-normal2', 'PREPARE', false, 'NORMAL', 2).maxWorkers)
+        assertThrows(GradleException) {
+            service.execute(f.root as File, f.module as File,
+                    'special-no-n', 'PREPARE', false, 'SPECIAL', null)
+        }
+        assertThrows(GradleException) {
+            service.execute(f.root as File, f.module as File,
+                    'special-zero', 'PREPARE', false, 'SPECIAL', 0)
+        }
+        assertThrows(GradleException) {
+            service.execute(f.root as File, f.module as File,
+                    'normal-four', 'PREPARE', false, 'NORMAL', 4)
+        }
+        Map special = service.execute(f.root as File, f.module as File,
+                'special-four', 'PREPARE', true, 'SPECIAL', 4)
+        assertEquals(4, special.maxWorkers)
+        assertEquals('SPECIAL', special.workerMode)
+        Map manifest = new groovy.json.JsonSlurper().parse(special.manifest as File) as Map
+        assertEquals(4, manifest.maxWorkers)
+        assertEquals('SPECIAL', manifest.workerMode)
+    }
+
+    @Test
+    void summaryJobOwnsExactlyTwoSameChapterFiles() {
+        Map f = fixture()
+        File module = f.module as File
+        for (String lang : ['vi', 'en']) {
+            write(module, "content/readme/docs/${lang}/menu/1.Basic/summary/section.yml",
+                    'title: Tiêu đề\nroadmap: []\n')
+            write(module, "content/readme/docs/${lang}/menu/1.Basic/summary/summaries.yml",
+                    'summaries: []\n')
+        }
+        List<Map> jobs = ModuleTranslationCatalogService.workerJobs(
+                ModuleTranslationCatalogService.inventory(module))
+        Map summary = jobs.find { (it.id as String).startsWith('SUMMARY/') }
+        assertEquals('STEP_11_WORKER_SUMMARY.md', summary.rule)
+        assertEquals(2, (summary.files as List).size())
+        assertTrue((summary.files as List).every { it.contains('/menu/1.Basic/summary/') })
+        assertEquals(6, jobs.size())
+
+        new File(module,
+                'content/readme/docs/vi/menu/1.Basic/summary/summaries.yml').delete()
+        new File(module,
+                'content/readme/docs/en/menu/1.Basic/summary/summaries.yml').delete()
+        GradleException ex = assertThrows(GradleException) {
+            ModuleTranslationCatalogService.workerJobs(
+                    ModuleTranslationCatalogService.inventory(module))
+        }
+        assertTrue(ex.message.contains('INCOMPLETE_SUMMARY_PAIR'))
+    }
+
+    @Test
+    void moduleWideCaseStudyTranslatesProseButLocksReadmeRelationsAndCodeFences() {
+        String vi = '''caseStudy:
+  - groupID: 1
+    groupName: Tư duy thiết kế
+    cases:
+      - situation: Tình huống thực tế
+        readmeRelated: {anchorList: [basic-001]}
+        resolve: Giải pháp
+        knowledge: Nguyên lý
+        code: |-
+          ## Mô tả
+          ```java
+          class Keep {}
+          ```
+'''
+        String en = vi.replace('Tư duy thiết kế', 'Design thinking')
+                .replace('Tình huống thực tế', 'Real scenario')
+                .replace('Giải pháp', 'Solution')
+                .replace('Nguyên lý', 'Principle')
+                .replace('Mô tả', 'Explanation')
+        ModuleTranslationValidationService.compare('MODULE_CASE_STUDY',
+                vi.getBytes('UTF-8'), en.getBytes('UTF-8'))
+        assertThrows(GradleException) {
+            ModuleTranslationValidationService.compare('MODULE_CASE_STUDY',
+                    vi.getBytes('UTF-8'),
+                    en.replace('basic-001', 'wrong-anchor').getBytes('UTF-8'))
+        }
+        assertThrows(GradleException) {
+            ModuleTranslationValidationService.compare('MODULE_CASE_STUDY',
+                    vi.getBytes('UTF-8'),
+                    en.replace('class Keep', 'class Broken').getBytes('UTF-8'))
+        }
+        assertFalse(ModuleTranslationValidationService.editable('MODULE_QUIZ',
+                'quiz[0].questions[1].correctAnswerId'))
+        assertTrue(ModuleTranslationValidationService.editable('MODULE_INTERVIEW',
+                'interviewQuestion[0].questions[2].knowledge'))
+        assertTrue(ModuleTranslationValidationService.editable('MODULE_CASE_STUDY',
+                'caseStudy[0].cases[1].resolve'))
     }
 
     @Test
@@ -93,8 +202,7 @@ class ModuleTranslationCatalogServiceTest {
         Map f = fixture()
         def service = new ModuleTranslationCatalogService()
         service.execute(f.root as File, f.module as File, 'review1', 'PREPARE', true)
-        File quiz = new File(f.module as File,
-                'content/readme/docs/en/menu/1.Basic/quiz/question.yml')
+        File quiz = new File(f.module as File, 'content/quiz/en/quiz.yml')
         quiz.setText(quiz.getText('UTF-8').replace('correctAnswerId: A',
                 'correctAnswerId: B'), 'UTF-8')
         try {
@@ -225,9 +333,9 @@ System.out.println("KEEP");
         List<Map> inventory = ModuleTranslationCatalogService.inventory(module)
         assertEquals(8, inventory.size())
         assertEquals(2, inventory.count { it.type == 'README' })
-        assertEquals(1, inventory.count { it.type == 'QUIZ' })
-        assertEquals(1, inventory.count { it.type == 'INTERVIEW' })
-        assertEquals(1, inventory.count { it.type == 'SUMMARY_QUESTIONS' })
+        assertEquals(1, inventory.count { it.type == 'MODULE_QUIZ' })
+        assertEquals(1, inventory.count { it.type == 'MODULE_INTERVIEW' })
+        assertEquals(1, inventory.count { it.type == 'MODULE_CASE_STUDY' })
         assertTrue(inventory.any { it.enPath ==
                 'content/readme/docs/en/menu/1.Basic/knowledge/Basic.md' })
         assertTrue(inventory.any { it.enPath ==
@@ -318,6 +426,42 @@ System.out.println("KEEP");
 ''',
                 'content/readme/docs/vi/menu/1.Basic/video/video-script.yml':
                         'title: Tiêu đề\nsections:\n  - title: Bài học\n    items:\n      - {type: SCENE, time: "00:00-00:10", visual: Hình ảnh, script: Thuyết minh, purpose: Mục đích}',
+                'content/quiz/vi/quiz.yml': '''quiz:
+  - groupID: 1
+    groupName: Nền tảng
+    questions:
+      - question: Câu hỏi?
+        readmeRelated: {anchorList: [basic-001]}
+        answers:
+          - {id: A, answer: Đúng, explanation: Giải thích đúng}
+          - {id: B, answer: Sai, explanation: Giải thích sai}
+          - {id: C, answer: Không, explanation: Giải thích không}
+          - {id: D, answer: Khác, explanation: Giải thích khác}
+        correctAnswerId: A
+''',
+                'content/interview/vi/interview.yml': '''interviewQuestion:
+  - groupID: 1
+    groupName: Phỏng vấn
+    questions:
+      - question: Câu phỏng vấn?
+        readmeRelated: {anchorList: [basic-001]}
+        knowledge: Nguyên lý
+        answer: Trả lời thực hành
+''',
+                'content/casestudy/vi/casestudy.yml': '''caseStudy:
+  - groupID: 1
+    groupName: Trường hợp
+    cases:
+      - situation: Tình huống thực tế
+        readmeRelated: {anchorList: [basic-001]}
+        resolve: Cách giải quyết
+        knowledge: Kiến thức liên quan
+        code: |-
+          ## Hướng dẫn
+          \u0060\u0060\u0060java
+          class Keep {}
+          \u0060\u0060\u0060
+''',
         ].each { String viPath, String content ->
             write(module, viPath, content)
             String enPath = viPath.replace('/vi/', '/en/')

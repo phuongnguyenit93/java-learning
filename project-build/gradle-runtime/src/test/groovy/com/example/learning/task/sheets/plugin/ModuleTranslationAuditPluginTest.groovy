@@ -18,6 +18,8 @@ class ModuleTranslationAuditPluginTest {
             def task = project.tasks.named(name, ModuleTranslationAuditTask).get()
             assertEquals(operation, task.operation.get())
             assertEquals('DRY_RUN', task.mode.get())
+            assertEquals('NORMAL', task.workerMode.get())
+            assertEquals('', task.workerCount.get())
             assertEquals('sheets', task.group)
         }
     }

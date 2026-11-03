@@ -7,11 +7,13 @@ import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 
-/** STEP 14: catalog/backup or validate one-file-at-a-time translated EN content. */
+/** STEP 11: catalog/baseline and validate EN translation worker jobs. */
 abstract class ModuleTranslationAuditTask extends DefaultTask {
     @Input abstract Property<String> getOperation()
     @Input abstract Property<String> getMode()
     @Input abstract Property<String> getRunId()
+    @Input abstract Property<String> getWorkerMode()
+    @Input abstract Property<String> getWorkerCount()
 
     @TaskAction
     void auditTranslation() {
@@ -19,18 +21,36 @@ abstract class ModuleTranslationAuditTask extends DefaultTask {
         if (!(requested in ['DRY_RUN', 'APPLY'])) {
             throw new GradleException('translationMode must be DRY_RUN or APPLY.')
         }
+        String countText = workerCount.get().trim()
+        Integer count = null
+        if (countText) {
+            if (!(countText ==~ /\d+/)) {
+                throw new GradleException('BLOCKER: INVALID_TRANSLATION_WORKER_COUNT')
+            }
+            try {
+                count = Integer.parseInt(countText)
+            } catch (NumberFormatException ignored) {
+                throw new GradleException('BLOCKER: INVALID_TRANSLATION_WORKER_COUNT')
+            }
+        }
         Map result = new ModuleTranslationCatalogService().execute(
                 project.rootProject.projectDir, project.projectDir,
-                runId.get(), operation.get(), requested == 'APPLY')
-        logger.lifecycle('[STEP-14] {} module={} run={} total={} translated={} pending={} ' +
-                'manifest={} semanticQA={}', result.status, result.module, result.runId,
-                result.total, result.translated ?: 0, result.pending ?: 0,
+                runId.get(), operation.get(), requested == 'APPLY', workerMode.get(), count)
+        logger.lifecycle('[STEP-11] {} module={} run={} total={} jobs={} mode={} maxWorkers={} ' +
+                'translated={} pending={} manifest={} semanticQA={}',
+                result.status, result.module, result.runId,
+                result.total, result.jobCount, result.workerMode, result.maxWorkers,
+                result.translated ?: 0, result.pending ?: 0,
                 result.manifest ?: 'EXISTING', result.semanticQaRequired ?: false)
         if (result.files) {
             (result.files as List).each { Map item ->
-                logger.lifecycle('[STEP-14-FILE] {} {} {}', item.type, item.enPath,
+                logger.lifecycle('[STEP-11-FILE] {} {} {}', item.type, item.enPath,
                         item.result)
             }
+        }
+        (result.jobs ?: []).each { Map job ->
+            logger.lifecycle('[STEP-11-JOB] {} rule={} files={}',
+                    job.id, job.rule, job.files)
         }
     }
 }
