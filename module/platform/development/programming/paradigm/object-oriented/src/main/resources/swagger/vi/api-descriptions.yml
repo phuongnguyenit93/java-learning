@@ -1464,8 +1464,8 @@ Group1Controller:
     methodName: executeCase9
     params:
     - name: mode
-      summary: Chưa có tiêu đề
-      description: Chưa có mô tả chi tiết
+      summary: "Chọn workload tính toán CPU hoặc cấp phát bộ nhớ"
+      description: "Tham số truy vấn mode chọn đúng một trong hai chế độ: cpu chạy phép tính trong vòng lặp; allocation cấp phát các mảng byte để minh họa hoạt động cấp phát object trên JVM. Chỉ chấp nhận chính xác cpu hoặc allocation. Dù Controller khai báo required=false, không có giá trị mặc định: khi bỏ mode, Controller truyền mảng đối số rỗng và Service ném IllegalArgumentException; nếu truyền giá trị khác hai chế độ trên, Service cũng ném IllegalArgumentException. Khi chạy hợp lệ, Service in workload completed; result=... ra stdout; đây không phải số đo CPU time, allocation rate hay GC pause."
     path: com/example/learning/casestudy/controller/Group1Controller.java
     mapping: '@GetMapping("/case/9/execute")'
     httpMethods:

@@ -37,8 +37,6 @@ import com.example.learning.casestudy.utils.group5.case3.Invoice3Utils;
 import com.example.learning.casestudy.utils.group5.case4.Case4Utils;
 import com.example.learning.casestudy.utils.group5.case5.Case5Utils;
 import com.example.learning.casestudy.utils.group5.case6.Case6Utils;
-import com.example.learning.casestudy.utils.group5.case7.Base7Utils;
-import com.example.learning.casestudy.utils.group5.case7.Child7Utils;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -96,9 +94,9 @@ public class Group5Service {
 
     public void executeCase7() {
         Base7 ref = new Child7();
-        assert Base7Utils.kind().equals("base-static");
-        assert Child7Utils.kind().equals("child-static");
-        assert Base7Utils.kind().equals("base-static");
+        assert Base7.kind().equals("base-static");
+        assert Child7.kind().equals("child-static");
+        assert ref.kind().equals("base-static");
         // hợp lệ nhưng nên tránh gọi static qua instance
         assert ref.render().equals("child-instance");
     }

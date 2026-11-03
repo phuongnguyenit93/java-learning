@@ -1,129 +1,421 @@
 Group10Controller:
   executeCase1():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Trong chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>, tình huống Customer làm rõ sự khác biệt giữa <strong>danh tính của entity</strong> và thuộc tính mô tả của nó. Hai khách hàng có thể cùng tên nhưng vẫn là hai thực thể; ngược lại, một khách hàng đổi tên vẫn phải giữ nguyên danh tính. Khi định nghĩa equality theo tên, collection có thể gộp nhầm hai entity khác nhau và che mất dữ liệu nghiệp vụ.</p>
+      <p>Điểm cần học là lựa chọn identity ổn định, chẳng hạn <code>customerId</code>, làm cơ sở nhất quán cho <code>equals</code>/<code>hashCode</code>, thay vì dựa trên thuộc tính có thể trùng hoặc thay đổi.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/10/case/1/execute</code> trên ứng dụng đang chạy và xem stdout trong terminal hoặc console của IDE. Nếu các kiểm tra nội bộ đều vượt qua, method in <code>PASS: stable Customer identity</code>. Đây là tín hiệu từ Service, không phải một JSON response của endpoint <code>void</code>.</p>
+      <p>Trong ví dụ, tập hợp so tên gộp hai khách hàng tên An thành một phần tử; tập hợp theo ID giữ hai khách hàng <code>C1</code> và <code>C2</code> riêng biệt. Sau khi đổi tên khách hàng <code>C1</code>, phép tìm kiếm theo cùng ID vẫn nhận ra entity đó, trong khi <code>C1</code> không trở thành <code>C2</code>. Quan sát này kiểm chứng identity không phụ thuộc tên hiển thị.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng rằng <strong>entity equality phải phản ánh identity nghiệp vụ bền vững</strong>: thuộc tính mô tả được phép trùng và thay đổi mà không làm collection nhầm hoặc mất thực thể. Đây là nền tảng khi thiết kế domain model có vòng đời dài.</p>
     usage: true
   executeCase2():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Ví dụ entity mới chưa có ID cơ sở dữ liệu cho thấy một rủi ro tinh vi của <strong>hash-based collection</strong> trong thiết kế OOP. Nếu <code>hashCode</code> dựa vào ID chỉ được gán sau khi lưu, cùng một object có thể đổi mã băm sau lúc được thêm vào <code>HashSet</code>; việc tìm kiếm khi đó không còn tuân theo giả định về khóa bất biến.</p>
+      <p>Giải pháp minh họa dùng identity key ổn định từ trước khi persist, tách vòng đời của entity khỏi thời điểm database cấp ID. Bài học không phải mọi entity đều phải dùng UUID, mà là không được làm biến đổi dữ liệu quyết định vị trí hash của phần tử đã đưa vào Set.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/10/case/2/execute</code> và kiểm tra stdout của JVM ứng dụng. Chuỗi <code>PASS: hash key independent of generated DB id</code> chỉ xuất hiện sau các phép kiểm tra nội bộ, không phải nội dung HTTP response.</p>
+      <p>Phần sai xác minh mã băm của entity thay đổi khi <code>databaseId</code> từ chưa có thành <code>1</code>. Phần đúng tạo khóa riêng trước khi đưa entity vào Set, sau đó gán database ID nhưng hash vẫn giữ nguyên và <code>contains</code> vẫn nhận ra entity. Đặc biệt, ví dụ <strong>không</strong> dùng kết quả <code>contains</code> của đối tượng sai làm điều kiện bắt buộc, vì va chạm hash bucket có thể khiến cách thử đó không ổn định.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng nguyên lý <strong>giữ identity/hash ổn định khi entity tham gia hashed collection</strong>. ID do persistence cấp có thể thuộc vòng đời lưu trữ, nhưng không nên làm thay đổi khóa tra cứu của object đã được đưa vào Set.</p>
     usage: true
   executeCase3():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Tình huống Address giúp phân biệt <strong>value object</strong> với entity: hai địa chỉ có cùng giá trị nghiệp vụ nên được coi là tương đương dù được tạo thành hai instance riêng biệt. Nếu chỉ dùng reference equality, hệ thống có thể đếm trùng địa điểm giao hàng; nếu chuẩn hóa tùy tiện, hệ thống lại có thể gộp nhầm địa chỉ khác nhau.</p>
+      <p>Vì vậy value object cần các thành phần giá trị có ý nghĩa, bất biến và một chính sách chuẩn hóa rõ ràng. Trong ví dụ, khoảng trắng và cách viết hoa được chuẩn hóa trước khi đối chiếu <code>equals</code> và <code>hashCode</code>.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi <code>GET /case-studies/group/10/case/3/execute</code>; xem stdout để tìm <code>PASS: normalized value equality</code> nếu toàn bộ phép kiểm tra thành công. Method không trả về danh sách địa chỉ hoặc JSON so sánh.</p>
+      <p>Đối chiếu lần lượt: hai object Address kiểu sai có cùng nội dung nhưng không bằng nhau theo reference; hai value object có cách ghi <code>Số 1 / Hà Nội</code> khác khoảng trắng và chữ hoa vẫn bằng nhau, có hash bằng nhau và chỉ chiếm một phần tử trong Set. Đầu vào tên đường trắng cũng được kiểm tra là không hợp lệ, tránh tạo value object vô nghĩa.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>value equality gắn với giá trị đã chuẩn hóa, không gắn với địa chỉ bộ nhớ</strong>. Bất biến, validation và quy tắc normalization nhất quán làm cho value object an toàn trong so sánh và collection.</p>
     usage: true
   executeCase4():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Money là value object chứa cả số tiền lẫn đơn vị tiền tệ. Tình huống này minh họa rằng chọn kiểu dữ liệu cũng là quyết định thiết kế domain model: <code>double</code> biểu diễn số thập phân qua nhị phân nên có thể gây sai số khi cộng các khoản tiền, dù các giá trị nhìn qua tưởng đơn giản.</p>
+      <p>Mô hình dùng <code>BigDecimal</code> tạo từ chuỗi để kiểm soát phép cộng chính xác, đồng thời từ chối cộng hai Money khác currency. Đây là cách gom <strong>invariant về độ chính xác và đơn vị</strong> vào value object thay vì để caller tự nhớ quy tắc.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/10/case/4/execute</code> và quan sát stdout; <code>PASS: precise Money addition</code> được in khi các điều kiện đã được xác nhận, không phải số dư trả về qua HTTP.</p>
+      <p>Ví dụ trước hết kiểm tra <code>0.1 + 0.2</code> bằng <code>double</code> không bằng đúng <code>0.3</code>. Sau đó hai khoản USD <code>0.10</code> và <code>0.20</code> tạo tổng <code>0.30</code>, cộng thêm <code>0.70</code> cho <code>1.00</code>; thao tác cộng USD với EUR phải bị từ chối. Những tín hiệu này chỉ xác minh phép cộng và currency guard của bản demo, không tự chứng minh toàn bộ chính sách làm tròn của một hệ thống tài chính.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>Money cần hành vi và ràng buộc miền riêng</strong>, không chỉ là một con số. Bao gói precision và currency vào value object giúp tránh phép tính sai ngầm trong nhiều use case.</p>
     usage: true
   executeCase5():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Aggregate root có trách nhiệm bảo toàn các quy tắc nội bộ của toàn bộ cụm object, không chỉ cung cấp danh sách child để caller sửa tùy ý. Tình huống đơn hàng cho thấy khi child quantity bị thay đổi trực tiếp, <code>storedTotal</code> có thể không còn tương ứng với các item; dữ liệu của cùng một aggregate đã tự mâu thuẫn.</p>
+      <p>Thay vì để lộ mutable child, aggregate quản lý thao tác thêm item, kiểm tra số lượng hợp lệ, tính tổng từ trạng thái đang sở hữu và cung cấp danh sách chỉ đọc. Bài học là <strong>encapsulation bảo vệ invariant</strong>, không đơn thuần ẩn field.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/10/case/5/execute</code> và xem dòng <code>PASS: aggregate derived total</code> trong console nếu các phép kiểm tra hoàn thành. Controller trả <code>void</code>; danh sách item và số tổng không được serialize thành response.</p>
+      <p>Phần thiết kế sai cho phép sửa <code>qty</code> mà tổng lưu sẵn không đổi. Phần đúng kiểm tra thêm hai đơn vị giá <code>100</code> cho tổng <code>200</code>, từ chối số lượng âm, đồng thời chặn việc <code>clear()</code> collection trả ra. Sau các thử nghiệm vi phạm, tổng vẫn bằng <code>200</code> và aggregate còn một item: các thao tác bên ngoài không phá được invariant.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng rằng <strong>aggregate root là ranh giới kiểm soát thay đổi trạng thái liên quan</strong>. Khi mọi thao tác đi qua hành vi có guard, tổng dẫn xuất và danh sách child vẫn nhất quán trước khi bước sang persistence boundary.</p>
     usage: true
   executeCase6():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Một domain operation vừa lưu đơn hàng vừa phát thông báo có hai loại tác động không nên bị đánh đồng: thay đổi dữ liệu giao dịch và side effect gửi đi bên ngoài. Gửi thông báo trước commit có thể khiến người dùng nhận tin thành công trong khi thao tác lưu bị từ chối. Tình huống minh họa việc đặt <strong>transaction boundary</strong> trước khâu phân phối thông báo bằng ý tưởng transactional outbox.</p>
+      <p>Thông điệp học tập là ghi trạng thái nghiệp vụ và ý định phát sự kiện trong cùng ranh giới commit, rồi xử lý gửi sau đó. Code ở đây là mô phỏng bộ nhớ, không phải database transaction hoặc một hệ thống gửi mail thật.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/10/case/6/execute</code> và tìm <code>PASS: simulated commit precedes notification</code> trên stdout của JVM ứng dụng. Không cần cài database, message broker hay SMTP để chạy phần minh họa; endpoint không cung cấp transaction log hoặc JSON payload.</p>
+      <p>Các kiểm tra xác nhận khi commit bị từ chối thì order, outbox và danh sách thông báo vẫn rỗng; khi commit được chấp nhận, danh sách thông báo vẫn chưa có phần tử. Chỉ sau khi dispatcher xử lý outbox mới xuất hiện mã đơn <code>O1</code> trong danh sách giả lập. Hãy phân biệt thứ tự xử lý được kiểm tra này với đảm bảo durable/retry của outbox triển khai thật.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>tách commit nghiệp vụ khỏi thời điểm thực thi side effect</strong> là nguyên tắc quan trọng khi phối hợp aggregate với hệ thống bên ngoài. Bản mô phỏng giải thích luồng outbox, không chứng minh atomicity SQL hoặc khả năng giao hàng trong môi trường phân tán.</p>
     usage: true
   executeCase7():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Trong luồng sự kiện có retry, cùng một event có thể đến nhiều lần. Nếu consumer mỗi lần đều trừ tồn kho hoặc gửi thông báo, tác động nghiệp vụ bị nhân đôi dù nguồn chỉ phát sinh một sự kiện logic. Ví dụ đặt trọng tâm vào <strong>idempotency theo eventId</strong>: xử lý lại cùng danh tính sự kiện không được lặp side effect đã hoàn thành.</p>
+      <p>Đây là hợp đồng hành vi của consumer và mô hình lưu trạng thái đã xử lý, khác với việc hy vọng hạ tầng message delivery tự bảo đảm chính xác một lần. Demo chạy tuần tự trong bộ nhớ, không dùng broker hay bảng deduplication thật.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi <code>GET /case-studies/group/10/case/7/execute</code>; sau các kiểm tra nội bộ, stdout dự kiến có <code>PASS: duplicate event ignored</code>. Không có email thật hoặc lệnh cập nhật kho ngoài tiến trình để quan sát.</p>
+      <p>Ví dụ chuyển cùng event <code>E1</code> hai lần: consumer không có deduplication còn stock <code>6</code> và ghi nhận hai lần gửi email giả lập, trong khi consumer có tập <code>processed</code> giữ stock <code>8</code> và một email. Khi xử lý thêm event mới <code>E2</code>, stock còn <code>7</code> và tổng email thành hai. Điều cần đối chiếu là <strong>trùng ID bị bỏ qua, ID mới vẫn được xử lý</strong>, không chỉ một counter riêng lẻ.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>consumer idempotent bảo vệ invariant nghiệp vụ khi cùng sự kiện được giao lặp</strong>. Bản thực tế còn cần lưu dấu event đã xử lý đồng bộ với thay đổi state; demo này chỉ kiểm chứng quy tắc hành vi.</p>
     usage: true
   executeCase8():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Một nghiệp vụ đặt chỗ và thanh toán có thể đi qua hai aggregate thuộc hai nguồn lưu trữ khác nhau. Transaction cục bộ của một nguồn không thể tự rollback thao tác đã hoàn tất tại nguồn còn lại; vì vậy cần thiết kế rõ <strong>quy trình phối hợp và bù trừ</strong> khi một bước thất bại.</p>
+      <p>Tình huống dùng Saga để minh họa rằng trạng thái nghiệp vụ cuối cùng phụ thuộc vào cả hành động thuận và compensation. Đây là nguyên lý nhất quán giữa các boundary, không phải lời hứa về một distributed ACID transaction.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/10/case/8/execute</code> và xem stdout để tìm <code>PASS: compensating flow illustrated</code>. Phần demo chỉ dùng <code>BookingStore</code> và <code>BillingStore</code> trong bộ nhớ, không kết nối hai database thật, nên không có transaction trace hoặc bản ghi DB bên ngoài để truy vấn.</p>
+      <p>Trong nhánh thanh toán không thành công, Saga trả kết quả thất bại và cả cờ <code>reserved</code> lẫn <code>charged</code> được kiểm tra ở trạng thái false sau bù trừ. Với nhánh thành công, cả hai cờ được kiểm tra ở trạng thái true. Hai kiểm tra này thể hiện cách phối hợp giữa reserve, charge và compensation, chưa chứng minh được resilience khi mất mạng hoặc crash giữa các bước.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng rằng <strong>nhiều aggregate ở các persistence boundary cần một quy trình bù trừ có chủ đích</strong>. Saga quản lý tiến trình nghiệp vụ và kết quả sau lỗi, không biến các giao dịch địa phương thành một transaction toàn cục.</p>
     usage: true
   executeCase9():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Một quy tắc hủy vé là <strong>business invariant</strong> chung, không phải trách nhiệm riêng của web controller. Nếu web tự kiểm tra thời hạn nhưng mobile hoặc batch bỏ qua, cùng một chiếc vé có thể được xử lý không nhất quán theo kênh gọi. Tình huống giúp người học thấy vai trò của shared application use case trong việc tập trung chính sách domain.</p>
+      <p>Đưa guard thời hạn vào thao tác chung khiến mỗi entrypoint có cùng điều kiện chấp nhận hoặc từ chối, đồng thời cho phép truyền thời điểm xác định thay vì phụ thuộc đồng hồ máy tại từng kênh.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/10/case/9/execute</code> và tìm <code>PASS: all channels share cancellation guard</code> trong console khi method qua kiểm tra. Request chỉ kích hoạt một bài demo, <strong>không phải ba HTTP endpoint web/mobile/batch riêng</strong> và không trả JSON vé đã hủy.</p>
+      <p>Demo mô phỏng ba kênh bằng ba hàm gọi cùng use case trên vé có giờ khởi hành <code>2026-11-30T12:00:00Z</code>. Thời điểm trước khởi hành <code>25</code> giờ được cả ba chấp nhận hủy; thời điểm trước <code>23</code> giờ bị cả ba từ chối theo guard hạn <code>24</code> giờ. Hãy chú ý sự nhất quán ở mọi kênh thay vì xem kết quả của riêng web.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>quy tắc miền phải nằm ở boundary được mọi kênh sử dụng chung</strong>. Dùng một use case có guard làm giảm nguy cơ web, mobile và batch áp dụng các chính sách nghiệp vụ khác nhau.</p>
     usage: true
   executeCase10():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Public setter cho trạng thái đơn hàng khiến object có thể nhảy qua những bước nghiệp vụ chưa diễn ra, ví dụ từ <code>NEW</code> sang <code>REFUNDED</code> dù chưa thanh toán. Ví dụ chỉ ra rằng <strong>đóng gói chuyển trạng thái bằng hành vi domain</strong> là cách bảo vệ state machine, không nên để mọi caller tự gán giá trị enum.</p>
+      <p>Các command có guard biểu diễn transition hợp lệ: ghi nhận thanh toán trước rồi mới hoàn tiền. Một khi đã hoàn tiền, không được tự quay lại thanh toán hoặc hoàn tiền lặp theo cách làm mất ý nghĩa trạng thái.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi <code>GET /case-studies/group/10/case/10/execute</code> và xem stdout; <code>PASS: guarded order transitions</code> được in khi toàn bộ kiểm tra đã hoàn thành. Endpoint trả <code>void</code>, không trả state graph dưới dạng JSON.</p>
+      <p>Đầu tiên bản thiết kế sai cho phép gán trực tiếp <code>REFUNDED</code>. Bản có guard từ chối hoàn tiền khi còn <code>NEW</code> và vẫn giữ trạng thái <code>NEW</code>; sau <code>recordPayment()</code>, thao tác <code>refund()</code> đưa đơn vào <code>REFUNDED</code>. Các lần thanh toán hoặc hoàn tiền tiếp theo bị chặn. Những exception được demo chủ động bắt để xác minh rejection, không phải lỗi được yêu cầu hiển thị qua HTTP.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>state transition phải là hành vi được kiểm soát, không phải một phép gán tùy ý</strong>. Đặt guard trong domain object giúp quy tắc vòng đời đơn hàng được áp dụng nhất quán ở mọi caller.</p>
     usage: true
   executeCase11():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Khi một entity có lazy relationship đi thẳng qua boundary persistence tới HTTP serialization, việc đọc child sau khi session đóng có thể thất bại. Tình huống minh họa vì sao <strong>domain/persistence object và API DTO không nên bị đồng nhất</strong>: đối tượng trả cho bên ngoài cần một snapshot dữ liệu đã được materialize trong phạm vi hợp lệ.</p>
+      <p>Thay vì lộ lazy loader và vòng đời session, mapping sang DTO khi dữ liệu còn truy cập được giúp response contract độc lập với trạng thái của ORM context. Ví dụ dùng Session và LazyItems tự mô phỏng, không khởi chạy Hibernate hoặc serializer thật.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/10/case/11/execute</code> trên JVM ứng dụng và quan sát stdout <code>PASS: API DTO detached from lazy state</code> khi các phép kiểm tra thành công. Không chờ một lỗi serializer trả về HTTP hoặc một DTO JSON từ endpoint demo <code>void</code>.</p>
+      <p>Ví dụ cố đọc lazy items trên entity sau khi session mô phỏng đã đóng và kiểm tra nó bị từ chối. Với session còn mở, mapper lấy dữ liệu <code>A</code> và <code>B</code> sang DTO; sau khi đóng session, DTO vẫn giữ ID <code>O1</code> và hai item để đọc độc lập. Để kiểm chứng hành vi ORM thật còn cần integration test với transaction, fetch strategy và tác động N+1.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>DTO là ranh giới dữ liệu tách API contract khỏi vòng đời lazy persistence object</strong>. Materialize đúng lúc giúp tránh phụ thuộc ngầm vào session khi dữ liệu đã rời domain/persistence boundary.</p>
     usage: true
   executeCase12():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Logic thời hạn không nên âm thầm phụ thuộc thời điểm thật mà máy đang chạy trả về. Nếu domain gọi đồng hồ hệ thống trực tiếp, cùng một kiểm thử có thể cho kết quả khác nhau theo giây chạy hoặc timezone. Tình huống cho thấy <strong>tiêm phụ thuộc thời gian qua Clock</strong> biến yếu tố môi trường thành đầu vào kiểm soát được của domain service.</p>
+      <p>Nhờ đó người học có thể kiểm chính xác biên hết hạn, thời điểm trước/sau deadline và việc chuyển <code>Instant</code> thành ngày lịch theo <code>ZoneId</code> mà không phải chờ đồng hồ thật tới giờ cần thử.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/10/case/12/execute</code> rồi tìm <code>PASS: fixed Clock yields deterministic boundary</code> trong stdout. Tín hiệu này do Service in sau các kiểm tra; endpoint không trả thời gian hệ thống hoặc trạng thái hết hạn dưới dạng JSON.</p>
+      <p>Clock được cố định tại <code>2026-11-01T00:00:00Z</code>: deadline muộn hơn một giây chưa hết hạn, đúng thời điểm deadline hoặc sớm hơn một giây thì đã hết hạn. Bài demo kiểm tra ngày <code>2026-11-01</code> theo UTC và <code>Asia/Ho_Chi_Minh</code>, đồng thời từ chối deadline <code>null</code>. Ở đúng instant được chọn, hai timezone cùng cho một ngày; demo <strong>không</strong> cho thấy hai ngày khác nhau gần nửa đêm địa phương.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>phụ thuộc thời gian được inject sẽ làm quy tắc deadline kiểm thử được và có tính quyết định</strong>. Phân biệt <code>Instant</code> với <code>LocalDate</code> theo timezone cũng giúp tránh lỗi khi thời gian hệ thống giao với quy tắc ngày lịch của nghiệp vụ.</p>
     usage: true
 Group11Controller:
   executeCase1():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Trong chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>, method giúp người học hiểu vì sao <code>equals()</code> và <code>hashCode()</code> phải dựa vào một danh tính ổn định khi object được dùng làm khóa của <code>HashMap</code> hoặc phần tử <code>HashSet</code>. Tên hiển thị có thể đổi, nhưng việc đổi tên không được làm object mất khả năng tra cứu theo business ID.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Khởi động ứng dụng Java với JVM assertions bật bằng <code>-ea</code>, sau đó gọi <code>GET /case-studies/group/11/case/1/execute</code>. Đặt breakpoint quanh thao tác đổi tên và các phép tra cứu: giá trị hash trước và sau khi đổi tên phải bằng nhau; map vẫn tìm được <code>active</code> bằng cả đối tượng gốc lẫn đối tượng mới cùng ID <code>C-1</code>, còn set vẫn chứa đúng một khách hàng. Method kiểm tra bằng <code>assert</code> nội bộ, không in kết quả tra cứu hay trả chúng trong HTTP body. Nếu thiếu <code>-ea</code>, các assert không được thực thi.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>hợp đồng equality nhất quán với collection băm</strong>: dùng ID bất biến cho identity bảo vệ khả năng tìm lại phần tử dù các thuộc tính khác thay đổi. Đây là nguyên tắc thiết kế object key, không phải yêu cầu cấm mọi object có trạng thái mutable.</p>
     usage: true
   executeCase2():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Bài học làm rõ mối ràng buộc giữa <code>equals()</code> và <code>hashCode()</code> trong <strong>OBJECT_ORIENTED_PROGRAMMING</strong>. Hai đối tượng đại diện cùng khóa sản phẩm phải được xem là bằng nhau và sinh cùng hash; nếu chỉ override <code>equals()</code>, cấu trúc băm có thể không tìm được bản ghi bằng một đối tượng khóa khác nhưng tương đương về giá trị.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Chạy ứng dụng với <code>-ea</code>, gọi <code>GET /case-studies/group/11/case/2/execute</code>, và dùng debugger xem các khóa sản phẩm có category <code>BOOK</code>, SKU <code>42</code> và khóa khác SKU <code>43</code>. Kiểm tra các phép bằng theo tính phản xạ, đối xứng, bắc cầu, hai khóa bằng nhau có hash bằng nhau; một khóa mới tương đương vẫn đọc được giá <code>250</code> trong <code>HashMap</code>. Các phép kiểm là Java <code>assert</code>, không phải dữ liệu HTTP trả về hay log đã phát sinh. Không suy đoán giá trị số cụ thể của hash.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>hợp đồng equals/hashCode là một phần của ngữ nghĩa object</strong>: khi equality được định nghĩa bằng nhiều trường ổn định thì hash cũng phải dùng chính những trường ấy để collection băm vận hành đúng.</p>
     usage: true
   executeCase3():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Trong <strong>OBJECT_ORIENTED_PROGRAMMING</strong>, kế thừa không tự bảo đảm phép bằng có ý nghĩa nhất quán. Khi lớp cha dùng <code>instanceof</code> còn lớp con chỉ chấp nhận đúng runtime class, hai object có cùng ID có thể cho kết quả <code>a.equals(b)</code> khác <code>b.equals(a)</code>, phá tính đối xứng. Bài học tách danh tính thành value object để chia sẻ identity mà không ép hai loại khách hàng thành cùng một object.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Bật <code>-ea</code> khi khởi chạy, rồi gọi <code>GET /case-studies/group/11/case/3/execute</code>. Trong debugger đối chiếu hai chiều so sánh giữa đối tượng base và subtype có ID <code>X</code>: chiều base so với subtype là true, chiều ngược lại là false. Sau đó đối chiếu hai khách hàng loại khác nhau có cùng <code>Identity("X")</code>: identity bằng nhau theo cả hai chiều nhưng bản thân hai customer khác loại không bị đồng nhất. Đây là tình huống lỗi được chủ động chứng minh bằng assertion; API không trả các phép so sánh trong body.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>nguy cơ phá symmetry khi trộn chính sách equality trong hierarchy</strong>. Việc đặt danh tính nghiệp vụ trong value object bất biến giúp tái sử dụng quy tắc nhận diện mà không cần một quan hệ kế thừa gây mâu thuẫn về equality.</p>
     usage: true
   executeCase4():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method minh họa sự khác nhau giữa <strong>thứ tự sắp xếp</strong> và <strong>đồng nhất đối tượng</strong> khi dùng collection có sắp thứ tự trong OOP. <code>TreeSet</code> coi hai phần tử là tương đương nếu comparator trả <code>0</code>, nên so sánh duy nhất theo tên có thể âm thầm làm mất sản phẩm khác SKU nhưng trùng tên.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Khởi chạy JVM với <code>-ea</code>, gọi <code>GET /case-studies/group/11/case/4/execute</code> rồi đặt breakpoint sau hai lần thêm sản phẩm cùng tên <code>Bút</code>. Bộ sắp xếp chỉ dựa vào tên giữ <code>1</code> phần tử; khi bổ sung tie-breaker bằng SKU, tập mới giữ đủ <code>2</code> phần tử và nhận diện được cả <code>SKU-1</code> lẫn <code>SKU-2</code>. Service dùng assertion để kiểm kết quả, không phát sự kiện xóa hoặc ghi database nào; endpoint không trả danh sách sản phẩm.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>comparator quyết định tính duy nhất trong sorted collection</strong>. Tiêu chí trả về <code>0</code> cần tương ứng với khóa đồng nhất đã được xác định rõ; tên hiển thị đơn lẻ thường không đủ thay cho mã sản phẩm.</p>
     usage: true
   executeCase5():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học thấy rằng khai báo <code>record</code> không tự tạo tính bất biến sâu cho danh sách hoặc phần tử mutable. Trong <strong>OBJECT_ORIENTED_PROGRAMMING</strong>, snapshot lịch sử cần tách quyền sở hữu dữ liệu bằng defensive copy của container và chuyển nested object sang value projection bất biến, để các thao tác sau này lên dữ liệu nguồn không viết lại lịch sử.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/11/case/5/execute</code> trên JVM bật <code>-ea</code>. Tại debugger, theo dõi snapshot đơn hàng ban đầu có dòng SKU <code>A</code> số lượng <code>2</code>; sau khi phần tử nguồn đổi thành <code>99</code> và thêm dòng <code>B</code>, snapshot vẫn giữ dòng ban đầu. Thử thêm một dòng qua danh sách snapshot phải phát sinh <code>UnsupportedOperationException</code> dự kiến và được bắt; việc xóa hết source list của snapshot khác cũng không thay danh sách đã lưu. Phần lớn phép đối chiếu là <code>assert</code>; không có snapshot JSON hoặc log quan sát được trực tiếp từ HTTP.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>defensive copying và immutable projection bảo vệ ranh giới sở hữu object</strong>. Cần xem cả khả năng thay đổi phần tử bên trong, bởi một list không cho thêm/xóa vẫn có thể chứa các tham chiếu mutable nếu thiết kế chưa sao chép đúng.</p>
     usage: true
   executeCase6():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Đây là bài học về <strong>hợp đồng <code>toString()</code> an toàn trên object graph có chu trình</strong>. Quan hệ parent/children hai chiều khiến việc ghép nguyên cả object cha và con vào chuỗi có nguy cơ đệ quy vô hạn; chỉ xuất ID, parent ID và số lượng con vừa đủ thông tin chẩn đoán vừa tránh phụ thuộc vào độ sâu đồ thị.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Khởi động với <code>-ea</code> và gọi <code>GET /case-studies/group/11/case/6/execute</code>. Dùng debugger xem các chuỗi được tạo từ node <code>root</code> và <code>child</code> sau khi liên kết cha/con: chuỗi root có <code>childCount=1</code>, chuỗi child có <code>parentId=root</code> và cả hai có độ dài dưới <code>100</code> ký tự. Code kiểm tra root không in lồng toàn bộ node child trong <code>toString()</code>. Hai chuỗi chỉ được lưu và so sánh nội bộ; không mặc định chúng đã được ghi vào logger. Không cần thử một <code>toString()</code> đệ quy sai để cố tạo <code>StackOverflowError</code>.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>biểu diễn object có giới hạn thay vì duyệt toàn bộ quan hệ</strong> giúp việc chẩn đoán dữ liệu có chu trình an toàn và dễ đọc hơn; <code>toString()</code> nên là tóm tắt có chủ đích, không phải trình tuần tự hóa cả graph.</p>
     usage: true
   executeCase7():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method làm rõ vì sao các phương thức mô tả object có thể trở thành nguồn rò rỉ dữ liệu khi lộ token hoặc thông tin thanh toán. Trong <strong>OBJECT_ORIENTED_PROGRAMMING</strong>, thiết kế <code>toString()</code> và trường log theo allowlist là một phần của hợp đồng công khai: chỉ đưa ra định danh và vai trò an toàn, giữ bí mật ngoài chuỗi quan sát.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Bật JVM assertions bằng <code>-ea</code>, gọi <code>GET /case-studies/group/11/case/7/execute</code> và dùng debugger xem các biến <code>text</code> từ <code>toString()</code> cùng <code>structured</code> từ <code>safeLogFields()</code>. Mã kiểm tra chúng có định danh <code>U-1</code> hoặc vai trò <code>VIEWER</code>, đồng thời không chứa token, số thẻ, hay tên trường nhạy cảm tương ứng. Không sao chép hoặc in các giá trị bí mật thật khi kiểm chứng; phương thức này chỉ xây chuỗi trong bộ nhớ và dùng assertion, không gửi log đến collector hay HTTP response.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>data minimization ngay tại phương thức biểu diễn object</strong>: chỉ công khai các trường đã được cho phép giúp tránh rò rỉ do log tự động hoặc debug. Muốn bảo đảm cho logger thực tế cần kiểm thêm serializer và bộ lọc tại nơi phát log.</p>
     usage: true
   executeCase8():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Ví dụ cho thấy <strong>shallow copy không đồng nghĩa với sở hữu độc lập</strong>. Khi hai profile giữ reference tới cùng object địa chỉ, thay đổi bản sao hoặc nguồn ngoài có thể ảnh hưởng bản gốc. Một copy constructor đúng cần sao chép các nested object mutable theo mức độc lập mà nghiệp vụ yêu cầu.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gửi <code>GET /case-studies/group/11/case/8/execute</code> trên ứng dụng có bật <code>-ea</code>. Trong debugger theo dõi <code>original</code> và <code>copy</code>: khi bản sao chuyển thành phố đầu tiên sang <code>Danang</code>, bản gốc vẫn là <code>Hanoi</code>. Ngay cả khi object địa chỉ ngoài bị đổi sang <code>Hue</code> và danh sách nguồn bị xóa, cả hai profile vẫn giữ dữ liệu độc lập mong đợi. Các trạng thái được đối chiếu bằng <code>assert</code> bên trong service; endpoint không ghi tệp, không lưu DB và không xuất profile thành JSON.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>copy constructor phải phản ánh ranh giới ownership</strong> trong OOP. Sao chép list thôi chưa đủ nếu các phần tử có thể thay đổi; nơi cần snapshot độc lập phải sao chép cả phần tử hoặc chuyển thành giá trị bất biến.</p>
     usage: true
   executeCase9():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method giới thiệu <strong>parametric polymorphism bằng Java generics</strong>: <code>Repository&lt;T, ID&gt;</code> ràng buộc kiểu entity và khóa ngay ở chữ ký, giúp caller nhận <code>Optional&lt;T&gt;</code> thay vì phải cast từ <code>Object</code>. Việc đặt ranh giới kiểu tại repository đưa nhiều lỗi sai kiểu từ lúc chạy về thời điểm biên dịch.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Trên JVM có <code>-ea</code>, gọi <code>GET /case-studies/group/11/case/9/execute</code>. Dùng debugger kiểm tra repository trong bộ nhớ lưu customer <code>C1</code> với tên <code>Mai</code>: thao tác lấy tên cho ra <code>Mai</code>, còn tìm ID không tồn tại nhận <code>Optional.empty()</code>. Những dòng cố lưu chuỗi thay entity hoặc nhận entity dưới kiểu Integer chỉ nằm trong comment để minh họa lỗi compile-time; endpoint không chạy trình biên dịch hay trả về thông báo lỗi kiểu. Không có kết nối database thật trong ví dụ.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>generics cải thiện type safety của API OOP</strong>: các quan hệ giữa khóa, dữ liệu lưu và dữ liệu đọc được kiểm tra tĩnh, giảm nhu cầu ép kiểu không an toàn trong client.</p>
     usage: true
   executeCase10():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Trong Java, <code>List&lt;Dog&gt;</code> không phải subtype của <code>List&lt;Animal&gt;</code> dù Dog là Animal. Method giải thích <strong>generic invariance</strong> và vai trò của <code>? extends Animal</code> cho API chỉ cần đọc dữ liệu, đồng thời cho thấy bản sao <code>List&lt;Animal&gt;</code> riêng mới thích hợp để bổ sung các loại thú khác.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Khởi chạy JVM với <code>-ea</code> rồi gọi <code>GET /case-studies/group/11/case/10/execute</code>. Qua debugger, nguồn <code>List&lt;Dog&gt;</code> tạo chuỗi tiếng kêu <code>woof;</code>; bản sao writable được thêm Cat tạo <code>woof;meow;</code>, trong khi danh sách chó ban đầu vẫn còn đúng một phần tử. Dòng gán trực tiếp <code>List&lt;Dog&gt;</code> sang <code>List&lt;Animal&gt;</code> đang ở dạng comment nên không gây lỗi compile khi gọi endpoint. Kết quả được xác nhận bằng assertion, không phát thành response body.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>invariance ngăn alias collection bị ghi sai kiểu</strong>: wildcard upper bound cho phép đọc an toàn từ các subtype, còn việc muốn thêm kiểu mới phải dùng collection có phạm vi kiểu phù hợp.</p>
     usage: true
   executeCase11():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method cụ thể hóa quy tắc <strong>PECS — Producer Extends, Consumer Super</strong> trong generic API. Danh sách nguồn <code>List&lt;? extends Animal&gt;</code> cho phép đọc ra Animal từ một subtype, còn danh sách đích <code>List&lt;? super Animal&gt;</code> có thể nhận thêm Animal mà không đánh mất an toàn kiểu.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/11/case/11/execute</code> khi ứng dụng chạy với <code>-ea</code>. Trong debugger, theo dõi hai con chó <code>Rex</code> và <code>Luna</code> được sao chép từ danh sách nguồn sang một <code>List&lt;Animal&gt;</code> và một <code>List&lt;Object&gt;</code>; cả hai đích nhận đủ hai phần tử. Sau khi thêm Cat vào danh sách Animal, nguồn Dog vẫn giữ hai phần tử. Dòng cố thêm Dog vào danh sách nguồn dạng <code>? extends</code> chỉ là ví dụ compile-time bị comment; không phải nhánh thực thi. API không trả các collection qua body.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh chứng <strong>phân biệt vai trò producer và consumer trong thiết kế OOP generic</strong> giúp mở rộng API theo subtype mà vẫn bảo vệ việc ghi và đọc collection khỏi những phép chuyển kiểu không hợp lệ.</p>
     usage: true
 Group12Controller:
   executeCase1():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Trong <strong>OBJECT_ORIENTED_PROGRAMMING</strong>, ví dụ này chỉ ra khác biệt giữa <strong>kiểm thử hành vi công khai</strong> và kiểm thử cấu trúc triển khai. Một phép thử dùng reflection để tìm private helper có thể thất bại sau khi đổi tên hoặc xóa helper, ngay cả khi kết quả nghiệp vụ và quy tắc kiểm tra đầu vào không hề thay đổi.</p>
+      <p>Người học hiểu rằng đóng gói còn là ranh giới cho thiết kế test: cùng một hợp đồng <code>payable</code> cần đúng ở cả phiên bản trước và sau refactor, trong khi cách tính nội bộ được phép khác nhau.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Khi ứng dụng ví dụ đang chạy, gọi <code>GET /case-studies/group/12/case/1/execute</code> và kiểm tra có lỗi thực thi nào được trả về hoặc ghi nhận hay không. Tiếp đó đối chiếu Case Study VI: hai cách triển khai phải cùng tính khoản thanh toán sau giảm giá và cùng từ chối khoản giảm vượt mức. Đặt chú ý vào kết quả và exception từ public method, không tìm tên private helper trong cấu trúc class.</p>
+      <p>Minh họa dùng kiểm tra trực tiếp hành vi trong Java; request HTTP không cung cấp danh sách assertion hay số đo coverage được tài liệu xác nhận. Nếu muốn xem từng nhánh, theo dõi các điều kiện của hợp đồng trong mã ví dụ thay vì suy ra nội dung từ HTTP status đơn lẻ.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên tắc <strong>black-box testing bảo vệ tính đóng gói</strong> của chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: khi test khóa các bất biến quan sát được thay vì chi tiết private, developer có thể cải tổ thuật toán bên trong mà vẫn kiểm soát được sự tương thích của hành vi công khai.</p>
     usage: true
   executeCase2():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Việc một mock được gọi đúng số lần chưa chứng minh đối tượng nghiệp vụ vẫn ở trạng thái hợp lệ. Tình huống rút tiền giúp người học nhận ra giới hạn của <strong>interaction-based testing</strong>: số lần gọi repository chỉ nói được rằng đã có tương tác, không nói được số dư sau giao dịch hoặc dữ liệu nào được ghi.</p>
+      <p>Kiểm thử đáng tin cậy cần kết hợp hành vi quan sát được với <strong>state invariant</strong>, đặc biệt ở nhánh lỗi nơi thao tác bị từ chối không được làm thay đổi trạng thái trước đó.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/12/case/2/execute</code> khi ứng dụng hoạt động. Dựa trên Case Study VI, kiểm tra ba khía cạnh của cùng phép rút tiền: repository được yêu cầu lưu sau thao tác hợp lệ; số dư trong account và bản ghi do fake repository giữ phải nhất quán; thao tác rút vượt số dư bị từ chối mà không phát sinh thêm lần lưu hay thay đổi số dư.</p>
+      <p>Phép kiểm tra sử dụng một repository giả trong bộ nhớ, không phải database được xác nhận đã kết nối. Không suy ra số lần gọi hoặc số dư từ HTTP response vì endpoint không khai báo nội dung kết quả để trả các giá trị đó.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên tắc <strong>kiểm thử kết quả và bất biến thay vì chỉ over-mocking</strong> trong chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: kiểm tra interaction là hữu ích khi nó thuộc hợp đồng, nhưng độ đúng nghiệp vụ phải được đối chiếu với trạng thái cuối và việc không có side effect ở nhánh bị từ chối.</p>
     usage: true
   executeCase3():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Hai implementation có thể đều vượt qua bộ unit test riêng mà vẫn không thay thế được cho nhau khi gặp <code>null</code>, đầu vào biên hoặc cách ném exception khác nhau. Tình huống này minh họa mối liên hệ giữa <strong>shared contract tests</strong> và <strong>Liskov Substitution Principle</strong>: chung interface về mặt cú pháp chưa đủ nếu các quy tắc hành vi không thống nhất.</p>
+      <p>Người học thấy giá trị của việc viết một bộ tiêu chí dùng lại cho mọi implementation, qua đó kiểm tra ý nghĩa của hợp đồng độc lập với cách mỗi class tính toán.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực hiện <code>GET /case-studies/group/12/case/3/execute</code> trên ứng dụng mẫu; sau đó xem phần hợp đồng trong Case Study VI. Cùng một bộ kiểm tra được áp lên hai cách tính phí vận chuyển: giá trị tại ranh giới khối lượng, phụ phí express, dữ liệu <code>null</code> hoặc khối lượng âm phải được diễn giải giống nhau, kể cả loại exception khi từ chối.</p>
+      <p>Quan sát thêm phép gọi lặp với cùng dữ liệu để đối chiếu tính nhất quán của kết quả trong mô hình không có trạng thái phụ. Việc gọi HTTP thành công không chứng minh mọi implementation tương lai đều tương thích; bằng chứng học tập nằm ở phạm vi các điều kiện đã được shared suite mô tả.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên tắc <strong>khả năng thay thế phụ thuộc vào hợp đồng ngữ nghĩa</strong> của chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: một interface chỉ thật sự tạo ra đa hình an toàn khi các lớp triển khai đồng thuận về giá trị trả về, xử lý dữ liệu biên và ngoại lệ có thể quan sát.</p>
     usage: true
   executeCase4():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Một method xử lý đơn hàng dài thường đồng thời thực hiện kiểm tra dữ liệu, định giá, chuyển trạng thái và lưu kết quả. Việc tách trách nhiệm sẽ rủi ro nếu không biết hành vi hiện tại nào phải giữ nguyên. Ví dụ này giúp người học hiểu <strong>characterization test</strong> như lớp bảo vệ trước khi áp dụng <strong>Single Responsibility Principle</strong> và refactor.</p>
+      <p>Bài học là thay đổi cấu trúc nội bộ theo bước nhỏ nhưng giữ nguyên hợp đồng bên ngoài: cùng kết quả đơn hàng, cùng dữ liệu được lưu và cùng cách từ chối đơn không hợp lệ.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Khi ứng dụng mẫu đã sẵn sàng, gọi <code>GET /case-studies/group/12/case/4/execute</code>, rồi đối chiếu hai phiên bản xử lý trong Case Study VI. Với đơn hợp lệ, kết quả thanh toán và nội dung lưu trong hai fake store phải tương đương; với đơn giảm giá không hợp lệ, việc xử lý phải dừng trước bước ghi.</p>
+      <p>Trọng tâm quan sát là <strong>behavior preservation</strong> qua ranh giới refactor, không phải số lượng class được tách ra. Store của ví dụ chỉ giữ dữ liệu trong bộ nhớ; không được diễn giải kết quả này là đã kiểm chứng transaction hoặc persistence trên database thật.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên tắc <strong>refactoring an toàn phải có regression gate trước khi tách trách nhiệm</strong> trong chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: cải thiện thiết kế lớp chỉ mang lại giá trị khi các kết quả và bất biến nghiệp vụ ban đầu vẫn được bảo toàn.</p>
     usage: true
   executeCase5():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Khi chuyển từ inheritance sang composition, developer dễ tập trung vào việc chuyển lời gọi sang delegate mà quên một bước bảo vệ từng nằm ở superclass. Tình huống này giúp người học nhận biết <strong>kiểm tra quyền là một security invariant</strong>, không phải chi tiết có thể bỏ đi khi đổi hình thức tái sử dụng mã nguồn.</p>
+      <p>Người học hiểu cách giữ guard ở đúng public boundary để việc chuyển sang delegation không vô tình mở đường cập nhật dữ liệu cho người không được phép.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/12/case/5/execute</code> khi ứng dụng đang chạy. Đối chiếu trong Case Study VI cả đường cũ sử dụng superclass và đường mới sử dụng delegate: lời gọi không có quyền phải bị từ chối trước khi có write; lời gọi có quyền vẫn đi đến cùng hiệu ứng cập nhật được mong đợi.</p>
+      <p>Để đánh giá đúng rủi ro, chú ý cả nhánh bị từ chối lẫn số lần ghi trong fake repository, thay vì chỉ kiểm tra có ném <code>SecurityException</code>. Ví dụ mô phỏng quyền bằng thuộc tính user tại chỗ, không chứng minh đã có hệ thống xác thực hay phân quyền HTTP thực tế.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên tắc <strong>giữ bất biến bảo mật khi thay cấu trúc kế thừa bằng composition</strong> của chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: quyền được kiểm soát tại ranh giới công khai phải được bảo toàn dù chi tiết delegation bên trong đã đổi hoàn toàn.</p>
     usage: true
   executeCase6():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Chuyển toàn bộ procedural code sang mô hình domain object trong một lần lớn khiến lỗi hồi quy khó truy nguyên và khó quay lại trạng thái ổn định. Ví dụ này giới thiệu <strong>incremental refactoring</strong> với <strong>golden-master fixtures</strong>: thay dần từng use case trong khi giữ bộ kết quả chuẩn để đối chiếu.</p>
+      <p>Người học nhận ra việc đưa OOP vào một hệ thống không nhất thiết là viết lại đồng loạt; ranh giới chuyển đổi nhỏ giúp kiểm soát thay đổi và xác định rõ hành vi nào vẫn đang do mã cũ xử lý.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/12/case/6/execute</code>, sau đó rà bộ fixture trong Case Study VI. Nhánh <code>BUY</code> đi qua implementation mới, còn <code>REFUND</code> tạm dùng implementation cũ; cả hai được so sánh với baseline cố định cho các trường hợp thông thường, giá trị biên, lỗi âm và thao tác không nhận diện.</p>
+      <p>Điểm cần quan sát là <strong>đầu ra giống nhau trước và sau thay đổi</strong>, không phải framework OOP tạo thêm class nào. Các fixture được định nghĩa trong bộ nhớ ví dụ; không nên coi chúng là kết quả hồi quy đã đo trên hệ thống production hoặc là danh sách đầy đủ mọi use case.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên tắc <strong>di trú thiết kế theo lát cắt nhỏ có bằng chứng hồi quy</strong> trong chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: giữ hành vi đã biết bằng golden-master giúp đưa trách nhiệm vào domain object theo từng bước, giảm phạm vi rủi ro của mỗi lần refactor.</p>
     usage: true
   executeCase7():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p><strong>Move Method</strong> có thể giữ nguyên kiểu trả về nhưng vẫn làm thay đổi ngữ nghĩa nếu thứ tự các side effect bị đảo. Trong tình huống cập nhật đơn hàng, callback chạy trước khi commit sẽ nhìn thấy dữ liệu chưa hoàn tất, nên thứ tự <strong>validate → commit → notify</strong> thực sự là một phần của hợp đồng quan sát được.</p>
+      <p>Người học hiểu vì sao test refactoring phải kiểm tra cả trình tự thành công lẫn đường lỗi: nếu bước lưu thất bại, callback không được chạy như thể việc cập nhật đã hoàn tất.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi <code>GET /case-studies/group/12/case/7/execute</code> trên ứng dụng ví dụ, rồi đối chiếu chuỗi sự kiện được ghi trong fake store của Case Study VI. Ở nhánh thành công, callback chỉ được quan sát trạng thái sau khi commit; ở nhánh commit ném lỗi, danh sách sự kiện phải dừng trước callback.</p>
+      <p>Những dấu mốc trong ví dụ chỉ là danh sách trong bộ nhớ, không phải log phân tán, database transaction hay sự kiện gửi qua hàng đợi. Với một hệ thống thật có crash hoặc đa tiến trình, cần xem xét transaction/outbox riêng trước khi khẳng định thông báo luôn được phát đúng một lần.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên tắc <strong>bảo toàn thứ tự side effect khi refactor cấu trúc</strong> của chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: việc di chuyển trách nhiệm giữa các lớp chỉ an toàn khi callback và thao tác ghi tiếp tục tuân thủ cùng những bất biến thời điểm mà bên ngoài dựa vào.</p>
     usage: true
   executeCase8():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Khởi động toàn bộ Spring context chỉ để kiểm tra một phép tính tiền đơn giản làm unit test phụ thuộc vào quá nhiều thành phần không liên quan. Tình huống này giúp người học hiểu <strong>test isolation và test pyramid</strong>: hành vi cốt lõi của object nên kiểm tra bằng dependency tường minh hoặc fake, còn Spring integration test dành cho wiring và tích hợp thực sự.</p>
+      <p>Trong OOP, việc thiết kế lớp nhận <code>DiscountPolicy</code> qua hợp đồng giúp tách tính đúng của thuật toán khỏi chi phí tạo container hay môi trường của framework.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Khi ứng dụng đang hoạt động, gọi <code>GET /case-studies/group/12/case/8/execute</code>. Đối chiếu ví dụ Case Study VI: chính sách giảm giá giả được truyền trực tiếp vào bộ tính tiền; các phép kiểm tra bao gồm tổng tiền bình thường, giá trị không âm, đầu vào âm và policy trả mức giảm không hợp lệ.</p>
+      <p>Mã minh họa có thể được kiểm tra như logic Java độc lập mà không cần dựng <code>ApplicationContext</code> cho riêng phép tính đó. Việc endpoint được gọi qua ứng dụng Spring không chứng minh một benchmark tốc độ của unit test hay xác nhận Spring context hoàn toàn không khởi động trong request hiện tại; đây là sự phân biệt về <strong>phạm vi kiểm thử</strong>.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên tắc <strong>thiết kế đối tượng dễ kiểm thử bằng cách cô lập dependency</strong> trong chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: unit test thuần tập trung vào invariant nghiệp vụ, còn integration test chỉ nên gánh chi phí framework khi mục tiêu thật sự là xác minh cấu hình và kết nối giữa các thành phần.</p>
     usage: true
 Group13Controller:
   executeCase1():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Trong OBJECT_ORIENTED_PROGRAMMING, một đối tượng chia sẻ không an toàn chỉ vì các lời gọi tới nó trông đơn giản. Method này minh họa lỗi <strong>lost update</strong>: hai thread cùng đọc giá trị cũ rồi ghi kết quả tăng khiến một lần cập nhật bị mất. Người học phân biệt thao tác đọc–sửa–ghi với một phép tăng thực sự nguyên tử và hiểu vì sao <code>AtomicInteger</code> thích hợp cho counter độc lập.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi endpoint của Case 1 và đối chiếu mã minh họa cùng phần kiểm chứng trong Case Study. Hai <code>CountDownLatch</code> được dùng để ép hai thread đọc trước khi ghi, tạo lịch xen kẽ có thể kiểm tra; phần sửa dùng <code>incrementAndGet()</code> khi nhiều thread tăng counter. Nếu chạy mẫu độc lập, theo dõi điều kiện kiểm tra tổng số lần tăng và dòng stdout <code>PASS: atomic counter preserves all increments</code> khi thực thi hoàn tất. Không hiểu một lần gọi HTTP là phép đo tổng số request của hệ thống thật.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>race condition và tính nguyên tử</strong> của trạng thái mutable dùng chung: các thao tác riêng lẻ có vẻ đúng vẫn có thể làm mất cập nhật khi xen kẽ; phép tăng nguyên tử hoặc lock bao trùm toàn bộ invariant mới bảo vệ được kết quả.</p>
     usage: true
   executeCase2():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method này giúp người học hiểu rằng ghi xong một cờ boolean ở thread A không đồng nghĩa thread B chắc chắn quan sát được nó nếu thiếu quan hệ đồng bộ theo Java Memory Model. Mẫu sử dụng <code>AtomicBoolean</code> để công bố trạng thái hoàn tất với ngữ nghĩa bộ nhớ tương ứng <code>volatile</code>, thay vì kỳ vọng <code>sleep</code> tự tạo visibility.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi endpoint rồi so sánh hai vai trò writer và observer trong Case Study: latch khởi phát các tác vụ, writer cập nhật cờ còn observer đọc giá trị qua <code>get()</code>. Khi chạy ví dụ độc lập, kiểm tra việc <code>Future</code> hoàn thành trong thời hạn đặt ra và trạng thái được quan sát qua atomic flag. Timeout là hàng rào tránh test treo, không phải phép đo latency; ví dụ cũng không bảo đảm dựng lại lỗi visibility của một boolean thường ở mọi lần chạy.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>happens-before và memory visibility</strong> trong OOP đồng thời: trạng thái dùng chung cần cơ chế công bố và quan sát có hợp đồng rõ ràng; các tác vụ thực tế nên ưu tiên đồng bộ chủ động thay cho busy-spin hoặc <code>Thread.sleep</code>.</p>
     usage: true
   executeCase3():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Đổi <code>HashMap</code> thành một collection thread-safe chưa đủ nếu client vẫn thực hiện phép cộng dồn bằng hai lời gọi <code>get</code> và <code>put</code>. Method này phân biệt an toàn ở cấp thao tác với tính nguyên tử của <strong>compound action</strong>, đồng thời giới thiệu <code>ConcurrentHashMap.merge</code> để cập nhật cùng một khóa không mất lượt tăng.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi endpoint rồi theo dõi hai phần minh họa của Case Study. Phần phản ví dụ mô phỏng lịch xen kẽ đọc cùng giá trị trước khi ghi, không chủ động tạo data race nguy hiểm trên <code>HashMap</code>. Phần còn lại dùng bốn worker và <code>merge</code> trên khóa <code>A</code>; nếu chạy riêng mẫu, so sánh tổng cập nhật với điều kiện kiểm tra sau khi các <code>Future</code> hoàn tất. Không suy ra <code>merge</code> biến nhiều khóa hay cả một quy trình nghiệp vụ thành một transaction.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>ranh giới atomicity trong concurrent collections</strong>: tính thread-safe của container phải được dùng qua đúng thao tác nguyên tử; quy tắc liên quan nhiều khóa hoặc nhiều object vẫn cần một cơ chế nhất quán rộng hơn.</p>
     usage: true
   executeCase4():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method này cho thấy nguy cơ khóa giữ lâu và dependency ngầm khi một object gọi callback do bên ngoài cung cấp trong vùng <code>synchronized</code>. Callback có thể gọi ngược hoặc giữ thêm lock, biến thao tác phát sự kiện thành nơi phát sinh deadlock. Chụp danh sách listener dưới lock rồi thông báo sau khi nhả khóa giúp tách quản lý dữ liệu nội bộ khỏi mã callback không kiểm soát.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi endpoint và đối chiếu mẫu <code>bad</code> với mẫu phát qua snapshot trong Case Study. Phép kiểm tra <code>Thread.holdsLock</code> cho biết callback có được gọi khi đang giữ monitor của bus hay không; callback tự unsubscribe còn giúp đối chiếu trạng thái danh sách listener sau khi phát. Mẫu tránh cố tình gây deadlock để làm bằng chứng. Listener đã bị hủy đăng ký vẫn có thể nằm trong snapshot chụp trước đó, nên quy tắc phát sự kiện cần xác định rõ.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>lock ordering và ranh giới gọi mã bên ngoài</strong> của thiết kế hướng đối tượng: chỉ bảo vệ dữ liệu chung khi cần, không thực thi callback tùy ý dưới lock; muốn chẩn đoán deadlock thực tế cần thêm bằng chứng luồng và thứ tự lock.</p>
     usage: true
   executeCase5():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Một class có getter và setter đều <code>synchronized</code> vẫn có thể không an toàn cho lời gọi <code>set(get() + 1)</code>. Method này giúp người học đặt <strong>ranh giới đồng bộ theo invariant nghiệp vụ</strong> thay vì theo từng method: thao tác tăng phải bao gồm cả đọc, sửa và ghi trong một critical section không thể bị thread khác chen vào.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi endpoint rồi so sánh hai lịch thao tác trong Case Study. Ở phiên bản cũ, hai client đọc cùng số ban đầu trước khi lần lượt ghi, làm mất một lượt tăng dù từng accessor có khóa. Phiên bản sửa đưa logic tăng vào một method đồng bộ chung; khi chạy mẫu độc lập, kiểm tra giá trị sau các lần tăng trên cùng monitor. Không dùng ví dụ counter một field để kết luận thao tác I/O, database hoặc nhiều object tự động có transaction chung.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>compound race và atomicity boundary</strong> trong OBJECT_ORIENTED_PROGRAMMING: thiết kế API phải cung cấp một thao tác nguyên tử cho điều kiện bất biến cần giữ, không đẩy việc ghép các bước đồng bộ riêng lẻ sang từng caller.</p>
     usage: true
   executeCase6():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method này giúp phân biệt object không còn giá trị nghiệp vụ với object đã đủ điều kiện cho garbage collector thu hồi. Một cache sống lâu nắm reference tới mọi request khiến chúng vẫn reachable; thiết kế cache có giới hạn và eviction loại bỏ đường tham chiếu không cần thiết, nhưng không đồng nghĩa đo được bộ nhớ đã giải phóng.</p>
+      <h3>2. Các chương trình ngoài luồng (nếu có)</h3>
+      <p>Nếu có quyền ghi và phân tích dữ liệu JVM, có thể dùng heap dump, JFR hoặc công cụ phân tích heap để lần theo retention path và so sánh snapshot. Phải tự bật thu thập và chuẩn bị môi trường phù hợp; lời gọi API minh họa không tự tạo bản ghi JFR hay heap dump.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi endpoint rồi đối chiếu cache không giới hạn với cache LRU có sức chứa hai entry trong Case Study. Trình tự thêm <code>R1</code>, <code>R2</code>, đọc lại <code>R1</code> và thêm <code>R3</code> cho phép kiểm tra entry ít được dùng <code>R2</code> không còn trong cache; bản mẫu có stdout <code>PASS: least-recently-used eviction</code> khi hoàn tất kiểm tra. Đây là dấu hiệu về <strong>quy tắc giữ reference</strong>, không phải phép đo GC hoặc heap giảm.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>GC reachability và cache lifecycle</strong>: không giữ object vượt quá nhu cầu và cần chính sách giới hạn/eviction rõ ràng; để xác nhận memory leak trên ứng dụng thực phải phân tích reference và dữ liệu bộ nhớ thu được.</p>
     usage: true
   executeCase7():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method này bàn về quyết định thiết kế trước sức ép hiệu năng: thay domain object bằng mảng primitive có thể làm mất ngữ nghĩa và tăng chi phí bảo trì, trong khi chưa chắc tạo ra lợi ích có thể đo. Người học cần phân biệt <strong>đúng hành vi</strong> với <strong>nhanh hơn</strong>, rồi chỉ tối ưu ở nơi baseline của workload thật chỉ ra vấn đề.</p>
+      <h3>2. Các chương trình ngoài luồng (nếu có)</h3>
+      <p>Nếu xây dựng phép đo riêng, dùng JMH với fork/warmup/measurement phù hợp cho microbenchmark và JFR hoặc profiler để xem allocation, GC và CPU. Các công cụ phải được chuẩn bị và chạy ngoài API demo; không có số liệu throughput, p95 hay p99 mặc định.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi endpoint và xem hai cách biểu diễn dữ liệu trong Case Study cùng các kiểm tra tính tương đương và edge case. Các assertion của mẫu chỉ hỗ trợ xác nhận phép xử lý giữ kết quả mong muốn. Muốn so sánh hiệu năng, hãy giữ cùng dữ liệu đầu vào, JDK, heap và môi trường, đo nhiều lần trước/sau rồi xem độ phân tán kết quả; không suy diễn mảng primitive nhanh hơn chỉ vì có ít object hơn trên mã nguồn.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>evidence-based optimization</strong> trong OOP: bảo vệ mô hình đối tượng dễ hiểu bằng phép đo khách quan, chỉ đánh đổi abstraction và readability khi có bằng chứng hiệu năng liên quan mục tiêu sử dụng.</p>
     usage: true
   executeCase8():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method này minh họa lỗi nghiêm trọng khi tái sử dụng mutable object giữa các request khác nhau: reset một trường như tên người dùng nhưng quên trạng thái quyền có thể mang dữ liệu phiên trước sang phiên sau. <strong>Object lifecycle và aliasing</strong> vì thế là vấn đề đúng đắn và cách ly dữ liệu, không chỉ là số lần cấp phát.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi endpoint và đối chiếu hai thiết kế trong Case Study: context mutable được pool chia sẻ dẫn tới trạng thái quyền cũ còn sót, còn request context bất biến được tạo riêng sử dụng defensive copy của tập vai trò. Trong mẫu độc lập, kiểm tra việc thay đổi collection đầu vào không làm biến đổi snapshot đã tạo. Đây chỉ là dữ liệu phân quyền mô phỏng; hệ thống thật cần identity và role từ security layer đã xác thực, không lấy thẳng từ giá trị client tự khai.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>isolation theo vòng đời object</strong> trong OBJECT_ORIENTED_PROGRAMMING: không dùng chung mutable per-request state khi thiếu hợp đồng reset toàn bộ field; tính bất biến và quyền sở hữu dữ liệu tường minh thường đáng giá hơn lợi ích allocation chưa được đo.</p>
     usage: true
   executeCase9():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method này giúp người học nhận ra <code>synchronized</code> bao toàn bộ service method có thể giữ lock cả lúc gọi collaborator xử lý công việc độc lập. Bảo vệ một counter nhỏ không nhất thiết đòi serialize mọi request; thu hẹp critical section hoặc dùng atomic field có thể giúp các thao tác không liên quan tránh tranh cùng monitor, nhưng chỉ khi invariant vẫn được bảo vệ.</p>
+      <h3>2. Các chương trình ngoài luồng (nếu có)</h3>
+      <p>Để đánh giá contention thực, có thể bật JFR và phân tích sự kiện <code>jdk.JavaMonitorEnter</code>, thời gian bị chặn cùng benchmark đa thread dưới tải phù hợp. Chỉ thực hiện khi đã cấu hình công cụ và có recording; ví dụ API không tự báo throughput được cải thiện.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi endpoint rồi đọc phép kiểm tra <code>Thread.holdsLock</code> trong Case Study: bản cũ gọi callback khi vẫn giữ monitor của service, còn bản dùng <code>AtomicInteger</code> để cập nhật counter gọi callback ngoài lock. Đối chiếu count cuối và trạng thái sở hữu lock tại callback; đây là bằng chứng về <strong>phạm vi khóa</strong>, không phải số đo blocked time hay tốc độ phục vụ HTTP.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>lock granularity và contention</strong>: giới hạn khóa đúng phần trạng thái chung giúp thiết kế tránh đồng bộ quá rộng, song mọi thay đổi phải giữ invariant trước khi kết luận lợi ích hiệu năng bằng số liệu thực.</p>
     usage: true
   executeCase10():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method này làm rõ nguyên nhân cache dẫn xuất gây dữ liệu cũ: giá trị <code>total</code> được tính từ quantity của các mục nhưng không tự cập nhật nếu collection gốc thay đổi. Thay vì rải thao tác sửa cache ra nhiều caller, aggregate phải nắm quyền thay đổi dữ liệu và <strong>invalidation</strong> mọi dẫn xuất phụ thuộc vào dữ liệu ấy.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi endpoint và đối chiếu trường hợp lỗi với aggregate có phương thức <code>setQuantity</code> trong Case Study. Sau khi thay quantity của các mục, kiểm tra tổng được tính lại theo trạng thái hiện tại; khi đầu vào không hợp lệ bị từ chối, cần đối chiếu rằng trạng thái trước đó vẫn được giữ. Ví dụ dùng <code>synchronized</code> để đọc/ghi collection cùng cache nhất quán trong một process; không từ đó suy ra cache nhiều node hay database tự đồng bộ.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>object invariants và quản lý derived state</strong> trong OOP: nơi sở hữu mutation phải biết giá trị nào cần invalidation hoặc tính lại, tránh để client quan sát một phiên bản dữ liệu không còn phù hợp với aggregate.</p>
     usage: true
 Group1Controller:
   executeCase1():
@@ -636,198 +928,618 @@ Group4Controller:
     usage: true
 Group5Controller:
   executeCase1():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Trong <strong>OBJECT_ORIENTED_PROGRAMMING</strong>, người học phân biệt quan hệ kiểu con với năng lực thật sự của một đối tượng. Việc bắt mọi phương tiện có phương thức khởi động động cơ khiến xe đạp phải thực hiện một lời hứa vô nghĩa. Thiết kế tách khả năng di chuyển và khả năng có động cơ giúp client phụ thuộc đúng hợp đồng mà nó cần, qua đó làm rõ Liskov Substitution Principle và Interface Segregation Principle.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/5/case/1/execute</code> trên ứng dụng đã chạy. Để xem giá trị trung gian, gắn IDE debugger vào JVM và kiểm tra hai loại phương tiện có thể cùng dùng hợp đồng di chuyển, còn thao tác khởi động chỉ nhận đối tượng có năng lực động cơ. Ví dụ Case Study còn chỉ ra rằng cố truyền xe đạp vào API nhận <code>EnginePowered</code> là lỗi kiểu tại thời điểm biên dịch; lời gọi API không tự biên dịch đoạn phản ví dụ đã comment. Nếu các phép kiểm dùng <code>assert</code>, cần bật assertions của JVM để chúng được thực thi.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh họa nguyên lý <strong>hợp đồng kiểu phải phù hợp khả năng hành vi</strong> trong OOP: chia interface theo vai trò giúp ngăn thao tác không hợp lệ ngay từ hệ kiểu, thay vì để subtype ném ngoại lệ khi bị yêu cầu làm việc ngoài năng lực.</p>
     usage: true
   executeCase2():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Tình huống giúp người học nhận ra rằng subtype hợp lệ phải giữ được bất biến mà client đã tin tưởng ở lớp cha. Với tài khoản, số dư không âm sau các giao dịch hợp lệ là một cam kết về hành vi; nếu lớp tài khoản tiết kiệm thay đổi quy tắc rút tiền tùy tiện, mã dùng chung hợp đồng tài khoản sẽ không còn an toàn. Bảo vệ thao tác rút tại lớp sở hữu invariant là cách thiết kế hướng đối tượng kiểm soát hậu điều kiện.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/5/case/2/execute</code>; dùng debugger hoặc chạy ví dụ độc lập với assertions bật để theo dõi trạng thái số dư trước và sau thao tác. So sánh việc rút vượt số dư bị từ chối mà không làm thay đổi số dư với việc rút đúng số tiền hiện có đưa số dư về không. Ngoại lệ được bắt để kiểm tra hợp đồng là một phần của kịch bản, không phải một response lỗi HTTP cần suy diễn.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh họa <strong>behavioral subtyping và invariant</strong> trong OBJECT_ORIENTED_PROGRAMMING: một lớp con chỉ thay thế an toàn cho lớp cha khi mọi lời gọi hợp lệ tiếp tục giữ các quy tắc mà khách hàng của abstraction được phép dựa vào.</p>
     usage: true
   executeCase3():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học hiểu tại sao thứ tự khởi tạo là một phần quan trọng của thiết kế kế thừa. Constructor lớp cha chạy khi dữ liệu riêng của lớp con có thể chưa sẵn sàng, nên gọi một phương thức có thể override hoặc validation phụ thuộc trạng thái con tại thời điểm đó dễ tạo lỗi khó tìm. Đặt bước xác thực sau khi object hoàn tất khởi tạo giúp tách trách nhiệm tạo trạng thái khỏi trách nhiệm kiểm tra tính hợp lệ.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/5/case/3/execute</code> và dùng breakpoint ở giai đoạn tạo hóa đơn để quan sát thứ tự: phần trạng thái cơ sở được tạo, danh sách dòng của hóa đơn được thiết lập, sau đó validation mới đánh giá dữ liệu. Đối chiếu hóa đơn có dòng hợp lệ với hóa đơn có danh sách rỗng bị từ chối. Case Study mô tả nguy cơ khi constructor cha gọi phương thức override, nhưng đó là phản ví dụ giải thích, không phải một lỗi bắt buộc xuất hiện từ endpoint đang chạy.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh họa <strong>ranh giới khởi tạo trong cây kế thừa</strong>: giữ constructor lớp cha độc lập với trạng thái chưa hoàn chỉnh của lớp con làm giảm coupling và cho phép kiểm tra bất biến tại thời điểm object đã sẵn sàng.</p>
     usage: true
   executeCase4():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Trong OOP, override có thể thay thuật toán chi tiết nhưng không được lặng lẽ phá cam kết chung với client. Ví dụ định giá chỉ cho subtype quyết định phần tiền trước phí, còn công thức cộng phí bắt buộc nằm trong một bước xử lý không cho override. Người học thấy cách template method và contract test cùng bảo vệ hậu điều kiện cho nhiều loại giá khác nhau.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/5/case/4/execute</code> và quan sát bằng debugger các khoản subtotal, phí và tổng cộng trong thiết kế minh họa. Với bộ giá trị trong Case Study, báo giá thường và báo giá khuyến mại cùng phải giữ phí bắt buộc, dù subtotal được tính khác nhau. Những phép kiểm trong biểu thức <code>assert</code> chỉ chạy khi JVM bật assertions, chẳng hạn với <code>-ea</code>; việc request hoàn tất khi assertions tắt không xác nhận phép so sánh đó.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh họa <strong>postcondition của lớp cha được bảo toàn qua đa hình</strong>: phần mở rộng nằm ở nơi được phép tùy biến, còn quy tắc bắt buộc được đặt tại một điểm chung. Điều này giúp subtype khác nhau vẫn có thể thay thế đúng hợp đồng định giá.</p>
     usage: true
   executeCase5():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học phân biệt việc thay đổi implementation với việc mở rộng tùy tiện loại lỗi mà client phải xử lý. Trong Java, một phương thức override có thể thu hẹp checked exception hoặc giữ loại phù hợp với khai báo lớp cha; thêm loại checked exception không liên quan sẽ phá hợp đồng ở cấp biên dịch. Đây là ví dụ hệ kiểu hỗ trợ kiểm soát tính tương thích của quan hệ kế thừa.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/5/case/5/execute</code>. Để kiểm chứng trực tiếp quy tắc, xem chữ ký phương thức đọc ở kiểu cơ sở và hai implementation trong ví dụ Case Study; đối chiếu nhánh đọc hợp lệ khi bật assertions. Có thể biên dịch riêng một biến thể cố ý đổi checked exception sang loại không phải subtype của <code>IOException</code> để quan sát lỗi từ <code>javac</code>; endpoint không tự sửa mã hay thực hiện phép thử biên dịch này. Những chuỗi trả về từ ví dụ là dữ liệu minh họa, không chứng minh đã truy cập ổ đĩa hoặc gọi dịch vụ mạng.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method làm rõ <strong>hợp đồng exception khi overriding</strong> trong OOP: subtype cần duy trì khả năng được gọi qua kiểu cha, kể cả ở các đường thất bại mà compiler yêu cầu khai báo tường minh.</p>
     usage: true
   executeCase6():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học hiểu rằng overload và override trả lời hai câu hỏi khác nhau: trình biên dịch chọn chữ ký overload từ kiểu tĩnh của đối số, còn dynamic dispatch chỉ chọn implementation của phương thức instance đã được xác định. Giá trị <code>null</code> làm lộ rõ quy tắc này khi tồn tại nhiều overload nhận các kiểu tham chiếu khác nhau, đặc biệt khi API được mở rộng theo thời gian.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/5/case/6/execute</code>; dùng debugger và bật assertions để so sánh nhánh <code>choose(String)</code> với <code>choose(Object)</code> khi truyền <code>null</code> trực tiếp hoặc ép kiểu tường minh. Trong Case Study, overload nhận String được chọn khi cả Object và String cùng phù hợp mà String đặc hiệu hơn. Còn tình huống hai overload nhận String và Integer khiến <code>run(null)</code> mơ hồ phải được xác minh bằng một ví dụ biên dịch riêng, không phải một nhánh runtime của endpoint này.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh họa <strong>phân giải overload tại compile time</strong> trong OBJECT_ORIENTED_PROGRAMMING: tính rõ ràng của chữ ký và kiểu ở call site quan trọng hơn kỳ vọng chủ quan về kiểu thực tế của đối tượng khi chạy.</p>
     usage: true
   executeCase7():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Trong OOP, <strong>static method hiding</strong> và <strong>instance overriding</strong> chọn hành vi theo hai cơ chế khác nhau. <code>Base7</code> và <code>Child7</code> có cùng phương thức static <code>kind()</code>; <code>Child7.kind()</code> che phương thức tương ứng của lớp cha. Với biến <code>Base7 ref = new Child7()</code>, lời gọi <code>ref.kind()</code> được liên kết theo kiểu khai báo <code>Base7</code>, còn <code>ref.render()</code> chạy implementation được override trên object <code>Child7</code>. Đây chính là khác biệt mà tình huống Case Study muốn chứng minh.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/5/case/7/execute</code> trong JVM bật assertions (<code>-ea</code>) hoặc chạy <code>Case7Test</code> với assertions bật. Đặt breakpoint tại các lời gọi <code>Base7.kind()</code>, <code>Child7.kind()</code>, <code>ref.kind()</code>, <code>ref.render()</code> trong <code>Group5Service.executeCase7()</code>: ba giá trị kỳ vọng lần lượt là <code>base-static</code>, <code>child-static</code>, <code>base-static</code>; kết quả instance là <code>child-instance</code>. Hai static method trên lớp domain ủy quyền thân tính toán cho <code>Base7Utils</code> và <code>Child7Utils</code> để giữ cách tách helper của STEP 8, nhưng quan hệ hiding nằm ở <code>Base7</code>/<code>Child7</code> thực sự. API trả <code>void</code>, không có JSON response chứa các giá trị này.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, <code>executeCase7()</code> minh họa được <strong>static method hiding trong quan hệ kế thừa</strong> bằng các lời gọi có cùng tên nhưng kiểu tham chiếu khác nhau; đồng thời xác nhận <strong>dynamic dispatch</strong> của phương thức instance <code>render()</code>. Hiding phụ thuộc kiểu tại compile time, còn overriding phụ thuộc loại object thực tế lúc runtime; không nên gọi phương thức static thông qua biến instance trong code ứng dụng thông thường.</p>
     usage: true
   executeCase8():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Ví dụ giúp người học nhìn rõ bẫy <strong>field hiding</strong>: hai field trùng tên của lớp cha và lớp con là hai vị trí dữ liệu riêng, và Java chọn field theo kiểu tĩnh của biểu thức truy cập. Khác với phương thức instance có override, field không tự chuyển sang phiên bản của object runtime. Dùng một trạng thái private và accessor có nghĩa là cách giảm mơ hồ về nguồn dữ liệu trong quan hệ kế thừa.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/5/case/8/execute</code>; dùng debugger hoặc assertions đã bật để so sánh <code>oldRef.code</code> với <code>oldChild.code</code> trên cùng một object. Trong ví dụ sai, tham chiếu kiểu cha đọc giá trị của field lớp cha còn tham chiếu kiểu con đọc field lớp con. Ở thiết kế sửa, trạng thái được cập nhật qua thao tác có kiểm soát và cả hai tham chiếu đọc chung một accessor, từ đó nhận cùng giá trị sau cập nhật.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh họa <strong>tính đóng gói của trạng thái kế thừa</strong> trong OOP: tránh trùng tên field và chỉ công bố thao tác truy cập có nghĩa giúp bảo toàn một nguồn dữ liệu nhất quán cho mọi client.</p>
     usage: true
   executeCase9():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học nhận ra rằng quyền truy cập <code>protected</code> của một hook có thể là cam kết mở rộng mà các subclass đang phụ thuộc. Khi đổi hook thành <code>private</code>, lập trình viên không chỉ giảm phạm vi truy cập mà còn có thể làm thay đổi cơ chế override, khiến phần tùy biến ngừng được gọi. Tính tương thích của thiết kế hướng đối tượng vì vậy bao gồm cả điểm mở rộng chứ không chỉ public API.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/5/case/9/execute</code> và đặt breakpoint tại hook chuẩn hóa. Theo Case Study, cùng chuỗi có khoảng trắng được xử lý khác nhau giữa instance cơ sở và subtype chuyên trim vì <code>process()</code> gọi hook có thể override. Nếu muốn quan sát lỗi tương thích, cần dùng một bản mã thử riêng đổi modifier của hook rồi biên dịch lại; request hiện tại không làm thay đổi modifier khi chạy. Bật assertions để các phép so sánh kết quả trong ví dụ có hiệu lực.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method làm rõ <strong>protected extension contract và khả năng tương thích khi refactor</strong>: giữ hook hoặc cung cấp cơ chế thay thế được công bố rõ ràng là điều cần thiết trước khi thay đổi cấu trúc lớp cha.</p>
     usage: true
   executeCase10():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học hiểu rằng <code>final</code> có thể bảo vệ implementation của một thành phần mà vẫn cho phép mở rộng hành vi thông qua composition. Thay vì buộc plugin phải kế thừa engine, một interface Strategy mô tả phép biến đổi và mỗi implementation được đưa vào từ bên ngoài. Đây là cách tách điểm mở rộng khỏi chi tiết nội bộ của lớp hiện hữu.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/5/case/10/execute</code>; khi assertions bật, có thể theo dõi trong debugger cùng thao tác xử lý chuỗi được ủy quyền cho hai strategy, một dạng chuyển thành chữ hoa và một dạng thêm tiền tố. Case Study dùng <code>hello</code> để so sánh các kết quả tương ứng. Ví dụ tạo plugin trực tiếp trong mã; endpoint không chứng minh có hệ thống phát hiện plugin động hoặc nạp thư viện ngoài đang hoạt động.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh họa <strong>mở rộng bằng interface và composition</strong> trong OOP: thay collaborator để đổi hành vi giúp giảm phụ thuộc vào kế thừa class cụ thể và tránh sao chép logic dùng chung.</p>
     usage: true
   executeCase11():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học hiểu vì sao một quan hệ subtype hợp lý về mặt toán học có thể không hợp lý về hợp đồng của object mutable. Nếu client Rectangle được quyền đổi width mà giữ nguyên height, một Square subtype buộc hai cạnh bằng nhau sẽ phá hậu điều kiện đó. Abstraction <code>Shape</code> và các value object bất biến biểu diễn hai loại hình độc lập mà vẫn chia sẻ khả năng tính diện tích.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/5/case/11/execute</code>; xem trong debugger hoặc chạy ví dụ có assertions để đối chiếu diện tích của hình chữ nhật và hình vuông theo dữ liệu mẫu, cùng tổng diện tích qua interface chung. Hai record không có setter thay đổi từng chiều. Tình huống Square kế thừa Rectangle mutable và phá hợp đồng là ví dụ lý giải vấn đề, không phải subtype sai được thực thi trong API này.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh họa <strong>Liskov Substitution Principle dựa trên hành vi</strong>: quan hệ “là một” trong ngôn ngữ tự nhiên không đủ để bảo đảm subtype phù hợp; thiết kế nên chọn abstraction có hậu điều kiện được mọi implementation tôn trọng.</p>
     usage: true
   executeCase12():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Ví dụ giúp người học nhận diện rủi ro fragile base class: một hook ở lớp gốc của chuỗi kế thừa sâu có thể tác động tới nhiều màn hình, khiến thay đổi nhỏ gây hồi quy ở các nơi không liên quan. Phân tách hành vi thành các renderer có thể kết hợp qua delegation cho phép mỗi màn hình chọn đúng chuỗi biến đổi cần dùng và kiểm tra hợp đồng của từng thành phần.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/5/case/12/execute</code> và theo dõi các kết quả hiển thị của renderer thuần, renderer thêm tiền tố, rồi renderer chuyển chữ hoa sau khi lắp ghép. Nếu dùng debugger, lần theo sự ủy quyền giữa các lớp biến đổi; với assertions bật, các phép kiểm trong ví dụ cho thấy các tổ hợp hoạt động theo hợp đồng chung. Đây là phép minh họa trong bộ nhớ, chưa phải kiểm thử giao diện của một ứng dụng đa màn hình.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh họa <strong>giảm coupling bằng composition và delegation</strong> trong OBJECT_ORIENTED_PROGRAMMING: cấu hình hành vi theo thành phần giúp kiểm soát phạm vi thay đổi và tránh phụ thuộc vào các hook của cây kế thừa sâu.</p>
     usage: true
 Group6Controller:
   executeCase1():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Trong <strong>OBJECT_ORIENTED_PROGRAMMING</strong>, method này minh họa <strong>đa hình theo subtype</strong>: mỗi loại nhân viên tự quyết định cách tạo báo cáo, còn nơi tổng hợp chỉ gọi cùng hợp đồng <code>report()</code>. Người học thấy được lợi ích của Tell, Don't Ask và Open/Closed Principle: thêm một vai trò mới không buộc mọi caller sửa nhánh <code>instanceof</code>.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Trên ứng dụng đã khởi động, gửi <code>GET /case-studies/group/6/case/1/execute</code>. Trong IDE, có thể đặt breakpoint tại đoạn tổng hợp báo cáo để so sánh kết quả cho danh sách hai vai trò (<code>DEV:An|DESIGN:Binh</code>) với danh sách bổ sung thực tập sinh (kết thúc bằng <code>INTERN:Chi</code>). Method sử dụng assertion nội bộ; nếu chúng không thất bại, lời gọi có thể kết thúc bình thường. API không khai báo đầu vào và không trả danh sách báo cáo qua response body; ví dụ này không in riêng hai kết quả ra stdout.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>dynamic dispatch theo vai trò trong OOP</strong>: cùng một lời gọi <code>report()</code> có hành vi riêng cho từng subtype, trong khi thuật toán tổng hợp vẫn ổn định khi tập loại đối tượng được mở rộng.</p>
     usage: true
   executeCase2():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Ví dụ cho thấy nguy cơ khi controller, service và UI tự giải mã cùng một <em>type code</em> bằng các lệnh <code>switch</code> riêng. Trong <strong>OBJECT_ORIENTED_PROGRAMMING</strong>, việc gom chính sách giao dịch vào một registry chiến lược giúp mỗi tầng sử dụng cùng quy tắc tính và biểu diễn, giảm khả năng các tầng hiểu khác nhau về một biến thể.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/6/case/2/execute</code>. Có thể dùng debugger theo dõi <code>TxView</code> được lấy qua các lối gọi mô phỏng controller, service và UI: với giao dịch thẻ 1.000 cent, cả ba phải cho cùng nhãn <code>card</code> và số tiền phải trả <code>1050</code>. Các giá trị được so sánh bằng assertion trong service; chúng không được xuất ra JSON hay log ứng dụng. Những tên controller/service/UI ở ví dụ là các nhánh gọi chung một bộ chính sách, không phải ba giao diện người dùng hoặc hệ thống đã tích hợp thực sự.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng cách <strong>ủy quyền hành vi theo biến thể và dùng chung contract</strong> giúp bảo đảm tính nhất quán giữa các thành phần trong thiết kế OOP. Khi bổ sung loại giao dịch, một điểm định nghĩa chính sách có thể được kiểm thử tập trung.</p>
     usage: true
   executeCase3():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method làm rõ rằng các implementation cùng interface tính thuế chỉ thật sự thay thế được nhau khi thống nhất cả <strong>ngữ nghĩa làm tròn</strong>, không chỉ kiểu trả về. Ví dụ dùng <code>BigDecimal</code> và chính sách <code>HALF_UP</code> với hai chữ số thập phân để diễn giải behavioral contract trong OOP.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi <code>GET /case-studies/group/6/case/3/execute</code> và có thể đặt breakpoint tại hàm kiểm thử contract dùng chung. Quan sát cả biến thể thuế trực tiếp và thuế cấu hình 10%: giá trị <code>0.45</code> dẫn tới thuế <code>0.05</code>, còn <code>0.44</code> dẫn tới <code>0.04</code>. Service gọi cùng bộ kiểm tra cho hai implementation và ném assertion nếu sai. Response của endpoint <code>void</code> không chứa bảng tính thuế; cần debugger hoặc đọc assertion để đối chiếu giá trị nội bộ.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>hợp đồng hành vi của đa hình</strong> phải bao gồm precision và quy tắc rounding. Việc thống nhất chữ ký interface mà để mỗi subtype làm tròn tại thời điểm khác nhau vẫn có thể gây sai lệch tiền tệ cho client.</p>
     usage: true
   executeCase4():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Tình huống này giúp người học nhận ra <strong>ép kiểu xuống subtype</strong> để lấy hành vi riêng là dấu hiệu một hợp đồng đang thiếu năng lực mà client thực sự cần. Thay vì đoán bản ghi PDF hay CSV rồi cast, thiết kế OOP dùng vai trò <code>Exportable</code> và dispatch qua <code>export()</code> để xử lý nhiều định dạng an toàn theo kiểu.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gửi <code>GET /case-studies/group/6/case/4/execute</code>. Đặt breakpoint tại đoạn tổng hợp để xem bản ghi PDF và CSV đều tham gia cùng đường gọi, tạo chuỗi <code>PDF:a|CSV:b</code>; service so sánh kết quả đó với giá trị mong đợi. Đoạn ép tất cả bản ghi thành <code>PdfRecord</code> chỉ là ví dụ sai được comment trong nguồn, không phải nhánh lỗi được endpoint thực thi. Endpoint không có tham số chọn định dạng và không trả file xuất ra ngoài.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>interface theo vai trò và đa hình</strong> giúp client yêu cầu đúng năng lực ngay tại biên API. Compiler có thể bảo vệ việc gọi <code>export()</code>, tránh phụ thuộc vào phép cast vốn chỉ đúng với một subtype.</p>
     usage: true
   executeCase5():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Trong bài học về <strong>OCP và Strategy</strong>, thêm kênh thông báo không nên buộc sửa logic gửi của Email và SMS. Method minh họa một bộ điều phối biết đến hợp đồng <code>NotificationSender</code> và bảng đăng ký kênh; thêm PUSH bằng cách đưa implementation mới vào cấu hình giúp phần điều phối vẫn ổn định.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/6/case/5/execute</code>. Khi debug, so sánh kết quả <code>dispatch</code> của các kênh cũ trước và sau khi mở rộng bảng đăng ký: Email và SMS phải giữ nguyên chuỗi đầu ra; PUSH mới cho <code>push:hi</code>. Service dùng assertion để bảo vệ hành vi cũ và xác minh nhánh mới. Đây là các sender giả trả chuỗi để học về routing, không chứng minh đã gửi email, SMS hoặc push notification thật. Không có dữ liệu gửi được trả về từ endpoint.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>mở rộng biến thể qua composition</strong> trong OOP: có thể đăng ký một chiến lược mới mà vẫn giữ cách gọi của client và bảo vệ hành vi các kênh đã tồn tại bằng regression check.</p>
     usage: true
   executeCase6():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Một interface nhiều implementation chỉ đáng tin khi các implementation đáp ứng cùng <strong>semantic contract</strong> ở trường hợp bình thường lẫn biên. Method này đưa hai cách tạo báo giá qua cùng bộ thử nghiệm để giải thích Liskov Substitution Principle trong thực tế: nhất quán về null, giá trị âm, coupon, rounding và tác động lên dữ liệu nguồn.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gửi <code>GET /case-studies/group/6/case/6/execute</code>. Có thể đặt breakpoint tại shared contract test để quan sát cả <code>LocalQuote</code> và <code>CachedRulesQuote</code> được kiểm với đầu vào <code>0.05</code>, mã <code>SAVE10</code> và các nhánh coupon rỗng, số âm hoặc null theo bộ thử nghiệm. Giá trị tiền sau giảm được làm tròn <code>HALF_UP</code>; các assertion kiểm tra kết quả lặp lại và input không bị sửa. API không nhận coupon từ HTTP và không xuất báo giá trong body; chỉ sự hoàn tất không phát sinh assertion là tín hiệu tổng quát khi gọi endpoint.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>khả năng thay thế trong OOP dựa trên hành vi được kiểm chứng</strong>, không chỉ việc class implements cùng interface. Contract test chung phát hiện sự lệch quy tắc giữa các subtype trước khi client phải xử lý những khác biệt bất ngờ.</p>
     usage: true
   executeCase7():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Ví dụ lý giải vì sao tạo subclass cho mọi tổ hợp khuyến mãi, hạng khách và vận chuyển có thể làm số lượng lớp tăng mất kiểm soát. Trong <strong>OBJECT_ORIENTED_PROGRAMMING</strong>, ba policy độc lập được ghép bằng composition; luật kiểm tra tổ hợp hợp lệ vẫn nằm ở ranh giới checkout thay vì bị phân tán qua cây kế thừa.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/6/case/7/execute</code>; trong debugger theo dõi phép tính cho mặt hàng số giá 1.000 cent: giảm khuyến mãi 100, tiếp tục áp dụng chính sách VIP còn <code>810</code>, phí vận chuyển số là <code>0</code>. Nhánh cố chọn <code>PHYSICAL</code> cho mặt hàng số bị chặn bằng <code>IllegalArgumentException</code> dự kiến, được bắt trong demo. Không có tham số HTTP để người dùng thay tổ hợp; kết quả được xác minh nội bộ chứ không trả thành JSON.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>composition over inheritance</strong> cho các trục biến thể độc lập: có thể kết hợp chính sách linh hoạt mà không tạo subclass cho mọi phép hoán vị, đồng thời tập trung kiểm soát các tổ hợp bị cấm.</p>
     usage: true
   executeCase8():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method làm rõ khác biệt giữa dùng kế thừa để ấn định thuật toán lúc tạo object và dùng <strong>Strategy có thể thay lúc runtime</strong>. Khi sở hữu một đối tượng checkout, ta có thể thay collaborator tính giá theo lựa chọn hiện tại mà không tạo lại checkout hoặc thay danh tính đối tượng.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi <code>GET /case-studies/group/6/case/8/execute</code>. Khi đặt breakpoint ở các lần tính tổng, theo dõi cùng một checkout: chính sách thường cho <code>1000</code>, đổi sang giảm giá cho <code>900</code>, sau đó quay lại chính sách thường cho <code>1000</code>. Mã kiểm tra tham chiếu checkout vẫn chính là object ban đầu. Những thay đổi lựa chọn được thực hiện sẵn trong service, không có tham số người dùng truyền từ HTTP; endpoint không trả danh sách ba giá trị.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>ủy quyền động qua Strategy</strong> trong OOP: sự biến thiên nằm ở collaborator thay thế được, còn owner giữ danh tính và trách nhiệm điều phối ổn định.</p>
     usage: true
   executeCase9():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Phân loại hành vi bằng tên class dưới dạng chuỗi làm chương trình mong manh trước refactor và subtype mới. Bài học này đưa khả năng vẽ vào hợp đồng <code>Shape</code>; mỗi hình tự hiện thực <code>draw()</code>, còn code render tận dụng <strong>dynamic dispatch</strong> thay cho các nhánh so sánh tên class.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gửi <code>GET /case-studies/group/6/case/9/execute</code>. Có thể dùng debugger quan sát việc gọi <code>draw()</code> theo từng hình trong danh sách: Circle bán kính 3 và Square cạnh 2 tạo kết quả <code>circle:3|square:2</code>. Service kiểm tra chuỗi này bằng assertion. Cách kiểm <code>getSimpleName()</code> chỉ được nhắc như anti-pattern trong comment, không chạy trong method. API không trả hình ảnh hoặc chuỗi kết quả qua response.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>đa hình giúp thay biến thể bằng lời gọi hành vi</strong> trong OOP. Khi code render phụ thuộc vào interface thay vì tên lớp, việc thêm loại hình hoặc đổi tên class ít làm ảnh hưởng logic điều phối.</p>
     usage: true
   executeCase10():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Java interface có thể khai báo <code>default method</code>, nhưng hai interface cung cấp cùng chữ ký sẽ tạo xung đột khi một class implements cả hai. Bài học nhấn mạnh <strong>giải quyết sự mơ hồ bằng override tường minh</strong>, cho phép tác giả class xác định chính xác cách kết hợp hành vi kế thừa từ nhiều vai trò.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/6/case/10/execute</code> và dùng debugger kiểm tra kết quả <code>label()</code> của class kết hợp: <code>primary+secondary</code>. Implementation gọi tường minh cả hai default method theo thứ tự do lập trình viên chọn; service kiểm tra chuỗi mong đợi bằng assertion. Trường hợp bỏ override gây lỗi compiler chỉ được giải thích trong Case Study, không phải lỗi mà HTTP endpoint tạo ra lúc chạy.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>quy tắc phân giải default method trong interface Java</strong>: class phải công khai quyết định của mình khi nhận nhiều implementation mặc định mâu thuẫn, giúp hành vi của đối tượng có thể dự đoán và kiểm thử.</p>
     usage: true
   executeCase11():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Trạng thái nhân vật được lưu bằng nhiều boolean độc lập có thể vô tình cho phép vừa chết vừa chạy hoặc nhảy. Method giới thiệu <strong>enum và luật chuyển trạng thái</strong> để giới hạn mỗi đối tượng vào một trạng thái hiện hành, giữ các invariant của mô hình OOP ngay tại nơi kiểm soát thay đổi.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/6/case/11/execute</code>. Đặt breakpoint ở các lần đổi trạng thái để quan sát <code>IDLE → RUNNING → JUMPING</code>. Sau đó mã cố chuyển trực tiếp <code>JUMPING → IDLE</code>; phương thức phải từ chối bằng <code>IllegalStateException</code> và trạng thái vẫn giữ <code>JUMPING</code>. Ngoại lệ dự kiến được bắt trong demo, nên không cần thấy lỗi HTTP để biết nhánh không hợp lệ đã được thử. Không có trạng thái được gửi lại trong body.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>đóng gói trạng thái và invariant chuyển trạng thái</strong> trong OOP: client không thể tự bật tắt những cờ mâu thuẫn; đối tượng chịu trách nhiệm quyết định chuyển đổi nào được phép.</p>
     usage: true
   executeCase12():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Hai luồng checkout thẻ và chuyển khoản có thể có quy tắc xác thực khác nhau dù cùng phục vụ hành động thanh toán. Method cho thấy <strong>composition với hợp đồng CheckoutFlow</strong> thích hợp hơn một abstract superclass đầy hook trống khi các flow không chia sẻ thuật toán hoặc invariant ổn định.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi <code>GET /case-studies/group/6/case/12/execute</code>. Trong debugger theo dõi hai ví dụ giả lập: luồng thẻ với số tiền 100 tạo <code>CARD:100</code>; luồng ngân hàng có tham chiếu <code>R1</code> tạo <code>BANK:R1</code>. Một yêu cầu chuyển khoản thiếu tham chiếu bị từ chối bằng <code>IllegalArgumentException</code> dự kiến và được bắt. Đây là kết quả chuỗi của các flow mô phỏng, không phải chứng cứ giao dịch đã được thanh toán hoặc tiền đã chuyển trên mạng; HTTP method cũng không nhận thông tin đơn hàng từ caller.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>chọn composition theo điểm biến thiên thực sự</strong> trong OOP: client chỉ cần giao diện chung để gọi luồng checkout, còn từng chiến lược bảo vệ điều kiện nghiệp vụ riêng mà không phụ thuộc một cây kế thừa khiên cưỡng.</p>
     usage: true
   executeCase13():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Việc <code>extends</code> một lớp nền của thư viện chỉ để dùng vài hàm tiện ích sẽ kéo ứng dụng phụ thuộc vào lifecycle và thay đổi nội bộ của thư viện. Bài học trình bày <strong>composition và adapter</strong>: tách chức năng chuẩn hóa dữ liệu khỏi phiên làm việc, đồng thời đặt trách nhiệm mở/đóng phiên ở một biên rõ ràng.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/6/case/13/execute</code>. Có thể đặt breakpoint tại thao tác adapter và sau khối <code>try-with-resources</code>. Dữ liệu đầu vào <code>" abc "</code> được chuẩn hóa rồi đưa qua phiên mô phỏng để tạo <code>lib:abc</code>; sau khi ra khỏi khối, phiên phải có <code>isActive() == false</code>. Service bảo vệ cả kết quả và việc đóng phiên bằng assertion. Đây là library session giả lập trong bộ nhớ, không phải kết nối thư viện ngoài hay database; endpoint không trả chuỗi xử lý hoặc trạng thái phiên ra HTTP.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>ưu tiên composition để kiểm soát hướng phụ thuộc</strong> trong OOP. Chức năng tiện ích được dùng qua collaborator, còn lifecycle của tài nguyên được đóng tại boundary phù hợp, giúp các lớp nghiệp vụ bớt gắn chặt với superclass của thư viện.</p>
     usage: true
 Group7Controller:
   executeCase1():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học nhận ra rằng một quan hệ giữa các đối tượng có thể mang hai ý nghĩa thời gian: thông tin hiện tại của khách hàng và dữ liệu cần giữ nguyên tại thời điểm phát sinh đơn hàng. Trong OOP, quyết định lưu tham chiếu hay bản chụp phải dựa vào quyền sở hữu và ý nghĩa nghiệp vụ của từng dữ liệu, nếu không thay đổi hồ sơ có thể làm sai lịch sử giao dịch.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Trên ứng dụng đang chạy, gọi <code>GET /case-studies/group/7/case/1/execute</code> rồi xem stdout của JVM trong terminal hoặc console IDE. Khi các kiểm tra hoàn tất, tìm đúng dòng <code>PASS: historical shipping snapshot</code>. Trong tình huống này địa chỉ hiện tại của khách đã đổi sang <code>Số 20</code>, còn địa chỉ giao hàng lúc đặt đơn vẫn là <code>Số 10</code>; dòng xác nhận chỉ xuất hiện sau khi cả hai trạng thái được kiểm tra.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh họa nguyên lý quản lý quan hệ và dữ liệu lịch sử trong <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: tham chiếu đến entity phục vụ thông tin hiện hành, còn snapshot thuộc ngữ cảnh đơn hàng giúp giữ đúng sự thật tại thời điểm mua. Không nên đồng bộ hóa hai loại dữ liệu một cách vô điều kiện.</p>
     usage: true
   executeCase2():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học hiểu vì sao quan hệ hai chiều trong một cây đối tượng cần một thao tác quản lý nhất quán: thay đổi cha của node phải đồng thời cập nhật danh sách con của cha cũ và cha mới. Một reference hợp lệ riêng lẻ chưa đủ đảm bảo toàn bộ đồ thị hợp lệ; còn phải ngăn vòng lặp tổ tiên và hỗ trợ tháo liên kết.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/7/case/2/execute</code> và kiểm tra stdout có <code>PASS: reparent consistent</code>. Trong lần chạy này node con lần lượt được gắn sang hai cha khác nhau; code kiểm tra cha cũ không còn giữ con, cha mới giữ đúng con, thao tác tạo cycle bị từ chối và sau khi tháo liên kết thì các phía trở về trạng thái phù hợp. Có thể đặt breakpoint tại thao tác chuyển cha để xem quan hệ ở từng thời điểm.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, ví dụ minh chứng yêu cầu giữ <strong>invariant của association hai chiều</strong> trong OOP: một hành động thay đổi quan hệ phải chịu trách nhiệm bảo toàn cả hai đầu và các ràng buộc của đồ thị. Việc chỉ cập nhật một reference sẽ dễ tạo cấu trúc sai dù từng đối tượng riêng vẫn tồn tại.</p>
     usage: true
   executeCase3():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học phân biệt quyền sở hữu vòng đời với quan hệ tham gia tổ chức. Nhân viên thuộc một phòng ban không đồng nghĩa dữ liệu nhân viên phải bị hủy khi phòng ban bị xóa. Mô hình association cần cho phép chuyển nhân viên trước khi kết thúc vòng đời phòng ban, tránh áp dụng cascade delete theo một giả định sai về composition.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gửi <code>GET /case-studies/group/7/case/3/execute</code>; theo dõi console ứng dụng và tìm <code>PASS: employee lifecycle independent</code>. Luồng minh họa từ chối xóa phòng ban còn nhân viên, sau đó chuyển nhân viên sang phòng ban mới, xóa phòng ban cũ và kiểm tra hồ sơ nhân viên vẫn tồn tại. Nếu cần quan sát rõ bước từ chối, dùng breakpoint trong thao tác xóa và chuyển phòng ban; exception bị bắt có chủ đích không phải kết quả trả về của API.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này cho thấy <strong>ownership quyết định chính sách vòng đời</strong> trong OOP: sự liên kết giữa các entity không mặc nhiên cho phép một đối tượng xóa đối tượng khác. Định nghĩa đúng ranh giới sở hữu giúp tránh mất dữ liệu khi mô hình nghiệp vụ thay đổi.</p>
     usage: true
   executeCase4():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học thấy sự khác nhau giữa đồ thị object dùng trong domain và biểu diễn dữ liệu gửi ra ngoài. Quan hệ parent-child hai chiều có thể cần thiết trong bộ nhớ nhưng nếu duyệt trực tiếp mọi reference khi xuất JSON thì dễ đi vào chu trình. Tách DTO theo hướng dữ liệu cần công bố giúp giữ liên kết nội bộ mà không kéo theo vòng lặp serialization.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/7/case/4/execute</code> rồi tìm dòng <code>PASS: exported DTO is acyclic</code> trên stdout. Ví dụ xây dựng quan hệ hai chiều, chuyển sang DTO chỉ chứa ID của parent và danh sách child ID, sau đó kiểm tra chuỗi JSON-like tạo từ DTO. Đây là biểu diễn chuỗi được tạo trong ví dụ, không phải bằng chứng đã dùng Jackson serialize trực tiếp đồ thị hoặc đã trả JSON qua HTTP; controller không trả DTO.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh họa <strong>ranh giới biểu diễn</strong> trong OOP: object graph phục vụ thao tác nghiệp vụ có thể phức tạp và có chu trình, còn hợp đồng dữ liệu xuất nên chủ động giới hạn hướng quan hệ và mức thông tin để tránh phụ thuộc cấu trúc nội bộ.</p>
     usage: true
   executeCase5():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học hiểu vì sao hai aggregate yêu cầu nắm giữ object hoàn chỉnh của nhau ngay trong constructor sẽ tạo phụ thuộc khởi tạo vòng tròn. Thay vì cố tạo trước một đối tượng chưa hợp lệ, có thể tạo các thực thể theo thứ tự độc lập rồi thiết lập quan hệ bằng ID hoặc thông qua factory điều phối, từ đó làm rõ ranh giới aggregate.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/7/case/5/execute</code> và đối chiếu thông báo <code>PASS: independent valid aggregates</code> tại stdout. Luồng tạo khách hàng hợp lệ, dùng factory tạo đơn hàng giữ customer ID và kiểm tra identity; thử tạo đơn hàng với customer rỗng (<code>null</code>) phải bị từ chối có kiểm soát. Có thể đặt breakpoint trong factory để nhận ra quan hệ được thiết lập sau khi đối tượng phụ thuộc hợp lệ, không có constructor cycle.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh họa cách <strong>composition có kiểm soát thứ tự khởi tạo</strong> giúp phá phụ thuộc vòng: quan hệ nghiệp vụ vẫn được giữ qua identity trong khi mỗi aggregate duy trì khả năng được tạo và kiểm tra riêng.</p>
     usage: true
   executeCase6():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học nhận ra vấn đề khi tầng xử lý phải đi xuyên qua nhiều getter để đọc chi tiết trạng thái của object khác. Cách đó khiến client gắn chặt vào cấu trúc bên trong. Nguyên lý Law of Demeter và Tell Don't Ask khuyến khích yêu cầu đối tượng hoặc dịch vụ sở hữu dữ liệu trả lời một quyết định nghiệp vụ có ý nghĩa, thay cho việc client tự lắp ghép quy tắc từ dữ liệu sâu.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi <code>GET /case-studies/group/7/case/6/execute</code> và tìm <code>PASS: caller does not inspect Wallet internals</code> trên stdout. Tình huống kiểm tra quyết định thanh toán khi số tiền phù hợp, vượt khả năng chi trả hoặc âm; client chỉ gọi thao tác quyết định thay vì truy cập trực tiếp cấu trúc <code>Wallet</code>. Để quan sát ranh giới trách nhiệm, xem cách lời gọi được chuyển qua API nghiệp vụ trong debugger.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, ví dụ minh chứng <strong>đóng gói và giảm kết dính giữa các object</strong> trong OOP: phía gọi phụ thuộc vào ý nghĩa của thao tác, còn chính sách về dữ liệu nội bộ được đặt sau một hợp đồng rõ ràng. Đổi cấu trúc sở hữu dữ liệu vì thế ít buộc các client phải sửa hơn.</p>
     usage: true
   executeCase7():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học thấy cách trả thẳng một collection đang sống có thể phá invariant của aggregate dù các phương thức thêm phần tử đã kiểm tra giới hạn. Collection là một phần trạng thái thuộc quyền quản lý của giỏ hàng; đóng gói đúng đòi hỏi mọi thay đổi đều đi qua hành vi có kiểm soát và phía ngoài chỉ nhận bản xem không thể sửa.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/7/case/7/execute</code> rồi tìm <code>PASS: capacity invariant enforced</code> trong console. Ví dụ đối chiếu giỏ hàng cũ cho sửa live list vượt giới hạn với giỏ hàng đã sửa chỉ nhận hai mặt hàng; lần thêm vượt sức chứa bị từ chối. Thử thêm phần tử vào snapshot trả về cũng bị từ chối, giúp phân biệt dữ liệu đọc được với quyền chỉnh sửa trạng thái của aggregate.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh họa nguyên lý <strong>aggregate root phải kiểm soát sự thay đổi trạng thái</strong> trong OOP: bảo vệ collection khỏi sửa trực tiếp là điều kiện để các quy tắc như giới hạn số mặt hàng luôn được áp dụng nhất quán.</p>
     usage: true
   executeCase8():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học nhận ra quan hệ đăng ký listener là một sự phụ thuộc vòng đời, dù không được biểu diễn bằng kế thừa. Một publisher sống lâu giữ reference tới listener có thể tiếp tục gọi hoặc giữ lại object không còn được sử dụng. Khi đối tượng lắng nghe kết thúc, hủy subscription là trách nhiệm thiết kế cần được gắn với lifecycle.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/7/case/8/execute</code> và tìm <code>PASS: unsubscribe prevents retained subscription</code> trên stdout. Ví dụ phát sự kiện đầu khi tab còn đăng ký, sau đó đóng tab, phát sự kiện tiếp theo và kiểm tra số listener về 0 trong khi tab chỉ nhận sự kiện đầu. Có thể đặt breakpoint tại <code>close()</code> và <code>publish()</code> để xem danh sách subscription thay đổi; ví dụ không tự đo thời điểm garbage collector thu hồi object.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh họa <strong>quản lý quan hệ theo vòng đời</strong> trong OOP: khi một thành phần không còn cần sự kiện, phải tháo reference mà publisher giữ để tránh callback ngoài ý muốn và nguy cơ giữ object lâu hơn cần thiết.</p>
     usage: true
   executeCase9():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học phân biệt giữa việc một thành phần sử dụng dependency và việc nó sở hữu quyền giải phóng dependency đó. Hai service có thể cùng tham chiếu một logger; nếu service đóng logger khi tự ngừng hoạt động thì service còn lại sẽ bị ảnh hưởng. Quyền đóng tài nguyên phải thuộc về thành phần quản lý vòng đời chung hoặc scope đã được quy định.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/7/case/9/execute</code>, kiểm tra dòng <code>PASS: shared collaborator closed only by owner</code> trong stdout. Tình huống đóng service thứ nhất nhưng logger vẫn mở cho service thứ hai sử dụng; sau khi cả hai hoàn tất, owner mới đóng logger. Đặt breakpoint ở các thao tác <code>handle</code> và <code>close</code> để phân biệt lifecycle của người mượn với lifecycle của dependency được chia sẻ.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method đã minh họa nguyên lý <strong>composition không tự động chuyển quyền sở hữu tài nguyên</strong>: một object sử dụng collaborator có thể chỉ mượn nó. Quy định rõ ai tạo và ai đóng dependency giúp các thành phần dùng chung hoạt động độc lập, an toàn hơn.</p>
     usage: true
   executeCase10():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học hiểu vai trò của constructor injection và dependency inversion đối với khả năng kiểm thử đối tượng. Khi logic tính toán chỉ biết interface repository, có thể thay một nguồn dữ liệu thật bằng implementation giả kiểm soát được, kiểm tra cả đường hợp lệ và quy tắc từ chối mà không cần đưa database vào phạm vi kiểm thử đơn vị.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/7/case/10/execute</code>; kiểm tra stdout có <code>PASS: pure unit test without a database</code>. Ví dụ dùng fake repository trả giá cố định để kiểm tra tổng tiền của các mặt hàng, đồng thời xác nhận số lượng không hợp lệ và giá âm bị từ chối. Không cần kết nối database để chạy logic minh họa này; dòng thông báo được in sau các kiểm tra trong bộ nhớ.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh họa <strong>composition qua interface tạo ranh giới kiểm thử rõ ràng</strong> trong OOP: đối tượng nghiệp vụ có thể được kiểm tra độc lập với hạ tầng lưu trữ. Kết quả của fake không đồng nghĩa adapter database thật đã được kiểm thử.</p>
     usage: true
   executeCase11():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học nhận biết tác hại của hai request cùng giữ reference tới một cấu hình mutable: việc sửa từ một phía làm phía còn lại đọc giá trị đã bị thay đổi ngoài ý muốn. Tách cấu hình thành snapshot bất biến cho từng đơn vị xử lý giúp ràng buộc trạng thái với đúng người sử dụng và giảm rủi ro aliasing.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/7/case/11/execute</code> và tìm <code>PASS: per-request immutable config</code> tại console. Tình huống lần đầu cho hai biến trỏ chung một cấu hình rồi thay timeout, khiến cả hai thấy cùng giá trị mới. Sau đó hai service nhận snapshot bất biến khác nhau và giữ timeout riêng; cấu hình không hợp lệ cũng bị từ chối. Đây là kiểm tra tuần tự về alias và snapshot, không phải phép đo khi nhiều request chạy đồng thời.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method minh họa <strong>quản lý phạm vi và quyền sửa trạng thái</strong> trong OOP: object cấu hình bất biến giúp cô lập ngữ cảnh xử lý, tránh để một đối tượng vô tình thay đổi hợp đồng đầu vào mà đối tượng khác đang sử dụng.</p>
     usage: true
   executeCase12():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học hiểu tại sao thay đổi lực lượng liên kết từ one-to-many thành many-to-many đòi hỏi sửa mô hình dữ liệu và các thao tác quản lý quan hệ. Một phần tử có thể thuộc nhiều nhóm nên không thể chỉ giữ một parent ID; quan hệ cần được biểu diễn bằng cặp identity để các thao tác thêm, xóa và tra cứu hai chiều không mâu thuẫn.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/7/case/12/execute</code>, tìm <code>PASS: many-to-many membership consistent</code> trong stdout. Tình huống thêm cùng item vào hai nhóm, lặp lại thao tác thêm mà không tạo liên kết trùng, rồi xóa quan hệ ở một nhóm và xác minh nhóm kia vẫn giữ item. Việc kiểm tra dựa vào tập quan hệ trong bộ nhớ; ví dụ không thực hiện thao tác SQL hay xác minh ràng buộc khóa ngoại trong database.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh họa <strong>cardinality là một phần của hợp đồng mô hình đối tượng</strong>: quan hệ nhiều-nhiều phải được quản lý bằng identity của từng liên kết, bảo toàn tính nhất quán khi cập nhật cả hai hướng truy vấn.</p>
     usage: true
   executeCase13():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Người học phân biệt bản sao dữ liệu của entity với tham chiếu theo identity tới một nguồn thông tin hiện hành. Khi nhiều đơn hàng giữ bản sao tùy tiện của tên khách hàng, bản sao có thể lỗi thời; lưu customer ID giúp các đối tượng cùng tra cứu một nguồn chân lý. Snapshot chỉ thích hợp khi thực sự cần giữ lịch sử tại một thời điểm.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/7/case/13/execute</code> và tìm dòng <code>PASS: shared identity resolves current source</code> trên stdout. Trong ví dụ, một bản copy giữ tên cũ sau khi hồ sơ khách hàng được thay đổi, trong khi hai đơn hàng tham chiếu cùng customer ID và tra cứu được tên mới ở registry. Registry dùng bộ nhớ để minh họa việc truy xuất theo identity; không có cơ chế đồng bộ phân tán hay cache được chạy ở đây.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh họa <strong>identity và nguồn chân lý trong quan hệ object</strong> của OOP: những nơi cần trạng thái hiện hành nên tham chiếu đúng entity, còn dữ liệu lịch sử phải được chụp có chủ đích. Quyết định này giúp tránh sai lệch do các bản sao thiếu chính sách cập nhật.</p>
     usage: true
 Group8Controller:
   executeCase1():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Trong OBJECT_ORIENTED_PROGRAMMING, method này giúp nhận diện phụ thuộc vòng ở ranh giới module: một package gọi ngược sang module đang phụ thuộc nó khiến khả năng biên dịch và kiểm thử riêng từng thành phần bị ảnh hưởng. Tư tưởng Dependency Inversion không chỉ là dùng interface, mà còn là đặt contract ở hướng phụ thuộc không tạo chu trình.</p>
+      <h3>2. Các chương trình ngoài luồng (nếu có)</h3>
+      <p>Có thể dùng công cụ xem dependency của Gradle hoặc <code>jdeps</code> khi có module/artifact thực tế để dựng đồ thị import. Những công cụ này không mặc nhiên được chạy hay tích hợp trong API minh họa.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi endpoint của Case 1 rồi đối chiếu với ví dụ đồ thị <code>before</code> và <code>after</code> trong Case Study: phép duyệt phát hiện chu trình khi quay về đỉnh đang thăm, nhưng không tìm thấy chu trình sau khi tách contract. Muốn tự kiểm chứng mã ví dụ, biên dịch và chạy với <code>java -ea</code> để bật các assertion; một HTTP response riêng lẻ không cho thấy toàn bộ dependency graph của repository.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng nguyên lý <strong>acyclic dependencies</strong> trong OOP: tách hợp đồng ổn định và hướng dependency một chiều giúp module có ranh giới rõ hơn; với dự án thật cần tiếp tục kiểm tra đồ thị build thay vì suy từ ví dụ mô phỏng.</p>
     usage: true
   executeCase2():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method này cho thấy một chính sách phê duyệt đơn hàng không cần biết câu SQL, tên bảng hay cách ánh xạ dữ liệu để đưa ra quyết định. Đặt <code>OrderRepository</code> làm port giúp logic nghiệp vụ phụ thuộc vào contract, còn JDBC chỉ là một cách triển khai ở tầng hạ tầng.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi endpoint rồi xem tình huống tương ứng: chính sách nhận dữ liệu qua repository giả, phân biệt đơn có giá trị nhỏ và lớn tại ngưỡng trong ví dụ. Có thể chạy riêng đoạn mẫu bằng <code>java -ea</code> để kiểm tra các nhánh assertion; phần demo không mở kết nối JDBC thật. Nếu muốn kiểm thử SQL adapter, phải chuẩn bị database và integration test riêng, không xem kết quả demo là bằng chứng truy vấn thực tế.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>Dependency Inversion và persistence port</strong> trong OBJECT_ORIENTED_PROGRAMMING: thay đổi cơ chế lưu trữ không bắt buộc kéo thay đổi vào quy tắc phê duyệt, miễn contract dữ liệu nghiệp vụ vẫn được đáp ứng.</p>
     usage: true
   executeCase3():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Tình huống phân tách định giá, giữ hàng, ghi sổ và gửi thông báo cho thấy Single Responsibility Principle còn liên quan đến ranh giới lỗi. Checkout chỉ điều phối phần nghiệp vụ cần tính nhất quán, còn tác vụ gửi email là side effect có thể thất bại và cần cơ chế xử lý độc lập.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi endpoint rồi đối chiếu mô hình thử nghiệm của Case Study: danh sách lời gọi cho phần stock/ledger và danh sách sự kiện pending vẫn là các trạng thái cần kiểm tra sau khi mailer giả ném lỗi. Ví dụ sử dụng <code>Runnable::run</code> làm unit of work giả, không mở transaction database và không gửi email thật. Để kiểm chứng tính nguyên tử, retry hoặc idempotency trên hệ thống thật, cần integration test riêng với hạ tầng tương ứng.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>SRP kết hợp fault isolation</strong>: tách việc gửi thông báo ra khỏi bước xác lập nghiệp vụ giúp thiết kế có chỗ quản lý thất bại và phát lại sự kiện, nhưng bản demo không chứng minh một transactional outbox production đã hoạt động.</p>
     usage: true
   executeCase4():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method này giúp phân biệt hai khái niệm thường bị nhập nhằng: một đối tượng hạ tầng có khả năng xóa dữ liệu và một client chỉ cần quyền đọc. Tách <code>ReadOnlyRepository</code> khỏi <code>AdminRepository</code> thể hiện Interface Segregation Principle ngay ở hợp đồng mà client được phép gọi.</p>
+      <h3>2. Các chương trình ngoài luồng (nếu có)</h3>
+      <p>Dùng <code>javac</code> với mã mẫu của Case Study để quan sát lỗi biên dịch khi thử gọi thao tác <code>delete</code> qua biến chỉ có kiểu <code>ReadOnlyRepository</code>; đây là kiểm tra compile-time, không phải cơ chế phân quyền server.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Sau khi gọi endpoint, đối chiếu việc client báo cáo đọc được mục đang có mà không cần interface quản trị. Với mẫu độc lập, chạy <code>java -ea</code> để kiểm chứng truy vấn giữ nguyên dữ liệu; tiếp đó thử bỏ comment lệnh gọi <code>delete</code> sai kiểu và biên dịch lại để thấy giới hạn API. Không suy ra quyền database hay authorization từ giới hạn kiểu Java này.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>ISP và principle of least privilege ở tầng API</strong>: cấp cho client đúng năng lực cần dùng giảm nguy cơ gọi nhầm thao tác phá hủy; kiểm soát quyền chạy thật vẫn cần ở lớp bảo mật và dữ liệu.</p>
     usage: true
   executeCase5():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Constructor có quá nhiều dependency có thể là tín hiệu một service đang gánh nhiều lý do thay đổi. Method này minh họa cách chuyển từ một điểm điều phối ôm cả định giá, tồn kho và thông báo sang các use case nhỏ với dependency thể hiện rõ theo từng trách nhiệm, thay vì che chúng phía sau service locator.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi API và xem mô hình của Case Study: luồng báo giá cần cổng giá cùng tồn kho, trong khi luồng thông báo chỉ cần cổng mail. Trong mẫu có fake cho từng cổng, phép thử phân biệt SKU khả dụng và không khả dụng, đồng thời theo dõi danh sách thông báo được ghi vào bộ nhớ. Các dấu hiệu này thuộc trạng thái của demo, không phải bằng chứng rằng ứng dụng có 18 dependency thực đã được refactor.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>SRP và giảm coupling bằng use-case boundaries</strong>: khi trách nhiệm và dependency tường minh, người học có thể kiểm thử từng luồng độc lập và xác định phạm vi thay đổi dễ hơn, không cần dùng một đối tượng toàn năng.</p>
     usage: true
   executeCase6():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method này hướng tới vấn đề tiến hóa interface: thêm thao tác ghi vào hợp đồng vốn chỉ đọc có thể buộc adapter cũ phải sửa dù không có khả năng ghi. Phân biệt <code>ReadStore</code> và <code>WriteStore</code> làm rõ vì sao một client không nên phụ thuộc vào phương thức không thuộc vai trò của nó.</p>
+      <h3>2. Các chương trình ngoài luồng (nếu có)</h3>
+      <p>Có thể dùng <code>javac</code> để kiểm tra việc adapter đọc cũ vẫn biên dịch sau khi tách hợp đồng. Để khẳng định backward compatibility của thư viện đã phát hành, cần thêm compile test và phép kiểm tra binary compatibility giữa các phiên bản artifact thực.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi endpoint, đối chiếu hai đường trong mẫu: <code>LegacyReadReplica</code> đáp ứng lời gọi đọc mà không cài <code>put</code>, còn <code>ReadWriteStore</code> cung cấp cả đọc và ghi cho client phù hợp. Khi chạy mã mẫu với <code>java -ea</code>, kiểm tra dữ liệu đọc từ adapter cũ và dữ liệu vừa ghi qua adapter mới; demo trong một file chưa đủ xác nhận tương thích nhị phân phiên bản cũ.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>Interface Segregation khi tiến hóa API</strong>: hợp đồng tách theo năng lực giúp adapter cũ không phải nhận trách nhiệm mới và giúp client ghi yêu cầu đúng interface của mình.</p>
     usage: true
   executeCase7():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method này làm rõ hướng dependency của kiến trúc có lớp application và infrastructure: quy tắc xét duyệt phải được định nghĩa qua port, không import adapter SQL hoặc gọi ngược tùy tiện vào implementation nghiệp vụ. Composition root có nhiệm vụ nối các phần mà không đảo hướng phụ thuộc của lớp lõi.</p>
+      <h3>2. Các chương trình ngoài luồng (nếu có)</h3>
+      <p>Đối với dự án đã tách package hoặc module, có thể dùng <code>jdeps</code>, báo cáo dependency build hoặc ArchUnit nếu đã cấu hình để kiểm tra import ngược và chu trình. Các phép kiểm này không được tự động thực hiện chỉ bằng lời gọi HTTP demo.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi endpoint và đối chiếu cách <code>Approval</code> nhận <code>OrderReader</code>: thử thay adapter mô phỏng bằng fake cung cấp đơn giá trị thấp mà không sửa luật xét duyệt. Mẫu chỉ cho thấy tính thay thế cổng đọc và quyết định từ dữ liệu; muốn kiểm chứng dependency rule giữa các module thật phải quét import/build graph riêng.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>Dependency Rule và DIP</strong> trong OBJECT_ORIENTED_PROGRAMMING: business policy hướng vào abstraction ổn định, còn infrastructure phụ thuộc vào hợp đồng đó; ranh giới module cần được kiểm tra bằng cả cấu trúc phụ thuộc thực.</p>
     usage: true
   executeCase8():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Không phải mọi tình huống đều cần thêm factory, decorator hay provider mới được gọi là tuân thủ SOLID. Method này minh họa cách nhận diện abstraction không mang lại biến thể hoặc test seam có giá trị; với chính sách thuế cố định, một bộ tính toán rõ ràng cùng lớp gọi tối giản có thể dễ hiểu hơn một chuỗi wrapper.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi endpoint và xem ví dụ tính hóa đơn: các tình huống tổng bằng không, tổng có thuế và subtotal âm được biểu diễn bằng phép kiểm tra hành vi và nhánh từ chối input. Nếu chạy riêng demo với <code>java -ea</code>, đối chiếu quy tắc tính toán vẫn giữ nguyên khi không có những lớp trung gian dư thừa; không dùng kết quả này để khẳng định đã đo tốc độ hay chi phí bảo trì.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>SOLID thực dụng cùng KISS/YAGNI</strong>: chỉ đặt abstraction tại điểm thay đổi có căn cứ, giữ đường đi của nghiệp vụ dễ đọc và dùng regression test để bảo vệ hành vi khi đơn giản hóa thiết kế.</p>
     usage: true
   executeCase9():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method này minh họa sự khác biệt giữa dependency được công bố ngay lúc khởi tạo và dependency bị giấu trong global service locator. Khi <code>Checkout</code> yêu cầu <code>Catalog</code> cùng <code>Orders</code> qua constructor, người gọi và test biết phải cung cấp gì để thực hiện nghiệp vụ.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi endpoint rồi đối chiếu bản mẫu sử dụng fake catalog và fake kho lưu đơn: sau thao tác đặt hàng, trạng thái map trong bộ nhớ là nơi cần kiểm tra giá trị được ghi. Phép thử riêng còn chủ động tạo đối tượng khi thiếu dependency để quan sát lỗi ngay tại constructor, thay vì đợi một lời gọi tới locator trong runtime. Không suy từ đây rằng có database thật hoặc một HTTP response chứa thông tin đơn hàng.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>explicit dependencies và constructor injection</strong>: hợp đồng phụ thuộc dễ thấy, dễ thay bằng fake và fail sớm khi thiếu, làm bài kiểm thử ít lệ thuộc trạng thái toàn cục hơn.</p>
     usage: true
   executeCase10():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method này làm rõ nguy cơ đặt <code>currentUser</code> mutable trong singleton được nhiều request dùng chung. Giải pháp minh họa giữ service không lưu trạng thái theo người dùng, đồng thời truyền một <code>RequestContext</code> bất biến riêng vào từng lời gọi để danh tính không bị ghi đè giữa các luồng.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi endpoint và xem phép thử đồng thời của Case Study: hai tác vụ cùng dùng một <code>ProfileService</code>, bắt đầu sau cùng latch nhưng mỗi tác vụ nhận context khác nhau; hãy đối chiếu kết quả tương ứng với <code>alice</code> và <code>bob</code> trong ví dụ khi chạy <code>java -ea</code>. Đây là identity mô phỏng; hệ thống thật phải tạo context từ security principal đã xác thực và kiểm thử đường request/security filter riêng.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>cách ly state theo request trong OOP</strong>: singleton stateless có thể được chia sẻ mà không dùng một field danh tính toàn cục, nhưng tính an toàn dữ liệu người dùng còn phụ thuộc quá trình xác thực và truyền context đúng đắn.</p>
     usage: true
   executeCase11():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Hai service yêu cầu constructor của nhau tạo thành vòng phụ thuộc khiến đồ thị khởi tạo không còn hướng xác định. Method này cho thấy cách loại vòng bằng việc phân tách trách nhiệm: <code>Billing</code> xử lý giá, <code>Inventory</code> xét khả dụng, còn <code>Coordinator</code> là thành phần điều phối phụ thuộc một chiều vào cả hai.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi API và đối chiếu thứ tự tạo đối tượng trong demo: rate table được đưa vào billing, inventory được dựng độc lập, sau đó coordinator mới kết hợp hai nhánh. Mẫu kiểm tra một giao dịch hợp lệ và một tình huống SKU không có trong kho; nếu muốn khẳng định DI container thật không còn constructor cycle, phải kiểm tra quá trình tạo bean/application context ở môi trường đó.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>service decomposition và đồ thị dependency không chu trình</strong>: tách orchestration ra khỏi hai trách nhiệm chuyên biệt giúp construction rõ thứ tự và tránh chữa vòng phụ thuộc bằng tra cứu đối tượng toàn cục.</p>
     usage: true
   executeCase12():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method này giúp nhận ra vấn đề khi ép adapter chỉ đọc phải implement cùng interface với các thao tác ghi và tái lập chỉ mục. Phân chia <code>Searchable</code>, <code>Writable</code> và <code>Reindexable</code> theo năng lực làm cho lời hứa của mỗi kiểu phù hợp với hành vi thực mà nó có thể cung cấp.</p>
+      <h3>2. Các chương trình ngoài luồng (nếu có)</h3>
+      <p>Có thể dùng <code>javac</code> để kiểm tra việc lời gọi <code>save</code> trên <code>ReadOnlyMirror</code> không hợp lệ ở thời điểm biên dịch; đây là kiểm tra contract kiểu, không phải kết quả của HTTP endpoint.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi endpoint và xem ví dụ: client đọc có thể dùng cả mirror chỉ đọc lẫn primary store thông qua <code>Searchable</code>; chỉ primary store được dùng cho thao tác ghi và rebuild. Với mã mẫu, chạy <code>java -ea</code> kiểm tra kết quả tra cứu và số lần rebuild, sau đó thử biên dịch dòng ghi qua mirror vốn được comment để xác nhận giới hạn khả năng.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>ISP đi cùng LSP và role segregation</strong>: mỗi implementation chỉ nhận hành vi nó thực sự hỗ trợ, tránh buộc client gọi một method rồi mới gặp <code>UnsupportedOperationException</code> ở runtime.</p>
     usage: true
   executeCase13():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Method này làm rõ Open/Closed Principle tại đúng điểm biến thiên: logic tính tổng checkout không cần biết từng chương trình khuyến mại, mà chỉ gọi <code>DiscountPolicy</code>. Chính sách phần trăm và mức tiền cố định có thể được bổ sung như các implementation riêng trong khi contract của bộ tính tổng vẫn ổn định.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi endpoint và xem bộ tình huống của Case Study: cùng một số tiền gốc được đánh giá với chính sách không giảm, giảm theo phần trăm và giảm cố định; các chính sách đều phải giữ tổng trong giới hạn hợp lệ. Khi chạy mẫu với <code>java -ea</code>, đối chiếu việc <code>FixedOff</code> được thêm mà không sửa <code>CheckoutCalculator</code>. Các tổ hợp nhiều giảm giá và thứ tự áp dụng chưa được mô hình này bao phủ.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này minh chứng <strong>OCP với extension point có chủ đích</strong> trong OBJECT_ORIENTED_PROGRAMMING: mở rộng tập chính sách bằng implementation mới trong khi lõi tiếp tục dùng contract ổn định, được bảo vệ bằng kiểm thử chung cho mọi chính sách.</p>
     usage: true
 Group9Controller:
   executeCase1():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Trong <strong>OBJECT_ORIENTED_PROGRAMMING</strong>, tình huống định giá theo nhiều gói cho thấy <strong>Strategy</strong> chỉ phát huy tác dụng khi việc chọn chiến lược có một nơi chịu trách nhiệm. Nếu mỗi controller tự quyết định công thức, cùng một gói có thể được định giá khác nhau giữa kênh web và tác vụ batch, dù cả hai đều dùng chung interface.</p>
+      <p>Người học nhận ra lợi ích của việc ghép Strategy tại application boundary: bên gọi chỉ phụ thuộc hợp đồng định giá, còn quy tắc chọn công thức được giữ nhất quán và có chỗ để kiểm thử tập trung.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Khi ứng dụng mẫu đang chạy, gọi <code>GET /case-studies/group/9/case/1/execute</code> và kiểm tra request có được xử lý hay phát sinh lỗi. Sau đó đối chiếu logic kiểm tra trong Case Study VI: cùng một loại gói được gửi qua hai đường gọi web/batch phải cho cùng cách tính; gói VIP và STAFF có các mức điều chỉnh khác nhau. Chỉ dựa vào phần phản hồi HTTP của method không có tham số và không khai báo response body thì chưa thể kết luận giá trị đơn hàng đã đúng.</p>
+      <p>Để tự kiểm chứng ý nghĩa thiết kế, so sánh điểm đặt quy tắc chọn Strategy với các controller: việc thêm một biến thể cần được quản lý ở nơi chọn chiến lược, không sao chép thêm nhánh lựa chọn trong từng controller.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên lý <strong>đóng gói hành vi biến đổi và tập trung quyết định lựa chọn</strong> trong chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: Strategy giúp thay đổi công thức độc lập, còn một composition boundary rõ ràng ngăn các bên gọi diễn giải khác nhau cùng một quy tắc nghiệp vụ.</p>
     usage: true
   executeCase2():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Một factory đọc môi trường từ trạng thái toàn cục có thể tạo đối tượng phụ thuộc vào thứ tự chạy test hoặc lần khởi tạo trước đó. Ví dụ này giúp người học phân biệt <strong>factory tạo đối tượng</strong> với <strong>nguồn cấu hình của factory</strong>: sự trừu tượng hóa bằng factory chưa đủ nếu nguồn dữ liệu đầu vào vẫn thay đổi ngầm.</p>
+      <p>Truyền cấu hình tường minh cho mỗi lần tạo client giúp việc chọn endpoint có thể lặp lại và kiểm tra độc lập theo từng môi trường, thay vì chịu ảnh hưởng bởi mutable global state.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/9/case/2/execute</code> khi ứng dụng mẫu sẵn sàng. Xem tình huống và kiểm tra minh họa trong Case Study VI theo thứ tự tạo client cho TEST, PRODUCTION rồi TEST lần nữa; endpoint của lần TEST sau cần vẫn gắn với cấu hình TEST. Giá trị endpoint trong ví dụ chỉ là dữ liệu cấu hình, không có căn cứ để coi đây là kết quả gọi mạng tới hệ thống test hay production thật.</p>
+      <p>Nếu cần quan sát kỹ hơn, dùng trình gỡ lỗi của môi trường Java đã cài để theo dõi cấu hình được truyền vào điểm tạo client; không cần bật thêm dịch vụ bên ngoài để hiểu bài học này.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên tắc <strong>khởi tạo có đầu vào tường minh</strong> trong chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: factory dễ kiểm thử và tái lập khi dependency được chọn bởi cấu hình của chính lời gọi, không bởi trạng thái toàn cục khó kiểm soát.</p>
     usage: true
   executeCase3():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p><strong>Abstract Factory</strong> không chỉ gom nhiều hàm tạo đối tượng; nó còn bảo đảm các sản phẩm thuộc <strong>cùng một họ tương thích</strong>. Tình huống ghép database client của staging với messaging client của production cho thấy các client hợp lệ riêng lẻ vẫn có thể tạo thành một cấu hình tổng thể sai và nguy hiểm.</p>
+      <p>Người học hiểu vì sao việc chọn một family theo environment và kiểm tra tính nhất quán ngay khi lắp ghép ứng dụng là một phần của hợp đồng khởi tạo, không nên đợi đến lúc gửi dữ liệu mới phát hiện sai môi trường.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực hiện <code>GET /case-studies/group/9/case/3/execute</code> trên ứng dụng đang chạy rồi đọc minh họa trong Case Study VI. Đối chiếu hai trường hợp tạo đầy đủ family STAGING/PRODUCTION và trường hợp cố tình trộn database STAGING với messaging PRODUCTION: trường hợp cuối được thiết kế để bị từ chối ở bước lắp ghép.</p>
+      <p>Các client trong ví dụ là đối tượng đại diện cho môi trường; việc đối chiếu thuộc tính <code>env</code> không phải bằng chứng đã kết nối database hay phát message sang hạ tầng bên ngoài. Nếu request lỗi, kiểm tra nguyên nhân trước khi diễn giải lỗi đó là kết quả mong đợi của nhánh trộn môi trường.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho giá trị của <strong>Abstract Factory với ràng buộc product family</strong> trong chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: lựa chọn nhất quán ngay tại composition root ngăn các dependency của những môi trường khác nhau bị ghép lẫn, làm rõ ranh giới cấu hình trong thiết kế OOP.</p>
     usage: true
   executeCase4():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Decorator bổ sung audit nhưng không được âm thầm thay hợp đồng lỗi của dịch vụ được bọc. Người học thấy được <strong>tính trong suốt của Decorator</strong> và quan hệ với nguyên tắc thay thế: bên gọi vẫn cần nhận kết quả thành công hoặc đúng loại ngoại lệ mà interface ban đầu cam kết.</p>
+      <p>Audit là trách nhiệm bổ sung; việc bắt lỗi để ghi nhận sự kiện không đồng nghĩa được quyền chuyển mọi exception thành một lỗi khác hoặc che mất đối tượng exception gốc.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/9/case/4/execute</code> và theo dõi request trên ứng dụng mẫu. Trong Case Study VI, đối chiếu cả luồng trả kết quả bình thường lẫn luồng delegate ném <code>IllegalArgumentException</code>: dữ liệu audit cần phân biệt thành công/thất bại, trong khi exception đến bên gọi phải giữ nguyên danh tính so với lỗi phát sinh bên trong.</p>
+      <p>Danh sách audit của minh họa tồn tại trong bộ nhớ; không nên suy ra có hệ thống logging tập trung hoặc thông điệp log cố định được xuất ra stdout. Việc response HTTP có hay không có body cũng không thay cho kiểm chứng exception contract.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên tắc <strong>mở rộng hành vi mà không phá vỡ hợp đồng</strong> của Decorator trong chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: quan sát lỗi là việc của lớp bọc, còn ý nghĩa lỗi đối với client vẫn thuộc hợp đồng dịch vụ gốc.</p>
     usage: true
   executeCase5():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Tình huống nâng SDK nhà cung cấp làm hỏng domain cho thấy chi phí của việc để DTO, enum và lỗi ngoại vi tràn vào API nghiệp vụ. Người học hiểu <strong>Adapter như một anti-corruption layer</strong>: chuyển dữ liệu từ mô hình của vendor sang những kiểu dữ liệu do ứng dụng sở hữu, qua đó bảo vệ domain trước thay đổi kỹ thuật bên ngoài.</p>
+      <p>Điểm quan trọng không chỉ là đổi tên method cho khớp interface, mà còn là giữ biên phiên dịch rõ ràng để các bên sử dụng nghiệp vụ không cần biết một mã trạng thái cụ thể của SDK.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi <code>GET /case-studies/group/9/case/5/execute</code>, sau đó đối chiếu mẫu trong Case Study VI: phía gọi nghiệp vụ làm việc qua <code>PaymentPort</code> và nhận <code>PaymentResult</code>, còn chuyển đổi mã trạng thái <code>OK_V2</code>/<code>REJECTED_V2</code> nằm ở Adapter.</p>
+      <p>Ví dụ dùng SDK mô phỏng tại chỗ và phép kiểm tra kết quả domain, không chứng minh đã gửi thanh toán thật hay đã nâng một thư viện vendor ngoài hệ thống. Khi rà lại tác động thay SDK, chú ý phạm vi cần đổi chỉ quanh lớp chuyển đổi và các phép kiểm tra mapping của nó.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên lý <strong>cách ly phụ thuộc ngoại vi bằng Adapter</strong> trong chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: contract nghiệp vụ ổn định khi kiểu dữ liệu của vendor thay đổi, nhờ ranh giới dịch dữ liệu được đặt ở infrastructure thay vì lan sang domain.</p>
     usage: true
   executeCase6():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Facade giúp bên gọi thao tác qua một giao diện đơn giản, nhưng nếu một bước phụ thất bại thì không được xóa nhòa kết quả của bước chính. Ví dụ thanh toán và gửi biên nhận giúp người học nhận diện <strong>partial success</strong>, cách biểu diễn trạng thái rõ ràng và vai trò của <strong>idempotency</strong> khi cần thử lại.</p>
+      <p>Thay vì biến mọi lỗi gửi biên nhận thành “thanh toán thất bại”, Facade cần trả về thông tin đủ phân biệt khoản đã ghi nhận với tác vụ phụ còn tồn đọng, để retry không tạo thêm một lần thu tiền.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/9/case/6/execute</code> và đọc ví dụ trong Case Study VI: lần xử lý có sự cố gửi biên nhận được mô hình hóa bằng trạng thái <code>PAID_RECEIPT_PENDING</code>; lần thử lại cùng requestId có thể hoàn tất gửi biên nhận mà không nhân đôi khoản charge.</p>
+      <p>Đối chiếu số bản ghi charge và biên nhận trong mô hình bộ nhớ để hiểu điều kiện idempotency. Đây không phải thao tác với cổng thanh toán hoặc email thật; trạng thái trong ví dụ cũng không phải HTTP status do Controller trả về. Muốn áp dụng thực tế còn cần cơ chế lưu khóa và phục hồi tác vụ có độ bền phù hợp.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên tắc <strong>Facade phải giữ đúng ngữ nghĩa thành công từng phần</strong> trong chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: giao diện đơn giản không có nghĩa được giấu trạng thái nghiệp vụ, và retry an toàn phải dựa trên định danh yêu cầu cùng hợp đồng rõ ràng giữa các bước.</p>
     usage: true
   executeCase7():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Observer cho phép nhiều subscriber nhận sự kiện mà publisher không cần phụ thuộc vào từng bên nhận. Tuy nhiên, khi callback được gọi đồng bộ, một subscriber ném exception có thể chặn những subscriber còn lại. Ví dụ giúp người học hiểu <strong>cô lập lỗi khi dispatch sự kiện</strong> là quyết định thiết kế riêng, không phải bảo đảm tự có của Observer.</p>
+      <p>Việc giữ lại danh sách lỗi giúp tầng gọi biết có phần việc không thành công, trong khi vẫn cho các callback còn lại cơ hội xử lý sự kiện.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi <code>GET /case-studies/group/9/case/7/execute</code>, sau đó đối chiếu chuỗi đăng ký và kiểm tra trong Case Study VI: subscriber A và C vẫn nhận <code>event-1</code> theo thứ tự mong đợi dù subscriber ở giữa ném exception; lỗi của subscriber thất bại được giữ lại để có thể xử lý hoặc báo cáo.</p>
+      <p>Đây là danh sách callback trong bộ nhớ và cách dispatch đồng bộ; không có cơ sở kết luận đã có event queue, retry bền vững hay phát thông điệp tới hệ thống khác. Nếu muốn quan sát khi gỡ lỗi, tập trung vào tập subscriber đã nhận sự kiện và tập lỗi sau lần publish.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên tắc <strong>fault isolation trong Observer</strong> của chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: liên kết lỏng giữa publisher và subscriber chỉ thật sự hữu ích khi failure của một bên được xử lý tường minh, không khiến mọi bên còn lại mất cơ hội nhận sự kiện.</p>
     usage: true
   executeCase8():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Trong Observer, vấn đề không dừng ở việc đăng ký callback; <strong>vòng đời của subscription</strong> phải đi cùng vòng đời thành phần sở hữu nó. Tình huống mở lại tab UI và nhận thông báo lặp giúp người học nhận ra listener tồn tại quá lâu hoặc bị đăng ký nhiều lần có thể gây lỗi chức năng dù event gốc chỉ phát một lần.</p>
+      <p>Subscription handle có thể đóng rõ ràng và đăng ký idempotent giúp người học thiết kế quan hệ sở hữu dễ quản lý: tạo khi cần quan sát, giải phóng khi không còn người sử dụng.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/9/case/8/execute</code> khi ứng dụng mẫu hoạt động. Dựa vào minh họa trong Case Study VI, đối chiếu mỗi vòng mở/đóng tab giả lập: đăng ký lại cùng listener không tăng số callback đang hoạt động, phát sự kiện chỉ thêm một thông báo, và sau khi đóng subscription danh sách listener trở về rỗng.</p>
+      <p>Việc mở/đóng tab ở đây được mô phỏng bằng mã Java và lifecycle <code>close()</code>, không phải thao tác thực trên một trình duyệt. Với ứng dụng UI thật, cần nối cleanup vào sự kiện unmount/dispose của framework đang dùng.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên tắc <strong>quản lý vòng đời Observer theo quyền sở hữu</strong> trong chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: callback không được tồn tại vô thời hạn, và cleanup cùng đăng ký không nhân đôi giúp ngăn thông báo trùng và tích lũy tài nguyên.</p>
     usage: true
   executeCase9():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p><strong>Template Method</strong> hữu ích khi một quy trình có thứ tự bất biến nhưng vẫn cần điểm mở rộng. Trường hợp hook bị override làm ghi dữ liệu trước validation cho thấy vì sao không thể để lớp con tùy tiện thay đổi mọi bước của thuật toán: điều này phá hủy hợp đồng của toàn bộ quy trình.</p>
+      <p>Người học phân biệt phần phải cố định ở lớp cơ sở với phần có thể cho lớp con tùy biến, và hiểu cách một template <code>final</code> bảo vệ thứ tự validate → transform → write.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/9/case/9/execute</code>, rồi đối chiếu các điều kiện của Case Study VI: dữ liệu trắng phải bị từ chối trước khi lưu, trong khi dữ liệu hợp lệ chỉ được lưu sau khi đã qua biến đổi. Quan sát phép kiểm tra vùng lưu in-memory để xác nhận tình huống bị lỗi không tạo bản ghi.</p>
+      <p>Minh họa sử dụng kho lưu trong bộ nhớ; không có cơ sở cho rằng đã ghi database hoặc hệ thống file thật. Nếu đặt breakpoint trong Java, điểm cần xem là thứ tự quyết định hợp lệ trước khi gọi bước lưu, không phải chỉ HTTP request hoàn thành.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên tắc <strong>Template Method bảo vệ bất biến trình tự</strong> trong chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: mở rộng đúng hook giúp thay đổi bước xử lý cho từng biến thể mà không cho phép lớp con vượt qua hàng rào validation trước thao tác ghi.</p>
     usage: true
   executeCase10():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Builder thường làm việc tạo đối tượng nhiều tùy chọn trở nên dễ đọc, nhưng nếu cho phép tổ hợp trái quy tắc thì đối tượng tạo ra vẫn không hợp lệ. Ví dụ TLS và plain HTTP loại trừ nhau giúp người học hiểu <strong>cross-field invariant</strong> cần được kiểm tra tại ranh giới <code>build()</code>, thay vì chờ lỗi xuất hiện khi dùng cấu hình.</p>
+      <p>Bài học OOP ở đây là gom trách nhiệm bảo vệ trạng thái hợp lệ vào điểm tạo đối tượng; một API thuận tiện không được đánh đổi các ràng buộc nghiệp vụ và kỹ thuật.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi <code>GET /case-studies/group/9/case/10/execute</code> và đối chiếu hai hướng trong Case Study VI: cấu hình chọn đúng một transport cùng host hợp lệ được tạo, còn cấu hình đồng thời bật TLS và plain HTTP phải bị từ chối ngay khi build.</p>
+      <p>Các cờ transport chỉ là thuộc tính của đối tượng cấu hình; ví dụ không mở kết nối TLS/HTTP thật. Khi rà bài học, kiểm tra nơi lỗi cấu hình được phát hiện, tránh nhầm kết quả validate tại Builder với bảo đảm về kết nối mạng.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên lý <strong>Builder là ranh giới bảo vệ tính hợp lệ của đối tượng</strong> trong chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: kiểm tra các trường liên quan ngay khi xây dựng giúp phát hiện cấu hình mâu thuẫn sớm, thay vì chuyển đối tượng lỗi sang giai đoạn vận hành.</p>
     usage: true
   executeCase11():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p><strong>State pattern</strong> tách hành vi theo trạng thái, nhưng không có nghĩa dữ liệu thay đổi của mọi phiên nên đặt chung trong một state object. Tình huống phiên làm việc này ảnh hưởng phiên khác cho thấy tầm quan trọng của <strong>object lifetime và quyền sở hữu mutable state</strong>.</p>
+      <p>Người học nhận ra phần chính sách chuyển trạng thái có thể ổn định hoặc chia sẻ khi bất biến, còn số lần thử và trạng thái hiện tại phải gắn với đúng aggregate/session đang được xử lý.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/9/case/11/execute</code> rồi xem phần kiểm tra minh họa của Case Study VI: hai session cùng được kích hoạt, nhưng các lần thử chỉ làm tăng bộ đếm của session thứ nhất; đóng session thứ nhất không làm session thứ hai đổi phase.</p>
+      <p>Trong lúc quan sát bằng mã hoặc debugger, so sánh riêng <code>attempts</code> và <code>phase</code> của từng session. Đó là những giá trị trong bộ nhớ thuộc các đối tượng độc lập, không phải bằng chứng về kho session phân tán hoặc cơ chế đồng bộ giữa nhiều tiến trình.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên tắc <strong>cô lập mutable state theo từng đối tượng sở hữu</strong> trong chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: State pattern vẫn an toàn khi chính sách và dữ liệu được đặt đúng vòng đời, để chuyển trạng thái của một phiên không lan sang phiên khác.</p>
     usage: true
   executeCase12():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Nhiều lớp Decorator ghép nối có thể che khuất nơi dữ liệu bị biến đổi hoặc nơi lỗi được bọc lại. Tình huống này cho người học thấy <strong>trách nhiệm và thứ tự của từng wrapper</strong> phải đủ rõ để gỡ lỗi: sự linh hoạt của composition không có nghĩa càng nhiều tầng càng tốt.</p>
+      <p>Ghi nhận một trace tại chỗ về đường đi của wrapper và giữ nguyên <code>cause</code> giúp người bảo trì phân biệt lớp đã xử lý request với nguyên nhân lỗi phát sinh từ sâu bên trong.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Thực thi <code>GET /case-studies/group/9/case/12/execute</code> khi ứng dụng mẫu chạy. Đối chiếu minh họa của Case Study VI: chuỗi xử lý ghi nhận <code>AuditDecorator</code> trước <code>TrimDecorator</code>; exception do wrapper đưa ra vẫn trỏ tới đối tượng cause ban đầu.</p>
+      <p>Trace trong ví dụ là danh sách trong bộ nhớ để kiểm tra thứ tự, không phải distributed tracing hoặc span của hệ thống giám sát. Khi điều tra vấn đề thực, cần phân biệt dấu vết của wrapper với stack trace và cause của ngoại lệ, tránh kết luận chỉ từ tên lỗi ở lớp ngoài cùng.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên tắc <strong>composition có trách nhiệm và khả năng truy nguyên lỗi</strong> trong chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: Decorator cần giữ đường đi xử lý minh bạch và không làm mất nguyên nhân lỗi gốc, nếu không lợi ích mở rộng dễ biến thành gánh nặng bảo trì.</p>
     usage: true
   executeCase13():
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: |
+      <h3>1. Mục đích của method này với chủ đề</h3>
+      <p>Design Pattern là công cụ giải quyết lực thay đổi cụ thể, không phải thước đo chất lượng qua số lượng lớp hay interface. Trường hợp thay một <code>switch</code> nhỏ bằng nhiều Strategy/Factory trước khi có nhu cầu thật giúp người học đánh giá <strong>KISS, YAGNI và chi phí abstraction</strong> trong thiết kế hướng đối tượng.</p>
+      <p>Với tập loại vận chuyển ổn định và vài quy tắc rõ ràng, cách thể hiện trực tiếp có thể dễ đọc, dễ kiểm tra và ít điểm cần sửa hơn một hệ phân cấp giả định sẽ cần mở rộng về sau.</p>
+      <h3>3. Hướng dẫn quan sát kết quả</h3>
+      <p>Gọi <code>GET /case-studies/group/9/case/13/execute</code>, rồi đối chiếu các phép kiểm tra phí vận chuyển trong Case Study VI: PICKUP, STANDARD và EXPRESS được xử lý theo các quy tắc được liệt kê, kèm nhánh từ chối dữ liệu đầu vào không hợp lệ.</p>
+      <p>Quan sát xem quy tắc có được giữ trong một điểm rõ ràng và các biến thể hiện có có được kiểm tra đầy đủ hay không. Ví dụ không đưa ra số đo hiệu năng hoặc bằng chứng về plugin/runtime variation; vì vậy không thể kết luận thiết kế dùng pattern sẽ chậm hơn, mà chỉ so sánh độ phức tạp cần thiết cho yêu cầu đang có.</p>
+      <h3>4. Kết luận</h3>
+      <p>Như vậy, method này đã minh chứng cho nguyên tắc <strong>chọn mức trừu tượng theo nhu cầu thực</strong> trong chủ đề <strong>OBJECT_ORIENTED_PROGRAMMING</strong>: giữ giải pháp đơn giản khi hành vi còn ổn định và chỉ đưa pattern vào khi xuất hiện biến thể hoặc failure mode đủ rõ để bù đắp chi phí thêm lớp và điểm mở rộng.</p>
     usage: true
