@@ -221,37 +221,23 @@ class JavaDataPublisherTests(unittest.TestCase):
                     publisher.validate(self.data)
                 forbidden.unlink()
 
-    def test_code_explorer_java_is_allowlisted_and_verified(self):
-        import hashlib
-        source = b"package demo;\npublic class Example {}\n"
-        path = "demo/Example.java"
-        folder = self.module / "code-explorer"
-        self.write_text(folder / "files" / path, source.decode("utf-8"))
-        # On Windows the text fixture may have CRLF on disk; the material
-        # contract always hashes source bytes rather than normalized text.
-        source = (folder / "files" / path).read_bytes()
-        self.write_json(folder / "index.json", {
-            "version": 1, "type": "CODE_EXPLORER", "id": "example",
-            "files": [{"path": path, "bytes": len(source),
-                       "sha256": hashlib.sha256(source).hexdigest()}],
-            "symbols": "symbols.json", "references": "references.json",
-            "apiMap": "api-map.json",
-        })
-        for asset in ("symbols.json", "references.json", "api-map.json"):
-            self.write_json(folder / asset, {"version": 1})
+    def test_retired_module_wide_explorer_is_rejected(self):
         catalog_file = self.data / "module-catalog.json"
         catalog = json.loads(catalog_file.read_text(encoding="utf-8"))
         catalog["root"]["children"][0]["codeExplorer"] = (
             "/module/EXAMPLE/code-explorer/index.json")
         self.write_json(catalog_file, catalog)
-        files, _, refs, _ = publisher.validate(self.data)
-        self.assertTrue(any(f.suffix == ".java" for f in files))
-        self.assertGreaterEqual(refs, 8)
-        self.write_text(folder / "files" / path, "tampered")
-        with self.assertRaisesRegex(ValueError, "checksum mismatch"):
+        with self.assertRaisesRegex(ValueError, "Retired Code Explorer catalog field"):
             publisher.validate(self.data)
+        del catalog["root"]["children"][0]["codeExplorer"]
+        self.write_json(catalog_file, catalog)
+        folder = self.module / "code-explorer"
+        self.write_json(folder / "index.json", {"version": 1})
+        with self.assertRaisesRegex(ValueError, "Retired Code Explorer asset"):
+            publisher.validate(self.data)
+        (folder / "index.json").unlink()
 
-    def test_step9_case_scoped_java_is_verified_and_requires_full_manifest(self):
+    def test_step8_case_scoped_java_is_verified_and_requires_full_manifest(self):
         import hashlib
         base = self.module / "code-explorer" / "casestudy"
         folder = base / "groups" / "1" / "cases" / "1"
@@ -264,11 +250,9 @@ class JavaDataPublisherTests(unittest.TestCase):
             "files": [{"path": path, "bytes": len(source),
                        "sha256": hashlib.sha256(source).hexdigest()}],
             "symbols": "symbols.json", "references": "references.json",
-            "apiMap": "api-map.json",
         })
         self.write_json(folder / "symbols.json", {"version": 1, "symbols": []})
         self.write_json(folder / "references.json", {"version": 1, "references": []})
-        self.write_json(folder / "api-map.json", {"version": 1, "endpoints": []})
         manifest = {"version": 1, "type": "CASE_STUDY_EXPLORER",
                     "complete": True, "cases": [{
                         "groupID": 1, "caseIndex": 1,
@@ -281,6 +265,18 @@ class JavaDataPublisherTests(unittest.TestCase):
         self.write_json(catalog_file, catalog)
         files, _, _, _ = publisher.validate(self.data)
         self.assertIn(source_file, files)
+        self.assertFalse((folder / "api-map.json").exists())
+        index = json.loads((folder / "index.json").read_text(encoding="utf-8"))
+        index["apiMap"] = "api-map.json"
+        self.write_json(folder / "index.json", index)
+        with self.assertRaisesRegex(ValueError, "Invalid STEP8_EXPLORER bundle"):
+            publisher.validate(self.data)
+        del index["apiMap"]
+        self.write_json(folder / "index.json", index)
+        self.write_json(folder / "api-map.json", {"version": 1, "endpoints": []})
+        with self.assertRaisesRegex(ValueError, "Retired Code Explorer asset"):
+            publisher.validate(self.data)
+        (folder / "api-map.json").unlink()
         manifest["complete"] = False
         self.write_json(base / "index.json", manifest)
         with self.assertRaisesRegex(ValueError, "Incomplete STEP8_EXPLORER"):
@@ -294,9 +290,15 @@ class JavaDataPublisherTests(unittest.TestCase):
     def test_unclaimed_java_and_unrelated_java_are_rejected(self):
         extra = self.module / "code-explorer" / "files" / "Demo.java"
         self.write_text(extra, "public class Demo {}")
-        with self.assertRaisesRegex(ValueError, "Unclaimed Code Explorer"):
+        with self.assertRaisesRegex(ValueError, "Forbidden generated file type"):
             publisher.validate(self.data)
         extra.unlink()
+        orphan = (self.module / "code-explorer" / "casestudy" / "groups" /
+                  "1" / "cases" / "1" / "files" / "Demo.java")
+        self.write_text(orphan, "public class Demo {}")
+        with self.assertRaisesRegex(ValueError, "Unclaimed Code Explorer Java assets"):
+            publisher.validate(self.data)
+        orphan.unlink()
         self.write_text(self.module / "Example.java", "public class Example {}")
         with self.assertRaisesRegex(ValueError, "Forbidden generated file type"):
             publisher.validate(self.data)

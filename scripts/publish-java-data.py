@@ -19,13 +19,10 @@ import yaml
 
 EXPOSED_FIELDS = (
     "overview", "knowledge", "roadmap", "video", "quiz",
-    "interview", "casestudy", "api", "reference", "codeExplorer",
+    "interview", "casestudy", "api", "reference",
     "caseStudyExplorer",
 )
 ALLOWED_EXTENSIONS = frozenset({".json", ".yml", ".yaml", ".md"})
-EXPLORER_SOURCE_RE = re.compile(
-    r"^module/[A-Z0-9_-]+/code-explorer/files/(?:[A-Za-z0-9_$-]+/)*[A-Za-z0-9_$-]+\.java$"
-)
 CASE_SOURCE_RE = re.compile(
     r"^module/[A-Z0-9_-]+/code-explorer/casestudy/groups/[1-9]\d*/cases/[1-9]\d*/files/"
     r"(?:[A-Za-z0-9_$-]+/)*[A-Za-z0-9_$-]+\.java$"
@@ -140,15 +137,17 @@ def validate(directory):
         if relative.startswith(DISABLED_SEARCH_PREFIX):
             # Ignore even stale outputs left by previous Gradle runs.
             continue
+        if re.fullmatch(
+                r"module/[A-Z0-9_-]+/code-explorer/(?:index|symbols|references|api-map)\.json",
+                relative) or relative.endswith("/api-map.json"):
+            fail(f"Retired Code Explorer asset: {relative}")
         folded = relative.casefold()
         if folded in casefolded:
             fail(f"Case-insensitive duplicate generated path: {relative}")
         casefolded.add(folded)
         suffix = file.suffix.lower()
         if suffix not in ALLOWED_EXTENSIONS and not (
-                suffix == ".java" and (
-                    EXPLORER_SOURCE_RE.fullmatch(relative)
-                    or CASE_SOURCE_RE.fullmatch(relative))):
+                suffix == ".java" and CASE_SOURCE_RE.fullmatch(relative)):
             fail(
                 f"Forbidden generated file type: {relative} "
                 f"(allowed: {', '.join(sorted(ALLOWED_EXTENSIONS))})"
@@ -181,7 +180,6 @@ def validate(directory):
 
     seen_modules = set()
     checked_refs = 0
-    explorers = {}
     case_explorers = {}
     group_indexes = {}
 
@@ -196,11 +194,8 @@ def validate(directory):
             if module_id in seen_modules:
                 fail(f"Duplicate routeId in catalog: {module_id}")
             seen_modules.add(module_id)
-            if node.get("codeExplorer") is not None:
-                expected = f"/module/{module_id}/code-explorer/index.json"
-                if node["codeExplorer"] != expected:
-                    fail(f"Unexpected Code Explorer catalog path for {module_id}")
-                explorers[module_id] = directory / expected.lstrip("/")
+            if "codeExplorer" in node:
+                fail(f"Retired Code Explorer catalog field for {module_id}")
             if node.get("caseStudyExplorer") is not None:
                 expected = f"/module/{module_id}/code-explorer/casestudy/index.json"
                 if node["caseStudyExplorer"] != expected:
@@ -266,42 +261,10 @@ def validate(directory):
         if total != index.get("totalQuestions"):
             fail(f"Invalid {kind} group total: {index_file}")
 
-    # Code Explorer is a private-to-this-material allowlist for Java sources.
-    # Validate every declared source by SHA-256, and reject orphan/extra Java.
+    # STEP 8 Case Study Explorer owns all published Java sources.
+    # Validate every declared source by SHA-256; reject orphan/extra Java.
     claimed_java = set()
-    for module_id, index_file in explorers.items():
-        index = json.loads(index_file.read_text(encoding="utf-8"))
-        if (index.get("version") != 1 or index.get("type") != "CODE_EXPLORER"
-                or not isinstance(index.get("files"), list)
-                or not index["files"]
-                or not isinstance(index.get("id"), str)):
-            fail(f"Invalid Code Explorer index for {module_id}")
-        folder = index_file.parent
-        for key in ("symbols", "references", "apiMap"):
-            name = index.get(key)
-            if name not in ("symbols.json", "references.json", "api-map.json"):
-                fail(f"Invalid Code Explorer {key} reference: {module_id}")
-            resolve_asset(directory, f"/module/{module_id}/code-explorer/{name}")
-            checked_refs += 1
-        local = set()
-        for entry in index["files"]:
-            if not isinstance(entry, dict):
-                fail(f"Invalid Code Explorer source entry: {module_id}")
-            path = entry.get("path")
-            if (not isinstance(path, str) or
-                    not EXPLORER_SOURCE_RE.fullmatch(f"module/{module_id}/code-explorer/files/{path}")):
-                fail(f"Unsafe Code Explorer Java path: {path!r}")
-            relative = f"module/{module_id}/code-explorer/files/{path}"
-            if relative in local or relative in claimed_java:
-                fail(f"Duplicate Code Explorer source: {relative}")
-            local.add(relative)
-            claimed_java.add(relative)
-            source = folder / "files" / path
-            if (not source.is_file() or source.stat().st_size != entry.get("bytes")
-                    or sha256(source) != entry.get("sha256")):
-                fail(f"Code Explorer source checksum mismatch: {relative}")
-            checked_refs += 1
-    # STEP 8 Code Explorer materials are independent of Swagger and the legacy API Explorer.
+    # STEP 8 Case Study materials are independent of Swagger and the retired API Explorer.
     # Each case owns a separate, hash-checked V1 source and symbol bundle.
     for module_id, manifest_file in case_explorers.items():
         manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
@@ -330,11 +293,11 @@ def validate(directory):
             if (index.get("version") != 1 or index.get("type") != "CODE_EXPLORER"
                     or index.get("id") != f"casestudy-g{g}-c{c}"
                     or not isinstance(index.get("files"), list)
-                    or entry.get("files") != len(index["files"])):
+                    or entry.get("files") != len(index["files"])
+                    or "apiMap" in index):
                 fail(f"Invalid STEP8_EXPLORER bundle: {index_file}")
             for key, name in (("symbols", "symbols.json"),
-                              ("references", "references.json"),
-                              ("apiMap", "api-map.json")):
+                              ("references", "references.json")):
                 if index.get(key) != name or not (case_dir / name).is_file():
                     fail(f"STEP8_EXPLORER metadata missing: {case_dir / name}")
             paths = set()
@@ -342,8 +305,7 @@ def validate(directory):
                 path = file.get("path") if isinstance(file, dict) else None
                 relative_path = f"module/{module_id}/code-explorer/casestudy/groups/{g}/cases/{c}/files/{path}"
                 if (not isinstance(path, str) or
-                        not EXPLORER_SOURCE_RE.fullmatch(
-                            f"module/{module_id}/code-explorer/files/{path}") or
+                        not CASE_SOURCE_RE.fullmatch(relative_path) or
                         relative_path in claimed_java):
                     fail(f"Unsafe or duplicate STEP8_EXPLORER Java file: {relative_path}")
                 if path in paths:
