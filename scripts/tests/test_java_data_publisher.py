@@ -144,8 +144,57 @@ class JavaDataPublisherTests(unittest.TestCase):
         self.write_text(self.knowledge / "content" / "lesson.md", "# New lesson\n")
         self.assertFalse(publisher.same_published_content(self.data, zip_file, checksum))
         self.write_text(self.knowledge / "content" / "lesson.md", "# Lesson\n")
-        self.write_text(self.module / "reference" / "references.yml", "references: []\n")
+        self.write_text(self.module / "reference" / "vi" / "references.yml",
+                        "references: []\n")
         self.assertFalse(publisher.same_published_content(self.data, zip_file, checksum))
+
+    def test_localized_reference_assets_are_checked_for_each_language(self):
+        catalog_file = self.data / "module-catalog.json"
+        catalog = json.loads(catalog_file.read_text(encoding="utf-8"))
+        reference = {
+            "vi": "/module/EXAMPLE/reference/vi/references.yml",
+            "en": "/module/EXAMPLE/reference/en/references.yml",
+        }
+        catalog["root"]["children"][0]["reference"] = reference
+        self.write_json(catalog_file, catalog)
+        for language in ("vi", "en"):
+            self.write_text(self.module / "reference" / language / "references.yml",
+                            "references:\n  - title: Specification\n"
+                            "    url: https://example.org/spec\n")
+
+        _, _, ref_count, _ = publisher.validate(self.data)
+        self.assertEqual(ref_count, 5)
+
+        (self.module / "reference" / "en" / "references.yml").unlink()
+        with self.assertRaisesRegex(ValueError, "Missing referenced asset"):
+            publisher.validate(self.data)
+
+        for invalid in (
+                {"vi": "/module/EXAMPLE/reference/en/references.yml"},
+                {"en": "/module/OTHER/reference/en/references.yml"},
+                {"fr": "/module/EXAMPLE/reference/fr/references.yml"},
+                {},
+                ["/module/EXAMPLE/reference/vi/references.yml"]):
+            with self.subTest(reference=invalid):
+                catalog["root"]["children"][0]["reference"] = invalid
+                self.write_json(catalog_file, catalog)
+                with self.assertRaisesRegex(ValueError, "Invalid localized Reference paths"):
+                    publisher.validate(self.data)
+
+    def test_legacy_shared_reference_catalog_remains_valid_during_rollout(self):
+        catalog_file = self.data / "module-catalog.json"
+        catalog = json.loads(catalog_file.read_text(encoding="utf-8"))
+        catalog["root"]["children"][0]["reference"] = (
+            "/module/EXAMPLE/reference/references.yml")
+        self.write_json(catalog_file, catalog)
+        self.write_text(self.module / "reference" / "references.yml", "references: []\n")
+        _, _, ref_count, _ = publisher.validate(self.data)
+        self.assertEqual(ref_count, 4)
+        catalog["root"]["children"][0]["reference"] = (
+            "/module/EXAMPLE/reference/other.yml")
+        self.write_json(catalog_file, catalog)
+        with self.assertRaisesRegex(ValueError, "Invalid Reference path"):
+            publisher.validate(self.data)
 
     def test_existing_release_checksum_mismatch_fails_closed(self):
         output = self.root / "release"

@@ -83,6 +83,29 @@ class ModuleEnSheetPublishServiceTest {
     }
 
     @Test
+    void changingEnglishReferenceAfterCloneInvalidatesPublishState() {
+        Map f = fixture()
+        File reference = new File(f.module, 'content/reference/en/references.yml')
+        assertTrue(reference.parentFile.mkdirs())
+        reference.setText('references: []\n', 'UTF-8')
+        List<String> events = []
+        List<Map> tabs = [
+                [gid:'0', title:'Template', moduleLocation:'', rows:700, columns:28],
+                [gid:'111', title:'OOP', moduleLocation:'module/demo', rows:700, columns:28]
+        ]
+        def service = mocked(tabs, events)
+        service.execute(f.root, f.module, URL, '111', 'CLONE', true)
+        reference.setText('references:\n  - {title: EN, url: https://example.com/en}\n', 'UTF-8')
+        try {
+            service.execute(f.root, f.module, URL, '111', 'CLONE', true)
+            fail('English Reference change must invalidate persisted publish state')
+        } catch (GradleException expected) {
+            assertTrue(expected.message.contains('sourceSha256'))
+        }
+        assertEquals(1, events.count { it.startsWith('duplicate:') })
+    }
+
+    @Test
     void videoAuthoredAfterStep15DoesNotChangeMandatoryPublishFingerprint() {
         Map f = fixture()
         List<String> events = []

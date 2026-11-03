@@ -20,7 +20,7 @@ class ContractSkeletonSyncServiceTest {
         File root = temp.newFolder('repository')
         prepareContract(root)
         def service = new ContractSkeletonSyncService(Logging.getLogger(getClass()))
-        assertEquals([total: 4, updated: 4], service.sync(root))
+        assertEquals([total: 5, updated: 5], service.sync(root))
 
         for (String kind in ['quiz', 'interview', 'roadmap']) {
             String filename = kind == 'roadmap' ? 'roadmap.yml' : "${kind}.yml"
@@ -36,15 +36,22 @@ class ContractSkeletonSyncServiceTest {
             assertFalse(new File(root, "project-build/skeleton/${kind}/vi").exists())
             assertFalse(new File(root, "project-build/skeleton/${kind}/question.yml").exists())
         }
-        File reference = new File(root, 'project-build/skeleton/reference/references.yml')
-        assertTrue(reference.isFile())
-        assertEquals([references: []], new Yaml().load(reference.getText('UTF-8')))
+        for (String language in ['vi', 'en']) {
+            File reference = new File(root,
+                    "project-build/skeleton/reference/${language}/references.yml")
+            assertTrue(reference.isFile())
+            assertTrue(reference.getText('UTF-8').contains("# language: ${language}"))
+            assertTrue(reference.getText('UTF-8').contains(
+                    "content/reference/${language}/references.yml"))
+            assertEquals([references: []], new Yaml().load(reference.getText('UTF-8')))
+        }
+        assertFalse(new File(root, 'project-build/skeleton/reference/references.yml').exists())
         assertFalse(new File(root, 'project-build/skeleton/video-script').exists())
         assertFalse(new File(root, 'module').exists())
         long previous = new File(
                 root, 'project-build/skeleton/roadmap/roadmap.yml'
         ).lastModified()
-        assertEquals([total: 4, updated: 0], service.sync(root))
+        assertEquals([total: 5, updated: 0], service.sync(root))
         assertEquals(previous, new File(
                 root, 'project-build/skeleton/roadmap/roadmap.yml'
         ).lastModified())
@@ -60,7 +67,7 @@ class ContractSkeletonSyncServiceTest {
         Map schema = new groovy.json.JsonSlurper().parse(contractQuiz) as Map
         schema['x-description']['en'] = 'Updated authoring description'
         contractQuiz.setText(JsonOutput.prettyPrint(JsonOutput.toJson(schema)), 'UTF-8')
-        assertEquals([total: 4, updated: 1], service.sync(root))
+        assertEquals([total: 5, updated: 1], service.sync(root))
         assertTrue(new File(
                 root, 'project-build/skeleton/quiz/quiz.yml'
         ).getText('UTF-8').contains('Updated authoring description'))
@@ -99,13 +106,13 @@ class ContractSkeletonSyncServiceTest {
 
         oldVietnamese.setText(ContractSkeletonSyncService.GENERATED_HEADER +
                 '\n# language: vi\nquestions: []\n', 'UTF-8')
-        assertEquals([total: 4, updated: 4], service.sync(root))
+        assertEquals([total: 5, updated: 5], service.sync(root))
         assertFalse(oldEnglish.exists())
         assertFalse(oldVietnamese.exists())
         assertFalse(oldEnglish.parentFile.exists())
         assertFalse(oldVietnamese.parentFile.exists())
         assertTrue(new File(root, 'project-build/skeleton/quiz/quiz.yml').isFile())
-        assertEquals([total: 4, updated: 0], service.sync(root))
+        assertEquals([total: 5, updated: 0], service.sync(root))
     }
 
     @Test
@@ -132,12 +139,38 @@ class ContractSkeletonSyncServiceTest {
 
         oldInterview.setText(ContractSkeletonSyncService.GENERATED_HEADER +
                 '\nquestions: []\n', 'UTF-8')
-        assertEquals([total: 4, updated: 4], service.sync(root))
+        assertEquals([total: 5, updated: 5], service.sync(root))
         assertFalse(oldQuiz.exists())
         assertFalse(oldInterview.exists())
         assertTrue(new File(root, 'project-build/skeleton/quiz/quiz.yml').isFile())
         assertTrue(new File(root, 'project-build/skeleton/interview/interview.yml').isFile())
-        assertEquals([total: 4, updated: 0], service.sync(root))
+        assertEquals([total: 5, updated: 0], service.sync(root))
+    }
+
+    @Test
+    void migratesOnlyGeneratedSharedReferenceSkeleton() {
+        File root = temp.newFolder('old-shared-reference')
+        prepareContract(root)
+        def service = new ContractSkeletonSyncService(Logging.getLogger(getClass()))
+        File oldReference = new File(root, 'project-build/skeleton/reference/references.yml')
+        assertTrue(oldReference.parentFile.mkdirs())
+        String manuallyAuthored = 'references:\n  - title: Human\n    url: https://example.org\n'
+        oldReference.setText(manuallyAuthored, 'UTF-8')
+        try {
+            service.sync(root)
+            fail('Expected manual reference protection')
+        } catch (GradleException expected) {
+            assertTrue(expected.message.contains('Refusing to remove non-generated'))
+        }
+        assertEquals(manuallyAuthored, oldReference.getText('UTF-8'))
+        assertFalse(new File(root, 'project-build/skeleton/reference/vi/references.yml').exists())
+
+        oldReference.setText(ContractSkeletonSyncService.GENERATED_HEADER +
+                '\n# language: shared\nreferences: []\n', 'UTF-8')
+        assertEquals([total: 5, updated: 5], service.sync(root))
+        assertFalse(oldReference.exists())
+        assertTrue(new File(root, 'project-build/skeleton/reference/vi/references.yml').isFile())
+        assertTrue(new File(root, 'project-build/skeleton/reference/en/references.yml').isFile())
     }
 
     private static void prepareContract(File root) {
@@ -165,6 +198,7 @@ class ContractSkeletonSyncServiceTest {
         }
         write(new File(schemas, 'reference.schema.json'), [
                 type: 'object',
+                description: 'reference/references.yml, validated after YAML parsing.',
                 required: ['references'],
                 properties: [references: [
                         type: 'array',

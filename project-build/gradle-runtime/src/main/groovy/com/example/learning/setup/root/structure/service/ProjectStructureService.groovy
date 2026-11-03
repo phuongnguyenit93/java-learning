@@ -338,10 +338,8 @@ ${moduleDirectory.absolutePath}
                     )
 
 
-            node.referenceAvailable =
-                    hasAuthoredReference(
-                            directory
-                    )
+            node.referenceLanguages =
+                    findReferenceLanguages(directory, moduleLanguages)
 
 
             node.quizQuestionCounts =
@@ -776,9 +774,11 @@ ${moduleDirectory.absolutePath}
             }
 
 
-            if (node.referenceAvailable) {
-                result.reference =
-                        "/module/${resolveRouteId(node)}/reference/references.yml"
+            if (!node.referenceLanguages.isEmpty()) {
+                result.reference = node.referenceLanguages.toList().sort().collectEntries {
+                    String language ->
+                        [(language): "/module/${resolveRouteId(node)}/reference/${language}/references.yml"]
+                }
             }
 
 
@@ -1083,23 +1083,21 @@ ${moduleDirectory.absolutePath}
     }
 
 
-    private static boolean hasAuthoredReference(
-            File moduleDirectory
+    private static Set<String> findReferenceLanguages(
+            File moduleDirectory,
+            List<String> moduleLanguages
     ) {
-
-        File referenceFile =
-                new File(
-                        moduleDirectory,
-                        'content/reference/references.yml'
-                )
-
-
-        if (!referenceFile.isFile()) {
-            return false
+        Set<String> result = new LinkedHashSet<>()
+        moduleLanguages.each { String language ->
+            File referenceFile = new File(
+                    moduleDirectory,
+                    "content/reference/${language}/references.yml"
+            )
+            if (PortalReferenceProjectionService.hasAuthoredReferences(referenceFile)) {
+                result.add(language)
+            }
         }
-
-
-        return PortalReferenceProjectionService.hasAuthoredReferences(referenceFile)
+        return result
     }
 
     private static Set<String> findSummaryLanguages(File moduleDirectory, List<String> declared) {
@@ -1696,7 +1694,7 @@ ${exception.message}
         Set<String> summaryLanguages = [] as Set<String>
         Set<String> videoLanguages = [] as Set<String>
         Set<String> roadmapLanguages = [] as Set<String>
-        boolean referenceAvailable
+        Set<String> referenceLanguages = [] as Set<String>
         Map<String, Integer> quizQuestionCounts = [:]
         Map<String, Integer> interviewQuestionCounts = [:]
         Map<String, Integer> caseStudyCounts = [:]

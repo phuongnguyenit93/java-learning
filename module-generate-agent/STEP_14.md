@@ -2,7 +2,7 @@
 
 
 
-> **2026-10-26:** STEP 14 translates existing VI `<chapter>/summary/section.yml` YAML and `summaries.yml` items into EN. The chapter source originated as full YAML in STEP 5 parent AC; `comparisonMarkdown` remains a single GFM table **inside a YAML scalar**. Preserve all IDs/order, roadmap transition targets, YAML keys/schema, code/links and Markdown table structure; no conversion back into chapter Markdown. Reference is language-neutral and must not be translated. Prime QA/readback Summary EN before STEP 15, which copies `section.yml` EN verbatim into parent AC.
+> **2026-11-03:** STEP 14 also translates `content/reference/en/references.yml`, cloned byte-for-byte from `content/reference/vi/references.yml` in STEP 13. Translate only `references[].title` and optional `references[].description`; preserve `url`, list size/order, YAML structure and source relevance. A byte-identical EN copy is **untranslated staging** until semantic QA passes. STEP 14 also translates chapter `summary/section.yml` and `summaries.yml` while preserving IDs/order, roadmap transitions and GFM table structure. STEP 15 publishes the reviewed EN Reference in the EN tab.
 
 > **Quy trình:** Hoàn tất preflight gate của STEP 13 → lập catalog/backup → giao worker **mỗi lượt một file** → Prime QA từng file → QA toàn module → CURRENT_STEP.VALUE readback. Whitelist/blacklist nằm trong `worker/STEP_14_WORKER.md`. Không thực thi STEP 15 khi STEP 14 chưa hoàn tất.
 
@@ -18,8 +18,9 @@ Trước khi kiểm tra, Prime đọc **toàn văn** `module-generate-agent/GENE
   - `content/readme/docs/{vi,en}/` (`BASE.md`, `LIST.md`, `menu/**`).
   - `content/roadmap/{vi,en}/`.
   - `src/main/resources/swagger/{vi,en}/`.
+  - `content/reference/{vi,en}/references.yml`.
 - Kiểm tra Menu Cấp 1, folder/filename, chapter, Knowledge section và anchor ID VI/EN. `menu/<chapter>/metadata/knowledge-metadata.yml` phải khớp bytes/anchor/`difficulty` cùng mọi metadata kỹ thuật còn hiệu lực. Các file Quiz, Interview, Summary giữ nguyên cùng cây docs.
-- Vì STEP 13 chỉ clone, **nội dung EN tại thời điểm này vẫn là tiếng Việt**. Đối chiếu byte/hash VI/EN cho mọi file nằm trong scope, **ngoại trừ `LIST.md`**: ở EN, chỉ header ngôn ngữ và đích link `content/readme/docs/vi/menu/` → `content/readme/docs/en/menu/` được khác.
+- Vì STEP 13 chỉ clone, **nội dung EN tại thời điểm này vẫn là tiếng Việt**. Đối chiếu byte/hash VI/EN cho mọi file nằm trong scope, **ngoại trừ `LIST.md`**: ở EN, chỉ header ngôn ngữ và đích link `content/readme/docs/vi/menu/` → `content/readme/docs/en/menu/` được khác. Reference EN phải có cùng SHA-256 với Reference VI trước lượt dịch đầu tiên.
 - Nếu một khả năng thuộc phạm vi bắt buộc không có nguồn VI (ví dụ Quiz không được tạo), xác minh vùng EN tương ứng **không còn dữ liệu cũ**. **Video nằm ngoài ownership của STEP 13/14**; không kiểm kê, xóa, clone hay dịch Video trong bước này.
 
 **FAIL:** file thiếu/thừa, chapter sai thứ tự, anchor đổi, metadata lệch, EN chưa phải clone hoặc dữ liệu EN cũ còn sót.
@@ -44,7 +45,7 @@ Trước khi kiểm tra, Prime đọc **toàn văn** `module-generate-agent/GENE
 
 ### Gate 4 — YAML schema + toàn bộ related links
 
-- Parse **toàn bộ YAML** trong scope, kiểm tra key/type theo schema tương ứng; dùng validator/contract hiện có trong `project-build/gradle-runtime` thay vì tự đoán format. Nếu schema có ngoại lệ compatibility đã được chuẩn hóa, phải ghi rõ chế độ kiểm tra và phạm vi ngoại lệ.
+- Parse **toàn bộ YAML** trong scope, gồm Reference VI/EN, kiểm tra key/type theo schema tương ứng; dùng validator/contract hiện có trong `project-build/gradle-runtime` thay vì tự đoán format. Nếu schema có ngoại lệ compatibility đã được chuẩn hóa, phải ghi rõ chế độ kiểm tra và phạm vi ngoại lệ.
 - Kiểm tra `readmeRelated`, `apiRelated`, Roadmap `relatedKnowledge` / `relatedModules.routeId`, Swagger links và Knowledge metadata mapping. Video chapter/section mapping thuộc riêng `STEP_OPTIONAL_VIDEO_TRANSLATE`.
 - **Chỉ tự động chấp nhận relation khi đích tồn tại và xác định duy nhất**. Không dịch anchor/route ID, không gán link theo tên gần giống, không coi warning hoặc unknown là PASS.
 - VI có lỗi liên kết → **`BLOCKER: VI_RELATION_INVALID`**: chuyển về sửa/QA nguồn (STEP 11 hoặc bước liên quan), sau đó chạy lại STEP 13 **trước khi bắt đầu dịch**. Không cho worker STEP 14 sửa nguồn VI.
@@ -56,7 +57,7 @@ Trước khi kiểm tra, Prime đọc **toàn văn** `module-generate-agent/GENE
 - Kiểm tra EN sau APPLY **không còn file/folder thuộc cấu trúc cũ nằm ngoài manifest clone**; chỉ những vùng do STEP 13 quản lý được thay thế.
 - Xác minh trạng thái `CLONED` hoặc `UNCHANGED`, exact readback và manifest file/hash VI–EN; không coi `DRY_RUN` là completion.
 - Khi EN cũ đã tồn tại và có thay đổi, xác nhận bản backup nằm tại `<MODULE>/build/step13-backups/<RUN_ID>/` và có dữ liệu đọc được; staging/backup nằm trong `build/` (Git-ignored). Nếu xảy ra rollback, phải xác minh khôi phục đầy đủ và **không** tiếp tục STEP 14 khi trạng thái bất định.
-- Xác minh ngoài scope: **VI, Excel VI/EN, Java source/test, Reference, generated Portal** không bị STEP 13 sửa.
+- Xác minh ngoài scope: **VI (gồm Reference VI), Excel VI/EN, Java source/test, generated Portal** không bị STEP 13 sửa. Reference EN là file thuộc phạm vi clone, phải có backup và exact readback.
 
 **FAIL:** EN sót file cũ, backup thiếu/corrupt khi cần, rollback incomplete, có tác động ngoài scope.
 
@@ -88,9 +89,10 @@ Chỉ khi **cả 6 gate = PASS** thì ghi `STEP_14_PRECHECK=PASS` vào báo cáo
 | INTERVIEW | Mỗi `content/readme/docs/en/menu/<chapter>/questions/interview.yml` |
 | SUMMARY_QUESTIONS | Mỗi `content/readme/docs/en/menu/<chapter>/questions/summary.yml` (chỉ question/answer) |
 | ROADMAP | Toàn bộ `content/roadmap/en/roadmap.yml` |
+| REFERENCE | Toàn bộ `content/reference/en/references.yml` |
 | SWAGGER | **Mỗi file riêng**: `controller-description.yml`, `api-descriptions.yml` (cả mô tả tham số theo method), `api-execution.yml`, `api-cases.yml` dưới `src/main/resources/swagger/en/` nếu hiện hữu |
 
-**Prime-only/không dịch:** `content/readme/docs/en/LIST.md` (link/menu kỹ thuật STEP 13), mọi `content/readme/docs/en/menu/<chapter>/metadata/knowledge-metadata.yml`, schema comment của YAML, Java code/test, Reference, Excel, Google Sheets, Portal, Gradle/config, toàn bộ VI. Module thiếu capability thì `NOT_APPLICABLE`; file bất thường/không xác định type thì BLOCKER.
+**Prime-only/không dịch:** `content/readme/docs/en/LIST.md` (link/menu kỹ thuật STEP 13), mọi `content/readme/docs/en/menu/<chapter>/metadata/knowledge-metadata.yml`, schema comment của YAML, Java code/test, Excel, Google Sheets, Portal, Gradle/config, toàn bộ VI. **Reference EN là file dịch, riêng `references[].url` không được thay.** Module thiếu capability thì `NOT_APPLICABLE`; file bất thường/không xác định type thì BLOCKER.
 
 ## 2. Prime lập danh mục, snapshot và giao đúng location
 
@@ -139,7 +141,7 @@ Prime cấp **đường dẫn tuyệt đối thực**, không paste nội dung n
 ## 4. Prime kiểm tra file và toàn module
 
 1. So từng file EN hoàn tất với VI và baseline theo **field whitelist**, không chỉ nhìn diff text. Markdown bảo toàn số section/anchor, liên kết, code fences, list/table không mất item, heading hierarchy không thêm/bớt. YAML schema, keys, list lengths/order, non-translatable fields **semantic-equal VI**.
-2. Quiz: cùng số câu, ID, A/B/C/D order, correctAnswerId, relations. Interview: cùng số câu/thứ tự và metadata/relations, đối chiếu theo index do không có question ID bắt buộc. Roadmap: cùng milestone ID/order/dependencies, relatedKnowledge/relatedModules.routeId. Swagger: cùng Controller/method, request/response/cases/status, chỉ đổi text mô tả. Video không thuộc STEP 14.
+2. Quiz: cùng số câu, ID, A/B/C/D order, correctAnswerId, relations. Interview: cùng số câu/thứ tự và metadata/relations, đối chiếu theo index do không có question ID bắt buộc. Roadmap: cùng milestone ID/order/dependencies, relatedKnowledge/relatedModules.routeId. Reference: cùng số mục, thứ tự, tất cả URL giữ nguyên; chỉ title/description có thể đổi sau dịch. Swagger: cùng Controller/method, request/response/cases/status, chỉ đổi text mô tả. Video không thuộc STEP 14.
 3. **Ngữ nghĩa phải QA riêng**: no omitted sentence/paragraph, no added explanation/hallucination; thuật ngữ Java/Spring nhất quán. Validator tự động **không thể chứng minh** bản dịch không thêm/bớt ý, nên Prime cần so nội dung thực tế. Không coi việc worker báo COMPLETED là đủ.
 4. File sai → thu hồi ownership, ghi evidence, restore **chỉ file đó** từ STEP14 backup (không xóa bản dịch file khác) rồi giao lại. Tuyệt đối **không gọi cloneModuleViToEn** sau khi dịch bắt đầu.
 5. Prime chạy code validation trên từng file và toàn manifest; tất cả files phải `PASSED` hoặc `SKIP_NO_TRANSLATABLE_TEXT` có căn cứ. PENDING/REVIEW/FAILED/BLOCKER → không cập nhật CURRENT_STEP.VALUE, không STEP 15.
@@ -147,8 +149,8 @@ Prime cấp **đường dẫn tuyệt đối thực**, không paste nội dung n
 ## 5. Completion gate và bàn giao
 
 - Sáu preflight gates đã PASS; không có worker đang ghi. Tất cả files trong manifest đã QA dịch và readback, không đổi cấu trúc/technical identity, không thêm/bớt nội dung, không sửa VI hay vùng ngoài scope.
-- Cây VI/EN bắt buộc, Knowledge anchor/metadata, Quiz/Interview IDs/order/correct answer, Swagger kỹ thuật, Roadmap relations và toàn bộ YAML schema/related **PASS**; backup đọc được và có rollback theo file. Không đòi Video.
+- Cây VI/EN bắt buộc, Knowledge anchor/metadata, Quiz/Interview IDs/order/correct answer, Swagger kỹ thuật, Roadmap relations, Reference EN (title/description đã QA, URLs giữ nguyên) và toàn bộ YAML schema/related **PASS**; backup đọc được và có rollback theo file. Không đòi Video.
 - Prime xác minh nguồn VI bằng gid/I3, sau đó ghi **`CURRENT_STEP.VALUE = "14"` trong `master.json` của đúng module** và exact readback theo `PRIME_RULES.md`. **Không tạo tab EN hay Excel EN** ở STEP 14 — việc đó thuộc STEP 15.
-- Báo cáo: `MODULE_I3, VI_GID, TOTAL_FILES, README, INTRODUCTION, QUIZ, INTERVIEW, ROADMAP, SWAGGER, PASSED, SKIPPED, PENDING, REVIEW, FAILED, STRUCTURE_QA, RELATION_QA, TRANSLATION_QA, CURRENT_STEP.VALUE_READBACK, BLOCKER`.
+- Báo cáo: `MODULE_I3, VI_GID, TOTAL_FILES, README, INTRODUCTION, QUIZ, INTERVIEW, ROADMAP, REFERENCE, SWAGGER, PASSED, SKIPPED, PENDING, REVIEW, FAILED, STRUCTURE_QA, RELATION_QA, TRANSLATION_QA, CURRENT_STEP.VALUE_READBACK, BLOCKER`.
 
 **Resume:** dùng ledger/backup/chỉ file chưa hoàn tất, không so EN↔VI bytes như preflight lần đầu, không chạy lại STEP 13 và không dịch đè file đã được QA PASS.

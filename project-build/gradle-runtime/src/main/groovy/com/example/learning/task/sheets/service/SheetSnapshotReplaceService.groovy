@@ -15,7 +15,7 @@ import java.nio.file.StandardCopyOption
  */
 class SheetSnapshotReplaceService {
     private static final List<List<String>> ALLOWED_SUFFIXES = [
-            ['content', 'reference'],
+            ['content', 'reference', 'vi'],
             ['content', 'roadmap', 'vi'],
             ['content', 'readme', 'metadata', 'vi'],
             ['content', 'interview', 'vi'],

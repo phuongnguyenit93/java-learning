@@ -12,12 +12,17 @@ class ReferenceSheetImportServiceTest {
     @Rule public TemporaryFolder tmp = new TemporaryFolder()
 
     @Test
-    void validatesReferenceYamlAndCleansOnlyModuleReferenceDirectory() {
+    void validatesReferenceYamlAndCleansOnlyVietnameseReferenceDirectory() {
         File root = tmp.newFolder('repo')
         File module = new File(root, 'module/sandbox/demo')
-        File owned = new File(module, 'content/reference')
+        File owned = new File(module, 'content/reference/vi')
         assertTrue(owned.mkdirs())
         new File(owned, 'obsolete.yml').setText('old', 'UTF-8')
+        File english = new File(module, 'content/reference/en/references.yml')
+        assertTrue(english.parentFile.mkdirs())
+        english.setText('references:\n  - {title: English, url: https://example.com/en}\n', 'UTF-8')
+        File legacy = new File(module, 'content/reference/references.yml')
+        legacy.setText('references:\n  - {title: Legacy, url: https://example.com/old}\n', 'UTF-8')
         File unaffected = new File(module, 'content/readme/docs/vi/BASE.md')
         assertTrue(unaffected.parentFile.mkdirs())
         unaffected.setText('untouched', 'UTF-8')
@@ -35,6 +40,8 @@ class ReferenceSheetImportServiceTest {
                 root, owned, ['references.yml': yaml], true).status)
         assertEquals(['references.yml'], owned.list().toList())
         assertEquals(yaml, new File(owned, 'references.yml').getText('UTF-8'))
+        assertTrue(english.getText('UTF-8').contains('title: English'))
+        assertTrue(legacy.getText('UTF-8').contains('title: Legacy'))
         assertEquals('untouched', unaffected.getText('UTF-8'))
         assertEquals([], ReferenceSheetImportService.parseReference('references: []').references)
     }

@@ -14,7 +14,7 @@ samples. There is **no Gradle task to invoke**, no module discovery, and no
 | `learning-contract/schemas/quiz.schema.json` | `quiz/quiz.yml` |
 | `learning-contract/schemas/interview.schema.json` | `interview/interview.yml` |
 | `learning-contract/schemas/roadmap.schema.json` | `roadmap/roadmap.yml` |
-| `learning-contract/schemas/reference.schema.json` | `reference/references.yml` (shared) |
+| `learning-contract/schemas/reference.schema.json` | `reference/{vi,en}/references.yml` |
 
 **Video authoring example (not contract-generated):**
 
@@ -24,8 +24,11 @@ This example is deliberately outside the plugin allowlist: its authored
 YAML format is validated by the Video importer/projector, while the existing
 `video-script.schema.json` describes *published JSON*, not the YAML source.
 
-Every sample uses **English** descriptions and guidance from the JSON Schema;
-there are no `vi/` or `en/` output directories. The generator derives
+Every sample uses descriptions and guidance from the JSON Schema.
+Reference has dedicated `vi/` and `en/` samples. The current pinned Reference
+schema supplies English descriptions for both samples until localized annotations
+are authored. Quiz/Interview/Roadmap samples remain language-independent.
+The generator derives
 field descriptions, required flags, defaults, examples, and Roadmap guidance
 from the schema itself. Every file contains a parseable
 empty list as its active YAML payload; commented examples may contain draft
@@ -34,13 +37,17 @@ placeholders that must be completed before publication.
 Files are updated **only when the contract-derived output differs**. Manually
 created files without the generated header are not overwritten. An uninitialized
 contract submodule or an incompatible schema causes an explicit failure.
-The plugin also removes the old generated `quiz/{vi,en}/`,
+The plugin also removes the old generated shared
+`reference/references.yml`, the old generated `quiz/{vi,en}/`,
 `interview/{vi,en}/`, and `roadmap/{vi,en}/` output directories on sync,
 as well as legacy `quiz/question.yml` and `interview/question.yml`,
 but refuses to delete non-generated files.
 
-Reference uses its English JSON Schema descriptions because localized authoring
-annotations have not yet been defined.
+Module-owned Reference files live separately at
+`content/reference/{vi,en}/references.yml`. Module setup initializes only empty
+language placeholders and preserves authored content. STEP 2 imports the VI file
+from Sheet L3; STEP 13 copies VI into EN as untranslated staging; STEP 14
+translates only titles/descriptions, preserving URLs and item order.
 
 **Not generated here:** Knowledge, Knowledge Search,
 Video Index/Script (published JSON projections, not the source YAML),

@@ -2,6 +2,7 @@ package com.example.learning.setup.root.structure.service
 
 import com.example.learning.utils.schema.validate.ContractSchemaValidateUtils
 import com.example.learning.utils.GradleBuildUtils
+import com.example.learning.utils.ProjectPropertyUtils
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
@@ -17,12 +18,11 @@ class PortalReferenceProjectionService {
             LearningDataPaths.MODULE_DIRECTORY
 
 
-    private static final String SOURCE_REFERENCE_FILE =
-            'content/reference/references.yml'
+    private static final String SOURCE_REFERENCE_DIRECTORY =
+            'content/reference'
 
-    // The public Portal path stays stable when authored sources move.
-    private static final String OUTPUT_REFERENCE_FILE =
-            'reference/references.yml'
+    private static final String REFERENCE_FILE =
+            'references.yml'
 
 
     private final Logger logger
@@ -79,21 +79,25 @@ class PortalReferenceProjectionService {
             Project moduleProject ->
 
 
-            File referenceFile =
-                    new File(
-                            moduleProject.projectDir,
-                            SOURCE_REFERENCE_FILE
-                    )
+            Map<String, File> referencesByLanguage = [:]
 
+            ProjectPropertyUtils
+                    .getStringList(moduleProject, 'MODULE_LANGUAGE')
+                    .collect { String language ->
+                        language.toLowerCase(Locale.ROOT)
+                    }
+                    .unique()
+                    .each { String language ->
+                        File referenceFile = new File(
+                                moduleProject.projectDir,
+                                "${SOURCE_REFERENCE_DIRECTORY}/${language}/${REFERENCE_FILE}"
+                        )
+                        if (hasAuthoredReferences(referenceFile)) {
+                            referencesByLanguage[language] = referenceFile
+                        }
+                    }
 
-            if (!referenceFile.isFile()) {
-                return
-            }
-
-
-            if (!hasAuthoredReferences(referenceFile)) {
-                return
-            }
+            if (referencesByLanguage.isEmpty()) return
 
 
             String routeId =
@@ -109,14 +113,12 @@ class PortalReferenceProjectionService {
             }
 
 
-            String relativeOutput =
-                    "${routeId}/${OUTPUT_REFERENCE_FILE}"
+            referencesByLanguage.each { String language, File referenceFile ->
+                String relativeOutput =
+                        "${routeId}/reference/${language}/${REFERENCE_FILE}"
 
-
-            outputs[relativeOutput] =
-                    Files.readAllBytes(
-                            referenceFile.toPath()
-                    )
+                outputs[relativeOutput] = Files.readAllBytes(referenceFile.toPath())
+            }
         }
 
 

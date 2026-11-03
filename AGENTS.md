@@ -3,7 +3,7 @@
 **Module progress:** The only checkpoint is `CURRENT_STEP.VALUE` (JSON string) in the verified module's `master.json`. Prime advances it after all QA gates, with no regression and exact readback; do not read or write progress in Google Sheets J3. See `module-generate-agent/rules/PRIME_RULES.md` section 2.
 
 
-**Reference/Summary import:** See `module-generate-agent/STEP_2.md` (Sheet L2/L3 Reference YAML to shared `content/reference/references.yml`) and `module-generate-agent/STEP_5.md` (AC parent is authored roadmap YAML copied verbatim into `summary/section.yml`; AC children remain Markdown assembled into `summary/summaries.yml`). Both are code-only module-local DRY_RUN/APPLY imports, not automatic Gradle Sync. Summary headers use `Summary` / `Summary YAML`; legacy `Learning Objectives` paired YAML labels are supported. STEP 12/13/14/15 preserve these contracts and STEP 15 uses A:AC (29 columns).
+**Reference/Summary import:** See `module-generate-agent/STEP_2.md` (Sheet VI L2/L3 Reference YAML to `content/reference/vi/references.yml`) and `module-generate-agent/STEP_5.md` (AC parent is authored roadmap YAML copied verbatim into `summary/section.yml`; AC children remain Markdown assembled into `summary/summaries.yml`). Both are code-only module-local DRY_RUN/APPLY imports, not automatic Gradle Sync. Reference is localized per language at `content/reference/{vi,en}/references.yml`: STEP 13 clones VI to EN as untranslated staging, STEP 14 reviews/translates only titles/descriptions while URLs remain fixed, and STEP 15 publishes EN L3. Summary headers use `Summary` / `Summary YAML`; legacy `Learning Objectives` paired YAML labels are supported. STEP 12/13/14/15 preserve these contracts and STEP 15 uses A:AC (29 columns).
 
 ## 1. Purpose
 

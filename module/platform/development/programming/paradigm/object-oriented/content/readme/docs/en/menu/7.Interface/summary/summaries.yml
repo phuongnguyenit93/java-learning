@@ -1,0 +1,238 @@
+summaries:
+- id: interface-001
+  title: Giao diện như một hợp đồng và một vai trò
+  summary: |-
+    # 0. Định hướng học tập
+    ## 1. Mục đích của bài học
+    **Giao diện như một hợp đồng và một vai trò**
+
+    Xem interface Java như một lời hứa mà bên sử dụng có thể dựa vào và như một vai trò một đối tượng có thể đảm nhiệm. Bài dùng DeliveryChannel, EmailChannel và SmsChannel để thấy lợi ích của kiểu tham chiếu interface, nhưng đồng thời phân biệt việc compiler kiểm tra chữ ký với việc hệ thống phải tự bảo vệ hợp đồng hành vi. Đây là nền tảng để thay thế, kiểm thử và tiến hóa implementation mà không gây bất ngờ cho client.
+    ## 2. Những câu hỏi người học phải tự trả lời được
+    ### Bản chất hợp đồng và vai trò
+    1. Vì sao một interface có thể mô tả khả năng của nhiều lớp khác họ thay vì danh tính của từng class?
+    2. DeliveryChannel.deliver(Notice) bảo đảm điều gì ở cấp chữ ký, và những tiền điều kiện, hậu điều kiện, lỗi hoặc tác dụng phụ nào phải được ghi rõ thêm?
+    3. Nếu SmsChannel đồng thời implements DeliveryChannel và HealthCheck, hai biến kiểu interface tham chiếu tới bao nhiêu đối tượng, và mỗi biến được phép gọi phương thức nào?
+    ### Hành vi có thể thay thế và giới hạn
+    1. Vì sao BrokenChannel trả null vẫn biên dịch nhưng không đạt hợp đồng, và có thể kiểm chứng vi phạm bằng cách nào?
+    2. Vì sao một channel không có chức năng thu hồi không nên bị buộc implements revoke(), và khi nào cần tách vai trò?
+    3. Khi sửa ý nghĩa DeliveryReceipt hoặc thêm method vào interface công khai, những client và implementation nào có thể bị ảnh hưởng?
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định hợp đồng hành vi | Viết được điều kiện đầu vào, kết quả khác null, lỗi và side effects cho DeliveryChannel ngoài chữ ký Java. |
+    | Phân tích vai trò và kiểu tĩnh | Giải thích được vì sao cùng SmsChannel có hai vai trò nhưng channel.isHealthy() không hợp lệ qua biến DeliveryChannel. |
+    | Đánh giá khả năng thay thế | Chỉ ra BrokenChannel vi phạm hậu điều kiện dù implements đúng chữ ký và đề xuất phép kiểm tra hành vi. |
+    | Thiết kế abstraction theo nhu cầu | Phân biệt Sender với Revocable, xác định đúng API client cần mà không ép lớp hỗ trợ hành vi không có. |
+    | Giải thích sự tiến hóa contract | Phân tích được rủi ro khi đổi signature hoặc semantics của receipt dù mã có thể vẫn biên dịch. |
+- id: interface-002
+  title: Khai báo và thực hiện giao diện
+  summary: |-
+    # 0. Định hướng học tập
+    ## 1. Mục đích của bài học
+    **Khai báo và thực hiện giao diện**
+
+    Luyện viết interface và class implements hợp lệ bằng ví dụ ShippingFeePolicy gồm hai chính sách phí giao hàng. Bài kết nối quy tắc cú pháp (public abstract, @Override, chữ ký, static) với việc chạy đa hình và kiểm tra nghĩa vụ thực thi, giúp người học tạo một implementation mới mà dịch vụ báo phí vẫn dùng được.
+    ## 2. Những câu hỏi người học phải tự trả lời được
+    ### Khai báo và tương thích ở thời điểm biên dịch
+    1. Trong interface Greeter, method greet không có thân mang modifier ngầm nào, và tại sao VietnameseGreeter phải khai báo public khi override?
+    2. Điều gì xảy ra nếu class concrete thiếu một abstract method, đổi danh sách tham số hoặc thu hẹp quyền truy cập?
+    3. Vì sao không thể new ShippingFeePolicy(), và static validateInputs được gọi bằng tên nào?
+    ### Đa hình và kiểm chứng ví dụ phí giao hàng
+    1. ShippingQuoteService nhận ShippingFeePolicy qua constructor và JVM chọn EconomyShipping hay ExpressShipping như thế nào tại lời gọi calculate?
+    2. Với quãng đường 10 km và đơn 300.000 VND, giải thích kết quả phí Economy 35.000 VND và Express 70.000 VND; điều gì thay đổi khi Economy gặp đơn 600.000 VND?
+    3. Làm sao thêm SameDayShipping mà không sửa ShippingQuoteService, đồng thời giữ kiểm tra dữ liệu âm và phép tính tránh tràn số?
+    4. Vì sao bộ kiểm tra chung vẫn cần thiết dù cả hai implementation đã biên dịch thành công?
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Khai báo và hiện thực đúng cú pháp | Viết interface, concrete class implements và @Override đúng chữ ký/visibility; chẩn đoán được lỗi compile minh họa. |
+    | Vận hành đa hình | Chạy ShippingQuoteService với hai policy và giải thích tuyến gọi calculate theo instance thực tế. |
+    | Xử lý điều kiện hợp đồng | Áp dụng validateInputs, Math.multiplyExact và Math.addExact để từ chối đầu vào âm, overflow. |
+    | Mở rộng bằng implementation mới | Bổ sung SameDayShipping và tính đúng phí 63.000 VND cho 4 km mà không sửa code service. |
+    | Kiểm tra nhiều implementation | Viết được kiểm tra chung cho phí không âm và quãng đường âm bị từ chối, phân biệt syntax và behavior. |
+- id: interface-003
+  title: Lập trình dựa trên giao diện
+  summary: |-
+    # 0. Định hướng học tập
+    ## 1. Mục đích của bài học
+    **Lập trình dựa trên giao diện**
+
+    Hiểu cách đặt dependency theo hợp đồng PaymentGateway để CheckoutService không tự tạo hoặc phân nhánh theo cổng thanh toán cụ thể. Bài có SimulatedCardGateway, PrepaidWalletGateway, constructor injection, composition root và RecordingGateway, qua đó người học quan sát việc thay implementation, kiểm thử service độc lập và đánh giá ranh giới hợp đồng thanh toán.
+    ## 2. Những câu hỏi người học phải tự trả lời được
+    ### Hướng phụ thuộc và cách lắp ghép
+    1. Vì sao đặt new CardGateway trực tiếp trong CheckoutService làm việc thay nhà cung cấp và kiểm thử khó hơn?
+    2. Constructor injection, composition root và Dependency Inversion Principle liên quan với nhau như thế nào, và vì sao DI không đồng nghĩa với interface?
+    3. Kiểu khai báo PaymentGateway cho phép gọi những thao tác nào, và JVM dispatch tới cổng thẻ/ví theo tiêu chí nào?
+    ### Thực hành checkout và độ tin cậy
+    1. Với ví có 50.000 cents, vì sao thanh toán 30.000 cents đầu thành công, lần kế tiếp cùng số tiền thất bại và số dư còn 20.000?
+    2. RecordingGateway giúp xác minh orderId, amountCents và số lần gọi như thế nào mà không kết nối cổng thật?
+    3. Khi thiết kế hợp đồng charge, vì sao timeout không đủ để kết luận giao dịch thất bại và retry không kiểm soát có thể thu tiền hai lần?
+    4. Lúc nào abstraction nhỏ như Iterable/List phù hợp hơn class cụ thể, và lúc nào thêm interface chỉ tạo cấu trúc không cần thiết?
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đảo hướng phụ thuộc | Refactor ví dụ CheckoutService từ new concrete gateway sang constructor nhận PaymentGateway và chọn implementation bên ngoài. |
+    | Dự đoán runtime đa hình | Giải thích kết quả card/wallet và đối tượng nào thực thi charge mà không dùng instanceof trong service. |
+    | Thiết kế fake để thử client | Tạo RecordingGateway và xác nhận yêu cầu được chuyển nguyên vẹn, gọi đúng một lần. |
+    | Nêu giới hạn của contract thanh toán | Mô tả được precondition, success/failure, timeout, side effects, idempotency và các giới hạn của demo so với hệ thống thật. |
+    | Chọn abstraction tối thiểu | Biện minh việc nhận PaymentGateway hay Iterable/List từ nhu cầu client và tránh interface thừa. |
+- id: interface-004
+  title: Một đối tượng đảm nhận nhiều giao diện
+  summary: |-
+    # 0. Định hướng học tập
+    ## 1. Mục đích của bài học
+    **Một đối tượng đảm nhận nhiều giao diện**
+
+    Làm rõ cách Java cho một class thực hiện nhiều interface độc lập mà vẫn chỉ tạo một instance với trạng thái chung. OfficeMachine đảm nhiệm Printable, Scannable và StatusReadable; từ đó người học phân biệt kiểu tĩnh với kiểu runtime, chọn vai trò phù hợp cho client và xử lý các dạng trùng phương thức, composition hoặc interface gộp.
+    ## 2. Những câu hỏi người học phải tự trả lời được
+    ### Nhiều tham chiếu, một đối tượng
+    1. Khi printPort, scanPort và monitorPort cùng nhận một OfficeMachine, có bao nhiêu object được tạo và vì sao kết quả status thấy cả hai bộ đếm?
+    2. Vì sao printer.scan() không biên dịch dù đối tượng đằng sau hỗ trợ Scannable?
+    3. Khi nào nên truyền riêng Printable và Scannable, khi nào cần MultiFunctionDevice extends cả hai?
+    ### Cú pháp đa giao diện và xung đột
+    1. Hai interface cùng có abstract log(String) khác với hai method overload hoặc hai default label() độc lập thế nào?
+    2. Java xử lý hai default label() xung đột ra sao, và cú pháp LocalLabel.super.label() có vai trò gì?
+    3. Vì sao implements nhiều interface không phải đa kế thừa field/constructor và khi nào composition với PrintEngine, ScanEngine phù hợp?
+    4. Với một Printable không phải Scannable, việc ép kiểu thiếu kiểm tra có thể dẫn tới lỗi gì?
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô phỏng alias và trạng thái chung | Theo dõi một OfficeMachine qua ba tham chiếu và giải thích printed=1, scanned=1 sau các thao tác. |
+    | Thiết kế API theo vai trò | Chọn Printable, Scannable hoặc MultiFunctionDevice đúng với yêu cầu cùng/khác thiết bị. |
+    | Xử lý xung đột phương thức | Phân biệt abstract method trùng chữ ký, overload khác tham số và default collision; viết override phân giải khi cần. |
+    | Đánh giá kế thừa và composition | Giải thích được một superclass trực tiếp, nhiều interfaces, và chuyển chức năng sang các engine hợp thành. |
+    | Nhận diện cast không an toàn | Dự đoán compile error khi gọi ngoài interface và ClassCastException nếu ép kiểu không được đối tượng hỗ trợ. |
+- id: interface-005
+  title: Chọn giao diện hay lớp trừu tượng
+  summary: |-
+    # 0. Định hướng học tập
+    ## 1. Mục đích của bài học
+    **Chọn giao diện hay lớp trừu tượng**
+
+    Học cách quyết định giữa interface, abstract class và composition dựa trên trách nhiệm nghiệp vụ, không dựa trên thói quen thêm lớp. Ví dụ DeliveryFeePolicy là hợp đồng chung, WeightDistancePolicy chia sẻ trạng thái/thuật toán cho họ tính phí theo cân nặng, còn StorePickupPolicy trực tiếp implements interface; từ đó nhận ra điểm mở rộng, invariant và nguy cơ kế thừa gượng ép.
+    ## 2. Những câu hỏi người học phải tự trả lời được
+    ### Ranh giới giữa hợp đồng và chia sẻ implementation
+    1. Những khác biệt về constructor, instance fields, default methods và khả năng implements/extends nhiều kiểu ảnh hưởng thế nào đến lựa chọn?
+    2. Vì sao StorePickupPolicy nên implements DeliveryFeePolicy trực tiếp thay vì kế thừa WeightDistancePolicy?
+    3. Trong WeightDistancePolicy, final quoteVnd() và protected abstract feePerChargedKgVnd() chia trách nhiệm bảo vệ thuật toán và tùy biến ra sao?
+    ### Quyết định theo tình huống
+    1. Với Parcel(1200 gram, 5 km), cơ chế làm tròn kg và công thức tạo ra phí 19.000, 33.500 và 0 VND như thế nào?
+    2. Khi hai lớp chỉ dùng chung thao tác kiểm tra code mà không cùng họ nghiệp vụ, vì sao CodeValidator theo composition thích hợp hơn một abstract superclass?
+    3. Khi nào default method của interface đủ để chia sẻ hành vi, và khi nào vẫn cần trạng thái/constructor trong abstract class?
+    4. Vì sao không nên khai báo một interface riêng cho mọi class hoặc dùng abstract class chỉ để tái sử dụng vài dòng code?
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh công cụ trừu tượng hóa | Lập bảng chọn interface/abstract class/composition theo contract, field, constructor, khả năng kết hợp và biến thiên. |
+    | Thiết kế họ policy hợp lý | Giải thích cấu trúc DeliveryFeePolicy, WeightDistancePolicy, Standard/Express và StorePickup không ép kế thừa không đúng nghĩa. |
+    | Bảo vệ thuật toán chia sẻ | Xác định final method, constructor validation và protected extension point; tính đúng phí với Parcel trong ví dụ. |
+    | Chọn composition khi phù hợp | Thiết kế hai lớp không cùng họ dùng CodeValidator mà không buộc extends một base class giả tạo. |
+    | Đánh giá rủi ro bảo trì | Phát hiện kế thừa chiếm mất superclass, default method giả định trạng thái hoặc lớp nền quá rộng. |
+- id: interface-006
+  title: Giao diện nhỏ và phân tách vai trò
+  summary: |-
+    # 0. Định hướng học tập
+    ## 1. Mục đích của bài học
+    **Giao diện nhỏ và phân tách vai trò**
+
+    Vận dụng Interface Segregation Principle để thay một DocumentManager quá rộng bằng các hợp đồng đọc, ghi và xuất bản đúng nhu cầu client. Bài minh họa SearchService, EditorService, PublicationService, SnapshotCatalog và InMemoryDocuments, nhấn mạnh tách theo trách nhiệm thực tế để giảm phụ thuộc và tránh phương thức không được hỗ trợ.
+    ## 2. Những câu hỏi người học phải tự trả lời được
+    ### Nhận diện và phân tách hợp đồng
+    1. Tại sao ReadOnlyArchive phải ném UnsupportedOperationException cho save/delete/publish là dấu hiệu hợp đồng quá rộng?
+    2. ISP nói gì về trách nhiệm của client, và vì sao kích thước interface không thể đánh giá đơn thuần bằng số phương thức?
+    3. Dựa trên nhu cầu SearchService, EditorService và PublicationService, nên định nghĩa và inject các interface nào?
+    4. Vì sao class implements DocumentReader và DocumentWriter không có nghĩa nó tự động implements DocumentEditor extends hai interface đó?
+    ### Tác động và kiểm chứng
+    1. SnapshotCatalog có thể thay InMemoryDocuments ở SearchService như thế nào mà không phải cung cấp API ghi?
+    2. Vì sao cấp DocumentReader theo kiểu tham chiếu chỉ giới hạn API trong Java chứ không thay thế authorization thực tế?
+    3. Lập quy trình chuyển client từ DocumentManager lớn sang vai trò nhỏ khi dự án còn nhiều người sử dụng mà vẫn giữ tương thích?
+    4. Lợi ích và giới hạn của việc tạo fake bằng lambda cho DocumentReader là gì khi thêm abstract method mới?
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện vi phạm ISP | Chỉ ra method client không dùng và implementation buộc ném UnsupportedOperationException trong DocumentManager. |
+    | Tách API theo nhu cầu | Thiết kế DocumentReader, DocumentWriter, DocumentPublisher và gán dependency đúng cho ba service. |
+    | Giữ implementation linh hoạt | Giải thích tại sao một InMemoryDocuments vẫn implements nhiều vai trò còn SnapshotCatalog chỉ hỗ trợ đọc. |
+    | Lập kế hoạch migration | Xác định nhóm client, tạo contract nhỏ, chuyển phụ thuộc từng bước và dùng test để kiểm tra semantics. |
+    | Đánh giá an toàn và khả năng thử nghiệm | Tạo fake DocumentReader để kiểm tra tìm kiếm, đồng thời phân biệt giới hạn kiểu với quyền bảo mật thực tế. |
+- id: interface-007
+  title: Thành viên mặc định và giới hạn tùy ngôn ngữ
+  summary: |-
+    # 0. Định hướng học tập
+    ## 1. Mục đích của bài học
+    **Thành viên mặc định và giới hạn tùy ngôn ngữ**
+
+    Nắm các loại thành viên hợp lệ của Java interface theo phiên bản và cách JVM/Java compiler xử lý default, static, private method và public static final fields. Qua Named, User, Invoice và những trường hợp class thắng interface, interface chuyên biệt hơn, xung đột hai default, người học tránh lỗi cú pháp, hiểu giới hạn của Object và không áp đặt quy tắc Java sang TypeScript, Kotlin hay C#.
+    ## 2. Những câu hỏi người học phải tự trả lời được
+    ### Modifier, dữ liệu và giới hạn Java
+    1. Java hiểu các method chỉ có chữ ký, field khai báo trực tiếp, default method, static method và private helper trong interface thế nào?
+    2. Vì sao User không thể gọi Named.isValidName như static method kế thừa, và private normalize không trở thành API cho implementation?
+    3. Vì sao final List trong interface không bảo đảm nội dung bất biến, và đâu là vị trí phù hợp để lưu instance state?
+    4. Tại sao interface không thể định nghĩa default toString() ghi đè phương thức public của Object?
+    ### Dispatch, evolution và ngôn ngữ
+    1. Khi class có method thích hợp, interface con override default của interface cha, hoặc hai interface độc lập cùng default, Java phân giải từng trường hợp ra sao?
+    2. Trong Demo.java, tại sao Invoice phải override label() còn User có thể kế thừa default, và các dòng output được tạo như thế nào?
+    3. Java 8, Java 9 và Java 17 bổ sung những khả năng interface nào và điều gì khiến ví dụ không chạy trên phiên bản cũ?
+    4. Vì sao interface của TypeScript không cấp default implementation ở runtime giống Java?
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện thành viên hợp lệ | Phân loại abstract, default, static, private và field; chỉ ra lỗi constructor, instance field, protected method trong interface. |
+    | Dự đoán phương thức được chạy | Giải thích class wins, interface chuyên biệt hơn, hai default độc lập và viết override với InterfaceName.super khi hợp lệ. |
+    | Phân biệt static/final và state | Gọi đúng Named.isValidName và phát hiện public static final List vẫn có thể chứa phần tử mutable. |
+    | Kiểm tra tương thích theo phiên bản | Xác định yêu cầu Java 8/9/17 cho default/static, private helper và sealed interface. |
+    | So sánh ranh giới liên ngôn ngữ | Nêu đúng khác biệt cài đặt runtime của Java interface với hợp đồng kiểu của TypeScript và giới hạn ngôn ngữ khác. |
+- id: interface-008
+  title: Thay thế cách thực hiện mà giữ hợp đồng
+  summary: |-
+    # 0. Định hướng học tập
+    ## 1. Mục đích của bài học
+    **Thay thế cách thực hiện mà giữ hợp đồng**
+
+    Phân biệt thay implementation thành công ở cấp kiểu với thay thế an toàn ở cấp hành vi. Hai PriceCatalog dùng HashMap và TreeMap có thuật toán, độ phức tạp khác nhau nhưng phải thống nhất đầu vào SKU, giá bằng 0, thứ tự listSkus, snapshot, lỗi và thao tác cập nhật; cùng bộ contract test kiểm chứng những cam kết mà CheckoutQuoteService dựa vào.
+    ## 2. Những câu hỏi người học phải tự trả lời được
+    ### Hợp đồng có thể quan sát
+    1. Vì sao hai lớp đều implements PriceCatalog vẫn có thể không thay thế được nhau về nghiệp vụ?
+    2. Các cam kết nào của putPrice, findPrice, remove và listSkus phải giữ giống nhau giữa HashMapPriceCatalog với TreeMapPriceCatalog?
+    3. Vì sao OptionalLong.empty() khác OptionalLong.of(0), và vì sao HashMap cần sắp xếp khi listSkus cam kết tăng dần?
+    4. Khi priceVnd × quantity vượt long, CheckoutQuoteService xử lý thế nào để tránh báo giá sai?
+    ### Kiểm thử và thay hạ tầng
+    1. Cùng một hàm verify(PriceCatalog) cần những ca kiểm thử nào để bắt lỗi thứ tự, ghi đè, snapshot và đầu vào sai?
+    2. Theo LSP, một implementation không được siết chặt tiền điều kiện hay làm yếu hậu điều kiện bằng những cách nào?
+    3. Nếu đổi catalog trong memory sang database/cache/HTTP, những cam kết về commit, consistency, lỗi mạng và concurrency cần được định nghĩa lại hoặc duy trì?
+    4. Vì sao đổi implementation lúc khởi động không tự di chuyển dữ liệu cũ hoặc thay mọi dependency đã được tạo khi chương trình đang chạy?
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết behavioral contract cụ thể | Đặc tả SKU hợp lệ, giá không âm, OptionalLong, thứ tự tăng dần và snapshot bất biến. |
+    | Đối chiếu hai cách lưu | Giải thích HashMap tự sort keys còn TreeMap giữ thứ tự và dự đoán cùng output trong Main.java. |
+    | Xây contract tests dùng chung | Tạo verify chạy được cho nhiều PriceCatalog, gồm SKU vắng/giá 0, cập nhật, xóa, snapshot và lỗi. |
+    | Phát hiện vi phạm LSP | Chỉ ra BrokenCatalog hoặc danh sách đảo thứ tự vẫn biên dịch nhưng sai bảo đảm hành vi. |
+    | Đánh giá thay thế hạ tầng | Nêu rủi ro consistency, transaction, migration state, thread safety và tác động lên hợp đồng client. |
+- id: interface-009
+  title: Thiết kế giao diện thanh toán hoặc lưu trữ
+  summary: |-
+    # 0. Định hướng học tập
+    ## 1. Mục đích của bài học
+    **Thiết kế giao diện thanh toán hoặc lưu trữ**
+
+    Tổng hợp các nguyên tắc interface vào quy trình checkout mô phỏng: PaymentGateway đảm nhiệm thu tiền, PaymentRepository tìm/lưu kết quả, CheckoutService phối hợp qua constructor injection. Bài cung cấp PaymentCommand/PaymentResult, fake test và mô phỏng requestId lặp, đồng thời chỉ ra giới hạn của synchronized, lưu RAM và nguy cơ thu tiền trùng khi giao dịch thực xảy ra lỗi giữa các bước.
+    ## 2. Những câu hỏi người học phải tự trả lời được
+    ### Phân định ranh giới nghiệp vụ
+    1. Vì sao nên tách PaymentGateway và PaymentRepository thay vì gộp thanh toán, lưu trữ, email vào một interface lớn?
+    2. PaymentCommand và PaymentResult kiểm soát dữ liệu requestId, orderId, amountCents, status và providerReference như thế nào?
+    3. CheckoutService nhận hai dependency qua constructor và chọn adapter thật/giả ở đâu, thay vì tự new client SQL hay nhà cung cấp?
+    ### Luồng xử lý và tình huống lỗi
+    1. Vì sao ba lời gọi pay với hai requestId trong demo chỉ gọi DemoGateway hai lần, và phạm vi bảo đảm của kết quả lặp là gì?
+    2. Khi cùng requestId nhưng orderId hoặc số tiền khác, CheckoutService làm gì và vì sao phải kiểm tra trước khi trả kết quả cũ?
+    3. Nếu gateway đã thu tiền nhưng repository.save thất bại, điều gì khiến retry có thể thu hai lần dù dùng synchronized và ConcurrentHashMap?
+    4. Với hệ thống thật, vì sao cần idempotency ở gateway, unique constraint bền vững, trạng thái UNKNOWN/PENDING và reconciliation?
+    5. FakeGateway có thể kiểm tra logic checkout nào, và phần tích hợp/provider thực tế nào vẫn cần kiểm thử độc lập?
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tách hợp đồng theo trách nhiệm | Thiết kế riêng PaymentGateway và PaymentRepository với DTO/record hợp lệ, giữ CheckoutService chỉ điều phối. |
+    | Trace luồng checkout | Dự đoán APPROVED, DECLINED, lượt requestId trùng và số lần gọi gateway của demo. |
+    | Kiểm tra logic bằng fake | Tạo FakeGateway và xác minh lệnh lặp không gọi lại gateway, yêu cầu khác nội dung bị từ chối. |
+    | Phân tích failure window | Mô tả đường đi gateway charge thành công rồi save thất bại và giải thích rủi ro double charge. |
+    | Phác thảo nâng cấp production | Đề xuất phối hợp provider idempotency key, lưu bền vững, uniqueness, recovery và trạng thái chưa xác định. |

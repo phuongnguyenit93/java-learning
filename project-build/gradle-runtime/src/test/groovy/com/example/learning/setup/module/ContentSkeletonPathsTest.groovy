@@ -40,7 +40,8 @@ class ContentSkeletonPathsTest {
         new ReferenceStructureService(project.logger).setup(project)
 
         assertTrue(new File(moduleDir, 'README.md').isFile())
-        assertTrue(new File(moduleDir, 'content/reference/references.yml').isFile())
+        assertTrue(new File(moduleDir, 'content/reference/vi/references.yml').isFile())
+        assertTrue(new File(moduleDir, 'content/reference/en/references.yml').isFile())
         assertFalse(new File(moduleDir, 'content/quiz').exists())
         assertFalse(new File(moduleDir, 'content/interview').exists())
         assertTrue(new File(moduleDir, 'content/roadmap').isDirectory())
@@ -114,18 +115,46 @@ class ContentSkeletonPathsTest {
         File moduleDir = temporary.newFolder('reference-module')
         def project = ProjectBuilder.builder().withProjectDir(moduleDir).build()
         def setup = new ReferenceStructureService(project.logger)
-        File references = new File(moduleDir, 'content/reference/references.yml')
+        File references = new File(moduleDir, 'content/reference/vi/references.yml')
+        File english = new File(moduleDir, 'content/reference/en/references.yml')
 
         setup.setup(project)
         assertTrue(references.isFile())
+        assertTrue(english.isFile())
+        assertEquals([references: []], new Yaml().load(references.getText('UTF-8')))
+        assertEquals([references: []], new Yaml().load(english.getText('UTF-8')))
         byte[] skeleton = references.bytes
+        byte[] enSkeleton = english.bytes
         setup.setup(project)
         assertArrayEquals(skeleton, references.bytes)
+        assertArrayEquals(enSkeleton, english.bytes)
 
         String authored = 'references:\n  - title: Existing source\n    url: https://example.org\n'
+        String authoredEn = 'references:\n  - title: English source\n    url: https://example.org\n'
         references.setText(authored, 'UTF-8')
+        english.setText(authoredEn, 'UTF-8')
         setup.setup(project)
         assertEquals(authored, references.getText('UTF-8'))
+        assertEquals(authoredEn, english.getText('UTF-8'))
+    }
+
+    @Test
+    void referenceSetupRejectsUnmigratedLegacyFileBeforeCreatingLanguages() {
+        File moduleDir = temporary.newFolder('legacy-reference-module')
+        def project = ProjectBuilder.builder().withProjectDir(moduleDir).build()
+        File legacy = new File(moduleDir, 'content/reference/references.yml')
+        assertTrue(legacy.parentFile.mkdirs())
+        String authored = 'references:\n  - title: Preserve this data\n    url: https://example.org\n'
+        legacy.setText(authored, 'UTF-8')
+        try {
+            new ReferenceStructureService(project.logger).setup(project)
+            fail('Expected unmigrated legacy Reference to be blocked')
+        } catch (org.gradle.api.GradleException expected) {
+            assertTrue(expected.message.contains('migrate'))
+        }
+        assertEquals(authored, legacy.getText('UTF-8'))
+        assertFalse(new File(moduleDir, 'content/reference/vi').exists())
+        assertFalse(new File(moduleDir, 'content/reference/en').exists())
     }
 
     @Test

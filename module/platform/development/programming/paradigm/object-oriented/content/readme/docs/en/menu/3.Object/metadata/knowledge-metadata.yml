@@ -1,0 +1,19 @@
+sections:
+  object-001:
+    difficulty: BASIC
+  object-002:
+    difficulty: BASIC
+  object-003:
+    difficulty: INTERMEDIATE
+  object-004:
+    difficulty: INTERMEDIATE
+  object-005:
+    difficulty: INTERMEDIATE
+  object-006:
+    difficulty: ADVANCED
+  object-007:
+    difficulty: ADVANCED
+  object-008:
+    difficulty: BASIC
+  object-009:
+    difficulty: INTERMEDIATE

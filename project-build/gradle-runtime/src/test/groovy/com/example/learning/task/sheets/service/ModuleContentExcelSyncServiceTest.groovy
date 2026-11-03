@@ -27,7 +27,15 @@ class ModuleContentExcelSyncServiceTest {
             viWorkbook.withOutputStream { book.write(it) }
         }
         byte[] sourceBefore = viWorkbook.bytes
+        write(module, 'content/reference/vi/references.yml', '''references:
+  - title: Đặc tả ngôn ngữ
+    url: https://docs.oracle.com/javase/specs/
+''')
         write(module, 'content/reference/references.yml', '''references:
+  - title: Legacy Reference
+    url: https://example.com/legacy
+''')
+        write(module, 'content/reference/en/references.yml', '''references:
   - title: Language Specification
     url: https://docs.oracle.com/javase/specs/
 ''')
@@ -60,6 +68,10 @@ class ModuleContentExcelSyncServiceTest {
                 def s = book.getSheetAt(0)
                 assertTrue(ModuleContentExcelSyncService.text(s, 3, 12)
                         .contains('Language Specification'))
+                assertFalse(ModuleContentExcelSyncService.text(s, 3, 12)
+                        .contains('Legacy Reference'))
+                assertFalse(ModuleContentExcelSyncService.text(s, 3, 12)
+                        .contains('Đặc tả ngôn ngữ'))
                 assertEquals('Summary', ModuleContentExcelSyncService.text(s, 18, 29))
                 assertEquals('Summary YAML', ModuleContentExcelSyncService.text(s, 19, 29))
                 String authored = ModuleContentExcelSyncService.text(s, 20, 29)

@@ -351,7 +351,7 @@ class ModuleEnSheetPublishService {
                             }
                         }
                         plan.add([r: 16, c: 1, value: cellValue(sheet.getRow(16)?.getCell(1))])
-                        // Reference is shared across languages and has no AI translation.
+                        // The EN workbook already contains its independently authored Reference.
                         plan.add([r: 1, c: 11, value: 'Reference'])
                         plan.add([r: 2, c: 11, value: cellValue(sheet.getRow(2)?.getCell(11))])
                         plan.add([r: 17, c: 28, value: 'Summary'])
@@ -551,6 +551,7 @@ class ModuleEnSheetPublishService {
         MessageDigest digest = MessageDigest.getInstance('SHA-256')
         List<String> files = ['content/sheet/vi/module.xlsx']
         for (String area : ['content/readme/docs/en', 'content/roadmap/en',
+                            'content/reference/en',
                             'src/main/resources/swagger/en']) {
             File parent = new File(module, area)
             if (!parent.exists()) continue

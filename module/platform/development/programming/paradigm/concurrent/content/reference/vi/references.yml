@@ -1,0 +1,8 @@
+# Shared language-neutral reference catalog for this module.
+references:
+  - title: "Java Memory Model (language-specific follow-up)"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-17.html"
+    description: "A concrete model for comparing theoretical concurrency concerns with Java."
+  - title: "Go Memory Model"
+    url: "https://go.dev/ref/mem"
+    description: "A second language-specific reference showing synchronization guarantees."

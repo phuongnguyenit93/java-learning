@@ -177,13 +177,13 @@ class ModuleContentExcelSyncService {
         report.items++
     }
 
-    /** Shared Reference: same canonical YAML in VI and EN. */
+    /** STEP 15 exports the authored English Reference into the English worksheet. */
     private static void reference(File module, XSSFSheet sheet, Map report) {
         String header = text(sheet, 2, 12)
         if (header && header != 'Reference') {
             throw new GradleException('Unexpected Reference schema at L2.')
         }
-        File source = new File(module, 'content/reference/references.yml')
+        File source = new File(module, 'content/reference/en/references.yml')
         if (!source.isFile()) {
             if (text(sheet, 3, 12)) throw new GradleException('Reference source missing but L3 is authored.')
             return

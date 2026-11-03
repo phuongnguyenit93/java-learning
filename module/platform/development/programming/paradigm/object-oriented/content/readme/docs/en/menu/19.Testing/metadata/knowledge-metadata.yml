@@ -1,0 +1,21 @@
+sections:
+  testing-001:
+    difficulty: ADVANCED
+  testing-002:
+    difficulty: INTERMEDIATE
+  testing-003:
+    difficulty: ADVANCED
+  testing-004:
+    difficulty: INTERMEDIATE
+  testing-005:
+    difficulty: ADVANCED
+  testing-006:
+    difficulty: INTERMEDIATE
+  testing-007:
+    difficulty: INTERMEDIATE
+  testing-008:
+    difficulty: INTERMEDIATE
+  testing-009:
+    difficulty: ADVANCED
+  testing-010:
+    difficulty: ADVANCED

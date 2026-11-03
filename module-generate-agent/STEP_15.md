@@ -16,6 +16,7 @@ ambiguous, stop as BLOCKER; do not invent data.
   row sizing and conditional colors.
 - STEP 12 `content/sheet/vi/module.xlsx` for the exact chapter and lesson rows.
 - Authored module EN YAML/Markdown from STEP 14 for actual English content.
+- Reviewed `content/reference/en/references.yml` from STEP 14 for the EN tab's Reference L3; `content/reference/vi/references.yml` remains the VI source.
 - The same spreadsheet as VI; EN gets a separate tab and a stable gid.
 
 Do not touch Java code/tests, module EN content, VI content, the Template tab,
@@ -77,10 +78,13 @@ All default to `DRY_RUN`; only `APPLY` mutates Sheets or local files.
 1. Build an intermediary `<MODULE>/build/step15/en-upload.xlsx` using
    `ModuleContentExcelSyncService` **forced to use VI snapshot as baseline**,
    never stale EN Excel.
-2. Map introduction B17, Roadmap F:H, Menu A/B, Knowledge C:N, difficulty O,
+2. Map introduction B17, Roadmap F:H, Reference L3, Menu A/B, Knowledge C:N, difficulty O,
    Interview P:S, Quiz T:W và Summary AC. **Bỏ qua Video X:AA trong publish bắt buộc.** Use source VI row
    identities; fail on lost chapter ownership, mismatched section count, long
-   text or invalid YAML.
+   text or invalid YAML. Validate Reference `references[]` schema, item order and
+   source URLs; write EN L3 from `content/reference/en/references.yml`, without
+   substituting the Vietnamese L3 snapshot. A missing or untranslated EN Reference
+   that contains VI prose is a STEP 14 QA blocker, not material for code translation.
    Đọc `menu/<chapter>/knowledge/<file>.md`, metadata tại
    `menu/<chapter>/metadata/knowledge-metadata.yml`, và Interview/Quiz tại
    `menu/<chapter>/questions/{interview,summary}.yml` và `menu/<chapter>/quiz/question.yml` của ngôn ngữ EN.
@@ -106,6 +110,9 @@ All default to `DRY_RUN`; only `APPLY` mutates Sheets or local files.
 ## 5. Verify, export, and update master.json
 
 1. Verify the uploaded EN content and all native Sheet formatting. Confirm the exact VI gid/I3, no drift in source hashes, and no conflicts.
+   Reference L3 readback must equal the reviewed EN Reference YAML; compare the
+   parsed URL list with VI (same URLs and order) and ensure no Reference text
+   was generated or inferred during publishing.
    Exact readback phải chứng minh mỗi `AC<PARENT>` **bằng đúng chuỗi UTF-8 của
    `section.yml` EN** (bao gồm indent, `comparisonMarkdown` và line breaks),
    mỗi `AC<CHILD>` bằng Summary Markdown trong `summaries.yml`, và `AC19=Summary YAML`.

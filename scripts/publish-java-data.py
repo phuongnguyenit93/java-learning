@@ -201,6 +201,21 @@ def validate(directory):
                 if node["caseStudyExplorer"] != expected:
                     fail(f"Unexpected Case Study Explorer path for {module_id}")
                 case_explorers[module_id] = directory / expected.lstrip("/")
+            reference = node.get("reference")
+            if reference is not None:
+                if isinstance(reference, dict):
+                    if not reference or any(
+                            language not in ("vi", "en") or
+                            path != f"/module/{module_id}/reference/{language}/references.yml"
+                            for language, path in reference.items()):
+                        fail(f"Invalid localized Reference paths for {module_id}")
+                elif isinstance(reference, str):
+                    # Older published catalogs may still use the shared path
+                    # during rollout. New Gradle builds produce localized maps.
+                    if reference != f"/module/{module_id}/reference/references.yml":
+                        fail(f"Invalid Reference path for {module_id}")
+                else:
+                    fail(f"Invalid localized Reference paths for {module_id}")
             for kind in ("quiz", "interview", "casestudy"):
                 localized = node.get(kind)
                 if not isinstance(localized, dict):

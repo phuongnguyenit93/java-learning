@@ -1,0 +1,292 @@
+summaries:
+- id: solid-001
+  title: Mục đích và phạm vi áp dụng SOLID
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Mục đích và phạm vi áp dụng SOLID**
+
+    Hiểu SOLID là năm nguyên tắc định hướng thiết kế OOP nhằm giảm tác động dây chuyền của thay đổi, tăng khả năng kiểm thử và giữ hợp đồng hành vi. Bài đặt SRP, OCP, LSP, ISP, DIP vào cùng tình huống checkout gồm chính sách giảm giá, lưu đơn và gửi biên nhận, đồng thời làm rõ SOLID không tự bảo đảm giao dịch nguyên tử, bảo mật hay tính đúng nghiệp vụ và không đòi mỗi class có interface.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa, phạm vi và mối liên hệ
+
+    1. Vì sao CheckoutService tự tính giảm giá, viết SQL, gửi SMTP và dựng JSON sẽ chịu nhiều nhóm yêu cầu thay đổi không liên quan?
+    2. Mỗi chữ S, O, L, I, D giải quyết câu hỏi thiết kế nào, và LSP hỗ trợ tính mở rộng OCP ra sao?
+    3. Vì sao interface nhỏ giúp ISP và DIP nhưng chưa đủ bảo đảm class có trách nhiệm đơn hoặc implementation thay thế an toàn?
+    4. Trong SolidScopeDemo, những phần nào bảo vệ bất biến, những phần nào điều phối và những phần nào chỉ là adapter?
+
+    ### Quyết định áp dụng và rủi ro
+
+    1. Với Order gồm BOOK 15.000 cent và hai PEN 2.500 cent, vì sao giảm 10% ra 2.000 cent và tổng còn 18.000 cent?
+    2. Khi nào một Money value object hoặc CRUD đơn giản chưa cần policy interface riêng?
+    3. Nếu lưu đơn thành công nhưng gửi biên nhận thất bại, vì sao SOLID không tự giải quyết transaction, outbox và idempotency?
+    4. Làm thế nào đo lợi ích SOLID bằng chi phí thay đổi, test và mức rõ ràng, thay vì số lượng interface?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Diễn giải năm nguyên tắc | Ghép đúng S/O/L/I/D với ranh giới trách nhiệm, biến thể, hợp đồng thay thế, nhu cầu client và hướng phụ thuộc. |
+    | Đọc thiết kế checkout | Chỉ được vai trò Order/OrderLine, DiscountPolicy, CheckoutService, repository và sender trong SolidScopeDemo. |
+    | Kiểm chứng hợp đồng | Giải thích giới hạn giảm 0..subtotal, các phép tính 20.000/2.000/18.000 cent và kiểm tra policy sai. |
+    | Chọn phạm vi áp dụng | So sánh mô hình đơn giản với policy/port có giá trị khi quy tắc hay tích hợp biến động. |
+    | Nhận diện vấn đề ngoài SOLID | Nêu được vì sao transaction, concurrency, security và consistency cần giải pháp bổ sung. |
+- id: solid-002
+  title: 'Trách nhiệm đơn: một nhóm lý do thay đổi'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Trách nhiệm đơn: một nhóm lý do thay đổi**
+
+    Nắm SRP là một nhóm lý do thay đổi nhất quán theo trách nhiệm và actor, không phải một method mỗi class. Bài dùng Invoice với bất biến vòng đời và tổng tiền; ReceiptFormatter, InvoiceRepository, NotificationSender chứa chi tiết trình bày/lưu trữ/giao tiếp; InvoiceWorkflow chỉ phối hợp use case. Người học xác định cohesion, coupling và tách lớp có căn cứ dựa trên áp lực thay đổi thật.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Trách nhiệm và bất biến hóa đơn
+
+    1. Vì sao Invoice.addLine(), totalCents() và issue() thuộc cùng nhóm trách nhiệm mặc dù có nhiều method?
+    2. Đổi logo PDF, schema SQL, provider email và điều kiện phát hành hóa đơn đại diện cho những nhóm thay đổi khác nhau nào?
+    3. Vì sao InvoiceWorkflow có ba dependency vẫn có thể tuân SRP nếu nhiệm vụ của nó là điều phối một use case?
+    4. Trong SrpDemo, vì sao INV-9 có tổng 35.000 VND và bị từ chối phát hành lần thứ hai?
+
+    ### Phân chia và kiểm thử có kiểm soát
+
+    1. Nếu tách addLine, total, issue thành ba service riêng, nguy cơ suy giảm đóng gói và tăng indirection là gì?
+    2. Khi lưu hoặc gửi thông báo bị lỗi sau invoice.issue(), trách nhiệm của Invoice, Workflow và hạ tầng cần được giữ thế nào?
+    3. Phân biệt entity, value object, application service, formatter và adapter bằng loại quy tắc mà mỗi thành phần sở hữu ra sao?
+    4. Làm thế nào dùng những tình huống thay đổi thật và test domain độc lập DB/SMTP để đánh giá ranh giới SRP?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định lý do thay đổi | Nhóm đúng quy tắc miền Invoice và tách các biến động PDF/DB/email ra adapter tương ứng. |
+    | Bảo vệ bất biến | Giải thích điều kiện không phát hành hóa đơn rỗng, không sửa sau phát hành và tính tổng không tràn số. |
+    | Dự đoán kết quả SrpDemo | Tái hiện total 35.000, repository lưu một hóa đơn, sender gửi một lần và duplicate issue bị từ chối. |
+    | Phân biệt coordinator với god class | Lý giải nhiều dependency vẫn hợp SRP khi cùng phục vụ điều phối một use case. |
+    | Đề xuất refactor có lý do | Vạch vùng thay đổi theo cohesion/coupling và kiểm thử riêng domain, formatter, integration. |
+- id: solid-003
+  title: 'Đóng-mở: mở rộng hành vi với thay đổi có kiểm soát'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đóng-mở: mở rộng hành vi với thay đổi có kiểm soát**
+
+    Hiểu OCP là đặt trục biến thiên sau hợp đồng ổn định để bổ sung implementation mà không sửa thuật toán điều phối theo từng biến thể. OpenClosedDemo dùng ShippingPolicy, ShippingService và Map đăng ký Standard/Express/SameDay; ví dụ RemoteAreaSurcharge dùng composition/decorator. Bài nhấn mạnh hợp đồng phí không âm, kết quả khác null, chỗ phải thay đổi ở composition root và những trường hợp switch đơn giản vẫn hợp lý.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Điểm mở rộng và phần cần ổn định
+
+    1. Vì sao thêm SameDayShipping bằng một ShippingPolicy mới không đòi sửa ShippingService.quote nhưng vẫn phải đăng ký mã vào Map?
+    2. Với Order subtotal 150.000 VND, cân nặng 1.200 g, vì sao Standard, Express, SameDay báo 20.000, 51.000, 70.000 VND?
+    3. ShippingService kiểm tra policy không tồn tại, trả null hoặc phí âm để giữ hợp đồng nào?
+    4. Vì sao câu nói OCP cấm mọi sửa đổi code là sai khi bản thân hợp đồng nền tảng thay đổi?
+
+    ### Mở rộng và đánh đổi
+
+    1. RemoteAreaSurcharge bọc ExpressShipping làm tổng phí 56.000 VND bằng cơ chế composition nào?
+    2. Khi nào chọn Strategy/Decorator thay vì thêm nhánh if/else vào cùng hàm, và khi nào switch vẫn dễ bảo trì hơn?
+    3. Nếu một plugin feeFor thay đổi Order hoặc dùng sai đơn vị tiền, thêm class mới có thực sự mở rộng an toàn không?
+    4. Quy trình refactor và contract test nào giúp giữ biểu phí cũ, bổ sung policy mới và phát hiện không có cấu hình đăng ký?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tìm trục biến thiên | Phân biệt chính sách giao hàng thay đổi độc lập với phần xác thực và điều phối ổn định. |
+    | Cài policy thay thế | Viết ShippingPolicy và implementation mới, đăng ký ở composition root, giữ ShippingService.quote. |
+    | Kiểm chứng ví dụ | Tính được 20.000/51.000/70.000 VND và phụ phí decorator nâng Express lên 56.000 VND. |
+    | Giữ hợp đồng của phần mở rộng | Kiểm tra khác null, phí không âm, đúng VND, lỗi mã không hỗ trợ và không sửa input. |
+    | Đánh giá chi phí abstraction | Chọn interface, decorator hay switch từ tần suất biến thể, độ phức tạp wiring và test. |
+- id: solid-004
+  title: 'Thay thế Liskov: bảo toàn hợp đồng của kiểu cha'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thay thế Liskov: bảo toàn hợp đồng của kiểu cha**
+
+    Hiểu LSP là khả năng thay một subtype cho supertype mà caller vẫn nhận các bảo đảm hành vi đã công bố, mạnh hơn việc Java chấp nhận extends/implements. Bài đặt precondition, postcondition, invariant, exception và side effect vào DiscountPolicy, so sánh FixedDiscount và ThresholdDiscount hợp lệ với BadVipDiscount siết điều kiện và BadFixedDiscount giảm vượt subtotal. Contract test phải áp dụng chung cho mọi implementation.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng và ví dụ discount
+
+    1. Vì sao cùng implements DiscountPolicy không đủ để bảo đảm CheckoutService.total tính đúng khi nhận một implementation mới?
+    2. Tiền điều kiện của discountFor với subtotal khác null, không âm khác gì hậu điều kiện discount nằm trong 0..subtotal?
+    3. Với subtotal 25.00, vì sao FixedDiscount(10) cho tổng 15.00, ThresholdDiscount cho 25.00?
+    4. Vì sao BadVipDiscount ném UnsupportedOperationException dưới ngưỡng 100 là siết tiền điều kiện?
+    5. Vì sao BadFixedDiscount trả 50 cho đơn 25 làm yếu hậu điều kiện và khiến tổng -25?
+
+    ### Kiểm chứng và thiết kế quan hệ kiểu
+
+    1. Khi contract chung không hứa setter độc lập, ví dụ Rectangle/Square còn vi phạm LSP theo cùng lập luận cũ không?
+    2. Ngoài kết quả, lỗi, bất biến, thứ tự và tác dụng phụ nào cần bảo toàn nếu client được phép dựa vào?
+    3. Vì sao cùng một bộ kiểm thử cho tất cả DiscountPolicy phải bao gồm subtotal 0, 25, 100, 250 và dữ liệu âm/null?
+    4. Nếu subtype không hỗ trợ một hành vi hợp lệ của interface, khi nào cần chia lại contract hoặc dùng composition?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát biểu LSP thực dụng | Nêu đúng precondition không mạnh hơn, postcondition không yếu hơn, invariant và lỗi/side effect phải phù hợp. |
+    | Phân tích đối chứng | Phân loại Fixed/Threshold hợp lệ và BadVip/BadFixed vi phạm với subtotal 25.00. |
+    | Xây kiểm thử hợp đồng | Thiết kế cùng một contract test cho mọi policy, cả giá trị biên và đầu vào bị từ chối. |
+    | Đánh giá subtype thiết kế sai | Giải thích rủi ro Rectangle/Square với setter độc lập và đề xuất interface bất biến hoặc composition. |
+    | Bảo vệ client qua abstraction | Phát hiện compile đúng nhưng semantics sai, không vá bằng instanceof riêng cho từng subtype. |
+- id: solid-005
+  title: 'Phân tách giao diện: hợp đồng phù hợp từng bên sử dụng'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân tách giao diện: hợp đồng phù hợp từng bên sử dụng**
+
+    Hiểu ISP từ nhu cầu client: DownloadService chỉ cần DocumentReader, ImportService chỉ cần DocumentWriter, công việc dọn dữ liệu cần DocumentDeleter. Bài cho thấy ReadOnlyArchive không nên implements hợp đồng ghi/xóa rồi ném UnsupportedOperationException, trong khi InMemoryStore hoàn toàn có thể đảm nhận nhiều interface. Người học lựa chọn ranh giới API, test bằng lambda/fake và phân biệt giới hạn kiểu Java với phân quyền thực.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng theo nhu cầu
+
+    1. Vì sao một DocumentStorage chứa findById, save, delete không phù hợp với ReadOnlyArchive chỉ đọc?
+    2. DownloadService và ImportService nên nhận interface nào để compiler chỉ cho phép thao tác thực sự cần?
+    3. Vì sao InMemoryStore implements cả DocumentReader, DocumentWriter, DocumentDeleter không vi phạm ISP?
+    4. Khi nào tạo một DocumentAdmin interface tổng hợp là có lý do và khi nào tách từng method quá vụn?
+
+    ### Tác động và kiểm thử
+
+    1. Trong IspDemo, vì sao cùng DownloadService đọc được tài liệu D01 từ mainStore và A01 từ ReadOnlyArchive?
+    2. Làm cách nào dùng lambda DocumentWriter để test ImportService mà không cần stub cả API đọc/xóa?
+    3. Vì sao việc inject DocumentReader không thay thế các kiểm tra authorization tại REST/Spring endpoint?
+    4. Nếu một public interface đang được nhiều module sử dụng, làm sao chuyển client dần mà giữ các semantics và tương thích?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện fat interface | Chỉ ra sự ép buộc khiến ReadOnlyArchive phải ném lỗi cho save/delete hợp lệ theo hợp đồng rộng. |
+    | Tách API theo client | Thiết kế DocumentReader, DocumentWriter, DocumentDeleter và inject đúng dịch vụ. |
+    | Dùng nhiều vai trò hợp lệ | Giải thích InMemoryStore hỗ trợ nhiều interface nhưng archive chỉ công bố năng lực đọc. |
+    | Kiểm thử client đơn giản | Viết fake/lambda của từng interface để kiểm tra tải hoặc nhập tài liệu độc lập. |
+    | Phân biệt API và an ninh | Nêu đúng giới hạn compile-time so với quyền thực thi trong ứng dụng. |
+- id: solid-006
+  title: 'Đảo ngược phụ thuộc: phụ thuộc vào sự trừu tượng'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đảo ngược phụ thuộc: phụ thuộc vào sự trừu tượng**
+
+    Hiểu DIP là đảo hướng phụ thuộc mã nguồn: quy tắc CustomerSpendingService sử dụng PurchaseReader do phía use case định nghĩa, còn JdbcPurchaseReader và InMemoryPurchaseReader thực hiện port. Bài giải thích khác biệt dependency build-time với luồng gọi runtime, tránh rò rỉ ResultSet/SDK vào API nghiệp vụ và chỉ ra cách test service bằng fake, adapter bằng integration test, ứng dụng bằng wiring test.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hướng phụ thuộc và port
+
+    1. Vì sao CustomerSpendingService tự tạo JdbcPurchaseReader làm quy tắc tổng doanh thu phụ thuộc hạ tầng?
+    2. Trong sơ đồ service → PurchaseReader ← adapter, mũi tên dependency mã nguồn khác gì hướng gọi tại runtime?
+    3. Port findByCustomer nên trả List Purchase theo nghiệp vụ thay vì ResultSet hay ResponseEntity vì sao?
+    4. Điều gì làm composition root được phép biết adapter cụ thể mà lớp use case không nên import?
+
+    ### Hợp đồng và kiểm thử
+
+    1. Trong DipDemo, vì sao KH01 có tổng 330.000 VND khi giao dịch 100.000 bị refunded, còn KH02 ra 0?
+    2. PurchaseReader trả null, trả giao dịch sai customerId hoặc nuốt lỗi DB thành danh sách rỗng sẽ làm sai hợp đồng thế nào?
+    3. Khi thay in-memory bằng JDBC, loại test nào kiểm tra được phép cộng của service và loại nào cần database để kiểm tra SQL?
+    4. Khi nào port thực sự có lợi và khi nào tạo interface cho một helper thuần chỉ làm hệ thống phức tạp hơn?
+    5. Vì sao constructor injection với tham số kiểu JdbcPurchaseReader vẫn chưa đủ đạt DIP?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ đúng hướng dependency | Thể hiện được service → port ← adapter và nơi bootstrap tạo kết nối. |
+    | Thiết kế port đúng domain | Định nghĩa PurchaseReader không lộ DataSource/ResultSet hoặc DTO công nghệ vào application. |
+    | Trace kết quả DipDemo | Tính đúng tổng 330.000 VND cho KH01 và 0 cho khách không có giao dịch. |
+    | Phân loại và test rủi ro | Dùng fake test nghiệp vụ, integration test adapter JDBC và wiring test chọn bean. |
+    | Đánh giá ý nghĩa abstraction | Nhận diện biên công nghệ thay đổi thật và tránh interface sao chép hạ tầng. |
+- id: solid-007
+  title: Phân biệt đảo ngược phụ thuộc và tiêm phụ thuộc
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt đảo ngược phụ thuộc và tiêm phụ thuộc**
+
+    Phân biệt DIP là nguyên lý hướng phụ thuộc mã nguồn với DI là cách cung cấp dependency từ bên ngoài; IoC rộng hơn và Spring chỉ là một cơ chế wiring. Qua CheckoutService/PaymentGateway/DemoBankAdapter, người học thấy constructor nhận concrete adapter là DI nhưng vẫn coupling; muốn đạt DIP, service phải phụ thuộc port nghiệp vụ, adapter implement port và composition root lắp ghép. Bài minh họa fake gateway, test input và lỗi reply.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### DIP, DI, IoC và ownership
+
+    1. Vì sao CheckoutWithDiButWithoutDip truyền DemoBankAdapter qua constructor vẫn là DI nhưng chưa đạt DIP?
+    2. CheckoutService → PaymentGateway ← DemoBankAdapter khác gì với CheckoutService → DemoBankAdapter ở mức source dependency?
+    3. Composition root và Spring @Bean có thể biết implementation cụ thể vì sao, và có cần Spring để thực hiện DI thủ công không?
+    4. Vì sao PaymentGateway chứa DTO từ bank SDK vẫn gây coupling dù chữ ký tham số trông là interface?
+
+    ### Kiểm thử và triển khai
+
+    1. Trong DipDiDemo, PaymentGateway nhận ORD-001 và 150.000 VND trả transaction ID nào và Receipt có các trường gì?
+    2. Fake PaymentGateway giúp kiểm tra request, số lần gọi và response bất thường mà không gọi ngân hàng ra sao?
+    3. Constructor, setter, field injection khác nhau thế nào về tính bắt buộc dependency và trạng thái khởi tạo?
+    4. Vì sao @Autowired hoặc dùng service locator không tự giải quyết DIP hay một contract thanh toán thiếu idempotency?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt ba khái niệm | Diễn đạt rõ DIP là hướng dependency, DI là wiring, IoC là khái niệm điều khiển rộng hơn. |
+    | Tách port và adapter | Viết CheckoutService nhận PaymentGateway, DemoBankAdapter triển khai interface thuộc phía nghiệp vụ. |
+    | Cấu hình đúng nơi | Dùng main hoặc Spring @Bean để chọn implementation mà service không import SDK. |
+    | Test bằng fake | Xác nhận gateway nhận orderId/amount đúng, trả transactionId hợp lệ và input sai bị chặn trước call. |
+    | Đánh giá injection | Chọn constructor cho dependency bắt buộc và chỉ ra DI không tự bảo đảm DIP. |
+- id: solid-008
+  title: Cân bằng các nguyên tắc với độ phức tạp thực tế
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Cân bằng các nguyên tắc với độ phức tạp thực tế**
+
+    Biết cân bằng SRP/OCP/LSP/ISP/DIP trước áp lực thay đổi thật và chi phí abstraction. Bài chuyển từ SimpleCheckout chỉ có Standard (30.000 VND, miễn phí từ 500.000) sang DeliveryFeePolicy khi xuất hiện Express có công thức 50.000 cộng 5.000 mỗi kilogram làm tròn lên. Người học phải cân nhắc if/switch, policy, registry, KISS, YAGNI và kiểm chứng change surface, test, khả năng đọc hiểu thay vì đếm class.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Áp dụng đúng nhu cầu
+
+    1. Vì sao SimpleCheckout một class với công thức vận chuyển cố định có thể tốt hơn một hệ thống policy/registry khi chưa có biến thể?
+    2. Khi Standard và Express thay đổi độc lập, điều gì khiến DeliveryFeePolicy bắt đầu có giá trị?
+    3. Với Order(600.000 VND, 1.500 g), vì sao Standard có tổng 600.000 còn Express có tổng 660.000 VND?
+    4. Trong DeliveryDemo, tính đúng số kilogram làm tròn lên mà không cộng 999 gây overflow bằng cách nào?
+
+    ### Chi phí thiết kế và kiểm chứng
+
+    1. Khi nào giữ if/switch rõ ràng còn hợp lý hơn Strategy, factory hoặc plugin loader?
+    2. Phân biệt độ phức tạp nghiệp vụ vốn có, độ phức tạp do implementation và độ phức tạp dự phòng tương lai ra sao?
+    3. KISS, YAGNI và DRY khuyên điều gì và vì sao hai rule giống cú pháp chưa chắc nên gộp?
+    4. Thay vì đếm interface, cần đánh giá change surface, rủi ro hồi quy, chi phí vận hành và test thế nào?
+    5. Tại sao việc thêm policy mới vẫn có thể cần sửa enum/cấu hình đăng ký mà không vi phạm OCP về phần tính tổng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn mức abstraction | So sánh SimpleCheckout với DeliveryFeePolicy dựa trên sự xuất hiện của các quy tắc độc lập. |
+    | Kiểm chứng phí vận chuyển | Dự đoán Standard miễn phí và Express 60.000 VND cho đơn 600.000 VND/1.500 g. |
+    | Nhận diện thiết kế quá mức | Phát hiện interface một triển khai, kế thừa sâu và plugin dự phòng chưa có nhu cầu. |
+    | Đánh giá bằng bằng chứng | Dùng change surface, readability, testability và lỗi hồi quy để chọn ranh giới có ích. |
+    | Refactor giữ hành vi | Lập trình tự ghi test hiện trạng, tách policy và kiểm tra lại kết quả/exception/tác dụng phụ. |

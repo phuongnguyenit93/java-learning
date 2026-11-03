@@ -21,7 +21,8 @@ class ModuleTranslationCatalogService {
     private static final String SWAGGER = 'src/main/resources/swagger/'
     private static final Map<String, String> SINGLE = [
             'content/readme/docs/en/BASE.md': 'INTRODUCTION',
-            'content/roadmap/en/roadmap.yml': 'ROADMAP'
+            'content/roadmap/en/roadmap.yml': 'ROADMAP',
+            'content/reference/en/references.yml': 'REFERENCE'
     ].asImmutable()
     private static final Map<String, String> API_TYPES = [
             'controller-description.yml': 'SWAGGER_CONTROLLER_DESCRIPTION',
@@ -199,7 +200,7 @@ class ModuleTranslationCatalogService {
         }
         // STEP 14 owns mandatory translations only. Video is authored later,
         // and a chapter may have a VI script without an EN counterpart.
-        for (String area : ['content/readme/docs', 'content/roadmap',
+        for (String area : ['content/readme/docs', 'content/roadmap', 'content/reference',
                              SWAGGER[0..-2]]) {
             File vi = new File(module, area + '/vi')
             File en = new File(module, area + '/en')

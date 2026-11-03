@@ -20,6 +20,7 @@ import java.nio.file.attribute.BasicFileAttributes
 class ModuleLanguageCloneValidationService {
     private static final String DOCS = 'content/readme/docs'
     private static final String SWAGGER = 'src/main/resources/swagger'
+    private static final String REFERENCE = 'content/reference'
 
     static void validate(Map<String, Map<String, byte[]>> trees, File repositoryRoot) {
         Map<String, byte[]> docs = trees[DOCS]
@@ -96,10 +97,22 @@ class ModuleLanguageCloneValidationService {
             throw new GradleException('LIST.md still refers to VI paths.')
         }
 
-        Map<String, byte[]> swagger = trees[SWAGGER]
+        Map<String, byte[]> swagger = trees[SWAGGER] ?: [:]
+        Map<String, byte[]> reference = trees[REFERENCE] ?: [:]
+        if (!reference.isEmpty()) {
+            if (reference.keySet() != (['references.yml'] as Set)) {
+                throw new GradleException('Unexpected VI Reference files in ' + REFERENCE)
+            }
+            Map document = yaml(reference['references.yml'], REFERENCE + '/vi/references.yml')
+            ContractSchemaValidateUtils.validateData('reference', document)
+            if (document.keySet() != (['references'] as Set) ||
+                    !(document.references instanceof List)) {
+                throw new GradleException('Invalid VI Reference document.')
+            }
+        }
         Map apiDescriptions = swagger.containsKey('api-descriptions.yml')
                 ? yaml(swagger['api-descriptions.yml'], 'swagger/api-descriptions.yml') : [:]
-        Map<String, byte[]> roadmap = trees['content/roadmap']
+        Map<String, byte[]> roadmap = trees['content/roadmap'] ?: [:]
         if (!roadmap.isEmpty()) {
             byte[] data = roadmap['roadmap.yml']
             if (data == null) throw new GradleException('Missing VI roadmap.yml.')
@@ -127,7 +140,7 @@ class ModuleLanguageCloneValidationService {
         chapterAnchors.each { String chapter, Set<String> anchors ->
             if (docs.containsKey('menu/' + chapter + '/interview/question.yml')) {
                 throw new GradleException('Legacy Interview source in ' + chapter +
-                        '; run legacy Interview P:S import to migrate to questions/interview.yml before STEP 13.')
+                        '; run legacy Interview P:S import to migrate to questions/interview.yml before STEP 10.')
             }
             String sectionPath = 'menu/' + chapter + '/summary/section.yml'
             String summariesPath = 'menu/' + chapter + '/summary/summaries.yml'
@@ -190,12 +203,12 @@ class ModuleLanguageCloneValidationService {
                     }
                 }
         swagger.each { String path, byte[] bytes ->
-            if (!(path in ['api-descriptions.yml', 'api-execution.yml',
-                           'api-cases.yml', 'controller-description.yml'])) {
-                throw new GradleException('Unexpected VI Swagger file: ' + path)
+            // All canonical Swagger files are cloned, even when a new file type
+            // has no known semantic validator yet.
+            if (path.endsWith('.yml') || path.endsWith('.yaml')) {
+                Map document = yaml(bytes, 'swagger/' + path)
+                checkNestedRelations(document, sections, 'swagger/' + path)
             }
-            Map document = yaml(bytes, 'swagger/' + path)
-            checkNestedRelations(document, sections, 'swagger/' + path)
         }
     }
 

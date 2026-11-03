@@ -1,0 +1,376 @@
+summaries:
+- id: practice-001
+  title: Bài tập lớp và đối tượng qua tài khoản ngân hàng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bài tập lớp và đối tượng qua tài khoản ngân hàng**
+
+    Luyện chuyển yêu cầu quản lý tài khoản thành lớp `BankAccount` với trạng thái riêng, constructor, phép nạp/rút/chuyển tiền và hợp đồng từ chối giao dịch sai. Bài thực hành giúp kiểm tra encapsulation bằng tình huống số dư không được âm, tràn `long` và lỗi chuyển tiền phải giữ nguyên số dư hai phía trong mô hình đơn luồng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lớp, đối tượng và hợp đồng tài khoản
+
+    1. Với hai `BankAccount` khác nhau và một biến alias, vì sao sửa số dư qua alias chỉ ảnh hưởng tài khoản mà nó cùng tham chiếu?
+    2. Những quy tắc nào constructor và các phương thức `deposit`, `withdraw`, `transferTo` phải kiểm tra để bảo vệ số dư và dữ liệu định danh?
+    3. Vì sao `balanceVnd` cần là instance field `private`, còn `static` hoặc `setBalanceVnd` công khai sẽ làm hỏng ý nghĩa mô hình?
+
+    ### Kiểm chứng giao dịch và giới hạn
+
+    1. Trong `transferTo`, cần tính trước những giá trị nào để tràn số ở tài khoản nhận không làm tài khoản gửi bị trừ một nửa?
+    2. Những ca JUnit nào chứng minh giao dịch sai bị từ chối và số dư hai phía không thay đổi?
+    3. Vì sao code chuyển tiền đơn luồng trong bộ nhớ chưa bảo đảm atomicity khi có concurrency, lỗi tiến trình hoặc database?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô hình hóa BankAccount | Tạo được hai instance có mã, chủ sở hữu, số dư độc lập và giải thích đúng alias/identity. |
+    | Bảo vệ số dư qua hành vi | Triển khai nạp/rút với tiền dương, số dư đủ và `Math.addExact` để phát hiện overflow. |
+    | Thiết kế chuyển tiền thất bại an toàn | Tính số dư dự kiến của nguồn/đích trước khi cập nhật và xác định kết quả nếu receiver overflow. |
+    | Kiểm thử invariant | Viết test cho giao dịch hợp lệ, dữ liệu xấu, số tiền bằng 0, tự chuyển và trạng thái giữ nguyên sau exception. |
+    | Xác định ranh giới an toàn | Giải thích rõ vì sao bản mô phỏng cần locking hoặc database transaction trong tình huống thực tế. |
+- id: practice-002
+  title: Bài tập đóng gói quy tắc của đơn hàng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bài tập đóng gói quy tắc của đơn hàng**
+
+    Thực hành biến `Order` thành đối tượng tự bảo vệ dòng hàng, tổng tiền và trạng thái DRAFT/PLACED/CANCELLED, thay vì để mã bên ngoài chỉnh collection hay trạng thái tùy ý. Người học sẽ thiết kế API hành vi, kiểm tra tiền/số lượng trước khi commit thay đổi và dùng các ca kiểm thử để xác nhận bất biến đơn hàng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Encapsulation và vòng đời Order
+
+    1. Vì sao một `public List` hoặc getter trả Map/collection mutable khiến bên ngoài có thể phá invariant của đơn hàng?
+    2. Những chuyển trạng thái nào được phép giữa DRAFT, PLACED và CANCELLED, và vì sao `place()` phải từ chối đơn rỗng?
+    3. Order và OrderLine nên chia trách nhiệm kiểm tra dữ liệu, sở hữu dòng hàng và tính tổng tiền như thế nào?
+
+    ### Tính tiền và xử lý lỗi
+
+    1. Vì sao `setLine()` nên kiểm tra map ứng viên và tổng tiền trước khi cập nhật map thật?
+    2. Khi đổi số lượng, vượt giới hạn tổng, overflow hoặc thao tác sau `place()`, kết quả lỗi và trạng thái còn lại phải được kiểm thử thế nào?
+    3. Vì sao snapshot `List.copyOf(...)` của record với component String/primitive bảo vệ ví dụ, nhưng record chứa phần tử mutable chưa chắc bất biến sâu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế API nghiệp vụ | Xây các phương thức setLine/changeQuantity/removeLine/place/cancel thay cho setter trạng thái và tổng tiền tùy ý. |
+    | Cưỡng chế trạng thái Order | Phân tích những thao tác hợp lệ ở DRAFT và các thao tác bị chặn khi PLACED hoặc CANCELLED. |
+    | Bảo vệ giá trị dòng hàng | Đặt validation cho SKU, giá, số lượng của OrderLine và tránh lộ collection nội bộ. |
+    | Ngăn cập nhật một nửa | Tính tổng ứng viên có kiểm tra overflow trước khi thay đổi dòng hàng thật. |
+    | Kiểm thử vòng đời | Liệt kê hoặc viết test cho đặt đơn rỗng, đổi dữ liệu sau đặt hàng, hủy lặp, giới hạn giá và dữ liệu getter. |
+- id: practice-003
+  title: Bài tập giao diện và đa hình thanh toán
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bài tập giao diện và đa hình thanh toán**
+
+    Rèn interface `PaymentMethod` và runtime polymorphism với thanh toán thẻ, chuyển khoản và ví điện tử. Bài học tập trung vào hợp đồng giao dịch, việc `PaymentProcessor` gọi implementation theo kiểu thực tế, sự khác nhau giữa điều phối và logic thanh toán, cùng cách kiểm thử từ chối mà không mất số dư ví.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng chung và đa hình
+
+    1. Vì sao `PaymentProcessor` chỉ cần gọi `PaymentMethod.pay(request)` mà không phải `if` hoặc `instanceof` phân biệt ba phương thức?
+    2. Trong lời gọi `method.pay(request)`, kiểu khai báo interface và loại object runtime quyết định hành vi thế nào?
+    3. Vì sao CardPayment, BankTransferPayment và EWalletPayment có thể giữ field và điều kiện duyệt riêng mà vẫn tuân một interface?
+
+    ### Tính đúng và mở rộng
+
+    1. Khi ví không đủ tiền, PaymentResult phải biểu diễn trạng thái, phí, tổng đã trả và số dư còn lại thế nào?
+    2. Khi thêm QRPayment với phí và giới hạn riêng, thành phần nào cần bổ sung và vì sao có thể giữ nguyên PaymentProcessor?
+    3. Tại sao `Math.addExact`, số tiền nguyên VND và kiểm thử lỗi cần thiết, nhưng demo này vẫn chưa phải hệ thống thanh toán có transaction/idempotency thật?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây dựng đa hình qua interface | Định nghĩa PaymentMethod và truyền các implementation vào PaymentProcessor qua constructor. |
+    | Dự đoán dynamic dispatch | Giải thích lớp cụ thể nào thực hiện pay khi tham chiếu mang kiểu PaymentMethod. |
+    | Kiểm tra kết quả thanh toán | Dự đoán PaymentResult cho thành công/từ chối, phí và số tiền đã trả mà không sửa sai số dư. |
+    | Mở rộng implementation | Thêm ý tưởng QRPayment và test mà không thêm nhánh tính phí trong processor. |
+    | Nhận biết giới hạn mô phỏng | Phân biệt test trong bộ nhớ với transaction, bảo mật, webhook và đối soát của hệ thống thật. |
+- id: practice-004
+  title: Bài tập chọn kế thừa hay kết hợp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bài tập chọn kế thừa hay kết hợp**
+
+    Thực hành chọn inheritance theo quan hệ is-a và hợp đồng có thể thay thế, hoặc composition khi một đối tượng sử dụng cộng tác viên có nhiệm vụ riêng. Ví dụ Shape/Circle/Rectangle và ReportPublisher/ReportFormatter/ReportSink giúp đánh giá Liskov Substitution, giảm hierarchy phình to và chứng minh khả năng thay thế bằng test.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lựa chọn inheritance/composition
+
+    1. Vì sao Circle và Rectangle có thể được dùng qua Shape.area(), còn ReportPublisher không phải một loại CsvFormatter?
+    2. Điều gì khác nhau giữa `implements ReportFormatter` và ReportPublisher giữ một field `ReportFormatter`?
+    3. Khi SavingsAccount làm chặt điều kiện rút tiền hoặc Square phá quy tắc setter Rectangle, hợp đồng thay thế của lớp cha bị ảnh hưởng thế nào?
+
+    ### Thay đổi thành phần và kiểm thử
+
+    1. Trong ReportPublisher, làm thế nào thay CsvFormatter bằng TextFormatter và thay ReportSink mà không sửa logic điều phối?
+    2. Vì sao tổ hợp nhiều lớp con theo loại báo cáo, định dạng và nơi lưu dễ bùng nổ số lượng subclass?
+    3. Những contract test nào chứng minh Shape subtype trả diện tích phù hợp và publisher làm việc với formatter/sink giả?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt quan hệ is-a/has-a | Chọn kế thừa cho Shape và composition cho publisher với lập luận về trách nhiệm và hợp đồng. |
+    | Đánh giá khả năng thay thế | Chỉ ra trường hợp override thu hẹp tiền điều kiện/làm yếu hậu điều kiện gây vi phạm LSP. |
+    | Tổ chức cộng tác viên | Thiết kế constructor injection cho ReportFormatter và ReportSink, thay implementation tại composition root. |
+    | Giảm kết dính | Giải thích vì sao không nên kế thừa chỉ để tái sử dụng vài phương thức. |
+    | Kiểm chứng lựa chọn | Đề xuất test chung cho subtype Shape và test publisher thay formatter mà không đổi caller. |
+- id: practice-005
+  title: Bài tập đối tượng giá trị và so sánh bằng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bài tập đối tượng giá trị và so sánh bằng**
+
+    Thiết kế `Sku` và `Money` như value object có biểu diễn chuẩn tắc, bất biến và ngữ nghĩa so sánh đúng. Bài thực hành tập trung vào khác biệt identity/value equality, chuẩn hóa `BigDecimal` theo scale, hợp đồng `equals`/`hashCode`/`compareTo`, rủi ro mutable key và giới hạn so sánh mặc định của record có array.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chuẩn hóa giá trị và bình đẳng
+
+    1. Vì sao `new Sku(" ab-01 ")` phải bằng `new Sku("AB-01")` và việc chuẩn hóa bằng `Locale.ROOT` cần thực hiện lúc nào?
+    2. Vì sao `BigDecimal("12.3")` và `BigDecimal("12.30")` có thể khác `equals` dù `compareTo` bằng 0; Money khắc phục bằng scale 2 thế nào?
+    3. Vì sao USD 12.30 không bằng EUR 12.30 và không thể cộng tiền khác đơn vị mà không có chính sách chuyển đổi?
+
+    ### Collection và dữ liệu mutable
+
+    1. Nếu hai object bằng nhau theo `equals` nhưng hash khác nhau, `HashSet` và `HashMap` có thể gặp lỗi gì?
+    2. Khi dùng `TreeSet`, điều gì xảy ra nếu `compareTo == 0` không nhất quán với `equals`?
+    3. Vì sao record có array component hoặc key có trường mutable không tự trở thành value object an toàn, và cần dùng defensive copy ở những ranh giới nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế giá trị chuẩn tắc | Cài đặt Sku chuẩn hóa uppercase/trim và Money chuẩn hóa BigDecimal scale 2 ngay khi khởi tạo. |
+    | Phân tích các hợp đồng bằng nhau | Giải thích vai trò của `==`, `equals`, `hashCode` và quy tắc equal implies same hash. |
+    | Sử dụng collection đúng | Dự đoán số phần tử của HashSet/TreeSet với nhiều dạng nhập số tiền tương đương. |
+    | Ngăn key biến đổi | Phát hiện lỗi khi object key bị sửa sau khi đưa vào HashMap, chọn immutable field hoặc object thay thế. |
+    | Kiểm thử giá trị biên | Đề xuất test số âm, scale 3 không thể giữ nguyên, currency khác, SKU không hợp lệ và collection chứa array. |
+- id: practice-006
+  title: Bài tập nhận diện lỗi thiết kế
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bài tập nhận diện lỗi thiết kế**
+
+    Luyện đọc Java dưới góc nhìn người review: phân biệt bug hành vi, code smell, vi phạm hợp đồng và lựa chọn thiết kế có chủ ý. Từ đoạn checkout trộn Order, payment và doanh số, bài học yêu cầu phát hiện bằng chứng cụ thể, đề xuất tách trách nhiệm, bảo vệ dòng tiền và chứng minh cải thiện bằng kiểm thử.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phát hiện vấn đề từ bằng chứng
+
+    1. Vì sao một chương trình chạy được với vài input chưa đủ chứng minh nó không có bug hoặc code smell?
+    2. Trong đoạn checkout chứa `List<long[]>`, logic VIP, payment và tổng doanh số dùng chung, những dấu hiệu nào chỉ ra rò rỉ quy tắc, dữ liệu thiếu nghĩa và coupling?
+    3. Những câu hỏi nào về owner trạng thái, dependency ẩn, long overflow và if/instanceof giúp phân biệt lỗi thực tế với lựa chọn thiết kế chấp nhận được?
+
+    ### Tách trách nhiệm và giữ hợp đồng
+
+    1. Vì sao Order/OrderLine, PaymentGateway, SalesLedger và CheckoutService cần vai trò riêng trong phương án refactor?
+    2. Khi refactor thêm validation và kiểm tra overflow, vì sao cần ghi rõ đây là thay đổi hợp đồng thay vì khẳng định mọi hành vi trước/sau giống hệt?
+    3. Những test nào chứng minh cả kết quả thanh toán và các side effect ghi ledger, đồng thời không ghi doanh số nếu thanh toán bị từ chối?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Review code có bằng chứng | Nêu tình huống cụ thể, hậu quả quan sát được và loại vấn đề thay vì chỉ nhận xét 'code xấu'. |
+    | Phân chia trách nhiệm | Đề xuất Order tính tiền, CheckoutService điều phối, PaymentGateway trả kết quả và SalesLedger ghi nhận. |
+    | Xác định lỗi số học/nghiệp vụ | Phát hiện thiếu validation, overflow và cập nhật doanh số sai sau giao dịch từ chối. |
+    | Bảo vệ hành vi bằng test | Lập kiểm thử khách thường/VIP, chấp nhận/từ chối, lỗi dữ liệu và tương tác ledger. |
+    | Phân biệt refactor và thay luật | Giải thích khi nào validation/exception mới là thay đổi quan sát được phải được công bố, kiểm thử. |
+- id: practice-007
+  title: Bài tập tái cấu trúc đoạn mã thủ tục thành mô hình đối tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Bài tập tái cấu trúc đoạn mã thủ tục thành mô hình đối tượng**
+
+    Chuyển hàm tính tiền thủ tục sang mô hình gồm Order, DiscountPolicy, ShippingPolicy, CheckoutService và Receipt trong khi giữ kết quả của các trường hợp đầu vào hợp lệ. Bài này luyện các bước refactor có kiểm thử hồi quy, đa hình cho chính sách VIP và ranh giới rõ giữa dữ liệu, phép giảm giá, phí giao và điều phối.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân rã logic thủ tục
+
+    1. Trong một hàm dùng magic string loại khách và giao hàng, vì sao cần tách Order, DiscountPolicy, ShippingPolicy, CheckoutService và Receipt?
+    2. Vì sao CheckoutService chọn chính sách qua interface/constructor injection thay vì rải chuỗi điều kiện VIP vào từng phép tính?
+    3. Những quy tắc nào xác định giảm 10% cho VIP, làm tròn xuống VND và tính phí vận chuyển sau khi đã giảm giá?
+
+    ### Đảm bảo tương đương và thay đổi
+
+    1. Vì sao ca VIP có tạm tính 1.100.000 VND phải kiểm tra ngưỡng miễn phí dựa trên số tiền sau giảm chứ không phải trước giảm?
+    2. Khi refactor thêm enum, `Math.multiplyExact` hoặc kiểm tra đầu vào, trường hợp nào là giữ nguyên kết quả cũ và trường hợp nào là thay hợp đồng lỗi?
+    3. Khi bổ sung PREMIUM giảm 15%, nên thêm/chỉnh thành phần nào và những test hồi quy nào cần giữ nguyên?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế lại trách nhiệm | Vẽ quan hệ Order, DiscountPolicy, ShippingPolicy, CheckoutService, Receipt từ đoạn code thủ tục. |
+    | Giữ phép tính nhất quán | Dự đoán tạm tính, chiết khấu, mức miễn phí giao và tổng trả với dữ liệu REGULAR/VIP. |
+    | Áp dụng Strategy | Thay thuật toán chiết khấu bằng implementation đăng ký ngoài CheckoutService. |
+    | Tái cấu trúc an toàn | Thực hiện hoặc giải thích từng bước Extract Class, Encapsulate Field, Introduce Strategy cùng test trước/sau. |
+    | Kiểm thử thay đổi | Lập ma trận ca sát ngưỡng, data invalid và overflow, phân biệt regression với thay hợp đồng. |
+- id: practice-008
+  title: 'Dự án tổng hợp: phân tích yêu cầu và tình huống sử dụng'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dự án tổng hợp: phân tích yêu cầu và tình huống sử dụng**
+
+    Khởi đầu dự án thư viện bằng phân tích yêu cầu và use case trước khi thiết kế class. Bài thực hành chốt phạm vi MVP, tác nhân, các quy tắc mượn/trả giả định, luồng chính/ngoại lệ, Given–When–Then và bảng truy vết FR/BR/NFR tới thiết kế và kiểm thử để không tự phát minh chính sách nghiệp vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Làm rõ yêu cầu và phạm vi
+
+    1. Những câu hỏi nào cần hỏi nhân viên thư viện để xác định 'tối đa 3 lượt mượn' là số phiếu đang mở, thay vì tự suy ra số lượt theo tháng?
+    2. Phân biệt nhu cầu người dùng, FR, BR, NFR, giả định cần xác nhận và use case qua tình huống bản sách đang bị mượn?
+    3. Vì sao nhân viên thư viện là tác nhân trực tiếp của MVP còn Member có thể mới là người hưởng lợi chứ chưa dùng giao diện?
+
+    ### Use case và nghiệm thu
+
+    1. Use case mượn sách cần actor, trigger, tiền điều kiện, luồng chính, luồng thất bại và hậu điều kiện nào?
+    2. Đối với bản sách, thành viên, phiếu mượn và giới hạn 3 phiếu mở/14 ngày, cần xác định invariant nào trước khi viết code?
+    3. Làm sao gắn mã yêu cầu với use case, class chịu trách nhiệm và test Given–When–Then để phát hiện thay đổi thiếu bao phủ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích phạm vi MVP | Viết danh sách trong/ngoài phạm vi, vai trò tác nhân và giả định nghiệp vụ cần xác nhận. |
+    | Cấu trúc yêu cầu có thể kiểm chứng | Phân loại FR/BR/NFR với ID và ví dụ tiêu chí nghiệm thu. |
+    | Đặc tả use case mượn trả | Xây luồng thành công, nhánh từ chối, trạng thái trước/sau cho tác nhân thủ thư. |
+    | Định nghĩa kịch bản kiểm thử | Soạn Given–When–Then cho phiếu mở, quá hạn, bản sách đã mượn và ngày trả không hợp lệ. |
+    | Lập truy vết | Liên kết yêu cầu, use case, lớp/contract đề xuất với ca test để đánh giá ảnh hưởng khi chính sách đổi. |
+- id: practice-009
+  title: 'Dự án tổng hợp: thiết kế lớp và quan hệ'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dự án tổng hợp: thiết kế lớp và quan hệ**
+
+    Từ yêu cầu thư viện đã xác định, thiết kế các lớp `Book`, `BookCopy`, `Member`, `Loan`, `LibraryService` và `LoanPolicy` với trách nhiệm và quan hệ phù hợp. Bài học phân biệt đầu sách ISBN với từng bản vật lý, quản lý phiếu mượn theo trạng thái và bảo vệ invariant liên đối tượng trước khi chọn mô hình cài đặt Java.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện các thực thể và trách nhiệm
+
+    1. Vì sao một đầu sách có ISBN không đồng nhất với một BookCopy vật lý có `copyId` và trạng thái mượn riêng?
+    2. Vì sao cần tạo `Loan` ghi thành viên, bản sách, ngày mượn, dueOn, ngày trả thay vì chỉ lưu memberId trên BookCopy?
+    3. Quy tắc nào thuộc nội bộ `Loan`/`BookCopy`, quy tắc nào phải được `LibraryService` kiểm tra trên nhiều đối tượng?
+
+    ### Quan hệ và invariant
+
+    1. Những quan hệ nào giữa Loan–Member–BookCopy là association và vì sao không nên diễn giải sai quyền sở hữu vòng đời?
+    2. Làm thế nào bảo vệ giới hạn ba phiếu mở, ngăn phiếu thứ hai trên cùng BookCopy và chặn thành viên có phiếu quá hạn?
+    3. Vì sao thay hạn mượn từ 14 lên 21 ngày nên chạm `LoanPolicy` thay vì rải sửa từng class, và cần test những gì khi thay?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tách Book và BookCopy | Phác thảo class và khóa định danh cho đầu sách, bản vật lý cùng ISBN nhưng trạng thái riêng. |
+    | Mô hình hóa Loan | Thiết kế trường, trạng thái và hành vi của phiếu mượn, giữ lịch sử qua nhiều lần mượn. |
+    | Phân trách nhiệm | Xác định quy tắc nội tại và invariant liên đối tượng nằm ở service/policy. |
+    | Đọc và vẽ quan hệ | Giải thích association, aggregation/composition trong sơ đồ theo ràng buộc domain đã đặt. |
+    | Đánh giá hành vi | Đề xuất test mượn trùng bản, thành viên vượt giới hạn, quá hạn và trả hai lần. |
+- id: practice-010
+  title: 'Dự án tổng hợp: hiện thực và kiểm thử hành vi'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dự án tổng hợp: hiện thực và kiểm thử hành vi**
+
+    Hiện thực thiết kế thư viện bằng Java 17 và kiểm thử JUnit Jupiter cho các use case mượn/trả. Bài học nhấn mạnh mượn theo `copyId`, chính sách tối đa ba phiếu mở và 14 ngày, Clock được tiêm để kiểm thử mốc thời gian, cùng bất biến trạng thái khi giao dịch bị từ chối hoặc xử lý trên nhiều đối tượng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thực hiện luồng mượn và trả
+
+    1. Vì sao thao tác mượn phải dùng `copyId` thay vì ISBN khi hai bản sách cùng đầu sách có trạng thái khác nhau?
+    2. Trong `borrow`, những điều kiện Member, BookCopy, phiếu mở, quá hạn và `BorrowingPolicy` phải được kiểm tra trước khi tạo Loan?
+    3. Vì sao dueOn cần được tính và chốt lúc mở phiếu, còn Loan và BookCopy không cho caller set trạng thái tùy ý?
+
+    ### Kiểm thử và giới hạn đồng thời
+
+    1. JUnit cần kiểm tra gì sau một lượt trả sai ngày hoặc trả hai lần để chứng minh cả Loan và BookCopy không bị thay đổi một nửa?
+    2. Việc tiêm `Clock` hỗ trợ test ngày trả, quá hạn và chính sách 14 ngày chính xác ra sao?
+    3. Vì sao `synchronized` trên một BorrowingService chỉ giải quyết cạnh tranh cùng một instance JVM và không thay thế transaction hoặc unique constraint khi dùng database/nhiều JVM?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Cài đặt nghiệp vụ thư viện | Tổ chức Book, BookCopy, Member, Loan và BorrowingService theo lớp/contract đã thiết kế. |
+    | Bảo vệ điều kiện mượn trả | Kiểm tra hoạt động của thành viên, số phiếu mở, quá hạn, AVAILABLE và trạng thái Loan. |
+    | Test ngày xác định | Sử dụng Clock/test clock để kiểm tra hạn 14 ngày, return date và hành vi quá hạn. |
+    | Test lỗi không làm đổi trạng thái | Viết assertion về Loan/BookCopy sau borrow/return bị từ chối và trả lần thứ hai. |
+    | Nhận diện mức atomicity | Giải thích giới hạn `synchronized` trong RAM so với transaction và ràng buộc duy nhất ở DB. |
+- id: practice-011
+  title: 'Dự án tổng hợp: thay đổi yêu cầu và đánh giá thiết kế'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Dự án tổng hợp: thay đổi yêu cầu và đánh giá thiết kế**
+
+    Tiếp tục đúng dự án thư viện bằng yêu cầu CR-01 tăng giới hạn 3 lên 5 phiếu mở, CR-02 sách tham khảo có hạn 7 ngày, cùng CR-03 giữ nguyên hạn trả đã chốt của phiếu cũ. Bài thực hành yêu cầu thay policy theo loại sách, viết ma trận nghiệm thu trước/sau và đánh giá thiết kế dựa trên bằng chứng từ code/test.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thay chính sách nhưng giữ lịch sử
+
+    1. Vì sao `BorrowingPolicy.termsFor(Member, BookCopy)` phải nhận loại bản sách khi sách NORMAL và REFERENCE có hạn mượn khác nhau?
+    2. Khi đổi giới hạn từ 3 lên 5 và hạn sách tham khảo thành 7 ngày, những quy tắc nào chỉ áp dụng cho Loan mới?
+    3. Vì sao tính lại `Loan.dueOn()` bằng policy hiện hành ở mỗi lần truy vấn sẽ làm sai lịch sử giao dịch cũ?
+
+    ### Đánh giá thay đổi và kiểm thử
+
+    1. Trong ma trận CH-01 đến CH-10, làm sao kiểm chứng phiếu cũ giữ hạn, sách tham khảo có hạn 7 ngày và quá hạn tiếp tục chặn mượn mới?
+    2. Vì sao phải phân biệt thay contract API của policy với sửa implementation cụ thể và cập nhật caller/test liên quan?
+    3. Nếu quản lý bổ sung 'sách tham khảo không gia hạn, sách thường gia hạn một lần tối đa 7 ngày', cần làm rõ những trường hợp nào và không mở `setDueOn` công khai?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích CR và tác động | Xác định thay đổi ở policy, loại sách, use case, dữ liệu lưu và test mà không sửa trạng thái lịch sử tùy tiện. |
+    | Bảo toàn snapshot giao kèo | Giải thích và kiểm tra `dueOn` cũ không đổi khi áp RevisedPolicy cho Loan mới. |
+    | Điều chỉnh thuật toán chính sách | Mô tả termsFor theo Member/BookCopy với 5 lượt mở, NORMAL 14 ngày, REFERENCE 7 ngày. |
+    | Viết ma trận nghiệm thu | Đề xuất test theo ngày hiệu lực, giới hạn mới, quá hạn, phiếu cũ và các loại bản sách. |
+    | Đánh giá thiết kế bằng chứng | Chấm các tiêu chí có dẫn class, test, contract cụ thể thay cho đếm số lượng class/pattern. |
+    | Phân tích yêu cầu gia hạn mới | Nêu giới hạn lượt gia hạn, ngày hạn, trạng thái Loan và phép kiểm tra từ policy trước khi thiết kế API. |

@@ -12,6 +12,36 @@ class SheetSnapshotReplaceServiceTest {
     public TemporaryFolder temporary = new TemporaryFolder()
 
     @Test
+    void referenceSnapshotCannotDeleteEnglishOrLegacyReferences() {
+        File root = temporary.newFolder('reference-language-isolation')
+        File module = new File(root, 'module/example')
+        File reference = new File(module, 'content/reference')
+        File vietnamese = new File(reference, 'vi/references.yml')
+        File english = new File(reference, 'en/references.yml')
+        File legacy = new File(reference, 'references.yml')
+        [vietnamese, english, legacy].each { File file ->
+            assertTrue(file.parentFile.isDirectory() || file.parentFile.mkdirs())
+            file.setText('old ' + file.name, 'UTF-8')
+        }
+        english.setText('English reference', 'UTF-8')
+        legacy.setText('Legacy reference', 'UTF-8')
+
+        assertFailure {
+            SheetSnapshotReplaceService.replace(root, reference,
+                    ['references.yml': 'unsafe'], true)
+        }
+        assertEquals('old references.yml', vietnamese.getText('UTF-8'))
+        assertEquals('English reference', english.getText('UTF-8'))
+        assertEquals('Legacy reference', legacy.getText('UTF-8'))
+
+        assertEquals('UPDATED', SheetSnapshotReplaceService.replace(root,
+                vietnamese.parentFile, ['references.yml': 'Vietnamese reference'], true).status)
+        assertEquals('Vietnamese reference', vietnamese.getText('UTF-8'))
+        assertEquals('English reference', english.getText('UTF-8'))
+        assertEquals('Legacy reference', legacy.getText('UTF-8'))
+    }
+
+    @Test
     void cleansOnlyOwnedViTreesWithoutTouchingEnglishOrModuleFiles() {
         File root = temporary.newFolder('isolation')
         File module = new File(root, 'module/example')

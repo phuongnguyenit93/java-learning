@@ -9,13 +9,12 @@ import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 
 /**
- * STEP 13. The final VI module tree is authoritative; EN is a translated-later
- * structural clone. All validation happens before any EN subtree is moved.
- * Old EN subtrees are saved under module/build/step13-backups/ for recovery.
+ * STEP 10. Clone all module-owned VI subtrees to EN with CLEAN -> FILL.
+ * Temporary backup/staging is deleted after successful verification.
  */
 class ModuleLanguageCloneService {
     static final List<String> OWNED = [
-            'content/readme/docs', 'content/roadmap',
+            'content/readme/docs', 'content/roadmap', 'content/reference',
             'src/main/resources/swagger'
     ].asImmutable()
 
@@ -25,19 +24,18 @@ class ModuleLanguageCloneService {
         File modulesRoot = new File(root, 'module').canonicalFile
         if (module == modulesRoot || !module.toPath().startsWith(modulesRoot.toPath()) ||
                 !module.isDirectory() || !new File(module, 'gradle.properties').isFile()) {
-            throw new GradleException('STEP 13 requires a real Gradle module within module/.')
+            throw new GradleException('STEP 10 requires a real Gradle module within module/.')
         }
         String location = root.toPath().relativize(module.toPath())
                 .toString().replace(File.separatorChar, '/' as char)
         RoadmapSheetImportService.resolveDestination(root, location)
+        List<String> areas = discoverAreas(module)
         Map<String, Map<String, byte[]>> expected = new LinkedHashMap<>()
         Map<String, Map<String, byte[]>> before = new LinkedHashMap<>()
-        OWNED.each { String area ->
+        areas.each { String area ->
             File vi = new File(module, area + '/vi')
             File en = new File(module, area + '/en')
             ModuleLanguageCloneService.checkPaths(module, vi, en)
-            // Video is authored after STEP 15. Preserve existing EN Video even
-            // when mandatory STEP 13 is re-run from a newer VI tree.
             expected[area] = ModuleLanguageCloneService.sourceTree(module, area)
             before[area] = ModuleLanguageCloneService.readTree(en)
         }
@@ -45,25 +43,35 @@ class ModuleLanguageCloneService {
         ModuleLanguageCloneValidationService.validate(expected, root)
 
         int total = expected.values().sum { Map tree -> tree.size() } as int
-        List<String> changes = OWNED.findAll { String key ->
-            !ModuleLanguageCloneService.equalTrees(before[key], expected[key])
+        List<String> changes = areas.findAll { String key ->
+            !new File(module, key + '/en').isDirectory() ||
+                    !ModuleLanguageCloneService.equalTrees(before[key], expected[key])
         }
         Map result = [status: changes.isEmpty() ? 'UNCHANGED' : apply ? 'CLONED' : 'DRY_RUN',
-                      module: location, groups: OWNED.size(), files: total, changes: changes,
-                      backup: null]
+                      module: location, groups: areas.size(), files: total,
+                      changes: changes, backup: null,
+                      filesByScope: expected.collectEntries { String key, Map tree ->
+                          [(key): tree.size()]
+                      },
+                      enOnlyRemoved: areas.sum { String key ->
+                          before[key].keySet().count { !expected[key].containsKey(it) }
+                      } ?: 0]
         if (!apply || changes.isEmpty()) return result
 
         // Preserve the original bytes read during preflight and abort on concurrent changes.
-        OWNED.each { String key ->
+        areas.each { String key ->
             if (!ModuleLanguageCloneService.equalTrees(before[key], ModuleLanguageCloneService.readTree(new File(module, key + '/en'))) ||
                     !ModuleLanguageCloneService.equalTrees(expected[key], ModuleLanguageCloneService.sourceTree(module, key))) {
-                throw new GradleException('VI or EN changed since STEP 13 preflight: ' + key)
+                throw new GradleException('VI or EN changed since STEP 10 preflight: ' + key)
             }
         }
 
         String runId = UUID.randomUUID().toString()
-        File backupRoot = new File(module, 'build/step13-backups/' + runId)
+        File backupRoot = new File(module, 'build/step10-backups/' + runId)
+        File stagingRoot = new File(module, 'build/step10-staging/' + runId)
         List<Map> operations = []
+        boolean committed = false
+        boolean restored = false
         try {
             // Stage *all* new EN data before moving any current target.
             changes.eachWithIndex { String key, int index ->
@@ -71,22 +79,20 @@ class ModuleLanguageCloneService {
                 Files.createDirectories(target.parentFile.toPath())
                 // Use the Git-ignored module/build/ area: interrupted staging
                 // must never accidentally appear as commit-ready content.
-                File staged = new File(module, 'build/step13-staging/' + runId +
-                        '/' + String.format('%02d', index) + '/' + key + '/en')
+                File staged = new File(stagingRoot,
+                        String.format('%02d', index) + '/' + key + '/en')
                 File backup = new File(backupRoot, String.format('%02d', index) + '/' + key + '/en')
                 Map record = [key: key, target: target, stage: staged,
                               backup: backup, hadOld: target.exists(),
                               movedOld: false, movedNew: false]
                 operations.add(record)
-                if (!expected[key].isEmpty()) {
-                    Files.createDirectories(staged.toPath())
-                    ModuleLanguageCloneService.writeTree(staged, expected[key])
-                    if (!ModuleLanguageCloneService.equalTrees(expected[key], ModuleLanguageCloneService.readTree(staged))) {
-                        throw new GradleException('Failed to verify staged EN: ' + key)
-                    }
+                Files.createDirectories(staged.toPath())
+                ModuleLanguageCloneService.writeTree(staged, expected[key])
+                if (!ModuleLanguageCloneService.equalTrees(expected[key], ModuleLanguageCloneService.readTree(staged))) {
+                    throw new GradleException('Failed to verify staged EN: ' + key)
                 }
             }
-            OWNED.each { String key ->
+            areas.each { String key ->
                 if (!ModuleLanguageCloneService.equalTrees(before[key], ModuleLanguageCloneService.readTree(new File(module, key + '/en'))) ||
                         !ModuleLanguageCloneService.equalTrees(expected[key], ModuleLanguageCloneService.sourceTree(module, key))) {
                     throw new GradleException('Concurrent VI/EN change before commit: ' + key)
@@ -99,19 +105,20 @@ class ModuleLanguageCloneService {
                     Files.move((op.target as File).toPath(), (op.backup as File).toPath())
                     op.movedOld = true
                 }
-                if (!expected[op.key].isEmpty()) {
-                    Files.move((op.stage as File).toPath(), (op.target as File).toPath())
-                    op.movedNew = true
-                }
+                Files.move((op.stage as File).toPath(), (op.target as File).toPath())
+                op.movedNew = true
                 afterReplacement(++completed)
             }
-            OWNED.each { String key ->
-                if (!ModuleLanguageCloneService.equalTrees(expected[key], ModuleLanguageCloneService.readTree(new File(module, key + '/en')))) {
+            areas.each { String key ->
+                File dest = new File(module, key + '/en')
+                if (!dest.isDirectory() ||
+                        !ModuleLanguageCloneService.equalTrees(expected[key], ModuleLanguageCloneService.readTree(dest))) {
                     throw new GradleException('EN readback differs from VI clone: ' + key)
                 }
             }
-            result.backup = operations.any { it.hadOld }
-                    ? backupRoot.absolutePath : null
+            // The backup is transaction-local, not an artifact of a successful clone.
+            committed = true
+            result.temporaryCleanup = 'PASS'
             return result
         } catch (Exception failure) {
             List<String> problems = []
@@ -126,14 +133,30 @@ class ModuleLanguageCloneService {
                     problems.add(op.key + ': ' + rollbackError.message)
                 }
             }
-            throw new GradleException('STEP 13 aborted: ' + failure.message +
+            restored = problems.isEmpty()
+            throw new GradleException('STEP 10 aborted: ' + failure.message +
                     (problems ? '. ROLLBACK INCOMPLETE: ' + problems.join('; ') +
                             ', inspect ' + backupRoot.absolutePath : '. Prior EN restored.'), failure)
         } finally {
-            operations.each { Map op ->
-                // A staged directory can be safely removed only if it was never committed.
-                File staged = op.stage as File
-                if (staged.exists()) ModuleLanguageCloneService.removeTree(staged)
+            // On success or a complete rollback, no backup/staging may remain.
+            // A failed rollback must retain its recovery files.
+            if (committed || restored) {
+                try {
+                    if (stagingRoot.exists()) ModuleLanguageCloneService.removeTree(stagingRoot)
+                    if (backupRoot.exists()) ModuleLanguageCloneService.removeTree(backupRoot)
+                    // Remove empty container directories; preserve other run IDs.
+                    [stagingRoot.parentFile, backupRoot.parentFile].each { File parent ->
+                        if (parent.isDirectory() && !(parent.list()?.length)) {
+                            Files.delete(parent.toPath())
+                        }
+                    }
+                    if (stagingRoot.exists() || backupRoot.exists()) {
+                        throw new GradleException('Temporary clone files still exist.')
+                    }
+                } catch (Exception cleanupFailure) {
+                    throw new GradleException('STEP 10 temporary cleanup failed: ' +
+                            cleanupFailure.message, cleanupFailure)
+                }
             }
         }
     }
@@ -141,17 +164,52 @@ class ModuleLanguageCloneService {
     /** Test seam for rollback failure injection; does not change normal behavior. */
     protected void afterReplacement(int completed) { }
 
+    /** Discover every canonical VI subtree; never traverse content/sheet or build. */
+    static List<String> discoverAreas(File module) {
+        File content = new File(module, 'content')
+        if (!content.isDirectory() || Files.isSymbolicLink(content.toPath())) {
+            throw new GradleException('Missing or unsafe module content/: ' + content)
+        }
+        Set<String> areas = new TreeSet<>()
+        def walker = Files.walk(content.toPath())
+        try {
+            walker.forEach { Path path ->
+                Path relative = content.toPath().relativize(path)
+                if (relative.nameCount == 0) return
+                String first = relative.getName(0).toString()
+                if (first == 'sheet') return
+                if (Files.isSymbolicLink(path)) {
+                    throw new GradleException('Symlink inside content/: ' + path)
+                }
+                if (path.fileName.toString() == 'vi' &&
+                        Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) {
+                    String parent = module.toPath().relativize(path.parent)
+                            .toString().replace(File.separatorChar, '/' as char)
+                    areas.add(parent)
+                }
+            }
+        } finally { walker.close() }
+        File swagger = new File(module, 'src/main/resources/swagger/vi')
+        if (swagger.exists()) {
+            if (!swagger.isDirectory() || Files.isSymbolicLink(swagger.toPath())) {
+                throw new GradleException('Unsafe VI Swagger directory: ' + swagger)
+            }
+            areas.add('src/main/resources/swagger')
+        }
+        if (!areas.contains('content/readme/docs')) {
+            throw new GradleException('Missing canonical VI README docs subtree.')
+        }
+        return new ArrayList<String>(areas)
+    }
+
     private static Map<String, byte[]> sourceTree(File module, String key) {
         boolean docs = key == 'content/readme/docs'
-        Map<String, byte[]> actual = readTree(new File(module, key + '/vi'), docs)
+        Map<String, byte[]> actual = readTree(new File(module, key + '/vi'))
         if (!docs || actual.isEmpty() || !actual.containsKey('LIST.md')) return actual
         String original = new String(actual['LIST.md'], StandardCharsets.UTF_8)
                 .replace('content/readme/docs/vi/menu/', 'content/readme/docs/en/menu/')
                 .replace('README MODULE STRUCTURE (VI)', 'README MODULE STRUCTURE (EN)')
         actual['LIST.md'] = original.getBytes(StandardCharsets.UTF_8)
-        readTree(new File(module, key + '/en')).each { String path, byte[] bytes ->
-            if (videoPath(path)) actual[path] = bytes
-        }
         return actual
     }
 

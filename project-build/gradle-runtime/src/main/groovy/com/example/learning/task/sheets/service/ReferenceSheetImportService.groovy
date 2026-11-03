@@ -5,7 +5,7 @@ import com.google.api.services.sheets.v4.Sheets
 import org.gradle.api.GradleException
 import org.yaml.snakeyaml.Yaml
 
-/** Module-wide language-neutral Reference: Sheet L2/L3 -> content/reference/references.yml. */
+/** Vietnamese module Reference: Sheet L2/L3 -> content/reference/vi/references.yml. */
 class ReferenceSheetImportService {
     static final String HEADER = 'Reference'
     static final int CELL_LIMIT = 30000
@@ -64,7 +64,7 @@ class ReferenceSheetImportService {
         // Shares the same safe I3/module contract as the other Sheet importers.
         File module = RoadmapSheetImportService.resolveDestination(root, moduleLocation)
                 .parentFile.parentFile.parentFile.parentFile
-        return new File(module, 'content/reference')
+        return new File(module, 'content/reference/vi')
     }
 
     private static String raw(List<List<Object>> rows, int index) {

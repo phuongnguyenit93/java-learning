@@ -1,0 +1,8 @@
+# Shared language-neutral reference catalog for this module.
+references:
+  - title: "Node.js Event Loop"
+    url: "https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick"
+    description: "Concrete event-loop phases and scheduling behavior."
+  - title: "MDN Event Loop"
+    url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Execution_model"
+    description: "Execution model with event-loop concepts."

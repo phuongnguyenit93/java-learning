@@ -11,7 +11,7 @@ class ModuleLanguageCloneServiceTest {
     @Rule public TemporaryFolder tmp = new TemporaryFolder()
 
     @Test
-    void dryRunThenApplyReplacesEveryOwnedEnDirectoryAndKeepsViAndExcel() {
+    void dryRunThenApplyCleansEntireEnTreesAndKeepsViAndExcel() {
         Map f = fixture()
         File module = f.module as File
         write(module, 'content/readme/docs/en/menu/1.Basic/video/video-script.yml',
@@ -20,7 +20,7 @@ class ModuleLanguageCloneServiceTest {
         Map beforeVi = snapshotVi(module)
         Map dry = service.execute(f.root as File, module, false)
         assertEquals('DRY_RUN', dry.status)
-        assertEquals(3, dry.groups)
+        assertEquals(5, dry.groups)
         assertEquals('old English', file(module, 'content/readme/docs/en/menu/Old.md').text)
         assertEquals(beforeVi, snapshotVi(module))
         assertEquals('Excel VI unaffected', file(module, 'content/sheet/vi/module.xlsx').text)
@@ -30,8 +30,10 @@ class ModuleLanguageCloneServiceTest {
 
         Map applied = service.execute(f.root as File, module, true)
         assertEquals('CLONED', applied.status)
-        assertNotNull(applied.backup)
-        assertTrue((applied.backup as String).replace('\\', '/').contains('/build/step13-backups/'))
+        assertNull('No temporary backup is retained after success', applied.backup)
+        assertEquals('PASS', applied.temporaryCleanup)
+        assertEquals([], new File(module, 'build/step10-backups').listFiles()?.toList() ?: [])
+        assertEquals([], new File(module, 'build/step10-staging').listFiles()?.toList() ?: [])
         assertFalse(file(module, 'content/readme/docs/en/menu/Old.md').exists())
         assertEquals('Vietnamese knowledge body', file(module,
                 'content/readme/docs/en/menu/1.Basic/knowledge/Basic.md').text.readLines().last())
@@ -46,6 +48,8 @@ class ModuleLanguageCloneServiceTest {
                 'content/readme/docs/en/menu/1.Basic/questions/interview.yml').isFile())
         assertEquals(file(module, 'content/readme/docs/vi/menu/1.Basic/questions/summary.yml').text,
                 file(module, 'content/readme/docs/en/menu/1.Basic/questions/summary.yml').text)
+        assertEquals(file(module, 'content/reference/vi/references.yml').text,
+                file(module, 'content/reference/en/references.yml').text)
         assertTrue(file(module, 'content/readme/docs/en/LIST.md').text
                 .contains('content/readme/docs/en/menu/1.Basic/knowledge/Basic.md'))
         assertFalse(file(module, 'content/readme/docs/en/LIST.md').text
@@ -53,16 +57,19 @@ class ModuleLanguageCloneServiceTest {
         assertEquals(beforeVi, snapshotVi(module))
         assertEquals('Excel VI unaffected', file(module, 'content/sheet/vi/module.xlsx').text)
         assertEquals('Excel EN unaffected', file(module, 'content/sheet/en/module.xlsx').text)
-        assertEquals('old optional EN video — must not be replaced', file(module,
-                'content/readme/docs/en/menu/1.Basic/video/video-script.yml').text)
-        assertEquals('old English', file(new File(applied.backup as String),
-                '00/content/readme/docs/en/menu/Old.md').text)
+        assertFalse('EN-only video must be removed by CLEAN',
+                file(module, 'content/readme/docs/en/menu/1.Basic/video/video-script.yml').exists())
+        assertEquals(file(module, 'content/video/vi/menu/1.Basic/video-script.yml').text,
+                file(module, 'content/video/en/menu/1.Basic/video-script.yml').text)
+        assertFalse(file(module, 'src/main/resources/swagger/en/old.yml').exists())
+        assertFalse('Old EN is replaced and its temporary backup removed',
+                file(module, 'content/readme/docs/en/menu/Old.md').exists())
         assertEquals('UNCHANGED', service.execute(f.root as File, module, false).status)
         assertEquals('UNCHANGED', service.execute(f.root as File, module, true).status)
     }
 
     @Test
-    void ignoresViVideoDuringCloneAndPreservesAuthoredEnVideoAcrossReruns() {
+    void replacesExistingEnVideoWithViVideoAcrossReruns() {
         Map f = fixture()
         File module = f.module as File
         String vi = 'content/readme/docs/vi/menu/1.Basic/video/video-script.yml'
@@ -72,21 +79,21 @@ class ModuleLanguageCloneServiceTest {
         def service = new ModuleLanguageCloneService()
 
         assertEquals('CLONED', service.execute(f.root as File, module, true).status)
-        assertEquals('Published EN script', file(module, en).text)
+        assertEquals('VI script draft', file(module, en).text)
         file(module, vi).text = 'Updated VI script'
-        assertEquals('UNCHANGED', service.execute(f.root as File, module, false).status)
+        assertEquals('DRY_RUN', service.execute(f.root as File, module, false).status)
 
         File knowledge = file(module,
                 'content/readme/docs/vi/menu/1.Basic/knowledge/Basic.md')
         knowledge.text = knowledge.text.replace('Vietnamese knowledge body', 'New VI content')
         assertEquals('CLONED', service.execute(f.root as File, module, true).status)
-        assertEquals('Published EN script', file(module, en).text)
+        assertEquals('Updated VI script', file(module, en).text)
         assertEquals('Updated VI script', file(module, vi).text)
         assertEquals('UNCHANGED', service.execute(f.root as File, module, true).status)
     }
 
     @Test
-    void optionalViVideoCanExistWithoutAnyEnVideoDuringStep13() {
+    void optionalViVideoIsCopiedEvenWhenEnVideoDidNotExist() {
         Map f = fixture()
         File module = f.module as File
         write(module, 'content/readme/docs/vi/menu/1.Basic/video/video-script.yml',
@@ -94,8 +101,8 @@ class ModuleLanguageCloneServiceTest {
         def service = new ModuleLanguageCloneService()
 
         assertEquals('CLONED', service.execute(f.root as File, module, true).status)
-        assertFalse(file(module,
-                'content/readme/docs/en/menu/1.Basic/video/video-script.yml').exists())
+        assertEquals('Only VI Video exists',
+                file(module, 'content/readme/docs/en/menu/1.Basic/video/video-script.yml').text)
         assertEquals('UNCHANGED', service.execute(f.root as File, module, true).status)
     }
 
@@ -152,6 +159,8 @@ class ModuleLanguageCloneServiceTest {
         assertFalse(file(module, 'content/readme/docs/en/menu/1.Basic/knowledge/Basic.md').exists())
         assertEquals('old English roadmap', file(module,
                 'content/roadmap/en/roadmap.yml').text)
+        assertEquals([], new File(module, 'build/step10-backups').listFiles()?.toList() ?: [])
+        assertEquals([], new File(module, 'build/step10-staging').listFiles()?.toList() ?: [])
     }
 
     @Test
@@ -274,6 +283,11 @@ roadmap:
         label: Demo
         note: Illustrate a stable module route
 '''.trim())
+        write(module, 'content/reference/vi/references.yml', '''references:
+  - title: Tài liệu gốc
+    url: https://example.org/reference
+    description: Giải thích tiếng Việt
+''')
         write(module, 'content/readme/docs/vi/menu/1.Basic/quiz/question.yml', '''
 questions:
   - id: quiz-001
@@ -341,7 +355,7 @@ ExampleController:
     }
 
     private static Map snapshotVi(File module) {
-        return ModuleLanguageCloneService.OWNED.collectEntries { String area ->
+        return ModuleLanguageCloneService.discoverAreas(module).collectEntries { String area ->
             [(area): ModuleLanguageCloneService.readTree(file(module, area + '/vi'))
                     .collectEntries { String path, byte[] bytes ->
                         [(path): bytes.encodeBase64().toString()]

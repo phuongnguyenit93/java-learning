@@ -1,0 +1,299 @@
+summaries:
+- id: lifecycle-001
+  title: Tạo đối tượng và cấp phát tài nguyên
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tạo đối tượng và cấp phát tài nguyên**
+
+    Nhận ra đối tượng Java, biến tham chiếu và tài nguyên bên ngoài JVM có cách hình thành, sử dụng và kết thúc khác nhau. Bài học giúp dự đoán hệ quả của `new`, gán alias, mở file và chuyển giao quyền sở hữu tài nguyên trước khi xây dựng các lớp có vòng đời an toàn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tạo đối tượng và trạng thái ban đầu
+
+    1. Với các biến `first`, `alias` và `second`, làm thế nào xác định có bao nhiêu đối tượng được tạo và phép gán nào chỉ sao chép tham chiếu?
+    2. Khi thực thi `new`, các trường instance nhận giá trị mặc định và được khởi tạo bằng initializer, constructor ra sao; vì sao không thể suy vị trí vật lý tuyệt đối từ mô hình heap/stack?
+
+    ### Vòng đời tài nguyên và cách phòng lỗi
+
+    1. Vì sao `reader = null` hoặc gọi `System.gc()` không đủ để đóng file dù đối tượng có thể trở thành ứng viên GC?
+    2. Khi `try-with-resources` gặp lỗi trong thân `try` và trong `close()`, ngoại lệ chính, suppressed exception và thứ tự đóng được xác định như thế nào?
+    3. Nếu constructor mở tài nguyên rồi ném exception hoặc một registry `static` giữ listener, cần xử lý ownership và tham chiếu ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích tham chiếu và instance | Dự đoán kết quả `==`, alias và thay đổi trạng thái trong ví dụ `Customer` có hai instance và ba biến tham chiếu. |
+    | Giải thích các bước khởi tạo | Phân biệt cấp phát object, giá trị mặc định của field, initializer và constructor với biến local chưa gán. |
+    | Tách tài nguyên heap và ngoài heap | Chỉ ra trong tình huống đọc file phần nào được GC xử lý và phần nào phải gọi `close()` đúng thời điểm. |
+    | Sử dụng try-with-resources | Viết đoạn đọc tệp có tự động đóng stream và xử lý việc xóa tệp tạm riêng; giải thích suppressed exception. |
+    | Phân tích đối tượng còn reachable | Xác định vì sao alias, cache hoặc registry sống lâu có thể giữ object và cách loại tham chiếu không còn cần. |
+- id: lifecycle-002
+  title: Hàm khởi tạo và thiết lập trạng thái hợp lệ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Hàm khởi tạo và thiết lập trạng thái hợp lệ**
+
+    Thiết kế constructor bảo vệ bất biến của lớp ngay khi khởi tạo thành công, thay vì để đối tượng ở trạng thái tạm thời sai. Bài học sử dụng ràng buộc sức chứa, email duy nhất, defensive copy, `final` và compact constructor của `record` để kiểm tra tính nhất quán của dữ liệu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bất biến và kiểm tra đầu vào
+
+    1. Làm thế nào xác định invariant cho `CourseEnrollment` từ mã khóa học, sức chứa và danh sách email, rồi tổ chức bước kiểm tra trước khi gán field?
+    2. Vì sao mọi constructor overload và phương thức tạo đối tượng mới phải dẫn về cùng quy tắc bảo vệ invariant?
+
+    ### Bảo vệ trạng thái và lỗi khởi tạo
+
+    1. Khi caller thay đổi một `List` đã truyền vào constructor, khác biệt giữa giữ trực tiếp list và dùng `List.copyOf()` là gì; giới hạn sao chép nông nằm ở đâu?
+    2. Constructor ném `IllegalArgumentException` thì phép gán bên gọi và những side effect ngoài JVM phát sinh trước đó có hành vi gì?
+    3. Tại sao `final`, `record` hay kiểm tra dữ liệu vẫn không cho phép công bố `this` trước khi quá trình khởi tạo hoàn tất?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây dựng invariant | Liệt kê các trạng thái hợp lệ/không hợp lệ của đăng ký khóa học và thiết kế validation phù hợp. |
+    | Kiểm tra nhiều đường khởi tạo | Giải thích cách constructor hai tham số, ba tham số và `withStudent()` cùng từ chối vượt sức chứa hoặc email trùng. |
+    | Bảo vệ dữ liệu mutable | Phân tích hoặc sửa một lớp giữ list đầu vào bằng defensive copy và tránh lộ collection có thể sửa. |
+    | Đánh giá tính bất biến | Phân biệt `private final`, immutable collection và việc phần tử bên trong vẫn có thể mutable. |
+    | Dự đoán lỗi constructor | Giải thích kết quả tạo object thành công/thất bại và nhận diện side effect hoặc `this` escape không được rollback tự động. |
+- id: lifecycle-003
+  title: Khởi tạo mặc định, tham số và nhiều cách khởi tạo
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khởi tạo mặc định, tham số và nhiều cách khởi tạo**
+
+    Phân biệt constructor mặc định do compiler sinh, constructor không tham số tự viết, constructor có tham số và các overload. Bài học giúp lựa chọn cách tạo dễ đọc, đảm bảo `final` field và invariant qua `this(...)`/`super(...)`, đồng thời xử lý lỗi biên dịch khi chữ ký khởi tạo không phù hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các loại constructor và overload
+
+    1. Trong điều kiện nào compiler tự sinh default constructor, và vì sao khai báo `Ticket(int)` khiến `new Ticket()` không còn hợp lệ nếu không viết no-arg?
+    2. Java phân giải overload bằng danh sách tham số ra sao, và khi nào `null` hoặc nhiều chữ ký kiểu tham chiếu tạo lời gọi mơ hồ?
+
+    ### Chuỗi khởi tạo và thiết kế API
+
+    1. `this(...)` khác `super(...)` thế nào; vì sao constructor con cần gọi được constructor cha phù hợp và không thể tạo chuỗi `this(...)` vòng tròn?
+    2. Khi nào overload trở nên khó đọc và nên dùng static factory có tên hay Builder thay cho nhiều tham số cùng kiểu?
+    3. Vì sao setter sau khi tạo không tương đương chạy lại constructor, và field `final` phải được gán ra sao trên mỗi đường khởi tạo?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chẩn đoán default/no-arg | Dự đoán các lệnh `new` biên dịch thành công hay lỗi sau khi thêm constructor có tham số. |
+    | Thiết kế overload hợp lệ | Viết các overload rõ nghĩa và phát hiện cặp chữ ký mơ hồ khi truyền `null`. |
+    | Điều phối constructor chaining | Mô phỏng chuỗi gọi `this(...)` và `super(...)`, chỉ ra nơi kiểm tra invariant chung. |
+    | Đảm bảo khởi tạo trường | Sửa ví dụ gán nhầm tham số cho chính nó hoặc bỏ sót phép gán trường `final`. |
+    | Chọn giao diện tạo phù hợp | Giải thích bằng tình huống khi constructor, static factory có tên hoặc Builder giúp lời gọi rõ ràng hơn. |
+- id: lifecycle-004
+  title: Thứ tự khởi tạo trong quan hệ kế thừa
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thứ tự khởi tạo trong quan hệ kế thừa**
+
+    Dự đoán thứ tự khởi tạo thực tế khi lớp con kế thừa lớp cha, bao gồm `static` initializer, instance field, initialization block và constructor. Bài học giúp truy vết output, sửa lỗi `super(...)` và tránh gọi phương thức override khi trạng thái lớp con còn mang giá trị mặc định.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Trình tự lớp cha và lớp con
+
+    1. Khi chạy `new Child()` lần đầu và lần thứ hai, phần `static` của Parent/Child và phần instance nào được chạy, theo thứ tự văn bản nào?
+    2. Vì sao `new Child()` tạo một đối tượng Child có phần trạng thái kế thừa chứ không tự sinh thêm một instance Parent riêng?
+
+    ### Constructor chaining và lỗi khởi tạo
+
+    1. Điều gì xảy ra khi lớp cha chỉ có constructor có tham số nhưng lớp con không gọi `super(argument)`?
+    2. Tại sao một override của lớp con được gọi trong constructor cha có thể quan sát giá trị `0`/`null` dù lớp con khai báo field initializer khác?
+    3. Khi phép khởi tạo thất bại giữa chuỗi constructor, phần code nào đã chạy và vì sao không được coi object là khởi tạo thành công?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết khởi tạo | Lập bảng log đúng thứ tự `static`, instance initializer và constructor cho hai lần tạo đối tượng kế thừa. |
+    | Phân biệt class/instance initialization | Giải thích vì sao `static` thường chạy một lần mỗi lần khởi tạo lớp, còn phần instance chạy mỗi lần `new`. |
+    | Sửa lời gọi constructor cha | Chọn `super(...)` hợp lệ khi cha không có no-arg truy cập được và lý giải lỗi biên dịch. |
+    | Phân tích dynamic dispatch sớm | Dự đoán giá trị field con khi override chạy trong constructor cha và sửa thiết kế bằng helper không thể override. |
+    | Đánh giá chain nhiều cấp | Mô phỏng trình tự từ tổ tiên tới lớp cụ thể mà không giả định có nhiều instance riêng biệt. |
+- id: lifecycle-005
+  title: Hàm tạo tĩnh, Factory và Builder
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Hàm tạo tĩnh, Factory và Builder**
+
+    Chọn cơ chế tạo đối tượng theo yêu cầu API: constructor trực tiếp, static factory có tên, Factory lựa chọn implementation hoặc Builder cấu hình nhiều tùy chọn. Bài học phân biệt Simple Factory với Factory Method pattern và nhận ra việc trả về object có sẵn, bean do Spring quản lý hoặc bản sao được bảo vệ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các cơ chế tạo đối tượng
+
+    1. Vì sao `Temperature.celsius(...)` và `fahrenheit(...)` diễn đạt ý nghĩa rõ hơn hai constructor cùng danh sách kiểu tham số?
+    2. Static factory có bắt buộc tạo instance mới không, và nó khác Factory riêng cũng như Factory Method pattern có thể override ở điểm nào?
+
+    ### Thiết kế Builder và tích hợp
+
+    1. Một Builder mutable thu thập giá trị ở những bước nào; khi gọi `build()`, phải xác thực và sao chép danh sách ra sao để object kết quả không bị sửa theo Builder?
+    2. Trong tình huống nào chọn constructor, factory chọn `Notifier` theo kênh hoặc Builder cho `SearchRequest`, và mỗi cách có chi phí thiết kế gì?
+    3. Vì sao trong ứng dụng Spring không nên `new` tùy tiện các service cần injection/proxy, và một factory chọn bean sẵn có khác gì tạo đối tượng mới?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lựa chọn mẫu khởi tạo | Ghép tình huống hai đơn vị nhiệt độ, chọn kênh thông báo, và nhiều tham số tùy chọn với cách tạo thích hợp. |
+    | Phân biệt thuật ngữ Factory | Giải thích bằng code vai trò của static factory, Simple Factory và Factory Method dùng subclass. |
+    | Thiết kế Builder có kiểm tra | Tạo luồng fluent `builder(...).page(...).addTag(...).build()` với validation và bản sao collection ở kết quả. |
+    | Kiểm soát danh tính và chia sẻ | Phân tích API factory trả cached instance so với instance mới mà không dựa sai vào `==` để so sánh giá trị. |
+    | Xác định giới hạn tích hợp | Nhận diện Builder không tự thread-safe và factory chọn bean Spring được quản lý thay vì khởi tạo lại service. |
+- id: lifecycle-006
+  title: Thời gian tồn tại, khả năng truy cập và giải phóng bộ nhớ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thời gian tồn tại, khả năng truy cập và giải phóng bộ nhớ**
+
+    Hiểu lifetime của object thông qua các đường tham chiếu từ GC roots, thay vì nhầm scope của biến với thời điểm thu gom. Bài học cung cấp cách phân tích strong/weak/soft/phantom reference, cache, listener, `ThreadLocal`, chu trình tham chiếu và sử dụng heap dump để tìm đối tượng bị giữ quá lâu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Reachability và lifetime
+
+    1. Vì sao `a = null`, ra khỏi scope và GC thu hồi bộ nhớ là ba sự kiện khác nhau; một alias hoặc registry `static` ảnh hưởng tới object thế nào?
+    2. GC roots và đồ thị object quyết định khả năng truy cập ra sao; vì sao hai object chỉ trỏ lẫn nhau mà không có đường root vẫn có thể bị thu gom?
+
+    ### Tham chiếu đặc biệt và chẩn đoán
+
+    1. Khác biệt giữa strong, soft, weak và phantom references là gì, và vì sao `WeakReference.get()` sau khi bỏ strong reference không có kết quả cố định?
+    2. Một cache không giới hạn, listener không unregister hoặc `ThreadLocal` trong thread pool có thể gây retention bằng những đường nào?
+    3. Khi heap tăng dài hạn, làm sao dùng heap dump, retained graph và GC roots để tìm nơi đang giữ object thay vì dựa vào `System.gc()`?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ đồ thị tham chiếu | Xác định object nào còn reachable qua alias, collection hoặc static field sau từng phép gán/xóa. |
+    | Phân biệt thời điểm vòng đời | Giải thích được object eligible for GC, đã thu hồi, đã close resource là những trạng thái độc lập. |
+    | Phân tích weak reference | Dự đoán các kết quả có thể của `WeakReference` mà không giả định GC có lịch cố định. |
+    | Phát hiện giữ tham chiếu quá lâu | Xác định và đề xuất loại bỏ retention từ cache, listener hoặc `ThreadLocal` gắn với luồng sống dài. |
+    | Điều tra memory leak | Đề xuất quy trình dùng heap dump/GC root path để kiểm chứng nguyên nhân object bị giữ. |
+- id: lifecycle-007
+  title: Thu gom rác và quản lý bộ nhớ thủ công
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thu gom rác và quản lý bộ nhớ thủ công**
+
+    Phân định việc GC tự thu hồi bộ nhớ object Java với trách nhiệm ứng dụng quản lý bộ nhớ native và tài nguyên OS. Bài học giới thiệu reachability, các pha GC ở mức khái niệm, những ngộ nhận về `System.gc()`/`finalize()`, FFM `Arena` ở JDK 22+ và công cụ quan sát heap, metaspace, off-heap.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế quản lý bộ nhớ
+
+    1. Vì sao GC có thể thu hồi một chu trình object không còn reachable nhưng không thể thu hồi cache vẫn bị tham chiếu dù dữ liệu đã hết ích lợi?
+    2. GC ở mức khái niệm tìm object còn sống, thu hồi và có thể di chuyển object như thế nào; vì sao không nên suy diễn lịch chạy GC từ `System.gc()`?
+
+    ### Heap, native memory và điều tra
+
+    1. Java heap, stack, metaspace, direct/native memory và file descriptor thuộc những cơ chế quản lý khác nhau ra sao?
+    2. Với JDK 22+, vòng đời bộ nhớ cấp phát qua `Arena.ofConfined()` và `Arena.close()` khác gì object heap thông thường?
+    3. Khi gặp `Java heap space`, `Metaspace`, lỗi direct buffer hoặc process RSS tăng, cần dùng những chỉ số/công cụ nào để khoanh vùng thay vì mặc định kết luận heap leak?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích phạm vi GC | Chỉ ra phần GC có thể thu hồi và phần phải đóng/giải phóng theo hợp đồng API. |
+    | Phân tích bộ nhớ còn giữ | Giải thích bằng cache hoặc đồ thị roots tại sao GC chạy nhiều mà retained heap không giảm. |
+    | Nhận biết giới hạn API | Phân biệt `System.gc()` là gợi ý, `finalize()` không đáng tin và `Arena` cần JDK 22 trở lên. |
+    | Phân loại sự cố bộ nhớ | Tách heap pressure, class-loader/metaspace, direct buffer và native thread/resource issues từ triệu chứng. |
+    | Thiết kế bước chẩn đoán | Lựa chọn GC log, `jcmd`, JFR, NMT hoặc heap dump theo vấn đề cần chứng minh. |
+- id: lifecycle-008
+  title: Đóng tài nguyên và giới hạn của hàm hủy
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đóng tài nguyên và giới hạn của hàm hủy**
+
+    Đóng đúng thời điểm những tài nguyên có quyền sở hữu rõ ràng như stream, JDBC connection và socket. Bài học làm rõ `AutoCloseable`/`Closeable`, try-with-resources, thứ tự đóng ngược, suppressed exceptions và lý do `finalize()` hay `Cleaner` không thay thế cho `close()`.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đóng tài nguyên và exception
+
+    1. Vì sao object Java không còn reachable vẫn có thể để file descriptor hay JDBC connection bị giữ, kể cả khi GC hoạt động?
+    2. Với `try (A a = ...; B b = ...)`, tài nguyên đóng theo thứ tự nào khi thân `try` ném lỗi hoặc bước khởi tạo B thất bại?
+    3. Nếu cả xử lý chính và `close()` cùng lỗi, khi nào ngoại lệ bị suppressed và cần đọc `getSuppressed()` ra sao?
+
+    ### Hợp đồng ownership và giới hạn
+
+    1. `AutoCloseable` khác `Closeable` ở hợp đồng ngoại lệ và tính an toàn khi đóng nhiều lần như thế nào?
+    2. Khi nhận một reader chỉ để mượn hoặc `Connection` do pool cung cấp, ai được phép đóng và `close()` có ý nghĩa gì?
+    3. Vì sao `finalize()`, `Cleaner` và `System.gc()` không thể bảo đảm cleanup đúng hạn; một lớp tự triển khai `AutoCloseable` cần lưu ý trạng thái và thread-safety nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết phạm vi tài nguyên an toàn | Tổ chức `try-with-resources` cho file hoặc các tài nguyên JDBC lồng nhau đúng quyền sở hữu. |
+    | Dự đoán thứ tự cleanup | Xác định thứ tự đóng ngược và cách đóng tài nguyên đã mở nếu bước khai báo tiếp theo ném lỗi. |
+    | Phân tích lỗi kép | Chỉ ra primary exception và suppressed exceptions từ một ví dụ xử lý và đóng cùng thất bại. |
+    | Thiết kế hợp đồng close | Phân biệt `AutoCloseable`, `Closeable`, idempotence và ngăn dùng resource đã đóng. |
+    | Đánh giá trách nhiệm sở hữu | Xác định khi nào phải đóng, chỉ mượn, hoặc trả connection về pool mà không nhầm với GC/finalization. |
+- id: lifecycle-009
+  title: Tránh để đối tượng chưa khởi tạo xong bị sử dụng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tránh để đối tượng chưa khởi tạo xong bị sử dụng**
+
+    Nhận diện và ngăn tham chiếu `this` thoát khỏi constructor khi trạng thái còn chưa sẵn sàng, kể cả trong callback đồng bộ và khi lớp cha gọi override. Bài học liên hệ constructor exception, thread start, Java Memory Model, final-field semantics và safe publication để thiết kế factory tạo xong rồi mới đăng ký hoặc kích hoạt.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phát hiện sử dụng object quá sớm
+
+    1. Những thao tác nào như đăng ký listener, giữ `this` trong registry, truyền lambda hay start thread trong constructor có thể làm lộ object trước khi khởi tạo hoàn tất?
+    2. Tại sao callback đăng ký ngay hoặc override của lớp con được gọi trong constructor cha có thể đọc field `null`/`0` dù field khai báo initializer hoặc `final`?
+
+    ### Công bố an toàn và xử lý lỗi
+
+    1. Vì sao constructor ném lỗi sau khi đã lưu `this` vào registry vẫn có thể để lại object dở dang, và cách đăng ký sau khi tạo thành công cần xử lý lỗi ra sao?
+    2. `Thread.start()` và ghi/đọc `volatile` tạo quan hệ happens-before nào; vì sao vẫn phải đồng bộ thay đổi mutable sau khi công bố?
+    3. Final-field semantics hỗ trợ điều gì và không bảo đảm điều gì khi object hoặc collection lồng nhau là mutable?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện this escape | Khoanh vùng các chỗ constructor công bố `this` qua listener, static collection, callback hoặc task. |
+    | Truy vết lỗi khởi tạo sớm | Dự đoán `null`, `0` hoặc exception khi callback/override được gọi trước phần initializer của lớp con. |
+    | Thiết kế factory an toàn | Chuyển thao tác register/start sang sau khi constructor trả thành công và nêu phương án cleanup nếu đăng ký thất bại. |
+    | Giải thích safe publication | Phân tích quan hệ happens-before từ `Thread.start()` hoặc volatile và giới hạn đối với mutable state. |
+    | Kiểm tra hợp đồng final | Giải thích vì sao field `final` không cứu được `this escape` hoặc bảo đảm immutable sâu. |

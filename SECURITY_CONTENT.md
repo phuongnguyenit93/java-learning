@@ -61,7 +61,7 @@ Ví dụ module:
           quiz/{vi,en}/question.yml
           interview/{vi,en}/question.yml
           video/{vi,en}/...
-          reference/references.yml
+          reference/{vi,en}/references.yml
           sheet/vi/module.xlsx     # snapshot local, đang có ignore rule
 
 - Thống kê **snapshot local ngày 2026-10-20**: khoảng **217 thư mục `content/`**, **2.539 file `.md`**, **1.073 file `.yml`**, **1 file `.xlsx`** (tổng ~**57,3 MiB**). Số liệu thay đổi theo checkout/trạng thái module.

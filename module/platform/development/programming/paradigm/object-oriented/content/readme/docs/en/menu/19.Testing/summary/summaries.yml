@@ -1,0 +1,407 @@
+summaries:
+- id: testing-001
+  title: Kiểm thử hành vi công khai và hợp đồng đối tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm thử hành vi công khai và hợp đồng đối tượng**
+
+    Kiểm thử một đối tượng là kiểm chứng lời hứa của API với client, thay vì tên field, cách đồng bộ hay số private helper. Từ SeatInventory, bài học xác lập tiền điều kiện, hậu điều kiện thành công/thất bại và invariant về số chỗ đã đặt.
+
+    Người học thực hành cùng contract suite cho MonitorSeatInventory và AtomicSeatInventory; quan sát snapshot, thử chuỗi reserve/cancel, kiểm tra value equality của SeatSnapshot và phân biệt bảo đảm atomic của một object trong JVM với transaction ở database.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng nhìn từ phía client
+
+    1. Một chữ ký tryReserve(int) còn thiếu các cam kết nào về giá trị 0, số âm, hết chỗ và exception?
+    2. Precondition, success postcondition, failure postcondition và invariant của SeatInventory khác nhau thế nào?
+    3. Vì sao chỉ assert tryReserve(7) trả false mà không so sánh snapshot trước/sau là chưa đủ?
+    4. Khi thay MonitorSeatInventory bằng AtomicSeatInventory, những điều gì cần giữ nguyên và điều gì chỉ là implementation detail?
+    5. Vì sao không nên mở private field reserved hoặc thêm setter để dựng trạng thái kiểm thử?
+
+    ### Chuỗi hành vi, giá trị và đồng thời
+
+    1. Chuỗi reserve(4) → reserve(7 bị từ chối) → cancel(2) → reserve(8) cho thấy lỗi nào mà test từng method có thể bỏ sót?
+    2. Record SeatSnapshot cần được kiểm tra equality và hashCode thế nào để dùng an toàn trong HashSet?
+    3. Kiểm thử nhiều thread cùng reserve trên một instance xác nhận giới hạn nào và chưa chứng minh gì về nhiều JVM/DB?
+    4. State-based assertion khác interaction-based assertion ở những hiệu ứng quan sát được nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đặc tả contract | Viết rõ precondition, postcondition, invariant và failure semantics cho SeatInventory. |
+    | Thiết kế test từ API công khai | Dựng Given–When–Then cho reserve/cancel/snapshot mà không nhìn private field. |
+    | Bảo vệ đường lỗi | So sánh snapshot trước và sau khi từ chối đặt/hủy, xác nhận không vượt capacity. |
+    | Tái sử dụng contract suite | Chạy cùng test qua factory đối với MonitorSeatInventory và AtomicSeatInventory. |
+    | Kiểm tra chuỗi và value equality | Dùng bảng state sequence, boundary cases và equals/hashCode của SeatSnapshot. |
+    | Phân định bằng chứng concurrency | Nêu được giá trị và giới hạn của CountDownLatch test một JVM so với integration test DB. |
+- id: testing-002
+  title: Kiểm thử hàm khởi tạo và trạng thái không hợp lệ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm thử hàm khởi tạo và trạng thái không hợp lệ**
+
+    Constructor/factory là ranh giới bảo đảm chỉ công bố đối tượng miền hợp lệ. Qua Invoice, LineItem và Wallet, bài học kiểm tra tham số bắt buộc, điều kiện liên trường, chuẩn hóa mã khách hàng, số học không tràn và thất bại không để lộ trạng thái sai.
+
+    JUnit Jupiter parameterized tests giúp bao phủ ranh giới giảm giá từ 0 đến subtotal, null/blank, List.copyOf và mutation của danh sách nguồn. Bài học còn cảnh báo builder/record, virtual method gọi trong constructor và side effect đã phát trước khi validation hoàn tất.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Dựng object hợp lệ và bất biến
+
+    1. Tại sao constructor Invoice cần kiểm tra danh sách hàng, discountVnd và tổng tiền thay vì chỉ gán field?
+    2. Giới hạn discount=0, discount=subtotal và discount=subtotal+1 phải cho những kết quả khác nhau nào?
+    3. List.copyOf bảo vệ cách sử dụng ArrayList nguồn ra sao và tại sao không đồng nghĩa deep copy?
+    4. Phép Math.multiplyExact/Math.addExact bắt lỗi số học nào mà phép long thông thường có thể bỏ qua?
+    5. Vì sao constructor hoàn tất không đồng nghĩa toàn bộ side effect ngoài hệ thống đã tự rollback nếu constructor ném lỗi?
+
+    ### Đường khởi tạo khác và chiến lược test
+
+    1. Compact constructor của record và phương thức build() cần duy trì invariant nào, kể cả khi setter của builder chấp nhận từng field?
+    2. Vì sao gọi method overrideable hoặc để this thoát ra khỏi constructor có thể khiến subclass bị quan sát khi chưa khởi tạo?
+    3. Trong lịch hẹn ONLINE/OFFLINE, tổ hợp start/end/link/location nào phải bị từ chối dù từng field riêng lẻ có giá trị hợp lệ?
+    4. Khi lỗi đến từ JSON hoặc dữ liệu database cũ, nên kiểm thử đúng boundary nào thay vì dùng reflection phá private state?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập ma trận constructor | Liệt kê valid/invalid/boundary và các điều kiện liên trường của Invoice hoặc Appointment. |
+    | Xác nhận postcondition | Kiểm tra customerId đã trim, subtotal, discount, total và line count sau tạo thành công. |
+    | Thử đường từ chối | Dùng assertThrows đúng loại cho null, blank, quantity sai, discount vượt tổng và overflow. |
+    | Kiểm tra aliasing | Sửa list nguồn sau tạo, thử sửa accessor để chứng minh snapshot của Invoice không bị ảnh hưởng. |
+    | Kiểm thử builder/record | Xác nhận record compact constructor và Builder.build không mở đường tạo object vi phạm invariant. |
+    | Phân biệt lỗi trong/ngoài constructor | Chỉ ra side effect trước validation, nguy cơ this escape và giới hạn transaction/concurrency. |
+- id: testing-003
+  title: Kiểm thử điều kiện bất biến và chuyển trạng thái
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm thử điều kiện bất biến và chuyển trạng thái**
+
+    Với object có vòng đời, một test kiểm đúng một phép nạp tiền chưa chứng minh ví luôn hợp lệ. Bài học xây state machine Wallet ACTIVE/FROZEN/CLOSED, phân biệt invariant theo snapshot với quy tắc qua thời gian, và kiểm thử cạnh hợp lệ lẫn thao tác bị cấm.
+
+    Người học kiểm tra lỗi không đổi snapshot, chính xác ngưỡng withdraw/close, overflow khi deposit và chuỗi freeze/resume/close. Bài cũng hướng dẫn reference model, property-based testing và lý giải tại sao bất biến hai ví hoặc thao tác nhiều thread phải được kiểm thử ở boundary lớn hơn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Máy trạng thái và invariant
+
+    1. State invariant như balanceVnd >= 0 khác với quy tắc FROZEN không cho rút tiền như thế nào?
+    2. Trong Wallet, những điều kiện nào cho ACTIVE → FROZEN, FROZEN → ACTIVE và ACTIVE → CLOSED?
+    3. Vì sao trạng thái CLOSED luôn phải có balance=0 và không được resume/deposit theo hợp đồng ví dụ?
+    4. Thế nào là state coverage, transition coverage, invalid-transition coverage và sequence coverage?
+    5. Tại sao chỉ dùng assertThrows khi withdraw bị từ chối chưa chứng minh invariant vẫn được bảo vệ?
+
+    ### Giới hạn, chuỗi test và mô hình tham chiếu
+
+    1. Các ngưỡng 0, -1, balance, balance+1 và Long.MAX_VALUE nên được test thế nào?
+    2. Reference model độc lập giúp so sánh chuỗi lệnh với Wallet thật bằng cách nào?
+    3. Property-based test cần tiền đề gì cho tính chất nạp x rồi rút x quay về số dư cũ?
+    4. Vì sao Account A và B riêng lẻ hợp lệ chưa chứng minh tổng tiền được bảo toàn khi chuyển tiền?
+    5. Test tuần tự hay một concurrency test pass một lần còn thiếu bằng chứng nào về lost update và transaction?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Mô hình hóa vòng đời | Vẽ ACTIVE/FROZEN/CLOSED với guard, trạng thái đầu/cuối và các lệnh được phép. |
+    | Liên kết invariant với test | Biến balance>=0, CLOSED=>balance=0 và thất bại không đổi state thành assertion. |
+    | Kiểm tra chuyển trạng thái | Tạo case cho cạnh hợp lệ, cạnh cấm, boundary và chuỗi nhiều bước. |
+    | Bảo vệ đường lỗi | So sánh Snapshot trước/sau khi thao tác vi phạm precondition hoặc overflow. |
+    | Dùng reference model | Tạo lệnh có seed, so sánh expected status/balance/lỗi và ghi lại chuỗi gây regression. |
+    | Xác định ranh giới lớn | Giải thích khi nào cần integration test cho chuyển tiền, DB transaction và concurrency. |
+- id: testing-004
+  title: Kiểm thử các cách thực hiện cùng một giao diện
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm thử các cách thực hiện cùng một giao diện**
+
+    Bài học tập trung vào cách tổ chức thực tế một bộ test dùng chung khi có nhiều class implements cùng interface, tránh viết hai bộ test không đồng đều. Interface IntSet có HashIntSet và TreeIntSet; cùng chung lời hứa add/remove/contains/size dù lưu trữ khác nhau.
+
+    Người học dùng JUnit 5 @ParameterizedTest, @MethodSource và Supplier<IntSet> để tạo fixture độc lập cho từng implementation, thử thêm trùng, xóa rồi thêm lại, các số MIN/MAX và tính độc lập giữa hai instance. Test riêng và integration test vẫn cần khi implementation có hợp đồng về DB hoặc cache.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Xác định một contract chung
+
+    1. Vì sao HashIntSet và TreeIntSet phải cho cùng ngữ nghĩa add/remove/contains/size dù có cấu trúc khác nhau?
+    2. IntSet.add(7) gọi hai lần phải trả hai boolean thế nào và size thay đổi ra sao?
+    3. Những giá trị 0, số âm, Integer.MIN_VALUE và Integer.MAX_VALUE có thuộc miền input của ví dụ không?
+    4. Tại sao thứ tự duyệt tập hợp và class HashSet/TreeSet không được test khi interface không công bố?
+
+    ### Tái sử dụng JUnit và kiểm thử riêng
+
+    1. @MethodSource variants() kết hợp Supplier<IntSet> và @ParameterizedTest tạo các lượt test riêng thế nào?
+    2. Vì sao mỗi test phải gọi factory.get() thay vì cùng chia sẻ một set mutable?
+    3. Test independentInstances có thể phát hiện lỗi nào nếu implementation vô tình dùng storage static?
+    4. Khi thêm LinkedHashIntSet, cần thay đổi factory danh sách hay nhân bản toàn bộ ca test?
+    5. Khi chuyển sang JdbcRepository, contract suite còn thiếu kiểm tra loại nào về transaction, mapping và tài nguyên thực?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết contract IntSet | Diễn đạt add trùng, remove không tồn tại, contains không mutate và size theo số phần tử phân biệt. |
+    | Tạo parameterized suite | Khai báo @MethodSource cung cấp tên và Supplier<IntSet> cho mỗi implementation. |
+    | Bao phủ nhiều implementation | Chạy cùng test trên HashIntSet, TreeIntSet và một implementation mới. |
+    | Kiểm tra state và biên | Thử add/remove/re-add, số âm, MIN/MAX và độc lập giữa các instance. |
+    | Giữ test không phụ thuộc storage | Không assert thứ tự HashSet/TreeSet nếu hợp đồng không quy định. |
+    | Chọn test đặc thù bổ sung | Phân biệt kiểm thử hợp đồng chung với transaction/cache/TTL/integration cho một implementation. |
+- id: testing-005
+  title: Kiểm thử tính thay thế của kiểu con
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm thử tính thay thế của kiểu con**
+
+    Khả năng implements hoặc extends đúng kiểu không chứng minh kiểu con dùng thay được kiểu cha. Bài học chuyển Liskov Substitution Principle thành các assertion về tiền điều kiện, hậu điều kiện, invariant, exception, tác dụng phụ và kỳ vọng quan sát của client.
+
+    Ví dụ DiscountPolicy chấp nhận subtotal 0–1.000.000 và trả discount hợp lệ: NoDiscount, TenPercentDiscount, TieredDiscount đều qua cùng suite, nhưng MinimumOnlyDiscount cố tình loại subtotal dưới 50.000 nên vi phạm hợp đồng. Người học dùng test biên, dữ liệu seed và client Checkout để chứng minh lỗi dù Java vẫn biên dịch.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng subtype
+
+    1. LSP yêu cầu gì khi dùng một DiscountPolicy mới trong Checkout qua cùng interface?
+    2. Vì sao kiểu con không được siết tiền điều kiện nhưng có thể nới lỏng phạm vi input hợp lệ?
+    3. Những hậu điều kiện 0 <= discount <= subtotal và discount(0)=0 phải đúng cho mọi policy trong miền nào?
+    4. Vì sao không thể yêu cầu mọi policy trả cùng số tiền giảm nếu hợp đồng chỉ định một khoảng giá trị?
+    5. RuntimeException ở subtotal hợp lệ và side effect ngầm có thể phá khả năng thay thế ra sao?
+
+    ### Thiết kế kiểm thử và giới hạn
+
+    1. MinimumOnlyDiscount sai ở input nào và test ở biên nào bắt được ngay?
+    2. Vì sao test cả giá trị 49.999/50.000/50.001 và các mẫu random có seed thay vì chỉ chọn trung bình?
+    3. Một policy phụ thuộc vào số lần gọi trước có thể vi phạm tính nhất quán mà client dựa vào như thế nào?
+    4. Khi một subtype chỉ đọc không thể thực hiện write, nên chia interface theo khả năng nào thay vì để nó ném UnsupportedOperationException?
+    5. Vì sao contract suite PASS chưa phải chứng minh toán học LSP trên mọi input, trạng thái và môi trường?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết contract của abstraction | Chỉ rõ miền input, output, exception, determinism và side effect của DiscountPolicy. |
+    | Chẩn đoán vi phạm LSP | Nhận diện subtype tăng precondition hoặc giảm postcondition dù implements đúng chữ ký. |
+    | Xây dựng test thay thế | Gọi nhiều policy qua interface cùng với client Checkout và bộ assertion chung. |
+    | Bao phủ ngưỡng và dữ liệu có seed | Test 0/1/max, ngay trước/sau 50.000 và tập mẫu ngẫu nhiên tái lập được. |
+    | Phân biệt hành vi chung với kết quả cụ thể | Cho phép các policy tính discount khác nhau nhưng đều tuân invariant đã hứa. |
+    | Đề xuất abstraction phù hợp | Phát hiện interface ghi/đọc bị trộn và xác định trường hợp cần tách hợp đồng. |
+- id: testing-006
+  title: Fake, stub, mock và đối tượng cộng tác
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Fake, stub, mock và đối tượng cộng tác**
+
+    Unit test CheckoutService không nên thu tiền thật, thay kho dữ liệu thật hoặc gửi email thật. Bài học phân biệt collaborator của SUT với test double: dummy, stub, fake, mock và spy; mỗi loại được chọn theo thông tin test cần chủ động cung cấp hoặc quan sát.
+
+    Ví dụ CheckoutDemo dùng FakeInventory để giữ trạng thái, StubPaymentGateway để điều khiển accept/decline và MockReceiptSender để ghi số lần gửi. Người học xác nhận cả kết quả, số hàng tồn và hiệu ứng thông báo; test với Mockito bổ sung verifyNoInteractions nhưng không nhầm verify(decrease) với dữ liệu thực đã được lưu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vai trò của test double
+
+    1. Collaborator khác với fake/stub/mock ở chỗ nào trong thiết kế CheckoutService?
+    2. StubPaymentGateway, FakeInventory và MockReceiptSender giúp kiểm soát/quan sát những dữ liệu hay tác dụng phụ nào?
+    3. Spy khác mock thuần và dummy được dùng khi nào?
+    4. Vì sao cùng một Mockito mock có thể vừa stub khi dùng when(...), vừa verify tương tác?
+
+    ### Kết quả, tương tác và tích hợp
+
+    1. Trong checkout thành công, những assertion nào chứng minh kho từ 3 còn 1 và gửi biên nhận đúng một lần với 500.000 VND?
+    2. Khi gateway trả false hoặc kho thiếu hàng, cần xác minh điều gì không thay đổi hoặc không được gọi?
+    3. Vì sao verify(inventory).decrease(...) không chứng minh tồn kho đã thật sự được trừ?
+    4. Khi nào ArgumentCaptor, verifyNoInteractions, times hoặc never bảo vệ một hợp đồng có tác dụng phụ thực?
+    5. Những giới hạn nào của FakeInventory khiến unit test không thể thay thế DB/concurrency/payment integration test?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lựa chọn test double | Phân biệt dummy, stub, fake, mock, spy theo vai trò trong một tình huống cụ thể. |
+    | Dựng CheckoutService thật | Tiêm collaborator thay thế qua constructor và tránh mock chính SUT. |
+    | Kiểm chứng state | Dùng FakeInventory kiểm tra số lượng kho sau success/decline/out-of-stock. |
+    | Kiểm chứng tác dụng phụ | Ghi nhận email/orderId/amount và assert đúng một lần hoặc không gửi theo outcome. |
+    | Sử dụng Mockito vừa đủ | Áp dụng when, verify, times, never và verifyNoInteractions cho ranh giới quan sát được. |
+    | Xác định phạm vi unit test | Giải thích chỗ fake khác implementation DB/payment thật và cần test tích hợp riêng. |
+- id: testing-007
+  title: Thiết kế để thay thế phụ thuộc khi kiểm thử
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thiết kế để thay thế phụ thuộc khi kiểm thử**
+
+    Khả năng kiểm thử bắt đầu từ thiết kế lớp: nếu CheckoutService tự new gateway, lấy thời gian thật và gửi email bên trong, test khó cô lập và khó tái lập. Bài học giới thiệu test seam bằng port, constructor injection, composition root và Clock có thể cố định.
+
+    Ví dụ PaymentGateway, ReceiptSender và CheckoutService với Result(accepted, checkedAt) được JUnit kiểm tra qua StubGateway, RecordingSender, Clock.fixed. Người học chứng minh input sai không gọi dependency, cổng từ chối không gửi biên nhận, exception được truyền lên và constructor từ chối dependency null.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết kế điểm thay thế phụ thuộc
+
+    1. Vì sao tự tạo HTTP client, payment adapter và Clock.systemUTC trong CheckoutService làm unit test khó chạy độc lập?
+    2. Interface PaymentGateway/ReceiptSender và constructor injection chia trách nhiệm giữa service và composition root thế nào?
+    3. DI với DIP có cần framework Spring không và khi nào không nên tạo interface cho mọi class?
+    4. Clock.fixed giúp kiểm tra Result.checkedAt ổn định hơn Instant.now như thế nào?
+    5. Constructor injection và method injection thích hợp cho những vòng đời dependency nào?
+
+    ### Kiểm chứng bằng test doubles
+
+    1. CheckoutService cần kiểm tra orderId blank và amountVnd<=0 trước khi phát sinh tác dụng phụ nào?
+    2. StubGateway trả true/false/exception và RecordingSender giúp khẳng định những điều gì qua 5 unit tests?
+    3. Vì sao gateway lỗi không được khiến sender gửi thông báo, còn kết quả từ chối phải giữ checkedAt từ Clock đã tiêm?
+    4. Fake/spy sạch theo từng test cần bảo vệ khỏi shared static state ra sao?
+    5. Vì sao test seam không tự chứng minh adapter thật xử lý timeout, retry, giao dịch hoặc email thành công?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện dependency khó kiểm soát | Tìm network, clock, environment, database hoặc singleton ẩn trong nghiệp vụ. |
+    | Thiết kế port và composition root | Tạo PaymentGateway/ReceiptSender và cung cấp implementation ở ranh giới khởi tạo. |
+    | Dùng constructor injection | Truyền dependency bắt buộc, kiểm tra null và tránh tự khởi tạo adapter trong service. |
+    | Khóa thời gian trong test | Sử dụng Clock.fixed để assert checkedAt và logic hạn chót không phụ thuộc thời điểm chạy. |
+    | Thử kịch bản thất bại | Dùng stub/spy để chứng minh input sai, decline hoặc gateway exception không gửi receipt. |
+    | Phân tách unit với integration | Chỉ ra những hành vi network/DB thật cần được kiểm ở cấp adapter hoặc hệ thống. |
+- id: testing-008
+  title: Tránh kiểm thử phụ thuộc quá chặt vào chi tiết bên trong
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tránh kiểm thử phụ thuộc quá chặt vào chi tiết bên trong**
+
+    Một bài test giòn đỏ khi đổi HashMap, private helper hoặc số lần gọi PriceCatalog dù kết quả client không đổi. Bài học hướng dẫn xác định đâu là hành vi được hứa và đâu chỉ là thuật toán có thể thay thế khi refactor.
+
+    QuoteContractDemo có PerLineService và GroupedService cho cùng kết quả giá, phí vận chuyển và ngưỡng miễn phí 500.000, dù số lần lookup khác nhau. Người học phân biệt lookup count với tác dụng phụ có nghĩa như charge, send hoặc publish sau commit; thay đổi nghĩa vụ contract sẽ quyết định khi nào tương tác cần được assert.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện brittle test
+
+    1. Vì sao test phản chiếu private field hoặc verify số lần gọi calculator dễ đỏ khi refactor không đổi kết quả?
+    2. Hai cách tính PerLineService và GroupedService khác số lần lookup nhưng cần giữ những giá trị Quote nào?
+    3. Đúng ngưỡng 500.000 VND, phí vận chuyển và tổng cần là bao nhiêu theo hợp đồng?
+    4. Trong trường hợp nào số lần tra giá mỗi SKU chuyển từ detail thành yêu cầu API có thể kiểm thử?
+    5. Vì sao mock toàn bộ Money, OrderLine hoặc Address thường làm test dài mà ít chứng minh quy tắc?
+
+    ### Phân biệt tương tác cần kiểm tra
+
+    1. Vì sao không gửi receipt khi thanh toán bị từ chối là side effect đáng verify?
+    2. Khi nào InOrder có ích cho xác thực trước thanh toán hoặc publish sau commit?
+    3. Clock giả và Supplier<UUID> giúp test tránh phụ thuộc thời gian/ID thực như thế nào?
+    4. Tại sao test Quote vẫn cần boundary quantity vượt int, SKU không tồn tại và overflow long dù code chỉ được refactor?
+    5. Unit test với FakeCatalog chưa kiểm được những vấn đề nào của cache, network hoặc persistence thật?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại assertion | Chỉ ra assertion bám hợp đồng và assertion khóa chi tiết cài đặt không cần thiết. |
+    | Viết test bền với refactor | Chạy cùng Quote behavior suite trên PerLineService và GroupedService dù lookup count khác nhau. |
+    | Bảo vệ giá trị biên | Kiểm tra subtotal, shipping, total tại ngưỡng 500.000 và input/overflow bất hợp lệ. |
+    | Chỉ verify side effect cần thiết | Lựa chọn verify của payment, receipt hoặc event khi đúng là cam kết nghiệp vụ. |
+    | Tách dữ liệu bất định | Tiêm Clock hoặc ID generator trong bài toán cần tái lập thay vì assert thời gian thật. |
+    | Chọn đúng tầng kiểm thử | Nêu phần network/cache/DB mà fake đơn giản không mô phỏng. |
+- id: testing-009
+  title: Kiểm thử hồi quy khi thay đổi thiết kế
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm thử hồi quy khi thay đổi thiết kế**
+
+    Refactor OOP có thể thay class, Strategy, dependency injection hoặc thuật toán mà không chủ định đổi hành vi quan sát được. Bài học xác lập regression suite theo hợp đồng trước/sau thay đổi, có baseline, đặc tả độc lập và kiểm tra cấp test tương ứng với rủi ro.
+
+    Ví dụ LegacyCheckout và RefactoredCheckout dùng ShippingRule: thành viên miễn phí, khách thường miễn phí từ subtotal=100.000 cent; BrokenShippingRule dùng > thay vì >= khiến ca đúng ngưỡng bị lỗi. Người học phối hợp test ví dụ lấy từ yêu cầu, differential testing với seed cố định và invariant tổng=tiền hàng+phí.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng cần giữ sau refactor
+
+    1. Những thay đổi class, DI hoặc Strategy nào được phép mà không đổi Invoice hay failure semantics?
+    2. Tại sao test so sánh before và after đơn thuần có thể giữ nguyên một bug có sẵn ở bản cũ?
+    3. Specification example, differential test và invariant test cung cấp những loại bằng chứng khác nhau nào?
+    4. Ở ngưỡng 99.999, 100.000 và 100.001 cent, phí vận chuyển của khách thường phải khác nhau ra sao?
+    5. BrokenShippingRule sai ở điều kiện nào dù cả hai class vẫn implements PriceQuoteService?
+
+    ### Chiến lược regression có thể tái lập
+
+    1. Vì sao cần baseline, test biên và cam kết no-side-effect trước khi tách nghiệp vụ sang ShippingRule?
+    2. Tại sao random seed cố định và input gây lỗi được ghi lại quan trọng với differential test?
+    3. Thay đổi interface/wiring, transaction hoặc serialization cần bổ sung cấp integration test nào bên cạnh unit test?
+    4. Khi business rule thật sự thay đổi, phải quản lý expected value và phê duyệt khác refactor thuần ra sao?
+    5. Vì sao CI phải thất bại khi production implementation vi phạm hợp đồng thay vì nuốt AssertionError như demo lỗi cố ý?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác lập regression contract | Ghi lại input, Invoice output, error và side effect được phép thay đổi hoặc phải giữ. |
+    | Tạo oracle độc lập | Chọn expectation từ yêu cầu cho member, non-member, ngưỡng và input ngoài miền. |
+    | So sánh hai thiết kế | Chạy PriceQuoteService cũ/mới cùng trường hợp và dữ liệu mẫu có seed cố định. |
+    | Bắt lỗi tại biên | Phát hiện sai sót > thay cho >= đúng subtotal 100.000 cent. |
+    | Lập kế hoạch kiểm thử refactor | Chạy baseline, refactor nhỏ, contract/unit, rồi integration và CI theo phạm vi thay đổi. |
+    | Quản lý thay đổi hợp đồng | Phân biệt bug/regression với yêu cầu mới và cập nhật test có review thay vì sửa expected tùy ý. |
+- id: testing-010
+  title: Kiểm thử tương tác giữa nhiều đối tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm thử tương tác giữa nhiều đối tượng**
+
+    Từng Inventory, PaymentGateway và ReceiptSender có thể đúng riêng nhưng CheckoutService vẫn điều phối sai: charge trước reserve, quên release khi từ chối, gửi biên nhận trước khi thanh toán hoặc charge hai lần. Bài học kiểm thử hợp đồng tương tác theo các nhánh và thứ tự nghiệp vụ có ý nghĩa.
+
+    Qua JUnit 5 + Mockito và CheckoutCollaborationTest dùng InMemoryInventory, người học dùng verify, never, InOrder, verifyNoInteractions đồng thời assert outcome PAID/DECLINED/OUT_OF_STOCK và trạng thái hàng tồn. Bài phân biệt lỗi từ gateway với email thất bại sau charge và giải thích vì sao quy trình thanh toán thật cần idempotency, reconciliation và outbox.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng phối hợp và thứ tự
+
+    1. CheckoutService phải gọi reserve, charge, send theo thứ tự nào khi thành công?
+    2. Trường hợp OUT_OF_STOCK phải không gọi những collaborator nào?
+    3. PaymentGateway trả false và ném RuntimeException khác nhau thế nào về outcome, release và exception?
+    4. Tại sao sender lỗi sau charge thành công không được tự động charge lại hoặc release hàng?
+    5. Những lời gọi nào có thứ tự thực sự thuộc hợp đồng để dùng Mockito InOrder?
+
+    ### Test tương tác và kiểm chứng trạng thái
+
+    1. Mockito when, verify, never, verifyNoInteractions và InOrder kiểm chứng những loại kỳ vọng nào?
+    2. Vì sao không nên mock chính CheckoutService hoặc chỉ verify gateway.charge mà bỏ qua kết quả cuối?
+    3. Với InMemoryInventory còn 5 sản phẩm, checkout mua 2 thành công hoặc bị từ chối dẫn đến số tồn nào?
+    4. Vì sao mock cho biết release đã gọi nhưng không chứng minh số hàng được khôi phục, và fake hỗ trợ bằng chứng nào?
+    5. Timeout ở payment gateway và lỗi gửi mail thực có thể tạo những trạng thái nào cần reconciliation, idempotency hoặc outbox?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập bảng nhánh workflow | Nêu tương tác được phép khi PAID, DECLINED, OUT_OF_STOCK và ngoại lệ từ gateway/sender. |
+    | Kiểm chứng thứ tự nghiệp vụ | Dùng InOrder xác minh reserve → charge → send hay reserve → charge → release khi cần. |
+    | Chặn tác dụng phụ không hợp lệ | Dùng verifyNoInteractions/never khi hết hàng, charge lỗi hoặc sender đã thất bại. |
+    | Kiểm tra outcome và dữ liệu | Assert enum outcome, exception đúng loại và tham số từng collaborator. |
+    | Thử phối hợp thật trong bộ nhớ | Dùng InMemoryInventory/RecordingSender để xác nhận tồn kho 5→3 hoặc được hoàn về 5. |
+    | Nhận diện giới hạn production | Giải thích tại sao exception gateway không khẳng định giao dịch chưa thu tiền và vì sao cần retry an toàn. |

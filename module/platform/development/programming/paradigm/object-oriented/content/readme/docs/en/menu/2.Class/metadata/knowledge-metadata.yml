@@ -1,0 +1,17 @@
+sections:
+  class-001:
+    difficulty: BASIC
+  class-002:
+    difficulty: BASIC
+  class-003:
+    difficulty: INTERMEDIATE
+  class-004:
+    difficulty: INTERMEDIATE
+  class-005:
+    difficulty: INTERMEDIATE
+  class-006:
+    difficulty: INTERMEDIATE
+  class-007:
+    difficulty: INTERMEDIATE
+  class-008:
+    difficulty: ADVANCED

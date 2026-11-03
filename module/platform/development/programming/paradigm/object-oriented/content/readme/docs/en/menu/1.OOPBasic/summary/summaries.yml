@@ -1,0 +1,273 @@
+summaries:
+- id: oop-basic-001
+  title: OOP là gì và bài toán tổ chức chương trình
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **OOP là gì và bài toán tổ chức chương trình**
+
+    Bài học giải thích vì sao hệ thống nhiều nghiệp vụ cần ranh giới trách nhiệm rõ ràng và cách OOP tổ chức các đối tượng cộng tác. Qua BankAccount và luồng đặt hàng, người học có cơ sở nhận ra nơi đặt quy tắc, giới hạn của đóng gói và giá trị của thiết kế có thể thay đổi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bài toán tổ chức chương trình
+
+    1. Vì sao chương trình tăng quy mô làm các quy tắc nghiệp vụ phân tán trở thành rủi ro?
+    2. OOP tổ chức dữ liệu, hành vi và trách nhiệm thành các đối tượng cộng tác như thế nào?
+    3. Định danh nghiệp vụ, trạng thái và hành vi của BankAccount khác nhau ra sao?
+
+    ### Đánh giá thiết kế và giới hạn
+
+    1. Vì sao BankAccount có withdraw() vẫn chưa bảo vệ được số dư nếu bên ngoài sửa được balance?
+    2. Trong quy trình đặt hàng, vì sao Order, InventoryService, PaymentGateway và CheckoutService nên có trách nhiệm khác nhau?
+    3. Khi nào một chuỗi hàm đơn giản hợp lý hơn việc tạo nhiều đối tượng, và vì sao private không tự giải quyết tranh chấp đồng thời?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện bài toán tổ chức | Chỉ ra các quy tắc bị phân tán, phụ thuộc chằng chịt hoặc khó kiểm thử trong một tình huống tài khoản/đặt hàng. |
+    | Mô hình hóa đối tượng | Xác định được identity, state, behavior và responsibility của BankAccount hoặc Order từ yêu cầu cụ thể. |
+    | Lần theo invariant | Dự đoán đúng kết quả rút tiền thành công/thất bại và giải thích vì sao số dư không bị sửa trong nhánh từ chối. |
+    | Phân chia trách nhiệm | Phác thảo vai trò của Order, kho, thanh toán và thành phần điều phối trong một use case. |
+    | Nhận diện giới hạn | Giải thích được vì sao encapsulation chưa thay thế transaction, locking, idempotency hay bảo mật. |
+- id: oop-basic-002
+  title: Đối tượng, trạng thái, hành vi và trách nhiệm
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đối tượng, trạng thái, hành vi và trách nhiệm**
+
+    Bài học làm rõ bốn thành phần gắn nhau trong một đối tượng có vòng đời nghiệp vụ. Ví dụ Order giúp người học xác định ai sở hữu trạng thái, hành vi nào được phép chuyển trạng thái và vì sao các quy tắc bắt buộc phải được giữ tại ranh giới phù hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất đối tượng và trạng thái
+
+    1. Đối tượng, trạng thái, hành vi và trách nhiệm liên hệ với nhau ra sao trong một Order?
+    2. Vì sao hai Order cùng DRAFT và cùng tổng tiền vẫn có thể là hai đối tượng khác nhau?
+    3. Sự khác nhau giữa trạng thái được lưu và giá trị total() được tính từ các dòng hàng là gì?
+
+    ### Quy tắc và phân công trách nhiệm
+
+    1. Vì sao gọi confirm() hợp lý hơn cho phép setStatus(CONFIRMED) tự do trong mô hình đơn hàng?
+    2. Khi confirm() đơn rỗng hoặc addLine() sau khi xác nhận, trạng thái cần được giữ ra sao và vì sao?
+    3. Quy tắc chuyển trạng thái nên nằm ở Order, còn lưu trữ, gửi thông báo và điều phối nên được giao cho ai?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích mô hình | Chỉ ra identity, state, behavior và responsibility trên ví dụ Order; phân biệt các khái niệm bằng dữ liệu cụ thể. |
+    | Xây dựng quy tắc | Liệt kê các invariant về số lượng, đơn giá, trạng thái DRAFT/CONFIRMED/CANCELLED trước khi viết method. |
+    | Dự đoán vòng đời | Lập bảng trạng thái trước/sau cho addLine(), confirm(), cancel() và cả tình huống bị từ chối. |
+    | Thiết kế API hành vi | Đề xuất các method thể hiện ý định nghiệp vụ, hạn chế việc lộ setter và collection mutable. |
+    | Phân chia cộng tác | Giải thích phần việc của Order, OrderService, Repository và NotificationService trong quy trình xác nhận đơn. |
+- id: oop-basic-003
+  title: 'Lớp, kiểu và thể hiện: các khái niệm nền tảng'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lớp, kiểu và thể hiện: các khái niệm nền tảng**
+
+    Bài học giúp đọc chính xác một dòng tạo đối tượng và dự đoán những biến nào cùng trỏ đến một instance. Qua ClickCounter, người học phân biệt kiểu khai báo với lớp runtime, ảnh hưởng của gán tham chiếu, so sánh identity và ranh giới giữa instance/static.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lớp, kiểu, thể hiện và tham chiếu
+
+    1. Trong CounterView view = new ClickCounter(...), phần nào là kiểu khai báo, lớp triển khai, instance mới và biến tham chiếu?
+    2. Vì sao view, first và general có thể cùng trỏ tới một object nhưng gọi trực tiếp được các method khác nhau?
+    3. Điều gì khác nhau giữa new ClickCounter(...), gán y = x và gọi y.click()?
+
+    ### Đọc kết quả và giới hạn kiểu
+
+    1. Làm sao dự đoán kết quả == và equals() giữa hai ClickCounter có dữ liệu giống nhau?
+    2. Vì sao view.click() không biên dịch trong khi view.value() hợp lệ, dù runtime object có click()?
+    3. null, instance field và static field ảnh hưởng thế nào tới số đối tượng, khả năng gọi method và trạng thái chia sẻ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc khai báo Java | Tách đúng class, declared type, runtime instance và reference trong các biểu thức tạo và gán đối tượng. |
+    | Mô phỏng tham chiếu | Vẽ quan hệ nhiều biến tới cùng instance hoặc nhiều instance, rồi dự đoán giá trị sau click()/gán lại biến. |
+    | Kiểm tra kiểu gọi | Chỉ ra dòng biên dịch được và không được qua CounterView, ClickCounter và Object, kèm lý do. |
+    | So sánh danh tính | Dự đoán đúng ==, equals() mặc định, trường hợp null và phân biệt identity với giá trị nghiệp vụ. |
+    | Phân biệt vùng dữ liệu | Giải thích khác biệt trạng thái riêng của instance field so với thành viên static thuộc lớp. |
+- id: oop-basic-004
+  title: Tương tác giữa đối tượng và lời gọi phương thức
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tương tác giữa đối tượng và lời gọi phương thức**
+
+    Bài học chuyển từ việc nhận diện object sang theo dõi một tương tác thật. Qua LendingService, Member, Book và Loan, người học phân tích caller, receiver, parameter, trạng thái trước/sau, kết quả trả về và đường lỗi để thiết kế hợp đồng phương thức an toàn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế tương tác và lời gọi
+
+    1. Trong service.borrow(an, javaBook), ai là caller/receiver và đối tượng nào nhận các lời gọi tiếp theo?
+    2. Java truyền tham số là bản sao tham chiếu theo giá trị có ý nghĩa gì khi reassign(localBook) và khi lendTo(member)?
+    3. this được xác định như thế nào khi chạy LendingService.borrow(), Member.ensureActive() và Book.lendTo()?
+
+    ### Hợp đồng, kết quả và sai lỗi
+
+    1. Phân biệt return value, side effect và trường hợp void trong ví dụ mượn sách như thế nào?
+    2. Vì sao một IllegalStateException có thể chặn việc tạo Loan nhưng không tự rollback mọi side effect trước đó?
+    3. Một hợp đồng lendTo() phải nêu những precondition, postcondition và invariant nào, và vì sao phải bảo vệ đường gọi nghiệp vụ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lần theo trình tự | Vẽ đúng luồng main → LendingService → Member → Book → Loan và các giá trị trả về. |
+    | Xác định receiver | Chỉ ra đối tượng mà this tham chiếu, phương thức nào đọc/sửa trạng thái và nơi phát sinh exception. |
+    | Dự đoán truyền tham số | Giải thích được vì sao gán lại tham số reference không đổi biến ở caller nhưng mutate object được chia sẻ. |
+    | Phân tích lỗi | Mô tả call stack và đường truyền exception khi sách đã mượn, bao gồm ảnh hưởng lên trạng thái. |
+    | Đặc tả hợp đồng | Viết điều kiện trước/sau và phản ứng lỗi của lendTo() hoặc returnBy(), rồi đề xuất tình huống kiểm thử. |
+- id: oop-basic-005
+  title: Đóng gói, trừu tượng, kế thừa và đa hình
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đóng gói, trừu tượng, kế thừa và đa hình**
+
+    Bài học đặt bốn khái niệm OOP vào cùng một bài toán giỏ hàng và chính sách giảm giá. Người học phân biệt từng công cụ theo vấn đề thiết kế nó giải quyết, theo dõi cách DiscountPolicy giữ hợp đồng chung và chọn phép tính khác nhau khi chạy.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân biệt bốn cơ chế
+
+    1. Đóng gói khác trừu tượng hóa như thế nào khi Cart bảo vệ items còn CheckoutService dùng DiscountPolicy?
+    2. Tại sao dùng private/final và getter/setter chưa chắc bảo vệ được invariant của giỏ hàng?
+    3. Khi nào quan hệ extends là một subtype hợp lệ và khi nào composition thích hợp hơn?
+
+    ### Đa hình và hợp đồng thực thi
+
+    1. Lời gọi discountFor() chung chọn công thức của PercentageDiscount và FixedDiscount qua dispatch ra sao?
+    2. Vì sao final discountFor() kết hợp protected calculateDiscount() giúp giữ bước kiểm tra chung, và điều gì xảy ra nếu chính sách vi phạm giới hạn giảm giá?
+    3. Overloading khác overriding, static hiding và private method ở điểm nào khi Java chọn cách thực thi?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Bảo vệ dữ liệu | Thiết kế Cart với đường thêm hàng hợp lệ và danh sách trả về không cho sửa trực tiếp trạng thái nội bộ. |
+    | Thiết kế abstraction | Xác định hợp đồng DiscountPolicy gồm đầu vào, đầu ra và quy tắc tiền giảm hợp lệ. |
+    | Đánh giá kế thừa | Giải thích quan hệ is-a, khả năng thay thế và lý do chọn abstract class hoặc interface theo nhu cầu. |
+    | Dự đoán đa hình | Tính đúng số tiền 450000/420000 từ cùng luồng checkout và chỉ ra method override được gọi. |
+    | Nhận diện lạm dụng | Đề xuất composition thay cho extends không đúng nghĩa và phát hiện vi phạm hợp đồng của subclass. |
+- id: oop-basic-006
+  title: 'OOP và lập trình thủ tục: cách phân chia bài toán'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **OOP và lập trình thủ tục: cách phân chia bài toán**
+
+    Bài học so sánh hai cách giải cùng một bài toán giỏ hàng mà vẫn trả 405.000 đồng. Người học thấy sự khác biệt ở chỗ đặt dữ liệu, quy tắc và hành vi; từ đó đánh giá tính gắn kết, mức phụ thuộc, invariant và chi phí kiểm thử thay vì chỉ đếm lớp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai cách phân chia cùng một nghiệp vụ
+
+    1. Cùng yêu cầu giỏ hàng giảm 10%, tư duy thủ tục bắt đầu từ các bước/hàm nào và tư duy OOP bắt đầu từ những đối tượng/trách nhiệm nào?
+    2. Vì sao CartProcedures.calculateTotal(data) và cart.total() đều trả 405000 nhưng tổ chức mã khác nhau?
+    3. Thiết kế theo thủ tục có thể bảo vệ dữ liệu và invariant không, và cần ranh giới gì để làm được?
+
+    ### Đánh giá thay đổi và đánh đổi
+
+    1. Thêm DiscountPolicy hoặc một kiểu thanh toán mới ảnh hưởng thế nào tới cấu trúc hai phương án?
+    2. Cohesion, coupling, khả năng kiểm thử và chi phí hiểu mã giúp so sánh hai cách phân chia ra sao?
+    3. Tại sao các tác vụ CSV/pipeline thường hợp với hàm đơn giản còn vòng đời đơn hàng thường hợp với đối tượng sở hữu trạng thái?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân rã yêu cầu | Viết ra đầu vào, đầu ra, quy tắc và đề xuất hai cách bố trí mã thủ tục/OOP cho cùng giỏ hàng. |
+    | Đối chiếu implementation | Lần theo hai đoạn mã và chứng minh cùng kết quả 405000 từ dữ liệu 450000 và giảm 10%. |
+    | Đánh giá ranh giới | Xác định ai có quyền sửa trạng thái và đề xuất chỗ đặt quy tắc để tránh đường cập nhật không kiểm tra. |
+    | Phân tích thay đổi | So sánh tác động của việc thêm biến thể giảm giá, thay lưu trữ, hoặc xuất hóa đơn trong mỗi thiết kế. |
+    | Chọn cấu trúc hợp lý | Giải thích quyết định dùng hàm, object hay mô hình kết hợp bằng cohesion, coupling và kiểm thử. |
+- id: oop-basic-007
+  title: OOP dựa trên lớp và OOP dựa trên nguyên mẫu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **OOP dựa trên lớp và OOP dựa trên nguyên mẫu**
+
+    Bài học mở rộng mô hình OOP quen thuộc của Java bằng cơ chế nguyên mẫu trong JavaScript. Người học phân tích hai cách tra cứu hành vi, cơ chế chia sẻ phương thức/trạng thái và những rủi ro do prototype chain thay đổi, đồng thời phân biệt prototype-based OOP với mẫu thiết kế tạo bản sao.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình lớp và chuỗi nguyên mẫu
+
+    1. Java chọn method qua quan hệ class, kiểu khai báo và runtime override khác cách JavaScript tìm thuộc tính qua prototype chain như thế nào?
+    2. Object.create(proto) thiết lập quan hệ gì, và vì sao nó không tự sao chép tất cả thuộc tính của proto?
+    3. Vì sao express.quote(2) tìm thấy method ở deliveryBehavior nhưng this vẫn là express?
+
+    ### Trạng thái dùng chung và thuật ngữ dễ nhầm
+
+    1. Khi sửa standard.feePerKg, vì sao economy đổi kết quả còn express không đổi?
+    2. Điều gì xảy ra khi đặt một mảng tags mutable trên prototype để nhiều object dùng chung?
+    3. JavaScript class/extends và Constructor.prototype liên quan [[Prototype]] ra sao, và Prototype Design Pattern khác prototype-based OOP ở đâu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích class-based | Theo dõi quote()/variableFee() trong Java và giải thích dispatch của StandardDelivery/ExpressDelivery. |
+    | Lần theo prototype chain | Chỉ đúng đường lookup express → standard → deliveryBehavior và dự đoán this, baseFee, feePerKg. |
+    | Giải thích shadowing | Dự đoán kết quả 25000 → 27000 của economy và 64000 không đổi của express khi cập nhật prototype. |
+    | Sửa lỗi chia sẻ dữ liệu | Phát hiện lỗi tags mutable ở prototype và viết phương án khởi tạo mảng riêng cho mỗi instance. |
+    | Phân biệt cơ chế | Phân biệt Object.create, JavaScript class, [[Prototype]], constructor.prototype và Prototype Design Pattern. |
+- id: oop-basic-008
+  title: Khi nên và không nên sử dụng OOP
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khi nên và không nên sử dụng OOP**
+
+    Bài học giúp chọn cấu trúc hợp lý cho từng loại yêu cầu, dựa trên trạng thái có vòng đời, invariant, trách nhiệm cộng tác và biến thể hành vi. Qua Order, chính sách giao hàng và bài toán tổng doanh thu, người học đánh giá lợi ích lẫn chi phí của OOP, tránh các lớp/interface và tầng chuyển tiếp không cần thiết.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Khi OOP thực sự tạo giá trị
+
+    1. Những dấu hiệu trạng thái qua nhiều thao tác, invariant và cộng tác nào khiến Order phù hợp với OOP?
+    2. Khi nào hợp đồng ShippingPolicy và các implementation khác nhau đáng giá hơn một hàm tính phí cố định?
+    3. Vì sao bài toán tính tổng doanh thu từ danh sách Sale có thể giải rõ ràng hơn bằng một hàm thuần túy?
+
+    ### Chi phí, rủi ro và đánh giá
+
+    1. Những dạng overengineering nào thể hiện qua nhiều lớp chuyển tiếp, interface một implementation hoặc chuỗi kế thừa sâu?
+    2. Tại sao private và class nghiệp vụ không tự giải quyết concurrency, transaction, idempotency hay tính đúng đắn thanh toán?
+    3. Làm sao phân biệt lợi ích bảo trì với hiệu năng và kiểm chứng nhận định hiệu năng bằng profiler hoặc benchmark?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại yêu cầu | Phân tích hai bài toán Order có vòng đời và báo cáo doanh thu một lượt để chọn object hoặc hàm phù hợp. |
+    | Thiết kế trạng thái | Chỉ ra invariant và dự đoán chuyển trạng thái DRAFT → SUBMITTED → PAID trên ví dụ đơn hàng. |
+    | Đánh giá biến thể | Giải thích khi nào ShippingPolicy/đa hình hữu ích và khi nào lambda/hàm đơn giản đủ dùng. |
+    | Nhận diện chi phí | Phát hiện các tầng chuyển tiếp, mô hình thiếu hành vi hoặc extends không hợp lý và đề xuất cách giảm độ phức tạp. |
+    | Kiểm chứng quyết định | Đưa ra lý do lựa chọn dựa trên mức thay đổi, kiểm thử, correctness và số đo hiệu năng thay vì số class. |

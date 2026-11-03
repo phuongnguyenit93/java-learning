@@ -22,6 +22,7 @@
 | `INTERVIEW` | `questions[].question`, `questions[].answer` |
 | `SUMMARY_QUESTIONS` | `questions[].question`, `questions[].answer` trong `questions/summary.yml`; không có relation |
 | `ROADMAP` | `roadmap[].title`, `roadmap[].purpose`, từng phần tử `roadmap[].objectives[]`, `roadmap[].relatedModules[].label` và `note` |
+| `REFERENCE` | `content/reference/en/references.yml`: chỉ `references[].title` và `references[].description` (nếu có). `references[].url`, số lượng/thứ tự item và toàn bộ key khác giữ nguyên |
 | `SWAGGER_CONTROLLER_DESCRIPTION` | `<Controller>.description` (chỉ text trong HTML, không thay tag/attrs) |
 | `SWAGGER_API_DESCRIPTIONS` | `<Controller>.<method>.summary`, `description` |
 | `SWAGGER_API_EXECUTION` | `<Controller>.<method>.execution` (HTML text, giữ cấu trúc tag) |
@@ -34,6 +35,7 @@
 - **INTERVIEW:** Không tự tạo question ID; giữ **chính xác số lượng và thứ tự** câu, cặp `question/answer` tương ứng, metadata và relation. Không thêm phỏng vấn mới hoặc rút ngắn câu trả lời.
 - **SUMMARY_QUESTIONS:** Chỉ dịch question/answer; không thêm câu, không trộn với Interview hoặc Summary STEP 5, không thêm metadata/related.
 - **ROADMAP:** `id`, `dependsOn`, `relatedKnowledge`, `relatedModules[].routeId`, số lượng/thứ tự milestone là khóa. Không dịch route/category ID.
+- **REFERENCE:** Mỗi mục giữ đúng URL nguồn, không tự tìm/chèn nguồn mới, đổi link hoặc loại mục. EN ban đầu là bản clone VI chưa dịch; dịch sát nghĩa title/description, bảo vệ title thương hiệu, tên sách, API, phiên bản và tên tài liệu chính thức. Nếu title là tên riêng hoặc hoàn toàn bằng tiếng Anh, giữ nguyên và giải thích lý do `SKIP_NO_TRANSLATABLE_TEXT` trong báo cáo. File rỗng `references: []` không cần tạo nội dung.
 - **VIDEO không thuộc STEP 14:** file Video phải được chuyển sang `STEP_OPTIONAL_VIDEO_TRANSLATE` sau `STEP_FINAL`; nếu nhận file Video trong bước này, worker báo `BLOCKER: WRONG STEP`.
 - **SWAGGER:** Controller name, exact method signature, `usage`, `methodName`, `params`, `path`, `mapping`, `httpMethods`, `mappingPaths`, `consumes/produces`, `enableVideoYoutube`, `videoYoutubeId/title`, case `id`, `input`, `status`, `response`, `readmeRelated`, metadata đều khóa. Không "dịch" literal JSON body, lỗi kỹ thuật, Java code hoặc response gốc. `params[].name` và thứ tự tham số khóa; dịch `params[].summary` và `params[].description` ngay trong `api-descriptions.yml`.
 - **YAML comments** (bao gồm khối `# <quiz-schema>`, `# <roadmap-schema>`) là schema contract cố định, **không sửa/xóa/reflow**. Chỉ sửa đúng các scalar strings được whitelist; giữ YAML parser compatibility và Unicode.

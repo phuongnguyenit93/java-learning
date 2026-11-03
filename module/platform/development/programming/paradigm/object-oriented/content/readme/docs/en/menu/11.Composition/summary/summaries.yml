@@ -1,0 +1,281 @@
+summaries:
+- id: composition-001
+  title: Ghép đối tượng để xây dựng hành vi
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ghép đối tượng để xây dựng hành vi**
+
+    Bài học giải thích cách xây dựng một chức năng hoàn chỉnh từ các đối tượng có trách nhiệm nhỏ và hợp đồng rõ. Trong ví dụ gửi thông báo đơn hàng, `OrderNotifier` điều phối `MessageFormatter` và `Transport`; thay thành phần giúp đổi cách định dạng, kênh gửi hoặc thêm lớp audit mà không sửa thuật toán điều phối. Người học còn phân biệt việc ghép đối tượng với quyền sở hữu độc quyền và kiểm chứng tương tác bằng fake thay cho dịch vụ gửi thật.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc và luồng phối hợp
+
+    1. Vì sao một lớp tự định dạng, gửi và kiểm tra mọi kênh thông báo sẽ khó mở rộng và kiểm thử?
+    2. Trong OrderNotifier, MessageFormatter và Transport chịu trách nhiệm nào và dữ liệu đi qua chúng theo thứ tự gì?
+    3. Composition khác inheritance ở quan hệ has-a/uses-a và is-a như thế nào?
+    4. Đoạn code nào là việc giữ tham chiếu thành phần, đoạn nào thật sự thực hiện delegation?
+
+    ### Thay thế, kiểm thử và giới hạn
+
+    1. Thay PlainFormatter bằng CompactFormatter hoặc EmailTransport bằng SmsTransport có cần sửa OrderNotifier không, vì sao?
+    2. Strategy và Decorator đóng vai trò gì trong các ví dụ Formatter và AuditedTransport?
+    3. Vì sao hai notifier cùng giữ một Transport không đồng nghĩa cả hai cùng sở hữu độc quyền transport?
+    4. Nếu Transport ném lỗi sau khi gửi một phần, composition có tự rollback hoặc bảo đảm gửi đúng một lần không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tách trách nhiệm | Vẽ quan hệ giữa OrderNotifier, MessageFormatter và Transport và xác định đúng nơi validation, định dạng, gửi thông báo. |
+    | Tổ hợp hành vi | Ghép formatter và transport khác nhau để giải thích đầu ra email, SMS hoặc thành phần decorator thêm audit. |
+    | Kiểm thử qua ranh giới | Dùng RecordingTransport/fake để xác nhận recipient, content, số lần send và đường lỗi. |
+    | Đánh giá vòng đời thành phần | Phân tích trường hợp hai notifier dùng chung transport và xác định nơi quản lý tài nguyên, concurrency. |
+- id: composition-002
+  title: Quan hệ “có một” và quan hệ “là một”
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Quan hệ “có một” và quan hệ “là một”**
+
+    Bài học cung cấp tiêu chí lựa chọn quan hệ kiểu con và quan hệ sử dụng thành phần trong mô hình đối tượng. Ví dụ `Car extends Vehicle` đồng thời giữ `PowerSource` cho thấy is-a có ý nghĩa phân loại, còn has-a mô tả phụ thuộc để phối hợp chức năng. Người học cần xét tính thay thế theo hợp đồng, phân biệt association, aggregation, composition sở hữu mạnh, và tránh suy ra quyền sở hữu hay tự động đóng resource chỉ vì có field tham chiếu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân loại quan hệ trong mô hình
+
+    1. Khi nào câu nói X là một Y đủ cơ sở cho extends hoặc implements, và tại sao còn cần kiểm chứng hợp đồng hành vi?
+    2. Vì sao Car có thể là Vehicle nhưng lại có hoặc sử dụng PowerSource thay vì extends PowerSource?
+    3. Association, aggregation và composition theo nghĩa UML khác nhau ở khía cạnh chia sẻ và vòng đời như thế nào?
+    4. Interface Payable thể hiện quan hệ subtype và hợp đồng theo nghĩa nào?
+
+    ### Bảo toàn mô hình và tài nguyên
+
+    1. Vì sao private final field hay collection không tự chứng minh thành phần chỉ có một owner?
+    2. Trong ví dụ Order và OrderLine, List.copyOf bảo vệ được phần nào và khi nào phải quan tâm đến phần tử mutable?
+    3. Khi truyền cùng Engine cho nhiều owner, garbage collector có tự đóng hoặc hủy Engine ngay khi một owner biến mất không?
+    4. Làm sao phát hiện thiết kế sai như Order extends Customer hay PaymentService extends DatabaseClient?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích quan hệ loại và thành phần | Chỉ ra các mũi tên extends/implements và has-a trong ví dụ Vehicle, Car, Bicycle, PowerSource. |
+    | Kiểm chứng LSP | Đánh giá hành vi của subtype qua lời gọi dùng kiểu Vehicle hoặc Payable và chỉ ra trường hợp vi phạm hợp đồng. |
+    | Phân biệt mức sở hữu | Đề xuất quan hệ association, aggregation hoặc composition cho đơn hàng, thành viên đội và service dùng chung. |
+    | Bảo vệ trạng thái | Giải thích giới hạn của final/List.copyOf và cách cô lập dữ liệu mutable hoặc quản lý close đúng owner. |
+- id: composition-003
+  title: Ủy quyền công việc cho đối tượng khác
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ủy quyền công việc cho đối tượng khác**
+
+    Bài học tập trung vào chính luồng ủy quyền công việc thay vì chỉ nhìn sơ đồ có field tham chiếu. `TicketRouter` nhận yêu cầu, kiểm tra dữ liệu, nhờ `TicketClassifier` chọn hàng chờ và `AssignmentPort` ghi nhận phân công; router vẫn chịu trách nhiệm trình tự và kết quả trả về. Người học biết đánh giá hợp đồng delegate, tránh tầng forwarding vô nghĩa, phân biệt Strategy/Adapter/Decorator/Proxy/Facade và kiểm thử cả đường thành công lẫn thất bại.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vai trò và trách nhiệm khi ủy quyền
+
+    1. Trong luồng TicketRouter.route, ai là delegator, ai phân loại và ai ghi nhận Assignment?
+    2. Vì sao field classifier và assignments là cấu trúc has-a, còn lệnh classify/assign mới thể hiện delegation?
+    3. Router phải tiếp tục giữ trách nhiệm nào khi phần chuyên môn được giao cho collaborator?
+    4. Delegation và forwarding thuần túy khác nhau ở giá trị mà lớp trung gian cung cấp như thế nào?
+
+    ### Hợp đồng, thay thế và lỗi
+
+    1. Vì sao classifier trả null hoặc port báo lỗi không được biến thành kết quả phân công thành công giả?
+    2. Đổi SeverityClassifier sang BillingKeywordClassifier kiểm chứng điều gì về hợp đồng và sự ghép nối?
+    3. Strategy, Adapter, Decorator và Proxy có thể sử dụng delegation với các mục đích khác nhau ra sao?
+    4. Khi hai router chia sẻ MemoryAssignmentPort dùng ArrayList, việc ghi đồng thời và vòng đời có những rủi ro nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Truy vết quy trình giao việc | Mô tả đúng trình tự validate → classify → assign → trả Assignment từ sequence diagram hoặc code TicketRouter. |
+    | Xác định contract delegate | Liệt kê đầu vào/đầu ra hợp lệ, hành vi null, failure và phạm vi bền vững cần yêu cầu ở AssignmentPort. |
+    | Kiểm thử tương tác | Dùng RecordingAssignments để xác nhận router gọi đúng delegate, đúng thứ tự và không gọi assign khi classifier lỗi. |
+    | Đánh giá thiết kế lớp trung gian | So sánh TicketRouter với BareRouter và nêu khi nào lớp chuyển tiếp thêm giá trị thực. |
+- id: composition-004
+  title: Tái sử dụng bằng kết hợp và bằng kế thừa
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tái sử dụng bằng kết hợp và bằng kế thừa**
+
+    Bài học đặt hai chiến lược tái sử dụng lên cùng tình huống tạo và phân phối báo cáo. `AbstractReport` cung cấp khung render và hook buildBody cho subtype có quan hệ is-a thật; `ReportPublisher` ghép `Formatter` và `Destination` khi cách định dạng và nơi xuất thay đổi độc lập. Người học học cách tránh cây lớp phình to, áp dụng LSP, dùng Strategy/Decorator hợp lý và kiểm thử với fake, đồng thời xem xét trạng thái dùng chung, ngoại lệ và concurrency.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### So sánh hai cơ chế tái sử dụng
+
+    1. Trong phương án AbstractReport/SalesReport, phần nào được kế thừa và hook nào được override?
+    2. Trong phương án ReportPublisher, Formatter và Destination thay đổi độc lập tạo được những tổ hợp nào?
+    3. Vì sao kế thừa phù hợp với is-a và hợp đồng ổn định nhưng dễ tạo coupling khi nhiều chiều biến thể giao nhau?
+    4. Phát biểu composition over inheritance có phải lệnh cấm extends trong mọi trường hợp không?
+
+    ### Mở rộng và kiểm chứng
+
+    1. Quan hệ Bird/Penguin vi phạm hợp đồng fly như thế nào và được liên hệ với LSP ra sao?
+    2. Strategy chọn thuật toán và Decorator bọc thêm hành vi trong hệ báo cáo khác nhau thế nào?
+    3. Vì sao ReportPublisher chứa final Formatter/Destination không mặc nhiên bảo đảm các collaborator được chia sẻ an toàn giữa các luồng?
+    4. Nếu Formatter ném ngoại lệ hoặc Destination chỉ ghi một phần rồi lỗi, phía Publisher tự bảo đảm điều gì và không bảo đảm điều gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn cách tái sử dụng | So sánh thiết kế AbstractReport và ReportPublisher theo is-a, chiều biến thể, chi phí đổi mã và khả năng thay thế. |
+    | Phát hiện hierarchy sai | Chỉ ra nguyên nhân một cây các lớp định dạng × kênh xuất dễ phình to và đề xuất Formatter/Destination riêng. |
+    | Thiết kế Strategy/Decorator | Ghép MarkdownFormatter với MemoryArchive hoặc LoggingDestination mà không thay ReportPublisher. |
+    | Kiểm chứng ranh giới | Viết hoặc phân tích fake Formatter/Destination xác nhận thứ tự format → deliver và tác động khi một bước thất bại. |
+- id: composition-005
+  title: Thay đổi đối tượng cộng tác khi chạy
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Thay đổi đối tượng cộng tác khi chạy**
+
+    Bài học đi sâu vào trường hợp collaborator được thay khi chương trình vẫn chạy. `CheckoutService` dùng hợp đồng `DiscountPolicy` để đổi giữa không giảm giá, VIP và khuyến mãi mà không tạo lại service; lựa chọn này khác với sửa trạng thái chính policy. Người học phân biệt chọn một lần ở constructor, thay bằng phương thức, hoặc truyền policy theo từng yêu cầu; đồng thời phải giữ contract, kết quả nhất quán trong mỗi lần checkout và tính an toàn khi nhiều thread dùng chung service.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đổi tham chiếu và chọn phạm vi
+
+    1. Vì sao field có kiểu DiscountPolicy cho phép chọn NoDiscount và PercentageDiscount trong cùng CheckoutService?
+    2. Thay một collaborator bằng object mới khác gì sửa thuộc tính của cùng collaborator đang được chia sẻ?
+    3. Ba cách constructor cố định, setter thay runtime và truyền policy per-request phù hợp với ngữ cảnh nào?
+    4. Vì sao một singleton dùng setter chung cho policy riêng từng khách hàng có thể trả mức giảm của khách khác?
+
+    ### Tính đúng đắn của hot swap
+
+    1. Chụp DiscountPolicy vào biến local ở đầu checkout giúp giữ tính nhất quán giữa discount() và code() như thế nào?
+    2. AtomicReference.get/set giải quyết những vấn đề visibility và thay tham chiếu nào, nhưng không thay thế điều phối nghiệp vụ nào?
+    3. Vì sao không thể đóng ngay Gateway cũ chỉ sau khi hoán đổi nếu request trước vẫn dùng nó?
+    4. Những điều kiện giá trị giảm, đơn vị VND và phạm vi lỗi nào mọi implementation mới phải đáp ứng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Hoán đổi policy | Dự đoán số tiền và mã chính sách trên Receipt trước/sau các lần gọi setDiscountPolicy. |
+    | Chọn phạm vi collaborator | Phân tích trường hợp cấu hình toàn cục, phiên người dùng và per-request để đề xuất constructor, setter hoặc tham số. |
+    | Giữ snapshot nhất quán | Giải thích cách chụp một DiscountPolicy cho mỗi checkout và vai trò AtomicReference khi cập nhật đồng thời. |
+    | Kiểm tra contract và lifecycle | Xác định policy lỗi trả giảm âm/vượt subtotal và rủi ro đóng một collaborator còn in-flight. |
+- id: composition-006
+  title: Tiêm phụ thuộc qua hàm khởi tạo hoặc phương thức
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tiêm phụ thuộc qua hàm khởi tạo hoặc phương thức**
+
+    Bài học chỉ rõ dependency injection trong Java thuần: cung cấp collaborator từ ngoài thay vì hard-code `new` trong lớp nghiệp vụ. `OrderNotifier` nhận `NotificationSender` bắt buộc qua constructor; `AlertService` nhận sender qua phương thức để thay theo mỗi lần gọi. Người học so sánh constructor, method parameter và setter injection; phân biệt DI, DIP, IoC, sử dụng interface phù hợp và tránh null, phụ thuộc bị tạo lén hoặc đóng tài nguyên không thuộc sở hữu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các phương thức cấp dependency
+
+    1. Vì sao OrderNotifier tự new EmailSender khiến việc đổi implementation và viết fake khó khăn?
+    2. Khi nào NotificationSender nên được truyền vào constructor và giữ final trong suốt vòng đời service?
+    3. Khi nào tham số phương thức là nơi phù hợp để cấp dependency riêng của một yêu cầu?
+    4. Setter injection khác method parameter injection ở khả năng lưu trạng thái và thời điểm kiểm tra tính sẵn sàng như thế nào?
+
+    ### Thiết kế abstraction và giới hạn
+
+    1. Dependency Injection khác Dependency Inversion Principle và Inversion of Control như thế nào?
+    2. Tại sao truyền interface NotificationSender có thể giảm phụ thuộc implementation nhưng không phải lớp nào cũng bắt buộc có interface?
+    3. Vì sao cung cấp sender qua constructor rồi tự new sender khác trong notifyPaid làm sai ý định DI?
+    4. Constructor injection có tự bảo đảm thread safety hoặc chuyển quyền sở hữu tài nguyên cho service không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết constructor injection | Phân tích hoặc tạo OrderNotifier nhận sender bắt buộc, Objects.requireNonNull và dùng đúng dependency được cấp. |
+    | Chọn method injection | Thiết kế AlertService gửi email/SMS theo từng lời gọi bằng tham số sender. |
+    | Thay fake trong kiểm thử | Dùng RecordingSender xác nhận nội dung, recipient và số lượt gọi mà không gửi thông báo thật. |
+    | Phân biệt các nguyên tắc | Giải thích DI, DIP, IoC qua mối quan hệ notifier, abstraction và composition root. |
+- id: composition-007
+  title: Quyền sở hữu và vòng đời đối tượng được chứa
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Quyền sở hữu và vòng đời đối tượng được chứa**
+
+    Bài học làm rõ ba ý thường bị nhập nhằng: quyền sở hữu trong mô hình nghiệp vụ, đường truy cập bằng reference Java và trách nhiệm đóng tài nguyên hệ thống. `Order` quản lý `Line` qua API thêm dòng và danh sách chỉ đọc để bảo vệ invariant; ví dụ `CsvExporter` tự mở `BufferedWriter` cho thấy owner phải đóng resource bằng AutoCloseable/try-with-resources. Người học hiểu vì sao GC không thay thế cleanup, còn `private final` hay List.copyOf có thể chưa đủ khi phần tử vẫn mutable.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Sở hữu và bảo vệ dữ liệu
+
+    1. Quyền sở hữu một thành phần trong mô hình Order/Line khác gì với việc nhiều biến giữ tham chiếu tới một instance?
+    2. Vì sao Order phải cho thêm dòng qua addLine thay vì trả trực tiếp List mutable nội bộ?
+    3. List.copyOf bảo vệ được danh sách nhưng còn rủi ro gì nếu các phần tử Line hoặc đối tượng caller truyền vào vẫn mutable?
+    4. Khi nào một thành phần nên được chia sẻ, khi nào nên được tạo/kiểm soát bởi owner?
+
+    ### Vòng đời nghiệp vụ và tài nguyên
+
+    1. Đối tượng rời khỏi Order có bị JVM thu hồi bộ nhớ ngay lập tức không, vì sao?
+    2. Trong ví dụ CsvExporter tự mở BufferedWriter, ai phải gọi close và vì sao nên dùng try-with-resources?
+    3. Nếu writer được caller tiêm vào service như tài nguyên dùng chung, service có được tự đóng nó không?
+    4. Vì sao final field và garbage collector không thay thế chiến lược quản lý alias và cleanup?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế ownership | Lập quy tắc ai tạo, sửa, chia sẻ, loại bỏ và đóng thành phần Order/Line hoặc collaborator. |
+    | Giữ invariant của tổng thể | Phân tích bug getter lộ mutable List và sửa bằng immutable value object, copy hoặc API giới hạn. |
+    | Phân biệt vòng đời | Mô tả khác nhau giữa xóa quan hệ thành phần trong domain và điều kiện GC của object trên heap. |
+    | Dọn resource đúng trách nhiệm | Thiết kế owner AutoCloseable dùng try-with-resources và so sánh resource owned với borrowed. |
+- id: composition-008
+  title: Chuyển thiết kế kế thừa sang kết hợp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chuyển thiết kế kế thừa sang kết hợp**
+
+    Bài học hướng dẫn một phép chuyển kiến trúc có kiểm soát khi lớp nghiệp vụ `OrderService` extends lớp lưu trữ `OrderStore` chỉ để dùng lại save/find. Thiết kế mới giao lưu trữ cho `OrderRepository` được truyền vào constructor, còn service giữ API nghiệp vụ và ủy quyền cho repository. Người học không chỉ thay cú pháp extends bằng field: cần kiểm kê caller và subtype assignments, chốt hành vi cùng lỗi, chuyển từng bước, viết fake/integration tests và xử lý thay đổi API trước khi gỡ kế thừa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đánh giá quan hệ kế thừa hiện tại
+
+    1. Vì sao OrderService extends OrderStore sai về quan hệ is-a và làm lộ những phương thức hạ tầng nào?
+    2. Thiết kế mới phân tách trách nhiệm của OrderService, OrderRepository và InMemoryOrderRepository như thế nào?
+    3. Composition + delegation thay cách gọi super.save bằng lời gọi nào mà vẫn giữ trách nhiệm nghiệp vụ?
+    4. Khi nào vẫn nên giữ inheritance vì subclass là subtype đúng hoặc framework có hook kế thừa rõ ràng?
+
+    ### Kế hoạch chuyển đổi và kiểm thử
+
+    1. Trước khi bỏ extends, phải rà soát những nơi gán OrderService vào biến OrderStore và những caller dùng method kế thừa nào?
+    2. Đầu vào, ngoại lệ, thứ tự gọi, transaction và side effect nào cần được ghi nhận để bảo toàn hành vi?
+    3. Vì sao fake repository có thể chứng minh tương tác service nhưng chưa chứng minh transaction và persistence của adapter thật?
+    4. Thay protected hook hoặc trạng thái kế thừa cần di chuyển trách nhiệm và bảo toàn invariant bằng cách nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện kế thừa để mượn code | Chỉ ra dấu hiệu coupling và API không đúng trách nhiệm trong OrderService extends OrderStore. |
+    | Thiết kế phiên bản composition | Phác thảo OrderRepository, triển khai in-memory và OrderService nhận repository qua constructor. |
+    | Lập kế hoạch migration | Liệt kê caller/subtype usages, hợp đồng và các bước chuyển từng phần trước khi gỡ extends. |
+    | Kiểm chứng hành vi | Thiết kế test cho đơn hợp lệ/lỗi, số lần gọi save, dữ liệu lưu và các ca integration cần bảo đảm. |

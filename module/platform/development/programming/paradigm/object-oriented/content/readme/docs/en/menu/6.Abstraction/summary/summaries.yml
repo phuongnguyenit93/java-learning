@@ -1,0 +1,316 @@
+summaries:
+- id: abstraction-001
+  title: Trừu tượng hóa và chọn đặc điểm thiết yếu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Trừu tượng hóa và chọn đặc điểm thiết yếu**
+
+    Một đối tượng ngoài đời có rất nhiều đặc điểm, nhưng mỗi chức năng phần mềm chỉ cần một phần trong số đó. Bài học giúp người học xuất phát từ câu hỏi nghiệp vụ để chọn dữ liệu, hành vi và quy tắc phù hợp, tránh buộc mọi caller mang theo một mô hình quá lớn hoặc hiểu công thức nội bộ.
+
+    Qua bài toán báo phí giao hàng, người học thấy lý do QuoteInput chỉ chứa cân nặng và quãng đường, ShippingPricing công bố hành vi báo phí, còn chính sách tiêu chuẩn và giao nhanh giữ thuật toán riêng. Cùng một kiện hàng có thể cần góc nhìn khác khi theo dõi vận chuyển.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Xác định bản chất theo ngữ cảnh
+
+    1. Vì sao không thể có một tập thuộc tính thiết yếu cố định cho mọi bài toán liên quan đến kiện hàng?
+    2. Nếu chuyển từ báo phí sang theo dõi vận chuyển, dữ liệu và hành vi cần công bố sẽ thay đổi thế nào?
+    3. Khi nào một thông tin đang được bỏ qua trở thành đầu vào bắt buộc do quy tắc nghiệp vụ thay đổi?
+
+    ### Thiết kế hợp đồng và kiểm chứng
+
+    1. Vì sao QuoteInput chỉ cần weightGrams và distanceKm trong công thức minh họa, còn ShippingPricing nên công bố hành vi quoteFee?
+    2. Caller của ShippingPricing cần biết những cam kết gì về đơn vị, giá trị hợp lệ, làm tròn và lỗi?
+    3. So với một EverythingShipment có nhiều trường không liên quan, thiết kế đầu vào theo use case giảm loại phụ thuộc nào?
+    4. Vì sao một lớp cụ thể hoặc record vẫn có thể thể hiện trừu tượng hóa mà không cần abstract class hay interface?
+    5. Với 1.001 gram và 0 km, làm thế nào suy luận phí tiêu chuẩn từ hợp đồng làm tròn cân nặng trong bài?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích yêu cầu theo use case | Lập bảng giữ hoặc bỏ từng thuộc tính của kiện hàng và giải thích quyết định bằng quy tắc nghiệp vụ cụ thể. |
+    | Thiết kế dữ liệu đầu vào tối thiểu | Phác thảo record hoặc class cho báo phí hay theo dõi, với tên trường, đơn vị và validation tương ứng. |
+    | Xây dựng hợp đồng hành vi | Đề xuất API có phương thức và kiểu kết quả thể hiện mục đích nghiệp vụ, thay vì bắt caller thực hiện thuật toán. |
+    | Phân tách hợp đồng với chính sách thực hiện | Chỉ ra vai trò của ShippingPricing, StandardPricing, ExpressPricing và composition trong ví dụ. |
+    | Đánh giá mức trừu tượng | Phát hiện mô hình quá rộng hoặc hợp đồng Object mơ hồ và đề xuất ranh giới API cụ thể hơn. |
+    | Kiểm tra kết quả theo quy tắc | Tính được phí cho trường hợp biên làm tròn khối lượng và đối chiếu với đầu ra minh họa. |
+- id: abstraction-002
+  title: Phân biệt trừu tượng với đóng gói
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt trừu tượng với đóng gói**
+
+    Bài học giúp người học nhận ra hai câu hỏi thiết kế khác nhau: đối tượng cần công bố khả năng nào cho người dùng và đối tượng phải kiểm soát những đường thay đổi trạng thái nào. Có interface chưa chắc đã bảo vệ dữ liệu; có private chưa chắc API đã diễn đạt đúng trách nhiệm.
+
+    Bằng SeatInventory và InMemorySeatInventory, người học phân biệt hợp đồng đặt ghế mà BookingService sử dụng với kiểm tra sức chứa, trường private và bản sao lịch sử nhằm bảo vệ bất biến. Các ví dụ SafeAccount và collection mutable cho thấy vì sao getter/setter hay access modifier đơn lẻ chưa đủ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Vai trò riêng của hai nguyên lý
+
+    1. Trong ví dụ đặt ghế, SeatInventory thể hiện abstraction ở đâu còn InMemorySeatInventory thực hiện encapsulation ở đâu?
+    2. Vì sao BookingService có thể đổi từ InMemorySeatInventory sang SoldOutInventory mà không cần biết cấu trúc lưu ghế?
+    3. Một lớp không có interface riêng vẫn có thể cung cấp abstraction tốt theo những điều kiện nào?
+
+    ### Bảo vệ trạng thái và nhận diện lỗi
+
+    1. Vì sao khai báo private balance nhưng cho phép setBalance nhận số âm vẫn là đóng gói yếu?
+    2. Vì sao trả trực tiếp một List mutable có thể làm hỏng bất biến dù trường giữ List là private final?
+    3. Khi nào nên dùng List.copyOf, và vì sao bản sao collection không tự bảo đảm bất biến sâu của phần tử mutable?
+    4. Mức truy cập private, package-private, protected và public ảnh hưởng ra sao đến ranh giới kiểm soát?
+    5. Vì sao việc reserve kiểm tra rồi giảm ghế trong ví dụ không tự động an toàn khi chạy nhiều luồng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt mục tiêu thiết kế | Phân loại tình huống thuộc abstraction, encapsulation hoặc cả hai, kèm giải thích theo trách nhiệm và invariant. |
+    | Phân tích phụ thuộc ở client | Giải thích vì sao BookingService chỉ dùng hợp đồng SeatInventory và dự đoán ảnh hưởng khi thay implementation. |
+    | Bảo vệ bất biến | Viết hoặc sửa constructor và phương thức reserve, deposit, withdraw để ngăn giá trị không hợp lệ. |
+    | Phát hiện lộ trạng thái mutable | Chỉ ra đường sửa nội bộ qua getter List và đề xuất snapshot hoặc API chỉ đọc phù hợp. |
+    | Đánh giá quyền truy cập | Chọn phạm vi truy cập cho trạng thái và thao tác công khai, nêu được lý do bảo vệ hợp đồng. |
+    | Nhận diện giới hạn kỹ thuật | Giải thích vì sao interface/private không thay cho đồng bộ hoặc transaction khi có cạnh tranh cập nhật. |
+- id: abstraction-003
+  title: Hợp đồng sử dụng và chi tiết thực hiện
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Hợp đồng sử dụng và chi tiết thực hiện**
+
+    Bài học giúp người học phân biệt lời hứa mà caller có quyền dựa vào với thuật toán, lưu trữ hoặc dịch vụ bên ngoài có thể thay đổi. Khớp chữ ký Java chưa đủ: giá trị trả về, lỗi, đơn vị, tác dụng phụ và thời điểm đánh giá đều góp phần tạo hợp đồng hành vi.
+
+    Ví dụ LeavePolicy dùng chính sách nghỉ phép thông thường và thử việc để cho thấy hai implementation có thể trả quyết định khác nhau nhưng vẫn giữ cam kết chung: không duyệt quá số ngày còn, không trả null và không âm thầm trừ quota. Người học cũng thực hành cách kiểm chứng hợp đồng và cách ly client khi provider thay đổi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Thiết lập hợp đồng từ góc nhìn caller
+
+    1. Với LeavePolicy.evaluate, những điều kiện đầu vào, kết quả, lỗi và side effect nào thuộc hợp đồng chung?
+    2. Tại sao @Override và kiểu trả về LeaveDecision không đủ để bảo đảm một implementation tuân thủ ngữ nghĩa?
+    3. Vì sao APPROVED trong ví dụ chỉ là kết quả đánh giá một snapshot, chưa đồng nghĩa đơn nghỉ đã được lưu hoặc trừ ngày phép?
+
+    ### Khả năng thay thế và kiểm thử
+
+    1. Vì sao chính sách thường có thể chấp thuận 3/5 ngày, chính sách thử việc từ chối 3/5 ngày mà cả hai vẫn hợp lệ?
+    2. Implementation trả null, duyệt 6/5 ngày hoặc tự trừ ngày phép vi phạm chính xác cam kết nào?
+    3. Contract test chung khác gì kiểm thử LeaveReviewService bằng một fake policy?
+    4. Khi chuyển implementation sang REST/HTTP, caller có thể cần biết thêm giới hạn nào về timeout, lỗi hệ thống, độ mới dữ liệu và retry?
+    5. Những thay đổi nào phá hợp đồng dù chữ ký evaluate vẫn giữ nguyên?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đặc tả hợp đồng hành vi | Viết rõ miền giá trị LeaveRequest, tính non-null của LeaveDecision, quy tắc chung và cam kết không side effect. |
+    | Tách vai trò client/provider | Vẽ phụ thuộc LeaveReviewService → LeavePolicy và chỉ ra các chính sách là implementation có thể thay thế. |
+    | Phân tích tính thay thế | Phân loại các kết quả APPROVED, EXCEEDS_TRIAL_LIMIT, null và thay đổi quota theo đúng hoặc sai hợp đồng. |
+    | Xây dựng contract test | Đề xuất ca kiểm tra kết quả khác null, không phê duyệt vượt phép, từ chối null và không thay đổi dữ liệu. |
+    | Kiểm thử client độc lập | Chọn một policy giả tuân thủ hợp đồng để kiểm tra đường chuyển request và nhận quyết định. |
+    | Đánh giá thay đổi triển khai | Liệt kê các thuộc tính có thể quan sát khi chuyển từ in-memory sang HTTP và xác định cam kết cần cập nhật. |
+- id: abstraction-004
+  title: Tiền điều kiện, hậu điều kiện và cam kết hành vi
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tiền điều kiện, hậu điều kiện và cam kết hành vi**
+
+    Một API chỉ đáng tin khi mô tả rõ trạng thái cần có trước lời gọi, kết quả sau khi thành công và điều phải giữ trong suốt vòng đời đối tượng. Bài học dùng SeatInventory để chuyển quy tắc đặt/trả ghế thành các cam kết có thể tính toán, viết mã và kiểm thử.
+
+    Người học phân biệt lỗi đầu vào với thiếu ghế, kiểm tra bảo toàn trạng thái khi thất bại, phát hiện implementation tăng tiền điều kiện trái hợp đồng và nhận ra giới hạn khi chạy đa luồng hoặc bất đồng bộ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Diễn đạt cam kết kiểm chứng được
+
+    1. Tiền điều kiện, hậu điều kiện và bất biến khác nhau thế nào với thao tác reserve(n) và release(n)?
+    2. Từ capacity = 10 và available = 10, sau reserve(3) rồi release(1) phải bảo đảm những giá trị nào?
+    3. Tại sao hậu điều kiện “số ghế được cập nhật” yếu hơn công thức available_after = available_before - n?
+    4. Khi reserve(9) lúc còn 8 ghế, API minh họa phải báo lỗi gì và giữ trạng thái như thế nào?
+
+    ### Thay thế, lỗi và điều kiện chạy
+
+    1. Vì sao một implementation chỉ nhận reserve(n) với n từ 2 trở lên vi phạm hợp đồng chấp nhận reserve(1)?
+    2. Làm thế nào viết contract test để kiểm tra trạng thái trước và sau lời gọi, kể cả đường exception?
+    3. Vì sao assert trong Java không thích hợp làm cơ chế bảo vệ duy nhất cho tham số API public?
+    4. Điều gì thay đổi trong cam kết nếu reserve là xử lý async hoặc nhiều luồng cùng đặt ghế?
+    5. Vì sao check available() rồi reserve(1) ở hai lời gọi riêng không đủ bảo đảm tính nguyên tử?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đặc tả tiền và hậu điều kiện | Viết quy tắc thành công, ngoại lệ và công thức trạng thái trước/sau cho reserve và release. |
+    | Chứng minh bất biến | Phân tích constructor, cập nhật và các nhánh thất bại để kiểm tra 0 ≤ available ≤ capacity. |
+    | Cài đặt theo hợp đồng | Chọn thứ tự validate trước khi sửa trạng thái và giải thích vì sao lỗi không được trừ ghế một phần. |
+    | Phân tích tương thích LSP | Phát hiện lớp con siết tiền điều kiện hoặc làm yếu hậu điều kiện và đưa ra cách thiết kế đúng. |
+    | Tạo phép thử hành vi | Thiết kế ca biên cho đủ ghế, thiếu ghế, n không dương, trả vượt ghế và kiểm tra trạng thái giữ nguyên khi lỗi. |
+    | Nêu phạm vi bảo đảm | Phân biệt kết quả sync, async, cập nhật đa luồng và giới hạn của transaction hoặc synchronized theo phạm vi hệ thống. |
+- id: abstraction-005
+  title: Lớp trừu tượng và phương thức trừu tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lớp trừu tượng và phương thức trừu tượng**
+
+    Bài học hướng dẫn dùng abstract class để chia sẻ trạng thái, constructor và quy trình ổn định giữa các lớp cùng họ, còn abstract method xác định bước buộc lớp con thực hiện. Đây là cơ chế Java cụ thể để xây dựng hợp đồng kế thừa và đa hình mà không lặp mã kiểm tra chung.
+
+    Qua ShippingPlan, người học theo dõi quote() final kiểm tra dữ liệu, gọi extraFee() được override ở EconomyShipping hoặc ExpressShipping, rồi cộng tổng phí. Bài học cũng làm rõ constructor lớp trừu tượng, lỗi biên dịch, giới hạn override và thời điểm nên chọn interface thay cho kế thừa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cú pháp và vòng đời đối tượng
+
+    1. Vì sao không thể new ShippingPlan trực tiếp nhưng có thể khai báo biến ShippingPlan nhận EconomyShipping?
+    2. Lớp abstract có thể chứa constructor, field, phương thức có thân và không có abstract method không?
+    3. Khi tạo lớp con, constructor lớp cha xử lý trạng thái chung vào thời điểm nào?
+    4. Vì sao không nên gọi phương thức có thể override từ constructor lớp cha?
+
+    ### Quy trình chung và ghi đè
+
+    1. Vì sao quote() được đánh dấu final còn extraFee() được khai báo abstract trong ví dụ tính phí?
+    2. Khi biến kiểu ShippingPlan trỏ tới ExpressShipping, Java quyết định extraFee() nào sẽ chạy?
+    3. Những lỗi biên dịch nào xảy ra nếu lớp concrete không implement abstract method, giảm quyền truy cập hoặc đổi sai chữ ký override?
+    4. Khi nào abstract class có lợi hơn interface và khi nào dùng composition sẽ rõ nghĩa hơn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện cú pháp hợp lệ | Phân biệt khai báo abstract class/method hợp lệ với abstract có body, abstract final hoặc khởi tạo abstract trực tiếp. |
+    | Tạo lớp nền dùng chung | Thiết kế abstract class giữ constructor, state được bảo vệ và phương thức chung cho họ đối tượng có quan hệ kế thừa thực. |
+    | Hiện thực điểm biến thiên | Override đúng phương thức extraFee và label với chữ ký, quyền truy cập, kiểu trả về phù hợp. |
+    | Giải thích Template Method | Mô phỏng đường gọi quote → kiểm tra → extraFee runtime → cộng phí và lý do cố định quy trình bằng final. |
+    | Kiểm tra vòng đời khởi tạo | Phân tích rủi ro lời gọi override trước khi field lớp con được khởi tạo đầy đủ. |
+    | Chọn công cụ trừu tượng | So sánh abstract class, interface và composition dựa trên yêu cầu chia sẻ trạng thái/quy trình, giới hạn đơn kế thừa. |
+- id: abstraction-006
+  title: Phân biệt lớp cụ thể với lớp trừu tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt lớp cụ thể với lớp trừu tượng**
+
+    Bài học làm rõ vai trò của kiểu tham chiếu và lớp thực tế được khởi tạo trong một cây kế thừa. Lớp trừu tượng mô tả phần chung và những điểm chưa hoàn thiện; lớp cụ thể đáp ứng đầy đủ các phương thức còn thiếu để tạo đối tượng, khi constructor và phạm vi truy cập cho phép.
+
+    Ví dụ NotificationChannel với EmailChannel, SmsChannel cho phép quan sát hành vi send() chung final gọi deliver() riêng của từng lớp con. Người học từ đó phân biệt abstract ở cấp lớp và method, đọc được kết quả đa hình và phát hiện lỗi biên dịch khi triển khai thiếu.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân biệt kiểu lớp và đối tượng
+
+    1. Với NotificationChannel channel = new SmsChannel(), kiểu khai báo và kiểu đối tượng thực tế là gì?
+    2. Lớp trừu tượng khác lớp cụ thể ở khả năng new trực tiếp và nghĩa vụ thực hiện abstract method như thế nào?
+    3. Vì sao một abstract class không có abstract method vẫn không được tạo instance trực tiếp?
+    4. Một lớp concrete có bắt buộc tự viết phương thức mới nếu mọi phương thức đã có implementation được kế thừa không?
+
+    ### Theo dõi hành vi và chọn cấu trúc
+
+    1. Tại sao send() final vẫn có thể dẫn đến cách gửi email hoặc SMS khác nhau?
+    2. Constructor của NotificationChannel chạy ra sao khi new EmailChannel, và vì sao không nên gọi hook overridable từ constructor?
+    3. Khi nào interface Trackable thích hợp hơn việc ép nhiều kiểu khác họ kế thừa chung một abstract class?
+    4. Lỗi gì xảy ra nếu lớp con quên override deliver(), override sai tên hoặc khai báo phương thức abstract là private?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định khả năng khởi tạo | Phân loại class abstract, concrete và final, giải thích điều kiện hợp lệ của biểu thức new. |
+    | Đọc kiểu tham chiếu và runtime | Giải thích đối tượng được tạo từ SmsChannel, còn biến NotificationChannel công bố bề mặt sử dụng chung. |
+    | Theo dõi đa hình động | Mô phỏng send() kiểm tra dữ liệu rồi dispatch deliver() theo từng đối tượng cụ thể. |
+    | Hoàn thiện lớp con | Viết subclass triển khai đúng abstract method và sử dụng @Override để kiểm chứng chữ ký. |
+    | Đánh giá constructor lớp cha | Dự đoán thứ tự khởi tạo và nhận diện nguy cơ gọi phương thức override quá sớm. |
+    | Lựa chọn quan hệ OOP | Đề xuất abstract class, interface, concrete class hoặc composition từ các nhu cầu chia sẻ hành vi thực tế. |
+- id: abstraction-007
+  title: Mức trừu tượng phù hợp với bài toán
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Mức trừu tượng phù hợp với bài toán**
+
+    Trừu tượng hóa chỉ có ích khi làm hành vi nghiệp vụ rõ ràng và chi phí thay đổi hợp lý. Bài học giúp người học nhận ra thiết kế quá thấp khiến caller tự lặp logic, còn thiết kế quá cao khiến một chức năng đơn giản phải đi qua nhiều tầng class, factory và generic khó hiểu.
+
+    Qua chính sách phí gửi xe, người học biết bắt đầu với ParkingFeeCalculator cụ thể cho một công thức, sau đó trích xuất ParkingFeePolicy khi xuất hiện hai chính sách tính phí cần dùng chung trong ParkingCheckout. Các ca 15, 16, 75, 76 phút cho thấy việc nâng mức trừu tượng phải bảo toàn hành vi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện mức thiết kế
+
+    1. Vì sao để UI, REST controller và batch job tự tính phí gửi xe là mức trừu tượng quá thấp?
+    2. Khi chỉ có một công thức cố định, vì sao một class ParkingFeeCalculator có API rõ có thể đủ tốt?
+    3. Những dấu hiệu nào cho thấy hệ thống factory, registry, AbstractRateEngine quá tổng quát so với yêu cầu hiện tại?
+
+    ### Tiến hóa theo nhu cầu thực tế
+
+    1. Khi nào việc xuất hiện HourlyPolicy và FlatPerVisitPolicy tạo lý do thực sự để giới thiệu ParkingFeePolicy?
+    2. ParkingCheckout phụ thuộc policy qua constructor giúp thay đổi điều gì mà không sửa logic checkout?
+    3. Vì sao dùng Object hoặc Map cho đầu vào có thể làm hợp đồng trở nên mơ hồ dù nhìn có vẻ tái sử dụng cao?
+    4. Làm thế nào chuyển từ calculator sang nhiều policy mà vẫn giữ các kết quả phí ở mốc 15, 16, 75 và 76 phút?
+    5. Khi nào composition phù hợp hơn kế thừa nhiều tầng trong bài toán nhiều chính sách?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chẩn đoán thiết kế thiếu hoặc thừa trừu tượng | Nêu dấu hiệu phân tán công thức hoặc tầng trung gian không có trách nhiệm rõ, gắn với hậu quả cụ thể. |
+    | Chọn API khởi đầu vừa đủ | Đề xuất lớp cụ thể với phương thức calculateVnd và ràng buộc tham số, kết quả minh bạch. |
+    | Nhận diện điểm biến thiên thật | Giải thích thời điểm cần trích xuất ParkingFeePolicy khi checkout phục vụ hai công thức khác nhau. |
+    | Thiết kế composition | Mô tả quan hệ ParkingCheckout chứa ParkingFeePolicy và cách truyền implementation tương ứng. |
+    | Bảo toàn hành vi khi refactor | Lập bảng kiểm tra phí ở các mốc 0, 15, 16, 75, 76 phút và giá trị lỗi cho đầu vào âm. |
+    | Đánh giá chi phí thiết kế | So sánh mức dễ đọc, số phụ thuộc, độ ổn định của hợp đồng và chi phí thêm biến thể trước khi tạo abstraction mới. |
+- id: abstraction-008
+  title: Rò rỉ chi tiết thực hiện qua giao diện sử dụng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Rò rỉ chi tiết thực hiện qua giao diện sử dụng**
+
+    Một API trông trừu tượng nhưng vẫn có thể buộc caller hiểu HashMap, SQLException, transaction hoặc thứ tự dữ liệu tình cờ của implementation. Bài học giúp phát hiện khi chi tiết triển khai đi xuyên qua hợp đồng sử dụng, khiến mã bên ngoài khó đổi backend và dễ phá bất biến.
+
+    Qua LeakyBookStore và BookCatalog, người học chuyển từ getInternalBooks().get(isbn) sang findByIsbn và searchByTitle có ngữ nghĩa rõ, phân biệt kết quả không tìm thấy với lỗi hệ thống, đồng thời xét những thuộc tính hành vi cần công bố như thứ tự kết quả, độ mới dữ liệu và vòng đời Stream.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện chi tiết bị lộ
+
+    1. Vì sao getInternalBooks() trả HashMap khiến caller phụ thuộc triển khai và có thể sửa trạng thái nội bộ?
+    2. Nếu thay HashMap mutable bằng unmodifiableMap, vấn đề đóng gói và vấn đề rò rỉ abstraction đã được xử lý đến đâu?
+    3. Khi nào Path hoặc IOException là phần hợp đồng hợp lý, thay vì dấu hiệu leaky abstraction?
+
+    ### Thiết kế lại API và giữ ngữ nghĩa
+
+    1. BookCatalog nên công bố hành vi tìm kiếm nào để LibraryService độc lập với HashMap, SQL hoặc HTTP?
+    2. Vì sao Optional.empty khi không thấy sách phải khác với thất bại khi truy vấn database?
+    3. Các thuộc tính tìm kiếm nào cần giữ nhất quán giữa implementation, như so khớp hoa/thường, thứ tự ISBN và giới hạn số kết quả?
+    4. Một Stream phụ thuộc connection đang mở đặt ra trách nhiệm vòng đời nào cho caller và adapter?
+    5. Khi nào dùng kiểu Page/Pageable của Spring là ranh giới hợp lý, và khi nào nó tạo phụ thuộc framework không cần thiết?
+    6. Các bước chuyển dần client khỏi API rò rỉ là gì để không làm hỏng tương thích sử dụng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện API rò rỉ | Chỉ ra trong ví dụ những chỗ công bố HashMap, ResultSet, SQLException hoặc phụ thuộc session ngoài phạm vi caller. |
+    | Phân biệt rò implementation với đóng gói kém | Phân tích độc lập việc lộ cấu trúc dữ liệu và cho phép sửa collection mutable. |
+    | Thiết kế hợp đồng theo nghiệp vụ | Viết phác thảo findByIsbn và searchByTitle với kiểu kết quả, điều kiện đầu vào và lỗi có ý nghĩa rõ ràng. |
+    | Bảo vệ dữ liệu trả về | Chọn List.copyOf khi phù hợp, giải thích giới hạn của sao chép nông và phần tử mutable. |
+    | Giữ hành vi thay thế được | Xây ca kiểm tra tìm theo ISBN, chữ hoa/thường, thứ tự, limit và phân biệt không có dữ liệu với lỗi backend. |
+    | Quản lý lỗi và tài nguyên | Mô tả cách adapter ánh xạ SQLException có giữ cause và cách đóng Stream phụ thuộc connection. |
+    | Lập lộ trình sửa API | Xác định nhu cầu caller, thêm API nghiệp vụ, chuyển mã gọi, loại đường truy cập cũ và kiểm thử hợp đồng. |

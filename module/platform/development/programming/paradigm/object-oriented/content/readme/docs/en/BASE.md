@@ -1,5 +1,7 @@
-# Object-Oriented Programming (OOP)
+# Lập trình hướng đối tượng (OOP)
 
-**Object-oriented programming (OOP)** is a way of organizing a program around **objects** with their own state, behavior, and responsibilities. Rather than scattering data and processing rules throughout a program, objects collaborate through clearly defined behaviors and contracts. When designed appropriately, this makes software easier to understand, change, and extend.
+Lập trình hướng đối tượng (Object-Oriented Programming, OOP) là cách tổ chức chương trình quanh các đối tượng có trạng thái, hành vi và trách nhiệm rõ ràng. Khi tiếp cận bài toán bằng OOP, ta xác định những đối tượng tham gia, công việc của từng đối tượng và cách chúng phối hợp để đáp ứng yêu cầu.
 
-This module takes you from the concepts of **classes and objects** through **encapsulation, abstraction, inheritance, and polymorphism**, relationships between objects, and how to apply these ideas when designing a complete program. The examples use **Java** for illustration, but the emphasis is on understanding OOP thinking—not merely memorizing syntax or its four commonly taught pillars. Java-specific language mechanisms are explored in greater depth in the Java Core modules.
+Tài liệu này dành cho người bắt đầu học OOP trong Java hoặc muốn hệ thống hóa tư duy thiết kế. Lộ trình gồm tám mốc: tư duy OOP; lớp và đối tượng; đóng gói; trừu tượng; kế thừa và kết hợp; đa hình; thiết kế đối tượng; thực hành tổng hợp. Người học đi từ việc nhận diện và mô hình hóa đối tượng đến tổ chức quan hệ, phân chia trách nhiệm và áp dụng các khái niệm vào một bài toán nhỏ.
+
+Sau khi hoàn thành, bạn có thể phân biệt lớp với đối tượng, quản lý trạng thái qua đóng gói, sử dụng trừu tượng và đa hình, lựa chọn kế thừa hoặc kết hợp phù hợp, đồng thời xây dựng và kiểm tra một mô hình OOP đơn giản. Trọng tâm là hiểu vì sao đưa ra từng quyết định thiết kế, nhận ra phụ thuộc không cần thiết và cải thiện khả năng thay đổi của chương trình.

@@ -56,7 +56,7 @@ class ModuleTranslationCatalogServiceTest {
         def service = new ModuleTranslationCatalogService()
         Map dry = service.execute(f.root as File, f.module as File, 'trial', 'PREPARE', false)
         assertEquals('DRY_RUN', dry.status)
-        assertEquals(6, dry.total)
+        assertEquals(7, dry.total)
         assertFalse((dry.manifest as File).exists())
         Map prepared = service.execute(f.root as File, f.module as File,
                 'trial', 'PREPARE', true)
@@ -78,9 +78,9 @@ class ModuleTranslationCatalogServiceTest {
         Map checked = service.execute(f.root as File, f.module as File,
                 'trial', 'VALIDATE', false)
         assertEquals('VALIDATED_STRUCTURE', checked.status)
-        assertEquals(6, checked.total)
+        assertEquals(7, checked.total)
         assertEquals(2, checked.translated)
-        assertEquals(4, checked.pending)
+        assertEquals(5, checked.pending)
         assertTrue(checked.semanticQaRequired)
         File snapshot = new File(f.module as File,
                 'build/step14/trial/baseline/content/readme/docs/en/menu/1.Basic/quiz/question.yml')
@@ -162,6 +162,12 @@ System.out.println("KEEP");
     void whitelistAllowsOnlyExpectedYamlTextFields() {
         assertTrue(ModuleTranslationValidationService.editable('ROADMAP',
                 'roadmap[0].relatedModules[0].note'))
+        assertTrue(ModuleTranslationValidationService.editable('REFERENCE',
+                'references[0].description'))
+        assertTrue(ModuleTranslationValidationService.editable('REFERENCE',
+                'references[0].title'))
+        assertFalse(ModuleTranslationValidationService.editable('REFERENCE',
+                'references[0].url'))
         assertFalse(ModuleTranslationValidationService.editable('ROADMAP',
                 'roadmap[0].relatedModules[0].routeId'))
         assertTrue(ModuleTranslationValidationService.editable('QUIZ',
@@ -181,6 +187,28 @@ System.out.println("KEEP");
     }
 
     @Test
+    void referenceTranslationAllowsDisplayTextButProtectsSourceUrlAndEntryOrder() {
+        String vi = '''references:
+  - title: Tài liệu tham khảo
+    url: https://example.org/reference
+    description: Giải thích ngắn
+'''
+        String en = vi.replace('Tài liệu tham khảo', 'Reference document')
+                .replace('Giải thích ngắn', 'Short explanation')
+        ModuleTranslationValidationService.compare('REFERENCE',
+                vi.getBytes('UTF-8'), en.getBytes('UTF-8'))
+        assertThrows(GradleException) {
+            ModuleTranslationValidationService.compare('REFERENCE',
+                    vi.getBytes('UTF-8'), en.replace('https://example.org/reference',
+                            'https://example.org/other').getBytes('UTF-8'))
+        }
+        assertThrows(GradleException) {
+            ModuleTranslationValidationService.compare('REFERENCE',
+                    vi.getBytes('UTF-8'), 'references: []\n'.getBytes('UTF-8'))
+        }
+    }
+
+    @Test
     void catalogIncludesNestedAndLegacyRootKnowledgeButIgnoresAuxiliaryChapterFiles() {
         Map f = fixture()
         File module = f.module as File
@@ -195,7 +223,7 @@ System.out.println("KEEP");
         write(module, 'content/readme/docs/en/menu/LegacyRoot.md',
                 '# Legacy root Knowledge')
         List<Map> inventory = ModuleTranslationCatalogService.inventory(module)
-        assertEquals(7, inventory.size())
+        assertEquals(8, inventory.size())
         assertEquals(2, inventory.count { it.type == 'README' })
         assertEquals(1, inventory.count { it.type == 'QUIZ' })
         assertEquals(1, inventory.count { it.type == 'INTERVIEW' })
@@ -237,7 +265,7 @@ System.out.println("KEEP");
 
         def service = new ModuleTranslationCatalogService()
         List<Map> inventory = ModuleTranslationCatalogService.inventory(module)
-        assertEquals(6, inventory.size())
+        assertEquals(7, inventory.size())
         assertFalse(inventory.any { it.enPath?.contains('/video/') })
         assertEquals('PREPARED', service.execute(f.root as File, module,
                 'video-independent', 'PREPARE', true).status)
@@ -258,6 +286,8 @@ System.out.println("KEEP");
                         '# Chương\n## <a id="basic-001">Bài học</a>\nNội dung giải thích',
                 'content/readme/docs/vi/menu/1.Basic/metadata/knowledge-metadata.yml':
                         'sections:\n  basic-001: {difficulty: BASIC}',
+                'content/reference/vi/references.yml':
+                        'references:\n  - title: Tài liệu\n    url: https://example.org/reference\n    description: Mô tả nguồn',
                 'content/roadmap/vi/roadmap.yml':
                         'roadmap:\n  - id: stable\n    title: Tiêu đề\n    purpose: Mục tiêu\n    objectives: [Hiểu nguyên lý]',
                 'content/readme/docs/vi/menu/1.Basic/quiz/question.yml': '''questions:

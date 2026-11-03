@@ -1,0 +1,279 @@
+summaries:
+- id: relationships-001
+  title: Liên kết giữa các đối tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Liên kết giữa các đối tượng**
+
+    Nắm được association là quan hệ giữa các đối tượng cụ thể và cách biểu diễn mối liên hệ đó trong Java. Thông qua ví dụ Ticket–Agent, người học cần tách bạch tham chiếu, chiều truy cập, số lượng và quyền sở hữu vòng đời, từ đó thay đổi liên kết mà vẫn giữ đúng quy tắc nghiệp vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất association và liên kết thực tế
+
+    1. Một quan hệ giữa hai lớp khác gì liên kết hiện tại giữa hai object Ticket và Agent; khi đổi người phụ trách thì thành phần nào thay đổi?
+    2. Vì sao field `Ticket.assignee` chỉ là tham chiếu mà không chứng minh Agent sở hữu vòng đời Ticket?
+    3. Trong sơ đồ Ticket–Agent, bội số `0..1` và `0..*` đặt gần từng đầu phải được đọc như thế nào?
+
+    ### Triển khai và duy trì liên kết
+
+    1. Khi chuyển ticket từ Lan sang Minh trong mô hình hai chiều, `changeAssignee()` cần cập nhật những phía nào và vì sao?
+    2. Khi nào chỉ lưu chiều `Ticket → Agent` và dùng repository để truy vấn ngược sẽ phù hợp hơn lưu hai chiều?
+    3. Trong trường hợp liên kết Student–Course có ngày đăng ký hoặc trạng thái riêng, vì sao nên xét một đối tượng `Enrollment` thay cho hai Set rời nhau?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện association | Chỉ ra được quan hệ kiểu lớp và các link giữa instance cụ thể trong tình huống phân công Ticket. |
+    | Đọc cardinality và navigability | Diễn giải đúng giới hạn `0..1`/`0..*` và đầu nào có thể đi tới đầu nào của quan hệ. |
+    | Giữ nhất quán liên kết | Phân tích các bước gỡ link cũ, đổi tham chiếu, thêm link mới khi chuyển người phụ trách. |
+    | Lựa chọn chiều lưu trữ | Lý giải khi nào một field liên kết đủ, khi nào mới cần chiều ngược hoặc truy vấn repository. |
+    | Bảo vệ API quan hệ | Nhận diện lỗi lộ Set có thể sửa, quy tắc equals/hashCode không ổn định hoặc thiếu đối tượng trung gian cho liên kết có thuộc tính. |
+- id: relationships-002
+  title: Sự phụ thuộc tạm thời và liên kết lâu dài
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Sự phụ thuộc tạm thời và liên kết lâu dài**
+
+    Phân biệt quan hệ sử dụng một cộng tác viên trong một thao tác với association được giữ như một phần trạng thái nghiệp vụ. Bài học giúp lựa chọn tham số phương thức, field, constructor injection và ký hiệu UML phù hợp, đồng thời tránh suy đoán vòng đời object từ phạm vi biến hoặc tên dependency.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phụ thuộc và liên kết trong mô hình
+
+    1. Giữa `Ticket.assignee` và tham số `MessageSender sender` của thao tác thông báo, quan hệ nào là trạng thái nghiệp vụ và quan hệ nào phục vụ hành vi tại thời điểm gọi?
+    2. Đường dependency nét đứt và association nét liền trên UML truyền đạt thông tin khác nhau ra sao?
+    3. Vì sao sau khi `notifyAssignee()` kết thúc không thể suy ra `ConsoleSender` đã bị GC thu gom?
+
+    ### Lựa chọn cộng tác viên và kiểm thử
+
+    1. Khi `NotificationService` được inject `MessageSender` qua constructor và giữ field, vì sao vẫn tồn tại dependency về thiết kế dù tham chiếu được lưu lâu?
+    2. Những câu hỏi nào về nhu cầu truy vấn về sau, trạng thái miền nghiệp vụ và chi phí truyền tham số giúp chọn tham số, field hoặc repository?
+    3. Kiểm thử một dependency dùng trong thao tác và kiểm thử association đổi người phụ trách qua nhiều thao tác khác nhau ở những điểm nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại quan hệ từ code | Phân biệt method-level dependency của sender với association giữa ticket và người phụ trách. |
+    | Đọc biểu diễn UML | Chỉ đúng hướng của mũi tên dependency và đường liền biểu thị liên kết có trạng thái. |
+    | Đánh giá constructor injection | Giải thích một field được tiêm có thể là phụ thuộc dịch vụ, không tự trở thành quan hệ sở hữu nghiệp vụ. |
+    | Lựa chọn nơi giữ tham chiếu | Thiết kế việc truyền cộng tác viên qua tham số hoặc lưu liên kết theo yêu cầu sử dụng qua nhiều lần gọi. |
+    | Viết kiểm thử có mục tiêu | Nêu assertion khác nhau cho fake sender được gọi đúng và việc Ticket duy trì/gỡ association đúng sau thao tác. |
+- id: relationships-003
+  title: Tập hợp và hợp thành
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tập hợp và hợp thành**
+
+    Đọc đúng quan hệ toàn thể–bộ phận: aggregation nhóm những thành phần có thể độc lập, còn composition gắn part với một owner theo hợp đồng miền nghiệp vụ. Qua Team–Employee và Order–LineItem, người học xác định quyền sở hữu, giới hạn chia sẻ, thao tác xóa/chuyển và ranh giới với GC hoặc cascade của JPA.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ý nghĩa ownership và vòng đời
+
+    1. Vì sao một field `List` hoặc lệnh `new` không đủ chứng minh aggregation hay composition, và câu hỏi nghiệp vụ nào phải được trả lời trước?
+    2. Trong Team–Employee, thao tác xóa nhóm hoặc loại thành viên khác gì xóa Order có các LineItem thuộc riêng đơn hàng?
+    3. Trong UML, hình thoi rỗng và đặc nằm ở phía nào, và composition ràng buộc một part với bao nhiêu composite tại cùng thời điểm?
+
+    ### Cài đặt và persistence
+
+    1. Làm sao API của Order ngăn LineItem bị gắn đồng thời vào hai đơn và không lộ collection có thể chỉnh sửa trực tiếp?
+    2. Vì sao `CascadeType.REMOVE` hoặc `orphanRemoval` chỉ phù hợp khi chính quy tắc domain yêu cầu xóa part, đặc biệt với nhân viên được nhiều nhóm dùng chung?
+    3. Kiểm thử những hành vi nào để phân biệt sự tồn tại độc lập của Employee với vòng đời thuộc một Order của LineItem?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích whole–part | Dựa vào khả năng tồn tại độc lập, chia sẻ và đổi chủ để chọn aggregation, composition hoặc association thường. |
+    | Đọc ký pháp UML | Đặt đúng hình thoi rỗng/đặc ở phía whole và phát biểu hạn chế ownership của part. |
+    | Thiết kế composition | Mô tả API Order tạo, sửa, xóa LineItem qua owner và từ chối trạng thái không hợp lệ. |
+    | Tránh xóa nhầm entity chia sẻ | Đánh giá nguy cơ cascade REMOVE, orphanRemoval trên Team–Employee so với Order–LineItem. |
+    | Kiểm chứng hợp đồng vòng đời | Đề xuất test xóa thành viên không xóa Employee, và test LineItem độc quyền, kiểm tra dữ liệu khi xóa Order theo chính sách. |
+- id: relationships-004
+  title: 'Số lượng: một-một, một-nhiều và nhiều-nhiều'
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Số lượng: một-một, một-nhiều và nhiều-nhiều**
+
+    Xác định bội số hợp lệ ở cả hai đầu quan hệ thay vì suy từ kiểu field hay collection. Bài học hướng dẫn mô hình 1–1, 1–N và N–N, lựa chọn association object/registry cho lần đăng ký có dữ liệu riêng, đồng thời bảo vệ các ràng buộc về null, số lượng, danh tính và chuyển liên kết.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đọc bội số và ràng buộc
+
+    1. Với UML `Department "1" -- "0..*" Employee`, mỗi ký hiệu ở một đầu nói gì về số đối tượng ở đầu đó cho một object phía đối diện?
+    2. Trường hợp 1–1 bắt buộc khác `0..1` thế nào, và vì sao khai báo `Profile profile` không tự bảo vệ tính duy nhất trên toàn hệ thống?
+    3. Vì sao `List<Task>` không cho biết quan hệ là 1–N hay N–N nếu chưa xét đầu Task → Project?
+
+    ### Chọn cấu trúc và bảo vệ invariant
+
+    1. Trong mô hình Student–Course N–N, cách `EnrollmentRegistry` ngăn một cặp ID đăng ký trùng ra sao và giới hạn gì khi demo chỉ chạy trong bộ nhớ?
+    2. Khi bản thân lần đăng ký có `status`, `grade`, `enrolledOn`, vì sao lớp Enrollment biểu diễn rõ hơn hai Set phản chiếu?
+    3. Với Team phải có 1 đến 5 thành viên không trùng ID, thao tác thêm, xóa và khởi tạo cần từ chối tình huống nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dịch yêu cầu thành multiplicity | Điền đúng `1`, `0..1`, `0..*`, `1..*`, khoảng min..max ở từng đầu trên sơ đồ. |
+    | Phân biệt các kiểu quan hệ | Diễn đạt số lượng hợp lệ cho 1–1, 1–N, N–N và tách khỏi ownership/navigability. |
+    | Thiết kế biểu diễn N–N | Lựa chọn registry hoặc Enrollment làm lớp trung gian khi quan hệ có định danh và thuộc tính riêng. |
+    | Cưỡng chế giới hạn cardinality | Đề xuất invariant và thao tác thêm/gỡ/chuyển bảo vệ tính duy nhất, tối thiểu/tối đa và null. |
+    | Kiểm tra tình huống nghiệp vụ | Phân tích kết quả đăng ký trùng, Team vượt sức chứa hoặc xóa thành viên cuối cùng theo chính sách đã định. |
+- id: relationships-005
+  title: Hướng liên kết và khả năng điều hướng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Hướng liên kết và khả năng điều hướng**
+
+    Xác định đối tượng cần truy cập trực tiếp từ phía nào của association và chỉ lưu đường đi đáp ứng truy vấn nghiệp vụ. Thông qua Order–Customer và Team–Member, bài học làm rõ navigability độc lập với multiplicity/ownership, chi phí lưu liên kết hai chiều và khả năng dùng repository để tìm phía ngược.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hướng điều hướng và UML
+
+    1. Khác biệt giữa association, multiplicity và navigability trong quan hệ Order–Customer là gì?
+    2. Vì sao mũi tên liên kết từ Order tới Customer không có nghĩa dữ liệu chỉ chạy một chiều hoặc Customer được tạo sau Order?
+    3. Khi sơ đồ UML không ghi mũi tên association, vì sao không nên mặc định đó chắc chắn là quan hệ hai chiều?
+
+    ### Thiết kế object graph
+
+    1. Nếu Order biết Customer nhưng Customer không giữ các Order, màn hình lịch sử mua hàng có thể tìm đơn bằng cách nào?
+    2. Khi Team và Member đều cần tìm nhau, những thay đổi nào phải diễn ra trong một thao tác chuyển nhóm để hai phía nhất quán?
+    3. Vì sao việc bổ sung chiều ngược làm tăng chi phí bảo trì, khả năng chu trình tham chiếu và lỗi serialize dù không nhất thiết làm đổi multiplicity?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đọc đường điều hướng | Phân tích chiều mũi tên association, nhãn bội số và khả năng truy cập trực tiếp từ từng object. |
+    | Chọn đồ thị tham chiếu tối giản | Lý giải khi nào `Order.customer` đủ và chiều ngược nên đặt ở repository/query service. |
+    | Thiết kế hai chiều khi cần | Xác định cổng cập nhật Team–Member và các bước đồng bộ khi thêm, gỡ, chuyển. |
+    | Phân biệt UML dependency | Chỉ ra mũi tên dependency nét đứt khác mũi tên navigability trên đường association liền. |
+    | Phát hiện lỗi do lưu dư | Nhận diện collection mutable, hai setter gọi ngược, JSON recursion và ngộ nhận JPA mappedBy tự đồng bộ. |
+- id: relationships-006
+  title: Quan hệ hai chiều và giữ dữ liệu nhất quán
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Quan hệ hai chiều và giữ dữ liệu nhất quán**
+
+    Bảo vệ invariant khi hai object giữ thông tin về cùng một mối liên kết, kể cả lúc thêm, chuyển và hủy phân công. Bài học dùng Employee–Department để tổ chức cổng cập nhật duy nhất, kiểm tra trước khi sửa, giữ trạng thái cũ khi thất bại và đối chiếu owning side JPA với quyền quản lý nghiệp vụ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bất biến và thao tác thay đổi
+
+    1. Với `Employee.department` và `Department.employees`, invariant nào phải đúng ở cả hai phía sau mỗi thao tác?
+    2. Khi chuyển nhân viên từ A sang B, vì sao phải kiểm tra sức chứa B trước ba bước gỡ A, đổi tham chiếu và thêm B?
+    3. Tại sao hai setter độc lập, getter trả Set có thể sửa hoặc hai helper gọi ngược vô điều kiện dễ gây lệch dữ liệu hoặc đệ quy vô hạn?
+
+    ### JPA, lỗi và kiểm thử
+
+    1. Trong JPA/Hibernate, owning side của khóa ngoại khác domain owner giữ invariant ở điểm nào và `mappedBy` có tự cập nhật hai phía object graph không?
+    2. Khi thay đổi liên kết gặp lỗi nghiệp vụ hoặc có hai request cạnh tranh, cần giữ trạng thái ban đầu và xét transaction/đồng bộ ra sao?
+    3. Vì sao test cần kiểm tra cả hai phía sau ca thành công/thất bại và dùng `flush`, `clear`, reload trước khi kết luận dữ liệu DB đã lưu đúng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát biểu invariant hai chiều | Viết điều kiện tương đương giữa tham chiếu `Employee.department` và membership trong `Department.employees`. |
+    | Thiết kế cổng cập nhật duy nhất | Mô phỏng `moveTo` idempotent, xác thực trước, gỡ cũ, gán mới và thêm mới đúng thứ tự. |
+    | Đóng gói collection | Phân biệt immutable view live và snapshot, ngăn caller phá trạng thái qua getter. |
+    | Phân tích owning side JPA | Xác định phía ghi khóa ngoại, phía `mappedBy`, và yêu cầu đồng bộ cả object graph trong transaction. |
+    | Kiểm thử tính nhất quán | Nêu các assertion cho thêm/chuyển/gỡ, lỗi phòng đầy, dữ liệu sau flush/reload và giới hạn test đơn luồng. |
+    | Nhận biết điểm nguy hiểm | Phát hiện hashCode phụ thuộc field mutable, JSON recursion, cascade xóa sai hoặc cập nhật thiếu khóa đồng thời. |
+- id: relationships-007
+  title: Vòng phụ thuộc và cách phá vòng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Vòng phụ thuộc và cách phá vòng**
+
+    Phân tích đồ thị phụ thuộc ở cấp lớp, luồng gọi, Spring bean, package và module để tìm chu trình thực sự gây coupling hoặc lỗi khởi tạo. Bài học hướng dẫn phá vòng theo trách nhiệm bằng coordinator, policy chung, Dependency Inversion hoặc event có ranh giới rõ; sau đó xác nhận hành vi và đồ thị đã đổi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện đúng loại chu trình
+
+    1. Vòng `OrderService → ShippingService → OrderService` có thể gây những rủi ro riêng nào về constructor wiring, lời gọi runtime, test và transaction?
+    2. Vì sao `Parent ↔ Child` trong object graph không mặc nhiên là lỗi thiết kế hoặc memory leak, khác với vòng module/build và vòng gọi đệ quy?
+
+    ### Refactor theo trách nhiệm
+
+    1. Thiết kế `CheckoutCoordinator` dùng `OrderRepository` và `ShippingGateway` một chiều chuyển trách nhiệm orchestration ra khỏi cặp service thế nào?
+    2. Khi nào nên trích `DiscountPolicy` dùng chung, đưa interface về tầng domain hoặc phát `OrderPlaced` thay cho lời gọi trực tiếp?
+    3. Vì sao `@Lazy`, `ObjectProvider` hay setter injection có thể chỉ trì hoãn lỗi bean cycle, và làm sao kiểm tra vòng runtime thực sự đã được phá?
+
+    ### Kiểm chứng giới hạn vận hành
+
+    1. Nếu lưu order thành công nhưng gọi shipping hoặc gửi event thất bại, transaction, retry/idempotency và transactional outbox giải quyết khía cạnh nào?
+    2. Làm sao kiểm tra lại cả đồ thị build/import, wiring Spring và thứ tự tương tác nghiệp vụ thay vì chỉ thử ứng dụng khởi động?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại các dạng vòng | Phân biệt directed dependency cycle, constructor cycle, runtime recursion, object reference cycle và project/module cycle. |
+    | Vẽ lại luồng cộng tác | Chuyển Order–Shipping thành coordinator với các cổng độc lập không gọi ngược. |
+    | Chọn kỹ thuật phá vòng | Giải thích theo tình huống việc trích policy, dependency inversion hay domain event phù hợp hơn. |
+    | Phân tích hậu quả vận hành | Nhận diện cần transaction boundary, retry, outbox và idempotency khi chia cắt luồng xử lý. |
+    | Kiểm thử sau refactor | Đề xuất kiểm tra thứ tự save/request shipment, wiring context và không tái xuất hiện chu trình ở nhiều cấp. |
+    | Đánh giá giải pháp tạm | Nêu vì sao trì hoãn bean bằng `@Lazy` không sửa một vòng gọi logic vốn tồn tại. |
+- id: relationships-008
+  title: Đọc ký hiệu quan hệ trong sơ đồ lớp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đọc ký hiệu quan hệ trong sơ đồ lớp**
+
+    Đọc sơ đồ lớp UML như một bản mô tả hợp đồng giữa các kiểu thay vì đoán theo một dấu mũi tên. Bài học tích hợp sáu ký hiệu association, dependency, aggregation, composition, generalization, realization cùng bội số, chiều điều hướng, tên vai trò và cách hiện thực tương ứng trong Java.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện ký hiệu quan hệ
+
+    1. Đường liền, nét đứt, mũi tên mở, tam giác rỗng, hình thoi rỗng và hình thoi đặc khác nhau thế nào khi nhận diện sáu quan hệ UML?
+    2. Vì sao tam giác rỗng trên đường liền trỏ tới superclass khác tam giác rỗng trên nét đứt trỏ tới interface?
+    3. Đọc `0..1`, `0..*`, `1..*` ở hai đầu sơ đồ bằng cách nào để không đảo ngược số lượng?
+
+    ### Đọc trọn sơ đồ rồi đối chiếu Java
+
+    1. Trong mô hình Order–Customer, Order–OrderLine và CheckoutService–PaymentGateway, mỗi quan hệ gợi ý field, ownership, dependency hay `implements` nào?
+    2. Vì sao không thể kết luận quyền sở hữu hoặc lệnh xóa Java chỉ từ `List<Child>`, và hình thoi phải được đặt bên whole ra sao?
+    3. Ý nghĩa của `+`, `-`, `#`, `~`, static gạch dưới, abstract in nghiêng và các constraint `{ordered}`/`{unique}` khi đối chiếu bản vẽ với Java là gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại ký hiệu UML | Gọi đúng tên và ý nghĩa của sáu loại đường nối bằng đặc điểm nét, mũi tên và hình thoi. |
+    | Đọc đúng điểm đặt bội số | Diễn giải các nhãn cardinality từ góc nhìn object phía đối diện. |
+    | Đối chiếu UML với Java | Phác thảo field, tham số, extends, implements hoặc API owner từ từng loại quan hệ trong sơ đồ mẫu. |
+    | Giải thích các ràng buộc | Phân biệt role name, visibility, static/abstract, ordered/unique và điều kiện phải được code cưỡng chế. |
+    | Phát hiện suy luận sai | Chỉ ra tại sao đường association không mũi tên có thể chưa xác định navigability và vì sao composition không có nghĩa JVM tự xóa part. |
