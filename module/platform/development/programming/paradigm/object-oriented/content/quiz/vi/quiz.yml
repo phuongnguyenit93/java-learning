@@ -4,7 +4,14 @@ quiz:
   questions:
   - question: OOP giúp quản lý độ phức tạp chủ yếu bằng cách nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - oop-basic-001
+      - oop-basic-006
+      - class-design-001
+      - class-design-002
+      - modeling-003
+      - design-pitfalls-001
+      - oop-basic-002
     answers:
     - id: A
       answer: Phân trách nhiệm cho các object gắn trạng thái với hành vi liên quan
@@ -23,7 +30,12 @@ quiz:
     correctAnswerId: A
   - question: Phát biểu nào phân biệt class và object chính xác?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - oop-basic-002
+      - oop-basic-003
+      - class-002
+      - object-001
+      - modeling-006
     answers:
     - id: A
       answer: Class mô tả dữ liệu lưu trữ; object chỉ định nghĩa các phương thức xử lý
@@ -40,7 +52,11 @@ quiz:
     correctAnswerId: D
   - question: Hai object có toàn bộ field giống nhau nhưng được tạo riêng thì điều gì chắc chắn đúng?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - object-001
+      - object-004
+      - modeling-006
+      - practice-005
     answers:
     - id: A
       answer: Hai object có field bằng nhau mặc nhiên bằng nhau theo Object.equals
@@ -57,7 +73,11 @@ quiz:
     correctAnswerId: D
   - question: Entity khác Value Object nổi bật ở điểm nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - object-004
+      - class-design-006
+      - modeling-002
+      - practice-005
     answers:
     - id: A
       answer: Entity được theo dõi bằng identity nghiệp vụ; Value Object chủ yếu bằng giá trị
@@ -77,7 +97,11 @@ quiz:
     correctAnswerId: A
   - question: Dấu hiệu class có cohesion thấp là gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - class-design-002
+      - modeling-004
+      - solid-002
+      - design-pitfalls-001
     answers:
     - id: A
       answer: Các phương thức cùng bảo vệ một invariant với các nhánh xử lý khác nhau
@@ -98,7 +122,9 @@ quiz:
   questions:
   - question: Trong Java, static field khác instance field thế nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - class-003
+      - design-pitfalls-008
     answers:
     - id: A
       answer: Static field tồn tại theo từng method call; instance field theo class loader
@@ -115,7 +141,9 @@ quiz:
     correctAnswerId: B
   - question: Static factory method có ưu điểm nào so với constructor?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - lifecycle-005
+      - design-patterns-002
     answers:
     - id: A
       answer: Luôn tái sử dụng cùng instance thay vì cấp phát object mới khi gọi
@@ -133,7 +161,10 @@ quiz:
     correctAnswerId: C
   - question: Khi khởi tạo object phải giữ invariant, cách nào phù hợp?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - lifecycle-002
+      - encapsulation-002
+      - testing-002
     answers:
     - id: A
       answer: Khởi tạo object tạm chưa hợp lệ rồi validate ở lần sử dụng đầu tiên
@@ -151,7 +182,11 @@ quiz:
     correctAnswerId: B
   - question: Vì sao gọi method override từ superclass constructor có thể nguy hiểm?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - lifecycle-004
+      - lifecycle-009
+      - inheritance-006
+      - testing-002
     answers:
     - id: A
       answer: Method override không thể truy cập state subclass trong lúc khởi tạo object
@@ -169,7 +204,10 @@ quiz:
     correctAnswerId: B
   - question: Tại sao private final List<String> chưa đủ để object bất biến sâu?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - class-006
+      - object-005
+      - encapsulation-007
     answers:
     - id: A
       answer: Final giữ cố định tham chiếu, không ngăn thay đổi phần tử của List mutable
@@ -186,7 +224,10 @@ quiz:
     correctAnswerId: A
   - question: List.copyOf(list) có giới hạn nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - object-005
+      - object-006
+      - encapsulation-007
     answers:
     - id: A
       answer: List.copyOf biến các phần tử mutable thành các bản sao bất biến
@@ -203,7 +244,9 @@ quiz:
     correctAnswerId: C
   - question: Đóng file và database connection nên dựa vào cơ chế nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - lifecycle-008
+      - composition-007
     answers:
     - id: A
       answer: Đóng đúng lúc bằng close hoặc try-with-resources theo quyền sở hữu
@@ -223,7 +266,11 @@ quiz:
   questions:
   - question: Encapsulation thực sự bảo vệ điều gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - encapsulation-001
+      - encapsulation-002
+      - encapsulation-008
+      - testing-003
     answers:
     - id: A
       answer: Giới hạn class chỉ được gọi qua interface và không có method public
@@ -240,7 +287,11 @@ quiz:
     correctAnswerId: B
   - question: Tại sao public setter cho từng field dễ làm mất invariant liên trường?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - encapsulation-002
+      - encapsulation-004
+      - design-pitfalls-002
+      - testing-003
     answers:
     - id: A
       answer: Mỗi setter validate field của mình là đủ bảo đảm mọi invariant liên trường
@@ -257,7 +308,11 @@ quiz:
     correctAnswerId: B
   - question: Phân biệt invariant và validation đầu vào thế nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - lifecycle-002
+      - encapsulation-002
+      - encapsulation-005
+      - testing-003
     answers:
     - id: A
       answer: Validation giữ trạng thái object cả đời; invariant chỉ kiểm dữ liệu request
@@ -274,7 +329,11 @@ quiz:
     correctAnswerId: C
   - question: Getter trả trực tiếp ArrayList nội bộ gây rủi ro gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - object-007
+      - encapsulation-006
+      - refactoring-005
+      - encapsulation-007
     answers:
     - id: A
       answer: Caller có thể sửa List nội bộ mà không qua thao tác kiểm tra của object
@@ -291,7 +350,12 @@ quiz:
     correctAnswerId: A
   - question: Cách nào phù hợp để Order tự bảo vệ chuyển trạng thái DRAFT sang PAID?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - encapsulation-008
+      - encapsulation-009
+      - modeling-008
+      - testing-003
+      - practice-002
     answers:
     - id: A
       answer: Client gọi setStatus(PAID) sau khi tự kiểm tra ở ngoài domain
@@ -308,7 +372,11 @@ quiz:
     correctAnswerId: D
   - question: Anemic Domain Model có dấu hiệu gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - encapsulation-008
+      - class-design-007
+      - design-pitfalls-003
+      - refactoring-004
     answers:
     - id: A
       answer: Object tự điều phối hành vi và bảo vệ invariant qua method nghiệp vụ
@@ -325,7 +393,11 @@ quiz:
     correctAnswerId: B
   - question: Khi key trong HashMap đổi field ảnh hưởng hashCode sau lúc put, chuyện gì có thể xảy ra?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - object-004
+      - language-mechanics-006
+      - design-pitfalls-009
+      - testing-001
     answers:
     - id: A
       answer: Map.get có thể không tìm được key vì hashCode đã đổi sau khi put
@@ -342,7 +414,11 @@ quiz:
     correctAnswerId: A
   - question: Immutable object có đảm bảo toàn bộ quy trình đa luồng nguyên tử không?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - object-005
+      - object-007
+      - design-pitfalls-008
+      - testing-003
     answers:
     - id: A
       answer: Tính bất biến khiến mọi biến tham chiếu tới object tự có volatile
@@ -362,7 +438,11 @@ quiz:
   questions:
   - question: Abstraction giúp client như thế nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - abstraction-003
+      - interface-001
+      - interface-003
+      - solid-006
     answers:
     - id: A
       answer: Client kế thừa implementation để truy cập trực tiếp mọi field nội bộ
@@ -379,7 +459,10 @@ quiz:
     correctAnswerId: D
   - question: Precondition của method là gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - abstraction-004
+      - language-mechanics-008
+      - testing-001
     answers:
     - id: A
       answer: Điều kiện caller phải đáp ứng trước khi operation được thực thi
@@ -396,7 +479,11 @@ quiz:
     correctAnswerId: A
   - question: Interface thường phù hợp hơn abstract class khi nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - abstraction-005
+      - interface-005
+      - polymorphism-002
+      - composition-004
     answers:
     - id: A
       answer: Khi cần giới hạn class chỉ kế thừa một bộ implementation cố định
@@ -413,7 +500,11 @@ quiz:
     correctAnswerId: C
   - question: Dấu hiệu vi phạm Interface Segregation Principle là gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - interface-006
+      - polymorphism-008
+      - solid-005
+      - design-pitfalls-006
     answers:
     - id: A
       answer: Interface có nhiều implementation nhưng các client chỉ dùng phần mình cần
@@ -431,7 +522,10 @@ quiz:
     correctAnswerId: D
   - question: Hai interface có default method trùng chữ ký, class implements cả hai thì sao?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - interface-007
+      - inheritance-008
+      - polymorphism-006
     answers:
     - id: A
       answer: Runtime lựa chọn default method theo kiểu của biến đang tham chiếu object
@@ -448,7 +542,10 @@ quiz:
     correctAnswerId: C
   - question: Leaky abstraction có biểu hiện gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - abstraction-008
+      - interface-009
+      - class-design-004
     answers:
     - id: A
       answer: Client cấu hình persistence adapter tại composition root của ứng dụng
@@ -468,7 +565,12 @@ quiz:
   questions:
   - question: Kế thừa implementation có tự chứng minh quan hệ is-a hợp lệ không?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - subtyping-001
+      - subtyping-002
+      - solid-004
+      - design-pitfalls-004
+      - testing-005
     answers:
     - id: A
       answer: Quan hệ extends tự đảm bảo mọi tiền điều kiện của base đều được giữ nguyên
@@ -485,7 +587,11 @@ quiz:
     correctAnswerId: D
   - question: Subclass tăng precondition so với superclass có nguy cơ gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - abstraction-004
+      - subtyping-007
+      - solid-004
+      - testing-005
     answers:
     - id: A
       answer: Client tự động thay đổi điều kiện gọi dựa theo kiểu object lúc runtime
@@ -503,7 +609,11 @@ quiz:
     correctAnswerId: C
   - question: Dấu hiệu subclass phá hợp đồng superclass là gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - subtyping-007
+      - solid-004
+      - design-pitfalls-004
+      - testing-005
     answers:
     - id: A
       answer: Subclass trả về subtype hợp lệ khi override method của superclass
@@ -521,7 +631,11 @@ quiz:
     correctAnswerId: B
   - question: Runtime polymorphism trong Java thực hiện bằng cơ chế nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - inheritance-004
+      - subtyping-004
+      - polymorphism-003
+      - polymorphism-004
     answers:
     - id: A
       answer: Instance method override được dispatch theo kiểu object thực tế khi gọi
@@ -538,7 +652,11 @@ quiz:
     correctAnswerId: A
   - question: Với overload foo(Object) và foo(String), argument khai báo Object nhưng chứa String, method nào được chọn?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - subtyping-004
+      - polymorphism-003
+      - polymorphism-005
+      - language-mechanics-004
     answers:
     - id: A
       answer: Cả foo(Object) và foo(String) cùng được gọi theo thứ tự cụ thể hơn
@@ -555,7 +673,10 @@ quiz:
     correctAnswerId: C
   - question: Static method cùng chữ ký ở subclass được xử lý thế nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - class-003
+      - inheritance-007
+      - polymorphism-006
     answers:
     - id: A
       answer: Compiler chuyển method static ở subclass thành abstract để phân giải
@@ -572,7 +693,10 @@ quiz:
     correctAnswerId: B
   - question: Private method superclass có được override theo nghĩa virtual dispatch không?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - inheritance-007
+      - polymorphism-006
+      - polymorphism-007
     answers:
     - id: A
       answer: Có; thêm @Override vào method subclass sẽ cho phép override private
@@ -589,7 +713,10 @@ quiz:
     correctAnswerId: D
   - question: Covariant return khi override là gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - inheritance-004
+      - subtyping-007
+      - polymorphism-005
     answers:
     - id: A
       answer: Return type của override có thể là subtype tương thích của reference type
@@ -606,7 +733,12 @@ quiz:
     correctAnswerId: A
   - question: Vì sao kế thừa chỉ để lấy vài method có thể nguy hiểm?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - inheritance-010
+      - subtyping-001
+      - composition-004
+      - design-pitfalls-004
+      - refactoring-007
     answers:
     - id: A
       answer: Subclass tự cô lập thay đổi superclass nên contract ít bị ảnh hưởng hơn
@@ -623,7 +755,11 @@ quiz:
     correctAnswerId: B
   - question: Khi nhiều nhánh instanceof lặp lại ở các client cho hành vi theo subtype, hướng phù hợp là gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - polymorphism-009
+      - design-patterns-008
+      - design-pitfalls-005
+      - refactoring-006
     answers:
     - id: A
       answer: Đưa hành vi vào subtype hoặc Strategy để client gọi theo contract
@@ -641,7 +777,10 @@ quiz:
     correctAnswerId: A
   - question: Khi nào instanceof có thể chấp nhận được?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - subtyping-006
+      - polymorphism-009
+      - design-pitfalls-005
     answers:
     - id: A
       answer: Trong từng client nghiệp vụ, để lựa chọn tất cả hành vi theo kiểu object
@@ -661,7 +800,12 @@ quiz:
   questions:
   - question: Composition giúp thiết kế linh hoạt hơn inheritance như thế nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - inheritance-010
+      - composition-001
+      - composition-004
+      - composition-005
+      - refactoring-007
     answers:
     - id: A
       answer: Để class tự sửa implementation superclass mỗi khi cần biến thể mới
@@ -678,7 +822,10 @@ quiz:
     correctAnswerId: D
   - question: Delegation có nghĩa là gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - oop-basic-004
+      - composition-003
+      - modeling-003
     answers:
     - id: A
       answer: Object tạo lớp con vào runtime để thay thế phần lớn hành vi hiện có
@@ -695,7 +842,10 @@ quiz:
     correctAnswerId: C
   - question: Trong UML, composition chủ yếu mô tả điều gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - composition-007
+      - relationships-003
+      - modeling-005
     answers:
     - id: A
       answer: Sở hữu mạnh và quan hệ vòng đời logic giữa whole và các thành phần
@@ -712,7 +862,10 @@ quiz:
     correctAnswerId: A
   - question: Quan hệ Parent-Child hai chiều dễ gặp lỗi nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - relationships-006
+      - modeling-006
+      - testing-010
     answers:
     - id: A
       answer: Hai phía tự đồng bộ vì cả hai object cùng tham chiếu lẫn nhau
@@ -729,7 +882,10 @@ quiz:
     correctAnswerId: B
   - question: Phụ thuộc vòng giữa module thường gây vấn đề gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - relationships-007
+      - design-pitfalls-007
+      - solid-006
     answers:
     - id: A
       answer: Vòng dependency giúp tối giản cấu hình vì module dùng chung lifecycle
@@ -746,7 +902,10 @@ quiz:
     correctAnswerId: B
   - question: Chuỗi order.getCustomer().getAddress().getCountry() có rủi ro thiết kế nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - composition-003
+      - class-design-009
+      - design-pitfalls-007
     answers:
     - id: A
       answer: Client được bảo vệ khỏi thay đổi cấu trúc nhờ truy cập qua nhiều lớp getter
@@ -766,7 +925,10 @@ quiz:
   questions:
   - question: Dependency Injection khác DIP như thế nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - composition-006
+      - solid-007
+      - solid-006
     answers:
     - id: A
       answer: DI là nguyên tắc chỉ dùng interface; DIP là framework tiêm object tự động
@@ -783,7 +945,10 @@ quiz:
     correctAnswerId: C
   - question: SRP cần được hiểu theo tiêu chí nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - class-design-001
+      - class-design-002
+      - solid-002
     answers:
     - id: A
       answer: Class nên có một lý do thay đổi nhất quán theo trách nhiệm của nó
@@ -800,7 +965,11 @@ quiz:
     correctAnswerId: A
   - question: Open/Closed Principle áp dụng thế nào với nhiều biến thể thật?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - polymorphism-009
+      - solid-003
+      - design-patterns-008
+      - refactoring-006
     answers:
     - id: A
       answer: Mở public field để các client tự thay đổi hành vi qua state bên ngoài
@@ -817,7 +986,10 @@ quiz:
     correctAnswerId: B
   - question: DIP chủ yếu yêu cầu gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - interface-003
+      - class-design-004
+      - solid-006
     answers:
     - id: A
       answer: High-level policy gọi adapter cụ thể, còn adapter không biết policy
@@ -834,7 +1006,12 @@ quiz:
     correctAnswerId: B
   - question: Interface có một implementation có chắc chắn dư thừa không?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - abstraction-007
+      - interface-003
+      - polymorphism-002
+      - solid-008
+      - testing-007
     answers:
     - id: A
       answer: Chưa chắc; cần xét boundary, contract và nhu cầu thay thế phù hợp
@@ -851,7 +1028,12 @@ quiz:
     correctAnswerId: A
   - question: Khi áp dụng SOLID làm xuất hiện nhiều tầng không có ích, nên cân nhắc gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - oop-basic-008
+      - abstraction-007
+      - solid-008
+      - design-patterns-013
+      - refactoring-008
     answers:
     - id: A
       answer: Tiếp tục tách tầng cho tới khi mỗi method có một interface riêng
@@ -868,7 +1050,11 @@ quiz:
     correctAnswerId: D
   - question: Cohesion và coupling khác nhau ra sao?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - class-design-002
+      - class-design-003
+      - modeling-004
+      - solid-002
     answers:
     - id: A
       answer: Cohesion đo phụ thuộc giữa module; coupling đo trách nhiệm trong một class
@@ -885,7 +1071,13 @@ quiz:
     correctAnswerId: D
   - question: Logic tính phí được copy ở Order, Invoice và Report, nên sửa thế nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - class-design-001
+      - class-design-007
+      - modeling-003
+      - design-patterns-008
+      - testing-009
+      - refactoring-004
     answers:
     - id: A
       answer: Chỉ trích các con số thành constant, giữ riêng logic tính tại mỗi nơi
@@ -902,7 +1094,11 @@ quiz:
     correctAnswerId: C
   - question: God Class được nhận biết bằng dấu hiệu nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - class-design-002
+      - solid-002
+      - design-pitfalls-001
+      - refactoring-003
     answers:
     - id: A
       answer: Class có nhiều method nhưng đều phục vụ một trách nhiệm nghiệp vụ
@@ -922,7 +1118,12 @@ quiz:
   questions:
   - question: Strategy Pattern giải quyết nhu cầu gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - polymorphism-001
+      - polymorphism-009
+      - composition-005
+      - design-patterns-008
+      - refactoring-006
     answers:
     - id: A
       answer: Cố định skeleton thuật toán trong superclass và override từng bước
@@ -939,7 +1140,9 @@ quiz:
     correctAnswerId: C
   - question: Factory Method và Abstract Factory khác nhau ở đâu?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - lifecycle-005
+      - design-patterns-002
     answers:
     - id: A
       answer: Factory Method chỉ trả singleton; Abstract Factory chỉ tạo một product
@@ -956,7 +1159,10 @@ quiz:
     correctAnswerId: D
   - question: Builder hữu ích nhất khi nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - lifecycle-005
+      - design-patterns-003
+      - testing-002
     answers:
     - id: A
       answer: Khi nhiều tham số bắt buộc/tùy chọn cần dựng object hợp lệ, dễ đọc
@@ -974,7 +1180,10 @@ quiz:
     correctAnswerId: A
   - question: Adapter Pattern dùng làm gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - abstraction-008
+      - composition-003
+      - design-patterns-005
     answers:
     - id: A
       answer: Bọc object để bổ sung logging mà giữ nguyên hợp đồng của đối tượng
@@ -991,7 +1200,9 @@ quiz:
     correctAnswerId: C
   - question: Facade Pattern giải quyết bài toán nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - composition-003
+      - design-patterns-007
     answers:
     - id: A
       answer: Cung cấp API cấp cao đơn giản hơn cho một subsystem phức tạp
@@ -1008,7 +1219,9 @@ quiz:
     correctAnswerId: A
   - question: Decorator và Proxy có mục đích khác nhau thế nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - composition-003
+      - design-patterns-006
     answers:
     - id: A
       answer: Decorator chuyển interface; Proxy chỉ dùng để thêm logging bổ trợ
@@ -1026,7 +1239,10 @@ quiz:
     correctAnswerId: C
   - question: Observer cần xử lý gì để tránh listener leak?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - lifecycle-006
+      - design-patterns-010
+      - testing-010
     answers:
     - id: A
       answer: Có cơ chế quản lý subscription và unsubscribe/close đúng vòng đời
@@ -1044,7 +1260,10 @@ quiz:
     correctAnswerId: A
   - question: Template Method thường dùng cơ chế nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - inheritance-003
+      - polymorphism-004
+      - design-patterns-011
     answers:
     - id: A
       answer: Superclass định nghĩa khung thuật toán; subclass override các bước/hook
@@ -1061,7 +1280,10 @@ quiz:
     correctAnswerId: A
   - question: Singleton có mặc nhiên thread-safe không?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - design-patterns-004
+      - design-pitfalls-008
+      - testing-003
     answers:
     - id: A
       answer: Có; tạo instance bằng static initialization cũng khóa mọi method về sau
@@ -1078,7 +1300,8 @@ quiz:
     correctAnswerId: C
   - question: Command Pattern hữu ích cho nhu cầu nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - design-patterns-012
     answers:
     - id: A
       answer: Đóng gói request thành object để đưa queue, lịch chạy hoặc undo/redo
@@ -1098,7 +1321,10 @@ quiz:
   questions:
   - question: Domain service phù hợp khi nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - class-design-006
+      - modeling-003
+      - solid-002
     answers:
     - id: A
       answer: Khi controller cần đổi HTTP request sang command và response DTO
@@ -1115,7 +1341,11 @@ quiz:
     correctAnswerId: C
   - question: Vì sao không nên đặt toàn bộ business rule trong controller?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - encapsulation-008
+      - class-design-004
+      - class-design-007
+      - modeling-001
     answers:
     - id: A
       answer: Controller luôn được JVM gọi sau repository nên thiếu cơ hội kiểm tra
@@ -1133,7 +1363,12 @@ quiz:
     correctAnswerId: D
   - question: Application service và domain object nên phân nhiệm thế nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - object-009
+      - class-design-004
+      - class-design-007
+      - modeling-003
+      - testing-010
     answers:
     - id: A
       answer: Application service xử lý nội bộ entity; domain trực tiếp quản lý transaction
@@ -1150,7 +1385,11 @@ quiz:
     correctAnswerId: D
   - question: Tách persistence model và domain model nhằm mục đích gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - abstraction-008
+      - class-design-004
+      - modeling-009
+      - solid-006
     answers:
     - id: A
       answer: Tách domain khỏi ràng buộc DB/ORM bằng mapper hoặc persistence adapter
@@ -1167,7 +1406,11 @@ quiz:
     correctAnswerId: A
   - question: Một DTO phục vụ CRUD đơn giản có luôn là thiết kế xấu không?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - oop-basic-008
+      - abstraction-007
+      - class-design-007
+      - design-patterns-013
     answers:
     - id: A
       answer: Có; mọi thao tác CRUD đều yêu cầu aggregate root với nhiều invariant
@@ -1184,7 +1427,10 @@ quiz:
     correctAnswerId: D
   - question: Để chống lost update khi hai request ghi cùng bản ghi nên cân nhắc gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - design-pitfalls-008
+      - testing-003
+      - practice-010
     answers:
     - id: A
       answer: Dùng optimistic version hoặc conditional update có kiểm tra trong transaction
@@ -1205,7 +1451,11 @@ quiz:
   questions:
   - question: Muốn kiểm thử nhiều implementation một interface theo cùng hợp đồng nên dùng gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - abstraction-004
+      - interface-008
+      - testing-004
+      - testing-005
     answers:
     - id: A
       answer: Chỉ kiểm type signature để thay thế hoàn toàn mọi kiểm thử hành vi
@@ -1223,7 +1473,8 @@ quiz:
     correctAnswerId: B
   - question: Stub khác mock trong test theo mục đích nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - testing-006
     answers:
     - id: A
       answer: Stub xác minh lời gọi; mock chủ yếu trả dữ liệu cố định để chạy tiếp
@@ -1241,7 +1492,9 @@ quiz:
     correctAnswerId: D
   - question: Fake thường là gì trong kiểm thử?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - testing-006
+      - testing-007
     answers:
     - id: A
       answer: Một object ghi lại số lần gọi để khẳng định tương tác nội bộ của caller
@@ -1258,7 +1511,10 @@ quiz:
     correctAnswerId: C
   - question: Vì sao test hành vi public thường bền hơn test private detail?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - testing-001
+      - testing-008
+      - refactoring-009
     answers:
     - id: A
       answer: Bám vào tên field nội bộ để kiểm soát mọi chi tiết không thuộc contract
@@ -1275,7 +1531,10 @@ quiz:
     correctAnswerId: C
   - question: Overmocking thường gây hậu quả gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - testing-008
+      - refactoring-009
+      - testing-010
     answers:
     - id: A
       answer: Test kiểm tra kết quả public khi thay nhiều implementation tương đương
@@ -1292,7 +1551,10 @@ quiz:
     correctAnswerId: B
   - question: Trước khi refactor một class cũ chưa có test, nên làm gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - testing-009
+      - refactoring-009
+      - practice-006
     answers:
     - id: A
       answer: Chỉ chạy compiler và bỏ qua các hành vi biên đã hoạt động trước đó
@@ -1313,7 +1575,10 @@ quiz:
   questions:
   - question: Feature Envy gợi ý hướng refactor nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - class-design-009
+      - modeling-003
+      - refactoring-004
     answers:
     - id: A
       answer: Thêm getter cho object bị truy vấn để method tiếp tục xử lý bên ngoài
@@ -1330,7 +1595,11 @@ quiz:
     correctAnswerId: D
   - question: Data Clumps có thể được xử lý thế nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - class-design-006
+      - modeling-002
+      - refactoring-003
+      - practice-005
     answers:
     - id: A
       answer: Gom cụm dữ liệu có ý nghĩa thành parameter object hoặc value object
@@ -1347,7 +1616,10 @@ quiz:
     correctAnswerId: A
   - question: Tầng chỉ chuyển tiếp lời gọi có nên bị xóa hết không?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - solid-008
+      - design-patterns-013
+      - refactoring-008
     answers:
     - id: A
       answer: Giữ tất cả tầng trung gian để bảo vệ chiều gọi dù không có trách nhiệm
@@ -1365,7 +1637,10 @@ quiz:
     correctAnswerId: B
   - question: Để đổi public API đang có nhiều caller an toàn, nên làm gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - abstraction-003
+      - testing-009
+      - refactoring-009
     answers:
     - id: A
       answer: Giữ adapter tương thích khi cần, migrate từng caller và kiểm tra contract
@@ -1385,7 +1660,11 @@ quiz:
   questions:
   - question: Mutable object chia sẻ giữa nhiều thread có nguy cơ nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - object-007
+      - design-patterns-004
+      - design-pitfalls-008
+      - testing-003
     answers:
     - id: A
       answer: Reference được chia sẻ khiến mọi phép ghi field tự có tính nguyên tử
@@ -1402,7 +1681,10 @@ quiz:
     correctAnswerId: D
   - question: volatile trong Java có ý nghĩa gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - design-patterns-004
+      - design-pitfalls-008
+      - testing-003
     answers:
     - id: A
       answer: Bảo đảm List và Map được thread-safe khi reference được khai báo volatile
@@ -1419,7 +1701,11 @@ quiz:
     correctAnswerId: B
   - question: Khi object đang nằm trong HashSet đổi field dùng bởi equals/hashCode, vấn đề gì có thể xảy ra?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - object-004
+      - language-mechanics-006
+      - design-pitfalls-009
+      - testing-001
     answers:
     - id: A
       answer: HashSet lập tức từ chối thay đổi field của object sau khi add thành công
@@ -1437,7 +1723,11 @@ quiz:
     correctAnswerId: C
   - question: equals trong hierarchy inheritance có nguy cơ gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - object-004
+      - language-mechanics-006
+      - testing-001
+      - testing-005
     answers:
     - id: A
       answer: equals của hierarchy chỉ so địa chỉ object nên không phát sinh bất đối xứng
@@ -1454,7 +1744,11 @@ quiz:
     correctAnswerId: B
   - question: toString với object graph hai chiều nên chú ý gì?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - object-003
+      - relationships-006
+      - language-mechanics-007
+      - testing-001
     answers:
     - id: A
       answer: Chỉ log ID object là đủ để tự động phát hiện mọi vòng lặp khi toString
@@ -1471,7 +1765,9 @@ quiz:
     correctAnswerId: B
   - question: Escape analysis trong Java được hiểu đúng thế nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - oop-basic-008
+      - lifecycle-001
     answers:
     - id: A
       answer: JIT luôn loại mọi allocation nhỏ trước khi GC có thể nhìn thấy object
@@ -1488,7 +1784,10 @@ quiz:
     correctAnswerId: D
   - question: Khi lo nhiều object nhỏ làm chậm hệ thống, cách xác minh nào phù hợp?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - oop-basic-008
+      - lifecycle-007
+      - refactoring-001
     answers:
     - id: A
       answer: Đổi mọi field thành static để giảm bộ nhớ rồi quan sát sau khi deploy
@@ -1505,7 +1804,15 @@ quiz:
     correctAnswerId: C
   - question: Trong code review OOP nên ưu tiên câu hỏi nào?
     readmeRelated:
-      anchorList: []
+      anchorList:
+      - encapsulation-002
+      - class-design-001
+      - class-design-002
+      - class-design-003
+      - modeling-009
+      - solid-008
+      - testing-001
+      - refactoring-009
     answers:
     - id: A
       answer: Xem số pattern GoF đã áp dụng có đủ cho mỗi class và package hay chưa
