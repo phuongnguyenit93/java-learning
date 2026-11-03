@@ -22,7 +22,6 @@ import java.nio.file.Path
  * service endpoint and the explicit group/case Java packages.
  */
 class CaseStudyExplorerService {
-    private static final String CONFIG = 'content/code-explorer/casestudy.yml'
     private final JavaParser parser
 
     CaseStudyExplorerService() {
@@ -40,10 +39,8 @@ class CaseStudyExplorerService {
                 !new File(module, 'gradle.properties').isFile()) {
             throw new GradleException('STEP8_EXPLORER requires a real Gradle module.')
         }
-        File settings = new File(module, CONFIG)
-        if (!settings.isFile() || settings.getText('UTF-8').replace('\r\n','\n').trim() !=
-                'version: 1\ntype: CASE_STUDY_EXPLORER') {
-            throw new GradleException('STEP8_EXPLORER requires canonical ' + CONFIG)
+        if (!enabled(module)) {
+            throw new GradleException('STEP8_EXPLORER requires BUILD_CASE_STUDY_EXPLORER=TRUE in master.json')
         }
         if ((requestedGroup == null) != (requestedCase == null) ||
                 (requestedGroup != null && (requestedGroup < 1 || requestedCase < 1))) {
@@ -173,6 +170,59 @@ class CaseStudyExplorerService {
         return [status:apply ? 'APPLIED' : 'DRY_RUN', module:serviceName,
                 complete:complete, cases:entries.size(), files:entries.sum { it.files } ?: 0,
                 output:target.absolutePath]
+    }
+
+    /** Explicit module opt-in. No sidecar YAML or implicit source detection. */
+    static boolean enabled(File module) {
+        File masterFile = new File(module, 'master.json')
+        if (!masterFile.isFile()) return false
+        Map master = new JsonSlurper().parse(masterFile) as Map
+        return enabled(master)
+    }
+
+    static boolean enabled(Map master) {
+        Map feature = master.BUILD_CASE_STUDY_EXPLORER instanceof Map
+                ? master.BUILD_CASE_STUDY_EXPLORER as Map : [:]
+        return feature.TYPE == 'boolean' &&
+                feature.VALUE instanceof String &&
+                'TRUE'.equalsIgnoreCase((feature.VALUE as String).trim())
+    }
+
+    /** Remove stale generated cases when an opt-in flag was turned off.
+     * Operates only inside build/learning-data, never on the module's sources. */
+    static void cleanDisabledPublished(File repository, Set<String> enabledRoutes) {
+        File root = repository.canonicalFile
+        File parent = new File(root, 'build/learning-data/java/module')
+        if (!parent.isDirectory()) return
+        parent.listFiles()?.findAll { File item ->
+            item.isDirectory() && !enabledRoutes.contains(item.name)
+        }?.each { File module ->
+            File explorer = new File(module, 'code-explorer')
+            File target = new File(explorer, 'casestudy')
+            if (!Files.exists(target.toPath(), LinkOption.NOFOLLOW_LINKS)) return
+            for (File location : [module, explorer, target]) {
+                if (Files.isSymbolicLink(location.toPath())) {
+                    throw new GradleException('Unsafe STEP8_EXPLORER published symlink: ' + location)
+                }
+            }
+            if (!target.canonicalFile.toPath().startsWith(parent.canonicalFile.toPath()) ||
+                    !target.isDirectory()) {
+                throw new GradleException('Unsafe STEP8_EXPLORER published output: ' + target)
+            }
+            def tree = Files.walk(target.toPath())
+            List<Path> paths = []
+            try {
+                tree.forEach { Path path ->
+                    if (Files.isSymbolicLink(path) ||
+                            !(Files.isDirectory(path) || Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS))) {
+                        throw new GradleException('Unsafe STEP8_EXPLORER output entry: ' + path)
+                    }
+                    paths.add(path)
+                }
+            } finally { tree.close() }
+            paths.sort { Path a, Path b -> b.nameCount <=> a.nameCount }
+            paths.each { Files.delete(it) }
+        }
     }
 
     private byte[] filtered(File root, String path, String expectedClass, String methodName) {

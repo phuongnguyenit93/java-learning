@@ -11,11 +11,7 @@ import com.github.javaparser.ast.expr.NameExpr
 import com.github.javaparser.ast.expr.ThisExpr
 import com.github.javaparser.ast.type.ClassOrInterfaceType
 import groovy.json.JsonOutput
-import groovy.json.JsonSlurper
 import org.gradle.api.GradleException
-import org.yaml.snakeyaml.LoaderOptions
-import org.yaml.snakeyaml.Yaml
-import org.yaml.snakeyaml.constructor.SafeConstructor
 
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
@@ -30,104 +26,10 @@ import java.security.MessageDigest
  * No Spring Bean, DI runtime, polymorphic dispatch or reflection inference.
  */
 class CodeExplorerMaterialService {
-    private static final int FILE_LIMIT = 1000
-    private static final long BYTE_LIMIT = 512 * 1024
-
-    Map execute(File repo, File moduleDir, boolean apply, boolean publish) {
-        File root = repo.canonicalFile
-        File module = moduleDir.canonicalFile
-        Path modules = new File(root, 'module').canonicalFile.toPath()
-        if (!module.toPath().startsWith(modules) || module.toPath() == modules ||
-                !new File(module, 'gradle.properties').isFile()) {
-            throw new GradleException('Code Explorer requires one real module.')
-        }
-        File settings = new File(module, 'content/code-explorer/material.yml')
-        safe(module.toPath(), settings.toPath())
-        if (!settings.isFile()) throw new GradleException('Missing Code Explorer material.yml.')
-        Map cfg = yaml(settings)
-        if (cfg.keySet() != (['version','type','id','language','sourceRoot','include',
-                              'apiMapping'] as Set) ||
-                cfg.version != 1 || cfg.type != 'CODE_EXPLORER' ||
-                cfg.language != 'java' || cfg.sourceRoot != 'src/main/java' ||
-                !(cfg.id instanceof String) ||
-                !(cfg.id ==~ /[a-z0-9][a-z0-9_-]{0,63}/) ||
-                !(cfg.include instanceof List) || cfg.include.isEmpty() ||
-                cfg.include.size() > 30 ||
-                cfg.apiMapping != [source: 'SWAGGER']) {
-            throw new GradleException('Invalid V1 Code Explorer material.yml.')
-        }
-        File sourceRoot = new File(module, cfg.sourceRoot as String)
-        if (!sourceRoot.isDirectory()) throw new GradleException('Missing Java sourceRoot.')
-        List<String> patterns = (cfg.include as List).collect { Object item ->
-            if (!(item instanceof String) ||
-                    !(item ==~ /[A-Za-z0-9_*?\/.-]+/) ||
-                    item.contains('..') || !item.endsWith('.java')) {
-                throw new GradleException('Unsafe Code Explorer include pattern: ' + item)
-            }
-            return item
-        }
-        def matchers = patterns.collect {
-            sourceRoot.toPath().fileSystem.getPathMatcher('glob:' + it)
-        }
-        List<File> selected = []
-        def stream = Files.walk(sourceRoot.toPath())
-        try {
-            stream.forEach { Path path ->
-                if (Files.isSymbolicLink(path)) {
-                    throw new GradleException('Source symlink forbidden: ' + path)
-                }
-                if (!Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)) return
-                Path relative = sourceRoot.toPath().relativize(path)
-                if (path.fileName.toString().endsWith('.java') &&
-                        matchers.any { it.matches(relative) }) {
-                    if (Files.size(path) > BYTE_LIMIT) {
-                        throw new GradleException('Code Explorer source too large: ' + path)
-                    }
-                    selected.add(path.toFile())
-                }
-            }
-        } finally { stream.close() }
-        selected.sort { File a, File b ->
-            slash(sourceRoot.toPath().relativize(a.toPath())) <=>
-                    slash(sourceRoot.toPath().relativize(b.toPath()))
-        }
-        if (selected.isEmpty() || selected.size() > FILE_LIMIT) {
-            throw new GradleException('Code Explorer requires 1..1000 selected Java files.')
-        }
-
-        Map bundle = build(cfg, sourceRoot, selected,
-                new File(module, 'src/main/resources/swagger/vi/api-descriptions.yml'))
-        Map master = new JsonSlurper().parse(new File(module, 'master.json')) as Map
-        String route = master.SERVICE_NAME?.VALUE?.toString()
-        if (!(route ==~ /[A-Za-z0-9_-]{1,128}/)) {
-            throw new GradleException('Invalid module SERVICE_NAME route.')
-        }
-        File local = new File(module, 'build/code-explorer')
-        File portal = new File(root, 'build/learning-data/java/module/' +
-                route + '/code-explorer')
-        if (apply) {
-            writeBundle(module.toPath(), local, bundle.outputs as Map)
-            if (publish) writeBundle(root.toPath(), portal, bundle.outputs as Map)
-        }
-        return [status: apply ? 'APPLIED' : 'DRY_RUN',
-                module: slash(root.toPath().relativize(module.toPath())),
-                files: bundle.fileCount, symbols: bundle.symbolCount,
-                resolved: bundle.resolved, unresolved: bundle.unresolved,
-                apis: bundle.apiCount,
-                output: (publish ? portal : local).absolutePath]
-    }
-
-    private static Map build(Map cfg, File sourceRoot, List<File> selected, File swagger) {
-        Map<String,byte[]> sources = new TreeMap<>()
-        selected.each { File file ->
-            sources[slash(sourceRoot.toPath().relativize(file.toPath()))] =
-                    Files.readAllBytes(file.toPath())
-        }
-        return buildFromSources(cfg.id as String, sources, swagger)
-    }
-
-    /** Used by STEP 8 Code Explorer: index exactly the bytes users will see in Monaco. */
-    static Map buildFromSources(String materialId, Map<String,byte[]> sources, File swagger = null) {
+    /** STEP 8 engine: index exactly the case-scoped Java bytes shown in Monaco.
+     * The old module-wide material.yml and Swagger API mapping pipeline is retired.
+     */
+    static Map buildFromSources(String materialId, Map<String,byte[]> sources) {
         // Gradle 8.x includes an older JavaParser in its own classloader.
         // Avoid a hard JAVA_21 enum reference when the Gradle-bundled parser
         // shadows the newer declared dependency.
@@ -203,21 +105,17 @@ class CodeExplorerMaterialService {
             (a.file <=> b.file) ?: (a.line <=> b.line) ?:
                     (a.column <=> b.column) ?: (a.kind <=> b.kind)
         }
-        List<Map> endpoints = swagger == null ? [] : apiEntries(swagger, typeIndex, methodIndex)
         Map index = [version:1, type:'CODE_EXPLORER', id:materialId, language:'java',
                      files:files, tree:buildTree(files), symbolCount:symbols.size(),
                      referenceCount:references.size(),
                      resolvedReferences:references.count { it.status == 'RESOLVED' },
                      unresolvedReferences:references.count { it.status != 'RESOLVED' },
-                     apiCount:endpoints.size(), symbols:'symbols.json',
-                     references:'references.json', apiMap:'api-map.json']
+                     symbols:'symbols.json', references:'references.json']
         assets['index.json'] = json(index)
         assets['symbols.json'] = json([version:1, symbols:symbols])
         assets['references.json'] = json([version:1, references:references])
-        assets['api-map.json'] = json([version:1, endpoints:endpoints])
         return [outputs:assets, fileCount:files.size(), symbolCount:symbols.size(),
-                resolved:index.resolvedReferences, unresolved:index.unresolvedReferences,
-                apiCount:endpoints.size()]
+                resolved:index.resolvedReferences, unresolved:index.unresolvedReferences]
     }
 
     private static String receiver(MethodCallExpr call, Map owner, Map types) {
@@ -261,41 +159,6 @@ class CodeExplorerMaterialService {
             it == name || it.endsWith('.' + name)
         }.toList()
         return found.size() == 1 ? found[0] : null
-    }
-
-    private static List<Map> apiEntries(File swagger, Map types, Map methods) {
-        if (!swagger.isFile()) return []
-        List<Map> result = []
-        yaml(swagger).each { String controller, Object methodsNode ->
-            if (!(methodsNode instanceof Map)) return
-            (methodsNode as Map).each { String signature, Object item ->
-                if (!(item instanceof Map)) return
-                Map api = item as Map
-                Map owner = types.values().find {
-                    it.file == api.path && it.name == controller
-                }
-                if (owner == null) return // only material-owned controllers
-                int count = api.params instanceof List ? api.params.size() : -1
-                List<Map> candidates = count >= 0 ?
-                        (methods[owner.fqcn + '#' + api.methodName + '/' + count] ?: []) : []
-                List<String> targets = candidates.collect { it.id }.sort()
-                List verbs = api.httpMethods instanceof List ? api.httpMethods : []
-                List urls = api.mappingPaths instanceof List ? api.mappingPaths : []
-                verbs.each { verb ->
-                    urls.each { path ->
-                        result.add([id:controller + '#' + signature + ':' + verb + ':' + path,
-                                    controller:controller, signature:signature, httpMethod:verb,
-                                    path:path, file:api.path,
-                                    status:targets.size() == 1 ? 'RESOLVED' :
-                                            (targets.size() > 1 ?
-                                                    'MULTIPLE_TARGETS' : 'UNRESOLVED'),
-                                    targets:targets])
-                    }
-                }
-            }
-        }
-        result.sort { a,b -> a.id <=> b.id }
-        return result
     }
 
     private static Map position(String id, String kind, String name, String file, Range pos) {
@@ -360,18 +223,6 @@ class CodeExplorerMaterialService {
             Map<String,Map> children = node.children as Map<String,Map>
             return [name:node.name, path:node.path, type:node.type,
                     children:treeNodes(children)]
-        }
-    }
-
-    private static Map yaml(File file) {
-        try {
-            LoaderOptions opts = new LoaderOptions()
-            opts.allowDuplicateKeys = false
-            def result = new Yaml(new SafeConstructor(opts)).load(file.getText('UTF-8'))
-            if (!(result instanceof Map)) throw new GradleException('Expected YAML map.')
-            return result as Map
-        } catch (Exception ex) {
-            throw new GradleException('Invalid Code Explorer YAML: ' + file, ex)
         }
     }
 

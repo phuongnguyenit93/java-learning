@@ -1,174 +1,94 @@
 package com.example.learning.task.codeexplorer.service
 
 import groovy.json.JsonSlurper
-import org.gradle.api.GradleException
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
 import static org.junit.Assert.*
 
+/** The shared Java indexing engine remains required by Case Study Explorer.
+ * No module-wide material.yml config or general Explorer task is supported. */
 class CodeExplorerMaterialServiceTest {
     @Rule public TemporaryFolder temp = new TemporaryFolder()
 
     @Test
-    void legacyCleanupPreservesIndependentCaseStudyMaterial() {
-        Map f = fixture()
-        File output = new File(f.root,
-                'build/learning-data/java/module/SAMPLE_MODULE/code-explorer')
-        File stale = new File(output, 'files/sample/Old.java')
-        File caseIndex = new File(output, 'casestudy/index.json')
-        stale.parentFile.mkdirs()
-        stale.setText('public class Old {}', 'UTF-8')
-        caseIndex.parentFile.mkdirs()
-        caseIndex.setText('{"type":"CASE_STUDY_EXPLORER"}', 'UTF-8')
-        new File(output, 'index.json').setText('{"version":1}', 'UTF-8')
-        CodeExplorerMaterialService.cleanUnclaimedLegacyBundles(f.root, [] as Set<String>)
-        assertFalse(stale.exists())
-        assertFalse(new File(output, 'files').exists())
-        assertFalse(new File(output, 'index.json').exists())
-        assertTrue(caseIndex.isFile())
-    }
-
-    @Test
-    void buildsPortableBundleWithDirectGoToDefinitionAndSwaggerEndpoint() {
-        Map f = fixture()
-        CodeExplorerMaterialService service = new CodeExplorerMaterialService()
-        Map dry = service.execute(f.root, f.module, false, false)
-        assertEquals('DRY_RUN', dry.status)
-        assertEquals(2, dry.files)
-        assertEquals(1, dry.apis)
-        assertFalse(new File(f.module, 'build/code-explorer/index.json').exists())
-        Map created = service.execute(f.root, f.module, true, false)
-        assertEquals('APPLIED', created.status)
-        File bundle = new File(f.module, 'build/code-explorer')
-        def index = parse(new File(bundle, 'index.json'))
-        def symbols = parse(new File(bundle, 'symbols.json')).symbols
-        def refs = parse(new File(bundle, 'references.json')).references
-        def api = parse(new File(bundle, 'api-map.json')).endpoints
-        assertEquals('CODE_EXPLORER', index.type)
-        assertEquals('sample', index.id)
-        assertEquals(2, index.files.size())
-        assertEquals('DIRECTORY', index.tree[0].type)
-        assertEquals('sample', index.tree[0].name)
-        assertEquals(2, index.tree[0].children.size())
-        assertEquals('RESOLVED', api[0].status)
-        assertEquals('/sample/search', api[0].path)
-        assertEquals('POST', api[0].httpMethod)
-        String target = 'sample.BookCatalogService#search(String)'
-        assertEquals([target], refs.find {
-            it.kind == 'METHOD_CALL' && it.text == 'search'
-        }.targets)
-        assertEquals(1, refs.count {
-            it.kind == 'METHOD_CALL' && it.text == 'search' && it.status == 'RESOLVED'
-        })
-        assertTrue(symbols.any { it.id == target && it.file == 'sample/BookCatalogService.java' })
-        assertTrue(new File(bundle, 'files/sample/SampleController.java').text
-                .contains('catalog.search(request)'))
-        Map previous = [index:index, symbols:symbols, refs:refs, api:api]
-        service.execute(f.root, f.module, true, false)
-        assertEquals(previous.index, parse(new File(bundle, 'index.json')))
-        assertEquals(previous.symbols, parse(new File(bundle, 'symbols.json')).symbols)
-        assertEquals(previous.refs, parse(new File(bundle, 'references.json')).references)
-    }
-
-    @Test
-    void publishesOnlySelectedFilesUnderPortalRoute() {
-        Map f = fixture()
-        def service = new CodeExplorerMaterialService()
-        service.execute(f.root, f.module, true, true)
-        File portal = new File(f.root,
-                'build/learning-data/java/module/SAMPLE_MODULE/code-explorer')
-        assertTrue(new File(portal, 'index.json').isFile())
-        assertTrue(new File(portal, 'files/sample/BookCatalogService.java').isFile())
-        assertFalse(new File(portal, 'files/sample/InternalSecret.java').exists())
-        assertEquals(new File(f.module, 'build/code-explorer/index.json').bytes.toList(),
-                new File(portal, 'index.json').bytes.toList())
-    }
-
-    @Test
-    void overloadedSameArityIsNeverGuessed() {
-        Map f = fixture()
-        File service = new File(f.module, 'src/main/java/sample/BookCatalogService.java')
-        service.setText('''package sample;
-public class BookCatalogService {
-    public String search(String request) { return request; }
-    public String search(Integer request) { return request.toString(); }
-}
-''', 'UTF-8')
-        new CodeExplorerMaterialService().execute(f.root, f.module, true, false)
-        def refs = parse(new File(f.module,'build/code-explorer/references.json')).references
-        Map call = refs.find { it.text == 'search' && it.kind == 'METHOD_CALL' }
-        assertEquals('MULTIPLE_TARGETS', call.status)
-        assertEquals(2, call.targets.size())
-        def api = parse(new File(f.module,'build/code-explorer/api-map.json')).endpoints
-        // The Controller method itself remains uniquely addressable. Only
-        // the call into the overloaded Service is intentionally ambiguous.
-        assertEquals('RESOLVED', api[0].status)
-    }
-
-    @Test
-    void rejectsPathEscapeAndMissingModuleConfigWithoutWriting() {
-        Map f = fixture()
-        File settings = new File(f.module,'content/code-explorer/material.yml')
-        settings.text = settings.text.replace('sample/*.java','../secrets/*.java')
-        try {
-            new CodeExplorerMaterialService().execute(f.root,f.module,true,false)
-            fail('unsafe include must fail')
-        } catch (GradleException expected) {
-            assertTrue(expected.message.contains('Unsafe'))
-        }
-        assertFalse(new File(f.module,'build/code-explorer/index.json').exists())
-    }
-
-    private static Map parse(File file) {
-        new JsonSlurper().parse(file) as Map
-    }
-
-    private Map fixture() {
-        File root = temp.newFolder('repo')
-        File module = new File(root, 'module/example')
-        assertTrue(module.mkdirs())
-        put(module, 'gradle.properties', 'IS_MODULE=TRUE')
-        put(module, 'master.json',
-                '{"SERVICE_NAME":{"VALUE":"SAMPLE_MODULE"}}')
-        put(module, 'content/code-explorer/material.yml', '''version: 1
-type: CODE_EXPLORER
-id: sample
-language: java
-sourceRoot: src/main/java
-include:
-  - sample/*.java
-apiMapping:
-  source: SWAGGER
-''')
-        put(module,'src/main/java/sample/SampleController.java', '''package sample;
+    void buildsCaseScopedSymbolsAndReferencesWithoutGeneralMaterialConfig() {
+        Map<String, byte[]> sources = [
+                'sample/SampleController.java': '''package sample;
 public class SampleController {
-    private final BookCatalogService catalog = new BookCatalogService();
-    public String search(String request) {
-        return catalog.search(request);
-    }
+    private final BookService service = new BookService();
+    public String executeCase1(String name) { return service.search(name); }
 }
-''')
-        put(module,'src/main/java/sample/BookCatalogService.java', '''package sample;
-public class BookCatalogService {
+'''.getBytes('UTF-8'),
+                'sample/BookService.java': '''package sample;
+public class BookService {
     public String search(String request) { return request.trim(); }
 }
-''')
-        put(module,'src/main/resources/swagger/vi/api-descriptions.yml', '''SampleController:
-  search(String):
-    methodName: search
-    params: [request]
-    path: sample/SampleController.java
-    httpMethods: [POST]
-    mappingPaths: [/sample/search]
-''')
-        return [root:root,module:module]
+'''.getBytes('UTF-8')
+        ]
+        Map bundle = CodeExplorerMaterialService.buildFromSources('casestudy-g1-c1', sources)
+        assertEquals(2, bundle.fileCount)
+        Map index = json(bundle.outputs['index.json'])
+        assertEquals('CODE_EXPLORER', index.type)
+        assertEquals('casestudy-g1-c1', index.id)
+        assertFalse(index.containsKey('apiMap'))
+        assertEquals(2, index.files.size())
+        assertEquals('sample', index.tree[0].name)
+        Map symbolData = json(bundle.outputs['symbols.json'])
+        Map refData = json(bundle.outputs['references.json'])
+        String id = 'sample.BookService#search(String)'
+        assertTrue(symbolData.symbols.any { it.id == id && it.file == 'sample/BookService.java' })
+        assertEquals([id], refData.references.find {
+            it.kind == 'METHOD_CALL' && it.text == 'search'
+        }.targets)
+        assertFalse(bundle.outputs.containsKey('api-map.json'))
+        assertEquals(bundle.outputs['index.json'].toList(),
+                CodeExplorerMaterialService.buildFromSources('casestudy-g1-c1', sources)
+                        .outputs['index.json'].toList())
     }
 
-    private static void put(File module, String name, String text) {
-        File output = new File(module,name)
-        assertTrue(output.parentFile.isDirectory() || output.parentFile.mkdirs())
-        output.setText(text,'UTF-8')
+    @Test
+    void overloadedMethodsAreMarkedAmbiguous() {
+        Map<String,byte[]> sources = [
+                'sample/Controller.java': '''package sample;
+public class Controller {
+    private final Service service = new Service();
+    public String run() { return service.search("hello"); }
+}
+'''.getBytes('UTF-8'),
+                'sample/Service.java': '''package sample;
+public class Service {
+    public String search(String value) { return value; }
+    public String search(Integer value) { return value.toString(); }
+}
+'''.getBytes('UTF-8'),
+        ]
+        Map refs = json(CodeExplorerMaterialService
+                .buildFromSources('casestudy-g1-c2', sources).outputs['references.json'])
+        Map call = refs.references.find { it.kind == 'METHOD_CALL' && it.text == 'search' }
+        assertEquals('MULTIPLE_TARGETS', call.status)
+        assertEquals(2, call.targets.size())
+    }
+
+    @Test
+    void cleanupRetiresOldModuleWideBundlesWithoutDeletingCaseStudy() {
+        File root = temp.newFolder('repo')
+        File bundle = new File(root, 'build/learning-data/java/module/DEMO/code-explorer')
+        File old = new File(bundle, 'files/demo/Old.java')
+        old.parentFile.mkdirs()
+        old.setText('public class Old {}', 'UTF-8')
+        File active = new File(bundle, 'casestudy/index.json')
+        active.parentFile.mkdirs()
+        active.setText('{"type":"CASE_STUDY_EXPLORER"}', 'UTF-8')
+        new File(bundle, 'index.json').setText('{"version":1}', 'UTF-8')
+        CodeExplorerMaterialService.cleanUnclaimedLegacyBundles(root, [] as Set<String>)
+        assertFalse(old.exists())
+        assertFalse(new File(bundle, 'index.json').exists())
+        assertTrue(active.isFile())
+    }
+
+    private static Map json(byte[] raw) {
+        new JsonSlurper().parseText(new String(raw, 'UTF-8')) as Map
     }
 }

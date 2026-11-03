@@ -227,6 +227,26 @@ class ModuleConfigurationSyncService {
                         newItem
         }
 
+        // Optional explicit opt-in, not a universal content flag. Preserve it
+        // only for modules that deliberately declare it; don't churn every
+        // module's master.json during Gradle configuration.
+        if (targetJson.containsKey('BUILD_CASE_STUDY_EXPLORER')) {
+            Object rawFlag = targetJson.BUILD_CASE_STUDY_EXPLORER
+            if (!(rawFlag instanceof Map) ||
+                    rawFlag.TYPE != 'boolean' ||
+                    !(rawFlag.VALUE instanceof String) ||
+                    !((rawFlag.VALUE as String).trim().toUpperCase(Locale.ROOT)
+                            in ['TRUE', 'FALSE'])) {
+                throw new GradleException('Invalid BUILD_CASE_STUDY_EXPLORER in ' + targetMasterFile)
+            }
+            updatedJson.BUILD_CASE_STUDY_EXPLORER = [
+                    DESCRIPTION: 'Publish per-case Java source explorer from Case Study and Java code (STEP 8)',
+                    TYPE: 'boolean',
+                    VALUE: (rawFlag.VALUE as String).trim().toUpperCase(Locale.ROOT),
+                    GROUP: 'TASK'
+            ]
+        }
+
 
         writeJsonIfChanged(
                 targetMasterFile,

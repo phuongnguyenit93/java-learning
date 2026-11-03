@@ -311,7 +311,7 @@ Portal frontend styling uses normal CSS files. Avoid inline CSS unless there is 
 
 The Portal consumes/aggregates learning capabilities but must not become the source of truth for module metadata, README ownership, Swagger runtime, or Execution Context. Future generated portal data should be a projection from canonical module structure/metadata/resources.
 
-Code Explorer's general Java material contract remains `content/code-explorer/material.yml` with `apiMapping: {source: SWAGGER}`. `CodeExplorerMaterialService` builds `api-map.json` from the module's `src/main/resources/swagger/vi/api-descriptions.yml` and indexed Java symbols; this mapping is independent of the retired Portal API Docs publisher. STEP 8 Case Study Explorer has its own case-scoped source filtering and QA contract in `module-generate-agent/STEP_8.md`; preserve both workflows.
+Only STEP 8 **Case Study Explorer** remains. It is enabled through `master.json.BUILD_CASE_STUDY_EXPLORER` (`TYPE="boolean"`, `VALUE="TRUE"`). The module-wide `content/code-explorer/material.yml` and `casestudy.yml` sidecar opt-ins, general `generatePortalCodeExplorer`/API mapping and the frontend's general Source Explorer are retired. `CaseStudyExplorerService` retains the shared `CodeExplorerMaterialService.buildFromSources` Java symbol/reference engine for per-case Monaco navigation; catalog output is only `caseStudyExplorer`. See `module-generate-agent/STEP_8.md` for the opt-in, generator and QA contract.
 
 ---
 

@@ -130,3 +130,38 @@ All default to `DRY_RUN`; only `APPLY` mutates Sheets or local files.
 Final report:
 `MODULE_I3, SPREADSHEET_ID, VI_GID, EN_GID, EN_TAB, TEMPLATE_QA,
 SOURCE_SHA256, CLONE, SYNC, CELL_READBACK, FORMAT_QA, CURRENT_STEP_MASTER_BEFORE, CURRENT_STEP_MASTER_AFTER, XLSX_OUTPUT, RESUME_STATUS, BLOCKER`.
+
+## 7. Phụ lục — task Excel độc lập / legacy (KHÔNG thuộc STEP 15 chuẩn)
+
+**Nguồn sự thật của STEP 15 là mục 0–6:** `publishModuleEnSheet` clone **tab Template** để giữ định dạng và gid, sync EN, verify rồi export EN Excel. **Không** thay bằng các task bên dưới, không chạy nối tiếp chúng sau `publishModuleEnSheet` và không coi kết quả riêng lẻ là completion gate.
+
+### 7A. Import Excel thành một tab Google Sheets mới (độc lập)
+
+- Task module-local `importExcelFromModuleSheet` đọc **một worksheet** ở `<module>/content/sheet/<language>/module.xlsx` rồi tạo **tab mới**, Google cấp gid mới; **không ghi đè tab có sẵn**, không đảm bảo gid ổn định như STEP 15 chính thức.
+- Cấu hình qua Gradle extension `importExcelFromModuleSheet { fileUrl = '<spreadsheet-url>'; language = 'en' }` hoặc các thuộc tính CLI; file `task.gradle` generate chỉ là ví dụ, không tự chạy.
+- Chạy riêng nếu thật sự cần tạo thêm tab, ví dụ:
+
+  ```powershell
+  .\gradlew.bat :<MODULE_GRADLE_PATH>:importExcelFromModuleSheet "-PfileUrl=https://docs.google.com/spreadsheets/d/<SPREADSHEET_ID>/edit" -Planguage=en -PsheetMode=DRY_RUN
+  # Chỉ khi đã chủ động chấp thuận tạo tab mới: thay DRY_RUN bằng APPLY.
+  ```
+
+- `DRY_RUN` kiểm tra I3/module, worksheet, yêu cầu ghi và title đề xuất nhưng không chỉnh Sheet. `APPLY` cần quyền **Google Sheets write** (service account Editor), tạo tab mới và báo gid/URL; title trùng được thêm suffix. Task validate giá trị/định dạng/dropdown/merge trước khi ghi, rollback **chỉ tab mới** khi batch lỗi. Formulas sống hoặc Excel error cells bị từ chối; formatting riêng của Google không được tái tạo đầy đủ. Không thay đổi file XLSX local.
+
+### 7B. Reverse-export EN vào Excel offline (legacy, không dùng để publish)
+
+Các task `syncModule*ToExcel` cũ đọc nội dung EN đã có và ghi **chỉ** `<module>/content/sheet/en/module.xlsx` (không dịch, không cập nhật Google Sheets, không sửa module EN/VI). Có thể chạy độc lập với `-PsheetMode=DRY_RUN|APPLY`, nhưng **mapping Quiz/Interview của chúng là cấu trúc theo chương cũ**, chưa được kiểm chứng cho assessment dạng group của STEP 6–7. Không dùng chúng làm giải pháp thay thế `publishModuleEnSheet` cho module mới.
+
+| Task độc lập | Nội dung / vùng Excel legacy |
+| --- | --- |
+| `syncModuleIntroductionToExcel` | Introduction EN → `B17` |
+| `syncModuleReadmeToExcel` | Knowledge EN / metadata → `A:B`, `C:N`, `O` |
+| `syncModuleRoadmapToExcel` | Roadmap EN → `F:H` |
+| `syncModuleInterviewToExcel` | Interview theo chương cũ → `P:S` |
+| `syncModuleQuizToExcel` | Quiz theo chương cũ → `T:W` |
+| `syncModuleVideoToExcel` | Video theo chương → `X:AA` (tùy chọn sau FINAL) |
+| `syncModuleContentToExcel` | Gộp các nguồn cũ trên vào một workbook EN |
+
+- Các task dùng snapshot VI của STEP 12 làm baseline nếu chưa có Excel EN, không ghi Excel VI và giữ format/merged cells/dropdown có thể bảo toàn. `APPLY` ghi file tạm, xác minh I3 và worksheet rồi atomic replace **chỉ** `content/sheet/en/module.xlsx`. Chia các YAML/Knowledge dài theo giới hạn ô; quá 32.767 ký tự thì **fail**, không cắt dữ liệu.
+- Roadmap `dependsOn`, `relatedKnowledge`, `relatedModules` và Swagger không có cột đầy đủ trong Excel; YAML EN vẫn là canonical. Không nhập ngược Excel để tái tạo EN YAML. Legacy relation `readmeRelated.file` và layout câu hỏi theo chapter có thể không tương thích với `anchorList` toàn module — gặp mismatch phải dừng, không đoán nội dung.
+- Với workflow chuẩn, chỉ dùng `publishModuleEnSheet` ở mục 2. Không gọi `importExcelFromModuleSheet`, `syncModuleContentToExcel` hoặc từng `syncModule*ToExcel` để thay bước Clone/Sync/Verify/Export chính thức.

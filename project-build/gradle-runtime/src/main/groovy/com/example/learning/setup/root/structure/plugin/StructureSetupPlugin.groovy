@@ -533,49 +533,31 @@ ${project.path}
             task.mustRunAfter(generatePortalModuleData)
         }
 
-        def generatePortalCodeExplorer =
-                project.tasks.register('generatePortalCodeExplorer') { task ->
-                    task.group = 'learning portal'
-                    task.description = 'Generate and publish static Code Explorer bundles for opted-in modules.'
-                    task.dependsOn(generatePortalModuleData)
-                    task.doLast {
-                        CodeExplorerMaterialService generator = new CodeExplorerMaterialService()
-                        def configs = project.fileTree(new File(project.projectDir, 'module')) {
-                            include '**/content/code-explorer/material.yml'
-                            exclude '**/build/**'
-                        }.files.toList().sort { it.absolutePath }
-                        Set<String> activeRoutes = [] as Set<String>
-                        configs.each { File config ->
-                            File moduleDirectory = config.parentFile.parentFile.parentFile
-                            def master = new groovy.json.JsonSlurper().parse(
-                                    new File(moduleDirectory, 'master.json')) as Map
-                            activeRoutes.add(master.SERVICE_NAME.VALUE as String)
-                            Map result = generator.execute(project.projectDir, moduleDirectory, true, true)
-                            project.logger.lifecycle('[PORTAL-CODE-EXPLORER] {}: {} Java files, {} API entries',
-                                    result.module, result.files, result.apis)
-                        }
-                        CodeExplorerMaterialService.cleanUnclaimedLegacyBundles(
-                                project.projectDir, activeRoutes)
-                    }
-                }
-
         def generatePortalCaseStudyExplorer =
                 project.tasks.register('generatePortalCaseStudyExplorer') { task ->
                     task.group = 'learning portal'
                     task.description = 'Generate STEP 8 case-scoped Java Code Explorer materials.'
-                    task.dependsOn(generatePortalCodeExplorer)
+                    task.dependsOn(generatePortalModuleData)
                     task.doLast {
                         CaseStudyExplorerService generator = new CaseStudyExplorerService()
-                        def configs = project.fileTree(new File(project.projectDir, 'module')) {
-                            include '**/content/code-explorer/casestudy.yml'
+                        def masters = project.fileTree(new File(project.projectDir, 'module')) {
+                            include '**/master.json'
                             exclude '**/build/**'
                         }.files.toList().sort { it.absolutePath }
-                        configs.each { File config ->
-                            File moduleDirectory = config.parentFile.parentFile.parentFile
+                        Set<String> enabledRoutes = [] as Set<String>
+                        masters.each { File masterFile ->
+                            File moduleDirectory = masterFile.parentFile
+                            if (!CaseStudyExplorerService.enabled(moduleDirectory)) return
                             Map result = generator.execute(project.projectDir, moduleDirectory, true, true)
+                            enabledRoutes.add(result.module as String)
                             project.logger.lifecycle('[PORTAL-STEP8-EXPLORER] {}: {} cases, {} Java files',
                                     result.module, result.cases, result.files)
                         }
+                        CaseStudyExplorerService.cleanDisabledPublished(
+                                project.projectDir, enabledRoutes)
+                        // Old module-wide bundles are obsolete; preserve the independent casestudy subtree.
+                        CodeExplorerMaterialService.cleanUnclaimedLegacyBundles(
+                                project.projectDir, [] as Set<String>)
                     }
                 }
 
@@ -605,7 +587,6 @@ ${project.path}
                         generatePortalVideo,
                         generatePortalReference,
                         generatePortalSummary,
-                        generatePortalCodeExplorer,
                         generatePortalCaseStudyExplorer
                 )
         }

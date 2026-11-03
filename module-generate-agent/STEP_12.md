@@ -28,7 +28,6 @@ Nguồn code để Prime đối chiếu nếu task lỗi hoặc drift:
 
 - `project-build/gradle-runtime/src/main/groovy/com/example/learning/task/sheets/task/ExportModuleSheetToExcelTask.groovy`
 - `project-build/gradle-runtime/src/main/groovy/com/example/learning/task/sheets/service/ModuleSheetExcelExportService.groovy`
-- `project-build/gradle-runtime/SHEET_EXCEL_EXPORT.md`
 
 Chạy ở **root `java-learning`**, thay đủ **ba placeholder** (`<EXACT_MODULE_GRADLE_PATH>`, `<SPREADSHEET_ID>`, `<GID>`). Sử dụng PowerShell hoặc terminal tương đương; URL tab có `#gid` **phải được quote**.
 
@@ -44,6 +43,7 @@ Chạy ở **root `java-learning`**, thay đủ **ba placeholder** (`<EXACT_MODU
 - **DRY_RUN mặc định**: yêu cầu exit code 0, log `[SHEET-XLSX] DRY_RUN`, `module`, `tab/gid`, `language=vi`, `cells`, `unsupported-dropdowns`, `output` đúng; không được thay `module.xlsx` ở lượt này. `DRY_RUN` **chưa phải** hoàn thành STEP.
 - **APPLY**: chỉ khi DRY_RUN PASS và nguồn không thay đổi, chạy **chính xác cùng task/tham số**, đổi **duy nhất** `-PsheetMode=APPLY`. Yêu cầu exit code 0 và `[SHEET-XLSX] EXPORTED`; task tự tạo file tạm, reopen bằng Apache POI, kiểm tra worksheet/cell count và atomic replace.
 - Không gọi task root, không xuất cả workbook, không dùng `importExcelFromModuleSheet` (task đó tạo tab **mới** trên Google Sheets, hoàn toàn không thuộc STEP 12).
+- Nếu cấu hình task bằng Gradle DSL thay vì CLI, dùng extension `exportModuleSheetToExcel { fileURL = '<spreadsheet-url>'; sheetURL = '<tab-url#gid>'; language = 'vi' }`. `task.gradle` được generate chỉ là ví dụ DSL, không tự chạy; phải cấu hình ở Gradle thực thi hoặc truyền các thuộc tính CLI như trên. File URL và tab URL phải cùng spreadsheet.
 
 ## 3. QA snapshot Excel sau APPLY — bắt buộc
 
@@ -53,6 +53,7 @@ Prime phải **tự mở và kiểm tra file offline**, không chỉ tin exit co
 2. Đối chiếu tổng ô được xuất với log `cells`, hàng/cột có dữ liệu thực, các mốc `A1`, `B1`, `I3`, `A17:B17`, `A19:B19`, Menu Cấp 1/Cấp 2, `C:N` Knowledge, `O` Difficulty, `P:S` Interview, `T:W` Quiz, `X:AA` Video, `AC` Summary, nếu nguồn có. Vùng trống hợp lệ không phải lý do tự sinh dữ liệu. So sánh snapshot với nguồn Sheet bằng giá trị effective; **không yêu cầu Excel chứa tiến độ master.json**.
 3. Kiểm tra **newline/Unicode**, rich text cơ bản/format quan trọng, freeze panes, merged cells, note, row height, column width và dropdown cơ bản; báo rõ `unsupported-dropdowns` từ task. Nếu dropdown quan trọng (đặc biệt Difficulty `O`) bị mất/không tương thích, `BLOCKER: XLSX VALIDATION LOSS` hoặc giải trình và nhận xác nhận rõ trước khi coi là bản sao đạt yêu cầu. Không mặc định mọi định dạng Google-only đều có thể tái hiện trong Excel.
 4. **Formula:** task lưu **giá trị đã tính (effective/cached)**, không giữ công thức live. So sánh theo giá trị hiển thị/effective, không đòi formula gốc còn tồn tại. Nếu công thức lỗi/chưa resolve, text dài hơn **32.767 ký tự mỗi ô**, lỗi đọc Sheets hoặc giới hạn Excel thì task phải FAIL; **không cắt bớt/truncated**, không tự thay công thức.
+   Task chỉ dùng quyền Google Sheets **read-only**; unsupported dropdowns được đếm trong log. Không thể đảm bảo tái tạo các tính năng định dạng riêng của Google Sheets (ví dụ smart chips). File Excel là snapshot tĩnh, không phải nguồn để cập nhật ngược module.
 5. Sau APPLY, đọc lại Google Sheet hoặc snapshot nguồn đã xác thực: **không thay đổi bất kỳ nội dung/tiến độ Sheet nào**, không chạm Template hoặc module khác. Xác minh `.xlsx` vẫn bị Git ignore. Nếu bất kỳ QA fail: giữ bằng chứng/hash, **không ghi `CURRENT_STEP.VALUE`**.
 
 ## 4. Completion gate: update master.json only

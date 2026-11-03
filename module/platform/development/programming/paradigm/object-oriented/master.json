@@ -85,5 +85,11 @@
         "TYPE": "boolean",
         "VALUE": "TRUE",
         "GROUP": "TASK"
+    },
+    "BUILD_CASE_STUDY_EXPLORER": {
+        "DESCRIPTION": "Publish per-case Java source explorer from Case Study and Java code (STEP 8)",
+        "TYPE": "boolean",
+        "VALUE": "TRUE",
+        "GROUP": "TASK"
     }
 }

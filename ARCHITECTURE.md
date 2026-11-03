@@ -2305,7 +2305,7 @@ trừ khi architecture contract của artifact đó được thay đổi rõ rà
 | Portal Video | authored `module/**/content/readme/docs/{lang}/menu/<chapter>/video/video-script.yml` hợp lệ | `build/learning-data/java/module/{ROUTE_ID}/video/{lang}/index.json` + `content/{categoryId}/script.json` + catalog `video` path |
 | Portal Quiz | `content/readme/docs/{lang}/menu/<chapter>/quiz/question.yml` chứa câu hỏi hợp lệ | `build/learning-data/java/module/{ROUTE_ID}/quiz/{lang}/index.json` + chapter `question.yml` + catalog Quiz |
 | Portal Interview | `content/readme/docs/{lang}/menu/<chapter>/questions/interview.yml` chứa câu hỏi hợp lệ | `build/learning-data/java/module/{ROUTE_ID}/interview/{lang}/index.json` + chapter `question.yml` + catalog Interview |
-| Code Explorer API mapping | `content/code-explorer/material.yml` với `apiMapping.source=SWAGGER` và `src/main/resources/swagger/vi/api-descriptions.yml` | `CodeExplorerMaterialService` tạo `api-map.json` từ Swagger mappings và Java symbols; không phụ thuộc Portal API Docs |
+| Case Study Explorer | `master.json.BUILD_CASE_STUDY_EXPLORER` (`TYPE="boolean"`, `VALUE="TRUE"`), `content/casestudy/vi/casestudy.yml` và Java Controller/Service/case types | `CaseStudyExplorerService` lọc Java theo `groupID/caseIndex`, dùng shared symbol/reference indexer, xuất `build/learning-data/java/module/<ROUTE_ID>/code-explorer/casestudy/` và catalog `caseStudyExplorer`. Module-wide `material.yml`/Swagger API map đã bỏ |
 | Portal production frontend | React/TypeScript source | Vite `dist` → Spring `classpath:/static` |
 
 ---

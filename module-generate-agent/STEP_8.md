@@ -146,12 +146,7 @@ Checklist:
 ### 6A. Đầu vào và quy tắc filter (deterministic)
 
 - Prime xác minh đúng Gradle module từ Sheet `I3`, `master.json` (`SERVICE_NAME`, `JAVA_BASE_PACKAGE`) và `content/casestudy/vi/casestudy.yml` (đủ `groupID`, `cases[]`; `caseIndex` 1-based). **Không** nhập từng file đích hoặc dự đoán từ câu chữ Case Study.
-- Prime kiểm tra module có **opt-in** `content/code-explorer/casestudy.yml` theo contract canonical sau; nếu chưa có thì tạo đúng file này trong phạm vi Prime, không chỉnh Sheet/YAML Case Study:
-
-  ```yaml
-  version: 1
-  type: CASE_STUDY_EXPLORER
-  ```
+- **Bật Case Study Explorer:** đặt `master.json.BUILD_CASE_STUDY_EXPLORER.VALUE = "TRUE"` (`TYPE = "boolean"`) tại module được chọn. Đây là opt-in duy nhất; thiếu flag hoặc `FALSE` thì module không được publish và task module-local từ chối chạy. **Không tạo `content/code-explorer/{casestudy,material}.yml`.** Không chỉnh Sheet/YAML Case Study.
 
 - Generator JavaParser đọc `casestudy/controller/Group<g>Controller.java` và `casestudy/service/Group<g>Service.java`, tạo **bản hiển thị** chỉ giữ `executeCase<c>()` của từng case, cùng constructor, fields, annotations và import liên quan. Các class dưới `casestudy/<kind>/group<g>/case<c>/` được giữ theo đường dẫn (không phân tích dependency xuyên module). Nếu có `CaseStudyJvmIsolation`, giữ hạ tầng dùng chung tương ứng. Không dùng AI inference, không refactor hay ghi đè source Java STEP 8.
 - Tạo lại `symbols.json` và `references.json` từ **bytes bản source đã lọc**, không tái sử dụng tọa độ từ runtime gốc. Ctrl+Click/F12 tới symbol được resolve phải đúng file/dòng; unresolved không tạo liên kết giả. Material phục vụ đọc trên Monaco, **không yêu cầu compile độc lập**.
@@ -173,9 +168,10 @@ Không truyền `-PgroupID`/`-PcaseIndex` trong completion gate: task phải qu�
 ### 6C. Prime QA material và checkpoint
 
 1. Kết quả `DRY_RUN` = PASS, không ghi file. `APPLY` trả `complete=true`, số case khớp tổng `cases[]` trên YAML, không thiếu/thừa/trùng groupID/caseIndex. `build/code-explorer/casestudy/index.json` phải liệt kê đủ scope.
-2. Mỗi case có `groups/<g>/cases/<c>/index.json`, `symbols.json`, `references.json`, `api-map.json` và `files/`; Controller/Service chỉ có **một** `executeCase<c>` đúng case, class không lẫn `group/case` khác. Kiểm checksum SHA256 của file; file được load trên FE phải đúng byte đã index.
-3. Symbol references Controller → Service → case class resolve đúng; thử ít nhất một case tiêu biểu và case có JVM isolation (nếu có). Không cho unresolved giả PASS. Đối chiếu input Java và test trước/sau generation: **UNCHANGED**, không sửa ngoài `build/` và file opt-in vừa khai báo.
-4. `generatePortalData` có tích hợp task `generatePortalCaseStudyExplorer` để tạo output publish `build/learning-data/java/module/<SERVICE_NAME>/code-explorer/casestudy/` và catalog `caseStudyExplorer`; FE tiếp tục dùng Monaco Code Explorer cũ. **Không mặc định chạy publish/deploy ở STEP 8**, trừ khi đó là phần nghiệm thu/publish được yêu cầu riêng; chạy root task không thay thế QA material per-module trước checkpoint.
+2. Mỗi case có `groups/<g>/cases/<c>/index.json`, `symbols.json`, `references.json` và `files/`; **không còn `api-map.json` tổng quát**. Controller/Service chỉ có **một** `executeCase<c>` đúng case, class không lẫn `group/case` khác. Kiểm checksum SHA256 của file; file được load trên FE phải đúng byte đã index.
+3. Symbol references Controller → Service → case class resolve đúng; thử ít nhất một case tiêu biểu và case có JVM isolation (nếu có). Không cho unresolved giả PASS. Đối chiếu input Java và test trước/sau generation: **UNCHANGED**, không sửa ngoài `build/` và `master.json` flag được phép cập nhật.
+4. `generatePortalData` có tích hợp task `generatePortalCaseStudyExplorer` quét `master.json` của các module (chỉ `BUILD_CASE_STUDY_EXPLORER=TRUE`) để tạo output publish `build/learning-data/java/module/<SERVICE_NAME>/code-explorer/casestudy/` và catalog `caseStudyExplorer`; FE tiếp tục dùng Monaco theo từng case. Pipeline Code Explorer **tổng quát** (`material.yml`, `generatePortalCodeExplorer`, `codeExplorer` catalog/API mapping) đã loại bỏ. **Không mặc định chạy publish/deploy ở STEP 8**, trừ khi được yêu cầu riêng; root task không thay QA material per-module.
+   Khi tắt flag, root publisher dọn output `casestudy/` cũ của module bị tắt, giữ output các module vẫn bật. Pilot có `complete=false` và không được publish.
 5. **Chỉ Prime** cập nhật/readback `CURRENT_STEP.VALUE="8"` sau khi cả Java QA và Code Explorer QA toàn module PASS, không blocker/worker pending, theo `rules/PRIME_RULES.md §2`; rerun module đã ở STEP cao hơn không ghi lùi. Không suy STEP 9 đã hoàn tất từ kết quả này.
 
 **Prime report:** RUN/module/gid, group/case total, hashes, owner, `ASSIGNED_GROUP_AND_SHEET_RANGE`, `GROUP_CASE_INVENTORY_VS_SHEET_MATCH`, `PRIME_SCAFFOLD_CONTROLLER_SERVICE_COUNTS`, `GROUP_METHOD_ENDPOINT_COVERAGE`, `GROUP_SERVICE_BODY_FIDELITY`, `TYPE_STATIC_PACKAGE_MAP`, `CONTENT_ERROR_FIX_AUDIT`, `BLOCKER_RESOLUTION_CATALOG_QA`, `BLOCKED_FAIL_CLOSED`, `COMPILE/TEST/HTTP`, `CODE_EXPLORER_DRY_RUN`, `CODE_EXPLORER_APPLY`, `CODE_EXPLORER_CASE_COVERAGE`, `CODE_EXPLORER_INDEX_NAVIGATION`, `CODE_EXPLORER_SOURCE_UNCHANGED`, `SHEET/YAML_UNCHANGED`, `OUT_OF_SCOPE_UNCHANGED`, `CURRENT_STEP_BEFORE/AFTER`, BLOCKERS.

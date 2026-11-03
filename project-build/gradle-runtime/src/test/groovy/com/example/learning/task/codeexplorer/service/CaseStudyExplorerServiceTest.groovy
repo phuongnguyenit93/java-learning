@@ -80,15 +80,53 @@ class CaseStudyExplorerServiceTest {
         }
     }
 
+    @Test
+    void masterJsonFlagControlsGenerationAndMissingOrFalseFailsClosed() {
+        Map fixture = fixture()
+        def service = new CaseStudyExplorerService()
+        assertTrue(CaseStudyExplorerService.enabled(fixture.module))
+        File masterFile = new File(fixture.module, 'master.json')
+        Map original = new JsonSlurper().parse(masterFile) as Map
+        original.BUILD_CASE_STUDY_EXPLORER.VALUE = 'FALSE'
+        masterFile.setText(groovy.json.JsonOutput.toJson(original), 'UTF-8')
+        assertFalse(CaseStudyExplorerService.enabled(fixture.module))
+        try {
+            service.execute(fixture.root, fixture.module, true, false)
+            fail('Disabled module must not generate')
+        } catch (GradleException error) {
+            assertTrue(error.message.contains('BUILD_CASE_STUDY_EXPLORER=TRUE'))
+        }
+        assertFalse(new File(fixture.module, 'build/code-explorer/casestudy').exists())
+        original.remove('BUILD_CASE_STUDY_EXPLORER')
+        masterFile.setText(groovy.json.JsonOutput.toJson(original), 'UTF-8')
+        assertFalse(CaseStudyExplorerService.enabled(fixture.module))
+        original.BUILD_CASE_STUDY_EXPLORER = [TYPE: 'boolean', VALUE: 'TRUE']
+        masterFile.setText(groovy.json.JsonOutput.toJson(original), 'UTF-8')
+        assertTrue(CaseStudyExplorerService.enabled(fixture.module))
+        assertEquals('DRY_RUN', service.execute(fixture.root, fixture.module, false, false).status)
+    }
+
+    @Test
+    void rootCleanupRemovesOnlyDisabledPublishedCases() {
+        Map f = fixture()
+        new CaseStudyExplorerService().execute(f.root, f.module, true, true)
+        File path = new File(f.root,
+                'build/learning-data/java/module/DEMO/code-explorer/casestudy')
+        assertTrue(new File(path, 'index.json').isFile())
+        CaseStudyExplorerService.cleanDisabledPublished(f.root, ['DEMO'] as Set<String>)
+        assertTrue(new File(path, 'index.json').isFile())
+        CaseStudyExplorerService.cleanDisabledPublished(f.root, [] as Set<String>)
+        assertFalse(path.exists())
+    }
+
     private Map fixture() {
         File root = temp.newFolder('repo')
         File module = new File(root, 'module/demo')
         assertTrue(module.mkdirs())
         put(module, 'gradle.properties', 'IS_MODULE=TRUE')
         put(module, 'master.json',
-                '{"SERVICE_NAME":{"VALUE":"DEMO"},"JAVA_BASE_PACKAGE":{"VALUE":"demo"}}')
-        put(module, 'content/code-explorer/casestudy.yml',
-                'version: 1\ntype: CASE_STUDY_EXPLORER\n')
+                '{"SERVICE_NAME":{"VALUE":"DEMO"},"JAVA_BASE_PACKAGE":{"VALUE":"demo"},' +
+                '"BUILD_CASE_STUDY_EXPLORER":{"TYPE":"boolean","VALUE":"TRUE"}}')
         put(module, 'content/casestudy/vi/casestudy.yml', '''caseStudy:
   - groupID: 1
     cases:

@@ -92,4 +92,29 @@ class ModuleConfigurationSyncServiceTest {
                     new File(module, name).bytes)
         }
     }
+
+    @Test
+    void optionalCaseStudyExplorerFlagSurvivesSyncButIsNotAddedToUnrelatedModules() {
+        File module = temporary.newFolder('case-study-module')
+        def service = new ModuleConfigurationSyncService(
+                Logging.getLogger(ModuleConfigurationSyncServiceTest))
+        service.sync(module)
+        File masterFile = new File(module, 'master.json')
+        Map master = new JsonSlurper().parse(masterFile) as Map
+        assertFalse(master.containsKey('BUILD_CASE_STUDY_EXPLORER'))
+        master.BUILD_CASE_STUDY_EXPLORER = [
+                TYPE: 'boolean', VALUE: 'TRUE', GROUP: 'TASK',
+                DESCRIPTION: 'Enable explorer'
+        ]
+        masterFile.setText(groovy.json.JsonOutput.prettyPrint(
+                groovy.json.JsonOutput.toJson(master)) + '\n', 'UTF-8')
+        service.sync(module)
+        Map updated = new JsonSlurper().parse(masterFile) as Map
+        assertEquals('TRUE', updated.BUILD_CASE_STUDY_EXPLORER.VALUE)
+        assertEquals('boolean', updated.BUILD_CASE_STUDY_EXPLORER.TYPE)
+        assertEquals('TASK', updated.BUILD_CASE_STUDY_EXPLORER.GROUP)
+        assertEquals(updated, new JsonSlurper().parse(masterFile))
+        service.sync(module)
+        assertEquals(updated, new JsonSlurper().parse(masterFile))
+    }
 }
