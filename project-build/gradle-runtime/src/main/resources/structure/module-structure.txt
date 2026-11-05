@@ -111,6 +111,7 @@ module
 │       │   │   │   └── elasticsearch
 │       │   │   └── time-series
 │       │   │       └── influxdb
+│       │   ├── fundamentals
 │       │   ├── performance
 │       │   │   ├── database-caching
 │       │   │   ├── execution-plan
@@ -189,6 +190,7 @@ module
 │       │   ├── management-console
 │       │   │   └── hawtio [HAWTIO]
 │       │   └── micrometer
+│       ├── operating-system
 │       ├── runtime
 │       │   └── servlet-container
 │       │       ├── jetty
@@ -260,6 +262,7 @@ module
 │   │   │           ├── producer
 │   │   │           │   └── bank [KAFKA_PRODUCER_BANK]
 │   │   │           └── server [KAFKA_SERVER]
+│   │   ├── fundamentals
 │   │   └── message-broker
 │   │       ├── activemq
 │   │       └── rabbitmq
@@ -315,6 +318,7 @@ module
     │       ├── pmd
     │       └── spotbugs
     ├── development
+    │   ├── computer-science-fundamentals
     │   ├── data
     │   │   ├── data-mapping
     │   │   │   └── object-mapping [OBJECT_MAPPING] : Object-to-object mapping concepts and implementations including manual mapping, MapStruct and ModelMapper
@@ -347,6 +351,8 @@ module
     │   │   │   │   │       └── development-plugin
     │   │   │   │   └── task
     │   │   │   └── maven
+    │   │   ├── developer-tooling
+    │   │   │   └── debugging
     │   │   └── validation
     │   │       ├── benchmark
     │   │       │   ├── microbenchmark
@@ -361,19 +367,21 @@ module
     │   │           │   ├── e2e-test
     │   │           │   ├── integration-test
     │   │           │   └── unit-test
-    │   │           └── non-functional
-    │   │               ├── performance-test
-    │   │               │   └── concept
-    │   │               │       ├── endurance-test
-    │   │               │       ├── load-test
-    │   │               │       ├── scalability-test
-    │   │               │       ├── spike-test
-    │   │               │       ├── stress-test
-    │   │               │       └── volume-test
-    │   │               └── tooling
-    │   │                   ├── gatling
-    │   │                   ├── jmeter
-    │   │                   └── k6
+    │   │           ├── non-functional
+    │   │           │   ├── performance-test
+    │   │           │   │   └── concept
+    │   │           │   │       ├── endurance-test
+    │   │           │   │       ├── load-test
+    │   │           │   │       ├── scalability-test
+    │   │           │   │       ├── spike-test
+    │   │           │   │       ├── stress-test
+    │   │           │   │       └── volume-test
+    │   │           │   └── tooling
+    │   │           │       ├── gatling
+    │   │           │       ├── jmeter
+    │   │           │       └── k6
+    │   │           ├── test-design
+    │   │           └── tooling
     │   ├── programming
     │   │   ├── framework
     │   │   │   ├── project-reactor
@@ -550,6 +558,7 @@ module
     │   │   │   │   ├── bulkhead
     │   │   │   │   ├── cqrs
     │   │   │   │   ├── event-sourcing
+    │   │   │   │   ├── fundamentals
     │   │   │   │   ├── saga
     │   │   │   │   ├── sidecar
     │   │   │   │   └── transactional-outbox [TRANSACTIONAL_OUTBOX] : Transactional Outbox pattern for reliable event publication across a database and a message broker

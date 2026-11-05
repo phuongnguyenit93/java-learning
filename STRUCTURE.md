@@ -489,6 +489,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </details>
 </li>
 <li>
+  <a href='./module/infrastructure/system/database/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
 <details>
   <summary><b><a href='./module/infrastructure/system/database/performance'>📁 performance</a></b></summary>
 <ul>
@@ -838,6 +841,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </details>
 </li>
 <li>
+  <a href='./module/infrastructure/system/operating-system'>🪄 operating-system</a>
+</li>
+<li>
 <details>
   <summary><b><a href='./module/infrastructure/system/runtime'>📁 runtime</a></b></summary>
 <ul>
@@ -1143,6 +1149,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </details>
 </li>
 <li>
+  <a href='./module/integration/messaging/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
 <details>
   <summary><b><a href='./module/integration/messaging/message-broker'>📁 message-broker</a></b></summary>
 <ul>
@@ -1380,6 +1389,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development'>📁 development</a></b></summary>
 <ul>
 <li>
+  <a href='./module/platform/development/computer-science-fundamentals'>🪄 computer-science-fundamentals</a>
+</li>
+<li>
 <details>
   <summary><b><a href='./module/platform/development/data'>📁 data</a></b></summary>
 <ul>
@@ -1530,6 +1542,16 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
+  <summary><b><a href='./module/platform/development/engineering/developer-tooling'>📁 developer-tooling</a></b></summary>
+<ul>
+<li>
+  <a href='./module/platform/development/engineering/developer-tooling/debugging'>🪄 debugging</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
   <summary><b><a href='./module/platform/development/engineering/validation'>📁 validation</a></b></summary>
 <ul>
 <li>
@@ -1642,6 +1664,12 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 </ul>
 </details>
+</li>
+<li>
+  <a href='./module/platform/development/engineering/validation/testing/test-design'>🪄 test-design</a>
+</li>
+<li>
+  <a href='./module/platform/development/engineering/validation/testing/tooling'>🪄 tooling</a>
 </li>
 </ul>
 </details>
@@ -2270,6 +2298,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
   <a href='./module/platform/development/software-design/architecture/distributed-system/event-sourcing'>🪄 event-sourcing</a>
+</li>
+<li>
+  <a href='./module/platform/development/software-design/architecture/distributed-system/fundamentals'>🪄 fundamentals</a>
 </li>
 <li>
   <a href='./module/platform/development/software-design/architecture/distributed-system/saga'>🪄 saga</a>
